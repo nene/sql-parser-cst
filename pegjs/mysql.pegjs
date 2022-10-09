@@ -1745,7 +1745,7 @@ literal_string
       text: `${r}'${ca[1].join('')}'`
     };
   }
-  / b:'_binary'i ? __ r:'b'i ca:("'" [0-9A-Fa-f]* "'") {
+  / b:'_binary'i ? __ r:'b'i ca:("'" [01]* "'") {
     return {
       type: 'string',
       prefix: b,
