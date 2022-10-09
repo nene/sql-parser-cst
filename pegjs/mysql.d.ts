@@ -5,10 +5,18 @@ type Select = {
   columns: Expr[];
 };
 
-type Expr = String;
+type Expr = Literal;
 
-type String = {
+type Literal = StringLiteral | BoolLiteral;
+
+type StringLiteral = {
   type: "string";
+  prefix?: string;
+  text: string;
+};
+
+type BoolLiteral = {
+  type: "bool";
   text: string;
 };
 
