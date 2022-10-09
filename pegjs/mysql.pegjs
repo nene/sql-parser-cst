@@ -277,67 +277,16 @@
 
     'ZEROFILL': true,
   };
-
-  function createUnaryExpr(op, e) {
-    return {
-      type: 'unary_expr',
-      operator: op,
-      expr: e
-    };
-  }
-
-  function createBinaryExpr(op, left, right) {
-    return {
-      type: 'binary_expr',
-      operator: op,
-      left: left,
-      right: right
-    };
-  }
-
-  function isBigInt(numberStr) {
-    const previousMaxSafe = BigInt(Number.MAX_SAFE_INTEGER)
-    const num = BigInt(numberStr)
-    if (num < previousMaxSafe) return false
-    return true
-  }
-
-  function createList(head, tail, po = 3) {
-    const result = [head];
-    for (let i = 0; i < tail.length; i++) {
-      result.push(tail[i][po]);
-    }
-    return result;
-  }
-
-  function createBinaryExprChain(head, tail) {
-    let result = head;
-    for (let i = 0; i < tail.length; i++) {
-      result = createBinaryExpr(tail[i][1], result, tail[i][3]);
-    }
-    return result;
-  }
-
-  function createParenExpr(expr) {
-    return { type: 'paren_expr', expr };
-  }
 }
 
 start
   = head:start_item __ tail:(__ KW_GO __ start_item)* {
-    if (!tail || tail.length === 0) return head
-    let cur = head
-    for (let i = 0; i < tail.length; i++) {
-      cur.go_next = tail[i][3]
-      cur.go = 'go'
-      cur = cur.go_next
-    }
-    return head
+    return "[Not implemented]";
   }
 
 start_item
   = __ n:(multiple_stmt / cmd_stmt / crud_stmt) {
-    return n
+    return "[Not implemented]";
   }
 
 cmd_stmt
@@ -375,50 +324,32 @@ crud_stmt
 
 multiple_stmt
   = head:crud_stmt tail:(__ SEMICOLON __ crud_stmt)+ {
-      const cur = [head];
-      for (let i = 0; i < tail.length; i++) {
-        if(!tail[i][3] || tail[i][3].length === 0) continue;
-        cur.push(tail[i][3]);
-      }
-      return cur
-    }
+    return "[Not implemented]";
+  }
 
 union_stmt
   = head:select_stmt tail:(__ KW_UNION __ KW_ALL? __ select_stmt)* __ ob: order_by_clause? __ l:limit_clause? {
-      let cur = head
-      for (let i = 0; i < tail.length; i++) {
-        cur._next = tail[i][5]
-        cur.union = tail[i][3] ? 'union all' : 'union'
-        cur = cur._next
-      }
-      if(ob) head._orderby = ob
-      if(l) head._limit = l
-      return head
-    }
+    return "[Not implemented]";
+  }
 
 column_order_list
   = head:column_order_item tail:(__ COMMA __ column_order_item)* {
-    return createList(head, tail)
+    return "[Not implemented]";
   }
 
 column_order_item
-  = c:expr o:(KW_ASC / KW_DESC)? { return {
-      column: c,
-      order: o && o.toLowerCase() || 'asc',
-    }
+  = c:expr o:(KW_ASC / KW_DESC)? {
+    return "[Not implemented]";
   }
   / column_order
 
 column_order
   = c:column_ref __ o:(KW_ASC / KW_DESC)? {
-    return {
-      column: c,
-      order: o && o.toLowerCase() || 'asc',
-    }
+    return "[Not implemented]";
   }
 create_db_definition
   = head:create_option_character_set tail:(__ create_option_character_set)* {
-    return createList(head, tail, 1)
+    return "[Not implemented]";
   }
 
 create_db_stmt
@@ -427,21 +358,15 @@ create_db_stmt
     ife:KW_IF_NOT_EXISTS? __
     t:ident_name __
     c:create_db_definition? {
-      return {
-        type: a[0].toLowerCase(),
-        keyword: 'database',
-        if_not_exists: ife && ife[0].toLowerCase(),
-        database: t,
-        create_definitions: c,
-      }
+      return "[Not implemented]";
     }
 
 view_with
   = KW_WITH __ c:("CASCADED"i / "LOCAL"i) __ "CHECK"i __ "OPTION" {
-    return `with ${c.toLowerCase()} check option`
+    return "[Not implemented]";
   }
   / KW_WITH __ "CHECK"i __ "OPTION" {
-    return 'with check option'
+    return "[Not implemented]";
   }
 
 create_view_stmt
@@ -453,20 +378,7 @@ create_view_stmt
   KW_VIEW __ v:table_name __ c:(LPAREN __ column_list __ RPAREN)? __
   KW_AS __ s:select_stmt_nake __
   w:view_with? {
-    v.view = v.table
-    delete v.table
-    return {
-      type: a[0].toLowerCase(),
-      keyword: 'view',
-      replace: or && 'or replace',
-      algorithm: al && al[4],
-      definer: df && df[4],
-      sql_security: ss && ss[4],
-      columns: c && c[2],
-      select: s,
-      view: v,
-      with: w,
-    }
+    return "[Not implemented]";
   }
 
 create_index_stmt
@@ -481,19 +393,7 @@ create_index_stmt
   io:index_options? __
   al:ALTER_ALGORITHM? __
   lo:ALTER_LOCK? __ {
-    return {
-      type: a[0].toLowerCase(),
-      index_type: kw && kw.toLowerCase(),
-      keyword: t.toLowerCase(),
-      index: n,
-      on_kw: on[0].toLowerCase(),
-      table: ta,
-      index_columns: cols,
-      index_using: um,
-      index_options: io,
-      algorithm_option: al,
-      lock_option: lo,
-    }
+    return "[Not implemented]";
   }
 
 create_table_stmt
@@ -503,14 +403,7 @@ create_table_stmt
     ife:KW_IF_NOT_EXISTS? __
     t:table_name __
     lt:create_like_table {
-      return {
-        type: a[0].toLowerCase(),
-        keyword: 'table',
-        temporary: tp && tp[0].toLowerCase(),
-        if_not_exists: ife && ife[0].toLowerCase(),
-        table: [t],
-        like: lt
-      }
+      return "[Not implemented]";
     }
   / a:KW_CREATE __
     tp:KW_TEMPORARY? __
@@ -522,39 +415,25 @@ create_table_stmt
     ir:(KW_IGNORE / KW_REPLACE)? __
     as:KW_AS? __
     qe:union_stmt? {
-      return {
-        type: a[0].toLowerCase(),
-        keyword: 'table',
-        temporary: tp && tp[0].toLowerCase(),
-        if_not_exists: ife && ife[0].toLowerCase(),
-        table: [t],
-        ignore_replace: ir && ir[0].toLowerCase(),
-        as: as && as[0].toLowerCase(),
-        query_expr: qe,
-        create_definitions: c,
-        table_options: to
-      }
+      return "[Not implemented]";
     }
 
 
 create_like_table_simple
   = KW_LIKE __ t: table_ref_list {
-    return {
-      type: 'like',
-      table: t
-    }
+    return "[Not implemented]";
   }
 
 create_like_table
   = create_like_table_simple
   / LPAREN __ e:create_like_table  __ RPAREN {
-    return createParenExpr(e);
+    return "[Not implemented]";
   }
 
 create_table_definition
   = LPAREN __ head:create_definition tail:(__ COMMA __ create_definition)* __ RPAREN {
-      return createList(head, tail);
-    }
+    return "[Not implemented]";
+  }
 
 create_definition
   = create_constraint_definition
@@ -564,99 +443,74 @@ create_definition
 
 column_definition_opt
   = n:(literal_not_null / literal_null) {
-    if (n && !n.value) n.value = 'null'
-    return { nullable: n }
+    return "[Not implemented]";
   }
   / d:default_expr {
-    return { default_val: d }
+    return "[Not implemented]";
   }
   / a:('AUTO_INCREMENT'i) {
-    return { auto_increment: a.toLowerCase() }
+    return "[Not implemented]";
   }
   / u:(('UNIQUE'i __ ('KEY'i)?) / (('PRIMARY'i)? __ 'KEY'i)) {
-    const unique_or_primary = []
-    if (u) unique_or_primary.push(u[0], u[2])
-    return { unique_or_primary: unique_or_primary.filter(v => v).join(' ').toLowerCase('') }
+    return "[Not implemented]";
   }
   / co:keyword_comment {
-    return { comment: co }
+    return "[Not implemented]";
   }
   / ca:collate_expr {
-    return { collate: ca }
+    return "[Not implemented]";
   }
   / cf:column_format {
-    return { column_format: cf }
+    return "[Not implemented]";
   }
   / s:storage {
-    return { storage: s }
+    return "[Not implemented]";
   }
   / re:reference_definition {
-    return { reference_definition: re }
+    return "[Not implemented]";
   }
   / ck:check_constraint_definition {
-    return { check: ck }
+    return "[Not implemented]";
   }
   / t:create_option_character_set_kw __ s:KW_ASSIGIN_EQUAL? __ v:ident_name {
-    return { character_set: { type: t, value: v, symbol: s }}
+    return "[Not implemented]";
   }
 
 column_definition_opt_list
   = head:column_definition_opt __ tail:(__ column_definition_opt)* {
-    let opt = head
-    for (let i = 0; i < tail.length; i++) {
-      opt = { ...opt, ...tail[i][1] }
-    }
-    return opt
+    return "[Not implemented]";
   }
 
 create_column_definition
   = c:column_ref __
     d:data_type __
     cdo:column_definition_opt_list? {
-      return {
-        column: c,
-        definition: d,
-        resource: 'column',
-        ...(cdo || {})
-      }
+      return "[Not implemented]";
     }
 
 collate_expr
   = KW_COLLATE __ s:KW_ASSIGIN_EQUAL? __ ca:ident_name {
-    return {
-      type: 'collate',
-      symbol: s,
-      value: ca,
-    }
+    return "[Not implemented]";
   }
 column_format
   = k:'COLUMN_FORMAT'i __ f:('FIXED'i / 'DYNAMIC'i / 'DEFAULT'i) {
-    return {
-      type: 'column_format',
-      value: f.toLowerCase()
-    }
+    return "[Not implemented]";
   }
 storage
   = k:'STORAGE'i __ s:('DISK'i / 'MEMORY'i) {
-    return {
-      type: 'storage',
-      value: s.toLowerCase()
-    }
+    return "[Not implemented]";
   }
 default_expr
   = KW_DEFAULT __ ce: (literal / expr) {
-    return {
-      type: 'default',
-      value: ce
-    }
+    return "[Not implemented]";
   }
 drop_index_opt
   = head:(ALTER_ALGORITHM / ALTER_LOCK) tail:(__ (ALTER_ALGORITHM / ALTER_LOCK))* {
-    return createList(head, tail, 1)
+    return "[Not implemented]";
   }
 if_exists
   = 'if'i __ 'exists'i {
-    return 'if exists'
+    return "[Not implemented]";
   }
 
 drop_stmt
@@ -664,12 +518,7 @@ drop_stmt
     r:KW_TABLE __
     ife: if_exists? __
     t:table_ref_list {
-      return {
-        type: a.toLowerCase(),
-        keyword: r.toLowerCase(),
-        prefix: ife,
-        name: t
-      };
+      return "[Not implemented]";
     }
   / a:KW_DROP __
     r:KW_INDEX __
@@ -677,33 +526,20 @@ drop_stmt
     KW_ON __
     t:table_name __
     op:drop_index_opt? __ {
-      return {
-        type: a.toLowerCase(),
-        keyword: r.toLowerCase(),
-        name: i,
-        table: t,
-        options: op
-      };
+      return "[Not implemented]";
     }
 
 truncate_stmt
   = a:KW_TRUNCATE  __
     kw:KW_TABLE? __
     t:table_ref_list {
-      return {
-        type: a.toLowerCase(),
-        keyword: kw && kw.toLowerCase() || 'table',
-        name: t
-      };
+      return "[Not implemented]";
     }
 
 use_stmt
   = KW_USE  __
     d:ident {
-      return {
-        type: 'use',
-        db: d
-      };
+      return "[Not implemented]";
     }
 
 alter_table_stmt
@@ -711,16 +547,12 @@ alter_table_stmt
     KW_TABLE __
     t:table_name __
     e:alter_action_list {
-      return {
-        type: 'alter',
-        table: [t],
-        expr: e
-      };
+      return "[Not implemented]";
     }
 
 alter_action_list
   = head:alter_action tail:(__ COMMA __ alter_action)* {
-      return createList(head, tail);
+      return "[Not implemented]";
     }
 
 alter_action
@@ -739,178 +571,85 @@ alter_action
   / ALTER_LOCK
   / ALTER_CHANGE_COLUMN
   / t:table_option {
-    t.resource = t.keyword
-    t[t.keyword] = t.value
-    delete t.value
-    return {
-      type: 'alter',
-      ...t,
-    }
+    return "[Not implemented]";
   }
 
 ALTER_ADD_COLUMN
   = KW_ADD __
     kc:KW_COLUMN? __
     cd:create_column_definition {
-      return {
-        action: 'add',
-        ...cd,
-        keyword: kc,
-        resource: 'column',
-        type: 'alter',
-      }
+      return "[Not implemented]";
     }
 
 ALTER_DROP_COLUMN
   = KW_DROP __
     kc:KW_COLUMN? __
     c:column_ref {
-      return {
-        action: 'drop',
-        column: c,
-        keyword: kc,
-        resource: 'column',
-        type: 'alter',
-      }
+      return "[Not implemented]";
     }
 
 ALTER_ADD_INDEX_OR_KEY
   = KW_ADD __
     id:create_index_definition {
-      return {
-        action: 'add',
-        type: 'alter',
-        ...id,
-      }
+      return "[Not implemented]";
     }
 
 ALTER_RENAME_TABLE
   = KW_RENAME __
   kw:(KW_TO / KW_AS)? __
   tn:ident {
-    return {
-      action: 'rename',
-      type: 'alter',
-      resource: 'table',
-      keyword: kw && kw[0].toLowerCase(),
-      table: tn
-    }
+    return "[Not implemented]";
   }
 
 ALTER_RENAME_COLUMN
   = KW_RENAME __ KW_COLUMN __ c:column_ref __
   kw:(KW_TO / KW_AS)? __
   tn:column_ref {
-    return {
-      action: 'rename',
-      type: 'alter',
-      resource: 'column',
-      keyword: 'column',
-      old_column: c,
-      prefix: kw && kw[0].toLowerCase(),
-      column: tn
-    }
+    return "[Not implemented]";
   }
 
 ALTER_ALGORITHM
   = "ALGORITHM"i __ s:KW_ASSIGIN_EQUAL? __ val:("DEFAULT"i / "INSTANT"i / "INPLACE"i / "COPY"i) {
-    return {
-      type: 'alter',
-      keyword: 'algorithm',
-      resource: 'algorithm',
-      symbol: s,
-      algorithm: val
-    }
+    return "[Not implemented]";
   }
 
 ALTER_LOCK
   = "LOCK"i __ s:KW_ASSIGIN_EQUAL? __ val:("DEFAULT"i / "NONE"i / "SHARED"i / "EXCLUSIVE"i) {
-    return {
-      type: 'alter',
-      keyword: 'lock',
-      resource: 'lock',
-      symbol: s,
-      lock: val
-    }
+    return "[Not implemented]";
   }
 
 ALTER_CHANGE_COLUMN
   = 'CHANGE'i __ kc:KW_COLUMN? __ od:column_ref __ cd:create_column_definition __ fa:(('FIRST'i / 'AFTER'i) __ column_ref)? {
-    return {
-        action: 'change',
-        old_column: od,
-        ...cd,
-        keyword: kc,
-        resource: 'column',
-        type: 'alter',
-        first_after: fa && {
-          keyword: fa[0],
-          column: fa[2]
-        },
-      }
+    return "[Not implemented]";
   }
 
 ALTER_ADD_CONSTRAINT
   = KW_ADD __ c:create_constraint_definition {
-      return {
-        action: 'add',
-        create_definitions: c,
-        resource: 'constraint',
-        type: 'alter',
-      }
-    }
+    return "[Not implemented]";
+  }
 
 ALTER_DROP_KEY
   = KW_DROP __ 'PRIMARY'i __ KW_KEY {
-    return {
-        action: 'drop',
-        key: '',
-        keyword: 'primary key',
-        resource: 'key',
-        type: 'alter',
-    }
+    return "[Not implemented]";
   }
   / KW_DROP __ 'FOREIGN'i __ KW_KEY __ c:ident_name {
-    return {
-        action: 'drop',
-        key: c,
-        keyword: 'foreign key',
-        resource: 'key',
-        type: 'alter',
-    }
+    return "[Not implemented]";
   }
 
 ALTER_DROP_CONSTRAINT
   = KW_DROP __ kc:'CHECK'i __ c:ident_name {
-      return {
-        action: 'drop',
-        constraint: c,
-        keyword: kc.toLowerCase(),
-        resource: 'constraint',
-        type: 'alter',
-      }
-    }
+    return "[Not implemented]";
+  }
 
 ALTER_ENABLE_CONSTRAINT
   = KW_WITH __ 'CHECK'i __ 'CHECK'i __ KW_CONSTRAINT __ c:ident_name {
-      return {
-        action: 'with',
-        constraint: c,
-        keyword: 'check check',
-        resource: 'constraint',
-        type: 'alter',
-      }
-    }
+    return "[Not implemented]";
+  }
 
 ALTER_DISABLE_CONSTRAINT
   = 'NOCHECK'i __ KW_CONSTRAINT __ c:ident_name {
-      return {
-        action: 'nocheck',
-        constraint: c,
-        resource: 'constraint',
-        type: 'alter',
-      }
-    }
+    return "[Not implemented]";
+  }
 
 
 create_index_definition
@@ -919,14 +658,7 @@ create_index_definition
     t:index_type? __
     de:cte_column_definition __
     id:index_options? __ {
-      return {
-        index: c,
-        definition: de,
-        keyword: kc.toLowerCase(),
-        index_type: t,
-        resource: 'index',
-        index_options: id,
-      }
+      return "[Not implemented]";
     }
 
 create_fulltext_spatial_index_definition
@@ -935,13 +667,7 @@ create_fulltext_spatial_index_definition
     c:column? __
     de: cte_column_definition __
     id: index_options? {
-      return {
-        index: c,
-        definition: de,
-        keyword: kc && `${p.toLowerCase()} ${kc.toLowerCase()}` || p.toLowerCase(),
-        index_options: id,
-        resource: 'index',
-      }
+      return "[Not implemented]";
     }
 
 create_constraint_definition
@@ -953,10 +679,7 @@ create_constraint_definition
 constraint_name
   = kc:KW_CONSTRAINT __
   c:ident? {
-    return {
-      keyword: kc.toLowerCase(),
-      constraint: c
-    }
+    return "[Not implemented]";
   }
 
 create_constraint_primary
@@ -965,15 +688,7 @@ create_constraint_primary
   t:index_type? __
   de:cte_column_definition __
   id:index_options? {
-    return {
-        constraint: kc && kc.constraint,
-        definition: de,
-        constraint_type: `${p[0].toLowerCase()} ${p[2].toLowerCase()}`,
-        keyword: kc && kc.keyword,
-        index_type: t,
-        resource: 'constraint',
-        index_options: id,
-      }
+    return "[Not implemented]";
   }
 
 create_constraint_unique
@@ -984,28 +699,12 @@ create_constraint_unique
   t:index_type? __
   de:cte_column_definition __
   id:index_options? {
-    return {
-        constraint: kc && kc.constraint,
-        definition: de,
-        constraint_type: p && `${u.toLowerCase()} ${p.toLowerCase()}` || u.toLowerCase(),
-        keyword: kc && kc.keyword,
-        index_type: t,
-        index: i,
-        resource: 'constraint',
-        index_options: id
-      }
+    return "[Not implemented]";
   }
 
 create_constraint_check
   = kc:constraint_name? __ u:'CHECK'i __ nfr:('NOT'i __ 'FOR'i __ 'REPLICATION'i __)? LPAREN __ c:expr __ RPAREN {
-    return {
-        constraint_type: u.toLowerCase(),
-        keyword: kc && kc.keyword,
-        constraint: kc && kc.constraint,
-        index_type: nfr && { keyword: 'not for replication' },
-        definition: [c],
-        resource: 'constraint',
-      }
+    return "[Not implemented]";
   }
 
 create_constraint_foreign
@@ -1014,29 +713,12 @@ create_constraint_foreign
   i:column? __
   de:cte_column_definition __
   id:reference_definition? {
-    return {
-        constraint: kc && kc.constraint,
-        definition: de,
-        constraint_type: p,
-        keyword: kc && kc.keyword,
-        index: i,
-        resource: 'constraint',
-        reference_definition: id
-      }
+    return "[Not implemented]";
   }
 
 check_constraint_definition
   = kc:constraint_name? __ u:'CHECK'i __ LPAREN __ c:expr __ RPAREN __ ne:(KW_NOT? __ 'ENFORCED'i)?  {
-    const enforced = []
-    if (ne) enforced.push(ne[0], ne[2])
-    return {
-        constraint_type: u.toLowerCase(),
-        keyword: kc && kc.keyword,
-        constraint: kc && kc.constraint,
-        definition: [c],
-        enforced: enforced.filter(v => v).join(' ').toLowerCase(),
-        resource: 'constraint',
-      }
+    return "[Not implemented]";
   }
 
 reference_definition
@@ -1046,293 +728,190 @@ reference_definition
   m:('MATCH FULL'i / 'MATCH PARTIAL'i / 'MATCH SIMPLE'i)? __
   od:on_reference? __
   ou:on_reference? {
-    return {
-        definition: de,
-        table: t,
-        keyword: kc.toLowerCase(),
-        match:m && m.toLowerCase(),
-        on_delete: od,
-        on_update: ou,
-      }
+    return "[Not implemented]";
   }
   / oa:on_reference {
-    const key = oa.type.split(' ').join('_')
-    return {
-      [key]: oa
-    }
+    return "[Not implemented]";
   }
 
 on_reference
   = on_kw:'ON'i __ kw: ('DELETE'i / 'UPDATE'i) __ ro:reference_option {
-    return {
-      type: `${on_kw.toLowerCase()} ${kw.toLowerCase()}`,
-      value: ro
-    }
+    return "[Not implemented]";
   }
 reference_option
   = kc:('RESTRICT'i / 'CASCADE'i / 'SET NULL'i / 'NO ACTION'i / 'SET DEFAULT'i / KW_CURRENT_TIMESTAMP) {
-    return kc.toLowerCase()
+    return "[Not implemented]";
   }
 
 table_options
   = head:table_option tail:(__ COMMA? __ table_option)* {
-    return createList(head, tail)
+    return "[Not implemented]";
   }
 
 create_option_character_set_kw
   = 'CHARACTER'i __ 'SET'i {
-    return 'CHARACTER SET'
+    return "[Not implemented]";
   }
 create_option_character_set
   = kw:KW_DEFAULT? __ t:(create_option_character_set_kw / 'CHARSET'i / 'COLLATE'i) __ s:(KW_ASSIGIN_EQUAL)? __ v:ident_name {
-    return {
-      keyword: kw && `${kw[0].toLowerCase()} ${t.toLowerCase()}` || t.toLowerCase(),
-      symbol: s,
-      value: v
-    }
+    return "[Not implemented]";
   }
 
 table_option
   = kw:('AUTO_INCREMENT'i / 'AVG_ROW_LENGTH'i / 'KEY_BLOCK_SIZE'i / 'MAX_ROWS'i / 'MIN_ROWS'i / 'STATS_SAMPLE_PAGES'i) __ s:(KW_ASSIGIN_EQUAL)? __ v:literal_numeric {
-    return {
-      keyword: kw.toLowerCase(),
-      symbol: s,
-      value: v.value
-    }
+    return "[Not implemented]";
   }
   / create_option_character_set
   / kw:(KW_COMMENT / 'CONNECTION'i) __ s:(KW_ASSIGIN_EQUAL)? __ c:literal_string {
-    return {
-      keyword: kw.toLowerCase(),
-      symbol: s,
-      value: `'${c.value}'`
-    }
+    return "[Not implemented]";
   }
   / kw:'COMPRESSION'i __ s:(KW_ASSIGIN_EQUAL)? __ v:("'"('ZLIB'i / 'LZ4'i / 'NONE'i)"'") {
-    return {
-      keyword: kw.toLowerCase(),
-      symbol: s,
-      value: v.join('').toUpperCase()
-    }
+    return "[Not implemented]";
   }
   / kw:'ENGINE'i __ s:(KW_ASSIGIN_EQUAL)? __ c:ident_name {
-    return {
-      keyword: kw.toLowerCase(),
-      symbol: s,
-      value: c.toUpperCase()
-    }
+    return "[Not implemented]";
   }
   / kw:'ROW_FORMAT'i __ s:(KW_ASSIGIN_EQUAL)? __ c:(KW_DEFAULT / 'DYNAMIC'i / 'FIXED'i / 'COMPRESSED'i / 'REDUNDANT'i / 'COMPACT'i) {
-    return {
-      keyword: kw.toLowerCase(),
-      symbol: s,
-      value: c.toUpperCase()
-    }
+    return "[Not implemented]";
   }
 
 
 ALTER_ADD_FULLETXT_SPARITAL_INDEX
   = KW_ADD __
-    fsid:create_fulltext_spatial_index_definition
-    {
-      return {
-        action: 'add',
-        type: 'alter',
-        ...fsid,
-      }
+    fsid:create_fulltext_spatial_index_definition {
+      return "[Not implemented]";
     }
 
 rename_stmt
   = KW_RENAME  __
     KW_TABLE __
     t:table_to_list {
-      return {
-        type: 'rename',
-        table: t
-      };
+      return "[Not implemented]";
     }
 
 set_stmt
   = KW_SET __
   kw: (KW_GLOBAL / KW_SESSION / KW_LOCAL / KW_PERSIST / KW_PERSIST_ONLY)? __
   a: assign_stmt {
-    a.keyword = kw
-    return {
-      type: 'set',
-      expr: a
-    }
+    return "[Not implemented]";
   }
 
 unlock_stmt
   = KW_UNLOCK __ KW_TABLES {
-    return {
-      type: 'unlock',
-      keyword: 'tables'
-    }
+    return "[Not implemented]";
   }
 
 lock_type
   = "READ"i __ s:("LOCAL"i)? {
-    return {
-      type: 'read',
-      suffix: s && 'local'
-    }
+    return "[Not implemented]";
   }
   / p:("LOW_PRIORITY"i)? __ "WRITE"i {
-    return {
-      type: 'write',
-      prefix: p && 'low_priority'
-    }
+    return "[Not implemented]";
   }
 
 lock_table
   = t:table_base __ lt:lock_type {
-    return {
-      table: t,
-      lock_type: lt
-    }
+    return "[Not implemented]";
   }
 
 lock_table_list
   = head:lock_table tail:(__ COMMA __ lock_table)* {
-    return createList(head, tail);
+    return "[Not implemented]";
   }
 
 lock_stmt
   = KW_LOCK __ KW_TABLES __ ltl:lock_table_list {
-    return {
-      type: 'lock',
-      keyword: 'tables',
-      tables: ltl
-    }
+    return "[Not implemented]";
   }
 
 call_stmt
   = KW_CALL __
   e: proc_func_call {
-    return {
-      type: 'call',
-      expr: e
-    }
+    return "[Not implemented]";
   }
 
 show_stmt
   = KW_SHOW __ t:('BINARY'i / 'MASTER'i) __ 'LOGS'i {
-    return {
-      type: 'show',
-      suffix: 'logs',
-      keyword: t.toLowerCase()
-    }
+    return "[Not implemented]";
   }
   / KW_SHOW __ 'BINLOG'i __ 'EVENTS'i __ ins:in_op_right? __ from: from_clause? __ limit: limit_clause? {
-    return {
-      type: 'show',
-      suffix: 'events',
-      keyword: 'binlog',
-      in: ins,
-      from,
-      limit,
-    }
+    return "[Not implemented]";
   }
   / KW_SHOW __ k:(('CHARACTER'i __ 'SET'i) / 'COLLATION'i) __ e:(like_op_right / where_clause)? {
-    let keyword = Array.isArray(k) && k || [k]
-    return {
-      type: 'show',
-      suffix: keyword[2] && keyword[2].toLowerCase(),
-      keyword: keyword[0].toLowerCase(),
-      expr: e
-    }
+    return "[Not implemented]";
   }
   / KW_SHOW __ KW_CREATE __ KW_VIEW __ t:table_name {
-    return {
-        type: 'show',
-        keyword: 'create',
-        suffix: 'view',
-        view: t
-      };
+    return "[Not implemented]";
   }
   / show_grant_stmt
 
 show_grant_stmt
   = KW_SHOW __ 'GRANTS'i __ f:show_grant_for? {
-    return {
-      type: 'show',
-      keyword: 'grants',
-      for: f,
-    }
+    return "[Not implemented]";
   }
 
 show_grant_for
   = 'FOR'i __ n:ident __ h:(KW_VAR__PRE_AT __ ident)? __ u:show_grant_for_using? {
-    return {
-      user: n,
-      host: h && h[2],
-      role_list: u
-    }
+    return "[Not implemented]";
   }
 
 show_grant_for_using
   = KW_USING __ l:show_grant_for_using_list {
-    return l
+    return "[Not implemented]";
   }
 
 show_grant_for_using_list
   = head:ident tail:(__ COMMA __ ident)* {
-    return createList(head, tail);
+    return "[Not implemented]";
   }
 
 desc_stmt
   = (KW_DESC / KW_DESCRIBE) __ t:ident {
-    return {
-      type: 'desc',
-      table: t
-    };
+    return "[Not implemented]";
   }
 
 select_stmt
   = select_stmt_nake
   / s:('(' __ select_stmt __ ')') {
-      return createParenExpr(s[2])
+      return "[Not implemented]";
     }
 
 with_clause
   = KW_WITH __ head:cte_definition tail:(__ COMMA __ cte_definition)* {
-      return createList(head, tail);
+      return "[Not implemented]";
     }
   / __ KW_WITH __ KW_RECURSIVE __ cte:cte_definition {
-      cte.recursive = true;
-      return [cte]
+      return "[Not implemented]";
     }
 
 cte_definition
   = name:(literal_string / ident_name) __ columns:cte_column_definition? __ KW_AS __ LPAREN __ stmt:union_stmt __ RPAREN {
-    if (typeof name === 'string') name = { type: 'default', value: name }
-    return { name, stmt, columns };
+    return "[Not implemented]";
   }
 
 cte_column_definition
   = LPAREN __ l:column_ref_index __ RPAREN {
-      return l
+      return "[Not implemented]";
     }
 
 for_update
   = fu:('FOR'i __ KW_UPDATE) {
-    return `${fu[0]} ${fu[2][0]}`
+    return "[Not implemented]";
   }
 
 lock_in_share_mode
   = m:('LOCK'i __ 'IN'i __ 'SHARE'i __ 'MODE'i) {
-    return `${m[0]} ${m[2]} ${m[4]} ${m[6]}`
+    return "[Not implemented]";
   }
 
 lock_option
-  = w:('WAIT'i __ literal_numeric) { return `${w[0]} ${w[2].value}` }
+  = w:('WAIT'i __ literal_numeric) { return "[Not implemented]"; }
   / nw:'NOWAIT'i
-  / sl:('SKIP'i __ 'LOCKED'i) { return `${sl[0]} ${sl[2]}` }
+  / sl:('SKIP'i __ 'LOCKED'i) { return "[Not implemented]"; }
 
 locking_read
   = t:(for_update / lock_in_share_mode) __ lo:lock_option? {
-    return t + (lo ? ` ${lo}` : '')
+    return "[Not implemented]";
   }
 
 select_stmt_nake
@@ -1351,38 +930,13 @@ select_stmt_nake
     lr: locking_read? __
     win:window_clause? __
     li:into_clause? {
-      if ((ci && fi) || (ci && li) || (fi && li) || (ci && fi && li)) {
-        throw new Error('A given SQL statement can contain at most one INTO clause')
-      }
-      return {
-          with: cte,
-          type: 'select',
-          options: opts,
-          distinct: d,
-          columns: c,
-          into: {
-            ...(ci || fi || li || {}),
-            position: ci && 'column' || fi && 'from' || li && 'end'
-          },
-          from: f,
-          where: w,
-          groupby: g,
-          having: h,
-          orderby: o,
-          limit: l,
-          locking_read: lr && lr,
-          window: win,
-      };
+      return "[Not implemented]";
   }
 
 // MySQL extensions to standard SQL
 option_clause
   = head:query_option tail:(__ query_option)* {
-    const opts = [head];
-    for (let i = 0, l = tail.length; i < l; ++i) {
-      opts.push(tail[i][1]);
-    }
-    return opts;
+    return "[Not implemented]";
   }
 
 query_option
@@ -1392,228 +946,139 @@ query_option
         / OPT_SQL_BIG_RESULT
         / OPT_SQL_SMALL_RESULT
         / OPT_SQL_BUFFER_RESULT
-    ) { return option; }
+    ) {
+      return "[Not implemented]";
+    }
 
 column_clause
   = head: (KW_ALL / (STAR !ident_start) / STAR) tail:(__ COMMA __ column_list_item)* {
-      if (tail && tail.length > 0) {
-        head[0] = {
-          expr: {
-            type: 'column_ref',
-            table: null,
-            column: '*'
-          },
-          as: null
-        };
-        return createList(head[0], tail);
-      }
-      return head[0];
+      return "[Not implemented]";
     }
   / head:column_list_item tail:(__ COMMA __ column_list_item)* {
-      return createList(head, tail);
+      return "[Not implemented]";
     }
 
 fulltext_search_mode
   = KW_IN __ 'NATURAL'i __ 'LANGUAGE'i __ 'MODE'i __ 'WITH'i __ 'QUERY'i __ 'EXPANSION'i  {
-    return { type: 'origin', value: 'IN NATURAL LANGUAGE MODE WITH QUERY EXPANSION' }
+    return "[Not implemented]";
   }
   / KW_IN __ 'NATURAL'i __ 'LANGUAGE'i __ 'MODE'i {
-    return { type: 'origin', value: 'IN NATURAL LANGUAGE MODE' }
+    return "[Not implemented]";
   }
   / KW_IN __ 'BOOLEAN'i __ 'MODE'i {
-    return { type: 'origin', value: 'IN BOOLEAN MODE' }
+    return "[Not implemented]";
   }
   / KW_WITH __ 'QUERY'i __ 'EXPANSION'i {
-    return { type: 'origin', value: 'WITH QUERY EXPANSION' }
+    return "[Not implemented]";
   }
 
 fulltext_search
   = 'MATCH'i __ LPAREN __ c:column_ref_list __ RPAREN __ 'AGAINST' __ LPAREN __ e:expr __ mo:fulltext_search_mode? __ RPAREN __ as:alias_clause? {
-    const expr = {
-      against: 'against',
-      columns: c,
-      expr: e,
-      match: 'match',
-      mode: mo,
-      type: 'fulltext_search',
-      as,
-    }
-    return expr
+    return "[Not implemented]";
   }
 
 column_list_item
   = fs:fulltext_search {
-    const { as, ...expr } = fs
-    return { expr, as }
+    return "[Not implemented]";
   }
   / tbl:(ident __ DOT)? __ STAR {
-      const table = tbl && tbl[0] || null
-      return {
-        expr: {
-          type: 'column_ref',
-          table: table,
-          column: '*'
-        },
-        as: null
-      };
-    }
+    return "[Not implemented]";
+  }
   / a:assign_stmt {
-    return { expr: a, as: null }
+    return "[Not implemented]";
   }
   / e:expr __ alias:alias_clause? {
-      return { expr: e, as: alias };
-    }
+    return "[Not implemented]";
+  }
 
 alias_clause
-  = KW_AS __ i:alias_ident { return i; }
-  / KW_AS? __ i:ident { return i; }
+  = KW_AS __ i:alias_ident { return "[Not implemented]"; }
+  / KW_AS? __ i:ident { return "[Not implemented]"; }
 
 into_clause
   = KW_INTO __ v:var_decl_list {
-    return {
-      keyword: 'var',
-      type: 'into',
-      expr: v
-    }
+    return "[Not implemented]";
   }
   / KW_INTO __ k:('OUTFILE'i / 'DUMPFILE'i)? __ f:(literal_string / ident) {
-    return {
-      keyword: k,
-      type: 'into',
-      expr: f
-    }
+    return "[Not implemented]";
   }
 
 from_clause
-  = KW_FROM __ l:table_ref_list { return l; }
+  = KW_FROM __ l:table_ref_list { return "[Not implemented]"; }
 
 table_to_list
   = head:table_to_item tail:(__ COMMA __ table_to_item)* {
-      return createList(head, tail);
-    }
+    return "[Not implemented]";
+  }
 
 table_to_item
   = head:table_name __ KW_TO __ tail: (table_name) {
-      return [head, tail]
-    }
+    return "[Not implemented]";
+  }
 
 index_type
   = KW_USING __
   t:("BTREE"i / "HASH"i) {
-    return {
-      keyword: 'using',
-      type: t.toLowerCase(),
-    }
+    return "[Not implemented]";
   }
 
 index_options
   = head:index_option tail:(__ index_option)* {
-    const result = [head];
-    for (let i = 0; i < tail.length; i++) {
-      result.push(tail[i][1]);
-    }
-    return result;
+    return "[Not implemented]";
   }
 
 index_option
   = k:KW_KEY_BLOCK_SIZE __ e:(KW_ASSIGIN_EQUAL)? __ kbs:literal_numeric {
-    return {
-      type: k.toLowerCase(),
-      symbol: e,
-      expr: kbs
-    };
+    return "[Not implemented]";
   }
   / index_type
   / "WITH"i __ "PARSER"i __ pn:ident_name {
-    return {
-      type: 'with parser',
-      expr: pn
-    }
+    return "[Not implemented]";
   }
   / k:("VISIBLE"i / "INVISIBLE"i) {
-    return {
-      type: k.toLowerCase(),
-      expr: k.toLowerCase()
-    }
+    return "[Not implemented]";
   }
   / keyword_comment
 
 table_ref_list
   = head:table_base
     tail:table_ref* {
-      tail.unshift(head);
-      return tail;
+      return "[Not implemented]";
     }
 
 table_ref
-  = __ COMMA __ t:table_base { return t; }
-  / __ t:table_join { return t; }
+  = __ COMMA __ t:table_base { return "[Not implemented]"; }
+  / __ t:table_join { return "[Not implemented]"; }
 
 
 table_join
   = op:join_op __ t:table_base __ KW_USING __ LPAREN __ head:ident_name tail:(__ COMMA __ ident_name)* __ RPAREN {
-      t.join = op;
-      t.using = createList(head, tail);
-      return t;
+    return "[Not implemented]";
     }
   / op:join_op __ t:table_base __ expr:on_clause? {
-      t.join = op;
-      t.on = expr;
-      return t;
+    return "[Not implemented]";
     }
 
 //NOTE that, the table assigned to `var` shouldn't write in `table_join`
 table_base
   = KW_DUAL {
-      return {
-        type: 'dual'
-      };
+    return "[Not implemented]";
   }
   / t:table_name __ alias:alias_clause? {
-      if (t.type === 'var') {
-        return {
-          expr: t,
-          as: alias
-        };
-      }
-      return {
-        db: t.db,
-        table: t.table,
-        as: alias,
-      };
-    }
+    return "[Not implemented]";
+  }
   / LPAREN __ t:table_name __ r:RPAREN __ alias:alias_clause? {
-      if (t.type === 'var') {
-        return {
-          expr: createParenExpr(t),
-          as: alias
-        };
-      }
-      return {
-        db: t.db,
-        table: t.table,
-        as: alias,
-        parentheses: true,
-      };
-    }
+    return "[Not implemented]";
+  }
   / stmt:value_clause __ alias:alias_clause? {
-    return {
-      expr: { type: 'values', values: stmt, prefix: 'row' },
-      as: alias
-    };
+    return "[Not implemented]";
   }
   / LPAREN __ stmt:value_clause __ RPAREN __ alias:alias_clause? {
-      return {
-        expr: { type: 'values', values: stmt, prefix: 'row', parentheses: true },
-        as: alias
-      };
-    }
+    return "[Not implemented]";
+  }
   / LPAREN __ stmt:union_stmt __ RPAREN __ alias:alias_clause? {
-      return {
-        expr: createParenExpr(stmt),
-        as: alias
-      };
-    }
+    return "[Not implemented]";
+  }
 
 join_op
   = KW_LEFT __ KW_OUTER? __ KW_JOIN { return 'LEFT JOIN'; }
@@ -1623,75 +1088,59 @@ join_op
 
 table_name
   = dt:ident tail:(__ DOT __ ident)? {
-      if (tail) {
-        return { db: dt, table: tail[3] };
-      } else {
-        return { db: null, table: dt };
-      }
-    }
+    return "[Not implemented]";
+  }
   / v:var_decl {
-      v.db = null;
-      v.table = v.name;
-      return v;
-    }
+    return "[Not implemented]";
+  }
 
 on_clause
-  = KW_ON __ e:or_and_where_expr { return e; }
+  = KW_ON __ e:or_and_where_expr { return "[Not implemented]"; }
 
 where_clause
-  = KW_WHERE __ e:or_and_where_expr { return e; }
+  = KW_WHERE __ e:or_and_where_expr { return "[Not implemented]"; }
 
 group_by_clause
-  = KW_GROUP __ KW_BY __ e:expr_list { return e.value; }
+  = KW_GROUP __ KW_BY __ e:expr_list { return "[Not implemented]"; }
 
 column_ref_index
   = column_ref_list / literal_list
 
 column_ref_list
   = head:column_ref tail:(__ COMMA __ column_ref)* {
-      return createList(head, tail);
+      return "[Not implemented]";
     }
 
 having_clause
-  = KW_HAVING __ e:expr { return e; }
+  = KW_HAVING __ e:expr { return "[Not implemented]"; }
 
 partition_by_clause
-  = KW_PARTITION __ KW_BY __ bc:column_clause { return bc; }
+  = KW_PARTITION __ KW_BY __ bc:column_clause { return "[Not implemented]"; }
 
 order_by_clause
-  = KW_ORDER __ KW_BY __ l:order_by_list { return l; }
+  = KW_ORDER __ KW_BY __ l:order_by_list { return "[Not implemented]"; }
 
 order_by_list
   = head:order_by_element tail:(__ COMMA __ order_by_element)* {
-      return createList(head, tail);
+      return "[Not implemented]";
     }
 
 order_by_element
   = e:expr __ d:(KW_DESC / KW_ASC)? {
-    const obj = { expr: e, type: 'ASC' };
-    if (d === 'DESC') obj.type = 'DESC';
-    return obj;
+    return "[Not implemented]";
   }
 
 number_or_param
   = literal_numeric
   / param
   / '?' {
-    return {
-      type: 'origin',
-      value: '?'
-    }
+    return "[Not implemented]";
   }
 
 limit_clause
   = KW_LIMIT __ i1:(number_or_param) __ tail:((COMMA / KW_OFFSET) __ number_or_param)? {
-      const res = [i1];
-      if (tail) res.push(tail[2]);
-      return {
-        seperator: tail && tail[0] && tail[0].toLowerCase() || '',
-        value: res
-      };
-    }
+    return "[Not implemented]";
+  }
 
 update_stmt
   = KW_UPDATE    __
@@ -1701,14 +1150,7 @@ update_stmt
     w:where_clause? __
     or:order_by_clause? __
     lc:limit_clause? {
-      return {
-        type: 'update',
-        table: t,
-        set: l,
-        where: w,
-        orderby: or,
-        limit: lc,
-      };
+      return "[Not implemented]";
     }
 
 delete_stmt
@@ -1718,27 +1160,12 @@ delete_stmt
     w:where_clause? __
     or:order_by_clause? __
     l:limit_clause? {
-      if (t === null && f.length === 1) {
-        const tableInfo = f[0]
-        t = [{
-          db: tableInfo.db,
-          table: tableInfo.table,
-          as: tableInfo.as,
-          addition: true
-        }]
-      }
-      return {
-        type: 'delete',
-        table: t,
-        from: f,
-        where: w,
-        orderby: or,
-        limit: l,
-      };
+      return "[Not implemented]";
     }
+
 set_list
   = head:set_item tail:(__ COMMA __ set_item)* {
-      return createList(head, tail);
+      return "[Not implemented]";
     }
 
 /**
@@ -1748,7 +1175,7 @@ set_list
  */
 set_item
   = tbl:(ident __ DOT)? __ c:column __ '=' __ v:additive_expr {
-      return { column: c, value: v, table: tbl && tbl[0] };
+    return "[Not implemented]";
   }
 
 insert_value_clause
@@ -1757,10 +1184,10 @@ insert_value_clause
 
 insert_partition
   = KW_PARTITION __ LPAREN __ head:ident_name tail:(__ COMMA __ ident_name)* __ RPAREN {
-      return createList(head, tail)
-    }
+    return "[Not implemented]";
+  }
   / KW_PARTITION __ v: value_item {
-    return v
+    return "[Not implemented]";
   }
 
 replace_insert_stmt
@@ -1771,28 +1198,7 @@ replace_insert_stmt
     p:insert_partition? __ LPAREN __ c:column_list  __ RPAREN __
     v:insert_value_clause __
     odp:on_duplicate_update_stmt? {
-      if (t) {
-        t.as = null
-      }
-      if (c) {
-        if(Array.isArray(v)) {
-          v.forEach((row, idx) => {
-            if(row.value.length != c.length) {
-              throw new Error(`Error: column count doesn't match value count at row ${idx+1}`)
-            }
-          })
-        }
-      }
-      const prefix = [ig, it].filter(v => v).map(v => v[0] && v[0].toLowerCase()).join(' ')
-      return {
-        type: ri,
-        table: [t],
-        columns: c,
-        values: v,
-        partition: p,
-        prefix,
-        on_duplicate_update: odp,
-      };
+      return "[Not implemented]";
     }
 
 insert_no_columns_stmt
@@ -1803,19 +1209,7 @@ insert_no_columns_stmt
     p:insert_partition? __
     v:insert_value_clause __
     odp: on_duplicate_update_stmt? {
-      if (t) {
-        t.as = null
-      }
-      const prefix = [ig, it].filter(v => v).map(v => v[0] && v[0].toLowerCase()).join(' ')
-      return {
-        type: ri,
-        table: [t],
-        columns: null,
-        values: v,
-        partition: p,
-        prefix,
-        on_duplicate_update: odp,
-      };
+      return "[Not implemented]";
     }
 
 insert_into_set
@@ -1826,60 +1220,41 @@ insert_into_set
     KW_SET       __
     l:set_list   __
     odp:on_duplicate_update_stmt? {
-      if (t) {
-        t.as = null
-      }
-      return {
-        type: ri,
-        table: [t],
-        columns: null,
-        partition: p,
-        set: l,
-        on_duplicate_update: odp,
-      };
+      return "[Not implemented]";
     }
 
 on_duplicate_update_stmt
   = KW_ON __ 'DUPLICATE'i __ KW_KEY __ KW_UPDATE __ s:set_list {
-    return {
-      keyword: 'on duplicate key update',
-      set: s
-    }
+    return "[Not implemented]";
   }
 
 replace_insert
-  = KW_INSERT   { return 'insert'; }
-  / KW_REPLACE  { return 'replace'; }
+  = KW_INSERT   { return "[Not implemented]"; }
+  / KW_REPLACE  { return "[Not implemented]"; }
 
 value_clause
-  = KW_VALUES __ l:value_list  { return l; }
+  = KW_VALUES __ l:value_list  { return "[Not implemented]"; }
 
 value_list
   = head:value_item tail:(__ COMMA __ value_item)* {
-      return createList(head, tail);
-    }
+    return "[Not implemented]";
+  }
 
 value_item
   = 'ROW'i? __ LPAREN __ l:expr_list  __ RPAREN {
-      return l;
-    }
+    return "[Not implemented]";
+  }
 
 expr_list
   = head:expr tail:(__ COMMA __ expr)* {
-      const el = { type: 'expr_list' };
-      el.value = createList(head, tail);
-      return el;
-    }
+    return "[Not implemented]";
+  }
 
 interval_expr
   = KW_INTERVAL                    __
     e:expr                       __
     u: interval_unit {
-      return {
-        type: 'interval',
-        expr: e,
-        unit: u.toLowerCase(),
-      }
+      return "[Not implemented]";
     }
 
 case_expr
@@ -1887,37 +1262,23 @@ case_expr
     condition_list:case_when_then+  __
     otherwise:case_else?            __
     KW_END __ KW_CASE? {
-      if (otherwise) condition_list.push(otherwise);
-      return {
-        type: 'case',
-        expr: null,
-        args: condition_list
-      };
+      return "[Not implemented]";
     }
   / KW_CASE                         __
     expr:expr                      __
     condition_list:case_when_then+  __
     otherwise:case_else?            __
     KW_END __ KW_CASE? {
-      if (otherwise) condition_list.push(otherwise);
-      return {
-        type: 'case',
-        expr: expr,
-        args: condition_list
-      };
+      return "[Not implemented]";
     }
 
 case_when_then
   = KW_WHEN __ condition:or_and_where_expr __ KW_THEN __ result:expr {
-    return {
-      type: 'when',
-      cond: condition,
-      result: result
-    };
+    return "[Not implemented]";
   }
 
 case_else = KW_ELSE __ result:expr {
-    return { type: 'else', result: result };
+    return "[Not implemented]";
   }
 
 /**
@@ -1941,69 +1302,50 @@ expr
 
 logic_operator_expr
   = head:primary tail:(__ LOGIC_OPERATOR __ primary)+ {
-    return createBinaryExprChain(head, tail);
+    return "[Not implemented]";
   }
 
 unary_expr
   = op: additive_operator tail: (__ primary)+ {
-    return createUnaryExpr(op, tail[0][1]);
+    return "[Not implemented]";
   }
 
 or_and_where_expr
 	= head:expr tail:(__ (KW_AND / KW_OR / COMMA) __ expr)* {
-    let result = head;
-    let seperator = ''
-    for (let i = 0; i < tail.length; i++) {
-      if (tail[i][1] === ',') {
-        seperator = ','
-        if (!Array.isArray(result)) result = [result]
-        result.push(tail[i][3])
-      } else {
-        result = createBinaryExpr(tail[i][1], result, tail[i][3]);
-      }
-    }
-    if (seperator === ',') {
-      const el = { type: 'expr_list' };
-      el.value = result
-      return el
-    }
-    return result;
+    return "[Not implemented]";
   }
 
 or_expr
   = head:and_expr tail:(___ KW_OR __ and_expr)* {
-      return createBinaryExprChain(head, tail);
-    }
+    return "[Not implemented]";
+  }
 
 and_expr
   = head:not_expr tail:(___ KW_AND __ not_expr)* {
-      return createBinaryExprChain(head, tail);
+    return "[Not implemented]";
   }
 //here we should use `NOT` instead of `comparision_expr` to support chain-expr
 not_expr
   = comparison_expr
   / exists_expr
   / (KW_NOT / "!" !"=") __ expr:not_expr {
-      return createUnaryExpr('NOT', expr);
-    }
+    return "[Not implemented]";
+  }
 
 comparison_expr
   = left:additive_expr __ rh:comparison_op_right? {
-      if (rh === null) return left;
-      else if (rh.type === 'arithmetic') return createBinaryExprChain(left, rh.tail);
-      else return createBinaryExpr(rh.op, left, rh.right);
-    }
+    return "[Not implemented]";
+  }
   / literal_string
   / column_ref
 
 exists_expr
   = op:exists_op __ LPAREN __ stmt:union_stmt __ RPAREN {
-    stmt.parentheses = true;
-    return createUnaryExpr(op, stmt);
+    return "[Not implemented]";
   }
 
 exists_op
-  = nk:(KW_NOT __ KW_EXISTS) { return nk[0] + ' ' + nk[2]; }
+  = nk:(KW_NOT __ KW_EXISTS) { return "[Not implemented]"; }
   / KW_EXISTS
 
 comparison_op_right
@@ -2016,37 +1358,31 @@ comparison_op_right
 
 arithmetic_op_right
   = l:(__ arithmetic_comparison_operator __ additive_expr)+ {
-      return { type: 'arithmetic', tail: l };
-    }
+    return "[Not implemented]";
+  }
 
 arithmetic_comparison_operator
   = ">=" / ">" / "<=" / "<>" / "<" / "=" / "!="
 
 is_op_right
   = KW_IS __ right:additive_expr {
-      return { op: 'IS', right: right };
-    }
+    return "[Not implemented]";
+  }
   / (KW_IS __ KW_NOT) __ right:additive_expr {
-      return { op: 'IS NOT', right: right };
+    return "[Not implemented]";
   }
 
 between_op_right
   = op:between_or_not_between_op __  begin:additive_expr __ KW_AND __ end:additive_expr {
-      return {
-        op: op,
-        right: {
-          type: 'expr_list',
-          value: [begin, end]
-        }
-      };
-    }
+    return "[Not implemented]";
+  }
 
 between_or_not_between_op
-  = nk:(KW_NOT __ KW_BETWEEN) { return nk[0] + ' ' + nk[2]; }
+  = nk:(KW_NOT __ KW_BETWEEN) { return "[Not implemented]"; }
   / KW_BETWEEN
 
 like_op
-  = nk:(KW_NOT __ KW_LIKE) { return nk[0] + ' ' + nk[2]; }
+  = nk:(KW_NOT __ KW_LIKE) { return "[Not implemented]"; }
   / KW_LIKE
 
 regexp_op
@@ -2054,31 +1390,31 @@ regexp_op
     return n ? `${n} ${k}` : k
   }
 in_op
-  = nk:(KW_NOT __ KW_IN) { return nk[0] + ' ' + nk[2]; }
+  = nk:(KW_NOT __ KW_IN) { return "[Not implemented]"; }
   / KW_IN
 
 regexp_op_right
   = op:regexp_op __ b:'BINARY'i? __ e:(literal_string / column_ref) {
-    return  { op: b ? `${op} ${b}` :  op, right: e };
+    return "[Not implemented]";
   }
 
 like_op_right
   = op:like_op __ right:(literal / comparison_expr) {
-      return { op: op, right: right };
-    }
+    return "[Not implemented]";
+  }
 
 in_op_right
   = op:in_op __ LPAREN  __ l:expr_list __ RPAREN {
-      return { op: op, right: l };
-    }
+    return "[Not implemented]";
+  }
   / op:in_op __ e:(var_decl / column_ref / literal_string) {
-      return { op: op, right: e };
-    }
+    return "[Not implemented]";
+  }
 
 additive_expr
   = head: multiplicative_expr
     tail:(__ additive_operator  __ multiplicative_expr)* {
-      return createBinaryExprChain(head, tail);
+      return "[Not implemented]";
     }
 
 additive_operator
@@ -2087,13 +1423,13 @@ additive_operator
 multiplicative_expr
   = head:primary
     tail:(__ multiplicative_operator  __ primary)* {
-      return createBinaryExprChain(head, tail)
+      return "[Not implemented]";
     }
 
 multiplicative_operator
   = "*" / "/" / "%"
   / "div"i {
-    return 'DIV'
+    return "[Not implemented]";
   }
   / '&' / '>>' / '<<' / '^' / '|' / '~'
 
@@ -2108,53 +1444,33 @@ primary
   / column_ref
   / param
   / LPAREN __ list:or_and_where_expr __ RPAREN {
-        list.parentheses = true;
-        return list;
-    }
+    return "[Not implemented]";
+  }
   / var_decl
   / __ prepared_symbol:'?' {
-    return {
-      type: 'origin',
-      value: prepared_symbol
-    }
+    return "[Not implemented]";
   }
 
 column_ref
   = tbl:(ident __ DOT __)? col:column __ a:((DOUBLE_ARROW / SINGLE_ARROW) __ (literal_string / literal_numeric))+ __ ca:collate_expr? {
-      const tableName = tbl && tbl[0] || null
-      return {
-        type: 'column_ref',
-        table: tableName,
-        column: col,
-        collate: ca,
-        arrows: a.map(item => item[0]),
-        properties: a.map(item => item[2])
-      };
+    return "[Not implemented]";
   }
   / tbl:(ident_name / backticks_quoted_ident) __ DOT __ col:column_without_kw {
-      return {
-        type: 'column_ref',
-        table: tbl,
-        column: col
-      };
-    }
+    return "[Not implemented]";
+  }
   / col:column {
-      return {
-        type: 'column_ref',
-        table: null,
-        column: col
-      };
-    }
+    return "[Not implemented]";
+  }
 
 column_list
   = head:column tail:(__ COMMA __ column)* {
-      return createList(head, tail);
-    }
+    return "[Not implemented]";
+  }
 
 ident
   = name:ident_name !{ return reservedMap[name.toUpperCase()] === true; } {
-      return name;
-    }
+    return "[Not implemented]";
+  }
   / quoted_ident
 
 alias_ident
@@ -2162,10 +1478,10 @@ alias_ident
       if (reservedMap[name.toUpperCase()] === true) throw new Error("Error: "+ JSON.stringify(name)+" is a reserved word, can not as alias clause");
       return false
     } {
-      return name;
+      return "[Not implemented]";
     }
   / name:quoted_ident {
-      return name;
+      return "[Not implemented]";
     }
 
 quoted_ident
@@ -2184,19 +1500,19 @@ backticks_quoted_ident
 
 column_without_kw
   = name:column_name {
-    return name;
+    return "[Not implemented]";
   }
   / quoted_ident
 
 column
-  = name:column_name !{ return reservedMap[name.toUpperCase()] === true; } { return name; }
+  = name:column_name !{ return reservedMap[name.toUpperCase()] === true; } { return "[Not implemented]"; }
   / backticks_quoted_ident
 
 column_name
-  =  start:ident_start parts:column_part* { return start + parts.join(''); }
+  =  start:ident_start parts:column_part* { return "[Not implemented]"; }
 
 ident_name
-  =  start:ident_start parts:ident_part* { return start + parts.join(''); }
+  =  start:ident_start parts:ident_part* { return "[Not implemented]"; }
 
 ident_start = [A-Za-z_]
 
@@ -2207,7 +1523,7 @@ column_part  = [A-Za-z0-9_:]
 
 param
   = l:(':' ident_name) {
-      return { type: 'param', value: l[1] };
+      return "[Not implemented]";
     }
 
 aggr_func
@@ -2216,14 +1532,7 @@ aggr_func
 
 aggr_fun_smma
   = name:KW_SUM_MAX_MIN_AVG  __ LPAREN __ e:additive_expr __ RPAREN __ bc:over_partition? {
-      return {
-        type: 'aggr_func',
-        name: name,
-        args: {
-          expr: e
-        },
-        over: bc,
-      };
+      return "[Not implemented]";
     }
 
 KW_SUM_MAX_MIN_AVG
@@ -2231,167 +1540,109 @@ KW_SUM_MAX_MIN_AVG
 
 on_update_current_timestamp
   = KW_ON __ KW_UPDATE __ kw:KW_CURRENT_TIMESTAMP __ LPAREN __ l:expr_list? __ RPAREN{
-    return {
-      type: 'on update',
-      keyword: kw,
-      parentheses: true,
-      expr: l
-    }
+    return "[Not implemented]";
   }
   / KW_ON __ KW_UPDATE __ kw:KW_CURRENT_TIMESTAMP {
-    return {
-      type: 'on update',
-      keyword: kw,
-    }
+    return "[Not implemented]";
   }
 
 over_partition
   = 'OVER'i __ aws:as_window_specification {
-    return {
-      type: 'window',
-      as_window_specification: aws,
-    }
+    return "[Not implemented]";
   }
   / on_update_current_timestamp
 
 window_clause
   = 'WINDOW'i __ l:named_window_expr_list {
-    // => { keyword: 'window'; type: 'window', expr: named_window_expr_list; }
-    return {
-      keyword: 'window',
-      type: 'window',
-      expr: l,
-    }
+    return "[Not implemented]";
   }
 
 named_window_expr_list
   = head:named_window_expr tail:(__ COMMA __ named_window_expr)* {
-    // => named_window_expr[]
-      return createList(head, tail);
-    }
+    return "[Not implemented]";
+  }
 
 named_window_expr
   = nw:ident_name __ KW_AS __ anw:as_window_specification {
-    // => { name: ident_name;  as_window_specification: as_window_specification; }
-    return {
-      name: nw,
-      as_window_specification: anw,
-    }
+    return "[Not implemented]";
   }
 
 as_window_specification
   = ident_name
   / LPAREN __ ws:window_specification? __ RPAREN {
-    return {
-      window_specification: ws || {},
-      parentheses: true
-    }
+    return "[Not implemented]";
   }
 
 window_specification
   = bc:partition_by_clause? __ l:order_by_clause? __ w:window_frame_clause? {
-    return {
-      name: null,
-      partitionby: bc,
-      orderby: l,
-      window_frame_clause: w,
-    }
+    return "[Not implemented]";
   }
 
 window_specification_frameless
   = bc:partition_by_clause? __
   l:order_by_clause? {
-    return {
-      name: null,
-      partitionby: bc,
-      orderby: l,
-      window_frame_clause: null
-    }
+    return "[Not implemented]";
   }
 
 window_frame_clause
   = kw:KW_ROWS __ s:(window_frame_following / window_frame_preceding) {
-    // => string
-    return `rows ${s}`
+    return "[Not implemented]";
   }
   / KW_ROWS __ KW_BETWEEN __ p:window_frame_preceding __ KW_AND __ f:window_frame_following {
-    // => string
-    return `rows between ${p} and ${f}`
+    return "[Not implemented]";
   }
 
 window_frame_following
   = s:window_frame_value __ 'FOLLOWING'i  {
-    // => string
-    return s + ' FOLLOWING'
+    return "[Not implemented]";
   }
   / window_frame_current_row
 
 window_frame_preceding
   = s:window_frame_value __ 'PRECEDING'i  {
-    // => string
-    return s + ' PRECEDING'
+    return "[Not implemented]";
   }
   / window_frame_current_row
 
 window_frame_current_row
   = 'CURRENT'i __ 'ROW'i {
-    // => string
-    return 'current row'
+    return "[Not implemented]";
   }
 
 window_frame_value
   = s:'UNBOUNDED'i {
-    // => string
-    return s.toUpperCase()
+    return "[Not implemented]";
   }
   / literal_numeric
 
 aggr_fun_count
   = name:(KW_COUNT / KW_GROUP_CONCAT) __ LPAREN __ arg:count_arg __ RPAREN __ bc:over_partition? {
-      return {
-        type: 'aggr_func',
-        name: name,
-        args: arg,
-        over: bc
-      };
-    }
+    return "[Not implemented]";
+  }
 
 count_arg
-  = e:star_expr { return { expr: e }; }
-  / d:KW_DISTINCT? __ LPAREN __ c:expr __ RPAREN __ or:order_by_clause? { return { distinct: d, expr: c, orderby: or, parentheses: true }; }
-  / d:KW_DISTINCT? __ c:primary __ or:order_by_clause? { return { distinct: d, expr: c, orderby: or }; }
+  = e:star_expr {
+    return "[Not implemented]";
+  }
+  / d:KW_DISTINCT? __ LPAREN __ c:expr __ RPAREN __ or:order_by_clause? {
+    return "[Not implemented]";
+  }
+  / d:KW_DISTINCT? __ c:primary __ or:order_by_clause? {
+    return "[Not implemented]";
+  }
 
 star_expr
-  = "*" { return { type: 'star', value: '*' }; }
+  = "*" { return "[Not implemented]"; }
 
 convert_args
   = c:(column_ref / literal_string) __ COMMA __ ch:character_string_type  __ cs:create_option_character_set_kw __ v:ident_name {
-    const { dataType, length } = ch
-    let dataTypeStr = dataType
-    if (length !== undefined) dataTypeStr = `${dataTypeStr}(${length})`
-    return {
-      type: 'expr_list',
-      value: [
-        c,
-        {
-          type: 'origin',
-          value: `${dataTypeStr} ${cs} ${v}`
-        }
-      ]
-    }
+    return "[Not implemented]";
   }
   / c:(column_ref / literal_string) __ COMMA __ d:data_type {
-    return {
-      type: 'expr_list',
-      value: [c, { type: 'datatype', ...d, }]
-    }
+    return "[Not implemented]";
   }
   / c:(column_ref / literal_string) __ KW_USING __ d:ident_name {
-    c.suffix = `USING ${d}`
-    return {
-      type: 'expr_list',
-      value: [c]
-    }
+    return "[Not implemented]";
   }
 
 trim_position
@@ -2399,60 +1650,26 @@ trim_position
 
 trim_rem
   = p:trim_position? __ rm:literal_string? __ k:KW_FROM {
-    let value = []
-    if (p) value.push({type: 'origin', value: p })
-    if (rm) value.push(rm)
-    value.push({type: 'origin', value: 'from' })
-    return {
-      type: 'expr_list',
-      value,
-    }
+    return "[Not implemented]";
   }
 
 trim_func_clause
   = 'trim'i __ LPAREN __ tr:trim_rem? __ s:expr __ RPAREN {
-    let args = tr || { type: 'expr_list', value: [] }
-    args.value.push(s)
-    return {
-        type: 'function',
-        name: 'TRIM',
-        args,
-    };
+    return "[Not implemented]";
   }
 func_call
   = trim_func_clause
   / 'convert'i __ LPAREN __ l:convert_args __ RPAREN __ ca:collate_expr? {
-    return {
-        type: 'function',
-        name: 'CONVERT',
-        args: l,
-        collate: ca,
-    };
+    return "[Not implemented]";
   }
   / name:proc_func_name __ LPAREN __ l:or_and_where_expr? __ RPAREN __ bc:over_partition? {
-    if (l && l.type !== 'expr_list') l = { type: 'expr_list', value: [l] }
-    if ((name.toUpperCase() === 'TIMESTAMPDIFF' || name.toUpperCase() === 'TIMESTAMPADD') && l.value && l.value[0]) l.value[0] = { type: 'origin', value: l.value[0].column }
-      return {
-        type: 'function',
-        name: name,
-        args: l ? l: { type: 'expr_list', value: [] },
-        over: bc
-      };
-    }
+    return "[Not implemented]";
+  }
   / name:scalar_func __ LPAREN __ l:expr_list? __ RPAREN __ bc:over_partition? {
-      return {
-        type: 'function',
-        name: name,
-        args: l ? l: { type: 'expr_list', value: [] },
-        over: bc
-      };
-    }
+    return "[Not implemented]";
+  }
   / f:KW_CURRENT_TIMESTAMP __ up:on_update_current_timestamp? {
-    return {
-        type: 'function',
-        name: f,
-        over: up
-    }
+    return "[Not implemented]";
   }
 
 scalar_func
@@ -2466,56 +1683,19 @@ scalar_func
 
 cast_expr
   = KW_CAST __ LPAREN __ e:expr __ KW_AS __ ch:character_string_type  __ cs:create_option_character_set_kw __ v:ident_name __ RPAREN __ ca:collate_expr? {
-    const { dataType, length } = ch
-    let dataTypeStr = dataType
-    if (length !== undefined) dataTypeStr = `${dataTypeStr}(${length})`
-    return {
-      type: 'cast',
-      expr: e,
-      symbol: 'as',
-      target: {
-        dataType: `${dataTypeStr} ${cs} ${v.toUpperCase()}`
-      },
-      collate: ca,
-    };
+    return "[Not implemented]";
   }
   / KW_CAST __ LPAREN __ e:expr __ KW_AS __ t:data_type __ RPAREN {
-    return {
-      type: 'cast',
-      expr: e,
-      symbol: 'as',
-      target: t
-    };
+    return "[Not implemented]";
   }
   / KW_CAST __ LPAREN __ e:expr __ KW_AS __ KW_DECIMAL __ LPAREN __ precision:int __ RPAREN __ RPAREN {
-    return {
-      type: 'cast',
-      expr: e,
-      symbol: 'as',
-      target: {
-        dataType: 'DECIMAL(' + precision + ')'
-      }
-    };
+    return "[Not implemented]";
   }
   / KW_CAST __ LPAREN __ e:expr __ KW_AS __ KW_DECIMAL __ LPAREN __ precision:int __ COMMA __ scale:int __ RPAREN __ RPAREN {
-      return {
-        type: 'cast',
-        expr: e,
-        symbol: 'as',
-        target: {
-          dataType: 'DECIMAL(' + precision + ', ' + scale + ')'
-        }
-      };
-    }
+    return "[Not implemented]";
+  }
   / KW_CAST __ LPAREN __ e:expr __ KW_AS __ s:signedness __ t:KW_INTEGER? __ RPAREN { /* MySQL cast to un-/signed integer */
-    return {
-      type: 'cast',
-      expr: e,
-      symbol: 'as',
-      target: {
-        dataType: s + (t ? ' ' + t: '')
-      }
-    };
+    return "[Not implemented]";
   }
 
 signedness
@@ -2524,9 +1704,7 @@ signedness
 
 literal
   = b:'BINARY'i? __ s:literal_string ca:(__ collate_expr)? {
-    if (b) s.prefix = b.toLowerCase()
-    if (ca) s.suffix = { collate: ca[1] }
-    return s
+    return "[Not implemented]";
   }
   / literal_numeric
   / literal_bool
@@ -2535,85 +1713,51 @@ literal
 
 literal_list
   = head:literal tail:(__ COMMA __ literal)* {
-      return createList(head, tail);
-    }
+    return "[Not implemented]";
+  }
 
 literal_null
   = KW_NULL {
-      return { type: 'null', value: null };
-    }
+    return "[Not implemented]";
+  }
 
 literal_not_null
   = KW_NOT_NULL {
-    return {
-      type: 'not null',
-      value: 'not null',
-    }
+    return "[Not implemented]";
   }
 
 literal_bool
   = KW_TRUE {
-      return { type: 'bool', value: true };
-    }
+    return "[Not implemented]";
+  }
   / KW_FALSE {
-      return { type: 'bool', value: false };
-    }
+    return "[Not implemented]";
+  }
 
 literal_string
   = b:'_binary'i ? __ r:'X'i ca:("'" [0-9A-Fa-f]* "'") {
-      return {
-        type: 'hex_string',
-        prefix: b,
-        value: ca[1].join(''),
-        text: `${r}'${ca[1].join('')}'`
-      };
-    }
+    return "[Not implemented]";
+  }
   / b:'_binary'i ? __ r:'b'i ca:("'" [0-9A-Fa-f]* "'") {
-      return {
-        type: 'bit_string',
-        prefix: b,
-        value: ca[1].join(''),
-        text: `${r}'${ca[1].join('')}'`
-      };
-    }
+    return "[Not implemented]";
+  }
   / b:'_binary'i ? __ r:'0x' ca:([0-9A-Fa-f]*) {
-    return {
-        type: 'full_hex_string',
-        prefix: b,
-        value: ca.join(''),
-        text: `${r}${ca.join('')}`
-      };
+    return "[Not implemented]";
   }
   / ca:("'" single_quoted_char* "'") {
-      return {
-        type: 'string',
-        value: ca[1].join(''),
-        text: `'${ca[1].join('')}'`
-      };
-    }
+    return "[Not implemented]";
+  }
   / ca:("\"" double_quoted_char* "\"") {
-      return {
-        type: 'string',
-        value: ca[1].join(''),
-        text: `"${ca[1].join('')}"`
-      };
-    }
+    return "[Not implemented]";
+  }
 
 literal_datetime
   = type:(KW_TIME / KW_DATE / KW_TIMESTAMP / KW_DATETIME) __ ca:("'" single_quoted_char* "'") {
-      return {
-        type: type.toLowerCase(),
-        value: ca[1].join(''),
-        text: `'${ca[1].join('')}'`
-      };
-    }
+    return "[Not implemented]";
+  }
   / type:(KW_TIME / KW_DATE / KW_TIMESTAMP / KW_DATETIME) __ ca:("\"" double_quoted_char* "\"") {
-      return {
-        type: type.toLowerCase(),
-        value: ca[1].join(''),
-        text: `"${ca[1].join('')}"`
-      };
-    }
+    return "[Not implemented]";
+  }
 
 double_quoted_char
   = [^"\\\0-\x1F\x7f]
@@ -2644,39 +1788,21 @@ line_terminator
 
 literal_numeric
   = n:number {
-      if (n && n.type === 'bigint') return n
-      return { type: 'number', value: n };
-    }
+    return "[Not implemented]";
+  }
 
 number
   = int_:int frac:frac exp:exp {
-    const numStr = int_ + frac + exp
-    return {
-      type: 'bigint',
-      value: numStr
-    }
+    return "[Not implemented]";
   }
   / int_:int frac:frac {
-    const numStr = int_ + frac
-    if (isBigInt(int_)) return {
-      type: 'bigint',
-      value: numStr
-    }
-    return parseFloat(numStr);
+    return "[Not implemented]";
   }
   / int_:int exp:exp {
-    const numStr = int_ + exp
-    return {
-      type: 'bigint',
-      value: numStr
-    }
+    return "[Not implemented]";
   }
   / int_:int {
-    if (isBigInt(int_)) return {
-      type: 'bigint',
-      value: int_
-    }
-    return parseFloat(int_);
+    return "[Not implemented]";
   }
 
 int
@@ -2711,7 +1837,7 @@ KW_TO       = "TO"i         !ident_start
 KW_FALSE    = "FALSE"i      !ident_start
 
 KW_SHOW     = "SHOW"i       !ident_start
-KW_DROP     = "DROP"i       !ident_start { return 'DROP'; }
+KW_DROP     = "DROP"i
 KW_USE      = "USE"i        !ident_start
 KW_ALTER    = "ALTER"i      !ident_start
 KW_SELECT   = "SELECT"i     !ident_start
@@ -2726,7 +1852,7 @@ KW_REPLACE  = "REPLACE"i    !ident_start
 KW_RENAME   = "RENAME"i     !ident_start
 KW_IGNORE   = "IGNORE"i     !ident_start
 KW_EXPLAIN  = "EXPLAIN"i    !ident_start
-KW_PARTITION = "PARTITION"i !ident_start { return 'PARTITION' }
+KW_PARTITION = "PARTITION"i
 
 KW_INTO     = "INTO"i       !ident_start
 KW_FROM     = "FROM"i       !ident_start
@@ -2735,11 +1861,11 @@ KW_UNLOCK   = "UNLOCK"i     !ident_start
 KW_LOCK     = "LOCK"i       !ident_start
 
 KW_AS       = "AS"i         !ident_start
-KW_TABLE    = "TABLE"i      !ident_start { return 'TABLE'; }
-KW_TABLES    = "TABLES"i      !ident_start { return 'TABLES'; }
-KW_DATABASE = "DATABASE"i      !ident_start { return 'DATABASE'; }
-KW_SCHEME   = "SCHEME"i      !ident_start { return 'SCHEME'; }
-KW_COLLATE  = "COLLATE"i    !ident_start { return 'COLLATE'; }
+KW_TABLE    = "TABLE"i
+KW_TABLES    = "TABLES"i
+KW_DATABASE = "DATABASE"i
+KW_SCHEME   = "SCHEME"i
+KW_COLLATE  = "COLLATE"i
 
 KW_ON       = "ON"i       !ident_start
 KW_LEFT     = "LEFT"i     !ident_start
@@ -2756,42 +1882,42 @@ KW_USING    = "USING"i    !ident_start
 KW_WHERE    = "WHERE"i      !ident_start
 KW_WITH     = "WITH"i       !ident_start
 
-KW_GO       = "GO"i         !ident_start { return 'GO'; }
+KW_GO       = "GO"i
 KW_GROUP    = "GROUP"i      !ident_start
 KW_BY       = "BY"i         !ident_start
 KW_ORDER    = "ORDER"i      !ident_start
 KW_HAVING   = "HAVING"i     !ident_start
 
 KW_LIMIT    = "LIMIT"i      !ident_start
-KW_OFFSET   = "OFFSET"i     !ident_start { return 'OFFSET'; }
+KW_OFFSET   = "OFFSET"i
 
-KW_ASC      = "ASC"i        !ident_start { return 'ASC'; }
-KW_DESC     = "DESC"i       !ident_start { return 'DESC'; }
-KW_DESCRIBE = "DESCRIBE"i       !ident_start { return 'DESCRIBE'; }
+KW_ASC      = "ASC"i
+KW_DESC     = "DESC"i
+KW_DESCRIBE = "DESCRIBE"i
 
-KW_ALL      = "ALL"i        !ident_start { return 'ALL'; }
-KW_DISTINCT = "DISTINCT"i   !ident_start { return 'DISTINCT';}
+KW_ALL      = "ALL"i
+KW_DISTINCT = "DISTINCT"i
 
-KW_BETWEEN  = "BETWEEN"i    !ident_start { return 'BETWEEN'; }
-KW_IN       = "IN"i         !ident_start { return 'IN'; }
-KW_IS       = "IS"i         !ident_start { return 'IS'; }
-KW_LIKE     = "LIKE"i       !ident_start { return 'LIKE'; }
-KW_RLIKE    = "RLIKE"i      !ident_start { return 'RLIKE'; }
-KW_REGEXP   = "REGEXP"i     !ident_start { return 'REGEXP'; }
-KW_EXISTS   = "EXISTS"i     !ident_start { return 'EXISTS'; }
+KW_BETWEEN  = "BETWEEN"i
+KW_IN       = "IN"i
+KW_IS       = "IS"i
+KW_LIKE     = "LIKE"i
+KW_RLIKE    = "RLIKE"i
+KW_REGEXP   = "REGEXP"i
+KW_EXISTS   = "EXISTS"i
 
-KW_NOT      = "NOT"i        !ident_start { return 'NOT'; }
-KW_AND      = "AND"i        !ident_start { return 'AND'; }
-KW_OR       = "OR"i         !ident_start { return 'OR'; }
+KW_NOT      = "NOT"i
+KW_AND      = "AND"i
+KW_OR       = "OR"i
 
-KW_COUNT    = "COUNT"i      !ident_start { return 'COUNT'; }
-KW_GROUP_CONCAT = "GROUP_CONCAT"i  !ident_start { return 'GROUP_CONCAT'; }
-KW_MAX      = "MAX"i        !ident_start { return 'MAX'; }
-KW_MIN      = "MIN"i        !ident_start { return 'MIN'; }
-KW_SUM      = "SUM"i        !ident_start { return 'SUM'; }
-KW_AVG      = "AVG"i        !ident_start { return 'AVG'; }
+KW_COUNT    = "COUNT"i
+KW_GROUP_CONCAT = "GROUP_CONCAT"i
+KW_MAX      = "MAX"i
+KW_MIN      = "MIN"i
+KW_SUM      = "SUM"i
+KW_AVG      = "AVG"i
 
-KW_CALL     = "CALL"i       !ident_start { return 'CALL'; }
+KW_CALL     = "CALL"i
 
 KW_CASE     = "CASE"i       !ident_start
 KW_WHEN     = "WHEN"i       !ident_start
@@ -2801,56 +1927,56 @@ KW_END      = "END"i        !ident_start
 
 KW_CAST     = "CAST"i       !ident_start
 
-KW_BIT      = "BIT"i      !ident_start { return 'BIT'; }
-KW_CHAR     = "CHAR"i     !ident_start { return 'CHAR'; }
-KW_VARCHAR  = "VARCHAR"i  !ident_start { return 'VARCHAR';}
-KW_NUMERIC  = "NUMERIC"i  !ident_start { return 'NUMERIC'; }
-KW_DECIMAL  = "DECIMAL"i  !ident_start { return 'DECIMAL'; }
-KW_SIGNED   = "SIGNED"i   !ident_start { return 'SIGNED'; }
-KW_UNSIGNED = "UNSIGNED"i !ident_start { return 'UNSIGNED'; }
-KW_INT      = "INT"i      !ident_start { return 'INT'; }
-KW_ZEROFILL = "ZEROFILL"i !ident_start { return 'ZEROFILL'; }
-KW_INTEGER  = "INTEGER"i  !ident_start { return 'INTEGER'; }
-KW_JSON     = "JSON"i     !ident_start { return 'JSON'; }
-KW_SMALLINT = "SMALLINT"i !ident_start { return 'SMALLINT'; }
-KW_TINYINT  = "TINYINT"i  !ident_start { return 'TINYINT'; }
-KW_TINYTEXT = "TINYTEXT"i !ident_start { return 'TINYTEXT'; }
-KW_TEXT     = "TEXT"i     !ident_start { return 'TEXT'; }
-KW_MEDIUMTEXT = "MEDIUMTEXT"i  !ident_start { return 'MEDIUMTEXT'; }
-KW_LONGTEXT  = "LONGTEXT"i  !ident_start { return 'LONGTEXT'; }
-KW_BIGINT   = "BIGINT"i   !ident_start { return 'BIGINT'; }
-KW_ENUM     = "ENUM"i   !ident_start { return 'ENUM'; }
-KW_FLOAT   = "FLOAT"i   !ident_start { return 'FLOAT'; }
-KW_DOUBLE   = "DOUBLE"i   !ident_start { return 'DOUBLE'; }
-KW_DATE     = "DATE"i     !ident_start { return 'DATE'; }
-KW_DATETIME     = "DATETIME"i     !ident_start { return 'DATETIME'; }
-KW_ROWS     = "ROWS"i     !ident_start { return 'ROWS'; }
-KW_TIME     = "TIME"i     !ident_start { return 'TIME'; }
-KW_TIMESTAMP= "TIMESTAMP"i!ident_start { return 'TIMESTAMP'; }
-KW_TRUNCATE = "TRUNCATE"i !ident_start { return 'TRUNCATE'; }
-KW_USER     = "USER"i     !ident_start { return 'USER'; }
+KW_BIT      = "BIT"i
+KW_CHAR     = "CHAR"i
+KW_VARCHAR  = "VARCHAR"i
+KW_NUMERIC  = "NUMERIC"i
+KW_DECIMAL  = "DECIMAL"i
+KW_SIGNED   = "SIGNED"i
+KW_UNSIGNED = "UNSIGNED"i
+KW_INT      = "INT"i
+KW_ZEROFILL = "ZEROFILL"i
+KW_INTEGER  = "INTEGER"i
+KW_JSON     = "JSON"i
+KW_SMALLINT = "SMALLINT"i
+KW_TINYINT  = "TINYINT"i
+KW_TINYTEXT = "TINYTEXT"i
+KW_TEXT     = "TEXT"i
+KW_MEDIUMTEXT = "MEDIUMTEXT"i
+KW_LONGTEXT  = "LONGTEXT"i
+KW_BIGINT   = "BIGINT"i
+KW_ENUM     = "ENUM"i
+KW_FLOAT   = "FLOAT"i
+KW_DOUBLE   = "DOUBLE"i
+KW_DATE     = "DATE"i
+KW_DATETIME     = "DATETIME"i
+KW_ROWS     = "ROWS"i
+KW_TIME     = "TIME"i
+KW_TIMESTAMP= "TIMESTAMP"i
+KW_TRUNCATE = "TRUNCATE"i
+KW_USER     = "USER"i
 
-KW_CURRENT_DATE     = "CURRENT_DATE"i !ident_start { return 'CURRENT_DATE'; }
-KW_ADD_DATE         = "ADDDATE"i !ident_start { return 'ADDDATE'; }
-KW_INTERVAL         = "INTERVAL"i !ident_start { return 'INTERVAL'; }
-KW_UNIT_YEAR        = "YEAR"i !ident_start { return 'YEAR'; }
-KW_UNIT_MONTH       = "MONTH"i !ident_start { return 'MONTH'; }
-KW_UNIT_DAY         = "DAY"i !ident_start { return 'DAY'; }
-KW_UNIT_HOUR        = "HOUR"i !ident_start { return 'HOUR'; }
-KW_UNIT_MINUTE      = "MINUTE"i !ident_start { return 'MINUTE'; }
-KW_UNIT_SECOND      = "SECOND"i !ident_start { return 'SECOND'; }
-KW_CURRENT_TIME     = "CURRENT_TIME"i !ident_start { return 'CURRENT_TIME'; }
-KW_CURRENT_TIMESTAMP= "CURRENT_TIMESTAMP"i !ident_start { return 'CURRENT_TIMESTAMP'; }
-KW_CURRENT_USER     = "CURRENT_USER"i !ident_start { return 'CURRENT_USER'; }
-KW_SESSION_USER     = "SESSION_USER"i !ident_start { return 'SESSION_USER'; }
-KW_SYSTEM_USER      = "SYSTEM_USER"i !ident_start { return 'SYSTEM_USER'; }
+KW_CURRENT_DATE     = "CURRENT_DATE"i
+KW_ADD_DATE         = "ADDDATE"i
+KW_INTERVAL         = "INTERVAL"i
+KW_UNIT_YEAR        = "YEAR"i
+KW_UNIT_MONTH       = "MONTH"i
+KW_UNIT_DAY         = "DAY"i
+KW_UNIT_HOUR        = "HOUR"i
+KW_UNIT_MINUTE      = "MINUTE"i
+KW_UNIT_SECOND      = "SECOND"i
+KW_CURRENT_TIME     = "CURRENT_TIME"i
+KW_CURRENT_TIMESTAMP= "CURRENT_TIMESTAMP"i
+KW_CURRENT_USER     = "CURRENT_USER"i
+KW_SESSION_USER     = "SESSION_USER"i
+KW_SYSTEM_USER      = "SYSTEM_USER"i
 
-KW_GLOBAL         = "GLOBAL"i    !ident_start { return 'GLOBAL'; }
-KW_SESSION        = "SESSION"i   !ident_start { return 'SESSION'; }
-KW_LOCAL          = "LOCAL"i     !ident_start { return 'LOCAL'; }
-KW_PERSIST        = "PERSIST"i   !ident_start { return 'PERSIST'; }
-KW_PERSIST_ONLY   = "PERSIST_ONLY"i   !ident_start { return 'PERSIST_ONLY'; }
-KW_VIEW           = "VIEW"i    !ident_start { return 'VIEW'; }
+KW_GLOBAL         = "GLOBAL"i
+KW_SESSION        = "SESSION"i
+KW_LOCAL          = "LOCAL"i
+KW_PERSIST        = "PERSIST"i
+KW_PERSIST_ONLY   = "PERSIST_ONLY"i
+KW_VIEW           = "VIEW"i
 
 KW_VAR__PRE_AT = '@'
 KW_VAR__PRE_AT_AT = '@@'
@@ -2864,17 +1990,17 @@ KW_ASSIGIN_EQUAL = '='
 KW_DUAL = "DUAL"i
 
 // MySQL Alter
-KW_ADD     = "ADD"i     !ident_start { return 'ADD'; }
-KW_COLUMN  = "COLUMN"i  !ident_start { return 'COLUMN'; }
-KW_INDEX   = "INDEX"i  !ident_start { return 'INDEX'; }
-KW_KEY     = "KEY"i  !ident_start { return 'KEY'; }
-KW_FULLTEXT = "FULLTEXT"i  !ident_start { return 'FULLTEXT'; }
-KW_SPATIAL  = "SPATIAL"i  !ident_start { return 'SPATIAL'; }
-KW_UNIQUE     = "UNIQUE"i  !ident_start { return 'UNIQUE'; }
-KW_KEY_BLOCK_SIZE = "KEY_BLOCK_SIZE"i !ident_start { return 'KEY_BLOCK_SIZE'; }
-KW_COMMENT     = "COMMENT"i  !ident_start { return 'COMMENT'; }
-KW_CONSTRAINT  = "CONSTRAINT"i  !ident_start { return 'CONSTRAINT'; }
-KW_REFERENCES  = "REFERENCES"i  !ident_start { return 'REFERENCES'; }
+KW_ADD     = "ADD"i     !ident_start
+KW_COLUMN  = "COLUMN"i  !ident_start
+KW_INDEX   = "INDEX"i  !ident_start
+KW_KEY     = "KEY"i  !ident_start
+KW_FULLTEXT = "FULLTEXT"i  !ident_start
+KW_SPATIAL  = "SPATIAL"i  !ident_start
+KW_UNIQUE     = "UNIQUE"i  !ident_start
+KW_KEY_BLOCK_SIZE = "KEY_BLOCK_SIZE"i !ident_start
+KW_COMMENT     = "COMMENT"i  !ident_start
+KW_CONSTRAINT  = "CONSTRAINT"i  !ident_start
+KW_REFERENCES  = "REFERENCES"i  !ident_start
 
 
 
@@ -2927,12 +2053,7 @@ pound_sign_comment
 
 keyword_comment
   = k:KW_COMMENT __ s:KW_ASSIGIN_EQUAL? __ c:literal_string {
-    return {
-      type: k.toLowerCase(),
-      keyword: k.toLowerCase(),
-      symbol: s,
-      value: c,
-    }
+    return "[Not implemented]";
   }
 
 char = .
@@ -2960,24 +2081,18 @@ proc_stmts
 
 proc_stmt
   = __ s:(assign_stmt / return_stmt) {
-      return { stmt: s };
-    }
+    return "[Not implemented]";
+  }
 
 assign_stmt
   = va:(var_decl / without_prefix_var_decl) __ s: (KW_ASSIGN / KW_ASSIGIN_EQUAL) __ e:proc_expr {
-    return {
-      type: 'assign',
-      left: va,
-      symbol: s,
-      right: e
-    };
+    return "[Not implemented]";
   }
-
 
 return_stmt
   = KW_RETURN __ e:proc_expr {
-      return { type: 'return', expr: e };
-    }
+    return "[Not implemented]";
+  }
 
 proc_expr
   = select_stmt
@@ -2988,25 +2103,19 @@ proc_expr
 proc_additive_expr
   = head:proc_multiplicative_expr
     tail:(__ additive_operator  __ proc_multiplicative_expr)* {
-      return createBinaryExprChain(head, tail);
+      return "[Not implemented]";
     }
 
 proc_multiplicative_expr
   = head:proc_primary
     tail:(__ multiplicative_operator  __ proc_primary)* {
-      return createBinaryExprChain(head, tail);
+      return "[Not implemented]";
     }
 
 proc_join
   = lt:var_decl __ op:join_op  __ rt:var_decl __ expr:on_clause {
-      return {
-        type: 'join',
-        ltable: lt,
-        rtable: rt,
-        op: op,
-        on: expr
-      };
-    }
+    return "[Not implemented]";
+  }
 
 proc_primary
   = literal
@@ -3015,87 +2124,54 @@ proc_primary
   / proc_func_call
   / param
   / LPAREN __ e:proc_additive_expr __ RPAREN {
-      e.parentheses = true;
-      return e;
-    }
+    return "[Not implemented]";
+  }
 
 proc_func_name
   = dt:ident tail:(__ DOT __ ident)? {
-      let name = dt
-      if (tail !== null) {
-        name = `${dt}.${tail[3]}`
-      }
-      return name;
-    }
-    / n:ident_name {
-      const upperName = n.toUpperCase()
-      if (reservedMap[upperName] === true) return upperName
-      return n
-    }
-    / quoted_ident
+    return "[Not implemented]";
+  }
+  / n:ident_name {
+    return "[Not implemented]";
+  }
+  / quoted_ident
 
 proc_func_call
   = name:proc_func_name __ LPAREN __ l:proc_primary_list? __ RPAREN {
-      //compatible with original func_call
-      return {
-        type: 'function',
-        name: name,
-        args: {
-          type: 'expr_list',
-          value: l
-        }
-      };
-    }
+    return "[Not implemented]";
+  }
   / name:proc_func_name {
-    return {
-        type: 'function',
-        name: name,
-        args: null
-      };
+    return "[Not implemented]";
   }
 
 proc_primary_list
   = head:proc_primary tail:(__ COMMA __ proc_primary)* {
-      return createList(head, tail);
-    }
+    return "[Not implemented]";
+  }
 
 proc_array =
   LBRAKE __ l:proc_primary_list __ RBRAKE {
-    return { type: 'array', value: l };
+    return "[Not implemented]";
   }
 
 var_decl_list
   = head:var_decl tail:(__ COMMA __ var_decl)* {
-    return createList(head, tail)
+    return "[Not implemented]";
   }
 
 var_decl
   = p: KW_VAR_PRE d: without_prefix_var_decl {
-    //push for analysis
-    return {
-      type: 'var',
-      ...d,
-      prefix: p
-    };
+    return "[Not implemented]";
   }
 
 without_prefix_var_decl
   = name:ident_name m:mem_chain {
-    return {
-      type: 'var',
-      name: name,
-      members: m,
-      prefix: null,
-    };
+    return "[Not implemented]";
   }
 
 mem_chain
   = l:('.' ident_name)* {
-    const s = [];
-    for (let i = 0; i < l.length; i++) {
-      s.push(l[i][1]);
-    }
-    return s;
+    return "[Not implemented]";
   }
 
 data_type
@@ -3110,50 +2186,49 @@ data_type
   / blob_type
 
 boolean_type
-  = 'boolean'i { return { dataType: 'BOOLEAN' }; }
+  = 'boolean'i { return "[Not implemented]"; }
 
 blob_type
-  = b:('blob'i / 'tinyblob'i / 'mediumblob'i / 'longblob'i) { return { dataType: b.toUpperCase() }; }
+  = b:('blob'i / 'tinyblob'i / 'mediumblob'i / 'longblob'i) { return "[Not implemented]"; }
 
 binary_type
-  = 'binary'i { return { dataType: 'BINARY' }; }
-  / 'varbinary'i { return { dataType: 'VARBINARY' }; }
+  = 'binary'i { return "[Not implemented]"; }
+  / 'varbinary'i { return "[Not implemented]"; }
 
 character_string_type
   = t:(KW_CHAR / KW_VARCHAR) __ LPAREN __ l:[0-9]+ __ RPAREN {
-    return { dataType: t, length: parseInt(l.join(''), 10) };
+    return "[Not implemented]";
   }
-  / t:KW_CHAR { return { dataType: t }; }
-  / t:KW_VARCHAR { return { dataType: t }; }
+  / t:KW_CHAR { return "[Not implemented]"; }
+  / t:KW_VARCHAR { return "[Not implemented]"; }
 
 numeric_type_suffix
   = un: KW_UNSIGNED? __ ze: KW_ZEROFILL? {
-    const result = []
-    if (un) result.push(un)
-    if (ze) result.push(ze)
-    return result
+    return "[Not implemented]";
   }
 numeric_type
-  = t:(KW_NUMERIC / KW_DECIMAL / KW_INT / KW_INTEGER / KW_SMALLINT / KW_TINYINT / KW_BIGINT / KW_FLOAT / KW_DOUBLE / KW_BIT) __ LPAREN __ l:[0-9]+ __ r:(COMMA __ [0-9]+)? __ RPAREN __ s:numeric_type_suffix? { return { dataType: t, length: parseInt(l.join(''), 10), scale: r && parseInt(r[2].join(''), 10), parentheses: true, suffix: s }; }
-  / t:(KW_NUMERIC / KW_DECIMAL / KW_INT / KW_INTEGER / KW_SMALLINT / KW_TINYINT / KW_BIGINT / KW_FLOAT / KW_DOUBLE)l:[0-9]+ __ s:numeric_type_suffix? { return { dataType: t, length: parseInt(l.join(''), 10), suffix: s }; }
-  / t:(KW_NUMERIC / KW_DECIMAL / KW_INT / KW_INTEGER / KW_SMALLINT / KW_TINYINT / KW_BIGINT / KW_FLOAT / KW_DOUBLE) __ s:numeric_type_suffix? __{ return { dataType: t, suffix: s }; }
+  = t:(KW_NUMERIC / KW_DECIMAL / KW_INT / KW_INTEGER / KW_SMALLINT / KW_TINYINT / KW_BIGINT / KW_FLOAT / KW_DOUBLE / KW_BIT) __ LPAREN __ l:[0-9]+ __ r:(COMMA __ [0-9]+)? __ RPAREN __ s:numeric_type_suffix? {
+    return "[Not implemented]";
+  }
+  / t:(KW_NUMERIC / KW_DECIMAL / KW_INT / KW_INTEGER / KW_SMALLINT / KW_TINYINT / KW_BIGINT / KW_FLOAT / KW_DOUBLE)l:[0-9]+ __ s:numeric_type_suffix? {
+    return "[Not implemented]";
+  }
+  / t:(KW_NUMERIC / KW_DECIMAL / KW_INT / KW_INTEGER / KW_SMALLINT / KW_TINYINT / KW_BIGINT / KW_FLOAT / KW_DOUBLE) __ s:numeric_type_suffix? __ {
+    return "[Not implemented]";
+  }
 
 
 datetime_type
-  = t:(KW_DATE / KW_DATETIME / KW_TIME / KW_TIMESTAMP) __ LPAREN __ l:[0-6] __ RPAREN __ s:numeric_type_suffix? { return { dataType: t, length: parseInt(l, 10), parentheses: true }; }
-  / t:(KW_DATE / KW_DATETIME / KW_TIME / KW_TIMESTAMP) { return { dataType: t }; }
+  = t:(KW_DATE / KW_DATETIME / KW_TIME / KW_TIMESTAMP) __ LPAREN __ l:[0-6] __ RPAREN __ s:numeric_type_suffix? { return "[Not implemented]"; }
+  / t:(KW_DATE / KW_DATETIME / KW_TIME / KW_TIMESTAMP) { return "[Not implemented]"; }
 
 enum_type
   = t:KW_ENUM __ e:value_item {
-    e.parentheses = true
-    return {
-      dataType: t,
-      expr: e
-    }
+    return "[Not implemented]";
   }
 
 json_type
-  = t:KW_JSON { return { dataType: t }; }
+  = t:KW_JSON { return "[Not implemented]"; }
 
 text_type
-  = t:(KW_TINYTEXT / KW_TEXT / KW_MEDIUMTEXT / KW_LONGTEXT) { return { dataType: t }}
+  = t:(KW_TINYTEXT / KW_TEXT / KW_MEDIUMTEXT / KW_LONGTEXT) { return "[Not implemented]"; }
