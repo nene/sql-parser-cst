@@ -40,5 +40,14 @@ describe("expr", () => {
       expect(parseExpr(`null`)).toMatchSnapshot();
       expect(parseExpr(`NULL`)).toMatchSnapshot();
     });
+
+    it("number", () => {
+      expect(parseExpr(`0`)).toMatchSnapshot();
+      expect(parseExpr(`123`)).toMatchSnapshot();
+      expect(parseExpr(`0.15`)).toMatchSnapshot();
+      expect(parseExpr(`123e15`)).toMatchSnapshot();
+      expect(parseExpr(`1.23E+13`)).toMatchSnapshot();
+      expect(parseExpr(`0.107e-62`)).toMatchSnapshot();
+    });
   });
 });

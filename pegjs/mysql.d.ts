@@ -7,11 +7,16 @@ type Select = {
 
 type Expr = Literal;
 
-type Literal = StringLiteral | BoolLiteral | NullLiteral;
+type Literal = StringLiteral | NumberLiteral | BoolLiteral | NullLiteral;
 
 type StringLiteral = {
   type: "string";
   prefix?: string;
+  text: string;
+};
+
+type NumberLiteral = {
+  type: "number";
   text: string;
 };
 

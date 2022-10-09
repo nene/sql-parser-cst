@@ -277,6 +277,7 @@
 
     'ZEROFILL': true,
   };
+
 }
 
 start
@@ -1809,22 +1810,32 @@ line_terminator
   = [\n\r]
 
 literal_numeric
-  = n:number {
-    return "[Not implemented]";
-  }
+  = number
 
 number
-  = int_:int frac:frac exp:exp {
-    return "[Not implemented]";
+  = int:int frac:frac exp:exp {
+    return {
+      type: 'number',
+      text: int + frac + exp
+    };
   }
-  / int_:int frac:frac {
-    return "[Not implemented]";
+  / int:int frac:frac {
+    return {
+      type: 'number',
+      text: int + frac
+    };
   }
-  / int_:int exp:exp {
-    return "[Not implemented]";
+  / int:int exp:exp {
+    return {
+      type: 'number',
+      text: int + exp
+    };
   }
-  / int_:int {
-    return "[Not implemented]";
+  / int:int {
+    return {
+      type: 'number',
+      text: int
+    };
   }
 
 int

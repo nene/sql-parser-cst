@@ -97,6 +97,48 @@ exports[`expr literal null 2`] = `
 }
 `;
 
+exports[`expr literal number 1`] = `
+{
+  "text": "0",
+  "type": "number",
+}
+`;
+
+exports[`expr literal number 2`] = `
+{
+  "text": "123",
+  "type": "number",
+}
+`;
+
+exports[`expr literal number 3`] = `
+{
+  "text": "0.15",
+  "type": "number",
+}
+`;
+
+exports[`expr literal number 4`] = `
+{
+  "text": "123e15",
+  "type": "number",
+}
+`;
+
+exports[`expr literal number 5`] = `
+{
+  "text": "1.23E+13",
+  "type": "number",
+}
+`;
+
+exports[`expr literal number 6`] = `
+{
+  "text": "0.107e-62",
+  "type": "number",
+}
+`;
+
 exports[`expr literal single-quoted string 1`] = `
 {
   "text": "'hello'",
