@@ -7,7 +7,7 @@ type Select = {
 
 type Expr = Literal;
 
-type Literal = StringLiteral | BoolLiteral;
+type Literal = StringLiteral | BoolLiteral | NullLiteral;
 
 type StringLiteral = {
   type: "string";
@@ -17,6 +17,11 @@ type StringLiteral = {
 
 type BoolLiteral = {
   type: "bool";
+  text: string;
+};
+
+type NullLiteral = {
+  type: "null";
   text: string;
 };
 

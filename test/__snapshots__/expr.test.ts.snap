@@ -83,6 +83,20 @@ exports[`expr literal hex string 2`] = `
 }
 `;
 
+exports[`expr literal null 1`] = `
+{
+  "text": "null",
+  "type": "null",
+}
+`;
+
+exports[`expr literal null 2`] = `
+{
+  "text": "NULL",
+  "type": "null",
+}
+`;
+
 exports[`expr literal single-quoted string 1`] = `
 {
   "text": "'hello'",

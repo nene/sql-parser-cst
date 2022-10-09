@@ -35,5 +35,10 @@ describe("expr", () => {
       expect(parseExpr(`false`)).toMatchSnapshot();
       expect(parseExpr(`FALSE`)).toMatchSnapshot();
     });
+
+    it("null", () => {
+      expect(parseExpr(`null`)).toMatchSnapshot();
+      expect(parseExpr(`NULL`)).toMatchSnapshot();
+    });
   });
 });

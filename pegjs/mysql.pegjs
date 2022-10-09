@@ -1721,8 +1721,8 @@ literal_list
   }
 
 literal_null
-  = KW_NULL {
-    return "[Not implemented]";
+  = text:KW_NULL {
+    return { type: "null", text };
   }
 
 literal_not_null
