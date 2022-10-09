@@ -22,9 +22,6 @@
     "preset": "ts-jest",
     "roots": [
       "test"
-    ],
-    "moduleNameMapper": {
-      "^\\.(.+)\\.js": ".$1"
-    }
+    ]
   }
 }
