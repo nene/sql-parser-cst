@@ -1850,66 +1850,66 @@ e
   = e:[eE] sign:[+-]? { return e + (sign !== null ? sign: ''); }
 
 
-KW_NULL     = "NULL"i       !ident_start
-KW_DEFAULT  = "DEFAULT"i    !ident_start
-KW_NOT_NULL = "NOT NULL"i   !ident_start
+KW_NULL     = kw:"NULL"i       !ident_start { return kw; }
+KW_DEFAULT  = kw:"DEFAULT"i    !ident_start { return kw; }
+KW_NOT_NULL = kw:"NOT NULL"i   !ident_start { return kw; }
 KW_TRUE     = kw:"TRUE"i       !ident_start { return kw; }
-KW_TO       = "TO"i         !ident_start
+KW_TO       = kw:"TO"i         !ident_start { return kw; }
 KW_FALSE    = kw:"FALSE"i      !ident_start { return kw; }
 
-KW_SHOW     = "SHOW"i       !ident_start
+KW_SHOW     = kw:"SHOW"i       !ident_start { return kw; }
 KW_DROP     = "DROP"i
-KW_USE      = "USE"i        !ident_start
-KW_ALTER    = "ALTER"i      !ident_start
-KW_SELECT   = "SELECT"i     !ident_start
-KW_UPDATE   = "UPDATE"i     !ident_start
-KW_CREATE   = "CREATE"i     !ident_start
-KW_TEMPORARY = "TEMPORARY"i !ident_start
-KW_IF_NOT_EXISTS = "IF NOT EXISTS"i !ident_start
-KW_DELETE   = "DELETE"i     !ident_start
-KW_INSERT   = "INSERT"i     !ident_start
-KW_RECURSIVE= "RECURSIVE"   !ident_start
-KW_REPLACE  = "REPLACE"i    !ident_start
-KW_RENAME   = "RENAME"i     !ident_start
-KW_IGNORE   = "IGNORE"i     !ident_start
-KW_EXPLAIN  = "EXPLAIN"i    !ident_start
+KW_USE      = kw:"USE"i        !ident_start { return kw; }
+KW_ALTER    = kw:"ALTER"i      !ident_start { return kw; }
+KW_SELECT   = kw:"SELECT"i     !ident_start { return kw; }
+KW_UPDATE   = kw:"UPDATE"i     !ident_start { return kw; }
+KW_CREATE   = kw:"CREATE"i     !ident_start { return kw; }
+KW_TEMPORARY = kw:"TEMPORARY"i !ident_start { return kw; }
+KW_IF_NOT_EXISTS = kw:"IF NOT EXISTS"i !ident_start { return kw; }
+KW_DELETE   = kw:"DELETE"i     !ident_start { return kw; }
+KW_INSERT   = kw:"INSERT"i     !ident_start { return kw; }
+KW_RECURSIVE= kw:"RECURSIVE"   !ident_start { return kw; }
+KW_REPLACE  = kw:"REPLACE"i    !ident_start { return kw; }
+KW_RENAME   = kw:"RENAME"i     !ident_start { return kw; }
+KW_IGNORE   = kw:"IGNORE"i     !ident_start { return kw; }
+KW_EXPLAIN  = kw:"EXPLAIN"i    !ident_start { return kw; }
 KW_PARTITION = "PARTITION"i
 
-KW_INTO     = "INTO"i       !ident_start
-KW_FROM     = "FROM"i       !ident_start
-KW_SET      = "SET"i        !ident_start
-KW_UNLOCK   = "UNLOCK"i     !ident_start
-KW_LOCK     = "LOCK"i       !ident_start
+KW_INTO     = kw:"INTO"i       !ident_start { return kw; }
+KW_FROM     = kw:"FROM"i       !ident_start { return kw; }
+KW_SET      = kw:"SET"i        !ident_start { return kw; }
+KW_UNLOCK   = kw:"UNLOCK"i     !ident_start { return kw; }
+KW_LOCK     = kw:"LOCK"i       !ident_start { return kw; }
 
-KW_AS       = "AS"i         !ident_start
+KW_AS       = kw:"AS"i         !ident_start { return kw; }
 KW_TABLE    = "TABLE"i
 KW_TABLES    = "TABLES"i
 KW_DATABASE = "DATABASE"i
 KW_SCHEME   = "SCHEME"i
 KW_COLLATE  = "COLLATE"i
 
-KW_ON       = "ON"i       !ident_start
-KW_LEFT     = "LEFT"i     !ident_start
-KW_RIGHT    = "RIGHT"i    !ident_start
-KW_FULL     = "FULL"i     !ident_start
-KW_INNER    = "INNER"i    !ident_start
-KW_JOIN     = "JOIN"i     !ident_start
-KW_OUTER    = "OUTER"i    !ident_start
-KW_OVER     = "OVER"i     !ident_start
-KW_UNION    = "UNION"i    !ident_start
-KW_VALUES   = "VALUES"i   !ident_start
-KW_USING    = "USING"i    !ident_start
+KW_ON       = kw:"ON"i       !ident_start { return kw; }
+KW_LEFT     = kw:"LEFT"i     !ident_start { return kw; }
+KW_RIGHT    = kw:"RIGHT"i    !ident_start { return kw; }
+KW_FULL     = kw:"FULL"i     !ident_start { return kw; }
+KW_INNER    = kw:"INNER"i    !ident_start { return kw; }
+KW_JOIN     = kw:"JOIN"i     !ident_start { return kw; }
+KW_OUTER    = kw:"OUTER"i    !ident_start { return kw; }
+KW_OVER     = kw:"OVER"i     !ident_start { return kw; }
+KW_UNION    = kw:"UNION"i    !ident_start { return kw; }
+KW_VALUES   = kw:"VALUES"i   !ident_start { return kw; }
+KW_USING    = kw:"USING"i    !ident_start { return kw; }
 
-KW_WHERE    = "WHERE"i      !ident_start
-KW_WITH     = "WITH"i       !ident_start
+KW_WHERE    = kw:"WHERE"i      !ident_start { return kw; }
+KW_WITH     = kw:"WITH"i       !ident_start { return kw; }
 
 KW_GO       = "GO"i
-KW_GROUP    = "GROUP"i      !ident_start
-KW_BY       = "BY"i         !ident_start
-KW_ORDER    = "ORDER"i      !ident_start
-KW_HAVING   = "HAVING"i     !ident_start
+KW_GROUP    = kw:"GROUP"i      !ident_start { return kw; }
+KW_BY       = kw:"BY"i         !ident_start { return kw; }
+KW_ORDER    = kw:"ORDER"i      !ident_start { return kw; }
+KW_HAVING   = kw:"HAVING"i     !ident_start { return kw; }
 
-KW_LIMIT    = "LIMIT"i      !ident_start
+KW_LIMIT    = kw:"LIMIT"i      !ident_start { return kw; }
 KW_OFFSET   = "OFFSET"i
 
 KW_ASC      = "ASC"i
@@ -1940,13 +1940,13 @@ KW_AVG      = "AVG"i
 
 KW_CALL     = "CALL"i
 
-KW_CASE     = "CASE"i       !ident_start
-KW_WHEN     = "WHEN"i       !ident_start
-KW_THEN     = "THEN"i       !ident_start
-KW_ELSE     = "ELSE"i       !ident_start
-KW_END      = "END"i        !ident_start
+KW_CASE     = kw:"CASE"i       !ident_start { return kw; }
+KW_WHEN     = kw:"WHEN"i       !ident_start { return kw; }
+KW_THEN     = kw:"THEN"i       !ident_start { return kw; }
+KW_ELSE     = kw:"ELSE"i       !ident_start { return kw; }
+KW_END      = kw:"END"i        !ident_start { return kw; }
 
-KW_CAST     = "CAST"i       !ident_start
+KW_CAST     = kw:"CAST"i       !ident_start { return kw; }
 
 KW_BIT      = "BIT"i
 KW_CHAR     = "CHAR"i
@@ -2011,17 +2011,17 @@ KW_ASSIGIN_EQUAL = '='
 KW_DUAL = "DUAL"i
 
 // MySQL Alter
-KW_ADD     = "ADD"i     !ident_start
-KW_COLUMN  = "COLUMN"i  !ident_start
-KW_INDEX   = "INDEX"i  !ident_start
-KW_KEY     = "KEY"i  !ident_start
-KW_FULLTEXT = "FULLTEXT"i  !ident_start
-KW_SPATIAL  = "SPATIAL"i  !ident_start
-KW_UNIQUE     = "UNIQUE"i  !ident_start
-KW_KEY_BLOCK_SIZE = "KEY_BLOCK_SIZE"i !ident_start
-KW_COMMENT     = "COMMENT"i  !ident_start
-KW_CONSTRAINT  = "CONSTRAINT"i  !ident_start
-KW_REFERENCES  = "REFERENCES"i  !ident_start
+KW_ADD     = kw:"ADD"i     !ident_start { return kw; }
+KW_COLUMN  = kw:"COLUMN"i  !ident_start { return kw; }
+KW_INDEX   = kw:"INDEX"i  !ident_start { return kw; }
+KW_KEY     = kw:"KEY"i  !ident_start { return kw; }
+KW_FULLTEXT = kw:"FULLTEXT"i  !ident_start { return kw; }
+KW_SPATIAL  = kw:"SPATIAL"i  !ident_start { return kw; }
+KW_UNIQUE     = kw:"UNIQUE"i  !ident_start { return kw; }
+KW_KEY_BLOCK_SIZE = kw:"KEY_BLOCK_SIZE"i !ident_start { return kw; }
+KW_COMMENT     = kw:"COMMENT"i  !ident_start { return kw; }
+KW_CONSTRAINT  = kw:"CONSTRAINT"i  !ident_start { return kw; }
+KW_REFERENCES  = kw:"REFERENCES"i  !ident_start { return kw; }
 
 
 
