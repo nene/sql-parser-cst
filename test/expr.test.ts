@@ -5,7 +5,7 @@ describe("expr", () => {
     return parse(`SELECT ${expr}`).columns[0];
   }
 
-  describe("string", () => {
+  describe("literal", () => {
     it("single-quoted string", () => {
       expect(parseExpr(`'hello'`)).toMatchSnapshot();
     });
@@ -27,6 +27,13 @@ describe("expr", () => {
     it("hex string", () => {
       expect(parseExpr(`x'AFC123'`)).toMatchSnapshot();
       expect(parseExpr(`_binary x'AFC123'`)).toMatchSnapshot();
+    });
+
+    it("boolean", () => {
+      expect(parseExpr(`true`)).toMatchSnapshot();
+      expect(parseExpr(`TRUE`)).toMatchSnapshot();
+      expect(parseExpr(`false`)).toMatchSnapshot();
+      expect(parseExpr(`FALSE`)).toMatchSnapshot();
     });
   });
 });

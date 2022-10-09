@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`expr string bit string 1`] = `
+exports[`expr literal bit string 1`] = `
 {
   "prefix": null,
   "text": "b'011001'",
@@ -8,7 +8,7 @@ exports[`expr string bit string 1`] = `
 }
 `;
 
-exports[`expr string bit string 2`] = `
+exports[`expr literal bit string 2`] = `
 {
   "prefix": "_binary",
   "text": "b'011001'",
@@ -16,14 +16,42 @@ exports[`expr string bit string 2`] = `
 }
 `;
 
-exports[`expr string double-quoted string 1`] = `
+exports[`expr literal boolean 1`] = `
+{
+  "text": "true",
+  "type": "bool",
+}
+`;
+
+exports[`expr literal boolean 2`] = `
+{
+  "text": "TRUE",
+  "type": "bool",
+}
+`;
+
+exports[`expr literal boolean 3`] = `
+{
+  "text": "false",
+  "type": "bool",
+}
+`;
+
+exports[`expr literal boolean 4`] = `
+{
+  "text": "FALSE",
+  "type": "bool",
+}
+`;
+
+exports[`expr literal double-quoted string 1`] = `
 {
   "text": ""hello"",
   "type": "string",
 }
 `;
 
-exports[`expr string hex literal 1`] = `
+exports[`expr literal hex literal 1`] = `
 {
   "prefix": null,
   "text": "0xAAFF11",
@@ -31,7 +59,7 @@ exports[`expr string hex literal 1`] = `
 }
 `;
 
-exports[`expr string hex literal 2`] = `
+exports[`expr literal hex literal 2`] = `
 {
   "prefix": "_binary",
   "text": "0xAAFF11",
@@ -39,7 +67,7 @@ exports[`expr string hex literal 2`] = `
 }
 `;
 
-exports[`expr string hex string 1`] = `
+exports[`expr literal hex string 1`] = `
 {
   "prefix": null,
   "text": "x'AFC123'",
@@ -47,7 +75,7 @@ exports[`expr string hex string 1`] = `
 }
 `;
 
-exports[`expr string hex string 2`] = `
+exports[`expr literal hex string 2`] = `
 {
   "prefix": "_binary",
   "text": "x'AFC123'",
@@ -55,7 +83,7 @@ exports[`expr string hex string 2`] = `
 }
 `;
 
-exports[`expr string single-quoted string 1`] = `
+exports[`expr literal single-quoted string 1`] = `
 {
   "text": "'hello'",
   "type": "string",

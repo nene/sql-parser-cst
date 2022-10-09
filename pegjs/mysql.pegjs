@@ -1730,11 +1730,11 @@ literal_not_null
   }
 
 literal_bool
-  = KW_TRUE {
-    return "[Not implemented]";
+  = text:KW_TRUE {
+    return { type: "bool", text };
   }
-  / KW_FALSE {
-    return "[Not implemented]";
+  / text:KW_FALSE {
+    return { type: "bool", text };
   }
 
 literal_string
@@ -1853,9 +1853,9 @@ e
 KW_NULL     = "NULL"i       !ident_start
 KW_DEFAULT  = "DEFAULT"i    !ident_start
 KW_NOT_NULL = "NOT NULL"i   !ident_start
-KW_TRUE     = "TRUE"i       !ident_start
+KW_TRUE     = kw:"TRUE"i       !ident_start { return kw; }
 KW_TO       = "TO"i         !ident_start
-KW_FALSE    = "FALSE"i      !ident_start
+KW_FALSE    = kw:"FALSE"i      !ident_start { return kw; }
 
 KW_SHOW     = "SHOW"i       !ident_start
 KW_DROP     = "DROP"i
