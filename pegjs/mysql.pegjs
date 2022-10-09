@@ -1810,31 +1810,10 @@ line_terminator
   = [\n\r]
 
 literal_numeric
-  = number
-
-number
-  = int:int frac:frac exp:exp {
+  = nr:(int frac? exp?) {
     return {
       type: 'number',
-      text: int + frac + exp
-    };
-  }
-  / int:int frac:frac {
-    return {
-      type: 'number',
-      text: int + frac
-    };
-  }
-  / int:int exp:exp {
-    return {
-      type: 'number',
-      text: int + exp
-    };
-  }
-  / int:int {
-    return {
-      type: 'number',
-      text: int
+      text: nr.join('')
     };
   }
 
