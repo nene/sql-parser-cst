@@ -1,3 +1,5 @@
+import { parse as mysql } from "../pegjs/mysql";
+
 export function parse(sql: string): boolean {
-  return !!sql;
+  return mysql(sql);
 }
