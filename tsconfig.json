@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "module": "NodeNext",
+    "target": "es6",
+    "lib": ["es6"],
+    "rootDirs": ["src"],
+    "outDir": "lib",
+    "baseUrl": "./",
+    "declaration": true,
+    "esModuleInterop": true,
+    "strict": true,
+    "noImplicitReturns": true
+  },
+  "include": ["src"],
+  "exclude": ["node_modules"]
+}
