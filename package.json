@@ -7,8 +7,8 @@
   "scripts": {
     "pretty": "prettier --write .",
     "grammar": "pegjs pegjs/mysql.pegjs",
-    "build": "tsc",
-    "test": "jest"
+    "build": "yarn grammar && tsc",
+    "test": "yarn grammar && jest"
   },
   "devDependencies": {
     "@types/jest": "^29.1.2",
