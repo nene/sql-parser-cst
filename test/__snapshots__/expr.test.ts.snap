@@ -1,0 +1,63 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`expr string bit string 1`] = `
+{
+  "prefix": null,
+  "text": "b'011001'",
+  "type": "string",
+}
+`;
+
+exports[`expr string bit string 2`] = `
+{
+  "prefix": "_binary",
+  "text": "b'011001'",
+  "type": "string",
+}
+`;
+
+exports[`expr string double-quoted string 1`] = `
+{
+  "text": ""hello"",
+  "type": "string",
+}
+`;
+
+exports[`expr string hex literal 1`] = `
+{
+  "prefix": null,
+  "text": "0xAAFF11",
+  "type": "string",
+}
+`;
+
+exports[`expr string hex literal 2`] = `
+{
+  "prefix": "_binary",
+  "text": "0xAAFF11",
+  "type": "string",
+}
+`;
+
+exports[`expr string hex string 1`] = `
+{
+  "prefix": null,
+  "text": "x'AFC123'",
+  "type": "string",
+}
+`;
+
+exports[`expr string hex string 2`] = `
+{
+  "prefix": "_binary",
+  "text": "x'AFC123'",
+  "type": "string",
+}
+`;
+
+exports[`expr string single-quoted string 1`] = `
+{
+  "text": "'hello'",
+  "type": "string",
+}
+`;
