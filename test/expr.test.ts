@@ -7,7 +7,12 @@ describe("expr", () => {
 
   describe("string", () => {
     it("single-quoted string", () => {
-      expect(parseExpr("'hello'")).toEqual({ type: "string", text: "'hello'" });
+      expect(parseExpr("'hello'")).toMatchInlineSnapshot(`
+        {
+          "text": "'hello'",
+          "type": "string",
+        }
+      `);
     });
   });
 });
