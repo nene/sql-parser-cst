@@ -281,12 +281,12 @@
 
 start
   = head:start_item __ tail:(__ KW_GO __ start_item)* {
-    return head;
+    return head; // TODO
   }
 
 start_item
   = __ n:(multiple_stmt / cmd_stmt / crud_stmt) {
-    return n;
+    return n; // TODO
   }
 
 cmd_stmt
@@ -329,7 +329,7 @@ multiple_stmt
 
 union_stmt
   = head:select_stmt tail:(__ KW_UNION __ KW_ALL? __ select_stmt)* __ ob: order_by_clause? __ l:limit_clause? {
-    return head;
+    return head; // TODO
   }
 
 column_order_list
@@ -930,6 +930,7 @@ select_stmt_nake
     lr: locking_read? __
     win:window_clause? __
     li:into_clause? {
+      // TODO
       return {
         type: "select",
         columns: c,
@@ -958,7 +959,7 @@ column_clause
       return "[Not implemented]";
     }
   / head:column_list_item tail:(__ COMMA __ column_list_item)* {
-      return [head];
+      return [head]; // TODO
     }
 
 fulltext_search_mode
@@ -991,7 +992,7 @@ column_list_item
     return "[Not implemented]";
   }
   / e:expr __ alias:alias_clause? {
-    return e;
+    return e; // TODO
   }
 
 alias_clause
@@ -1320,12 +1321,12 @@ or_and_where_expr
 
 or_expr
   = head:and_expr tail:(___ KW_OR __ and_expr)* {
-    return head;
+    return head; // TODO
   }
 
 and_expr
   = head:not_expr tail:(___ KW_AND __ not_expr)* {
-    return head;
+    return head; // TODO
   }
 //here we should use `NOT` instead of `comparision_expr` to support chain-expr
 not_expr
@@ -1337,7 +1338,7 @@ not_expr
 
 comparison_expr
   = left:additive_expr __ rh:comparison_op_right? {
-    return left;
+    return left; // TODO
   }
   / literal_string
   / column_ref
@@ -1417,7 +1418,7 @@ in_op_right
 additive_expr
   = head: multiplicative_expr
     tail:(__ additive_operator  __ multiplicative_expr)* {
-      return head;
+      return head; // TODO
     }
 
 additive_operator
@@ -1426,7 +1427,7 @@ additive_operator
 multiplicative_expr
   = head:primary
     tail:(__ multiplicative_operator  __ primary)* {
-      return head;
+      return head; // TODO
     }
 
 multiplicative_operator
@@ -1707,7 +1708,7 @@ signedness
 
 literal
   = b:'BINARY'i? __ s:literal_string ca:(__ collate_expr)? {
-    return s;
+    return s; // TODO
   }
   / literal_numeric
   / literal_bool
