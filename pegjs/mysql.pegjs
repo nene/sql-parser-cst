@@ -1739,13 +1739,25 @@ literal_bool
 
 literal_string
   = b:'_binary'i ? __ r:'X'i ca:("'" [0-9A-Fa-f]* "'") {
-    return "[Not implemented]";
+    return {
+      type: 'string',
+      prefix: b,
+      text: `${r}'${ca[1].join('')}'`
+    };
   }
   / b:'_binary'i ? __ r:'b'i ca:("'" [0-9A-Fa-f]* "'") {
-    return "[Not implemented]";
+    return {
+      type: 'string',
+      prefix: b,
+      text: `${r}'${ca[1].join('')}'`
+    };
   }
   / b:'_binary'i ? __ r:'0x' ca:([0-9A-Fa-f]*) {
-    return "[Not implemented]";
+    return {
+      type: 'string',
+      prefix: b,
+      text: `${r}${ca.join('')}`
+    };
   }
   / ca:("'" single_quoted_char* "'") {
     return {
@@ -1754,7 +1766,10 @@ literal_string
     };
   }
   / ca:("\"" double_quoted_char* "\"") {
-    return "[Not implemented]";
+    return {
+      type: 'string',
+      text: `"${ca[1].join('')}"`
+    };
   }
 
 literal_datetime
