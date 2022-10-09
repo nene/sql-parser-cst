@@ -51,6 +51,20 @@ exports[`expr literal double-quoted string 1`] = `
 }
 `;
 
+exports[`expr literal double-quoted string 2`] = `
+{
+  "text": ""hel\\"lo"",
+  "type": "string",
+}
+`;
+
+exports[`expr literal double-quoted string 3`] = `
+{
+  "text": ""hel"",
+  "type": "string",
+}
+`;
+
 exports[`expr literal hex literal 1`] = `
 {
   "prefix": null,
@@ -142,6 +156,20 @@ exports[`expr literal number 6`] = `
 exports[`expr literal single-quoted string 1`] = `
 {
   "text": "'hello'",
+  "type": "string",
+}
+`;
+
+exports[`expr literal single-quoted string 2`] = `
+{
+  "text": "'hel\\'lo'",
+  "type": "string",
+}
+`;
+
+exports[`expr literal single-quoted string 3`] = `
+{
+  "text": "'hel''lo'",
   "type": "string",
 }
 `;

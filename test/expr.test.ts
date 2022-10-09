@@ -8,10 +8,14 @@ describe("expr", () => {
   describe("literal", () => {
     it("single-quoted string", () => {
       expect(parseExpr(`'hello'`)).toMatchSnapshot();
+      expect(parseExpr(`'hel\\'lo'`)).toMatchSnapshot();
+      expect(parseExpr(`'hel''lo'`)).toMatchSnapshot();
     });
 
     it("double-quoted string", () => {
       expect(parseExpr(`"hello"`)).toMatchSnapshot();
+      expect(parseExpr(`"hel\\"lo"`)).toMatchSnapshot();
+      expect(parseExpr(`"hel""lo"`)).toMatchSnapshot();
     });
 
     it("hex literal", () => {
