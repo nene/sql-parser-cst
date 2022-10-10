@@ -15,7 +15,14 @@ type Select = Node & {
   columns: Expr[];
 };
 
-type Expr = Literal | StringWithCharset;
+type Expr = Literal | StringWithCharset | BinaryExpr;
+
+type BinaryExpr = Node & {
+  type: "binary_expr";
+  left: Expr;
+  operator: string;
+  right: Expr;
+};
 
 type StringWithCharset = Node & {
   type: "string_with_charset";
