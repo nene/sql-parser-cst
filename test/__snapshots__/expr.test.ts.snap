@@ -48,29 +48,57 @@ exports[`expr literal boolean 4`] = `
 
 exports[`expr literal datetime 1`] = `
 {
-  "text": "'20:15:00'",
-  "type": "time",
+  "kw": {
+    "text": "TIME",
+    "type": "keyword",
+  },
+  "string": {
+    "text": "'20:15:00'",
+    "type": "string",
+  },
+  "type": "datetime",
 }
 `;
 
 exports[`expr literal datetime 2`] = `
 {
-  "text": ""1995-06-01"",
-  "type": "date",
+  "kw": {
+    "text": "DATE",
+    "type": "keyword",
+  },
+  "string": {
+    "text": ""1995-06-01"",
+    "type": "string",
+  },
+  "type": "datetime",
 }
 `;
 
 exports[`expr literal datetime 3`] = `
 {
-  "text": "'1995-06-01 20:15:00'",
+  "kw": {
+    "text": "DATEtime",
+    "type": "keyword",
+  },
+  "string": {
+    "text": "'1995-06-01 20:15:00'",
+    "type": "string",
+  },
   "type": "datetime",
 }
 `;
 
 exports[`expr literal datetime 4`] = `
 {
-  "text": ""1995-06-01 20:15:00"",
-  "type": "timestamp",
+  "kw": {
+    "text": "timestamp",
+    "type": "keyword",
+  },
+  "string": {
+    "text": ""1995-06-01 20:15:00"",
+    "type": "string",
+  },
+  "type": "datetime",
 }
 `;
 

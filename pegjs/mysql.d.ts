@@ -41,7 +41,13 @@ type NullLiteral = {
 };
 
 type DateTimeLiteral = {
-  type: "time" | "date" | "datetime" | "timestamp";
+  type: "datetime";
+  kw: Keyword;
+  string: StringLiteral;
+};
+
+type Keyword = {
+  type: "keyword";
   text: string;
 };
 

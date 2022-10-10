@@ -1844,11 +1844,12 @@ literal_double_quoted_string
   }
 
 literal_datetime
-  = type:(KW_TIME / KW_DATE / KW_TIMESTAMP / KW_DATETIME) __
+  = kw:(KW_TIME / KW_DATE / KW_TIMESTAMP / KW_DATETIME) __
     str:(literal_single_quoted_string / literal_double_quoted_string) {
       return {
-        type: type.toLowerCase(),
-        text: str.text
+        type: "datetime",
+        kw: { type: "keyword", text: kw },
+        string: str
       };
     }
 
