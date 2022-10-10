@@ -20,7 +20,7 @@ type Expr = Literal | StringWithCharset | BinaryExpr;
 type BinaryExpr = Node & {
   type: "binary_expr";
   left: Expr;
-  operator: string;
+  operator: string | Keyword[];
   right: Expr;
 };
 

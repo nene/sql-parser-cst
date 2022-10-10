@@ -300,6 +300,60 @@ exports[`expr operators parses DIV operator 1`] = `
 }
 `;
 
+exports[`expr operators parses IS NOT operator 1`] = `
+{
+  "left": {
+    "text": "7",
+    "type": "number",
+  },
+  "operator": [
+    {
+      "text": "IS",
+      "type": "keyword",
+    },
+    {
+      "text": "NOT",
+      "type": "keyword",
+    },
+  ],
+  "right": {
+    "text": "5",
+    "type": "number",
+  },
+  "type": "binary_expr",
+}
+`;
+
+exports[`expr operators parses IS NOT operator with comment inside 1`] = `
+{
+  "left": {
+    "text": "7",
+    "type": "number",
+  },
+  "operator": [
+    {
+      "text": "IS",
+      "trailingComments": [
+        {
+          "text": "/* com */",
+          "type": "block_comment",
+        },
+      ],
+      "type": "keyword",
+    },
+    {
+      "text": "NOT",
+      "type": "keyword",
+    },
+  ],
+  "right": {
+    "text": "5",
+    "type": "number",
+  },
+  "type": "binary_expr",
+}
+`;
+
 exports[`expr operators parses IS operator 1`] = `
 {
   "left": {

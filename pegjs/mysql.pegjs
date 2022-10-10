@@ -281,6 +281,9 @@
   /** Extracts second item from array */
   const second = ([_, x]) => x;
 
+  /** Last item in array */
+  const last = (arr) => arr[arr.length-1];
+
   /** True when value is object */
   const isObject = (value) => typeof value === "object";
 
@@ -306,6 +309,20 @@
       left: withComments(left, {trailing: c1}),
       right: withComments(right, {leading: c2}),
     };
+  }
+
+  const createKeyword = (text) => ({ type: "keyword", text });
+
+  const createKeywordList = (items) => {
+    const keywords = [];
+    for (const it of items) {
+      if (typeof it === "string") {
+        keywords.push(createKeyword(it));
+      } else {
+        keywords[keywords.length - 1] = withComments(keywords[keywords.length - 1], {trailing: it});
+      }
+    }
+    return keywords;
   }
 }
 
@@ -1414,8 +1431,8 @@ is_op_right
   = op:KW_IS c:__ right:additive_expr {
     return { op, c, right };
   }
-  / (KW_IS __ KW_NOT) __ right:additive_expr {
-    return "[Not implemented]";
+  / op:(KW_IS __ KW_NOT) c:__ right:additive_expr {
+    return { op: createKeywordList(op), c, right };
   }
 
 between_op_right
