@@ -1,13 +1,13 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`expr literal bit string 1`] = `
+exports[`literal bit string 1`] = `
 {
   "text": "b'011001'",
   "type": "string",
 }
 `;
 
-exports[`expr literal bit string with charset 1`] = `
+exports[`literal bit string with charset 1`] = `
 {
   "charset": "big5",
   "string": {
@@ -18,35 +18,35 @@ exports[`expr literal bit string with charset 1`] = `
 }
 `;
 
-exports[`expr literal boolean 1`] = `
+exports[`literal boolean 1`] = `
 {
   "text": "true",
   "type": "bool",
 }
 `;
 
-exports[`expr literal boolean 2`] = `
+exports[`literal boolean 2`] = `
 {
   "text": "TRUE",
   "type": "bool",
 }
 `;
 
-exports[`expr literal boolean 3`] = `
+exports[`literal boolean 3`] = `
 {
   "text": "false",
   "type": "bool",
 }
 `;
 
-exports[`expr literal boolean 4`] = `
+exports[`literal boolean 4`] = `
 {
   "text": "FALSE",
   "type": "bool",
 }
 `;
 
-exports[`expr literal datetime 1`] = `
+exports[`literal datetime 1`] = `
 {
   "kw": {
     "text": "TIME",
@@ -60,7 +60,7 @@ exports[`expr literal datetime 1`] = `
 }
 `;
 
-exports[`expr literal datetime 2`] = `
+exports[`literal datetime 2`] = `
 {
   "kw": {
     "text": "DATE",
@@ -74,7 +74,7 @@ exports[`expr literal datetime 2`] = `
 }
 `;
 
-exports[`expr literal datetime 3`] = `
+exports[`literal datetime 3`] = `
 {
   "kw": {
     "text": "DATEtime",
@@ -88,7 +88,7 @@ exports[`expr literal datetime 3`] = `
 }
 `;
 
-exports[`expr literal datetime 4`] = `
+exports[`literal datetime 4`] = `
 {
   "kw": {
     "text": "timestamp",
@@ -102,7 +102,7 @@ exports[`expr literal datetime 4`] = `
 }
 `;
 
-exports[`expr literal datetime with comment 1`] = `
+exports[`literal datetime with comment 1`] = `
 {
   "kw": {
     "text": "DATETIME",
@@ -122,14 +122,14 @@ exports[`expr literal datetime with comment 1`] = `
 }
 `;
 
-exports[`expr literal double-quoted string 1`] = `
+exports[`literal double-quoted string 1`] = `
 {
   "text": ""hello"",
   "type": "string",
 }
 `;
 
-exports[`expr literal double-quoted string with charset 1`] = `
+exports[`literal double-quoted string with charset 1`] = `
 {
   "charset": "latin1",
   "string": {
@@ -140,7 +140,7 @@ exports[`expr literal double-quoted string with charset 1`] = `
 }
 `;
 
-exports[`expr literal double-quoted string with charset and comments 1`] = `
+exports[`literal double-quoted string with charset and comments 1`] = `
 {
   "charset": "latin1",
   "string": {
@@ -161,28 +161,28 @@ exports[`expr literal double-quoted string with charset and comments 1`] = `
 }
 `;
 
-exports[`expr literal double-quoted string with escapes 1`] = `
+exports[`literal double-quoted string with escapes 1`] = `
 {
   "text": ""hel\\"lo"",
   "type": "string",
 }
 `;
 
-exports[`expr literal double-quoted string with escapes 2`] = `
+exports[`literal double-quoted string with escapes 2`] = `
 {
   "text": ""hel"",
   "type": "string",
 }
 `;
 
-exports[`expr literal hex literal 1`] = `
+exports[`literal hex literal 1`] = `
 {
   "text": "0xAAFF11",
   "type": "string",
 }
 `;
 
-exports[`expr literal hex literal with charset 1`] = `
+exports[`literal hex literal with charset 1`] = `
 {
   "charset": "utf8",
   "string": {
@@ -193,14 +193,14 @@ exports[`expr literal hex literal with charset 1`] = `
 }
 `;
 
-exports[`expr literal hex string 1`] = `
+exports[`literal hex string 1`] = `
 {
   "text": "x'AFC123'",
   "type": "string",
 }
 `;
 
-exports[`expr literal hex string with charset 1`] = `
+exports[`literal hex string with charset 1`] = `
 {
   "charset": "utf16le",
   "string": {
@@ -211,70 +211,91 @@ exports[`expr literal hex string with charset 1`] = `
 }
 `;
 
-exports[`expr literal null 1`] = `
+exports[`literal natural character set string 1`] = `
+{
+  "text": "N'hello'",
+  "type": "string",
+}
+`;
+
+exports[`literal natural character set string with escapes 1`] = `
+{
+  "text": "n'hel\\'lo'",
+  "type": "string",
+}
+`;
+
+exports[`literal natural character set string with escapes 2`] = `
+{
+  "text": "N'hel''lo'",
+  "type": "string",
+}
+`;
+
+exports[`literal null 1`] = `
 {
   "text": "null",
   "type": "null",
 }
 `;
 
-exports[`expr literal null 2`] = `
+exports[`literal null 2`] = `
 {
   "text": "NULL",
   "type": "null",
 }
 `;
 
-exports[`expr literal number 1`] = `
+exports[`literal number 1`] = `
 {
   "text": "0",
   "type": "number",
 }
 `;
 
-exports[`expr literal number 2`] = `
+exports[`literal number 2`] = `
 {
   "text": "123",
   "type": "number",
 }
 `;
 
-exports[`expr literal number 3`] = `
+exports[`literal number 3`] = `
 {
   "text": "0.15",
   "type": "number",
 }
 `;
 
-exports[`expr literal number 4`] = `
+exports[`literal number 4`] = `
 {
   "text": "123e15",
   "type": "number",
 }
 `;
 
-exports[`expr literal number 5`] = `
+exports[`literal number 5`] = `
 {
   "text": "1.23E+13",
   "type": "number",
 }
 `;
 
-exports[`expr literal number 6`] = `
+exports[`literal number 6`] = `
 {
   "text": "0.107e-62",
   "type": "number",
 }
 `;
 
-exports[`expr literal single-quoted string 1`] = `
+exports[`literal single-quoted string 1`] = `
 {
   "text": "'hello'",
   "type": "string",
 }
 `;
 
-exports[`expr literal single-quoted string with charset 1`] = `
+exports[`literal single-quoted string with charset 1`] = `
 {
   "charset": "binary",
   "string": {
@@ -285,7 +306,7 @@ exports[`expr literal single-quoted string with charset 1`] = `
 }
 `;
 
-exports[`expr literal single-quoted string with charset and comment 1`] = `
+exports[`literal single-quoted string with charset and comment 1`] = `
 {
   "charset": "latin1",
   "string": {
@@ -302,14 +323,14 @@ exports[`expr literal single-quoted string with charset and comment 1`] = `
 }
 `;
 
-exports[`expr literal single-quoted string with escapes 1`] = `
+exports[`literal single-quoted string with escapes 1`] = `
 {
   "text": "'hel\\'lo'",
   "type": "string",
 }
 `;
 
-exports[`expr literal single-quoted string with escapes 2`] = `
+exports[`literal single-quoted string with escapes 2`] = `
 {
   "text": "'hel''lo'",
   "type": "string",
