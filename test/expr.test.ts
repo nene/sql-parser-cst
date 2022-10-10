@@ -13,6 +13,10 @@ describe("expr", () => {
       expect(parseExpr(`_binary 'hello'`)).toMatchSnapshot();
     });
 
+    it("string with charset and comment", () => {
+      expect(parseExpr(`_latin1 /* comment */ 'hello'`)).toMatchSnapshot();
+    });
+
     it("double-quoted string", () => {
       expect(parseExpr(`"hello"`)).toMatchSnapshot();
       expect(parseExpr(`"hel\\"lo"`)).toMatchSnapshot();

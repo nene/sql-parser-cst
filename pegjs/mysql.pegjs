@@ -278,6 +278,22 @@
     'ZEROFILL': true,
   };
 
+  /** Extracts second item from array */
+  const second = ([_, x]) => x;
+
+  /** True when value is object */
+  const isObject = (value) => typeof value === "object";
+
+  /** Attaches optional comments to AST node */
+  const withComments = (node, { leading, trailing }) => {
+    if (leading && leading.length) {
+      node = {...node, leadingComments: leading};
+    }
+    if (trailing && trailing.length) {
+      node = {...node, trailingComments: trailing};
+    }
+    return node;
+  };
 }
 
 start
@@ -1740,11 +1756,11 @@ literal_bool
   }
 
 literal_string
-  = charset:charset_introducer __ string:literal_string_without_charset {
+  = charset:charset_introducer c:__ string:literal_string_without_charset {
     return {
       type: "string_with_charset",
       charset,
-      string,
+      string: withComments(string, { leading: c }),
     };
   }
   / literal_string_without_charset
@@ -2115,10 +2131,14 @@ LOGIC_OPERATOR = OPERATOR_CONCATENATION / OPERATOR_AND
 
 // separator
 __
-  = (whitespace / comment)*
+  = xs:(whitespace / comment)* {
+    return xs.filter(isObject);
+  }
 
 ___
-  = (whitespace / comment)+
+  = xs:(whitespace / comment)+ {
+    return xs.filter(isObject);
+  }
 
 comment
   = block_comment
@@ -2126,13 +2146,28 @@ comment
   / pound_sign_comment
 
 block_comment
-  = "/*" (!"*/" char)* "*/"
+  = "/*" cs:(!"*/" char)* "*/" {
+    return {
+      type: "block_comment",
+      text: "/*" + cs.map(second).join('') + "*/",
+    };
+  }
 
 line_comment
-  = "--" (!EOL char)*
+  = "--" cs:(!EOL char)* {
+    return {
+      type: "line_comment",
+      text: "--" + cs.map(second).join(''),
+    };
+  }
 
 pound_sign_comment
-  = "#" (!EOL char)*
+  = "#" cs:(!EOL char)* {
+    return {
+      type: "line_comment",
+      text: "#" + cs.map(second).join(''),
+    };
+  }
 
 keyword_comment
   = k:KW_COMMENT __ s:KW_ASSIGIN_EQUAL? __ c:literal_string {

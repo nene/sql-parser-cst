@@ -257,3 +257,20 @@ exports[`expr literal single-quoted string 4`] = `
   "type": "string_with_charset",
 }
 `;
+
+exports[`expr literal string with charset and comment 1`] = `
+{
+  "charset": "latin1",
+  "string": {
+    "leadingComments": [
+      {
+        "text": "/* comment */",
+        "type": "block_comment",
+      },
+    ],
+    "text": "'hello'",
+    "type": "string",
+  },
+  "type": "string_with_charset",
+}
+`;
