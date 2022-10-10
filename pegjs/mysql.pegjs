@@ -1367,8 +1367,11 @@ not_expr
   }
 
 comparison_expr
-  = left:additive_expr __ rh:comparison_op_right? {
-    return left; // TODO
+  = left:additive_expr __ tail:comparison_op_right? {
+    if (!tail) {
+      return left;
+    }
+    return createBinaryExprChain(left, tail);
   }
   / literal_string
   / column_ref
@@ -1391,8 +1394,8 @@ comparison_op_right
   / regexp_op_right
 
 arithmetic_op_right
-  = l:(__ arithmetic_comparison_operator __ additive_expr)+ {
-    return "[Not implemented]";
+  = tail:(__ arithmetic_comparison_operator __ additive_expr)+ {
+    return tail;
   }
 
 arithmetic_comparison_operator

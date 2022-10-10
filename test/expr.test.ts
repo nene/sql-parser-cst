@@ -7,13 +7,31 @@ describe("expr", () => {
 
   describe("operators", () => {
     // punctuation-based operators
-    ["+", "-", "~", "*", "/", "%", "&", ">>", "<<", "^", "|", "~"].forEach(
-      (op) => {
-        it(`parses ${op} operator`, () => {
-          expect(parseExpr(`5 ${op} 7`)).toMatchSnapshot();
-        });
-      }
-    );
+    [
+      "+",
+      "-",
+      "~",
+      "*",
+      "/",
+      "%",
+      "&",
+      ">>",
+      "<<",
+      "^",
+      "|",
+      "~",
+      ">=",
+      ">",
+      "<=",
+      "<>",
+      "<",
+      "=",
+      "!=",
+    ].forEach((op) => {
+      it(`parses ${op} operator`, () => {
+        expect(parseExpr(`5 ${op} 7`)).toMatchSnapshot();
+      });
+    });
 
     it("parses chain of addition and subtraction", () => {
       expect(parseExpr(`5 + 6 - 8`)).toMatchSnapshot();
