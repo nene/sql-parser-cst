@@ -57,6 +57,14 @@ describe("expr", () => {
       expect(parseExpr(`_utf16le X'AFC123'`)).toMatchSnapshot();
     });
 
+    it("natural character set string", () => {
+      expect(parseExpr(`N'hello'`)).toMatchSnapshot();
+    });
+    it("natural character set string with escapes", () => {
+      expect(parseExpr(`n'hel\\'lo'`)).toMatchSnapshot();
+      expect(parseExpr(`N'hel''lo'`)).toMatchSnapshot();
+    });
+
     it("boolean", () => {
       expect(parseExpr(`true`)).toMatchSnapshot();
       expect(parseExpr(`TRUE`)).toMatchSnapshot();

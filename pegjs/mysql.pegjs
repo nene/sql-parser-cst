@@ -1764,6 +1764,7 @@ literal_string
     };
   }
   / literal_string_without_charset
+  / literal_natural_charset_string
 
 charset_introducer
   = "_" cs:charset_name !ident_start { return cs; }
@@ -1856,6 +1857,14 @@ literal_double_quoted_string
     return {
       type: 'string',
       text: `"${ca[1].join('')}"`
+    };
+  }
+
+literal_natural_charset_string
+  = p:"N"i s:literal_single_quoted_string {
+    return {
+      type: 'string',
+      text: p + s.text
     };
   }
 
