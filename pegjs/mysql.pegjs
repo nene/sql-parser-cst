@@ -296,11 +296,7 @@
   };
 
   function createBinaryExprChain(head, tail) {
-    let result = head;
-    for (let i = 0; i < tail.length; i++) {
-      result = createBinaryExpr(tail[i][1], result, tail[i][3]);
-    }
-    return result;
+    return tail.reduce((left, [_1, op, _2, right]) => createBinaryExpr(op, left, right), head);
   }
 
   function createBinaryExpr(op, left, right) {
