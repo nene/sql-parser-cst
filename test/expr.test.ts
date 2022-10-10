@@ -78,5 +78,16 @@ describe("expr", () => {
     it("parses IS NOT operator with comments", () => {
       expect(parseExpr(`7 /*c1*/ IS /*c2*/ NOT /*c3*/ 5`)).toMatchSnapshot();
     });
+
+    it("parses LIKE & NOT LIKE operators", () => {
+      expect(parseExpr(`'foobar' LIKE 'foo%'`)).toMatchSnapshot();
+      expect(parseExpr(`'foobar' NOT LIKE 'foo%'`)).toMatchSnapshot();
+    });
+    it("parses LIKE & NOT LIKE operators with comments", () => {
+      expect(parseExpr(`'foobar' /*c1*/ LIKE /*c2*/ 'foo%'`)).toMatchSnapshot();
+      expect(
+        parseExpr(`'foobar' /*c1*/ NOT /*c2*/ LIKE /*c3*/ 'foo%'`)
+      ).toMatchSnapshot();
+    });
   });
 });

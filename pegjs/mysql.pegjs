@@ -1445,8 +1445,8 @@ between_or_not_between_op
   / KW_BETWEEN
 
 like_op
-  = nk:(KW_NOT __ KW_LIKE) { return "[Not implemented]"; }
-  / KW_LIKE
+  = kws:(KW_NOT __ KW_LIKE) { return createKeywordList(kws); }
+  / kw:KW_LIKE { return [createKeyword(kw)]; }
 
 regexp_op
   = n: KW_NOT? __ k:(KW_REGEXP / KW_RLIKE) {
@@ -1462,8 +1462,8 @@ regexp_op_right
   }
 
 like_op_right
-  = op:like_op __ right:(literal / comparison_expr) {
-    return "[Not implemented]";
+  = op:like_op c:__ right:(literal / comparison_expr) {
+    return { op, c, right };
   }
 
 in_op_right

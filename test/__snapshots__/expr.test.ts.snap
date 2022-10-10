@@ -423,6 +423,124 @@ exports[`expr operators parses IS operator with comments 1`] = `
 }
 `;
 
+exports[`expr operators parses LIKE & NOT LIKE operators 1`] = `
+{
+  "left": {
+    "text": "'foobar'",
+    "type": "string",
+  },
+  "operator": [
+    {
+      "text": "LIKE",
+      "type": "keyword",
+    },
+  ],
+  "right": {
+    "text": "'foo%'",
+    "type": "string",
+  },
+  "type": "binary_expr",
+}
+`;
+
+exports[`expr operators parses LIKE & NOT LIKE operators 2`] = `
+{
+  "left": {
+    "text": "'foobar'",
+    "type": "string",
+  },
+  "operator": [
+    {
+      "text": "NOT",
+      "type": "keyword",
+    },
+    {
+      "text": "LIKE",
+      "type": "keyword",
+    },
+  ],
+  "right": {
+    "text": "'foo%'",
+    "type": "string",
+  },
+  "type": "binary_expr",
+}
+`;
+
+exports[`expr operators parses LIKE & NOT LIKE operators with comments 1`] = `
+{
+  "left": {
+    "text": "'foobar'",
+    "trailingComments": [
+      {
+        "text": "/*c1*/",
+        "type": "block_comment",
+      },
+    ],
+    "type": "string",
+  },
+  "operator": [
+    {
+      "text": "LIKE",
+      "type": "keyword",
+    },
+  ],
+  "right": {
+    "leadingComments": [
+      {
+        "text": "/*c2*/",
+        "type": "block_comment",
+      },
+    ],
+    "text": "'foo%'",
+    "type": "string",
+  },
+  "type": "binary_expr",
+}
+`;
+
+exports[`expr operators parses LIKE & NOT LIKE operators with comments 2`] = `
+{
+  "left": {
+    "text": "'foobar'",
+    "trailingComments": [
+      {
+        "text": "/*c1*/",
+        "type": "block_comment",
+      },
+    ],
+    "type": "string",
+  },
+  "operator": [
+    {
+      "text": "NOT",
+      "trailingComments": [
+        {
+          "text": "/*c2*/",
+          "type": "block_comment",
+        },
+      ],
+      "type": "keyword",
+    },
+    {
+      "text": "LIKE",
+      "type": "keyword",
+    },
+  ],
+  "right": {
+    "leadingComments": [
+      {
+        "text": "/*c3*/",
+        "type": "block_comment",
+      },
+    ],
+    "text": "'foo%'",
+    "type": "string",
+  },
+  "type": "binary_expr",
+}
+`;
+
 exports[`expr operators parses addition with comments 1`] = `
 {
   "left": {
