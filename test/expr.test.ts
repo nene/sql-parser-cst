@@ -53,5 +53,12 @@ describe("expr", () => {
       expect(parseExpr(`1.23E+13`)).toMatchSnapshot();
       expect(parseExpr(`0.107e-62`)).toMatchSnapshot();
     });
+
+    it("datetime", () => {
+      expect(parseExpr(`TIME '20:15:00'`)).toMatchSnapshot();
+      expect(parseExpr(`DATE "1995-06-01"`)).toMatchSnapshot();
+      expect(parseExpr(`DATETIME '1995-06-01 20:15:00'`)).toMatchSnapshot();
+      expect(parseExpr(`TIMESTAMP "1995-06-01 20:15:00"`)).toMatchSnapshot();
+    });
   });
 });

@@ -44,6 +44,34 @@ exports[`expr literal boolean 4`] = `
 }
 `;
 
+exports[`expr literal datetime 1`] = `
+{
+  "text": "'20:15:00'",
+  "type": "time",
+}
+`;
+
+exports[`expr literal datetime 2`] = `
+{
+  "text": ""1995-06-01"",
+  "type": "date",
+}
+`;
+
+exports[`expr literal datetime 3`] = `
+{
+  "text": "'1995-06-01 20:15:00'",
+  "type": "datetime",
+}
+`;
+
+exports[`expr literal datetime 4`] = `
+{
+  "text": ""1995-06-01 20:15:00"",
+  "type": "timestamp",
+}
+`;
+
 exports[`expr literal double-quoted string 1`] = `
 {
   "text": ""hello"",

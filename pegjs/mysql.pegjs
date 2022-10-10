@@ -1776,10 +1776,16 @@ literal_string
 
 literal_datetime
   = type:(KW_TIME / KW_DATE / KW_TIMESTAMP / KW_DATETIME) __ ca:("'" single_quoted_char* "'") {
-    return "[Not implemented]";
+    return {
+      type: type.toLowerCase(),
+      text: `'${ca[1].join('')}'`
+    };
   }
   / type:(KW_TIME / KW_DATE / KW_TIMESTAMP / KW_DATETIME) __ ca:("\"" double_quoted_char* "\"") {
-    return "[Not implemented]";
+    return {
+      type: type.toLowerCase(),
+      text: `"${ca[1].join('')}"`
+    };
   }
 
 double_quoted_char

@@ -7,7 +7,12 @@ type Select = {
 
 type Expr = Literal;
 
-type Literal = StringLiteral | NumberLiteral | BoolLiteral | NullLiteral;
+type Literal =
+  | StringLiteral
+  | NumberLiteral
+  | BoolLiteral
+  | NullLiteral
+  | DateTimeLiteral;
 
 type StringLiteral = {
   type: "string";
@@ -27,6 +32,11 @@ type BoolLiteral = {
 
 type NullLiteral = {
   type: "null";
+  text: string;
+};
+
+type DateTimeLiteral = {
+  type: "time" | "date" | "datetime" | "timestamp";
   text: string;
 };
 
