@@ -1740,24 +1740,34 @@ literal_bool
   }
 
 literal_string
-  = b:'_binary'i ? __ r:'X'i ca:("'" [0-9A-Fa-f]* "'") {
+  = charset:charset_introducer __ string:literal_string_without_charset {
+    return {
+      type: "string_with_charset",
+      charset,
+      string,
+    };
+  }
+  / literal_string_without_charset
+
+charset_introducer
+  = i:'_binary'i !ident_start { return i; }
+
+literal_string_without_charset
+  = r:'X'i ca:("'" [0-9A-Fa-f]* "'") {
     return {
       type: 'string',
-      prefix: b,
       text: `${r}'${ca[1].join('')}'`
     };
   }
-  / b:'_binary'i ? __ r:'b'i ca:("'" [01]* "'") {
+  / r:'b'i ca:("'" [01]* "'") {
     return {
       type: 'string',
-      prefix: b,
       text: `${r}'${ca[1].join('')}'`
     };
   }
-  / b:'_binary'i ? __ r:'0x' ca:([0-9A-Fa-f]*) {
+  / r:'0x' ca:([0-9A-Fa-f]*) {
     return {
       type: 'string',
-      prefix: b,
       text: `${r}${ca.join('')}`
     };
   }

@@ -5,7 +5,13 @@ type Select = {
   columns: Expr[];
 };
 
-type Expr = Literal;
+type Expr = Literal | StringWithCharset;
+
+type StringWithCharset = {
+  type: "string_with_charset";
+  charset: string;
+  string: StringLiteral;
+};
 
 type Literal =
   | StringLiteral
@@ -16,7 +22,6 @@ type Literal =
 
 type StringLiteral = {
   type: "string";
-  prefix?: string;
   text: string;
 };
 

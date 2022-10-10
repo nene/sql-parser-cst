@@ -10,12 +10,14 @@ describe("expr", () => {
       expect(parseExpr(`'hello'`)).toMatchSnapshot();
       expect(parseExpr(`'hel\\'lo'`)).toMatchSnapshot();
       expect(parseExpr(`'hel''lo'`)).toMatchSnapshot();
+      expect(parseExpr(`_binary 'hello'`)).toMatchSnapshot();
     });
 
     it("double-quoted string", () => {
       expect(parseExpr(`"hello"`)).toMatchSnapshot();
       expect(parseExpr(`"hel\\"lo"`)).toMatchSnapshot();
       expect(parseExpr(`"hel""lo"`)).toMatchSnapshot();
+      expect(parseExpr(`_binary"hello"`)).toMatchSnapshot();
     });
 
     it("hex literal", () => {

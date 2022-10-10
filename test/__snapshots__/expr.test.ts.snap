@@ -2,7 +2,6 @@
 
 exports[`expr literal bit string 1`] = `
 {
-  "prefix": null,
   "text": "b'011001'",
   "type": "string",
 }
@@ -10,9 +9,12 @@ exports[`expr literal bit string 1`] = `
 
 exports[`expr literal bit string 2`] = `
 {
-  "prefix": "_binary",
-  "text": "b'011001'",
-  "type": "string",
+  "charset": "_binary",
+  "string": {
+    "text": "b'011001'",
+    "type": "string",
+  },
+  "type": "string_with_charset",
 }
 `;
 
@@ -93,9 +95,19 @@ exports[`expr literal double-quoted string 3`] = `
 }
 `;
 
+exports[`expr literal double-quoted string 4`] = `
+{
+  "charset": "_binary",
+  "string": {
+    "text": ""hello"",
+    "type": "string",
+  },
+  "type": "string_with_charset",
+}
+`;
+
 exports[`expr literal hex literal 1`] = `
 {
-  "prefix": null,
   "text": "0xAAFF11",
   "type": "string",
 }
@@ -103,15 +115,17 @@ exports[`expr literal hex literal 1`] = `
 
 exports[`expr literal hex literal 2`] = `
 {
-  "prefix": "_binary",
-  "text": "0xAAFF11",
-  "type": "string",
+  "charset": "_binary",
+  "string": {
+    "text": "0xAAFF11",
+    "type": "string",
+  },
+  "type": "string_with_charset",
 }
 `;
 
 exports[`expr literal hex string 1`] = `
 {
-  "prefix": null,
   "text": "x'AFC123'",
   "type": "string",
 }
@@ -119,9 +133,12 @@ exports[`expr literal hex string 1`] = `
 
 exports[`expr literal hex string 2`] = `
 {
-  "prefix": "_binary",
-  "text": "x'AFC123'",
-  "type": "string",
+  "charset": "_binary",
+  "string": {
+    "text": "x'AFC123'",
+    "type": "string",
+  },
+  "type": "string_with_charset",
 }
 `;
 
@@ -199,5 +216,16 @@ exports[`expr literal single-quoted string 3`] = `
 {
   "text": "'hel''lo'",
   "type": "string",
+}
+`;
+
+exports[`expr literal single-quoted string 4`] = `
+{
+  "charset": "_binary",
+  "string": {
+    "text": "'hello'",
+    "type": "string",
+  },
+  "type": "string_with_charset",
 }
 `;
