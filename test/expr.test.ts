@@ -84,5 +84,9 @@ describe("expr", () => {
       expect(parseExpr(`DATEtime '1995-06-01 20:15:00'`)).toMatchSnapshot();
       expect(parseExpr(`timestamp "1995-06-01 20:15:00"`)).toMatchSnapshot();
     });
+
+    it("datetime with comment", () => {
+      expect(parseExpr(`DATETIME /* com1 */ '20:15:00'`)).toMatchSnapshot();
+    });
   });
 });

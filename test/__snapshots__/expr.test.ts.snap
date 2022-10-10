@@ -102,6 +102,26 @@ exports[`expr literal datetime 4`] = `
 }
 `;
 
+exports[`expr literal datetime with comment 1`] = `
+{
+  "kw": {
+    "text": "DATETIME",
+    "type": "keyword",
+  },
+  "string": {
+    "leadingComments": [
+      {
+        "text": "/* com1 */",
+        "type": "block_comment",
+      },
+    ],
+    "text": "'20:15:00'",
+    "type": "string",
+  },
+  "type": "datetime",
+}
+`;
+
 exports[`expr literal double-quoted string 1`] = `
 {
   "text": ""hello"",

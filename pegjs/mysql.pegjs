@@ -1860,12 +1860,12 @@ literal_double_quoted_string
   }
 
 literal_datetime
-  = kw:(KW_TIME / KW_DATE / KW_TIMESTAMP / KW_DATETIME) __
+  = kw:(KW_TIME / KW_DATE / KW_TIMESTAMP / KW_DATETIME) c:__
     str:(literal_single_quoted_string / literal_double_quoted_string) {
       return {
         type: "datetime",
         kw: { type: "keyword", text: kw },
-        string: str
+        string: withComments(str, { leading: c })
       };
     }
 
