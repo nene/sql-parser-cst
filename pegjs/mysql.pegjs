@@ -294,6 +294,23 @@
     }
     return node;
   };
+
+  function createBinaryExprChain(head, tail) {
+    let result = head;
+    for (let i = 0; i < tail.length; i++) {
+      result = createBinaryExpr(tail[i][1], result, tail[i][3]);
+    }
+    return result;
+  }
+
+  function createBinaryExpr(op, left, right) {
+    return {
+      type: 'binary_expr',
+      operator: op,
+      left: left,
+      right: right
+    };
+  }
 }
 
 start
@@ -1435,7 +1452,7 @@ in_op_right
 additive_expr
   = head: multiplicative_expr
     tail:(__ additive_operator  __ multiplicative_expr)* {
-      return head; // TODO
+      return createBinaryExprChain(head, tail);
     }
 
 additive_operator
@@ -1444,7 +1461,7 @@ additive_operator
 multiplicative_expr
   = head:primary
     tail:(__ multiplicative_operator  __ primary)* {
-      return head; // TODO
+      return createBinaryExprChain(head, tail);
     }
 
 multiplicative_operator

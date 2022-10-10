@@ -1,0 +1,100 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`expr operators parses chain of addition and subtraction 1`] = `
+{
+  "left": {
+    "left": {
+      "text": "5",
+      "type": "number",
+    },
+    "operator": "+",
+    "right": {
+      "text": "6",
+      "type": "number",
+    },
+    "type": "binary_expr",
+  },
+  "operator": "-",
+  "right": {
+    "text": "8",
+    "type": "number",
+  },
+  "type": "binary_expr",
+}
+`;
+
+exports[`expr operators parses chain of multiplication and division 1`] = `
+{
+  "left": {
+    "left": {
+      "text": "2",
+      "type": "number",
+    },
+    "operator": "*",
+    "right": {
+      "text": "7",
+      "type": "number",
+    },
+    "type": "binary_expr",
+  },
+  "operator": "/",
+  "right": {
+    "text": "3",
+    "type": "number",
+  },
+  "type": "binary_expr",
+}
+`;
+
+exports[`expr operators parses simple addition 1`] = `
+{
+  "left": {
+    "text": "5",
+    "type": "number",
+  },
+  "operator": "+",
+  "right": {
+    "text": "7",
+    "type": "number",
+  },
+  "type": "binary_expr",
+}
+`;
+
+exports[`expr operators parses simple multiplication 1`] = `
+{
+  "left": {
+    "text": "7",
+    "type": "number",
+  },
+  "operator": "*",
+  "right": {
+    "text": "8",
+    "type": "number",
+  },
+  "type": "binary_expr",
+}
+`;
+
+exports[`expr operators treats multiplication with higher precedence than addition 1`] = `
+{
+  "left": {
+    "text": "6",
+    "type": "number",
+  },
+  "operator": "+",
+  "right": {
+    "left": {
+      "text": "7",
+      "type": "number",
+    },
+    "operator": "*",
+    "right": {
+      "text": "3",
+      "type": "number",
+    },
+    "type": "binary_expr",
+  },
+  "type": "binary_expr",
+}
+`;
