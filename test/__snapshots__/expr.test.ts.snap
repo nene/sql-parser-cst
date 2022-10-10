@@ -9,7 +9,7 @@ exports[`expr literal bit string 1`] = `
 
 exports[`expr literal bit string 2`] = `
 {
-  "charset": "_binary",
+  "charset": "big5",
   "string": {
     "text": "b'011001'",
     "type": "string",
@@ -97,7 +97,7 @@ exports[`expr literal double-quoted string 3`] = `
 
 exports[`expr literal double-quoted string 4`] = `
 {
-  "charset": "_binary",
+  "charset": "latin1",
   "string": {
     "text": ""hello"",
     "type": "string",
@@ -115,7 +115,7 @@ exports[`expr literal hex literal 1`] = `
 
 exports[`expr literal hex literal 2`] = `
 {
-  "charset": "_binary",
+  "charset": "utf8",
   "string": {
     "text": "0xAAFF11",
     "type": "string",
@@ -133,9 +133,9 @@ exports[`expr literal hex string 1`] = `
 
 exports[`expr literal hex string 2`] = `
 {
-  "charset": "_binary",
+  "charset": "utf16le",
   "string": {
-    "text": "x'AFC123'",
+    "text": "X'AFC123'",
     "type": "string",
   },
   "type": "string_with_charset",
@@ -221,7 +221,7 @@ exports[`expr literal single-quoted string 3`] = `
 
 exports[`expr literal single-quoted string 4`] = `
 {
-  "charset": "_binary",
+  "charset": "binary",
   "string": {
     "text": "'hello'",
     "type": "string",

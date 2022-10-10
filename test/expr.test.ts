@@ -17,22 +17,22 @@ describe("expr", () => {
       expect(parseExpr(`"hello"`)).toMatchSnapshot();
       expect(parseExpr(`"hel\\"lo"`)).toMatchSnapshot();
       expect(parseExpr(`"hel""lo"`)).toMatchSnapshot();
-      expect(parseExpr(`_binary"hello"`)).toMatchSnapshot();
+      expect(parseExpr(`_latin1"hello"`)).toMatchSnapshot();
     });
 
     it("hex literal", () => {
       expect(parseExpr(`0xAAFF11`)).toMatchSnapshot();
-      expect(parseExpr(`_binary 0xAAFF11`)).toMatchSnapshot();
+      expect(parseExpr(`_utf8 0xAAFF11`)).toMatchSnapshot();
     });
 
     it("bit string", () => {
       expect(parseExpr(`b'011001'`)).toMatchSnapshot();
-      expect(parseExpr(`_binary b'011001'`)).toMatchSnapshot();
+      expect(parseExpr(`_big5 b'011001'`)).toMatchSnapshot();
     });
 
     it("hex string", () => {
       expect(parseExpr(`x'AFC123'`)).toMatchSnapshot();
-      expect(parseExpr(`_binary x'AFC123'`)).toMatchSnapshot();
+      expect(parseExpr(`_utf16le X'AFC123'`)).toMatchSnapshot();
     });
 
     it("boolean", () => {
