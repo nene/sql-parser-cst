@@ -8,34 +8,52 @@ describe("expr", () => {
   describe("literal", () => {
     it("single-quoted string", () => {
       expect(parseExpr(`'hello'`)).toMatchSnapshot();
+    });
+    it("single-quoted string with escapes", () => {
       expect(parseExpr(`'hel\\'lo'`)).toMatchSnapshot();
       expect(parseExpr(`'hel''lo'`)).toMatchSnapshot();
+    });
+    it("single-quoted string with charset", () => {
       expect(parseExpr(`_binary 'hello'`)).toMatchSnapshot();
     });
-
-    it("string with charset and comment", () => {
+    it("single-quoted string with charset and comment", () => {
       expect(parseExpr(`_latin1 /* comment */ 'hello'`)).toMatchSnapshot();
     });
 
     it("double-quoted string", () => {
       expect(parseExpr(`"hello"`)).toMatchSnapshot();
+    });
+    it("double-quoted string with escapes", () => {
       expect(parseExpr(`"hel\\"lo"`)).toMatchSnapshot();
       expect(parseExpr(`"hel""lo"`)).toMatchSnapshot();
+    });
+    it("double-quoted string with charset", () => {
       expect(parseExpr(`_latin1"hello"`)).toMatchSnapshot();
+    });
+    it("double-quoted string with charset and comments", () => {
+      expect(
+        parseExpr(`_latin1 -- comment1\n -- comment2\n 'hello'`)
+      ).toMatchSnapshot();
     });
 
     it("hex literal", () => {
       expect(parseExpr(`0xAAFF11`)).toMatchSnapshot();
+    });
+    it("hex literal with charset", () => {
       expect(parseExpr(`_utf8 0xAAFF11`)).toMatchSnapshot();
     });
 
     it("bit string", () => {
       expect(parseExpr(`b'011001'`)).toMatchSnapshot();
+    });
+    it("bit string with charset", () => {
       expect(parseExpr(`_big5 b'011001'`)).toMatchSnapshot();
     });
 
     it("hex string", () => {
       expect(parseExpr(`x'AFC123'`)).toMatchSnapshot();
+    });
+    it("hex string with charset", () => {
       expect(parseExpr(`_utf16le X'AFC123'`)).toMatchSnapshot();
     });
 

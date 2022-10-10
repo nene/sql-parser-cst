@@ -7,7 +7,7 @@ exports[`expr literal bit string 1`] = `
 }
 `;
 
-exports[`expr literal bit string 2`] = `
+exports[`expr literal bit string with charset 1`] = `
 {
   "charset": "big5",
   "string": {
@@ -109,21 +109,7 @@ exports[`expr literal double-quoted string 1`] = `
 }
 `;
 
-exports[`expr literal double-quoted string 2`] = `
-{
-  "text": ""hel\\"lo"",
-  "type": "string",
-}
-`;
-
-exports[`expr literal double-quoted string 3`] = `
-{
-  "text": ""hel"",
-  "type": "string",
-}
-`;
-
-exports[`expr literal double-quoted string 4`] = `
+exports[`expr literal double-quoted string with charset 1`] = `
 {
   "charset": "latin1",
   "string": {
@@ -134,6 +120,41 @@ exports[`expr literal double-quoted string 4`] = `
 }
 `;
 
+exports[`expr literal double-quoted string with charset and comments 1`] = `
+{
+  "charset": "latin1",
+  "string": {
+    "leadingComments": [
+      {
+        "text": "-- comment1",
+        "type": "line_comment",
+      },
+      {
+        "text": "-- comment2",
+        "type": "line_comment",
+      },
+    ],
+    "text": "'hello'",
+    "type": "string",
+  },
+  "type": "string_with_charset",
+}
+`;
+
+exports[`expr literal double-quoted string with escapes 1`] = `
+{
+  "text": ""hel\\"lo"",
+  "type": "string",
+}
+`;
+
+exports[`expr literal double-quoted string with escapes 2`] = `
+{
+  "text": ""hel"",
+  "type": "string",
+}
+`;
+
 exports[`expr literal hex literal 1`] = `
 {
   "text": "0xAAFF11",
@@ -141,7 +162,7 @@ exports[`expr literal hex literal 1`] = `
 }
 `;
 
-exports[`expr literal hex literal 2`] = `
+exports[`expr literal hex literal with charset 1`] = `
 {
   "charset": "utf8",
   "string": {
@@ -159,7 +180,7 @@ exports[`expr literal hex string 1`] = `
 }
 `;
 
-exports[`expr literal hex string 2`] = `
+exports[`expr literal hex string with charset 1`] = `
 {
   "charset": "utf16le",
   "string": {
@@ -233,21 +254,7 @@ exports[`expr literal single-quoted string 1`] = `
 }
 `;
 
-exports[`expr literal single-quoted string 2`] = `
-{
-  "text": "'hel\\'lo'",
-  "type": "string",
-}
-`;
-
-exports[`expr literal single-quoted string 3`] = `
-{
-  "text": "'hel''lo'",
-  "type": "string",
-}
-`;
-
-exports[`expr literal single-quoted string 4`] = `
+exports[`expr literal single-quoted string with charset 1`] = `
 {
   "charset": "binary",
   "string": {
@@ -258,7 +265,7 @@ exports[`expr literal single-quoted string 4`] = `
 }
 `;
 
-exports[`expr literal string with charset and comment 1`] = `
+exports[`expr literal single-quoted string with charset and comment 1`] = `
 {
   "charset": "latin1",
   "string": {
@@ -272,5 +279,19 @@ exports[`expr literal string with charset and comment 1`] = `
     "type": "string",
   },
   "type": "string_with_charset",
+}
+`;
+
+exports[`expr literal single-quoted string with escapes 1`] = `
+{
+  "text": "'hel\\'lo'",
+  "type": "string",
+}
+`;
+
+exports[`expr literal single-quoted string with escapes 2`] = `
+{
+  "text": "'hel''lo'",
+  "type": "string",
 }
 `;
