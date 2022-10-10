@@ -60,5 +60,9 @@ describe("expr", () => {
     it("parses multiplication with comments", () => {
       expect(parseExpr(`6 /* com1 */ * /* com2 */ 7`)).toMatchSnapshot();
     });
+
+    it("parses comparison with comments", () => {
+      expect(parseExpr(`6 /* com1 */ < /* com2 */ 7`)).toMatchSnapshot();
+    });
   });
 });

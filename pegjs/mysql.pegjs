@@ -1367,11 +1367,11 @@ not_expr
   }
 
 comparison_expr
-  = left:additive_expr __ tail:comparison_op_right? {
-    if (!tail) {
-      return left;
-    }
-    return createBinaryExprChain(left, tail);
+  = head:additive_expr tail:(__ arithmetic_comparison_operator __ additive_expr)* {
+    return createBinaryExprChain(head, tail);
+  }
+  / additive_expr __ comparison_op_right {
+    return "[Not implemented]";
   }
   / literal_string
   / column_ref
@@ -1386,17 +1386,11 @@ exists_op
   / KW_EXISTS
 
 comparison_op_right
-  = arithmetic_op_right
-  / in_op_right
+  = in_op_right
   / between_op_right
   / is_op_right
   / like_op_right
   / regexp_op_right
-
-arithmetic_op_right
-  = tail:(__ arithmetic_comparison_operator __ additive_expr)+ {
-    return tail;
-  }
 
 arithmetic_comparison_operator
   = ">=" / ">" / "<=" / "<>" / "<" / "=" / "!="
