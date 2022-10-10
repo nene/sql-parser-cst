@@ -291,7 +291,12 @@ exports[`expr operators parses DIV operator 1`] = `
     "text": "8",
     "type": "number",
   },
-  "operator": "DIV",
+  "operator": [
+    {
+      "text": "DIV",
+      "type": "keyword",
+    },
+  ],
   "right": {
     "text": "4",
     "type": "number",
@@ -324,10 +329,16 @@ exports[`expr operators parses IS NOT operator 1`] = `
 }
 `;
 
-exports[`expr operators parses IS NOT operator with comment inside 1`] = `
+exports[`expr operators parses IS NOT operator with comments 1`] = `
 {
   "left": {
     "text": "7",
+    "trailingComments": [
+      {
+        "text": "/*c1*/",
+        "type": "block_comment",
+      },
+    ],
     "type": "number",
   },
   "operator": [
@@ -335,7 +346,7 @@ exports[`expr operators parses IS NOT operator with comment inside 1`] = `
       "text": "IS",
       "trailingComments": [
         {
-          "text": "/* com */",
+          "text": "/*c2*/",
           "type": "block_comment",
         },
       ],
@@ -347,6 +358,12 @@ exports[`expr operators parses IS NOT operator with comment inside 1`] = `
     },
   ],
   "right": {
+    "leadingComments": [
+      {
+        "text": "/*c3*/",
+        "type": "block_comment",
+      },
+    ],
     "text": "5",
     "type": "number",
   },
@@ -360,8 +377,45 @@ exports[`expr operators parses IS operator 1`] = `
     "text": "7",
     "type": "number",
   },
-  "operator": "IS",
+  "operator": [
+    {
+      "text": "IS",
+      "type": "keyword",
+    },
+  ],
   "right": {
+    "text": "5",
+    "type": "number",
+  },
+  "type": "binary_expr",
+}
+`;
+
+exports[`expr operators parses IS operator with comments 1`] = `
+{
+  "left": {
+    "text": "7",
+    "trailingComments": [
+      {
+        "text": "/*c1*/",
+        "type": "block_comment",
+      },
+    ],
+    "type": "number",
+  },
+  "operator": [
+    {
+      "text": "IS",
+      "type": "keyword",
+    },
+  ],
+  "right": {
+    "leadingComments": [
+      {
+        "text": "/*c2*/",
+        "type": "block_comment",
+      },
+    ],
     "text": "5",
     "type": "number",
   },
@@ -502,7 +556,12 @@ exports[`expr operators recognizes lowercase DIV operator 1`] = `
     "text": "8",
     "type": "number",
   },
-  "operator": "div",
+  "operator": [
+    {
+      "text": "div",
+      "type": "keyword",
+    },
+  ],
   "right": {
     "text": "4",
     "type": "number",

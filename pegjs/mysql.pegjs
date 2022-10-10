@@ -1429,7 +1429,7 @@ arithmetic_comparison_operator
 
 is_op_right
   = op:KW_IS c:__ right:additive_expr {
-    return { op, c, right };
+    return { op: [createKeyword(op)], c, right };
   }
   / op:(KW_IS __ KW_NOT) c:__ right:additive_expr {
     return { op: createKeywordList(op), c, right };
@@ -1490,7 +1490,8 @@ multiplicative_expr
     }
 
 multiplicative_operator
-  = "*" / "/" / "%" / op:KW_DIV / '&' / '>>' / '<<' / '^' / '|' / '~'
+  = "*" / "/" / "%" / '&' / '>>' / '<<' / '^' / '|' / '~'
+  / op:KW_DIV { return [createKeyword(op)]; }
 
 primary
   = cast_expr

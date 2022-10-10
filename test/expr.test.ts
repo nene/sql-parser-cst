@@ -68,13 +68,15 @@ describe("expr", () => {
     it("parses IS operator", () => {
       expect(parseExpr(`7 IS 5`)).toMatchSnapshot();
     });
+    it("parses IS operator with comments", () => {
+      expect(parseExpr(`7 /*c1*/ IS /*c2*/ 5`)).toMatchSnapshot();
+    });
 
     it("parses IS NOT operator", () => {
       expect(parseExpr(`7 IS NOT 5`)).toMatchSnapshot();
     });
-
-    it("parses IS NOT operator with comment inside", () => {
-      expect(parseExpr(`7 IS /* com */ NOT 5`)).toMatchSnapshot();
+    it("parses IS NOT operator with comments", () => {
+      expect(parseExpr(`7 /*c1*/ IS /*c2*/ NOT /*c3*/ 5`)).toMatchSnapshot();
     });
   });
 });
