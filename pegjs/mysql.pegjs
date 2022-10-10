@@ -1797,31 +1797,46 @@ charset_name
   / "gbk"i
 
 literal_string_without_charset
+  = literal_hex_string
+  / literal_bit_string
+  / literal_hex_sequence
+  / literal_single_quoted_string
+  / literal_double_quoted_string
+
+literal_hex_string
   = r:'X'i ca:("'" [0-9A-Fa-f]* "'") {
     return {
       type: 'string',
       text: `${r}'${ca[1].join('')}'`
     };
   }
-  / r:'b'i ca:("'" [01]* "'") {
+
+literal_bit_string
+  = r:'b'i ca:("'" [01]* "'") {
     return {
       type: 'string',
       text: `${r}'${ca[1].join('')}'`
     };
   }
-  / r:'0x' ca:([0-9A-Fa-f]*) {
+
+literal_hex_sequence
+  = r:'0x' ca:([0-9A-Fa-f]*) {
     return {
       type: 'string',
       text: `${r}${ca.join('')}`
     };
   }
-  / ca:("'" single_quoted_char* "'") {
+
+literal_single_quoted_string
+  = ca:("'" single_quoted_char* "'") {
     return {
       type: 'string',
       text: `'${ca[1].join('')}'`
     };
   }
-  / ca:("\"" double_quoted_char* "\"") {
+
+literal_double_quoted_string
+  = ca:("\"" double_quoted_char* "\"") {
     return {
       type: 'string',
       text: `"${ca[1].join('')}"`
