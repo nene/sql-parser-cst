@@ -1844,18 +1844,13 @@ literal_double_quoted_string
   }
 
 literal_datetime
-  = type:(KW_TIME / KW_DATE / KW_TIMESTAMP / KW_DATETIME) __ ca:("'" single_quoted_char* "'") {
-    return {
-      type: type.toLowerCase(),
-      text: `'${ca[1].join('')}'`
-    };
-  }
-  / type:(KW_TIME / KW_DATE / KW_TIMESTAMP / KW_DATETIME) __ ca:("\"" double_quoted_char* "\"") {
-    return {
-      type: type.toLowerCase(),
-      text: `"${ca[1].join('')}"`
-    };
-  }
+  = type:(KW_TIME / KW_DATE / KW_TIMESTAMP / KW_DATETIME) __
+    str:(literal_single_quoted_string / literal_double_quoted_string) {
+      return {
+        type: type.toLowerCase(),
+        text: str.text
+      };
+    }
 
 double_quoted_char
   = [^"\\\0-\x1F\x7f]
