@@ -1505,19 +1505,19 @@ backticks_quoted_ident
 
 column_without_kw
   = name:column_name {
-    return "[Not implemented]";
+    return name;
   }
   / quoted_ident
 
 column
-  = name:column_name !{ return reservedMap[name.toUpperCase()] === true; } { return "[Not implemented]"; }
+  = name:column_name !{ return reservedMap[name.toUpperCase()] === true; } { return name; }
   / backticks_quoted_ident
 
 column_name
-  =  start:ident_start parts:column_part* { return "[Not implemented]"; }
+  =  start:ident_start parts:column_part* { return start + parts.join(''); }
 
 ident_name
-  =  start:ident_start parts:ident_part* { return "[Not implemented]"; }
+  =  start:ident_start parts:ident_part* { return start + parts.join(''); }
 
 ident_start = [A-Za-z_]
 
