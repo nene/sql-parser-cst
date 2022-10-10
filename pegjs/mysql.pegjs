@@ -1461,11 +1461,7 @@ multiplicative_expr
     }
 
 multiplicative_operator
-  = "*" / "/" / "%"
-  / "div"i {
-    return "[Not implemented]";
-  }
-  / '&' / '>>' / '<<' / '^' / '|' / '~'
+  = "*" / "/" / "%" / op:KW_DIV / '&' / '>>' / '<<' / '^' / '|' / '~'
 
 primary
   = cast_expr
@@ -2098,6 +2094,8 @@ KW_LOCAL          = kw:"LOCAL"i     !ident_start { return kw; }
 KW_PERSIST        = kw:"PERSIST"i   !ident_start { return kw; }
 KW_PERSIST_ONLY   = kw:"PERSIST_ONLY"i   !ident_start { return kw; }
 KW_VIEW           = kw:"VIEW"i    !ident_start { return kw; }
+
+KW_DIV = kw:"DIV"i !ident_start { return kw; }
 
 KW_VAR__PRE_AT = '@'
 KW_VAR__PRE_AT_AT = '@@'

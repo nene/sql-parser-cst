@@ -26,6 +26,14 @@ describe("expr", () => {
       expect(parseExpr(`6 + 7 * 3`)).toMatchSnapshot();
     });
 
+    it("parses DIV operator", () => {
+      expect(parseExpr(`8 DIV 4`)).toMatchSnapshot();
+    });
+
+    it("recognizes lowercase DIV operator", () => {
+      expect(parseExpr(`8 div 4`)).toMatchSnapshot();
+    });
+
     it("parses addition with comments", () => {
       expect(parseExpr(`6 /* com1 */ + /* com2 */ 7`)).toMatchSnapshot();
     });
