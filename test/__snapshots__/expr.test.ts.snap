@@ -1,5 +1,185 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`expr operators parses % operator 1`] = `
+{
+  "left": {
+    "text": "5",
+    "type": "number",
+  },
+  "operator": "%",
+  "right": {
+    "text": "7",
+    "type": "number",
+  },
+  "type": "binary_expr",
+}
+`;
+
+exports[`expr operators parses & operator 1`] = `
+{
+  "left": {
+    "text": "5",
+    "type": "number",
+  },
+  "operator": "&",
+  "right": {
+    "text": "7",
+    "type": "number",
+  },
+  "type": "binary_expr",
+}
+`;
+
+exports[`expr operators parses * operator 1`] = `
+{
+  "left": {
+    "text": "5",
+    "type": "number",
+  },
+  "operator": "*",
+  "right": {
+    "text": "7",
+    "type": "number",
+  },
+  "type": "binary_expr",
+}
+`;
+
+exports[`expr operators parses + operator 1`] = `
+{
+  "left": {
+    "text": "5",
+    "type": "number",
+  },
+  "operator": "+",
+  "right": {
+    "text": "7",
+    "type": "number",
+  },
+  "type": "binary_expr",
+}
+`;
+
+exports[`expr operators parses / operator 1`] = `
+{
+  "left": {
+    "text": "5",
+    "type": "number",
+  },
+  "operator": "/",
+  "right": {
+    "text": "7",
+    "type": "number",
+  },
+  "type": "binary_expr",
+}
+`;
+
+exports[`expr operators parses << operator 1`] = `
+{
+  "left": {
+    "text": "5",
+    "type": "number",
+  },
+  "operator": "<<",
+  "right": {
+    "text": "7",
+    "type": "number",
+  },
+  "type": "binary_expr",
+}
+`;
+
+exports[`expr operators parses >> operator 1`] = `
+{
+  "left": {
+    "text": "5",
+    "type": "number",
+  },
+  "operator": ">>",
+  "right": {
+    "text": "7",
+    "type": "number",
+  },
+  "type": "binary_expr",
+}
+`;
+
+exports[`expr operators parses ^ operator 1`] = `
+{
+  "left": {
+    "text": "5",
+    "type": "number",
+  },
+  "operator": "^",
+  "right": {
+    "text": "7",
+    "type": "number",
+  },
+  "type": "binary_expr",
+}
+`;
+
+exports[`expr operators parses | operator 1`] = `
+{
+  "left": {
+    "text": "5",
+    "type": "number",
+  },
+  "operator": "|",
+  "right": {
+    "text": "7",
+    "type": "number",
+  },
+  "type": "binary_expr",
+}
+`;
+
+exports[`expr operators parses ~ operator 1`] = `
+{
+  "left": {
+    "text": "5",
+    "type": "number",
+  },
+  "operator": "~",
+  "right": {
+    "text": "7",
+    "type": "number",
+  },
+  "type": "binary_expr",
+}
+`;
+
+exports[`expr operators parses ~ operator 2`] = `
+{
+  "left": {
+    "text": "5",
+    "type": "number",
+  },
+  "operator": "~",
+  "right": {
+    "text": "7",
+    "type": "number",
+  },
+  "type": "binary_expr",
+}
+`;
+
+exports[`expr operators parses - operator 1`] = `
+{
+  "left": {
+    "text": "5",
+    "type": "number",
+  },
+  "operator": "-",
+  "right": {
+    "text": "7",
+    "type": "number",
+  },
+  "type": "binary_expr",
+}
+`;
+
 exports[`expr operators parses DIV operator 1`] = `
 {
   "left": {
@@ -109,36 +289,6 @@ exports[`expr operators parses multiplication with comments 1`] = `
       },
     ],
     "text": "7",
-    "type": "number",
-  },
-  "type": "binary_expr",
-}
-`;
-
-exports[`expr operators parses simple addition 1`] = `
-{
-  "left": {
-    "text": "5",
-    "type": "number",
-  },
-  "operator": "+",
-  "right": {
-    "text": "7",
-    "type": "number",
-  },
-  "type": "binary_expr",
-}
-`;
-
-exports[`expr operators parses simple multiplication 1`] = `
-{
-  "left": {
-    "text": "7",
-    "type": "number",
-  },
-  "operator": "*",
-  "right": {
-    "text": "8",
     "type": "number",
   },
   "type": "binary_expr",
