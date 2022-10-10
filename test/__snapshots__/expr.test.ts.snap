@@ -300,6 +300,21 @@ exports[`expr operators parses DIV operator 1`] = `
 }
 `;
 
+exports[`expr operators parses IS operator 1`] = `
+{
+  "left": {
+    "text": "7",
+    "type": "number",
+  },
+  "operator": "IS",
+  "right": {
+    "text": "5",
+    "type": "number",
+  },
+  "type": "binary_expr",
+}
+`;
+
 exports[`expr operators parses addition with comments 1`] = `
 {
   "left": {

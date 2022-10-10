@@ -64,5 +64,9 @@ describe("expr", () => {
     it("parses comparison with comments", () => {
       expect(parseExpr(`6 /* com1 */ < /* com2 */ 7`)).toMatchSnapshot();
     });
+
+    it("parses IS operator", () => {
+      expect(parseExpr(`7 IS 5`)).toMatchSnapshot();
+    });
   });
 });

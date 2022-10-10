@@ -1367,8 +1367,17 @@ not_expr
   }
 
 comparison_expr
-  = head:additive_expr tail:(__ arithmetic_comparison_operator __ additive_expr)* {
-    return createBinaryExprChain(head, tail);
+  = head:additive_expr c:__ tail:(comparison_op_right)? {
+    if (!tail) {
+      return head;
+    }
+    if (tail instanceof Array) {
+      // overwrite the first comment (which never matches) in tail,
+      // because the comment inside this rule matches first.
+      tail[0][0] = c;
+      return createBinaryExprChain(head, tail);
+    }
+    return createBinaryExpr(head, c, tail.op, tail.c, tail.right)
   }
   / additive_expr __ comparison_op_right {
     return "[Not implemented]";
@@ -1386,18 +1395,24 @@ exists_op
   / KW_EXISTS
 
 comparison_op_right
-  = in_op_right
+  = arithmetic_op_right
+  / in_op_right
   / between_op_right
   / is_op_right
   / like_op_right
   / regexp_op_right
 
+arithmetic_op_right
+  = tail:(__ arithmetic_comparison_operator __ additive_expr)+ {
+    return tail;
+  }
+
 arithmetic_comparison_operator
   = ">=" / ">" / "<=" / "<>" / "<" / "=" / "!="
 
 is_op_right
-  = KW_IS __ right:additive_expr {
-    return "[Not implemented]";
+  = op:KW_IS c:__ right:additive_expr {
+    return { op, c, right };
   }
   / (KW_IS __ KW_NOT) __ right:additive_expr {
     return "[Not implemented]";
