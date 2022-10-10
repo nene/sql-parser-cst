@@ -296,15 +296,15 @@
   };
 
   function createBinaryExprChain(head, tail) {
-    return tail.reduce((left, [_1, op, _2, right]) => createBinaryExpr(op, left, right), head);
+    return tail.reduce((left, [c1, op, c2, right]) => createBinaryExpr(left, c1, op, c2, right), head);
   }
 
-  function createBinaryExpr(op, left, right) {
+  function createBinaryExpr(left, c1, op, c2, right) {
     return {
       type: 'binary_expr',
       operator: op,
-      left: left,
-      right: right
+      left: withComments(left, {trailing: c1}),
+      right: withComments(right, {leading: c2}),
     };
   }
 }

@@ -25,5 +25,13 @@ describe("expr", () => {
     it("treats multiplication with higher precedence than addition", () => {
       expect(parseExpr(`6 + 7 * 3`)).toMatchSnapshot();
     });
+
+    it("parses addition with comments", () => {
+      expect(parseExpr(`6 /* com1 */ + /* com2 */ 7`)).toMatchSnapshot();
+    });
+
+    it("parses multiplication with comments", () => {
+      expect(parseExpr(`6 /* com1 */ * /* com2 */ 7`)).toMatchSnapshot();
+    });
   });
 });

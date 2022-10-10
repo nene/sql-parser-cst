@@ -1,5 +1,32 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`expr operators parses addition with comments 1`] = `
+{
+  "left": {
+    "text": "6",
+    "trailingComments": [
+      {
+        "text": "/* com1 */",
+        "type": "block_comment",
+      },
+    ],
+    "type": "number",
+  },
+  "operator": "+",
+  "right": {
+    "leadingComments": [
+      {
+        "text": "/* com2 */",
+        "type": "block_comment",
+      },
+    ],
+    "text": "7",
+    "type": "number",
+  },
+  "type": "binary_expr",
+}
+`;
+
 exports[`expr operators parses chain of addition and subtraction 1`] = `
 {
   "left": {
@@ -40,6 +67,33 @@ exports[`expr operators parses chain of multiplication and division 1`] = `
   "operator": "/",
   "right": {
     "text": "3",
+    "type": "number",
+  },
+  "type": "binary_expr",
+}
+`;
+
+exports[`expr operators parses multiplication with comments 1`] = `
+{
+  "left": {
+    "text": "6",
+    "trailingComments": [
+      {
+        "text": "/* com1 */",
+        "type": "block_comment",
+      },
+    ],
+    "type": "number",
+  },
+  "operator": "*",
+  "right": {
+    "leadingComments": [
+      {
+        "text": "/* com2 */",
+        "type": "block_comment",
+      },
+    ],
+    "text": "7",
     "type": "number",
   },
   "type": "binary_expr",
