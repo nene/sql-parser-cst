@@ -14,7 +14,14 @@ import {
 } from "pegjs/mysql";
 import { isDefined } from "./util";
 
-export function show(node: Node): string {
+export function show(node: Node | Node[] | string): string {
+  if (typeof node === "string") {
+    return node;
+  }
+  if (node instanceof Array) {
+    return node.map(show).join(" ");
+  }
+
   return [
     showComments(node.leadingComments),
     showNode(node),
@@ -69,22 +76,13 @@ const showDateTimeLiteral = (node: DateTimeLiteral) =>
   show(node.kw) + " " + show(node.string);
 
 const showBinaryExpr = (node: BinaryExpr) => {
-  return (
-    show(node.left) + " " + showOperator(node.operator) + " " + show(node.right)
-  );
-};
-
-const showOperator = (op: string | Keyword[]): string => {
-  if (typeof op === "string") {
-    return op;
-  }
-  return op.map(show).join(" ");
+  return show(node.left) + " " + show(node.operator) + " " + show(node.right);
 };
 
 const showBetweenExpr = (node: BetweenExpr) => {
   return [
     show(node.left),
-    ...node.betweenKw.map(show),
+    show(node.betweenKw),
     show(node.begin),
     show(node.andKw),
     show(node.end),
