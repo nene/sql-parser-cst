@@ -1384,17 +1384,29 @@ not_expr
   }
 
 comparison_expr
-  = head:additive_expr c:__ tail:(comparison_op_right)? {
-    if (!tail) {
+  = head:additive_expr c:__ right:(comparison_op_right)? {
+    if (!right) {
       return head;
     }
-    if (tail instanceof Array) {
+    if (right.kind === "arithmetic") {
       // overwrite the first comment (which never matches) in tail,
       // because the comment inside this rule matches first.
-      tail[0][0] = c;
-      return createBinaryExprChain(head, tail);
+      right.tail[0][0] = c;
+      return createBinaryExprChain(head, right.tail);
     }
-    return createBinaryExpr(head, c, tail.op, tail.c, tail.right)
+    else if (right.kind === "between") {
+      return {
+        type: "between_expr",
+        left: withComments(head, { trailing: c }),
+        betweenKw: right.betweenKw,
+        begin: right.begin,
+        andKw: right.andKw,
+        end: right.end,
+      };
+    }
+    else {
+      return createBinaryExpr(head, c, right.op, right.c, right.right);
+    }
   }
   / additive_expr __ comparison_op_right {
     return "[Not implemented]";
@@ -1421,7 +1433,7 @@ comparison_op_right
 
 arithmetic_op_right
   = tail:(__ arithmetic_comparison_operator __ additive_expr)+ {
-    return tail;
+    return { kind: "arithmetic", tail };
   }
 
 arithmetic_comparison_operator
@@ -1429,20 +1441,26 @@ arithmetic_comparison_operator
 
 is_op_right
   = op:KW_IS c:__ right:additive_expr {
-    return { op: [createKeyword(op)], c, right };
+    return { kind: "is", op: [createKeyword(op)], c, right };
   }
   / op:(KW_IS __ KW_NOT) c:__ right:additive_expr {
-    return { op: createKeywordList(op), c, right };
+    return { kind: "is", op: createKeywordList(op), c, right };
   }
 
 between_op_right
-  = op:between_or_not_between_op __  begin:additive_expr __ KW_AND __ end:additive_expr {
-    return "[Not implemented]";
+  = betweenKw:between_or_not_between_op c1:__  begin:additive_expr c2:__ andKw:KW_AND c3:__ end:additive_expr {
+    return {
+      kind: "between",
+      betweenKw,
+      begin: withComments(begin, { leading: c1 }),
+      andKw: withComments(createKeyword(andKw), { leading: c2 }),
+      end: withComments(end, { leading: c3 }),
+    };
   }
 
 between_or_not_between_op
-  = nk:(KW_NOT __ KW_BETWEEN) { return "[Not implemented]"; }
-  / KW_BETWEEN
+  = kws:(KW_NOT __ KW_BETWEEN) { return createKeywordList(kws); }
+  / kw:KW_BETWEEN { return createKeywordList([kw]); }
 
 like_op
   = kws:(KW_NOT __ KW_LIKE) { return createKeywordList(kws); }
@@ -1463,7 +1481,7 @@ regexp_op_right
 
 like_op_right
   = op:like_op c:__ right:(literal / comparison_expr) {
-    return { op, c, right };
+    return { kind: "like", op, c, right };
   }
 
 in_op_right

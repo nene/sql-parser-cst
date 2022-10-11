@@ -1,4 +1,5 @@
 import {
+  BetweenExpr,
   BinaryExpr,
   BoolLiteral,
   Comment,
@@ -29,6 +30,8 @@ function showNode(node: Node): string {
       return showSelect(node);
     case "binary_expr":
       return showBinaryExpr(node);
+    case "between_expr":
+      return showBetweenExpr(node);
     case "string":
       return showLiteral(node);
     case "number":
@@ -76,6 +79,16 @@ const showOperator = (op: string | Keyword[]): string => {
     return op;
   }
   return op.map(show).join(" ");
+};
+
+const showBetweenExpr = (node: BetweenExpr) => {
+  return [
+    show(node.left),
+    ...node.betweenKw.map(show),
+    show(node.begin),
+    show(node.andKw),
+    show(node.end),
+  ].join(" ");
 };
 
 const showKeyword = (kw: Keyword) => kw.text;

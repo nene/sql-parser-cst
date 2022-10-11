@@ -16,6 +16,7 @@ type Statement = Select;
 
 type Expr =
   | BinaryExpr
+  | BetweenExpr
   | StringWithCharset
   | StringLiteral
   | NumberLiteral
@@ -33,6 +34,15 @@ type BinaryExpr = Comments & {
   left: Expr;
   operator: string | Keyword[];
   right: Expr;
+};
+
+type BetweenExpr = Comments & {
+  type: "between_expr";
+  left: Expr;
+  betweenKw: Keyword[];
+  begin: Expr;
+  andKw: Keyword;
+  end: Expr;
 };
 
 type StringWithCharset = Comments & {

@@ -69,6 +69,17 @@ describe("expr", () => {
       testExpr(`'foobar' NOT LIKE 'foo%'`);
       testExpr(`'foobar' /*c1*/ NOT /*c2*/ LIKE /*c3*/ 'foo%'`);
     });
+
+    it("parses BETWEEN operator", () => {
+      testExpr(`5 BETWEEN 1 AND 10`);
+      testExpr(`5 between 1 and 10`);
+      testExpr(`5 /*c1*/ BETWEEN /*c2*/ 1 /*c3*/ AND /*c4*/ 10`);
+    });
+
+    it("parses NOT BETWEEN operator", () => {
+      testExpr(`5 NOT BETWEEN 1 AND 10`);
+      testExpr(`5 /*c0*/ not /*c1*/ BETWEEN /*c2*/ 1 /*c3*/ AND /*c4*/ 10`);
+    });
   });
 
   describe("operator precedence", () => {
