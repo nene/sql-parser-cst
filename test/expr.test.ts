@@ -82,14 +82,19 @@ describe("expr", () => {
       testExpr(`'foooo' /*c1*/ NOT /*c2*/ RLIKE /*c3*/ 'fo*'`);
     });
 
-    it("parses IN operator", () => {
+    it("parses basic IN operator", () => {
       testExpr(`'oo' IN 'foobar'`);
       testExpr(`'oo' /*c1*/ IN /*c2*/ 'foobar'`);
     });
 
-    it("parses NOT IN operator", () => {
+    it("parses basic NOT IN operator", () => {
       testExpr(`'oo' NOT IN 'foobar'`);
       testExpr(`'oo' /*c1*/ NOT /*c2*/ IN /*c3*/ 'foobar'`);
+    });
+
+    it("parses IN (...) operator", () => {
+      testExpr(`7 IN (1, 2, 3, 4)`);
+      testExpr(`7 NOT IN (1, 2, 3, 4)`);
     });
 
     it("parses BETWEEN operator", () => {

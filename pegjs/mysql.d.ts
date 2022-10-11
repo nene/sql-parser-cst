@@ -15,6 +15,8 @@ type Node = Statement | Expr | Keyword;
 type Statement = Select;
 
 type Expr =
+  | ExprList
+  | ParenExpr
   | BinaryExpr
   | BetweenExpr
   | StringWithCharset
@@ -27,6 +29,16 @@ type Expr =
 type Select = Comments & {
   type: "select";
   columns: Expr[];
+};
+
+type ExprList = Comments & {
+  type: "expr_list";
+  children: Expr[];
+};
+
+type ParenExpr = Comments & {
+  type: "paren_expr";
+  expr: Expr;
 };
 
 type BinaryExpr = Comments & {

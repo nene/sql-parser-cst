@@ -1298,7 +1298,10 @@ value_item
 
 expr_list
   = head:expr tail:(__ COMMA __ expr)* {
-    return "[Not implemented]";
+    return {
+      type: "expr_list",
+      children: tail.reduce((arr, [c1, comma, c2, expr]) => [...arr, expr], [head]),
+    };
   }
 
 interval_expr
@@ -1437,8 +1440,16 @@ arithmetic_comparison_operator
   = ">=" / ">" / "<=" / "<>" / "<" / "=" / "!="
 
 in_op_right
-  = op:in_op __ LPAREN  __ l:expr_list __ RPAREN {
-    return "[Not implemented]";
+  = op:in_op c1:__ LPAREN  __ list:expr_list __ RPAREN {
+    return {
+      kind: "in",
+      op,
+      c: c1,
+      right: {
+        type: "paren_expr",
+        expr: list,
+      },
+    };
   }
   / op:in_op c:__ right:(var_decl / column_ref / literal_string) {
     return { kind: "in", op, c, right };

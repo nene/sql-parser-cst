@@ -4,10 +4,12 @@ import {
   BoolLiteral,
   Comment,
   DateTimeLiteral,
+  ExprList,
   Keyword,
   Node,
   NullLiteral,
   NumberLiteral,
+  ParenExpr,
   Select,
   StringLiteral,
   StringWithCharset,
@@ -35,6 +37,10 @@ function showNode(node: Node): string {
   switch (node.type) {
     case "select":
       return showSelect(node);
+    case "expr_list":
+      return showExprList(node);
+    case "paren_expr":
+      return showParenExpr(node);
     case "binary_expr":
       return showBinaryExpr(node);
     case "between_expr":
@@ -74,6 +80,10 @@ const showLiteral = (
 
 const showDateTimeLiteral = (node: DateTimeLiteral) =>
   show(node.kw) + " " + show(node.string);
+
+const showExprList = (node: ExprList) => node.children.map(show).join(", ");
+
+const showParenExpr = (node: ParenExpr) => "(" + show(node.expr) + ")";
 
 const showBinaryExpr = (node: BinaryExpr) => {
   return show(node.left) + " " + show(node.operator) + " " + show(node.right);
