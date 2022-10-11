@@ -81,7 +81,7 @@ const showComments = (c?: Comment[]): string | undefined => {
 const showComment = (c: Comment): string =>
   c.type === "line_comment" ? c.text + "\n" : c.text;
 
-const showSelect = (node: Select) => "SELECT " + show(node.columns[0]);
+const showSelect = (node: Select) => "SELECT " + show(node.columns);
 
 const showLiteral = (
   node: StringLiteral | NumberLiteral | BoolLiteral | NullLiteral

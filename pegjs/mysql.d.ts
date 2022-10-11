@@ -31,7 +31,7 @@ type Expr =
 
 type Select = Comments & {
   type: "select";
-  columns: Expr[];
+  columns: ExprList;
 };
 
 type ExprList = Comments & {

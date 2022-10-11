@@ -333,6 +333,16 @@
     return keywords;
   }
 
+  const createExprList = (head, tail) => {
+    const children = [head];
+    for (const [c1, comma, c2, expr] of tail) {
+      const lastIdx = children.length - 1;
+      children[lastIdx] = withComments(children[lastIdx], { trailing: c1 });
+      children.push(withComments(expr, { leading: c2 }));
+    }
+    return { type: "expr_list", children };
+  };
+
   const createIdentifier = (text) => ({ type: "identifier", text });
 }
 
@@ -1016,7 +1026,7 @@ column_clause
       return "[Not implemented]";
     }
   / head:column_list_item tail:(__ COMMA __ column_list_item)* {
-      return [head]; // TODO
+      return createExprList(head, tail);
     }
 
 fulltext_search_mode
@@ -1308,14 +1318,7 @@ value_item
 
 expr_list
   = head:expr tail:(__ COMMA __ expr)* {
-    const children = [head];
-    for (const [c1, comma, c2, expr] of tail) {
-      const lastIdx = children.length - 1;
-      children[lastIdx] = withComments(children[lastIdx], { trailing: c1 });
-      children.push(withComments(expr, { leading: c2 }));
-    }
-
-    return { type: "expr_list", children };
+    return createExprList(head, tail);
   }
 
 interval_expr
