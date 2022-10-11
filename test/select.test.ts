@@ -8,6 +8,7 @@ describe("select", () => {
   it("parses simple SELECT", () => {
     test("SELECT 'hello'");
     test("SELECT 1, 2, 3");
+    test("SELECT 1 /*c1*/, /*c2*/ 2");
   });
 
   describe("syntax tree", () => {

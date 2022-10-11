@@ -1058,7 +1058,7 @@ column_list_item
   / a:assign_stmt {
     return "[Not implemented]";
   }
-  / e:expr __ alias:alias_clause? {
+  / e:expr (__ alias:alias_clause)? {
     return e; // TODO
   }
 
