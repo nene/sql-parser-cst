@@ -1408,9 +1408,6 @@ comparison_expr
       return createBinaryExpr(head, c, right.op, right.c, right.right);
     }
   }
-  / additive_expr __ comparison_op_right {
-    return "[Not implemented]";
-  }
   / literal_string
   / column_ref
 
