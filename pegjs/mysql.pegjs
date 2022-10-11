@@ -1620,9 +1620,7 @@ alias_ident
     } {
       return name;
     }
-  / name:quoted_ident {
-      return name;
-    }
+  / quoted_ident
 
 quoted_ident
   = double_quoted_ident
