@@ -1440,13 +1440,13 @@ in_op_right
   = op:in_op __ LPAREN  __ l:expr_list __ RPAREN {
     return "[Not implemented]";
   }
-  / op:in_op __ e:(var_decl / column_ref / literal_string) {
-    return "[Not implemented]";
+  / op:in_op c:__ right:(var_decl / column_ref / literal_string) {
+    return { kind: "in", op, c, right };
   }
 
 in_op
-  = nk:(KW_NOT __ KW_IN) { return "[Not implemented]"; }
-  / KW_IN
+  = kws:(KW_NOT __ KW_IN) { return createKeywordList(kws); }
+  / kw:KW_IN { return createKeywordList([kw]); }
 
 is_op_right
   = kw:KW_IS c:__ right:additive_expr {

@@ -82,6 +82,16 @@ describe("expr", () => {
       testExpr(`'foooo' /*c1*/ NOT /*c2*/ RLIKE /*c3*/ 'fo*'`);
     });
 
+    it("parses IN operator", () => {
+      testExpr(`'oo' IN 'foobar'`);
+      testExpr(`'oo' /*c1*/ IN /*c2*/ 'foobar'`);
+    });
+
+    it("parses NOT IN operator", () => {
+      testExpr(`'oo' NOT IN 'foobar'`);
+      testExpr(`'oo' /*c1*/ NOT /*c2*/ IN /*c3*/ 'foobar'`);
+    });
+
     it("parses BETWEEN operator", () => {
       testExpr(`5 BETWEEN 1 AND 10`);
       testExpr(`5 between 1 and 10`);
