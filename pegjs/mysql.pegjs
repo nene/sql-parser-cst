@@ -1071,7 +1071,7 @@ column_list_item
   }
 
 alias_clause
-  = kw:KW_AS c:__ id:(alias_ident / ident) {
+  = kw:KW_AS c:__ id:ident {
     return {
       kwAs: createKeyword(kw),
       alias: withComments(createIdentifier(id), { leading: c }),
@@ -1609,17 +1609,6 @@ ident
   = name:ident_name !{ return reservedMap[name.toUpperCase()] === true; } {
     return name;
   }
-  / quoted_ident
-
-alias_ident
-  = name:ident_name !{
-      if (reservedMap[name.toUpperCase()] === true) {
-        throw new Error("Error: "+ JSON.stringify(name)+" is a reserved word, can not as alias clause");
-      }
-      return false
-    } {
-      return name;
-    }
   / quoted_ident
 
 quoted_ident
