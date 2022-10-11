@@ -1388,21 +1388,21 @@ or_expr
     return createBinaryExprChain(head, tail);
   }
 
-or_op = kw:KW_OR { return createKeywordList([kw]); }
+or_op = kw:KW_OR { return createKeyword(kw); }
 
 and_expr
   = head:not_expr tail:(___ and_op __ not_expr)* {
     return createBinaryExprChain(head, tail);
   }
 
-and_op = kw:KW_AND { return createKeywordList([kw]); }
+and_op = kw:KW_AND { return createKeyword(kw); }
 
 //here we should use `NOT` instead of `comparision_expr` to support chain-expr
 not_expr
   = comparison_expr
   / exists_expr
   / kw:KW_NOT c:__ expr:not_expr {
-    return createUnaryExpr(createKeywordList([kw]), c, expr);
+    return createUnaryExpr(createKeyword(kw), c, expr);
   }
   / op:"!" !"=" c:__ expr:not_expr {
     return createUnaryExpr(op, c, expr);
@@ -1480,11 +1480,11 @@ in_op_right
 
 in_op
   = kws:(KW_NOT __ KW_IN) { return createKeywordList(kws); }
-  / kw:KW_IN { return createKeywordList([kw]); }
+  / kw:KW_IN { return createKeyword(kw); }
 
 is_op_right
   = kw:KW_IS c:__ right:additive_expr {
-    return { kind: "is", op: createKeywordList([kw]), c, right };
+    return { kind: "is", op: createKeyword(kw), c, right };
   }
   / kws:(KW_IS __ KW_NOT) c:__ right:additive_expr {
     return { kind: "is", op: createKeywordList(kws), c, right };
@@ -1497,7 +1497,7 @@ like_op_right
 
 like_op
   = kws:(KW_NOT __ KW_LIKE) { return createKeywordList(kws); }
-  / kw:KW_LIKE { return createKeywordList([kw]); }
+  / kw:KW_LIKE { return createKeyword(kw); }
 
 regexp_op_right
   = op:regexp_op c:__ b:'BINARY'i? __ right:(literal_string / column_ref) {
@@ -1509,7 +1509,7 @@ regexp_op
     return createKeywordList(kws);
   }
   / kw:(KW_REGEXP / KW_RLIKE) {
-    return createKeywordList([kw]);
+    return createKeyword(kw);
   }
 
 between_op_right
@@ -1544,7 +1544,7 @@ multiplicative_expr
 
 multiplicative_operator
   = "*" / "/" / "%" / '&' / '>>' / '<<' / '^' / '|' / '~'
-  / op:KW_DIV { return [createKeyword(op)]; }
+  / op:KW_DIV { return createKeyword(op); }
 
 primary
   = cast_expr

@@ -240,12 +240,10 @@ describe("expr", () => {
             },
             "type": "binary_expr",
           },
-          "operator": [
-            {
-              "text": "NOT",
-              "type": "keyword",
-            },
-          ],
+          "operator": {
+            "text": "NOT",
+            "type": "keyword",
+          },
           "type": "unary_expr",
         }
       `);
@@ -259,20 +257,16 @@ describe("expr", () => {
               "text": "false",
               "type": "bool",
             },
-            "operator": [
-              {
-                "text": "NOT",
-                "type": "keyword",
-              },
-            ],
-            "type": "unary_expr",
-          },
-          "operator": [
-            {
-              "text": "AND",
+            "operator": {
+              "text": "NOT",
               "type": "keyword",
             },
-          ],
+            "type": "unary_expr",
+          },
+          "operator": {
+            "text": "AND",
+            "type": "keyword",
+          },
           "right": {
             "text": "true",
             "type": "bool",
@@ -289,23 +283,19 @@ describe("expr", () => {
             "text": "true",
             "type": "bool",
           },
-          "operator": [
-            {
-              "text": "OR",
-              "type": "keyword",
-            },
-          ],
+          "operator": {
+            "text": "OR",
+            "type": "keyword",
+          },
           "right": {
             "left": {
               "text": "false",
               "type": "bool",
             },
-            "operator": [
-              {
-                "text": "AND",
-                "type": "keyword",
-              },
-            ],
+            "operator": {
+              "text": "AND",
+              "type": "keyword",
+            },
             "right": {
               "text": "true",
               "type": "bool",

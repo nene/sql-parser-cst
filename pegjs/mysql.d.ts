@@ -47,7 +47,7 @@ type ParenExpr = Comments & {
 type BinaryExpr = Comments & {
   type: "binary_expr";
   left: Expr;
-  operator: string | Keyword[];
+  operator: string | Keyword | Keyword[];
   right: Expr;
 };
 
