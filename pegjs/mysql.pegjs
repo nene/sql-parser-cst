@@ -1423,10 +1423,10 @@ exists_op
 comparison_op_right
   = arithmetic_op_right
   / in_op_right
-  / between_op_right
   / is_op_right
   / like_op_right
   / regexp_op_right
+  / between_op_right
 
 arithmetic_op_right
   = tail:(__ arithmetic_comparison_operator __ additive_expr)+ {
@@ -1436,12 +1436,43 @@ arithmetic_op_right
 arithmetic_comparison_operator
   = ">=" / ">" / "<=" / "<>" / "<" / "=" / "!="
 
+in_op_right
+  = op:in_op __ LPAREN  __ l:expr_list __ RPAREN {
+    return "[Not implemented]";
+  }
+  / op:in_op __ e:(var_decl / column_ref / literal_string) {
+    return "[Not implemented]";
+  }
+
+in_op
+  = nk:(KW_NOT __ KW_IN) { return "[Not implemented]"; }
+  / KW_IN
+
 is_op_right
   = op:KW_IS c:__ right:additive_expr {
     return { kind: "is", op: [createKeyword(op)], c, right };
   }
   / op:(KW_IS __ KW_NOT) c:__ right:additive_expr {
     return { kind: "is", op: createKeywordList(op), c, right };
+  }
+
+like_op_right
+  = op:like_op c:__ right:(literal / comparison_expr) {
+    return { kind: "like", op, c, right };
+  }
+
+like_op
+  = kws:(KW_NOT __ KW_LIKE) { return createKeywordList(kws); }
+  / kw:KW_LIKE { return [createKeyword(kw)]; }
+
+regexp_op_right
+  = op:regexp_op __ b:'BINARY'i? __ e:(literal_string / column_ref) {
+    return "[Not implemented]";
+  }
+
+regexp_op
+  = n: KW_NOT? __ k:(KW_REGEXP / KW_RLIKE) {
+    return n ? `${n} ${k}` : k
   }
 
 between_op_right
@@ -1458,36 +1489,6 @@ between_op_right
 between_or_not_between_op
   = kws:(KW_NOT __ KW_BETWEEN) { return createKeywordList(kws); }
   / kw:KW_BETWEEN { return createKeywordList([kw]); }
-
-like_op
-  = kws:(KW_NOT __ KW_LIKE) { return createKeywordList(kws); }
-  / kw:KW_LIKE { return [createKeyword(kw)]; }
-
-regexp_op
-  = n: KW_NOT? __ k:(KW_REGEXP / KW_RLIKE) {
-    return n ? `${n} ${k}` : k
-  }
-in_op
-  = nk:(KW_NOT __ KW_IN) { return "[Not implemented]"; }
-  / KW_IN
-
-regexp_op_right
-  = op:regexp_op __ b:'BINARY'i? __ e:(literal_string / column_ref) {
-    return "[Not implemented]";
-  }
-
-like_op_right
-  = op:like_op c:__ right:(literal / comparison_expr) {
-    return { kind: "like", op, c, right };
-  }
-
-in_op_right
-  = op:in_op __ LPAREN  __ l:expr_list __ RPAREN {
-    return "[Not implemented]";
-  }
-  / op:in_op __ e:(var_decl / column_ref / literal_string) {
-    return "[Not implemented]";
-  }
 
 additive_expr
   = head: multiplicative_expr
