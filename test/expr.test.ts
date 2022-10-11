@@ -121,6 +121,18 @@ describe("expr", () => {
       testExpr(`! ! ! false`);
       testExpr(`! /*com*/ true`);
     });
+
+    it("parses AND operator", () => {
+      testExpr(`x > 1 AND false`);
+      testExpr(`c < 2 AND y = 2 AND 3 > 2`);
+      testExpr(`true /*com1*/ AND /*com2*/ false`);
+    });
+
+    it("parses OR operator", () => {
+      testExpr(`true OR false`);
+      testExpr(`x != 3 OR y > 2 OR z <> 4`);
+      testExpr(`true /*com1*/ OR /*com2*/ false`);
+    });
   });
 
   describe("operator precedence", () => {
@@ -235,6 +247,72 @@ describe("expr", () => {
             },
           ],
           "type": "unary_expr",
+        }
+      `);
+    });
+
+    it("NOT has higher precedence than AND", () => {
+      expect(parseExpr(`NOT false AND true`)).toMatchInlineSnapshot(`
+        {
+          "left": {
+            "expr": {
+              "text": "false",
+              "type": "bool",
+            },
+            "operator": [
+              {
+                "text": "NOT",
+                "type": "keyword",
+              },
+            ],
+            "type": "unary_expr",
+          },
+          "operator": [
+            {
+              "text": "AND",
+              "type": "keyword",
+            },
+          ],
+          "right": {
+            "text": "true",
+            "type": "bool",
+          },
+          "type": "binary_expr",
+        }
+      `);
+    });
+
+    it("AND has higher precedence than OR", () => {
+      expect(parseExpr(`true OR false AND true`)).toMatchInlineSnapshot(`
+        {
+          "left": {
+            "text": "true",
+            "type": "bool",
+          },
+          "operator": [
+            {
+              "text": "OR",
+              "type": "keyword",
+            },
+          ],
+          "right": {
+            "left": {
+              "text": "false",
+              "type": "bool",
+            },
+            "operator": [
+              {
+                "text": "AND",
+                "type": "keyword",
+              },
+            ],
+            "right": {
+              "text": "true",
+              "type": "bool",
+            },
+            "type": "binary_expr",
+          },
+          "type": "binary_expr",
         }
       `);
     });

@@ -1384,14 +1384,18 @@ or_and_where_expr
   }
 
 or_expr
-  = head:and_expr tail:(___ KW_OR __ and_expr)* {
-    return head; // TODO
+  = head:and_expr tail:(___ or_op __ and_expr)* {
+    return createBinaryExprChain(head, tail);
   }
 
+or_op = kw:KW_OR { return createKeywordList([kw]); }
+
 and_expr
-  = head:not_expr tail:(___ KW_AND __ not_expr)* {
-    return head; // TODO
+  = head:not_expr tail:(___ and_op __ not_expr)* {
+    return createBinaryExprChain(head, tail);
   }
+
+and_op = kw:KW_AND { return createKeywordList([kw]); }
 
 //here we should use `NOT` instead of `comparision_expr` to support chain-expr
 not_expr
