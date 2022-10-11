@@ -1298,10 +1298,14 @@ value_item
 
 expr_list
   = head:expr tail:(__ COMMA __ expr)* {
-    return {
-      type: "expr_list",
-      children: tail.reduce((arr, [c1, comma, c2, expr]) => [...arr, expr], [head]),
-    };
+    const children = [head];
+    for (const [c1, comma, c2, expr] of tail) {
+      const lastIdx = children.length - 1;
+      children[lastIdx] = withComments(children[lastIdx], { trailing: c1 });
+      children.push(withComments(expr, { leading: c2 }));
+    }
+
+    return { type: "expr_list", children };
   }
 
 interval_expr
@@ -1389,7 +1393,7 @@ not_expr
 comparison_expr
   = head:additive_expr c:__ right:(comparison_op_right)? {
     if (!right) {
-      return head;
+      return withComments(head, { trailing: c });
     }
     if (right.kind === "arithmetic") {
       // overwrite the first comment (which never matches) in tail,
@@ -1440,14 +1444,14 @@ arithmetic_comparison_operator
   = ">=" / ">" / "<=" / "<>" / "<" / "=" / "!="
 
 in_op_right
-  = op:in_op c1:__ LPAREN  __ list:expr_list __ RPAREN {
+  = op:in_op c1:__ LPAREN  c2:__ list:expr_list c3:__ RPAREN {
     return {
       kind: "in",
       op,
       c: c1,
       right: {
         type: "paren_expr",
-        expr: list,
+        expr: withComments(list, { leading: c2, trailing: c3 }),
       },
     };
   }

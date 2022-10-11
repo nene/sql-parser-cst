@@ -95,6 +95,8 @@ describe("expr", () => {
     it("parses IN (...) operator", () => {
       testExpr(`7 IN (1, 2, 3, 4)`);
       testExpr(`7 NOT IN (1, 2, 3, 4)`);
+      testExpr(`7 /*c*/ IN /*c0*/ (/*c1*/ 1 /*c2*/, /*c3*/ 2 /*c4*/)`);
+      testExpr(`7 /**/ NOT /*c*/ IN /*c0*/ (/*c1*/ 1 /*c2*/, /*c3*/ 2 /*c4*/)`);
     });
 
     it("parses BETWEEN operator", () => {
