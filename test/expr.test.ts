@@ -70,6 +70,18 @@ describe("expr", () => {
       testExpr(`'foobar' /*c1*/ NOT /*c2*/ LIKE /*c3*/ 'foo%'`);
     });
 
+    it("parses REGEXP/RLIKE operator", () => {
+      testExpr(`'foooo' REGEXP 'fo*'`);
+      testExpr(`'foooo' RLIKE 'fo*'`);
+      testExpr(`'foooo' /*c1*/ RLIKE /*c2*/ 'fo*'`);
+    });
+
+    it("parses NOT REGEXP/RLIKE operator", () => {
+      testExpr(`'foooo' NOT REGEXP 'fo*'`);
+      testExpr(`'foooo' NOT RLIKE 'fo*'`);
+      testExpr(`'foooo' /*c1*/ NOT /*c2*/ RLIKE /*c3*/ 'fo*'`);
+    });
+
     it("parses BETWEEN operator", () => {
       testExpr(`5 BETWEEN 1 AND 10`);
       testExpr(`5 between 1 and 10`);

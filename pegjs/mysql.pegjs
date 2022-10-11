@@ -1466,13 +1466,16 @@ like_op
   / kw:KW_LIKE { return createKeywordList([kw]); }
 
 regexp_op_right
-  = op:regexp_op __ b:'BINARY'i? __ e:(literal_string / column_ref) {
-    return "[Not implemented]";
+  = op:regexp_op c:__ b:'BINARY'i? __ right:(literal_string / column_ref) {
+    return { kind: "regexp", op, c, right }; // TODO
   }
 
 regexp_op
-  = n: KW_NOT? __ k:(KW_REGEXP / KW_RLIKE) {
-    return n ? `${n} ${k}` : k
+  = kws:(KW_NOT __ (KW_REGEXP / KW_RLIKE)) {
+    return createKeywordList(kws);
+  }
+  / kw:(KW_REGEXP / KW_RLIKE) {
+    return createKeywordList([kw]);
   }
 
 between_op_right
