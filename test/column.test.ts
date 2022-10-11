@@ -19,10 +19,35 @@ describe("column", () => {
     testExpr("`some special name`");
   });
 
+  it("parses qualified column name", () => {
+    testExpr("foo.bar");
+    testExpr("`foo`.`bar`");
+    testExpr("foo.'bar'");
+    testExpr("`foo`.'bar'");
+    testExpr('foo."bar"');
+    testExpr('`foo`."bar"');
+  });
+
   it("parses column name as ColumnRef node", () => {
     expect(parseExpr("foo")).toMatchInlineSnapshot(`
       {
         "column": {
+          "text": "foo",
+          "type": "identifier",
+        },
+        "type": "column_ref",
+      }
+    `);
+  });
+
+  it("parses qualified column name as ColumnRef node", () => {
+    expect(parseExpr("foo.bar")).toMatchInlineSnapshot(`
+      {
+        "column": {
+          "text": "bar",
+          "type": "identifier",
+        },
+        "table": {
           "text": "foo",
           "type": "identifier",
         },

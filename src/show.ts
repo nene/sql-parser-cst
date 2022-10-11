@@ -110,6 +110,7 @@ const showKeyword = (kw: Keyword) => kw.text;
 const showStringWithCharset = (node: StringWithCharset) =>
   node.charset + " " + show(node.string);
 
-const showColumnRef = (node: ColumnRef) => show(node.column);
+const showColumnRef = (node: ColumnRef) =>
+  node.table ? show(node.table) + "." + show(node.column) : show(node.column);
 
 const showIdentifier = (node: Identifier) => node.text;

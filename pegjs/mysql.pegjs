@@ -1553,7 +1553,11 @@ column_ref
     return "[Not implemented]";
   }
   / tbl:(ident_name / backticks_quoted_ident) __ DOT __ col:column_without_kw {
-    return "[Not implemented]";
+    return {
+      type: "column_ref",
+      table: createIdentifier(tbl),
+      column: createIdentifier(col),
+    };
   }
   / col:column {
     return {
