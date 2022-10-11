@@ -1,45 +1,39 @@
-import { parse } from "../src/parser";
+import { parse, show } from "../src/parser";
 
 describe("select", () => {
+  function test(sql: string) {
+    expect(show(parse(sql))).toBe(sql);
+  }
+
   it("parses simple SELECT", () => {
-    expect(parse("SELECT 'hello'")).toMatchInlineSnapshot(`
-      {
-        "columns": {
-          "children": [
-            {
-              "text": "'hello'",
-              "type": "string",
-            },
-          ],
-          "type": "expr_list",
-        },
-        "type": "select",
-      }
-    `);
+    test("SELECT 'hello'");
+    test("SELECT 1, 2, 3");
   });
 
-  it("parses SELECT with multiple columns", () => {
-    expect(parse("SELECT 1, 2, 3")).toMatchInlineSnapshot(`
-      {
-        "columns": {
-          "children": [
-            {
-              "text": "1",
-              "type": "number",
-            },
-            {
-              "text": "2",
-              "type": "number",
-            },
-            {
-              "text": "3",
-              "type": "number",
-            },
-          ],
-          "type": "expr_list",
-        },
-        "type": "select",
-      }
-    `);
+  describe("syntax tree", () => {
+    it("parses SELECT with multiple columns", () => {
+      expect(parse("SELECT 1, 2, 3")).toMatchInlineSnapshot(`
+        {
+          "columns": {
+            "children": [
+              {
+                "text": "1",
+                "type": "number",
+              },
+              {
+                "text": "2",
+                "type": "number",
+              },
+              {
+                "text": "3",
+                "type": "number",
+              },
+            ],
+            "type": "expr_list",
+          },
+          "type": "select",
+        }
+      `);
+    });
   });
 });
