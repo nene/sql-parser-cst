@@ -1476,7 +1476,7 @@ regexp_op
   }
 
 between_op_right
-  = betweenKw:between_or_not_between_op c1:__  begin:additive_expr c2:__ andKw:KW_AND c3:__ end:additive_expr {
+  = betweenKw:between_op c1:__  begin:additive_expr c2:__ andKw:KW_AND c3:__ end:additive_expr {
     return {
       kind: "between",
       betweenKw,
@@ -1486,7 +1486,7 @@ between_op_right
     };
   }
 
-between_or_not_between_op
+between_op
   = kws:(KW_NOT __ KW_BETWEEN) { return createKeywordList(kws); }
   / kw:KW_BETWEEN { return createKeywordList([kw]); }
 
