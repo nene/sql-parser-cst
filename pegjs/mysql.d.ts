@@ -1,6 +1,6 @@
-type Ast = Select;
+type Ast = Statement;
 
-type Node = {
+type Comments = {
   leadingComments?: Comment[];
   trailingComments?: Comment[];
 };
@@ -10,60 +10,64 @@ type Comment = {
   text: string;
 };
 
-type Select = Node & {
-  type: "select";
-  columns: Expr[];
-};
+type Node = Statement | Expr | Keyword;
 
-type Expr = Literal | StringWithCharset | BinaryExpr;
+type Statement = Select;
 
-type BinaryExpr = Node & {
-  type: "binary_expr";
-  left: Expr;
-  operator: string | Keyword[];
-  right: Expr;
-};
-
-type StringWithCharset = Node & {
-  type: "string_with_charset";
-  charset: string;
-  string: StringLiteral;
-};
-
-type Literal =
+type Expr =
+  | BinaryExpr
+  | StringWithCharset
   | StringLiteral
   | NumberLiteral
   | BoolLiteral
   | NullLiteral
   | DateTimeLiteral;
 
-type StringLiteral = Node & {
+type Select = Comments & {
+  type: "select";
+  columns: Expr[];
+};
+
+type BinaryExpr = Comments & {
+  type: "binary_expr";
+  left: Expr;
+  operator: string | Keyword[];
+  right: Expr;
+};
+
+type StringWithCharset = Comments & {
+  type: "string_with_charset";
+  charset: string;
+  string: StringLiteral;
+};
+
+type StringLiteral = Comments & {
   type: "string";
   text: string;
 };
 
-type NumberLiteral = Node & {
+type NumberLiteral = Comments & {
   type: "number";
   text: string;
 };
 
-type BoolLiteral = Node & {
+type BoolLiteral = Comments & {
   type: "bool";
   text: string;
 };
 
-type NullLiteral = Node & {
+type NullLiteral = Comments & {
   type: "null";
   text: string;
 };
 
-type DateTimeLiteral = Node & {
+type DateTimeLiteral = Comments & {
   type: "datetime";
   kw: Keyword;
   string: StringLiteral;
 };
 
-type Keyword = Node & {
+type Keyword = Comments & {
   type: "keyword";
   text: string;
 };

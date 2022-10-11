@@ -1,8 +1,8 @@
-import { parse } from "../src/parser";
+import { parse, show } from "../src/parser";
 
 describe("expr", () => {
-  function parseExpr(expr: string) {
-    return parse(`SELECT ${expr}`).columns[0];
+  function testExpr(expr: string) {
+    expect(show(parse(`SELECT ${expr}`))).toBe(`SELECT ${expr}`);
   }
 
   describe("operators", () => {
@@ -29,65 +29,63 @@ describe("expr", () => {
       "!=",
     ].forEach((op) => {
       it(`parses ${op} operator`, () => {
-        expect(parseExpr(`5 ${op} 7`)).toMatchSnapshot();
+        testExpr(`5 ${op} 7`);
       });
     });
 
     it("parses chain of addition and subtraction", () => {
-      expect(parseExpr(`5 + 6 - 8`)).toMatchSnapshot();
+      testExpr(`5 + 6 - 8`);
     });
 
     it("parses chain of multiplication and division", () => {
-      expect(parseExpr(`2 * 7 / 3`)).toMatchSnapshot();
+      testExpr(`2 * 7 / 3`);
     });
 
     it("treats multiplication with higher precedence than addition", () => {
-      expect(parseExpr(`6 + 7 * 3`)).toMatchSnapshot();
+      testExpr(`6 + 7 * 3`);
     });
 
     it("parses DIV operator", () => {
-      expect(parseExpr(`8 DIV 4`)).toMatchSnapshot();
+      testExpr(`8 DIV 4`);
     });
 
     it("recognizes lowercase DIV operator", () => {
-      expect(parseExpr(`8 div 4`)).toMatchSnapshot();
+      testExpr(`8 div 4`);
     });
 
     it("parses addition with comments", () => {
-      expect(parseExpr(`6 /* com1 */ + /* com2 */ 7`)).toMatchSnapshot();
+      testExpr(`6 /* com1 */ + /* com2 */ 7`);
     });
 
     it("parses multiplication with comments", () => {
-      expect(parseExpr(`6 /* com1 */ * /* com2 */ 7`)).toMatchSnapshot();
+      testExpr(`6 /* com1 */ * /* com2 */ 7`);
     });
 
     it("parses comparison with comments", () => {
-      expect(parseExpr(`6 /* com1 */ < /* com2 */ 7`)).toMatchSnapshot();
+      testExpr(`6 /* com1 */ < /* com2 */ 7`);
     });
 
     it("parses IS operator", () => {
-      expect(parseExpr(`7 IS 5`)).toMatchSnapshot();
+      testExpr(`7 IS 5`);
     });
     it("parses IS operator with comments", () => {
-      expect(parseExpr(`7 /*c1*/ IS /*c2*/ 5`)).toMatchSnapshot();
+      testExpr(`7 /*c1*/ IS /*c2*/ 5`);
     });
 
     it("parses IS NOT operator", () => {
-      expect(parseExpr(`7 IS NOT 5`)).toMatchSnapshot();
+      testExpr(`7 IS NOT 5`);
     });
     it("parses IS NOT operator with comments", () => {
-      expect(parseExpr(`7 /*c1*/ IS /*c2*/ NOT /*c3*/ 5`)).toMatchSnapshot();
+      testExpr(`7 /*c1*/ IS /*c2*/ NOT /*c3*/ 5`);
     });
 
     it("parses LIKE & NOT LIKE operators", () => {
-      expect(parseExpr(`'foobar' LIKE 'foo%'`)).toMatchSnapshot();
-      expect(parseExpr(`'foobar' NOT LIKE 'foo%'`)).toMatchSnapshot();
+      testExpr(`'foobar' LIKE 'foo%'`);
+      testExpr(`'foobar' NOT LIKE 'foo%'`);
     });
     it("parses LIKE & NOT LIKE operators with comments", () => {
-      expect(parseExpr(`'foobar' /*c1*/ LIKE /*c2*/ 'foo%'`)).toMatchSnapshot();
-      expect(
-        parseExpr(`'foobar' /*c1*/ NOT /*c2*/ LIKE /*c3*/ 'foo%'`)
-      ).toMatchSnapshot();
+      testExpr(`'foobar' /*c1*/ LIKE /*c2*/ 'foo%'`);
+      testExpr(`'foobar' /*c1*/ NOT /*c2*/ LIKE /*c3*/ 'foo%'`);
     });
   });
 });
