@@ -1391,10 +1391,11 @@ not_expr
   }
 
 comparison_expr
-  = head:additive_expr c:__ right:(comparison_op_right)? {
-    if (!right) {
-      return withComments(head, { trailing: c });
+  = head:additive_expr tail:(__ comparison_op_right)? {
+    if (!tail) {
+      return head;
     }
+    const [c, right] = tail;
     if (right.kind === "arithmetic") {
       // overwrite the first comment (which never matches) in tail,
       // because the comment inside this rule matches first.
