@@ -19,6 +19,10 @@ describe("column", () => {
     testExpr("`some special name`");
   });
 
+  it("parses escaped quotes in column name", () => {
+    testExpr("`some `` name`");
+  });
+
   it("parses qualified column name", () => {
     testExpr("foo.bar");
     testExpr("`foo`.`bar`");

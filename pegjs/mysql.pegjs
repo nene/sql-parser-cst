@@ -1628,13 +1628,13 @@ quoted_ident
   / backticks_quoted_ident
 
 double_quoted_ident
-  = q:'"' chars:[^"]+ '"' { return q + chars.join('') + q; }
+  = q:'"' chars:([^"] / '""')+ '"' { return q + chars.join('') + q; }
 
 single_quoted_ident
-  = q:"'" chars:[^']+ "'" { return q + chars.join('') + q; }
+  = q:"'" chars:([^'] / "''")+ "'" { return q + chars.join('') + q; }
 
 backticks_quoted_ident
-  = q:"`" chars:[^`]+ "`" { return q + chars.join('') + q; }
+  = q:"`" chars:([^`] / "``")+ "`" { return q + chars.join('') + q; }
 
 column_without_kw
   = name:column_name {
