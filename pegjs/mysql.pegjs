@@ -1613,7 +1613,9 @@ ident
 
 alias_ident
   = name:ident_name !{
-      if (reservedMap[name.toUpperCase()] === true) throw new Error("Error: "+ JSON.stringify(name)+" is a reserved word, can not as alias clause");
+      if (reservedMap[name.toUpperCase()] === true) {
+        throw new Error("Error: "+ JSON.stringify(name)+" is a reserved word, can not as alias clause");
+      }
       return false
     } {
       return name;
