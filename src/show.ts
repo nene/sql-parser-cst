@@ -2,9 +2,11 @@ import {
   BetweenExpr,
   BinaryExpr,
   BoolLiteral,
+  ColumnRef,
   Comment,
   DateTimeLiteral,
   ExprList,
+  Identifier,
   Keyword,
   Node,
   NullLiteral,
@@ -59,6 +61,10 @@ function showNode(node: Node): string {
       return showKeyword(node);
     case "string_with_charset":
       return showStringWithCharset(node);
+    case "column_ref":
+      return showColumnRef(node);
+    case "identifier":
+      return showIdentifier(node);
   }
 }
 
@@ -103,3 +109,7 @@ const showKeyword = (kw: Keyword) => kw.text;
 
 const showStringWithCharset = (node: StringWithCharset) =>
   node.charset + " " + show(node.string);
+
+const showColumnRef = (node: ColumnRef) => show(node.column);
+
+const showIdentifier = (node: Identifier) => node.text;

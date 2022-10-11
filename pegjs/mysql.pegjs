@@ -324,6 +324,8 @@
     }
     return keywords;
   }
+
+  const createIdentifier = (text) => ({ type: "identifier", text });
 }
 
 start
@@ -1554,7 +1556,10 @@ column_ref
     return "[Not implemented]";
   }
   / col:column {
-    return "[Not implemented]";
+    return {
+      type: "column_ref",
+      column: createIdentifier(col),
+    };
   }
 
 column_list

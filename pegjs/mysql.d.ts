@@ -24,7 +24,9 @@ type Expr =
   | NumberLiteral
   | BoolLiteral
   | NullLiteral
-  | DateTimeLiteral;
+  | DateTimeLiteral
+  | ColumnRef
+  | Identifier;
 
 type Select = Comments & {
   type: "select";
@@ -87,6 +89,17 @@ type DateTimeLiteral = Comments & {
   type: "datetime";
   kw: Keyword;
   string: StringLiteral;
+};
+
+type ColumnRef = Comments & {
+  type: "column_ref";
+  table?: Identifier;
+  column: Identifier;
+};
+
+type Identifier = Comments & {
+  type: "identifier";
+  text: string;
 };
 
 type Keyword = Comments & {
