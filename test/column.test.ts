@@ -26,6 +26,7 @@ describe("column", () => {
     testExpr("`foo`.'bar'");
     testExpr('foo."bar"');
     testExpr('`foo`."bar"');
+    testExpr("foo /*c1*/./*c2*/ bar");
   });
 
   it("parses column name as ColumnRef node", () => {

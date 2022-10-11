@@ -1552,11 +1552,11 @@ column_ref
   = tbl:(ident __ DOT __)? col:column __ a:((DOUBLE_ARROW / SINGLE_ARROW) __ (literal_string / literal_numeric))+ __ ca:collate_expr? {
     return "[Not implemented]";
   }
-  / tbl:(ident_name / backticks_quoted_ident) __ DOT __ col:column_without_kw {
+  / tbl:(ident_name / backticks_quoted_ident) c1:__ DOT c2:__ col:column_without_kw {
     return {
       type: "column_ref",
-      table: createIdentifier(tbl),
-      column: createIdentifier(col),
+      table: withComments(createIdentifier(tbl), {trailing: c1}),
+      column: withComments(createIdentifier(col), {leading: c2}),
     };
   }
   / col:column {
