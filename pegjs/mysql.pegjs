@@ -1058,13 +1058,28 @@ column_list_item
   / a:assign_stmt {
     return "[Not implemented]";
   }
-  / e:expr (__ alias:alias_clause)? {
-    return e; // TODO
+  / expr:expr alias:(__ alias_clause)? {
+    if (!alias) {
+      return expr;
+    }
+    const [c, partialAlias] = alias;
+    return {
+      type: "alias",
+      expr: withComments(expr, { trailing: c }),
+      ...partialAlias,
+    };
   }
 
 alias_clause
-  = KW_AS __ i:alias_ident { return "[Not implemented]"; }
-  / KW_AS? __ i:ident { return "[Not implemented]"; }
+  = kw:KW_AS c:__ id:(alias_ident / ident) {
+    return {
+      kwAs: createKeyword(kw),
+      alias: withComments(createIdentifier(id), { leading: c }),
+    };
+  }
+  / id:ident {
+    return { alias: createIdentifier(id) };
+  }
 
 into_clause
   = KW_INTO __ v:var_decl_list {
@@ -1592,7 +1607,7 @@ column_list
 
 ident
   = name:ident_name !{ return reservedMap[name.toUpperCase()] === true; } {
-    return "[Not implemented]";
+    return name;
   }
   / quoted_ident
 
@@ -1601,10 +1616,10 @@ alias_ident
       if (reservedMap[name.toUpperCase()] === true) throw new Error("Error: "+ JSON.stringify(name)+" is a reserved word, can not as alias clause");
       return false
     } {
-      return "[Not implemented]";
+      return name;
     }
   / name:quoted_ident {
-      return "[Not implemented]";
+      return name;
     }
 
 quoted_ident

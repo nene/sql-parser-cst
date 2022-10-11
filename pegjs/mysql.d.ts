@@ -15,6 +15,7 @@ type Node = Statement | Expr | Keyword;
 type Statement = Select;
 
 type Expr =
+  | Alias
   | ExprList
   | ParenExpr
   | BinaryExpr
@@ -32,6 +33,13 @@ type Expr =
 type Select = Comments & {
   type: "select";
   columns: ExprList;
+};
+
+type Alias = Comments & {
+  type: "alias";
+  expr: Expr;
+  kwAs?: Keyword;
+  alias: Identifier;
 };
 
 type ExprList = Comments & {

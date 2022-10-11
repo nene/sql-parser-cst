@@ -1,4 +1,5 @@
 import {
+  Alias,
   BetweenExpr,
   BinaryExpr,
   BoolLiteral,
@@ -40,6 +41,8 @@ function showNode(node: Node): string {
   switch (node.type) {
     case "select":
       return showSelect(node);
+    case "alias":
+      return showAlias(node);
     case "expr_list":
       return showExprList(node);
     case "paren_expr":
@@ -82,6 +85,12 @@ const showComment = (c: Comment): string =>
   c.type === "line_comment" ? c.text + "\n" : c.text;
 
 const showSelect = (node: Select) => "SELECT " + show(node.columns);
+
+const showAlias = (node: Alias) => {
+  return node.kwAs
+    ? `${show(node.expr)} ${show(node.kwAs)} ${show(node.alias)}`
+    : `${show(node.expr)} ${show(node.alias)}`;
+};
 
 const showLiteral = (
   node: StringLiteral | NumberLiteral | BoolLiteral | NullLiteral
