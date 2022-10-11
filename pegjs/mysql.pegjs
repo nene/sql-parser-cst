@@ -1449,11 +1449,11 @@ in_op
   / KW_IN
 
 is_op_right
-  = op:KW_IS c:__ right:additive_expr {
-    return { kind: "is", op: [createKeyword(op)], c, right };
+  = kw:KW_IS c:__ right:additive_expr {
+    return { kind: "is", op: createKeywordList([kw]), c, right };
   }
-  / op:(KW_IS __ KW_NOT) c:__ right:additive_expr {
-    return { kind: "is", op: createKeywordList(op), c, right };
+  / kws:(KW_IS __ KW_NOT) c:__ right:additive_expr {
+    return { kind: "is", op: createKeywordList(kws), c, right };
   }
 
 like_op_right
@@ -1463,7 +1463,7 @@ like_op_right
 
 like_op
   = kws:(KW_NOT __ KW_LIKE) { return createKeywordList(kws); }
-  / kw:KW_LIKE { return [createKeyword(kw)]; }
+  / kw:KW_LIKE { return createKeywordList([kw]); }
 
 regexp_op_right
   = op:regexp_op __ b:'BINARY'i? __ e:(literal_string / column_ref) {
