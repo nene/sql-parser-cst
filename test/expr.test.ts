@@ -1,6 +1,10 @@
 import { parse, show } from "../src/parser";
 
 describe("expr", () => {
+  function parseExpr(expr: string) {
+    return parse(`SELECT ${expr}`).columns[0];
+  }
+
   function testExpr(expr: string) {
     expect(show(parse(`SELECT ${expr}`))).toBe(`SELECT ${expr}`);
   }
@@ -64,6 +68,91 @@ describe("expr", () => {
     it("parses NOT LIKE operator", () => {
       testExpr(`'foobar' NOT LIKE 'foo%'`);
       testExpr(`'foobar' /*c1*/ NOT /*c2*/ LIKE /*c3*/ 'foo%'`);
+    });
+  });
+
+  describe("operator precedence", () => {
+    it("associates same level binary operators to left", () => {
+      expect(parseExpr(`5 + 2 - 1`)).toMatchInlineSnapshot(`
+        {
+          "left": {
+            "left": {
+              "text": "5",
+              "type": "number",
+            },
+            "operator": "+",
+            "right": {
+              "text": "2",
+              "type": "number",
+            },
+            "type": "binary_expr",
+          },
+          "operator": "-",
+          "right": {
+            "text": "1",
+            "type": "number",
+          },
+          "type": "binary_expr",
+        }
+      `);
+    });
+
+    it("multiplication has higher precedence than addition", () => {
+      expect(parseExpr(`5 + 2 * 3`)).toMatchInlineSnapshot(`
+        {
+          "left": {
+            "text": "5",
+            "type": "number",
+          },
+          "operator": "+",
+          "right": {
+            "left": {
+              "text": "2",
+              "type": "number",
+            },
+            "operator": "*",
+            "right": {
+              "text": "3",
+              "type": "number",
+            },
+            "type": "binary_expr",
+          },
+          "type": "binary_expr",
+        }
+      `);
+    });
+
+    it("addition has higher precedence than comparison", () => {
+      expect(parseExpr(`5 + 2 > 3 + 1`)).toMatchInlineSnapshot(`
+        {
+          "left": {
+            "left": {
+              "text": "5",
+              "type": "number",
+            },
+            "operator": "+",
+            "right": {
+              "text": "2",
+              "type": "number",
+            },
+            "type": "binary_expr",
+          },
+          "operator": ">",
+          "right": {
+            "left": {
+              "text": "3",
+              "type": "number",
+            },
+            "operator": "+",
+            "right": {
+              "text": "1",
+              "type": "number",
+            },
+            "type": "binary_expr",
+          },
+          "type": "binary_expr",
+        }
+      `);
     });
   });
 });
