@@ -18,6 +18,7 @@ type Expr =
   | ExprList
   | ParenExpr
   | BinaryExpr
+  | UnaryExpr
   | BetweenExpr
   | StringWithCharset
   | StringLiteral
@@ -48,6 +49,12 @@ type BinaryExpr = Comments & {
   left: Expr;
   operator: string | Keyword[];
   right: Expr;
+};
+
+type UnaryExpr = Comments & {
+  type: "unary_expr";
+  operator: string | Keyword[];
+  expr: Expr;
 };
 
 type BetweenExpr = Comments & {

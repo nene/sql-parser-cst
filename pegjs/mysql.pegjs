@@ -311,6 +311,14 @@
     };
   }
 
+  function createUnaryExpr(op, c, right) {
+    return {
+      type: "unary_expr",
+      operator: op,
+      expr: withComments(right, { leading: c }),
+    };
+  }
+
   const createKeyword = (text) => ({ type: "keyword", text });
 
   const createKeywordList = (items) => {
@@ -1384,12 +1392,16 @@ and_expr
   = head:not_expr tail:(___ KW_AND __ not_expr)* {
     return head; // TODO
   }
+
 //here we should use `NOT` instead of `comparision_expr` to support chain-expr
 not_expr
   = comparison_expr
   / exists_expr
-  / (KW_NOT / "!" !"=") __ expr:not_expr {
-    return "[Not implemented]";
+  / kw:KW_NOT c:__ expr:not_expr {
+    return createUnaryExpr(createKeywordList([kw]), c, expr);
+  }
+  / op:"!" !"=" c:__ expr:not_expr {
+    return createUnaryExpr(op, c, expr);
   }
 
 comparison_expr

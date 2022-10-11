@@ -109,6 +109,18 @@ describe("expr", () => {
       testExpr(`5 NOT BETWEEN 1 AND 10`);
       testExpr(`5 /*c0*/ not /*c1*/ BETWEEN /*c2*/ 1 /*c3*/ AND /*c4*/ 10`);
     });
+
+    it("parses NOT operator", () => {
+      testExpr(`NOT x > y`);
+      testExpr(`NOT NOT true`);
+      testExpr(`NOT /*com*/ true`);
+    });
+
+    it("parses ! operator", () => {
+      testExpr(`! x > y`);
+      testExpr(`! ! ! false`);
+      testExpr(`! /*com*/ true`);
+    });
   });
 
   describe("operator precedence", () => {
@@ -191,6 +203,38 @@ describe("expr", () => {
             "type": "binary_expr",
           },
           "type": "binary_expr",
+        }
+      `);
+    });
+
+    it("comparison has higher precedence than NOT", () => {
+      expect(parseExpr(`NOT x > y`)).toMatchInlineSnapshot(`
+        {
+          "expr": {
+            "left": {
+              "column": {
+                "text": "x",
+                "type": "identifier",
+              },
+              "type": "column_ref",
+            },
+            "operator": ">",
+            "right": {
+              "column": {
+                "text": "y",
+                "type": "identifier",
+              },
+              "type": "column_ref",
+            },
+            "type": "binary_expr",
+          },
+          "operator": [
+            {
+              "text": "NOT",
+              "type": "keyword",
+            },
+          ],
+          "type": "unary_expr",
         }
       `);
     });

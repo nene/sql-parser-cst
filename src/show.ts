@@ -15,6 +15,7 @@ import {
   Select,
   StringLiteral,
   StringWithCharset,
+  UnaryExpr,
 } from "pegjs/mysql";
 import { isDefined } from "./util";
 
@@ -45,6 +46,8 @@ function showNode(node: Node): string {
       return showParenExpr(node);
     case "binary_expr":
       return showBinaryExpr(node);
+    case "unary_expr":
+      return showUnaryExpr(node);
     case "between_expr":
       return showBetweenExpr(node);
     case "string":
@@ -93,6 +96,10 @@ const showParenExpr = (node: ParenExpr) => "(" + show(node.expr) + ")";
 
 const showBinaryExpr = (node: BinaryExpr) => {
   return show(node.left) + " " + show(node.operator) + " " + show(node.right);
+};
+
+const showUnaryExpr = (node: UnaryExpr) => {
+  return show(node.operator) + " " + show(node.expr);
 };
 
 const showBetweenExpr = (node: BetweenExpr) => {
