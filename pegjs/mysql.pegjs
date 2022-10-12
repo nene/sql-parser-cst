@@ -1620,8 +1620,8 @@ additive_operator
   = "+" / "-"
 
 multiplicative_expr
-  = head:unary_expr
-    tail:(__ multiplicative_operator  __ unary_expr)* {
+  = head:negation_expr
+    tail:(__ multiplicative_operator  __ negation_expr)* {
       return createBinaryExprChain(head, tail);
     }
 
@@ -1629,13 +1629,13 @@ multiplicative_operator
   = "*" / "/" / "%" / '&' / '>>' / '<<' / '^' / '|' / '~'
   / op:KW_DIV { return createKeyword(op); }
 
-unary_expr
+negation_expr
   = primary
-  / op:unary_operator c:__ right:unary_expr {
+  / op:negation_operator c:__ right:negation_expr {
     return createUnaryExpr(op, c, right);
   }
 
-unary_operator = "-" / "~"
+negation_operator = "-" / "~"
 
 primary
   = cast_expr
