@@ -62,6 +62,12 @@ describe("expr", () => {
       testExpr(`x << ~y`);
     });
 
+    it("parses unary ! operator", () => {
+      testExpr(`!x OR y`);
+      testExpr(`!!!false`);
+      testExpr(`!/*com*/ true`);
+    });
+
     it("parses IS operator", () => {
       testExpr(`7 IS 5`);
       testExpr(`7 /*c1*/ IS /*c2*/ 5`);
@@ -126,12 +132,6 @@ describe("expr", () => {
       testExpr(`NOT x > y`);
       testExpr(`NOT NOT true`);
       testExpr(`NOT /*com*/ true`);
-    });
-
-    it("parses ! operator", () => {
-      testExpr(`!x > y`);
-      testExpr(`!!!false`);
-      testExpr(`!/*com*/ true`);
     });
 
     it("parses AND / && operator", () => {

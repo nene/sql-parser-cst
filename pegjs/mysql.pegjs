@@ -1451,7 +1451,7 @@ case_else = KW_ELSE __ result:expr {
 /**
  * Operator precedence, as implemented currently (though incorrect)
  * ---------------------------------------------------------------------------------------------------
- * | -, ~                                                     | negation, bit inversion              |
+ * | -, ~, !                                                  | negation, bit inversion              |
  * | *, /, DIV, MOD                                           | multiplication, division             |
  * | +, -                                                     | addition, subtraction, concatenation |
  * | =, <, >, <=, >=, <>, !=, IS, LIKE, BETWEEN, IN           | comparion                            |
@@ -1489,9 +1489,6 @@ not_expr
   / exists_expr
   / kw:KW_NOT c:__ expr:not_expr {
     return createUnaryExpr(createKeyword(kw), c, expr);
-  }
-  / op:"!" !"=" c:__ expr:not_expr {
-    return createUnaryExpr(op, c, expr);
   }
 
 comparison_expr
@@ -1636,7 +1633,7 @@ negation_expr
     return createUnaryExpr(op, c, right);
   }
 
-negation_operator = "-" / "~"
+negation_operator = "-" / "~" / "!"
 
 primary
   = cast_expr
