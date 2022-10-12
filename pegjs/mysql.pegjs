@@ -1095,7 +1095,11 @@ into_clause
 
 from_clause
   = kw:KW_FROM c:__ tables:table_ref_list {
-    return { type: "from_clause", kwFrom: kw, tables }; // TODO
+    return {
+      type: "from_clause",
+      kwFrom: withComments(createKeyword(kw), { trailing: c }),
+      tables,
+    };
   }
 
 table_to_list

@@ -104,7 +104,7 @@ const showSelectClause = (node: SelectClause) =>
   "SELECT " + node.columns.map(show).join(", ");
 
 const showFromClause = (node: FromClause) =>
-  "FROM " + node.tables.map(show).join(", ");
+  show(node.kwFrom) + " " + node.tables.map(show).join(", ");
 
 const showAlias = (node: Alias) => {
   return node.kwAs

@@ -18,10 +18,17 @@ describe("select", () => {
     test("SELECT 1 /*c*/ bar");
   });
 
-  it("parses table names in FROM clause", () => {
-    test("SELECT col FROM tbl");
-    test("SELECT col FROM db.tbl");
-    test("SELECT col FROM db /*c1*/./*c2*/ tbl");
+  describe("FROM", () => {
+    it("parses basic syntax", () => {
+      test("SELECT col FROM tbl");
+      test("SELECT col from tbl");
+      test("SELECT col FROM /*com*/ tbl");
+    });
+
+    it("parses qualified table names", () => {
+      test("SELECT col FROM db.tbl");
+      test("SELECT col FROM db /*c1*/./*c2*/ tbl");
+    });
   });
 
   describe("syntax tree", () => {
