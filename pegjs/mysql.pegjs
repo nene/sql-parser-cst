@@ -998,9 +998,12 @@ select_stmt_nake
     win:window_clause? __
     li:into_clause? {
       // TODO
+      const clauses = [
+        { type: "select_clause", columns: c },
+      ];
       return {
-        type: "select",
-        columns: c,
+        type: "select_statement",
+        clauses,
       };
   }
 

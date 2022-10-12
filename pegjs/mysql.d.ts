@@ -10,9 +10,9 @@ type Comment = {
   text: string;
 };
 
-type Node = Statement | Expr | Keyword;
+type Node = Statement | Clause | Expr | Keyword;
 
-type Statement = Select;
+type Statement = SelectStatement;
 
 type Expr =
   | Alias
@@ -30,8 +30,15 @@ type Expr =
   | ColumnRef
   | Identifier;
 
-type Select = Comments & {
-  type: "select";
+type SelectStatement = Comments & {
+  type: "select_statement";
+  clauses: Clause[];
+};
+
+type Clause = SelectClause;
+
+type SelectClause = Comments & {
+  type: "select_clause";
   columns: ExprList;
 };
 

@@ -13,7 +13,8 @@ import {
   NullLiteral,
   NumberLiteral,
   ParenExpr,
-  Select,
+  SelectClause,
+  SelectStatement,
   StringLiteral,
   StringWithCharset,
   UnaryExpr,
@@ -39,8 +40,10 @@ export function show(node: Node | Node[] | string): string {
 
 function showNode(node: Node): string {
   switch (node.type) {
-    case "select":
-      return showSelect(node);
+    case "select_statement":
+      return showSelectStatement(node);
+    case "select_clause":
+      return showSelectClause(node);
     case "alias":
       return showAlias(node);
     case "expr_list":
@@ -84,7 +87,9 @@ const showComments = (c?: Comment[]): string | undefined => {
 const showComment = (c: Comment): string =>
   c.type === "line_comment" ? c.text + "\n" : c.text;
 
-const showSelect = (node: Select) => "SELECT " + show(node.columns);
+const showSelectStatement = (node: SelectStatement) => show(node.clauses);
+
+const showSelectClause = (node: SelectClause) => "SELECT " + show(node.columns);
 
 const showAlias = (node: Alias) => {
   return node.kwAs
