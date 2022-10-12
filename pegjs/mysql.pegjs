@@ -1626,7 +1626,7 @@ multiplicative_expr
     }
 
 multiplicative_operator
-  = "*" / "/" / "%" / '&' / '>>' / '<<' / '^' / '|' / '~'
+  = "*" / "/" / "%" / '&' / '>>' / '<<' / '^' / '|'
   / op:KW_DIV { return createKeyword(op); }
 
 negation_expr
