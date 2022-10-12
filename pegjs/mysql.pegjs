@@ -344,6 +344,18 @@
   };
 
   const createIdentifier = (text) => ({ type: "identifier", text });
+
+  const createAlias = (expr, _alias) => {
+    if (!_alias) {
+      return expr;
+    }
+    const [c, partialAlias] = _alias;
+    return {
+      type: "alias",
+      expr: withComments(expr, { trailing: c }),
+      ...partialAlias,
+    };
+  }
 }
 
 start
@@ -1068,15 +1080,7 @@ column_list_item
     return "[Not implemented]";
   }
   / expr:expr alias:(__ alias_clause)? {
-    if (!alias) {
-      return expr;
-    }
-    const [c, partialAlias] = alias;
-    return {
-      type: "alias",
-      expr: withComments(expr, { trailing: c }),
-      ...partialAlias,
-    };
+    return createAlias(expr, alias);
   }
 
 alias_clause
@@ -1164,8 +1168,8 @@ table_base
   = KW_DUAL {
     return "[Not implemented]";
   }
-  / t:table_name (__ alias:alias_clause)? {
-    return t; // TODO
+  / t:table_name alias:(__ alias_clause)? {
+    return createAlias(t, alias);
   }
   / LPAREN __ t:table_name __ r:RPAREN __ alias:alias_clause? {
     return "[Not implemented]";

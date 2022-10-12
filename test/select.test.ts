@@ -36,6 +36,10 @@ describe("select", () => {
       test("SELECT col FROM tbl1, tbl2, tbl3");
       test("SELECT col FROM tbl1 /*c1*/, /*c2*/ tbl2");
     });
+
+    it("parses table alias", () => {
+      test("SELECT t.col FROM my_db.my_long_table_name AS t");
+    });
   });
 
   describe("syntax tree", () => {

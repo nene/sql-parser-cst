@@ -48,7 +48,7 @@ type SelectClause = Comments & {
 type FromClause = Comments & {
   type: "from_clause";
   kwFrom: Keyword;
-  tables: TableRef[];
+  tables: Expr[];
 };
 
 type Alias = Comments & {
