@@ -41,6 +41,7 @@ type Clause = SelectClause | FromClause;
 
 type SelectClause = Comments & {
   type: "select_clause";
+  selectKw: Keyword;
   columns: Expr[];
 };
 

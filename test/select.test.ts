@@ -8,6 +8,7 @@ describe("select", () => {
   it("parses simple SELECT", () => {
     test("SELECT 'hello'");
     test("SELECT 1, 2, 3");
+    test("select 123");
     test("SELECT 1 /*c1*/, /*c2*/ 2");
   });
 
@@ -50,6 +51,10 @@ describe("select", () => {
                 "type": "number",
               },
             ],
+            "selectKw": {
+              "text": "SELECT",
+              "type": "keyword",
+            },
             "type": "select_clause",
           },
           "type": "select_statement",
@@ -78,6 +83,10 @@ describe("select", () => {
                 "type": "alias",
               },
             ],
+            "selectKw": {
+              "text": "SELECT",
+              "type": "keyword",
+            },
             "type": "select_clause",
           },
           "type": "select_statement",

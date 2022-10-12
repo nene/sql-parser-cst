@@ -982,10 +982,11 @@ locking_read
   }
 
 select_stmt_nake
-  = __ cte:with_clause? __ KW_SELECT ___
+  = __ cte:with_clause? __
+    kw:KW_SELECT ___
     opts:option_clause? __
     d:KW_DISTINCT?      __
-    c:column_clause     __
+    columns:column_clause     __
     ci:into_clause?      __
     from:from_clause?      __
     fi:into_clause?      __
@@ -1000,7 +1001,11 @@ select_stmt_nake
       // TODO
       const stmt = {
         type: "select_statement",
-        select: { type: "select_clause", columns: c },
+        select: {
+          type: "select_clause",
+          selectKw: createKeyword(kw),
+          columns,
+        },
       };
       if (from) {
         stmt.from = from;

@@ -101,7 +101,7 @@ const showSelectStatement = (node: SelectStatement) =>
   [node.select, node.from].filter(isDefined).map(show).join(" ");
 
 const showSelectClause = (node: SelectClause) =>
-  "SELECT " + node.columns.map(show).join(", ");
+  show(node.selectKw) + " " + node.columns.map(show).join(", ");
 
 const showFromClause = (node: FromClause) =>
   show(node.kwFrom) + " " + node.tables.map(show).join(", ");
