@@ -39,6 +39,15 @@ describe("select", () => {
 
     it("parses table alias", () => {
       test("SELECT t.col FROM my_db.my_long_table_name AS t");
+      test("SELECT t.col FROM my_db.my_long_table_name t");
+      test("SELECT t.col FROM db.tbl /*c1*/ AS /*c2*/ t");
+    });
+
+    it("parses table name in parenthesis", () => {
+      test("SELECT col FROM (tbl)");
+      test("SELECT t.col FROM (db.tbl) AS t");
+      test("SELECT t.col FROM (db.tbl) t");
+      test("SELECT t.col FROM (/*c1*/ db.tbl /*c2*/) /*c3*/ AS /*c4*/ t");
     });
   });
 

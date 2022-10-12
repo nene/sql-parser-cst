@@ -356,6 +356,13 @@
       ...partialAlias,
     };
   }
+
+  const createParenExpr = (c1, expr, c2) => {
+    return {
+      type: "paren_expr",
+      expr: withComments(expr, { leading: c1, trailing: c2 }),
+    };
+  }
 }
 
 start
@@ -1171,8 +1178,8 @@ table_base
   / t:table_name alias:(__ alias_clause)? {
     return createAlias(t, alias);
   }
-  / LPAREN __ t:table_name __ r:RPAREN __ alias:alias_clause? {
-    return "[Not implemented]";
+  / LPAREN c1:__ t:table_name c2:__ RPAREN alias:(__ alias_clause)? {
+    return createAlias(createParenExpr(c1, t, c2), alias);
   }
   / stmt:value_clause __ alias:alias_clause? {
     return "[Not implemented]";
@@ -1516,10 +1523,7 @@ in_op_right
       kind: "in",
       op,
       c: c1,
-      right: {
-        type: "paren_expr",
-        expr: withComments(list, { leading: c2, trailing: c3 }),
-      },
+      right: createParenExpr(c2, list, c3),
     };
   }
   / op:in_op c:__ right:(var_decl / column_ref / literal_string) {
