@@ -1454,8 +1454,8 @@ case_else = KW_ELSE __ result:expr {
  * | -, ~, !                                                  | negation, bit inversion              |
  * | *, /, DIV, MOD                                           | multiplication, division             |
  * | +, -                                                     | addition, subtraction, concatenation |
- * | =, <, >, <=, >=, <>, !=, IS, LIKE, BETWEEN, IN           | comparion                            |
- * | !, NOT                                                   | logical negation                     |
+ * | =, <, >, <=, >=, <>, !=, <=>, IS, LIKE, BETWEEN, IN      | comparion                            |
+ * | NOT                                                      | logical negation                     |
  * | AND, &&                                                  | conjunction                          |
  * | OR, ||                                                   | disjunction                          |
  * ---------------------------------------------------------------------------------------------------
@@ -1543,7 +1543,7 @@ arithmetic_op_right
   }
 
 arithmetic_comparison_operator
-  = ">=" / ">" / "<=" / "<>" / "<" / "=" / "!="
+  = "<=>" / ">=" / ">" / "<=" / "<>" / "<" / "=" / "!="
 
 in_op_right
   = op:in_op c1:__ LPAREN  c2:__ list:expr_list c3:__ RPAREN {
