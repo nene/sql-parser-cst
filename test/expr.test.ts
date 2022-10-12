@@ -48,6 +48,12 @@ describe("expr", () => {
       testExpr(`8 /* com1 */ DIV /* com2 */ 2`);
     });
 
+    it("parses MOD operator", () => {
+      testExpr(`8 MOD 4`);
+      testExpr(`8 mod 4`);
+      testExpr(`8 /* com1 */ MOD /* com2 */ 2`);
+    });
+
     it("parses unary negation operator", () => {
       testExpr(`x + -y`);
     });

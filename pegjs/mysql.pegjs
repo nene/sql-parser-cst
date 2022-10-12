@@ -1452,7 +1452,7 @@ case_else = KW_ELSE __ result:expr {
  * Operator precedence, as implemented currently (though incorrect)
  * ---------------------------------------------------------------------------------------------------
  * | -, ~                                                     | negation, bit inversion              |
- * | *, /                                                     | multiplication, division             |
+ * | *, /, DIV, MOD                                           | multiplication, division             |
  * | +, -                                                     | addition, subtraction, concatenation |
  * | =, <, >, <=, >=, <>, !=, IS, LIKE, BETWEEN, IN           | comparion                            |
  * | !, NOT                                                   | logical negation                     |
@@ -1628,6 +1628,7 @@ multiplicative_expr
 multiplicative_operator
   = "*" / "/" / "%" / '&' / '>>' / '<<' / '^' / '|'
   / op:KW_DIV { return createKeyword(op); }
+  / op:KW_MOD { return createKeyword(op); }
 
 negation_expr
   = primary
@@ -2267,6 +2268,7 @@ KW_PERSIST_ONLY   = kw:"PERSIST_ONLY"i   !ident_start { return kw; }
 KW_VIEW           = kw:"VIEW"i    !ident_start { return kw; }
 
 KW_DIV = kw:"DIV"i !ident_start { return kw; }
+KW_MOD = kw:"MOD"i !ident_start { return kw; }
 
 KW_VAR__PRE_AT = '@'
 KW_VAR__PRE_AT_AT = '@@'
