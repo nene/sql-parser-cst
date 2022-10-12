@@ -31,6 +31,11 @@ describe("select", () => {
       test("SELECT col FROM `db`.`tbl`");
       test("SELECT col FROM db /*c1*/./*c2*/ tbl");
     });
+
+    it("parses multiple comma-separated tables", () => {
+      test("SELECT col FROM tbl1, tbl2, tbl3");
+      test("SELECT col FROM tbl1 /*c1*/, /*c2*/ tbl2");
+    });
   });
 
   describe("syntax tree", () => {

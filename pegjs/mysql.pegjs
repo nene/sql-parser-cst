@@ -1143,11 +1143,11 @@ index_option
 
 table_ref_list
   = head:table_base tail:table_ref* {
-    return [head]; // TODO
+    return createExprList(head, tail).children;
   }
 
 table_ref
-  = __ COMMA __ t:table_base { return "[Not implemented]"; }
+  = __ COMMA __ table_base
   / __ t:table_join { return "[Not implemented]"; }
 
 
