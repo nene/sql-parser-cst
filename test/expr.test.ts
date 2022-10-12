@@ -122,16 +122,24 @@ describe("expr", () => {
       testExpr(`! /*com*/ true`);
     });
 
-    it("parses AND operator", () => {
+    it("parses AND / && operator", () => {
       testExpr(`x > 1 AND false`);
       testExpr(`c < 2 AND y = 2 AND 3 > 2`);
       testExpr(`true /*com1*/ AND /*com2*/ false`);
+
+      testExpr(`x > 1 && false`);
+      testExpr(`c < 2 && y = 2 && 3 > 2`);
+      testExpr(`true /*com1*/ && /*com2*/ false`);
     });
 
-    it("parses OR operator", () => {
+    it("parses OR / || operator", () => {
       testExpr(`true OR false`);
       testExpr(`x != 3 OR y > 2 OR z <> 4`);
       testExpr(`true /*com1*/ OR /*com2*/ false`);
+
+      testExpr(`true || false`);
+      testExpr(`x != 3 || y > 2 || z <> 4`);
+      testExpr(`true /*com1*/ || /*com2*/ false`);
     });
   });
 

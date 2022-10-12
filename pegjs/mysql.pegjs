@@ -1449,28 +1449,22 @@ case_else = KW_ELSE __ result:expr {
   }
 
 /**
- * Borrowed from PL/SQL ,the priority of below list IS ORDER BY DESC
+ * Operator precedence, as implemented currently (though incorrect)
  * ---------------------------------------------------------------------------------------------------
- * | +, -                                                     | identity, negation                   |
+ * | +, -, ~                                                  | identity, negation, bit inversion    |
  * | *, /                                                     | multiplication, division             |
  * | +, -                                                     | addition, subtraction, concatenation |
  * | =, <, >, <=, >=, <>, !=, IS, LIKE, BETWEEN, IN           | comparion                            |
  * | !, NOT                                                   | logical negation                     |
- * | AND                                                      | conjunction                          |
- * | OR                                                       | inclusion                            |
+ * | AND, &&                                                  | conjunction                          |
+ * | OR, ||                                                   | disjunction                          |
  * ---------------------------------------------------------------------------------------------------
  */
 
 expr
-  = logic_operator_expr // support concatenation operator || and &&
-  / or_expr
+  = or_expr
   / unary_expr
   / union_stmt
-
-logic_operator_expr
-  = head:primary tail:(__ LOGIC_OPERATOR __ primary)+ {
-    return "[Not implemented]";
-  }
 
 unary_expr
   = op: additive_operator tail: (__ primary)+ {
@@ -1487,14 +1481,18 @@ or_expr
     return createBinaryExprChain(head, tail);
   }
 
-or_op = kw:KW_OR { return createKeyword(kw); }
+or_op
+  = kw:KW_OR { return createKeyword(kw); }
+  / "||"
 
 and_expr
   = head:not_expr tail:(___ and_op __ not_expr)* {
     return createBinaryExprChain(head, tail);
   }
 
-and_op = kw:KW_AND { return createKeyword(kw); }
+and_op
+  = kw:KW_AND { return createKeyword(kw); }
+  / "&&"
 
 //here we should use `NOT` instead of `comparision_expr` to support chain-expr
 not_expr
@@ -2320,10 +2318,6 @@ RBRAKE    = ']'
 SEMICOLON = ';'
 SINGLE_ARROW = '->'
 DOUBLE_ARROW = '->>'
-
-OPERATOR_CONCATENATION = '||'
-OPERATOR_AND = '&&'
-LOGIC_OPERATOR = OPERATOR_CONCATENATION / OPERATOR_AND
 
 // separator
 __
