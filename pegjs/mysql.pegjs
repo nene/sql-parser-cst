@@ -1198,20 +1198,18 @@ join_op
   / (KW_INNER __)? KW_JOIN { return 'INNER JOIN'; }
 
 table_name
-  = head:ident tail:(__ DOT __ ident)? {
-    if (tail) {
-      const [c1, _, c2, table] = tail;
-      return {
-        type: "table_ref",
-        db: withComments(createIdentifier(head), { trailing: c1 }),
-        table: withComments(createIdentifier(table), { leading: c2 }),
-      }
-    } else {
-      return {
-        type: "table_ref",
-        table: createIdentifier(head),
-      };
-    }
+  = db:ident c1:__ DOT c2:__ t:ident {
+    return {
+      type: "table_ref",
+      db: withComments(createIdentifier(db), { trailing: c1 }),
+      table: withComments(createIdentifier(t), { leading: c2 }),
+    };
+  }
+  / t:ident {
+    return {
+      type: "table_ref",
+      table: createIdentifier(t),
+    };
   }
   / v:var_decl {
     return "[Not implemented]";
