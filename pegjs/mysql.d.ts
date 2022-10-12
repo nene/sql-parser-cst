@@ -28,18 +28,25 @@ type Expr =
   | NullLiteral
   | DateTimeLiteral
   | ColumnRef
+  | TableRef
   | Identifier;
 
 type SelectStatement = Comments & {
   type: "select_statement";
-  clauses: Clause[];
+  select: SelectClause;
+  from?: FromClause;
 };
 
-type Clause = SelectClause;
+type Clause = SelectClause | FromClause;
 
 type SelectClause = Comments & {
   type: "select_clause";
   columns: Expr[];
+};
+
+type FromClause = Comments & {
+  type: "from_clause";
+  tables: TableRef[];
 };
 
 type Alias = Comments & {
@@ -117,6 +124,12 @@ type ColumnRef = Comments & {
   type: "column_ref";
   table?: Identifier;
   column: Identifier;
+};
+
+type TableRef = Comments & {
+  type: "table_ref";
+  db?: Identifier;
+  table: Identifier;
 };
 
 type Identifier = Comments & {

@@ -7,6 +7,7 @@ import {
   Comment,
   DateTimeLiteral,
   ExprList,
+  FromClause,
   Identifier,
   Keyword,
   Node,
@@ -17,6 +18,7 @@ import {
   SelectStatement,
   StringLiteral,
   StringWithCharset,
+  TableRef,
   UnaryExpr,
 } from "pegjs/mysql";
 import { isDefined } from "./util";
@@ -44,6 +46,8 @@ function showNode(node: Node): string {
       return showSelectStatement(node);
     case "select_clause":
       return showSelectClause(node);
+    case "from_clause":
+      return showFromClause(node);
     case "alias":
       return showAlias(node);
     case "expr_list":
@@ -72,9 +76,15 @@ function showNode(node: Node): string {
       return showStringWithCharset(node);
     case "column_ref":
       return showColumnRef(node);
+    case "table_ref":
+      return showTableRef(node);
     case "identifier":
       return showIdentifier(node);
   }
+  // Theoretically unreachable,
+  // but in practice the pegjs-generated parser code is not type-safe,
+  // so we can end up here as a result of a simple typo.
+  throw new Error(`Unexpected node type: ${(node as any).type}`);
 }
 
 const showComments = (c?: Comment[]): string | undefined => {
@@ -87,10 +97,14 @@ const showComments = (c?: Comment[]): string | undefined => {
 const showComment = (c: Comment): string =>
   c.type === "line_comment" ? c.text + "\n" : c.text;
 
-const showSelectStatement = (node: SelectStatement) => show(node.clauses);
+const showSelectStatement = (node: SelectStatement) =>
+  [node.select, node.from].filter(isDefined).map(show).join(" ");
 
 const showSelectClause = (node: SelectClause) =>
   "SELECT " + node.columns.map(show).join(", ");
+
+const showFromClause = (node: FromClause) =>
+  "FROM " + node.tables.map(show).join(", ");
 
 const showAlias = (node: Alias) => {
   return node.kwAs
@@ -134,5 +148,8 @@ const showStringWithCharset = (node: StringWithCharset) =>
 
 const showColumnRef = (node: ColumnRef) =>
   node.table ? show(node.table) + "." + show(node.column) : show(node.column);
+
+const showTableRef = (node: TableRef) =>
+  node.db ? show(node.db) + "." + show(node.table) : show(node.table);
 
 const showIdentifier = (node: Identifier) => node.text;

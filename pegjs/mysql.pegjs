@@ -987,7 +987,7 @@ select_stmt_nake
     d:KW_DISTINCT?      __
     c:column_clause     __
     ci:into_clause?      __
-    f:from_clause?      __
+    from:from_clause?      __
     fi:into_clause?      __
     w:where_clause?     __
     g:group_by_clause?  __
@@ -998,13 +998,14 @@ select_stmt_nake
     win:window_clause? __
     li:into_clause? {
       // TODO
-      const clauses = [
-        { type: "select_clause", columns: c },
-      ];
-      return {
+      const stmt = {
         type: "select_statement",
-        clauses,
+        select: { type: "select_clause", columns: c },
       };
+      if (from) {
+        stmt.from = from;
+      }
+      return stmt;
   }
 
 // MySQL extensions to standard SQL
@@ -1093,7 +1094,9 @@ into_clause
   }
 
 from_clause
-  = KW_FROM __ l:table_ref_list { return "[Not implemented]"; }
+  = kw:KW_FROM c:__ tables:table_ref_list {
+    return { type: "from_clause", kwFrom: kw, tables }; // TODO
+  }
 
 table_to_list
   = head:table_to_item tail:(__ COMMA __ table_to_item)* {
@@ -1130,10 +1133,9 @@ index_option
   / keyword_comment
 
 table_ref_list
-  = head:table_base
-    tail:table_ref* {
-      return "[Not implemented]";
-    }
+  = head:table_base tail:table_ref* {
+    return [head]; // TODO
+  }
 
 table_ref
   = __ COMMA __ t:table_base { return "[Not implemented]"; }
@@ -1153,8 +1155,8 @@ table_base
   = KW_DUAL {
     return "[Not implemented]";
   }
-  / t:table_name __ alias:alias_clause? {
-    return "[Not implemented]";
+  / t:table_name (__ alias:alias_clause)? {
+    return t; // TODO
   }
   / LPAREN __ t:table_name __ r:RPAREN __ alias:alias_clause? {
     return "[Not implemented]";
@@ -1176,8 +1178,20 @@ join_op
   / (KW_INNER __)? KW_JOIN { return 'INNER JOIN'; }
 
 table_name
-  = dt:ident tail:(__ DOT __ ident)? {
-    return "[Not implemented]";
+  = head:ident tail:(__ DOT __ ident)? {
+    if (tail) {
+      const [c1, _, c2, table] = tail;
+      return {
+        type: "table_ref",
+        db: withComments(createIdentifier(head), { trailing: c1 }),
+        table: withComments(createIdentifier(table), { leading: c2 }),
+      }
+    } else {
+      return {
+        type: "table_ref",
+        table: createIdentifier(head),
+      };
+    }
   }
   / v:var_decl {
     return "[Not implemented]";
