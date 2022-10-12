@@ -157,7 +157,11 @@ const showBinaryExpr = (node: BinaryExpr) => {
 };
 
 const showUnaryExpr = (node: UnaryExpr) => {
-  return show(node.operator) + " " + show(node.expr);
+  if (typeof node.operator === "string") {
+    return show(node.operator) + show(node.expr);
+  } else {
+    return show(node.operator) + " " + show(node.expr);
+  }
 };
 
 const showBetweenExpr = (node: BetweenExpr) => {

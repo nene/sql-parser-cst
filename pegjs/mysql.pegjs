@@ -1451,7 +1451,7 @@ case_else = KW_ELSE __ result:expr {
 /**
  * Operator precedence, as implemented currently (though incorrect)
  * ---------------------------------------------------------------------------------------------------
- * | +, -, ~                                                  | identity, negation, bit inversion    |
+ * | -, ~                                                     | negation, bit inversion              |
  * | *, /                                                     | multiplication, division             |
  * | +, -                                                     | addition, subtraction, concatenation |
  * | =, <, >, <=, >=, <>, !=, IS, LIKE, BETWEEN, IN           | comparion                            |
@@ -1463,13 +1463,7 @@ case_else = KW_ELSE __ result:expr {
 
 expr
   = or_expr
-  / unary_expr
   / union_stmt
-
-unary_expr
-  = op: additive_operator tail: (__ primary)+ {
-    return "[Not implemented]";
-  }
 
 or_expr
   = head:and_expr tail:(___ or_op __ and_expr)* {
@@ -1623,17 +1617,25 @@ additive_expr
     }
 
 additive_operator
-  = "+" / "-" / "~"
+  = "+" / "-"
 
 multiplicative_expr
-  = head:primary
-    tail:(__ multiplicative_operator  __ primary)* {
+  = head:unary_expr
+    tail:(__ multiplicative_operator  __ unary_expr)* {
       return createBinaryExprChain(head, tail);
     }
 
 multiplicative_operator
   = "*" / "/" / "%" / '&' / '>>' / '<<' / '^' / '|' / '~'
   / op:KW_DIV { return createKeyword(op); }
+
+unary_expr
+  = primary
+  / op:unary_operator c:__ right:unary_expr {
+    return createUnaryExpr(op, c, right);
+  }
+
+unary_operator = "-" / "~"
 
 primary
   = cast_expr

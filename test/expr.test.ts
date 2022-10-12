@@ -14,7 +14,6 @@ describe("expr", () => {
     [
       "+",
       "-",
-      "~",
       "*",
       "/",
       "%",
@@ -48,6 +47,14 @@ describe("expr", () => {
       testExpr(`8 DIV 4`);
       testExpr(`8 div 4`);
       testExpr(`8 /* com1 */ DIV /* com2 */ 2`);
+    });
+
+    it("parses unary negation operator", () => {
+      testExpr(`x + -y`);
+    });
+
+    it("parses unary bit inversion operator", () => {
+      testExpr(`x << ~y`);
     });
 
     it("parses IS operator", () => {
@@ -117,9 +124,9 @@ describe("expr", () => {
     });
 
     it("parses ! operator", () => {
-      testExpr(`! x > y`);
-      testExpr(`! ! ! false`);
-      testExpr(`! /*com*/ true`);
+      testExpr(`!x > y`);
+      testExpr(`!!!false`);
+      testExpr(`!/*com*/ true`);
     });
 
     it("parses AND / && operator", () => {
