@@ -1187,8 +1187,8 @@ table_base
   / LPAREN __ stmt:value_clause __ RPAREN __ alias:alias_clause? {
     return "[Not implemented]";
   }
-  / LPAREN __ stmt:union_stmt __ RPAREN __ alias:alias_clause? {
-    return "[Not implemented]";
+  / LPAREN c1:__ stmt:union_stmt c2:__ RPAREN alias:(__ alias_clause)? {
+    return createAlias(createParenExpr(c1, stmt, c2), alias);
   }
 
 join_op

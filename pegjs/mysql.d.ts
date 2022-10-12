@@ -15,6 +15,7 @@ type Node = Statement | Clause | Expr | Keyword;
 type Statement = SelectStatement;
 
 type Expr =
+  | SelectStatement
   | Alias
   | ExprList
   | ParenExpr
