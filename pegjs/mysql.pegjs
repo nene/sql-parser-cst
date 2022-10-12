@@ -1457,6 +1457,7 @@ case_else = KW_ELSE __ result:expr {
  * | =, <, >, <=, >=, <>, !=, <=>, IS, LIKE, BETWEEN, IN      | comparion                            |
  * | NOT                                                      | logical negation                     |
  * | AND, &&                                                  | conjunction                          |
+ * | XOR                                                      | exclusive or                         |
  * | OR, ||                                                   | disjunction                          |
  * ---------------------------------------------------------------------------------------------------
  */
@@ -1466,13 +1467,21 @@ expr
   / union_stmt
 
 or_expr
-  = head:and_expr tail:(___ or_op __ and_expr)* {
+  = head:xor_expr tail:(___ or_op __ xor_expr)* {
     return createBinaryExprChain(head, tail);
   }
 
 or_op
   = kw:KW_OR { return createKeyword(kw); }
   / "||"
+
+xor_expr
+  = head:and_expr tail:(___ xor_op __ and_expr)* {
+    return createBinaryExprChain(head, tail);
+  }
+
+xor_op
+  = kw:KW_XOR { return createKeyword(kw); }
 
 and_expr
   = head:not_expr tail:(___ and_op __ not_expr)* {
@@ -2195,6 +2204,7 @@ KW_EXISTS   = kw:"EXISTS"i     !ident_start { return kw; }
 KW_NOT      = kw:"NOT"i        !ident_start { return kw; }
 KW_AND      = kw:"AND"i        !ident_start { return kw; }
 KW_OR       = kw:"OR"i         !ident_start { return kw; }
+KW_XOR      = kw:"XOR"i        !ident_start { return kw; }
 
 KW_COUNT    = kw:"COUNT"i      !ident_start { return kw; }
 KW_GROUP_CONCAT = kw:"GROUP_CONCAT"i  !ident_start { return kw; }

@@ -145,6 +145,12 @@ describe("expr", () => {
       testExpr(`true /*com1*/ && /*com2*/ false`);
     });
 
+    it("parses XOR operator", () => {
+      testExpr(`true XOR false`);
+      testExpr(`x != 3 XOR y > 2 XOR z <> 4`);
+      testExpr(`true /*com1*/ XOR /*com2*/ false`);
+    });
+
     it("parses OR / || operator", () => {
       testExpr(`true OR false`);
       testExpr(`x != 3 OR y > 2 OR z <> 4`);
