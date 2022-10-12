@@ -1256,7 +1256,7 @@ plain_column_ref
   }
 
 on_clause
-  = kw:KW_ON c:__ expr:or_and_where_expr {
+  = kw:KW_ON c:__ expr:expr {
     return {
       type: "join_specification",
       kw,
@@ -1265,7 +1265,7 @@ on_clause
   }
 
 where_clause
-  = KW_WHERE __ e:or_and_where_expr { return "[Not implemented]"; }
+  = KW_WHERE __ e:expr { return "[Not implemented]"; }
 
 group_by_clause
   = KW_GROUP __ KW_BY __ e:expr_list { return "[Not implemented]"; }
@@ -1440,7 +1440,7 @@ case_expr
     }
 
 case_when_then
-  = KW_WHEN __ condition:or_and_where_expr __ KW_THEN __ result:expr {
+  = KW_WHEN __ condition:expr __ KW_THEN __ result:expr {
     return "[Not implemented]";
   }
 
@@ -1468,11 +1468,6 @@ expr
 
 unary_expr
   = op: additive_operator tail: (__ primary)+ {
-    return "[Not implemented]";
-  }
-
-or_and_where_expr
-	= head:expr tail:(__ (KW_AND / KW_OR / COMMA) __ expr)* {
     return "[Not implemented]";
   }
 
@@ -1650,7 +1645,7 @@ primary
   / interval_expr
   / column_ref
   / param
-  / LPAREN __ list:or_and_where_expr __ RPAREN {
+  / LPAREN __ expr __ RPAREN {
     return "[Not implemented]";
   }
   / var_decl
@@ -1865,7 +1860,7 @@ func_call
   / 'convert'i __ LPAREN __ l:convert_args __ RPAREN __ ca:collate_expr? {
     return "[Not implemented]";
   }
-  / name:proc_func_name __ LPAREN __ l:or_and_where_expr? __ RPAREN __ bc:over_partition? {
+  / name:proc_func_name __ LPAREN __ l:expr? __ RPAREN __ bc:over_partition? {
     return "[Not implemented]";
   }
   / name:scalar_func __ LPAREN __ l:expr_list? __ RPAREN __ bc:over_partition? {
