@@ -57,6 +57,7 @@ describe("select", () => {
     });
 
     it("parses joins", () => {
+      test("SELECT c FROM t1 JOIN t2");
       test("SELECT c FROM t1 LEFT JOIN t2");
       test("SELECT c FROM t1 LEFT OUTER JOIN t2");
       test("SELECT c FROM t1 RIGHT JOIN t2");

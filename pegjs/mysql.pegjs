@@ -1217,7 +1217,7 @@ join_op
   / kws:(KW_FULL __ KW_OUTER __ KW_JOIN) { return createKeywordList(kws); }
   / kws:(KW_FULL __ KW_JOIN) { return createKeywordList(kws); }
   / kws:(KW_INNER __ KW_JOIN) { return createKeywordList(kws); }
-  / kws:(KW_JOIN) { return createKeywordList(kws); }
+  / kw:KW_JOIN { return createKeywordList([kw]); }
 
 table_name
   = db:ident c1:__ DOT c2:__ t:ident {
