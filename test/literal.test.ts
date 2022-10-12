@@ -2,7 +2,7 @@ import { parse } from "../src/parser";
 
 describe("literal", () => {
   function parseExpr(expr: string) {
-    return parse(`SELECT ${expr}`).clauses[0].columns.children[0];
+    return parse(`SELECT ${expr}`).clauses[0].columns[0];
   }
 
   it("single-quoted string", () => {

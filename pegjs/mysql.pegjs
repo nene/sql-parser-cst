@@ -1029,7 +1029,7 @@ column_clause
       return "[Not implemented]";
     }
   / head:column_list_item tail:(__ COMMA __ column_list_item)* {
-      return createExprList(head, tail);
+      return createExprList(head, tail).children;
     }
 
 fulltext_search_mode

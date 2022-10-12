@@ -2,7 +2,7 @@ import { parse, show } from "../src/parser";
 
 describe("column", () => {
   function parseExpr(expr: string) {
-    return parse(`SELECT ${expr}`).clauses[0].columns.children[0];
+    return parse(`SELECT ${expr}`).clauses[0].columns[0];
   }
 
   function testExpr(expr: string) {

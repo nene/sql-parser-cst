@@ -24,23 +24,20 @@ describe("select", () => {
         {
           "clauses": [
             {
-              "columns": {
-                "children": [
-                  {
-                    "text": "1",
-                    "type": "number",
-                  },
-                  {
-                    "text": "2",
-                    "type": "number",
-                  },
-                  {
-                    "text": "3",
-                    "type": "number",
-                  },
-                ],
-                "type": "expr_list",
-              },
+              "columns": [
+                {
+                  "text": "1",
+                  "type": "number",
+                },
+                {
+                  "text": "2",
+                  "type": "number",
+                },
+                {
+                  "text": "3",
+                  "type": "number",
+                },
+              ],
               "type": "select_clause",
             },
           ],
@@ -54,26 +51,23 @@ describe("select", () => {
         {
           "clauses": [
             {
-              "columns": {
-                "children": [
-                  {
-                    "alias": {
-                      "text": "foo",
-                      "type": "identifier",
-                    },
-                    "expr": {
-                      "text": "1",
-                      "type": "number",
-                    },
-                    "kwAs": {
-                      "text": "AS",
-                      "type": "keyword",
-                    },
-                    "type": "alias",
+              "columns": [
+                {
+                  "alias": {
+                    "text": "foo",
+                    "type": "identifier",
                   },
-                ],
-                "type": "expr_list",
-              },
+                  "expr": {
+                    "text": "1",
+                    "type": "number",
+                  },
+                  "kwAs": {
+                    "text": "AS",
+                    "type": "keyword",
+                  },
+                  "type": "alias",
+                },
+              ],
               "type": "select_clause",
             },
           ],

@@ -39,7 +39,7 @@ type Clause = SelectClause;
 
 type SelectClause = Comments & {
   type: "select_clause";
-  columns: ExprList;
+  columns: Expr[];
 };
 
 type Alias = Comments & {

@@ -89,7 +89,8 @@ const showComment = (c: Comment): string =>
 
 const showSelectStatement = (node: SelectStatement) => show(node.clauses);
 
-const showSelectClause = (node: SelectClause) => "SELECT " + show(node.columns);
+const showSelectClause = (node: SelectClause) =>
+  "SELECT " + node.columns.map(show).join(", ");
 
 const showAlias = (node: Alias) => {
   return node.kwAs
