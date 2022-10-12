@@ -34,8 +34,28 @@ describe("select", () => {
 
   describe("syntax tree", () => {
     it("parses SELECT with multiple columns", () => {
-      expect(parse("SELECT 1, 2, 3")).toMatchInlineSnapshot(`
+      expect(parse("SELECT 1, 2, 3 FROM db.tbl")).toMatchInlineSnapshot(`
         {
+          "from": {
+            "kwFrom": {
+              "text": "FROM",
+              "type": "keyword",
+            },
+            "tables": [
+              {
+                "db": {
+                  "text": "db",
+                  "type": "identifier",
+                },
+                "table": {
+                  "text": "tbl",
+                  "type": "identifier",
+                },
+                "type": "table_ref",
+              },
+            ],
+            "type": "from_clause",
+          },
           "select": {
             "columns": [
               {
