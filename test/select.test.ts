@@ -28,6 +28,7 @@ describe("select", () => {
 
     it("parses qualified table names", () => {
       test("SELECT col FROM db.tbl");
+      test("SELECT col FROM `db`.`tbl`");
       test("SELECT col FROM db /*c1*/./*c2*/ tbl");
     });
   });
