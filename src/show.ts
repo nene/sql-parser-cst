@@ -9,6 +9,8 @@ import {
   ExprList,
   FromClause,
   Identifier,
+  Join,
+  JoinSpecification,
   Keyword,
   Node,
   NullLiteral,
@@ -48,6 +50,10 @@ function showNode(node: Node): string {
       return showSelectClause(node);
     case "from_clause":
       return showFromClause(node);
+    case "join":
+      return showJoin(node);
+    case "join_specification":
+      return showJoinSpecification(node);
     case "alias":
       return showAlias(node);
     case "expr_list":
@@ -103,8 +109,29 @@ const showSelectStatement = (node: SelectStatement) =>
 const showSelectClause = (node: SelectClause) =>
   show(node.selectKw) + " " + node.columns.map(show).join(", ");
 
-const showFromClause = (node: FromClause) =>
-  show(node.kwFrom) + " " + node.tables.map(show).join(", ");
+const showFromClause = (node: FromClause) => {
+  // first one is always a table reference expression, the rest are joins
+  const [first, ...rest] = node.tables;
+  return (
+    show(node.kwFrom) +
+    " " +
+    rest.reduce((str, join) => {
+      if (join.type === "join" && join.operator === ",") {
+        return str + show(join); // no space before comma
+      } else {
+        return str + " " + show(join);
+      }
+    }, show(first))
+  );
+};
+
+const showJoin = (node: Join) => {
+  const spec = node.specification ? " " + show(node.specification) : "";
+  return show(node.operator) + " " + show(node.table) + spec;
+};
+
+const showJoinSpecification = (node: JoinSpecification) =>
+  show(node.kw) + " " + show(node.expr);
 
 const showAlias = (node: Alias) => {
   return node.kwAs

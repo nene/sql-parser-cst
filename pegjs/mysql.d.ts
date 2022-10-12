@@ -10,7 +10,7 @@ type Comment = {
   text: string;
 };
 
-type Node = Statement | Clause | Expr | Keyword;
+type Node = Statement | Clause | Expr | Keyword | Join | JoinSpecification;
 
 type Statement = SelectStatement;
 
@@ -49,7 +49,20 @@ type SelectClause = Comments & {
 type FromClause = Comments & {
   type: "from_clause";
   kwFrom: Keyword;
-  tables: Expr[];
+  tables: (Expr | Join)[];
+};
+
+type Join = Comments & {
+  type: "join";
+  operator: Keyword[] | ",";
+  table: Expr;
+  specification?: JoinSpecification;
+};
+
+type JoinSpecification = Comments & {
+  type: "join_specification";
+  kw: Keyword;
+  expr: Expr;
 };
 
 type Alias = Comments & {

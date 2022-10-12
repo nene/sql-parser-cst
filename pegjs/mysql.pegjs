@@ -1153,22 +1153,40 @@ index_option
   / keyword_comment
 
 table_ref_list
-  = head:table_base tail:table_ref* {
-    return createExprList(head, tail).children;
+  = head:table_base tail:_table_join* {
+    return [head, ...tail];
   }
 
-table_ref
-  = __ COMMA __ table_base
-  / __ t:table_join { return "[Not implemented]"; }
-
+_table_join
+  = c:__ join:table_join {
+    return withComments(join, { leading: c });
+  }
 
 table_join
-  = op:join_op __ t:table_base __ KW_USING __ LPAREN __ head:ident_name tail:(__ COMMA __ ident_name)* __ RPAREN {
-    return "[Not implemented]";
+  = COMMA c:__ table:table_base {
+    return {
+      type: "join",
+      operator: ",",
+      table: withComments(table, { leading: c }),
+    };
+  }
+  / op:join_op c1:__ t:table_base jspec:(__ join_specification)? {
+    if (jspec) {
+      const [c2, spec] = jspec;
+      return {
+        type: "join",
+        operator: op,
+        table: withComments(t, { leading: c1 }),
+        specification: withComments(spec, { leading: c2 }),
+      };
+    } else {
+      return {
+        type: "join",
+        operator: op,
+        table: withComments(t, { leading: c1 }),
+      };
     }
-  / op:join_op __ t:table_base __ expr:on_clause? {
-    return "[Not implemented]";
-    }
+  }
 
 //NOTE that, the table assigned to `var` shouldn't write in `table_join`
 table_base
@@ -1192,10 +1210,14 @@ table_base
   }
 
 join_op
-  = KW_LEFT __ KW_OUTER? __ KW_JOIN { return 'LEFT JOIN'; }
-  / KW_RIGHT __ KW_OUTER? __ KW_JOIN { return 'RIGHT JOIN'; }
-  / KW_FULL __ KW_OUTER? __ KW_JOIN { return 'FULL JOIN'; }
-  / (KW_INNER __)? KW_JOIN { return 'INNER JOIN'; }
+  = kws:(KW_LEFT __ KW_OUTER __ KW_JOIN) { return createKeywordList(kws); }
+  / kws:(KW_LEFT __ KW_JOIN) { return createKeywordList(kws); }
+  / kws:(KW_RIGHT __ KW_OUTER __ KW_JOIN) { return createKeywordList(kws); }
+  / kws:(KW_RIGHT __ KW_JOIN) { return createKeywordList(kws); }
+  / kws:(KW_FULL __ KW_OUTER __ KW_JOIN) { return createKeywordList(kws); }
+  / kws:(KW_FULL __ KW_JOIN) { return createKeywordList(kws); }
+  / kws:(KW_INNER __ KW_JOIN) { return createKeywordList(kws); }
+  / kws:(KW_JOIN) { return createKeywordList(kws); }
 
 table_name
   = db:ident c1:__ DOT c2:__ t:ident {
@@ -1215,8 +1237,26 @@ table_name
     return "[Not implemented]";
   }
 
+join_specification
+  = using_clause / on_clause
+
+using_clause
+  = kw:KW_USING c1:__ LPAREN c2:__ head:ident_name tail:(__ COMMA __ ident_name)* c3:__ RPAREN {
+    return {
+      type: "join_specification",
+      kw,
+      expr: createParenExpr(c2, {}, c3), // TODO
+    };
+  }
+
 on_clause
-  = KW_ON __ e:or_and_where_expr { return "[Not implemented]"; }
+  = kw:KW_ON c:__ expr:or_and_where_expr {
+    return {
+      type: "join_specification",
+      kw,
+      expr,
+    };
+  }
 
 where_clause
   = KW_WHERE __ e:or_and_where_expr { return "[Not implemented]"; }

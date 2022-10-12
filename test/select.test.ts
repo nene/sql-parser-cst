@@ -34,7 +34,7 @@ describe("select", () => {
 
     it("parses multiple comma-separated tables", () => {
       test("SELECT col FROM tbl1, tbl2, tbl3");
-      test("SELECT col FROM tbl1 /*c1*/, /*c2*/ tbl2");
+      test("SELECT col FROM tbl1/*c1*/ , /*c2*/ tbl2");
     });
 
     it("parses table alias", () => {
@@ -54,6 +54,19 @@ describe("select", () => {
       test("SELECT t.col FROM (SELECT x FROM tbl) AS t");
       // TODO: support comment before closing paren ")"
       test("SELECT t.col FROM (/*c1*/ SELECT x FROM tbl) /*c3*/ AS /*c4*/ t");
+    });
+
+    it("parses joins", () => {
+      test("SELECT c FROM t1 LEFT JOIN t2");
+      test("SELECT c FROM t1 LEFT OUTER JOIN t2");
+      test("SELECT c FROM t1 RIGHT JOIN t2");
+      test("SELECT c FROM t1 RIGHT OUTER JOIN t2");
+      test("SELECT c FROM t1 FULL JOIN t2");
+      test("SELECT c FROM t1 FULL OUTER JOIN t2");
+      test("SELECT c FROM t1 INNER JOIN t2");
+
+      test("SELECT c FROM t1 /*c0*/ FULL /*c1*/ JOIN /*c2*/ t2");
+      test("SELECT c FROM t1 /*c0*/ LEFT /*c1*/ OUTER /*c2*/ JOIN /*c3*/ t2");
     });
   });
 
