@@ -1241,12 +1241,18 @@ join_specification
   = using_clause / on_clause
 
 using_clause
-  = kw:KW_USING c1:__ LPAREN c2:__ head:ident_name tail:(__ COMMA __ ident_name)* c3:__ RPAREN {
+  = kw:KW_USING c1:__ LPAREN c2:__ head:plain_column_ref tail:(__ COMMA __ plain_column_ref)* c3:__ RPAREN {
+    const columnList = createExprList(head, tail)
     return {
       type: "join_specification",
       kw,
-      expr: createParenExpr(c2, {}, c3), // TODO
+      expr: withComments(createParenExpr(c2, columnList, c3), { leading: c1 }),
     };
+  }
+
+plain_column_ref
+  = c:ident_name {
+    return { type: "column_ref", column: createIdentifier(c) };
   }
 
 on_clause

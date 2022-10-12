@@ -90,7 +90,9 @@ function showNode(node: Node): string {
   // Theoretically unreachable,
   // but in practice the pegjs-generated parser code is not type-safe,
   // so we can end up here as a result of a simple typo.
-  throw new Error(`Unexpected node type: ${(node as any).type}`);
+  throw new Error(
+    `Unexpected node type: ${(node as any).type} ${JSON.stringify(node)}`
+  );
 }
 
 const showComments = (c?: Comment[]): string | undefined => {
