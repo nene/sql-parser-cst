@@ -1009,7 +1009,7 @@ select_stmt_nake
     ci:into_clause?      __
     from:from_clause?      __
     fi:into_clause?      __
-    w:where_clause?     __
+    where:where_clause?     __
     g:group_by_clause?  __
     h:having_clause?    __
     o:order_by_clause?  __
@@ -1028,6 +1028,9 @@ select_stmt_nake
       };
       if (from) {
         stmt.from = from;
+      }
+      if (where) {
+        stmt.where = where;
       }
       return stmt;
   }
@@ -1265,7 +1268,13 @@ on_clause
   }
 
 where_clause
-  = KW_WHERE __ e:expr { return "[Not implemented]"; }
+  = kw:KW_WHERE c:__ expr:expr {
+    return {
+      type: "where_clause",
+      whereKw: createKeyword(kw),
+      expr: withComments(expr, {leading: c}),
+    };
+  }
 
 group_by_clause
   = KW_GROUP __ KW_BY __ e:expr_list { return "[Not implemented]"; }

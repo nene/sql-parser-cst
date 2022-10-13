@@ -36,9 +36,10 @@ type SelectStatement = Comments & {
   type: "select_statement";
   select: SelectClause;
   from?: FromClause;
+  where: WhereClause;
 };
 
-type Clause = SelectClause | FromClause;
+type Clause = SelectClause | FromClause | WhereClause;
 
 type SelectClause = Comments & {
   type: "select_clause";
@@ -50,6 +51,12 @@ type FromClause = Comments & {
   type: "from_clause";
   kwFrom: Keyword;
   tables: (Expr | Join)[];
+};
+
+type WhereClause = Comments & {
+  type: "where_clause";
+  whereKw: Keyword;
+  expr: Expr;
 };
 
 type Join = Comments & {

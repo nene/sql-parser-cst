@@ -22,6 +22,7 @@ import {
   StringWithCharset,
   TableRef,
   UnaryExpr,
+  WhereClause,
 } from "pegjs/mysql";
 import { isDefined } from "./util";
 
@@ -50,6 +51,8 @@ function showNode(node: Node): string {
       return showSelectClause(node);
     case "from_clause":
       return showFromClause(node);
+    case "where_clause":
+      return showWhereClause(node);
     case "join":
       return showJoin(node);
     case "join_specification":
@@ -90,9 +93,9 @@ function showNode(node: Node): string {
   // Theoretically unreachable,
   // but in practice the pegjs-generated parser code is not type-safe,
   // so we can end up here as a result of a simple typo.
-  throw new Error(
-    `Unexpected node type: ${(node as any).type} ${JSON.stringify(node)}`
-  );
+  // throw new Error(
+  //   `Unexpected node type: ${(node as any).type} ${JSON.stringify(node)}`
+  // );
 }
 
 const showComments = (c?: Comment[]): string | undefined => {
@@ -106,7 +109,7 @@ const showComment = (c: Comment): string =>
   c.type === "line_comment" ? c.text + "\n" : c.text;
 
 const showSelectStatement = (node: SelectStatement) =>
-  [node.select, node.from].filter(isDefined).map(show).join(" ");
+  [node.select, node.from, node.where].filter(isDefined).map(show).join(" ");
 
 const showSelectClause = (node: SelectClause) =>
   show(node.selectKw) + " " + node.columns.map(show).join(", ");
@@ -134,6 +137,9 @@ const showJoin = (node: Join) => {
 
 const showJoinSpecification = (node: JoinSpecification) =>
   show(node.kw) + " " + show(node.expr);
+
+const showWhereClause = (node: WhereClause) =>
+  show(node.whereKw) + " " + show(node.expr);
 
 const showAlias = (node: Alias) => {
   return node.kwAs

@@ -86,6 +86,14 @@ describe("select", () => {
     });
   });
 
+  describe("WHERE", () => {
+    it("parses where clause", () => {
+      test("SELECT name FROM pupils WHERE age > 10");
+      test("SELECT name FROM pupils where true");
+      test("SELECT name FROM pupils WHERE /*c*/ name = 'Mary'");
+    });
+  });
+
   describe("syntax tree", () => {
     it("parses SELECT with multiple columns", () => {
       expect(parse("SELECT 1, 2, 3 FROM db.tbl")).toMatchInlineSnapshot(`
