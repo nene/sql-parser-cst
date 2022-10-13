@@ -1,10 +1,6 @@
-import { parse, show } from "../src/parser";
+import { test } from "./test_utils";
 
 describe("create table", () => {
-  function test(sql: string) {
-    expect(show(parse(sql))).toBe(sql);
-  }
-
   it("parses simple CREATE TABLE statement", () => {
     test("CREATE TABLE foo");
     test("CREATE TEMPORARY TABLE foo");

@@ -1,10 +1,7 @@
 import { parse, show } from "../src/parser";
+import { test } from "./test_utils";
 
 describe("statement", () => {
-  function test(sql: string) {
-    expect(show(parse(sql))).toBe(sql);
-  }
-
   it("parses multiple statements", () => {
     test("SELECT 1; SELECT 2; SELECT 3");
   });

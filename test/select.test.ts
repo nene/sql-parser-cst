@@ -1,10 +1,7 @@
-import { parse, show } from "../src/parser";
+import { parse } from "../src/parser";
+import { test } from "./test_utils";
 
 describe("select", () => {
-  function test(sql: string) {
-    expect(show(parse(sql))).toBe(sql);
-  }
-
   it("parses simple SELECT", () => {
     test("SELECT 'hello'");
     test("SELECT 1, 2, 3");

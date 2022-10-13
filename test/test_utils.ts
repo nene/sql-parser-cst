@@ -1,4 +1,8 @@
-import { parse } from "../src/parser";
+import { parse, show } from "../src/parser";
+
+export function test(sql: string) {
+  expect(show(parse(sql))).toBe(sql);
+}
 
 export function parseExpr(expr: string) {
   const stmt = parse(`SELECT ${expr}`)[0];
