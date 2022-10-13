@@ -104,6 +104,11 @@ function showNode(node: Node): string {
   }
 }
 
+const showAll = (
+  nodes: (Node | Node[] | string | undefined)[],
+  joinString: string = " "
+) => nodes.filter(isDefined).map(show).join(joinString);
+
 const showComments = (c?: Comment[]): string | undefined => {
   if (!c) {
     return undefined;
@@ -115,13 +120,17 @@ const showComment = (c: Comment): string =>
   c.type === "line_comment" ? c.text + "\n" : c.text;
 
 const showSelectStatement = (node: SelectStatement) =>
-  [node.select, node.from, node.where, node.groupBy, node.having, node.orderBy]
-    .filter(isDefined)
-    .map(show)
-    .join(" ");
+  showAll([
+    node.select,
+    node.from,
+    node.where,
+    node.groupBy,
+    node.having,
+    node.orderBy,
+  ]);
 
 const showSelectClause = (node: SelectClause) =>
-  show(node.selectKw) + " " + node.columns.map(show).join(", ");
+  show(node.selectKw) + " " + showAll(node.columns, ", ");
 
 const showFromClause = (node: FromClause) => {
   // first one is always a table reference expression, the rest are joins
@@ -139,70 +148,53 @@ const showFromClause = (node: FromClause) => {
   );
 };
 
-const showJoin = (node: Join) => {
-  return [node.operator, node.table, node.specification]
-    .filter(isDefined)
-    .map(show)
-    .join(" ");
-};
+const showJoin = (node: Join) =>
+  showAll([node.operator, node.table, node.specification]);
 
 const showJoinSpecification = (node: JoinSpecification) =>
-  show(node.kw) + " " + show(node.expr);
+  showAll([node.kw, node.expr]);
 
 const showWhereClause = (node: WhereClause) =>
-  show(node.whereKw) + " " + show(node.expr);
+  showAll([node.whereKw, node.expr]);
 
 const showGroupByClause = (node: GroupByClause) =>
-  show(node.groupByKw) + " " + node.columns.map(show).join(", ");
+  show(node.groupByKw) + " " + showAll(node.columns, ", ");
 
 const showHavingClause = (node: HavingClause) =>
-  show(node.havingKw) + " " + show(node.expr);
+  showAll([node.havingKw, node.expr]);
 
 const showOrderByClause = (node: OrderByClause) =>
-  show(node.orderByKw) + " " + node.specifications.map(show).join(", ");
+  show(node.orderByKw) + " " + showAll(node.specifications, ", ");
 
 const showSortSpecification = (node: SortSpecification) =>
-  [node.expr, node.orderKw].filter(isDefined).map(show).join(" ");
+  showAll([node.expr, node.orderKw]);
 
-const showAlias = (node: Alias) => {
-  return [node.expr, node.asKw, node.alias]
-    .filter(isDefined)
-    .map(show)
-    .join(" ");
-};
+const showAlias = (node: Alias) => showAll([node.expr, node.asKw, node.alias]);
 
 const showLiteral = (
   node: StringLiteral | NumberLiteral | BoolLiteral | NullLiteral
 ) => node.text;
 
 const showDateTimeLiteral = (node: DateTimeLiteral) =>
-  show(node.kw) + " " + show(node.string);
+  showAll([node.kw, node.string]);
 
-const showExprList = (node: ExprList) => node.children.map(show).join(", ");
+const showExprList = (node: ExprList) => showAll(node.children, ", ");
 
 const showParenExpr = (node: ParenExpr) => "(" + show(node.expr) + ")";
 
-const showBinaryExpr = (node: BinaryExpr) => {
-  return show(node.left) + " " + show(node.operator) + " " + show(node.right);
-};
+const showBinaryExpr = (node: BinaryExpr) =>
+  showAll([node.left, node.operator, node.right]);
 
 const showUnaryExpr = (node: UnaryExpr) => {
   if (typeof node.operator === "string") {
-    return show(node.operator) + show(node.expr);
+    return showAll([node.operator, node.expr], "");
   } else {
-    return show(node.operator) + " " + show(node.expr);
+    return showAll([node.operator, node.expr], " ");
   }
 };
 
-const showBetweenExpr = (node: BetweenExpr) => {
-  return [
-    show(node.left),
-    show(node.betweenKw),
-    show(node.begin),
-    show(node.andKw),
-    show(node.end),
-  ].join(" ");
-};
+const showBetweenExpr = (node: BetweenExpr) =>
+  showAll([node.left, node.betweenKw, node.begin, node.andKw, node.end]);
 
 const showKeyword = (kw: Keyword) => kw.text;
 
@@ -210,9 +202,8 @@ const showStringWithCharset = (node: StringWithCharset) =>
   node.charset + " " + show(node.string);
 
 const showColumnRef = (node: ColumnRef) =>
-  [node.table, node.column].filter(isDefined).map(show).join(".");
+  showAll([node.table, node.column], ".");
 
-const showTableRef = (node: TableRef) =>
-  [node.db, node.table].filter(isDefined).map(show).join(".");
+const showTableRef = (node: TableRef) => showAll([node.db, node.table], ".");
 
 const showIdentifier = (node: Identifier) => node.text;
