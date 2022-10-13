@@ -322,6 +322,9 @@
   const createKeyword = (text) => ({ type: "keyword", text });
 
   const createKeywordList = (items) => {
+    if (!items) {
+      return undefined;
+    }
     const keywords = [];
     for (const it of items) {
       if (it instanceof Array) {
@@ -481,17 +484,24 @@ create_table_stmt
     lt:create_like_table {
       return "[Not implemented]";
     }
-  / a:KW_CREATE __
-    tp:KW_TEMPORARY? __
-    KW_TABLE __
-    ife:KW_IF_NOT_EXISTS? __
+  / cKw:(KW_CREATE __)
+    tmpKw:(KW_TEMPORARY __)?
+    tKw:(KW_TABLE __)
+    ifKw:(KW_IF_NOT_EXISTS __)?
     t:table_name __
     c:create_table_definition? __
     to:table_options? __
     ir:(KW_IGNORE / KW_REPLACE)? __
     as:KW_AS? __
     qe:union_stmt? {
-      return "[Not implemented]";
+      return {
+        type: "create_table_statement",
+        createKw: createKeywordList(cKw),
+        temporaryKw: createKeywordList(tmpKw),
+        tableKw: createKeywordList(tKw),
+        ifNotExistsKw: createKeywordList(ifKw),
+        table: t,
+      };
     }
 
 

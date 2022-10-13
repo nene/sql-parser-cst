@@ -186,7 +186,6 @@ const showCreateTableStatement = (node: CreateTableStatement) =>
     node.tableKw,
     node.ifNotExistsKw,
     node.table,
-    "()",
   ]);
 
 const showAlias = (node: Alias) => show([node.expr, node.asKw, node.alias]);
