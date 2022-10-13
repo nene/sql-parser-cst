@@ -458,8 +458,8 @@ view_with
 create_view_stmt
   = a:KW_CREATE __
   or:(KW_OR __ KW_REPLACE)? __
-  al:("ALGORITHM"i __ KW_ASSIGIN_EQUAL __ ("UNDEFINED"i / "MERGE"i / "TEMPTABLE"i))? __
-  df:("DEFINER"i __ KW_ASSIGIN_EQUAL __ ident)? __
+  al:("ALGORITHM"i __ ASSIGIN_EQUAL __ ("UNDEFINED"i / "MERGE"i / "TEMPTABLE"i))? __
+  df:("DEFINER"i __ ASSIGIN_EQUAL __ ident)? __
   ss:("SQL"i __ "SECURITY"i __ ("DEFINER"i / "INVOKER"i))? __
   KW_VIEW __ v:table_name __ c:(LPAREN __ column_list __ RPAREN)? __
   KW_AS __ s:select_stmt_nake __
@@ -558,7 +558,7 @@ column_definition_opt
   / ck:check_constraint_definition {
     return "[Not implemented]";
   }
-  / t:create_option_character_set_kw __ s:KW_ASSIGIN_EQUAL? __ v:ident_name {
+  / t:create_option_character_set_kw __ s:ASSIGIN_EQUAL? __ v:ident_name {
     return "[Not implemented]";
   }
 
@@ -575,7 +575,7 @@ create_column_definition
     }
 
 collate_expr
-  = KW_COLLATE __ s:KW_ASSIGIN_EQUAL? __ ca:ident_name {
+  = KW_COLLATE __ s:ASSIGIN_EQUAL? __ ca:ident_name {
     return "[Not implemented]";
   }
 column_format
@@ -695,12 +695,12 @@ ALTER_RENAME_COLUMN
   }
 
 ALTER_ALGORITHM
-  = "ALGORITHM"i __ s:KW_ASSIGIN_EQUAL? __ val:("DEFAULT"i / "INSTANT"i / "INPLACE"i / "COPY"i) {
+  = "ALGORITHM"i __ s:ASSIGIN_EQUAL? __ val:("DEFAULT"i / "INSTANT"i / "INPLACE"i / "COPY"i) {
     return "[Not implemented]";
   }
 
 ALTER_LOCK
-  = "LOCK"i __ s:KW_ASSIGIN_EQUAL? __ val:("DEFAULT"i / "NONE"i / "SHARED"i / "EXCLUSIVE"i) {
+  = "LOCK"i __ s:ASSIGIN_EQUAL? __ val:("DEFAULT"i / "NONE"i / "SHARED"i / "EXCLUSIVE"i) {
     return "[Not implemented]";
   }
 
@@ -839,25 +839,25 @@ create_option_character_set_kw
     return "[Not implemented]";
   }
 create_option_character_set
-  = kw:KW_DEFAULT? __ t:(create_option_character_set_kw / 'CHARSET'i / 'COLLATE'i) __ s:(KW_ASSIGIN_EQUAL)? __ v:ident_name {
+  = kw:KW_DEFAULT? __ t:(create_option_character_set_kw / 'CHARSET'i / 'COLLATE'i) __ s:(ASSIGIN_EQUAL)? __ v:ident_name {
     return "[Not implemented]";
   }
 
 table_option
-  = kw:('AUTO_INCREMENT'i / 'AVG_ROW_LENGTH'i / 'KEY_BLOCK_SIZE'i / 'MAX_ROWS'i / 'MIN_ROWS'i / 'STATS_SAMPLE_PAGES'i) __ s:(KW_ASSIGIN_EQUAL)? __ v:literal_numeric {
+  = kw:('AUTO_INCREMENT'i / 'AVG_ROW_LENGTH'i / 'KEY_BLOCK_SIZE'i / 'MAX_ROWS'i / 'MIN_ROWS'i / 'STATS_SAMPLE_PAGES'i) __ s:(ASSIGIN_EQUAL)? __ v:literal_numeric {
     return "[Not implemented]";
   }
   / create_option_character_set
-  / kw:(KW_COMMENT / 'CONNECTION'i) __ s:(KW_ASSIGIN_EQUAL)? __ c:literal_string {
+  / kw:(KW_COMMENT / 'CONNECTION'i) __ s:(ASSIGIN_EQUAL)? __ c:literal_string {
     return "[Not implemented]";
   }
-  / kw:'COMPRESSION'i __ s:(KW_ASSIGIN_EQUAL)? __ v:("'"('ZLIB'i / 'LZ4'i / 'NONE'i)"'") {
+  / kw:'COMPRESSION'i __ s:(ASSIGIN_EQUAL)? __ v:("'"('ZLIB'i / 'LZ4'i / 'NONE'i)"'") {
     return "[Not implemented]";
   }
-  / kw:'ENGINE'i __ s:(KW_ASSIGIN_EQUAL)? __ c:ident_name {
+  / kw:'ENGINE'i __ s:(ASSIGIN_EQUAL)? __ c:ident_name {
     return "[Not implemented]";
   }
-  / kw:'ROW_FORMAT'i __ s:(KW_ASSIGIN_EQUAL)? __ c:(KW_DEFAULT / 'DYNAMIC'i / 'FIXED'i / 'COMPRESSED'i / 'REDUNDANT'i / 'COMPACT'i) {
+  / kw:'ROW_FORMAT'i __ s:(ASSIGIN_EQUAL)? __ c:(KW_DEFAULT / 'DYNAMIC'i / 'FIXED'i / 'COMPRESSED'i / 'REDUNDANT'i / 'COMPACT'i) {
     return "[Not implemented]";
   }
 
@@ -1143,7 +1143,7 @@ index_options
   }
 
 index_option
-  = k:KW_KEY_BLOCK_SIZE __ e:(KW_ASSIGIN_EQUAL)? __ kbs:literal_numeric {
+  = k:KW_KEY_BLOCK_SIZE __ e:(ASSIGIN_EQUAL)? __ kbs:literal_numeric {
     return "[Not implemented]";
   }
   / index_type
@@ -2300,11 +2300,6 @@ KW_SQL_SMALL_RESULT    = kw:"SQL_SMALL_RESULT"i    !ident_start { return createK
 KW_SQL_BIG_RESULT      = kw:"SQL_BIG_RESULT"i      !ident_start { return createKeyword(kw); }
 KW_SQL_BUFFER_RESULT   = kw:"SQL_BUFFER_RESULT"i   !ident_start { return createKeyword(kw); }
 
-
-KW_ASSIGN = ':='
-KW_ASSIGIN_EQUAL = '='
-
-
 //special character
 DOT       = '.'
 COMMA     = ','
@@ -2318,6 +2313,9 @@ RBRAKE    = ']'
 SEMICOLON = ';'
 SINGLE_ARROW = '->'
 DOUBLE_ARROW = '->>'
+
+ASSIGN = ':='
+ASSIGIN_EQUAL = '='
 
 // separator
 __
@@ -2360,7 +2358,7 @@ pound_sign_comment
   }
 
 keyword_comment
-  = k:KW_COMMENT __ s:KW_ASSIGIN_EQUAL? __ c:literal_string {
+  = k:KW_COMMENT __ s:ASSIGIN_EQUAL? __ c:literal_string {
     return "[Not implemented]";
   }
 
@@ -2393,7 +2391,7 @@ proc_stmt
   }
 
 assign_stmt
-  = va:(var_decl / without_prefix_var_decl) __ s: (KW_ASSIGN / KW_ASSIGIN_EQUAL) __ e:proc_expr {
+  = va:(var_decl / without_prefix_var_decl) __ s: (ASSIGN / ASSIGIN_EQUAL) __ e:proc_expr {
     return "[Not implemented]";
   }
 
