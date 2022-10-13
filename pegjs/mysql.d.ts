@@ -130,7 +130,7 @@ type CreateTableStatement = Comments & {
   temporaryKw?: Keyword;
   ifNotExistsKw?: Keyword[];
   table: TableRef;
-  columns?: ColumnDefinition[];
+  columns: ColumnDefinition[];
 };
 
 type ColumnDefinition = Comments & {

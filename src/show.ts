@@ -195,7 +195,7 @@ const showCreateTableStatement = (node: CreateTableStatement) =>
     node.tableKw,
     node.ifNotExistsKw,
     node.table,
-    node.columns ? "(" + show(node.columns, ", ") + ")" : undefined,
+    "(" + show(node.columns, ", ") + ")",
   ]);
 
 const showColumnDefinition = (node: ColumnDefinition) =>

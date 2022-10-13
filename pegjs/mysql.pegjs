@@ -500,7 +500,7 @@ create_table_stmt
     tKw:(KW_TABLE __)
     ifKw:if_not_exists_?
     t:table_name __
-    cols:create_table_definition? __
+    cols:create_table_definition __
     to:table_options? __
     ir:(KW_IGNORE / KW_REPLACE)? __
     as:KW_AS? __
