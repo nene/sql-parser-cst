@@ -1,4 +1,4 @@
-type Ast = Statement;
+type Ast = Statement[];
 
 type Comments = {
   leadingComments?: Comment[];

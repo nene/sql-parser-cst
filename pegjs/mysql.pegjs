@@ -366,52 +366,36 @@
 }
 
 start
-  = head:start_item __ tail:(__ KW_GO __ start_item)* {
-    return head; // TODO
+  = multiple_stmt
+
+multiple_stmt
+  = head:statement tail:(__ SEMICOLON __ statement)* {
+    return createExprList(head, tail).children;
   }
 
-start_item
-  = __ n:(multiple_stmt / cmd_stmt / crud_stmt) {
-    return n; // TODO
-  }
-
-cmd_stmt
-  = drop_stmt
-  / create_stmt
+statement
+  = union_stmt
+  / drop_stmt
+  / create_table_stmt
+  / create_index_stmt
+  / create_db_stmt
+  / create_view_stmt
   / truncate_stmt
   / rename_stmt
   / call_stmt
   / use_stmt
-  / alter_stmt
+  / alter_table_stmt
   / set_stmt
   / lock_stmt
   / unlock_stmt
   / show_stmt
   / desc_stmt
-
-create_stmt
-  = create_table_stmt
-  / create_index_stmt
-  / create_db_stmt
-  / create_view_stmt
-
-alter_stmt
-  = alter_table_stmt
-
-crud_stmt
-  = union_stmt
   / update_stmt
   / replace_insert_stmt
   / insert_no_columns_stmt
   / insert_into_set
   / delete_stmt
-  / cmd_stmt
   / proc_stmts
-
-multiple_stmt
-  = head:crud_stmt tail:(__ SEMICOLON __ crud_stmt)+ {
-    return "[Not implemented]";
-  }
 
 union_stmt
   = head:select_stmt tail:(__ KW_UNION __ KW_ALL? __ select_stmt)* __ ob: order_by_clause? __ l:limit_clause? {
