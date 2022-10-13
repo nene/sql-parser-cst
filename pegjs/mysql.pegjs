@@ -1260,7 +1260,7 @@ on_clause
     return {
       type: "join_specification",
       kw,
-      expr,
+      expr: withComments(expr, {leading: c}),
     };
   }
 

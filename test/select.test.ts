@@ -77,6 +77,12 @@ describe("select", () => {
         "SELECT c FROM t1 JOIN t2 /*c1*/ USING /*c2*/ (/*c3*/ col1 /*c4*/, /*c5*/ col2 /*c6*/)"
       );
     });
+
+    it("parses join with ON specification", () => {
+      test("SELECT c FROM t1 JOIN t2 ON t1.id = t2.id");
+      test("SELECT c FROM t1 JOIN t2 ON t1.id = t2.id AND t2.type = 5");
+      test("SELECT c FROM t1 JOIN t2 /*c1*/ ON /*c2*/ true");
+    });
   });
 
   describe("syntax tree", () => {
