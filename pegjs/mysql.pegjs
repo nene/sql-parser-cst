@@ -1248,7 +1248,7 @@ using_clause
     const columnList = createExprList(head, tail)
     return {
       type: "join_specification",
-      kw,
+      kw: createKeyword(kw),
       expr: withComments(createParenExpr(c2, columnList, c3), { leading: c1 }),
     };
   }
@@ -1262,7 +1262,7 @@ on_clause
   = kw:KW_ON c:__ expr:expr {
     return {
       type: "join_specification",
-      kw,
+      kw: createKeyword(kw),
       expr: withComments(expr, {leading: c}),
     };
   }

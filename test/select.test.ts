@@ -73,6 +73,7 @@ describe("select", () => {
     it("parses join with USING specification", () => {
       test("SELECT c FROM t1 JOIN t2 USING (id)");
       test("SELECT c FROM t1 JOIN t2 USING (col1, col2)");
+      test("SELECT c FROM t1 JOIN t2 using (ext_id)");
       test(
         "SELECT c FROM t1 JOIN t2 /*c1*/ USING /*c2*/ (/*c3*/ col1 /*c4*/, /*c5*/ col2 /*c6*/)"
       );
@@ -82,6 +83,7 @@ describe("select", () => {
       test("SELECT c FROM t1 JOIN t2 ON t1.id = t2.id");
       test("SELECT c FROM t1 JOIN t2 ON t1.id = t2.id AND t2.type = 5");
       test("SELECT c FROM t1 JOIN t2 ON (t1.id = t2.id)");
+      test("SELECT c FROM t1 JOIN t2 on t1.id = t2.id");
       test("SELECT c FROM t1 JOIN t2 /*c1*/ ON /*c2*/ true");
     });
   });
