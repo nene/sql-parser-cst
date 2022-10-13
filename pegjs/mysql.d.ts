@@ -19,7 +19,7 @@ type Node =
   | JoinSpecification
   | SortSpecification;
 
-type Statement = SelectStatement;
+type Statement = SelectStatement | EmptyStatement;
 
 type Expr =
   | SelectStatement
@@ -38,6 +38,10 @@ type Expr =
   | ColumnRef
   | TableRef
   | Identifier;
+
+type EmptyStatement = Comment & {
+  type: "empty_statement";
+};
 
 type SelectStatement = Comments & {
   type: "select_statement";

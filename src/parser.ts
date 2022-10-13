@@ -6,5 +6,5 @@ export function parse(sql: string): Ast {
 }
 
 export function show(ast: Ast): string {
-  return showSql(ast, "; ");
+  return showSql(ast, "; ").trimEnd();
 }

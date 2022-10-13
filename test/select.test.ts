@@ -12,10 +12,6 @@ describe("select", () => {
     test("SELECT 1 /*c1*/, /*c2*/ 2");
   });
 
-  it("parses multiple SELECT statements", () => {
-    test("SELECT 1; SELECT 2; SELECT 3");
-  });
-
   it("parses column aliases", () => {
     test("SELECT 'hello' AS foo");
     test("SELECT 1 as bar, 2 baz");

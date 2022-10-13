@@ -395,7 +395,13 @@ statement
   / insert_no_columns_stmt
   / insert_into_set
   / delete_stmt
-  / proc_stmts
+  / proc_stmt
+  / empty_stmt
+
+empty_stmt
+  = c:__ {
+    return withComments({ type: "empty_statement" }, { trailing: c });
+  }
 
 union_stmt
   = head:select_stmt tail:(__ KW_UNION __ KW_ALL? __ select_stmt)* __ ob: order_by_clause? __ l:limit_clause? {
@@ -2401,10 +2407,6 @@ EOL
   / [\n\r]+
 
 EOF = !.
-
-//begin procedure extension
-proc_stmts
-  = proc_stmt*
 
 proc_stmt
   = __ s:(assign_stmt / return_stmt) {
