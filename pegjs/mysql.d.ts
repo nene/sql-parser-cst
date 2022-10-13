@@ -36,10 +36,11 @@ type SelectStatement = Comments & {
   type: "select_statement";
   select: SelectClause;
   from?: FromClause;
-  where: WhereClause;
+  where?: WhereClause;
+  groupBy?: GroupByClause;
 };
 
-type Clause = SelectClause | FromClause | WhereClause;
+type Clause = SelectClause | FromClause | WhereClause | GroupByClause;
 
 type SelectClause = Comments & {
   type: "select_clause";
@@ -57,6 +58,12 @@ type WhereClause = Comments & {
   type: "where_clause";
   whereKw: Keyword;
   expr: Expr;
+};
+
+type GroupByClause = Comments & {
+  type: "group_by_clause";
+  groupByKw: Keyword[];
+  columns: Expr[];
 };
 
 type Join = Comments & {

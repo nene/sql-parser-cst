@@ -8,6 +8,7 @@ import {
   DateTimeLiteral,
   ExprList,
   FromClause,
+  GroupByClause,
   Identifier,
   Join,
   JoinSpecification,
@@ -53,6 +54,8 @@ function showNode(node: Node): string {
       return showFromClause(node);
     case "where_clause":
       return showWhereClause(node);
+    case "group_by_clause":
+      return showGroupByClause(node);
     case "join":
       return showJoin(node);
     case "join_specification":
@@ -109,7 +112,10 @@ const showComment = (c: Comment): string =>
   c.type === "line_comment" ? c.text + "\n" : c.text;
 
 const showSelectStatement = (node: SelectStatement) =>
-  [node.select, node.from, node.where].filter(isDefined).map(show).join(" ");
+  [node.select, node.from, node.where, node.groupBy]
+    .filter(isDefined)
+    .map(show)
+    .join(" ");
 
 const showSelectClause = (node: SelectClause) =>
   show(node.selectKw) + " " + node.columns.map(show).join(", ");
@@ -140,6 +146,9 @@ const showJoinSpecification = (node: JoinSpecification) =>
 
 const showWhereClause = (node: WhereClause) =>
   show(node.whereKw) + " " + show(node.expr);
+
+const showGroupByClause = (node: GroupByClause) =>
+  show(node.groupByKw) + " " + node.columns.map(show).join(", ");
 
 const showAlias = (node: Alias) => {
   return node.asKw

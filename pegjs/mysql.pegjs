@@ -1010,7 +1010,7 @@ select_stmt_nake
     from:from_clause?      __
     fi:into_clause?      __
     where:where_clause?     __
-    g:group_by_clause?  __
+    groupBy:group_by_clause?  __
     h:having_clause?    __
     o:order_by_clause?  __
     l:limit_clause? __
@@ -1031,6 +1031,9 @@ select_stmt_nake
       }
       if (where) {
         stmt.where = where;
+      }
+      if (groupBy) {
+        stmt.groupBy = groupBy;
       }
       return stmt;
   }
@@ -1277,7 +1280,13 @@ where_clause
   }
 
 group_by_clause
-  = KW_GROUP __ KW_BY __ e:expr_list { return "[Not implemented]"; }
+  = kws:(KW_GROUP __ KW_BY __) list:expr_list {
+    return {
+      type: "group_by_clause",
+      groupByKw: createKeywordList(kws),
+      columns: list.children,
+    };
+  }
 
 column_ref_index
   = column_ref_list / literal_list
