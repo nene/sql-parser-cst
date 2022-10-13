@@ -5,6 +5,6 @@ describe("create table", () => {
     test("CREATE TABLE foo");
     test("CREATE TEMPORARY TABLE foo");
     test("CREATE TABLE IF NOT EXISTS foo");
-    test("CREATE /*c1*/ TEMPORARY /*c1*/ TABLE /*c1*/ IF NOT EXISTS /*c1*/ foo");
+    test("create /*c1*/ temporary /*c2*/ table /*c3*/ if /*c4*/ not /*c5*/ exists /*c6*/ foo");
   });
 });

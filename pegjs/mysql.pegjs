@@ -287,6 +287,9 @@
   /** True when value is object */
   const isObject = (value) => typeof value === "object";
 
+  /** Prefer undefined over null */
+  const nullToUndefined = (value) => value === null ? undefined : value;
+
   /** Attaches optional comments to AST node */
   const withComments = (node, { leading, trailing }) => {
     if (leading && leading.length) {
@@ -434,7 +437,7 @@ create_db_definition
 create_db_stmt
   = a:KW_CREATE __
     k:(KW_DATABASE / KW_SCHEME) __
-    ife:KW_IF_NOT_EXISTS? __
+    ife:if_not_exists_?
     t:ident_name __
     c:create_db_definition? {
       return "[Not implemented]";
@@ -479,7 +482,7 @@ create_table_stmt
   = a:KW_CREATE __
     tp:KW_TEMPORARY? __
     KW_TABLE __
-    ife:KW_IF_NOT_EXISTS? __
+    ife:if_not_exists_?
     t:table_name __
     lt:create_like_table {
       return "[Not implemented]";
@@ -487,7 +490,7 @@ create_table_stmt
   / cKw:(KW_CREATE __)
     tmpKw:(KW_TEMPORARY __)?
     tKw:(KW_TABLE __)
-    ifKw:(KW_IF_NOT_EXISTS __)?
+    ifKw:if_not_exists_?
     t:table_name __
     c:create_table_definition? __
     to:table_options? __
@@ -499,11 +502,13 @@ create_table_stmt
         createKw: createKeywordList(cKw),
         temporaryKw: createKeywordList(tmpKw),
         tableKw: createKeywordList(tKw),
-        ifNotExistsKw: createKeywordList(ifKw),
+        ifNotExistsKw: nullToUndefined(ifKw),
         table: t,
       };
     }
 
+if_not_exists_
+  = kws:(KW_IF __ KW_NOT __ KW_EXISTS __) { return createKeywordList(kws); }
 
 create_like_table_simple
   = KW_LIKE __ t: table_ref_list {
@@ -2175,7 +2180,6 @@ KW_SELECT   = kw:"SELECT"i     !ident_start { return createKeyword(kw); }
 KW_UPDATE   = kw:"UPDATE"i     !ident_start { return createKeyword(kw); }
 KW_CREATE   = kw:"CREATE"i     !ident_start { return createKeyword(kw); }
 KW_TEMPORARY = kw:"TEMPORARY"i !ident_start { return createKeyword(kw); }
-KW_IF_NOT_EXISTS = kw:"IF NOT EXISTS"i !ident_start { return createKeyword(kw); }
 KW_DELETE   = kw:"DELETE"i     !ident_start { return createKeyword(kw); }
 KW_INSERT   = kw:"INSERT"i     !ident_start { return createKeyword(kw); }
 KW_RECURSIVE= kw:"RECURSIVE"   !ident_start { return createKeyword(kw); }
@@ -2235,6 +2239,7 @@ KW_IS       = kw:"IS"i         !ident_start { return createKeyword(kw); }
 KW_LIKE     = kw:"LIKE"i       !ident_start { return createKeyword(kw); }
 KW_RLIKE    = kw:"RLIKE"i      !ident_start { return createKeyword(kw); }
 KW_REGEXP   = kw:"REGEXP"i     !ident_start { return createKeyword(kw); }
+KW_IF       = kw:"IF"i         !ident_start { return createKeyword(kw); }
 KW_EXISTS   = kw:"EXISTS"i     !ident_start { return createKeyword(kw); }
 
 KW_NOT      = kw:"NOT"i        !ident_start { return createKeyword(kw); }

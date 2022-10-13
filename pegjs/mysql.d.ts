@@ -125,7 +125,7 @@ type CreateTableStatement = Comments & {
   createKw: Keyword;
   tableKw: Keyword;
   temporaryKw?: Keyword;
-  ifNotExistsKw?: Keyword;
+  ifNotExistsKw?: Keyword[];
   table: TableRef;
 };
 
