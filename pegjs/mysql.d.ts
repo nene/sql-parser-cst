@@ -19,7 +19,7 @@ type Node =
   | JoinSpecification
   | SortSpecification;
 
-type Statement = SelectStatement | EmptyStatement;
+type Statement = EmptyStatement | SelectStatement | CreateTableStatement;
 
 type Expr =
   | SelectStatement
@@ -39,9 +39,12 @@ type Expr =
   | TableRef
   | Identifier;
 
-type EmptyStatement = Comment & {
+type EmptyStatement = Comments & {
   type: "empty_statement";
+  foo: number;
 };
+
+// SELECT
 
 type SelectStatement = Comments & {
   type: "select_statement";
@@ -115,6 +118,18 @@ type SortSpecification = Comments & {
   expr: Expr;
   orderKw?: Keyword;
 };
+
+// CREATE TABLE
+type CreateTableStatement = Comments & {
+  type: "create_table_statement";
+  createKw: Keyword;
+  tableKw: Keyword;
+  temporaryKw?: Keyword;
+  ifNotExistsKw?: Keyword;
+  table: TableRef;
+};
+
+// other...
 
 type Alias = Comments & {
   type: "alias";

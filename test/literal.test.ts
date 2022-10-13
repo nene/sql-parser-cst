@@ -1,10 +1,6 @@
-import { parse } from "../src/parser";
+import { parseExpr } from "./test_utils";
 
 describe("literal", () => {
-  function parseExpr(expr: string) {
-    return parse(`SELECT ${expr}`)[0].select.columns[0];
-  }
-
   it("single-quoted string", () => {
     expect(parseExpr(`'hello'`)).toMatchSnapshot();
   });

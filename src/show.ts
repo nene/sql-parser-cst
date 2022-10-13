@@ -5,7 +5,9 @@ import {
   BoolLiteral,
   ColumnRef,
   Comment,
+  CreateTableStatement,
   DateTimeLiteral,
+  EmptyStatement,
   ExprList,
   FromClause,
   GroupByClause,
@@ -57,6 +59,8 @@ export function show(
 
 function showNode(node: Node): string {
   switch (node.type) {
+    case "empty_statement":
+      return showEmptyStatement(node);
     case "select_statement":
       return showSelectStatement(node);
     case "select_clause":
@@ -77,6 +81,8 @@ function showNode(node: Node): string {
       return showJoinSpecification(node);
     case "sort_specification":
       return showSortSpecification(node);
+    case "create_table_statement":
+      return showCreateTableStatement(node);
     case "alias":
       return showAlias(node);
     case "expr_list":
@@ -121,6 +127,8 @@ const showComments = (c?: Comment[]): string | undefined => {
 
 const showComment = (c: Comment): string =>
   c.type === "line_comment" ? c.text + "\n" : c.text;
+
+const showEmptyStatement = (node: EmptyStatement) => "";
 
 const showSelectStatement = (node: SelectStatement) =>
   show([
@@ -170,6 +178,16 @@ const showOrderByClause = (node: OrderByClause) =>
 
 const showSortSpecification = (node: SortSpecification) =>
   show([node.expr, node.orderKw]);
+
+const showCreateTableStatement = (node: CreateTableStatement) =>
+  show([
+    node.createKw,
+    node.temporaryKw,
+    node.tableKw,
+    node.ifNotExistsKw,
+    node.table,
+    "()",
+  ]);
 
 const showAlias = (node: Alias) => show([node.expr, node.asKw, node.alias]);
 
