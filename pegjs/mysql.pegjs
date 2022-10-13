@@ -2276,30 +2276,30 @@ KW_VIEW           = kw:"VIEW"i    !ident_start { return createKeyword(kw); }
 KW_DIV = kw:"DIV"i !ident_start { return createKeyword(kw); }
 KW_MOD = kw:"MOD"i !ident_start { return createKeyword(kw); }
 
+KW_DUAL = kw:"DUAL"i         !ident_start { return createKeyword(kw); }
+KW_RETURN = kw:'RETURN'i     !ident_start { return createKeyword(kw); }
+
+// MySQL Alter
+KW_ADD     = kw:"ADD"i       !ident_start { return createKeyword(kw); }
+KW_COLUMN  = kw:"COLUMN"i    !ident_start { return createKeyword(kw); }
+KW_INDEX   = kw:"INDEX"i     !ident_start { return createKeyword(kw); }
+KW_KEY     = kw:"KEY"i       !ident_start { return createKeyword(kw); }
+KW_FULLTEXT = kw:"FULLTEXT"i !ident_start { return createKeyword(kw); }
+KW_SPATIAL  = kw:"SPATIAL"i  !ident_start { return createKeyword(kw); }
+KW_UNIQUE     = kw:"UNIQUE"i !ident_start { return createKeyword(kw); }
+KW_KEY_BLOCK_SIZE = kw:"KEY_BLOCK_SIZE"i !ident_start { return createKeyword(kw); }
+KW_COMMENT     = kw:"COMMENT"i     !ident_start { return createKeyword(kw); }
+KW_CONSTRAINT  = kw:"CONSTRAINT"i  !ident_start { return createKeyword(kw); }
+KW_REFERENCES  = kw:"REFERENCES"i  !ident_start { return createKeyword(kw); }
+
+
 KW_VAR__PRE_AT = '@'
 KW_VAR__PRE_AT_AT = '@@'
 KW_VAR_PRE_DOLLAR = '$'
 KW_VAR_PRE
   = KW_VAR__PRE_AT_AT / KW_VAR__PRE_AT / KW_VAR_PRE_DOLLAR
-KW_RETURN = 'return'i
 KW_ASSIGN = ':='
 KW_ASSIGIN_EQUAL = '='
-
-KW_DUAL = "DUAL"i
-
-// MySQL Alter
-KW_ADD     = "ADD"i     !ident_start { return 'ADD'; }
-KW_COLUMN  = "COLUMN"i  !ident_start { return 'COLUMN'; }
-KW_INDEX   = "INDEX"i  !ident_start { return 'INDEX'; }
-KW_KEY     = "KEY"i  !ident_start { return 'KEY'; }
-KW_FULLTEXT = "FULLTEXT"i  !ident_start { return 'FULLTEXT'; }
-KW_SPATIAL  = "SPATIAL"i  !ident_start { return 'SPATIAL'; }
-KW_UNIQUE     = "UNIQUE"i  !ident_start { return 'UNIQUE'; }
-KW_KEY_BLOCK_SIZE = "KEY_BLOCK_SIZE"i !ident_start { return 'KEY_BLOCK_SIZE'; }
-KW_COMMENT     = "COMMENT"i  !ident_start { return 'COMMENT'; }
-KW_CONSTRAINT  = "CONSTRAINT"i  !ident_start { return 'CONSTRAINT'; }
-KW_REFERENCES  = "REFERENCES"i  !ident_start { return 'REFERENCES'; }
-
 
 
 // MySQL extensions to SQL
