@@ -7,4 +7,9 @@ describe("create table", () => {
     test("CREATE TABLE IF NOT EXISTS foo");
     test("create /*c1*/ temporary /*c2*/ table /*c3*/ if /*c4*/ not /*c5*/ exists /*c6*/ foo");
   });
+
+  it("parses CREATE TABLE with column definitions", () => {
+    test("CREATE TABLE foo (id INT)");
+    test("CREATE TABLE foo (id INT, age SMALLINT)");
+  });
 });

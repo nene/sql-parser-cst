@@ -3,9 +3,11 @@ import {
   BetweenExpr,
   BinaryExpr,
   BoolLiteral,
+  ColumnDefinition,
   ColumnRef,
   Comment,
   CreateTableStatement,
+  DataType,
   DateTimeLiteral,
   EmptyStatement,
   ExprList,
@@ -83,6 +85,10 @@ function showNode(node: Node): string {
       return showSortSpecification(node);
     case "create_table_statement":
       return showCreateTableStatement(node);
+    case "column_definition":
+      return showColumnDefinition(node);
+    case "data_type":
+      return showDataType(node);
     case "alias":
       return showAlias(node);
     case "expr_list":
@@ -186,7 +192,13 @@ const showCreateTableStatement = (node: CreateTableStatement) =>
     node.tableKw,
     node.ifNotExistsKw,
     node.table,
+    node.columns ? "(" + show(node.columns, ", ") + ")" : undefined,
   ]);
+
+const showColumnDefinition = (node: ColumnDefinition) =>
+  show([node.name, node.dataType]);
+
+const showDataType = (node: DataType) => show(node.nameKw);
 
 const showAlias = (node: Alias) => show([node.expr, node.asKw, node.alias]);
 

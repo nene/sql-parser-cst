@@ -492,7 +492,7 @@ create_table_stmt
     tKw:(KW_TABLE __)
     ifKw:if_not_exists_?
     t:table_name __
-    c:create_table_definition? __
+    cols:create_table_definition? __
     to:table_options? __
     ir:(KW_IGNORE / KW_REPLACE)? __
     as:KW_AS? __
@@ -504,6 +504,7 @@ create_table_stmt
         tableKw: createKeywordList(tKw),
         ifNotExistsKw: nullToUndefined(ifKw),
         table: t,
+        columns: cols,
       };
     }
 
@@ -522,8 +523,12 @@ create_like_table
   }
 
 create_table_definition
-  = LPAREN __ head:create_definition tail:(__ COMMA __ create_definition)* __ RPAREN {
-    return "[Not implemented]";
+  = LPAREN c1:__ head:create_definition tail:(__ COMMA __ create_definition)* c2:__ RPAREN {
+    const cols = createExprList(head, tail).children;
+    // Add surrounding comments to first and last column (which might be the same one)
+    cols[0] = withComments(cols[0], { leading: c1 });
+    cols[cols.length-1] = withComments(cols[cols.length-1], { trailing: c2 });
+    return cols;
   }
 
 create_definition
@@ -573,10 +578,15 @@ column_definition_opt_list
   }
 
 create_column_definition
-  = c:column_ref __
-    d:data_type __
+  = name:column_ref c1:__
+    type:data_type __
     cdo:column_definition_opt_list? {
-      return "[Not implemented]";
+      // TODO
+      return {
+        type: "column_definition",
+        name: withComments(name, {trailing: c1}),
+        dataType: type,
+      };
     }
 
 collate_expr
@@ -2559,10 +2569,13 @@ numeric_type
   / t:(KW_NUMERIC / KW_DECIMAL / KW_INT / KW_INTEGER / KW_SMALLINT / KW_TINYINT / KW_BIGINT / KW_FLOAT / KW_DOUBLE)l:[0-9]+ __ s:numeric_type_suffix? {
     return "[Not implemented]";
   }
-  / t:(KW_NUMERIC / KW_DECIMAL / KW_INT / KW_INTEGER / KW_SMALLINT / KW_TINYINT / KW_BIGINT / KW_FLOAT / KW_DOUBLE) __ s:numeric_type_suffix? __ {
-    return "[Not implemented]";
+  / kw:(KW_NUMERIC / KW_DECIMAL / KW_INT / KW_INTEGER / KW_SMALLINT / KW_TINYINT / KW_BIGINT / KW_FLOAT / KW_DOUBLE) __ s:numeric_type_suffix? __ {
+    return {
+      type: "data_type",
+      nameKw: kw,
+      // TODO
+    };
   }
-
 
 datetime_type
   = t:(KW_DATE / KW_DATETIME / KW_TIME / KW_TIMESTAMP) __ LPAREN __ l:[0-6] __ RPAREN __ s:numeric_type_suffix? { return "[Not implemented]"; }

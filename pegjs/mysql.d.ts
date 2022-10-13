@@ -17,7 +17,9 @@ type Node =
   | Keyword
   | Join
   | JoinSpecification
-  | SortSpecification;
+  | SortSpecification
+  | ColumnDefinition
+  | DataType;
 
 type Statement = EmptyStatement | SelectStatement | CreateTableStatement;
 
@@ -127,6 +129,18 @@ type CreateTableStatement = Comments & {
   temporaryKw?: Keyword;
   ifNotExistsKw?: Keyword[];
   table: TableRef;
+  columns?: ColumnDefinition[];
+};
+
+type ColumnDefinition = Comments & {
+  type: "column_definition";
+  name: ColumnRef;
+  dataType: DataType;
+};
+
+type DataType = Comments & {
+  type: "data_type";
+  nameKw: Keyword;
 };
 
 // other...
