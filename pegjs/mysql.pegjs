@@ -1043,11 +1043,11 @@ option_clause
 
 query_option
   = option:(
-        OPT_SQL_CALC_FOUND_ROWS
-        / (OPT_SQL_CACHE / OPT_SQL_NO_CACHE)
-        / OPT_SQL_BIG_RESULT
-        / OPT_SQL_SMALL_RESULT
-        / OPT_SQL_BUFFER_RESULT
+        KW_SQL_CALC_FOUND_ROWS
+        / (KW_SQL_CACHE / KW_SQL_NO_CACHE)
+        / KW_SQL_BIG_RESULT
+        / KW_SQL_SMALL_RESULT
+        / KW_SQL_BUFFER_RESULT
     ) {
       return "[Not implemented]";
     }
@@ -2292,6 +2292,14 @@ KW_COMMENT     = kw:"COMMENT"i     !ident_start { return createKeyword(kw); }
 KW_CONSTRAINT  = kw:"CONSTRAINT"i  !ident_start { return createKeyword(kw); }
 KW_REFERENCES  = kw:"REFERENCES"i  !ident_start { return createKeyword(kw); }
 
+// MySQL extensions to SQL
+KW_SQL_CALC_FOUND_ROWS = kw:"SQL_CALC_FOUND_ROWS"i !ident_start { return createKeyword(kw); }
+KW_SQL_CACHE           = kw:"SQL_CACHE"i           !ident_start { return createKeyword(kw); }
+KW_SQL_NO_CACHE        = kw:"SQL_NO_CACHE"i        !ident_start { return createKeyword(kw); }
+KW_SQL_SMALL_RESULT    = kw:"SQL_SMALL_RESULT"i    !ident_start { return createKeyword(kw); }
+KW_SQL_BIG_RESULT      = kw:"SQL_BIG_RESULT"i      !ident_start { return createKeyword(kw); }
+KW_SQL_BUFFER_RESULT   = kw:"SQL_BUFFER_RESULT"i   !ident_start { return createKeyword(kw); }
+
 
 KW_VAR__PRE_AT = '@'
 KW_VAR__PRE_AT_AT = '@@'
@@ -2301,14 +2309,6 @@ KW_VAR_PRE
 KW_ASSIGN = ':='
 KW_ASSIGIN_EQUAL = '='
 
-
-// MySQL extensions to SQL
-OPT_SQL_CALC_FOUND_ROWS = "SQL_CALC_FOUND_ROWS"i
-OPT_SQL_CACHE           = "SQL_CACHE"i
-OPT_SQL_NO_CACHE        = "SQL_NO_CACHE"i
-OPT_SQL_SMALL_RESULT    = "SQL_SMALL_RESULT"i
-OPT_SQL_BIG_RESULT      = "SQL_BIG_RESULT"i
-OPT_SQL_BUFFER_RESULT   = "SQL_BUFFER_RESULT"i
 
 //special character
 DOT       = '.'
