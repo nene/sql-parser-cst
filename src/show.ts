@@ -146,8 +146,10 @@ const showFromClause = (node: FromClause) => {
 };
 
 const showJoin = (node: Join) => {
-  const spec = node.specification ? " " + show(node.specification) : "";
-  return show(node.operator) + " " + show(node.table) + spec;
+  return [node.operator, node.table, node.specification]
+    .filter(isDefined)
+    .map(show)
+    .join(" ");
 };
 
 const showJoinSpecification = (node: JoinSpecification) =>
@@ -169,9 +171,10 @@ const showSortSpecification = (node: SortSpecification) =>
   [node.expr, node.orderKw].filter(isDefined).map(show).join(" ");
 
 const showAlias = (node: Alias) => {
-  return node.asKw
-    ? `${show(node.expr)} ${show(node.asKw)} ${show(node.alias)}`
-    : `${show(node.expr)} ${show(node.alias)}`;
+  return [node.expr, node.asKw, node.alias]
+    .filter(isDefined)
+    .map(show)
+    .join(" ");
 };
 
 const showLiteral = (
@@ -213,9 +216,9 @@ const showStringWithCharset = (node: StringWithCharset) =>
   node.charset + " " + show(node.string);
 
 const showColumnRef = (node: ColumnRef) =>
-  node.table ? show(node.table) + "." + show(node.column) : show(node.column);
+  [node.table, node.column].filter(isDefined).map(show).join(".");
 
 const showTableRef = (node: TableRef) =>
-  node.db ? show(node.db) + "." + show(node.table) : show(node.table);
+  [node.db, node.table].filter(isDefined).map(show).join(".");
 
 const showIdentifier = (node: Identifier) => node.text;
