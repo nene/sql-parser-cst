@@ -349,6 +349,14 @@
     return { type: "expr_list", children };
   };
 
+  const createList = (head, tail) => {
+    const items = [head];
+    for (const [c, expr] of tail) {
+      items.push(withComments(expr, { leading: c }));
+    }
+    return items;
+  };
+
   const createIdentifier = (text) => ({ type: "identifier", text });
 
   const createAlias = (expr, _alias) => {
@@ -538,8 +546,11 @@ create_definition
   / create_fulltext_spatial_index_definition
 
 column_definition_opt
-  = n:(literal_not_null / literal_null) {
-    return "[Not implemented]";
+  = kw:KW_NOT_NULL {
+    return { type: "column_option_nullable", kw, value: false };
+  }
+  / kw:KW_NULL {
+    return { type: "column_option_nullable", kw, value: true };
   }
   / d:default_expr {
     return "[Not implemented]";
@@ -573,19 +584,20 @@ column_definition_opt
   }
 
 column_definition_opt_list
-  = head:column_definition_opt __ tail:(__ column_definition_opt)* {
-    return "[Not implemented]";
+  = head:column_definition_opt tail:(__ column_definition_opt)* {
+    return createList(head, tail);
   }
 
 create_column_definition
   = name:column_ref c1:__
     type:data_type __
-    cdo:column_definition_opt_list? {
+    opts:column_definition_opt_list? {
       // TODO
       return {
         type: "column_definition",
         name: withComments(name, {trailing: c1}),
         dataType: type,
+        options: opts || [],
       };
     }
 

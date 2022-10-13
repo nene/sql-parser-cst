@@ -12,4 +12,9 @@ describe("create table", () => {
     test("CREATE TABLE foo (id INT)");
     test("CREATE TABLE foo (id INT, age SMALLINT)");
   });
+
+  it("parses column options", () => {
+    test("create table foo (id int NULL)");
+    test("create table foo (id int NOT NULL)");
+  });
 });

@@ -19,6 +19,7 @@ type Node =
   | JoinSpecification
   | SortSpecification
   | ColumnDefinition
+  | ColumnOption
   | DataType;
 
 type Statement = EmptyStatement | SelectStatement | CreateTableStatement;
@@ -136,11 +137,20 @@ type ColumnDefinition = Comments & {
   type: "column_definition";
   name: ColumnRef;
   dataType: DataType;
+  options: ColumnOption[];
 };
 
 type DataType = Comments & {
   type: "data_type";
   nameKw: Keyword;
+};
+
+type ColumnOption = ColumnOptionNullable;
+
+type ColumnOptionNullable = Comments & {
+  type: "column_option_nullable";
+  kw: Keyword;
+  value: boolean;
 };
 
 // other...
