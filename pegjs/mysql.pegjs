@@ -937,7 +937,7 @@ show_grant_stmt
   }
 
 show_grant_for
-  = 'FOR'i __ n:ident __ h:(KW_VAR__PRE_AT __ ident)? __ u:show_grant_for_using? {
+  = 'FOR'i __ n:ident __ h:("@" __ ident)? __ u:show_grant_for_using? {
     return "[Not implemented]";
   }
 
@@ -2301,11 +2301,6 @@ KW_SQL_BIG_RESULT      = kw:"SQL_BIG_RESULT"i      !ident_start { return createK
 KW_SQL_BUFFER_RESULT   = kw:"SQL_BUFFER_RESULT"i   !ident_start { return createKeyword(kw); }
 
 
-KW_VAR__PRE_AT = '@'
-KW_VAR__PRE_AT_AT = '@@'
-KW_VAR_PRE_DOLLAR = '$'
-KW_VAR_PRE
-  = KW_VAR__PRE_AT_AT / KW_VAR__PRE_AT / KW_VAR_PRE_DOLLAR
 KW_ASSIGN = ':='
 KW_ASSIGIN_EQUAL = '='
 
@@ -2473,9 +2468,11 @@ var_decl_list
   }
 
 var_decl
-  = p: KW_VAR_PRE d: without_prefix_var_decl {
+  = p:var_prefix d: without_prefix_var_decl {
     return "[Not implemented]";
   }
+
+var_prefix = "@@" / "@" / "$"
 
 without_prefix_var_decl
   = name:ident_name m:mem_chain {
