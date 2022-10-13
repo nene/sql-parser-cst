@@ -1,4 +1,4 @@
-import { parse, show } from "../src/parser";
+import { parse } from "../src/parser";
 import { test } from "./test_utils";
 
 describe("statement", () => {

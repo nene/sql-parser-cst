@@ -1,11 +1,6 @@
-import { parse, show } from "../src/parser";
-import { parseExpr } from "./test_utils";
+import { parseExpr, testExpr } from "./test_utils";
 
 describe("column", () => {
-  function testExpr(expr: string) {
-    expect(show(parse(`SELECT ${expr}`))).toBe(`SELECT ${expr}`);
-  }
-
   it("parses simple column name", () => {
     testExpr("foo");
     testExpr("foo123");

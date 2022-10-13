@@ -4,6 +4,10 @@ export function test(sql: string) {
   expect(show(parse(sql))).toBe(sql);
 }
 
+export function testExpr(expr: string) {
+  expect(show(parse(`SELECT ${expr}`))).toBe(`SELECT ${expr}`);
+}
+
 export function parseExpr(expr: string) {
   const stmt = parse(`SELECT ${expr}`)[0];
   if (stmt.type === "select_statement") {
