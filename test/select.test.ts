@@ -108,6 +108,13 @@ describe("select", () => {
     });
   });
 
+  describe("HAVING", () => {
+    it("parses having clause", () => {
+      test("SELECT c FROM t WHERE true GROUP BY col HAVING x > 3");
+      test("SELECT c FROM t Having /*c*/ x = 81");
+    });
+  });
+
   describe("syntax tree", () => {
     it("parses SELECT with multiple columns", () => {
       expect(parse("SELECT 1, 2, 3 FROM db.tbl")).toMatchInlineSnapshot(`

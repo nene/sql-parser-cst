@@ -1011,7 +1011,7 @@ select_stmt_nake
     fi:into_clause?      __
     where:where_clause?     __
     groupBy:group_by_clause?  __
-    h:having_clause?    __
+    having:having_clause?    __
     o:order_by_clause?  __
     l:limit_clause? __
     lr: locking_read? __
@@ -1034,6 +1034,9 @@ select_stmt_nake
       }
       if (groupBy) {
         stmt.groupBy = groupBy;
+      }
+      if (having) {
+        stmt.having = having;
       }
       return stmt;
   }
@@ -1297,7 +1300,13 @@ column_ref_list
     }
 
 having_clause
-  = KW_HAVING __ e:expr { return "[Not implemented]"; }
+  = kw:KW_HAVING c:__ expr:expr {
+    return {
+      type: "having_clause",
+      havingKw: kw,
+      expr: withComments(expr, {leading: c}),
+    };
+  }
 
 partition_by_clause
   = KW_PARTITION __ KW_BY __ bc:column_clause { return "[Not implemented]"; }

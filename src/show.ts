@@ -9,6 +9,7 @@ import {
   ExprList,
   FromClause,
   GroupByClause,
+  HavingClause,
   Identifier,
   Join,
   JoinSpecification,
@@ -56,6 +57,8 @@ function showNode(node: Node): string {
       return showWhereClause(node);
     case "group_by_clause":
       return showGroupByClause(node);
+    case "having_clause":
+      return showHavingClause(node);
     case "join":
       return showJoin(node);
     case "join_specification":
@@ -112,7 +115,7 @@ const showComment = (c: Comment): string =>
   c.type === "line_comment" ? c.text + "\n" : c.text;
 
 const showSelectStatement = (node: SelectStatement) =>
-  [node.select, node.from, node.where, node.groupBy]
+  [node.select, node.from, node.where, node.groupBy, node.having]
     .filter(isDefined)
     .map(show)
     .join(" ");
@@ -149,6 +152,9 @@ const showWhereClause = (node: WhereClause) =>
 
 const showGroupByClause = (node: GroupByClause) =>
   show(node.groupByKw) + " " + node.columns.map(show).join(", ");
+
+const showHavingClause = (node: HavingClause) =>
+  show(node.havingKw) + " " + show(node.expr);
 
 const showAlias = (node: Alias) => {
   return node.asKw
