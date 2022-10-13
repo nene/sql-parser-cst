@@ -10,7 +10,14 @@ type Comment = {
   text: string;
 };
 
-type Node = Statement | Clause | Expr | Keyword | Join | JoinSpecification;
+type Node =
+  | Statement
+  | Clause
+  | Expr
+  | Keyword
+  | Join
+  | JoinSpecification
+  | SortSpecification;
 
 type Statement = SelectStatement;
 
@@ -39,6 +46,7 @@ type SelectStatement = Comments & {
   where?: WhereClause;
   groupBy?: GroupByClause;
   having?: HavingClause;
+  orderBy?: OrderByClause;
 };
 
 type Clause =
@@ -46,7 +54,8 @@ type Clause =
   | FromClause
   | WhereClause
   | GroupByClause
-  | HavingClause;
+  | HavingClause
+  | OrderByClause;
 
 type SelectClause = Comments & {
   type: "select_clause";
@@ -78,6 +87,12 @@ type HavingClause = Comments & {
   expr: Expr;
 };
 
+type OrderByClause = Comments & {
+  type: "order_by_clause";
+  orderByKw: Keyword[];
+  specifications: Expr[];
+};
+
 type Join = Comments & {
   type: "join";
   operator: Keyword[] | ",";
@@ -89,6 +104,12 @@ type JoinSpecification = Comments & {
   type: "join_specification";
   kw: Keyword;
   expr: Expr;
+};
+
+type SortSpecification = Comments & {
+  type: "sort_specification";
+  expr: Expr;
+  orderKw?: Keyword;
 };
 
 type Alias = Comments & {

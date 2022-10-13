@@ -1012,7 +1012,7 @@ select_stmt_nake
     where:where_clause?     __
     groupBy:group_by_clause?  __
     having:having_clause?    __
-    o:order_by_clause?  __
+    orderBy:order_by_clause?  __
     l:limit_clause? __
     lr: locking_read? __
     win:window_clause? __
@@ -1037,6 +1037,9 @@ select_stmt_nake
       }
       if (having) {
         stmt.having = having;
+      }
+      if (orderBy) {
+        stmt.orderBy = orderBy;
       }
       return stmt;
   }
@@ -1312,16 +1315,32 @@ partition_by_clause
   = KW_PARTITION __ KW_BY __ bc:column_clause { return "[Not implemented]"; }
 
 order_by_clause
-  = KW_ORDER __ KW_BY __ l:order_by_list { return "[Not implemented]"; }
+  = kws:(KW_ORDER __ KW_BY __) l:order_by_list {
+    return {
+      type: "order_by_clause",
+      orderByKw: createKeywordList(kws),
+      specifications: l,
+    };
+  }
 
 order_by_list
   = head:order_by_element tail:(__ COMMA __ order_by_element)* {
-      return "[Not implemented]";
-    }
+    return createExprList(head, tail).children;
+  }
 
 order_by_element
-  = e:expr __ d:(KW_DESC / KW_ASC)? {
-    return "[Not implemented]";
+  = e:expr c:__ orderKw:(KW_DESC / KW_ASC) {
+    return {
+      type: "sort_specification",
+      expr: withComments(e, { trailing: c }),
+      orderKw,
+    };
+  }
+  / e:expr {
+    return {
+      type: "sort_specification",
+      expr: e,
+    };
   }
 
 number_or_param

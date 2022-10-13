@@ -17,9 +17,11 @@ import {
   Node,
   NullLiteral,
   NumberLiteral,
+  OrderByClause,
   ParenExpr,
   SelectClause,
   SelectStatement,
+  SortSpecification,
   StringLiteral,
   StringWithCharset,
   TableRef,
@@ -59,10 +61,14 @@ function showNode(node: Node): string {
       return showGroupByClause(node);
     case "having_clause":
       return showHavingClause(node);
+    case "order_by_clause":
+      return showOrderByClause(node);
     case "join":
       return showJoin(node);
     case "join_specification":
       return showJoinSpecification(node);
+    case "sort_specification":
+      return showSortSpecification(node);
     case "alias":
       return showAlias(node);
     case "expr_list":
@@ -115,7 +121,7 @@ const showComment = (c: Comment): string =>
   c.type === "line_comment" ? c.text + "\n" : c.text;
 
 const showSelectStatement = (node: SelectStatement) =>
-  [node.select, node.from, node.where, node.groupBy, node.having]
+  [node.select, node.from, node.where, node.groupBy, node.having, node.orderBy]
     .filter(isDefined)
     .map(show)
     .join(" ");
@@ -155,6 +161,12 @@ const showGroupByClause = (node: GroupByClause) =>
 
 const showHavingClause = (node: HavingClause) =>
   show(node.havingKw) + " " + show(node.expr);
+
+const showOrderByClause = (node: OrderByClause) =>
+  show(node.orderByKw) + " " + node.specifications.map(show).join(", ");
+
+const showSortSpecification = (node: SortSpecification) =>
+  [node.expr, node.orderKw].filter(isDefined).map(show).join(" ");
 
 const showAlias = (node: Alias) => {
   return node.asKw
