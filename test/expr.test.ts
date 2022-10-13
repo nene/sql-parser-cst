@@ -162,6 +162,14 @@ describe("expr", () => {
     });
   });
 
+  describe("parenthesis", () => {
+    it("parses parenthesized expressions", () => {
+      testExpr(`2 * (2 + 3)`);
+      testExpr(`((true OR false) AND true)`);
+      testExpr(`(/*c1*/ 42 /*c2*/)`);
+    });
+  });
+
   describe("operator precedence", () => {
     it("associates same level binary operators to left", () => {
       expect(parseExpr(`5 + 2 - 1`)).toMatchInlineSnapshot(`

@@ -81,6 +81,7 @@ describe("select", () => {
     it("parses join with ON specification", () => {
       test("SELECT c FROM t1 JOIN t2 ON t1.id = t2.id");
       test("SELECT c FROM t1 JOIN t2 ON t1.id = t2.id AND t2.type = 5");
+      test("SELECT c FROM t1 JOIN t2 ON (t1.id = t2.id)");
       test("SELECT c FROM t1 JOIN t2 /*c1*/ ON /*c2*/ true");
     });
   });

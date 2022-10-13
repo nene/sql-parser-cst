@@ -1654,8 +1654,8 @@ primary
   / interval_expr
   / column_ref
   / param
-  / LPAREN __ expr __ RPAREN {
-    return "[Not implemented]";
+  / LPAREN c1:__ expr:expr c2:__ RPAREN {
+    return createParenExpr(c1, expr, c2);
   }
   / var_decl
   / __ prepared_symbol:'?' {
