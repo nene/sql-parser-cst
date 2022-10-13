@@ -71,9 +71,7 @@ describe("select", () => {
       test("SELECT c FROM t1 JOIN t2 USING (id)");
       test("SELECT c FROM t1 JOIN t2 USING (col1, col2)");
       test("SELECT c FROM t1 JOIN t2 using (ext_id)");
-      test(
-        "SELECT c FROM t1 JOIN t2 /*c1*/ USING /*c2*/ (/*c3*/ col1 /*c4*/, /*c5*/ col2 /*c6*/)"
-      );
+      test("SELECT c FROM t1 JOIN t2 /*c1*/ USING /*c2*/ (/*c3*/ col1 /*c4*/, /*c5*/ col2 /*c6*/)");
     });
 
     it("parses join with ON specification", () => {
@@ -119,9 +117,7 @@ describe("select", () => {
       test("SELECT c FROM t ORDER BY name ASC");
       test("SELECT c FROM t ORDER BY age DESC");
       test("SELECT c FROM t ORDER BY name DESC, age ASC, salary");
-      test(
-        "SELECT c FROM t Order /*c1*/ By /*c2*/ age /*c3*/ ASC /*c4*/, /*c5*/ name"
-      );
+      test("SELECT c FROM t Order /*c1*/ By /*c2*/ age /*c3*/ ASC /*c4*/, /*c5*/ name");
     });
   });
 

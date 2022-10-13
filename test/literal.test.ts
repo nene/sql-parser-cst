@@ -26,9 +26,7 @@ describe("literal", () => {
     expect(parseExpr(`_latin1"hello"`)).toMatchSnapshot();
   });
   it("double-quoted string with charset and comments", () => {
-    expect(
-      parseExpr(`_latin1 -- comment1\n -- comment2\n 'hello'`)
-    ).toMatchSnapshot();
+    expect(parseExpr(`_latin1 -- comment1\n -- comment2\n 'hello'`)).toMatchSnapshot();
   });
 
   it("hex literal", () => {
