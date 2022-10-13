@@ -49,7 +49,7 @@ type SelectClause = Comments & {
 
 type FromClause = Comments & {
   type: "from_clause";
-  kwFrom: Keyword;
+  fromKw: Keyword;
   tables: (Expr | Join)[];
 };
 
@@ -75,7 +75,7 @@ type JoinSpecification = Comments & {
 type Alias = Comments & {
   type: "alias";
   expr: Expr;
-  kwAs?: Keyword;
+  asKw?: Keyword;
   alias: Identifier;
 };
 

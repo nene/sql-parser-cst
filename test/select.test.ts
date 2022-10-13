@@ -101,7 +101,7 @@ describe("select", () => {
       expect(parse("SELECT 1, 2, 3 FROM db.tbl")).toMatchInlineSnapshot(`
         {
           "from": {
-            "kwFrom": {
+            "fromKw": {
               "text": "FROM",
               "type": "keyword",
             },
@@ -156,13 +156,13 @@ describe("select", () => {
                   "text": "foo",
                   "type": "identifier",
                 },
+                "asKw": {
+                  "text": "AS",
+                  "type": "keyword",
+                },
                 "expr": {
                   "text": "1",
                   "type": "number",
-                },
-                "kwAs": {
-                  "text": "AS",
-                  "type": "keyword",
                 },
                 "type": "alias",
               },

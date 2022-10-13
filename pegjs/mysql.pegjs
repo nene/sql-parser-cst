@@ -1096,7 +1096,7 @@ column_list_item
 alias_clause
   = kw:KW_AS c:__ id:ident {
     return {
-      kwAs: createKeyword(kw),
+      asKw: createKeyword(kw),
       alias: withComments(createIdentifier(id), { leading: c }),
     };
   }
@@ -1116,7 +1116,7 @@ from_clause
   = kw:KW_FROM c:__ tables:table_ref_list {
     return {
       type: "from_clause",
-      kwFrom: withComments(createKeyword(kw), { trailing: c }),
+      fromKw: withComments(createKeyword(kw), { trailing: c }),
       tables,
     };
   }

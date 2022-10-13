@@ -118,7 +118,7 @@ const showFromClause = (node: FromClause) => {
   // first one is always a table reference expression, the rest are joins
   const [first, ...rest] = node.tables;
   return (
-    show(node.kwFrom) +
+    show(node.fromKw) +
     " " +
     rest.reduce((str, join) => {
       if (join.type === "join" && join.operator === ",") {
@@ -142,8 +142,8 @@ const showWhereClause = (node: WhereClause) =>
   show(node.whereKw) + " " + show(node.expr);
 
 const showAlias = (node: Alias) => {
-  return node.kwAs
-    ? `${show(node.expr)} ${show(node.kwAs)} ${show(node.alias)}`
+  return node.asKw
+    ? `${show(node.expr)} ${show(node.asKw)} ${show(node.alias)}`
     : `${show(node.expr)} ${show(node.alias)}`;
 };
 
