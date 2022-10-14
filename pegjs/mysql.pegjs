@@ -1753,7 +1753,7 @@ primary
   }
 
 column_ref
-  = tbl:(ident __ DOT __)? col:column __ a:((DOUBLE_ARROW / SINGLE_ARROW) __ (literal_string / literal_numeric))+ __ ca:collate_expr? {
+  = tbl:(ident __ DOT __)? col:column __ a:(("->>" / "->") __ (literal_string / literal_numeric))+ __ ca:collate_expr? {
     return "[Not implemented]";
   }
   / tbl:(ident_name / backticks_quoted_ident) c1:__ DOT c2:__ col:column_without_kw {
@@ -2627,5 +2627,3 @@ RPAREN        = ')'
 LBRAKE        = '['
 RBRAKE        = ']'
 SEMICOLON     = ';'
-SINGLE_ARROW  = '->'
-DOUBLE_ARROW  = '->>'
