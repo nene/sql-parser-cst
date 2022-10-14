@@ -583,7 +583,7 @@ column_definition_opt
   / kws:(KW_UNIQUE __ KW_KEY / KW_UNIQUE / KW_PRIMARY __ KW_KEY / KW_KEY) {
     return { type: "column_option_key", kw: createKeywordList(kws) };
   }
-  / keyword_comment
+  / column_option_comment
   / ca:collate_expr {
     return "[Not implemented]";
   }
@@ -1214,7 +1214,7 @@ index_option
   / k:("VISIBLE"i / "INVISIBLE"i) {
     return "[Not implemented]";
   }
-  / keyword_comment
+  / column_option_comment
 
 table_ref_list
   = head:table_base tail:_table_join* {
@@ -2246,7 +2246,7 @@ pound_sign_comment
     };
   }
 
-keyword_comment
+column_option_comment
   = kw:KW_COMMENT eq:(__ "=")? c2:__ str:literal_string {
     const c1 = eq ? eq[0] : undefined;
     return {
