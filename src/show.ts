@@ -5,6 +5,7 @@ import {
   BoolLiteral,
   ColumnDefinition,
   ColumnOptionAutoIncrement,
+  ColumnOptionComment,
   ColumnOptionDefault,
   ColumnOptionKey,
   ColumnOptionNullable,
@@ -97,6 +98,8 @@ function showNode(node: Node): string {
       return showColumnOption(node);
     case "column_option_default":
       return showColumnOptionDefault(node);
+    case "column_option_comment":
+      return showColumnOptionComment(node);
     case "data_type":
       return showDataType(node);
     case "alias":
@@ -218,6 +221,9 @@ const showColumnOption = (
 
 const showColumnOptionDefault = (node: ColumnOptionDefault) =>
   show([node.kw, node.expr]);
+
+const showColumnOptionComment = (node: ColumnOptionComment) =>
+  show([node.kw, node.hasEquals ? "=" : undefined, node.value]);
 
 const showDataType = (node: DataType) => show(node.nameKw);
 

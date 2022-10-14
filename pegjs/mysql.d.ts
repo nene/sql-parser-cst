@@ -149,7 +149,8 @@ type ColumnOption =
   | ColumnOptionNullable
   | ColumnOptionDefault
   | ColumnOptionAutoIncrement
-  | ColumnOptionKey;
+  | ColumnOptionKey
+  | ColumnOptionComment;
 
 type ColumnOptionNullable = Comments & {
   type: "column_option_nullable";
@@ -171,6 +172,13 @@ type ColumnOptionAutoIncrement = Comments & {
 type ColumnOptionKey = Comments & {
   type: "column_option_key";
   kw: Keyword | Keyword[];
+};
+
+type ColumnOptionComment = Comments & {
+  type: "column_option_comment";
+  kw: Keyword;
+  hasEquals: boolean;
+  value: StringLiteral;
 };
 
 // other...

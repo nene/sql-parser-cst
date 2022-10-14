@@ -583,9 +583,7 @@ column_definition_opt
   / kws:(KW_UNIQUE __ KW_KEY / KW_UNIQUE / KW_PRIMARY __ KW_KEY / KW_KEY) {
     return { type: "column_option_key", kw: createKeywordList(kws) };
   }
-  / co:keyword_comment {
-    return "[Not implemented]";
-  }
+  / keyword_comment
   / ca:collate_expr {
     return "[Not implemented]";
   }
@@ -2249,7 +2247,14 @@ pound_sign_comment
   }
 
 keyword_comment
-  = k:KW_COMMENT __ s:"="? __ c:literal_string {
+  = kw:KW_COMMENT eq:(__ "=")? c2:__ str:literal_string {
+    const c1 = eq ? eq[0] : undefined;
+    return {
+      type: "column_option_comment",
+      kw: c1 ? withComments(kw, { trailing: c1 }) : kw,
+      hasEquals: Boolean(eq),
+      value: withComments(str, { leading: c2 }),
+    }
     return "[Not implemented]";
   }
 
