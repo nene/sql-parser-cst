@@ -504,8 +504,8 @@ create_index_stmt
   ta:table_name __
   LPAREN __ cols:column_order_list __ RPAREN __
   io:index_options? __
-  al:ALTER_ALGORITHM? __
-  lo:ALTER_LOCK? __ {
+  al:alter_algorithm? __
+  lo:alter_lock? __ {
     return "[Not implemented]";
   }
 
@@ -642,7 +642,7 @@ storage
     return "[Not implemented]";
   }
 drop_index_opt
-  = head:(ALTER_ALGORITHM / ALTER_LOCK) tail:(__ (ALTER_ALGORITHM / ALTER_LOCK))* {
+  = head:(alter_algorithm / alter_lock) tail:(__ (alter_algorithm / alter_lock))* {
     return "[Not implemented]";
   }
 if_exists
@@ -693,79 +693,79 @@ alter_action_list
     }
 
 alter_action
-  = ALTER_ADD_CONSTRAINT
-  / ALTER_DROP_CONSTRAINT
-  / ALTER_DROP_KEY
-  / ALTER_ENABLE_CONSTRAINT
-  / ALTER_DISABLE_CONSTRAINT
-  / ALTER_ADD_COLUMN
-  / ALTER_DROP_COLUMN
-  / ALTER_ADD_INDEX_OR_KEY
-  / ALTER_ADD_FULLETXT_SPARITAL_INDEX
-  / ALTER_RENAME_COLUMN
-  / ALTER_RENAME_TABLE
-  / ALTER_ALGORITHM
-  / ALTER_LOCK
-  / ALTER_CHANGE_COLUMN
+  = alter_add_constraint
+  / alter_drop_constraint
+  / alter_drop_key
+  / alter_enable_constraint
+  / alter_disable_constraint
+  / alter_add_column
+  / alter_drop_column
+  / alter_add_index_or_key
+  / alter_add_fulletxt_sparital_index
+  / alter_rename_column
+  / alter_rename_table
+  / alter_algorithm
+  / alter_lock
+  / alter_change_column
   / t:table_option {
     return "[Not implemented]";
   }
 
-ALTER_ADD_COLUMN
+alter_add_column
   = KW_ADD __
     kc:KW_COLUMN? __
     cd:create_column_definition {
       return "[Not implemented]";
     }
 
-ALTER_DROP_COLUMN
+alter_drop_column
   = KW_DROP __
     kc:KW_COLUMN? __
     c:column_ref {
       return "[Not implemented]";
     }
 
-ALTER_ADD_INDEX_OR_KEY
+alter_add_index_or_key
   = KW_ADD __
     id:create_index_definition {
       return "[Not implemented]";
     }
 
-ALTER_RENAME_TABLE
+alter_rename_table
   = KW_RENAME __
   kw:(KW_TO / KW_AS)? __
   tn:ident {
     return "[Not implemented]";
   }
 
-ALTER_RENAME_COLUMN
+alter_rename_column
   = KW_RENAME __ KW_COLUMN __ c:column_ref __
   kw:(KW_TO / KW_AS)? __
   tn:column_ref {
     return "[Not implemented]";
   }
 
-ALTER_ALGORITHM
+alter_algorithm
   = "ALGORITHM"i __ s:ASSIGIN_EQUAL? __ val:("DEFAULT"i / "INSTANT"i / "INPLACE"i / "COPY"i) {
     return "[Not implemented]";
   }
 
-ALTER_LOCK
+alter_lock
   = "LOCK"i __ s:ASSIGIN_EQUAL? __ val:("DEFAULT"i / "NONE"i / "SHARED"i / "EXCLUSIVE"i) {
     return "[Not implemented]";
   }
 
-ALTER_CHANGE_COLUMN
+alter_change_column
   = 'CHANGE'i __ kc:KW_COLUMN? __ od:column_ref __ cd:create_column_definition __ fa:(('FIRST'i / 'AFTER'i) __ column_ref)? {
     return "[Not implemented]";
   }
 
-ALTER_ADD_CONSTRAINT
+alter_add_constraint
   = KW_ADD __ c:create_constraint_definition {
     return "[Not implemented]";
   }
 
-ALTER_DROP_KEY
+alter_drop_key
   = KW_DROP __ 'PRIMARY'i __ KW_KEY {
     return "[Not implemented]";
   }
@@ -773,17 +773,17 @@ ALTER_DROP_KEY
     return "[Not implemented]";
   }
 
-ALTER_DROP_CONSTRAINT
+alter_drop_constraint
   = KW_DROP __ kc:'CHECK'i __ c:ident_name {
     return "[Not implemented]";
   }
 
-ALTER_ENABLE_CONSTRAINT
+alter_enable_constraint
   = KW_WITH __ 'CHECK'i __ 'CHECK'i __ KW_CONSTRAINT __ c:ident_name {
     return "[Not implemented]";
   }
 
-ALTER_DISABLE_CONSTRAINT
+alter_disable_constraint
   = 'NOCHECK'i __ KW_CONSTRAINT __ c:ident_name {
     return "[Not implemented]";
   }
@@ -913,7 +913,7 @@ table_option
   }
 
 
-ALTER_ADD_FULLETXT_SPARITAL_INDEX
+alter_add_fulletxt_sparital_index
   = KW_ADD __
     fsid:create_fulltext_spatial_index_definition {
       return "[Not implemented]";
