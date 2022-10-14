@@ -290,8 +290,25 @@
   /** Prefer undefined over null */
   const nullToUndefined = (value) => value === null ? undefined : value;
 
-  /** Attaches optional comments to AST node */
+  /** Creates new array with first item replaced by value */
+  const setFirst = ([oldFirst, ...rest], value) => {
+    return [value, ...rest];
+  };
+
+  /** Creates new array with last item replaced by value */
+  const setLast = (array, value) => {
+    const rest = array.slice(0, -1);
+    return [...rest, value];
+  };
+
+  /** Attaches optional comments to AST node, or to array of AST nodes (the first and last) */
   const withComments = (node, { leading, trailing }) => {
+    if (node instanceof Array) {
+      // Add surrounding comments to first and last item in array (which might be the same one)
+      node = setFirst(node, withComments(node[0], { leading }));
+      node = setLast(node, withComments(last(node), { trailing }));
+      return node;
+    }
     if (leading && leading.length) {
       node = {...node, leadingComments: leading};
     }
@@ -532,11 +549,7 @@ create_like_table
 
 create_table_definition
   = LPAREN c1:__ head:create_definition tail:(__ COMMA __ create_definition)* c2:__ RPAREN {
-    const cols = readCommaSepList(head, tail);
-    // Add surrounding comments to first and last column (which might be the same one)
-    cols[0] = withComments(cols[0], { leading: c1 });
-    cols[cols.length-1] = withComments(cols[cols.length-1], { trailing: c2 });
-    return cols;
+    return withComments(readCommaSepList(head, tail), { leading: c1, trailing: c2 });
   }
 
 create_definition
