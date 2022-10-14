@@ -39,5 +39,10 @@ describe("create table", () => {
       testOption("DEFAULT 5 + 6 > 0 AND true");
       testOption("DEFAULT /*c1*/ 10");
     });
+
+    it("AUTO_INCREMENT", () => {
+      testOption("AUTO_INCREMENT");
+      testOption("AUTO_increment");
+    });
   });
 });

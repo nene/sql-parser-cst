@@ -574,8 +574,8 @@ column_definition_opt
   / kw:KW_DEFAULT c:__ e:expr {
     return { type: "column_option_default", kw, expr: withComments(e, {leading: c}) };
   }
-  / KW_AUTO_INCREMENT {
-    return "[Not implemented]";
+  / kw:KW_AUTO_INCREMENT {
+    return { type: "column_option_auto_increment", kw };
   }
   / u:((KW_UNIQUE __ (KW_KEY)?) / ((KW_PRIMARY)? __ KW_KEY)) {
     return "[Not implemented]";

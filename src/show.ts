@@ -4,6 +4,7 @@ import {
   BinaryExpr,
   BoolLiteral,
   ColumnDefinition,
+  ColumnOptionAutoIncrement,
   ColumnOptionDefault,
   ColumnOptionNullable,
   ColumnRef,
@@ -90,7 +91,8 @@ function showNode(node: Node): string {
     case "column_definition":
       return showColumnDefinition(node);
     case "column_option_nullable":
-      return showColumnOptionNullable(node);
+    case "column_option_auto_increment":
+      return showColumnOption(node);
     case "column_option_default":
       return showColumnOptionDefault(node);
     case "data_type":
@@ -208,7 +210,9 @@ const showColumnDefinition = (node: ColumnDefinition) =>
     node.options.length > 0 ? node.options : undefined,
   ]);
 
-const showColumnOptionNullable = (node: ColumnOptionNullable) => show(node.kw);
+const showColumnOption = (
+  node: ColumnOptionNullable | ColumnOptionAutoIncrement
+) => show(node.kw);
 
 const showColumnOptionDefault = (node: ColumnOptionDefault) =>
   show([node.kw, node.expr]);
