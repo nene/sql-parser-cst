@@ -340,13 +340,13 @@
   }
 
   const createExprList = (head, tail) => {
-    const children = [head];
+    const items = [head];
     for (const [c1, comma, c2, expr] of tail) {
-      const lastIdx = children.length - 1;
-      children[lastIdx] = withComments(children[lastIdx], { trailing: c1 });
-      children.push(withComments(expr, { leading: c2 }));
+      const lastIdx = items.length - 1;
+      items[lastIdx] = withComments(items[lastIdx], { trailing: c1 });
+      items.push(withComments(expr, { leading: c2 }));
     }
-    return { type: "expr_list", children };
+    return items;
   };
 
   const createList = (head, tail) => {
@@ -384,7 +384,7 @@ start
 
 multiple_stmt
   = head:statement tail:(__ SEMICOLON __ statement)* {
-    return createExprList(head, tail).children;
+    return createExprList(head, tail);
   }
 
 statement
@@ -532,7 +532,7 @@ create_like_table
 
 create_table_definition
   = LPAREN c1:__ head:create_definition tail:(__ COMMA __ create_definition)* c2:__ RPAREN {
-    const cols = createExprList(head, tail).children;
+    const cols = createExprList(head, tail);
     // Add surrounding comments to first and last column (which might be the same one)
     cols[0] = withComments(cols[0], { leading: c1 });
     cols[cols.length-1] = withComments(cols[cols.length-1], { trailing: c2 });
@@ -1102,7 +1102,7 @@ column_clause
       return "[Not implemented]";
     }
   / head:column_list_item tail:(__ COMMA __ column_list_item)* {
-      return createExprList(head, tail).children;
+      return createExprList(head, tail);
     }
 
 fulltext_search_mode
@@ -1290,7 +1290,7 @@ join_specification
 
 using_clause
   = kw:KW_USING c1:__ LPAREN c2:__ head:plain_column_ref tail:(__ COMMA __ plain_column_ref)* c3:__ RPAREN {
-    const columnList = createExprList(head, tail)
+    const columnList = { type: "expr_list", children: createExprList(head, tail) };
     return {
       type: "join_specification",
       kw,
@@ -1361,7 +1361,7 @@ order_by_clause
 
 order_by_list
   = head:order_by_element tail:(__ COMMA __ order_by_element)* {
-    return createExprList(head, tail).children;
+    return createExprList(head, tail);
   }
 
 order_by_element
@@ -1496,7 +1496,7 @@ value_item
 
 expr_list
   = head:expr tail:(__ COMMA __ expr)* {
-    return createExprList(head, tail);
+    return { type: "expr_list", children: createExprList(head, tail) };
   }
 
 interval_expr
