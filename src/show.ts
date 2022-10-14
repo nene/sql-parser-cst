@@ -4,7 +4,8 @@ import {
   BinaryExpr,
   BoolLiteral,
   ColumnDefinition,
-  ColumnOption,
+  ColumnOptionDefault,
+  ColumnOptionNullable,
   ColumnRef,
   Comment,
   CreateTableStatement,
@@ -89,7 +90,9 @@ function showNode(node: Node): string {
     case "column_definition":
       return showColumnDefinition(node);
     case "column_option_nullable":
-      return showColumnOption(node);
+      return showColumnOptionNullable(node);
+    case "column_option_default":
+      return showColumnOptionDefault(node);
     case "data_type":
       return showDataType(node);
     case "alias":
@@ -205,7 +208,10 @@ const showColumnDefinition = (node: ColumnDefinition) =>
     node.options.length > 0 ? node.options : undefined,
   ]);
 
-const showColumnOption = (node: ColumnOption) => show(node.kw);
+const showColumnOptionNullable = (node: ColumnOptionNullable) => show(node.kw);
+
+const showColumnOptionDefault = (node: ColumnOptionDefault) =>
+  show([node.kw, node.expr]);
 
 const showDataType = (node: DataType) => show(node.nameKw);
 

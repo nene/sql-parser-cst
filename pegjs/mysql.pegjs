@@ -571,8 +571,8 @@ column_definition_opt
   / kw:KW_NULL {
     return { type: "column_option_nullable", kw, value: true };
   }
-  / d:default_expr {
-    return "[Not implemented]";
+  / kw:KW_DEFAULT c:__ e:expr {
+    return { type: "column_option_default", kw, expr: withComments(e, {leading: c}) };
   }
   / a:('AUTO_INCREMENT'i) {
     return "[Not implemented]";
@@ -639,10 +639,6 @@ column_format
   }
 storage
   = k:'STORAGE'i __ s:('DISK'i / 'MEMORY'i) {
-    return "[Not implemented]";
-  }
-default_expr
-  = KW_DEFAULT __ ce: (literal / expr) {
     return "[Not implemented]";
   }
 drop_index_opt

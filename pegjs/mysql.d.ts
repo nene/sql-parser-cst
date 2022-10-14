@@ -145,12 +145,18 @@ type DataType = Comments & {
   nameKw: Keyword;
 };
 
-type ColumnOption = ColumnOptionNullable;
+type ColumnOption = ColumnOptionNullable | ColumnOptionDefault;
 
 type ColumnOptionNullable = Comments & {
   type: "column_option_nullable";
   kw: Keyword | Keyword[];
   value: boolean;
+};
+
+type ColumnOptionDefault = Comments & {
+  type: "column_option_default";
+  kw: Keyword;
+  expr: Expr;
 };
 
 // other...

@@ -1,4 +1,4 @@
-import { parse } from "../src/parser";
+import { parse, show } from "../src/parser";
 import { test } from "./test_utils";
 
 describe("create table", () => {
@@ -18,9 +18,26 @@ describe("create table", () => {
     );
   });
 
-  it("parses column options", () => {
-    test("create table foo (id int NULL)");
-    test("create table foo (id int NOT NULL)");
-    test("create table foo (id int /*c1*/ NOT /*c2*/ NULL /*c3*/)");
+  describe("column options", () => {
+    it("parses multiple options after type", () => {
+      test("CREATE TABLE foo (id INT /*c1*/ NOT /*c2*/ NULL /*c3*/ DEFAULT /*c4*/ 5 /*c5*/)");
+    });
+
+    function testOption(opt: string) {
+      const sql = `CREATE TABLE t (id INT ${opt})`;
+      expect(show(parse(sql))).toBe(sql);
+    }
+
+    it("NULL / NOT NULL", () => {
+      testOption("NULL");
+      testOption("NOT NULL");
+      testOption("NOT /*c2*/ NULL");
+    });
+
+    it("DEFAULT", () => {
+      testOption("DEFAULT 10");
+      testOption("DEFAULT 5 + 6 > 0 AND true");
+      testOption("DEFAULT /*c1*/ 10");
+    });
   });
 });
