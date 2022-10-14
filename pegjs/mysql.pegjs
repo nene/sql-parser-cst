@@ -2278,7 +2278,7 @@ proc_stmt
   }
 
 assign_stmt
-  = va:(var_decl / without_prefix_var_decl) __ s: (ASSIGN / "=") __ e:proc_expr {
+  = va:(var_decl / without_prefix_var_decl) __ s: (":=" / "=") __ e:proc_expr {
     return "[Not implemented]";
   }
 
@@ -2629,4 +2629,3 @@ RBRAKE        = ']'
 SEMICOLON     = ';'
 SINGLE_ARROW  = '->'
 DOUBLE_ARROW  = '->>'
-ASSIGN        = ':='
