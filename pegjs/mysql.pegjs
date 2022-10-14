@@ -339,7 +339,7 @@
     return keywords;
   }
 
-  const createExprList = (head, tail) => {
+  const readCommaSepList = (head, tail) => {
     const items = [head];
     for (const [c1, comma, c2, expr] of tail) {
       const lastIdx = items.length - 1;
@@ -349,7 +349,7 @@
     return items;
   };
 
-  const createList = (head, tail) => {
+  const readSpaceSepList = (head, tail) => {
     const items = [head];
     for (const [c, expr] of tail) {
       items.push(withComments(expr, { leading: c }));
@@ -384,7 +384,7 @@ start
 
 multiple_stmt
   = head:statement tail:(__ SEMICOLON __ statement)* {
-    return createExprList(head, tail);
+    return readCommaSepList(head, tail);
   }
 
 statement
@@ -532,7 +532,7 @@ create_like_table
 
 create_table_definition
   = LPAREN c1:__ head:create_definition tail:(__ COMMA __ create_definition)* c2:__ RPAREN {
-    const cols = createExprList(head, tail);
+    const cols = readCommaSepList(head, tail);
     // Add surrounding comments to first and last column (which might be the same one)
     cols[0] = withComments(cols[0], { leading: c1 });
     cols[cols.length-1] = withComments(cols[cols.length-1], { trailing: c2 });
@@ -585,7 +585,7 @@ column_definition_opt
 
 column_definition_opt_list
   = head:column_definition_opt tail:(__ column_definition_opt)* {
-    return createList(head, tail);
+    return readSpaceSepList(head, tail);
   }
 
 create_column_definition
@@ -1102,7 +1102,7 @@ column_clause
       return "[Not implemented]";
     }
   / head:column_list_item tail:(__ COMMA __ column_list_item)* {
-      return createExprList(head, tail);
+      return readCommaSepList(head, tail);
     }
 
 fulltext_search_mode
@@ -1290,7 +1290,7 @@ join_specification
 
 using_clause
   = kw:KW_USING c1:__ LPAREN c2:__ head:plain_column_ref tail:(__ COMMA __ plain_column_ref)* c3:__ RPAREN {
-    const columnList = { type: "expr_list", children: createExprList(head, tail) };
+    const columnList = { type: "expr_list", children: readCommaSepList(head, tail) };
     return {
       type: "join_specification",
       kw,
@@ -1361,7 +1361,7 @@ order_by_clause
 
 order_by_list
   = head:order_by_element tail:(__ COMMA __ order_by_element)* {
-    return createExprList(head, tail);
+    return readCommaSepList(head, tail);
   }
 
 order_by_element
@@ -1496,7 +1496,7 @@ value_item
 
 expr_list
   = head:expr tail:(__ COMMA __ expr)* {
-    return { type: "expr_list", children: createExprList(head, tail) };
+    return { type: "expr_list", children: readCommaSepList(head, tail) };
   }
 
 interval_expr
