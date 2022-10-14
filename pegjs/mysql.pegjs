@@ -574,10 +574,10 @@ column_definition_opt
   / kw:KW_DEFAULT c:__ e:expr {
     return { type: "column_option_default", kw, expr: withComments(e, {leading: c}) };
   }
-  / a:('AUTO_INCREMENT'i) {
+  / KW_AUTO_INCREMENT {
     return "[Not implemented]";
   }
-  / u:(('UNIQUE'i __ ('KEY'i)?) / (('PRIMARY'i)? __ 'KEY'i)) {
+  / u:((KW_UNIQUE __ (KW_KEY)?) / ((KW_PRIMARY)? __ KW_KEY)) {
     return "[Not implemented]";
   }
   / co:keyword_comment {
@@ -634,11 +634,11 @@ collate_expr
     return "[Not implemented]";
   }
 column_format
-  = k:'COLUMN_FORMAT'i __ f:('FIXED'i / 'DYNAMIC'i / 'DEFAULT'i) {
+  = k:KW_COLUMN_FORMAT __ f:(KW_FIXED / KW_DYNAMIC / KW_DEFAULT) {
     return "[Not implemented]";
   }
 storage
-  = k:'STORAGE'i __ s:('DISK'i / 'MEMORY'i) {
+  = k:KW_STORAGE __ s:(KW_DISK / KW_MEMORY) {
     return "[Not implemented]";
   }
 drop_index_opt
@@ -646,7 +646,7 @@ drop_index_opt
     return "[Not implemented]";
   }
 if_exists
-  = 'if'i __ 'exists'i {
+  = KW_IF __ KW_EXISTS {
     return "[Not implemented]";
   }
 
@@ -2437,6 +2437,7 @@ KW_ALTER               = kw:"ALTER"i               !ident_start { return createK
 KW_AND                 = kw:"AND"i                 !ident_start { return createKeyword(kw); }
 KW_AS                  = kw:"AS"i                  !ident_start { return createKeyword(kw); }
 KW_ASC                 = kw:"ASC"i                 !ident_start { return createKeyword(kw); }
+KW_AUTO_INCREMENT      = kw:"AUTO_INCREMENT"i      !ident_start { return createKeyword(kw); }
 KW_AVG                 = kw:"AVG"i                 !ident_start { return createKeyword(kw); }
 KW_BETWEEN             = kw:"BETWEEN"i             !ident_start { return createKeyword(kw); }
 KW_BIGINT              = kw:"BIGINT"i              !ident_start { return createKeyword(kw); }
@@ -2448,6 +2449,7 @@ KW_CAST                = kw:"CAST"i                !ident_start { return createK
 KW_CHAR                = kw:"CHAR"i                !ident_start { return createKeyword(kw); }
 KW_COLLATE             = kw:"COLLATE"i             !ident_start { return createKeyword(kw); }
 KW_COLUMN              = kw:"COLUMN"i              !ident_start { return createKeyword(kw); }
+KW_COLUMN_FORMAT       = kw:"COLUMN_FORMAT"i       !ident_start { return createKeyword(kw); }
 KW_COMMENT             = kw:"COMMENT"i             !ident_start { return createKeyword(kw); }
 KW_CONSTRAINT          = kw:"CONSTRAINT"i          !ident_start { return createKeyword(kw); }
 KW_COUNT               = kw:"COUNT"i               !ident_start { return createKeyword(kw); }
@@ -2464,17 +2466,20 @@ KW_DEFAULT             = kw:"DEFAULT"i             !ident_start { return createK
 KW_DELETE              = kw:"DELETE"i              !ident_start { return createKeyword(kw); }
 KW_DESC                = kw:"DESC"i                !ident_start { return createKeyword(kw); }
 KW_DESCRIBE            = kw:"DESCRIBE"i            !ident_start { return createKeyword(kw); }
+KW_DISK                = kw:"DISK"i                !ident_start { return createKeyword(kw); }
 KW_DISTINCT            = kw:"DISTINCT"i            !ident_start { return createKeyword(kw); }
 KW_DIV                 = kw:"DIV"i                 !ident_start { return createKeyword(kw); }
 KW_DOUBLE              = kw:"DOUBLE"i              !ident_start { return createKeyword(kw); }
 KW_DROP                = kw:"DROP"i                !ident_start { return createKeyword(kw); }
 KW_DUAL                = kw:"DUAL"i                !ident_start { return createKeyword(kw); }
+KW_DYNAMIC             = kw:"DYNAMIC"i             !ident_start { return createKeyword(kw); }
 KW_ELSE                = kw:"ELSE"i                !ident_start { return createKeyword(kw); }
 KW_END                 = kw:"END"i                 !ident_start { return createKeyword(kw); }
 KW_ENUM                = kw:"ENUM"i                !ident_start { return createKeyword(kw); }
 KW_EXISTS              = kw:"EXISTS"i              !ident_start { return createKeyword(kw); }
 KW_EXPLAIN             = kw:"EXPLAIN"i             !ident_start { return createKeyword(kw); }
 KW_FALSE               = kw:"FALSE"i               !ident_start { return createKeyword(kw); }
+KW_FIXED               = kw:"FIXED"i               !ident_start { return createKeyword(kw); }
 KW_FLOAT               = kw:"FLOAT"i               !ident_start { return createKeyword(kw); }
 KW_FROM                = kw:"FROM"i                !ident_start { return createKeyword(kw); }
 KW_FULL                = kw:"FULL"i                !ident_start { return createKeyword(kw); }
@@ -2507,6 +2512,7 @@ KW_LOCK                = kw:"LOCK"i                !ident_start { return createK
 KW_LONGTEXT            = kw:"LONGTEXT"i            !ident_start { return createKeyword(kw); }
 KW_MAX                 = kw:"MAX"i                 !ident_start { return createKeyword(kw); }
 KW_MEDIUMTEXT          = kw:"MEDIUMTEXT"i          !ident_start { return createKeyword(kw); }
+KW_MEMORY              = kw:"MEMORY"i              !ident_start { return createKeyword(kw); }
 KW_MIN                 = kw:"MIN"i                 !ident_start { return createKeyword(kw); }
 KW_MOD                 = kw:"MOD"i                 !ident_start { return createKeyword(kw); }
 KW_NOT                 = kw:"NOT"i                 !ident_start { return createKeyword(kw); }
@@ -2521,6 +2527,7 @@ KW_OVER                = kw:"OVER"i                !ident_start { return createK
 KW_PARTITION           = kw:"PARTITION"i           !ident_start { return createKeyword(kw); }
 KW_PERSIST             = kw:"PERSIST"i             !ident_start { return createKeyword(kw); }
 KW_PERSIST_ONLY        = kw:"PERSIST_ONLY"i        !ident_start { return createKeyword(kw); }
+KW_PRIMARY             = kw:"PRIMARY"i             !ident_start { return createKeyword(kw); }
 KW_RECURSIVE           = kw:"RECURSIVE"            !ident_start { return createKeyword(kw); }
 KW_REFERENCES          = kw:"REFERENCES"i          !ident_start { return createKeyword(kw); }
 KW_REGEXP              = kw:"REGEXP"i              !ident_start { return createKeyword(kw); }
@@ -2545,6 +2552,7 @@ KW_SQL_CACHE           = kw:"SQL_CACHE"i           !ident_start { return createK
 KW_SQL_CALC_FOUND_ROWS = kw:"SQL_CALC_FOUND_ROWS"i !ident_start { return createKeyword(kw); }
 KW_SQL_NO_CACHE        = kw:"SQL_NO_CACHE"i        !ident_start { return createKeyword(kw); }
 KW_SQL_SMALL_RESULT    = kw:"SQL_SMALL_RESULT"i    !ident_start { return createKeyword(kw); }
+KW_STORAGE             = kw:"STORAGE"i             !ident_start { return createKeyword(kw); }
 KW_SUM                 = kw:"SUM"i                 !ident_start { return createKeyword(kw); }
 KW_SYSTEM_USER         = kw:"SYSTEM_USER"i         !ident_start { return createKeyword(kw); }
 KW_TABLE               = kw:"TABLE"i               !ident_start { return createKeyword(kw); }
