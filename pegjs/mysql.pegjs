@@ -574,7 +574,7 @@ column_definition_opt
   / kw:KW_NULL {
     return { type: "column_option_nullable", kw, value: true };
   }
-  / kw:KW_DEFAULT c:__ e:expr {
+  / kw:KW_DEFAULT c:__ e:(literal / paren_expr) {
     return { type: "column_option_default", kw, expr: withComments(e, {leading: c}) };
   }
   / kw:KW_AUTO_INCREMENT {
@@ -1742,12 +1742,15 @@ primary
   / interval_expr
   / column_ref
   / param
-  / LPAREN c1:__ expr:expr c2:__ RPAREN {
-    return createParenExpr(c1, expr, c2);
-  }
+  / paren_expr
   / var_decl
   / __ prepared_symbol:'?' {
     return "[Not implemented]";
+  }
+
+paren_expr
+  = LPAREN c1:__ expr:expr c2:__ RPAREN {
+    return createParenExpr(c1, expr, c2);
   }
 
 column_ref

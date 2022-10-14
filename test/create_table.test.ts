@@ -36,7 +36,7 @@ describe("create table", () => {
 
     it("DEFAULT", () => {
       testOption("DEFAULT 10");
-      testOption("DEFAULT 5 + 6 > 0 AND true");
+      testOption("DEFAULT (5 + 6 > 0 AND true)");
       testOption("DEFAULT /*c1*/ 10");
     });
 
