@@ -488,8 +488,8 @@ view_with
 create_view_stmt
   = a:KW_CREATE __
   or:(KW_OR __ KW_REPLACE)? __
-  al:("ALGORITHM"i __ ASSIGIN_EQUAL __ ("UNDEFINED"i / "MERGE"i / "TEMPTABLE"i))? __
-  df:("DEFINER"i __ ASSIGIN_EQUAL __ ident)? __
+  al:("ALGORITHM"i __ "=" __ ("UNDEFINED"i / "MERGE"i / "TEMPTABLE"i))? __
+  df:("DEFINER"i __ "=" __ ident)? __
   ss:("SQL"i __ "SECURITY"i __ ("DEFINER"i / "INVOKER"i))? __
   KW_VIEW __ v:table_name __ c:(LPAREN __ column_list __ RPAREN)? __
   KW_AS __ s:select_stmt_nake __
@@ -601,7 +601,7 @@ column_definition_opt
   / ck:check_constraint_definition {
     return "[Not implemented]";
   }
-  / t:create_option_character_set_kw __ s:ASSIGIN_EQUAL? __ v:ident_name {
+  / t:create_option_character_set_kw __ s:"="? __ v:ident_name {
     return "[Not implemented]";
   }
 
@@ -633,7 +633,7 @@ create_column_definition
     }
 
 collate_expr
-  = KW_COLLATE __ s:ASSIGIN_EQUAL? __ ca:ident_name {
+  = KW_COLLATE __ s:"="? __ ca:ident_name {
     return "[Not implemented]";
   }
 column_format
@@ -749,12 +749,12 @@ alter_rename_column
   }
 
 alter_algorithm
-  = "ALGORITHM"i __ s:ASSIGIN_EQUAL? __ val:("DEFAULT"i / "INSTANT"i / "INPLACE"i / "COPY"i) {
+  = "ALGORITHM"i __ s:"="? __ val:("DEFAULT"i / "INSTANT"i / "INPLACE"i / "COPY"i) {
     return "[Not implemented]";
   }
 
 alter_lock
-  = "LOCK"i __ s:ASSIGIN_EQUAL? __ val:("DEFAULT"i / "NONE"i / "SHARED"i / "EXCLUSIVE"i) {
+  = "LOCK"i __ s:"="? __ val:("DEFAULT"i / "NONE"i / "SHARED"i / "EXCLUSIVE"i) {
     return "[Not implemented]";
   }
 
@@ -893,25 +893,25 @@ create_option_character_set_kw
     return "[Not implemented]";
   }
 create_option_character_set
-  = kw:KW_DEFAULT? __ t:(create_option_character_set_kw / KW_CHARSET / KW_COLLATE) __ s:(ASSIGIN_EQUAL)? __ v:ident_name {
+  = kw:KW_DEFAULT? __ t:(create_option_character_set_kw / KW_CHARSET / KW_COLLATE) __ s:("=")? __ v:ident_name {
     return "[Not implemented]";
   }
 
 table_option
-  = kw:(KW_AUTO_INCREMENT / KW_AVG_ROW_LENGTH / KW_KEY_BLOCK_SIZE / KW_MAX_ROWS / KW_MIN_ROWS / KW_STATS_SAMPLE_PAGES) __ s:(ASSIGIN_EQUAL)? __ v:literal_numeric {
+  = kw:(KW_AUTO_INCREMENT / KW_AVG_ROW_LENGTH / KW_KEY_BLOCK_SIZE / KW_MAX_ROWS / KW_MIN_ROWS / KW_STATS_SAMPLE_PAGES) __ s:("=")? __ v:literal_numeric {
     return "[Not implemented]";
   }
   / create_option_character_set
-  / kw:(KW_COMMENT / KW_CONNECTION) __ s:(ASSIGIN_EQUAL)? __ c:literal_string {
+  / kw:(KW_COMMENT / KW_CONNECTION) __ s:("=")? __ c:literal_string {
     return "[Not implemented]";
   }
-  / kw:KW_COMPRESSION __ s:(ASSIGIN_EQUAL)? __ v:("'"('ZLIB'i / 'LZ4'i / 'NONE'i)"'") {
+  / kw:KW_COMPRESSION __ s:("=")? __ v:("'"('ZLIB'i / 'LZ4'i / 'NONE'i)"'") {
     return "[Not implemented]";
   }
-  / kw:KW_ENGINE __ s:(ASSIGIN_EQUAL)? __ c:ident_name {
+  / kw:KW_ENGINE __ s:("=")? __ c:ident_name {
     return "[Not implemented]";
   }
-  / kw:KW_ROW_FORMAT __ s:(ASSIGIN_EQUAL)? __ c:(KW_DEFAULT / KW_DYNAMIC / KW_FIXED / KW_COMPRESSED / KW_REDUNDANT / KW_COMPACT) {
+  / kw:KW_ROW_FORMAT __ s:("=")? __ c:(KW_DEFAULT / KW_DYNAMIC / KW_FIXED / KW_COMPRESSED / KW_REDUNDANT / KW_COMPACT) {
     return "[Not implemented]";
   }
 
@@ -1206,7 +1206,7 @@ index_options
   }
 
 index_option
-  = k:KW_KEY_BLOCK_SIZE __ e:(ASSIGIN_EQUAL)? __ kbs:literal_numeric {
+  = k:KW_KEY_BLOCK_SIZE __ e:("=")? __ kbs:literal_numeric {
     return "[Not implemented]";
   }
   / index_type
@@ -2249,7 +2249,7 @@ pound_sign_comment
   }
 
 keyword_comment
-  = k:KW_COMMENT __ s:ASSIGIN_EQUAL? __ c:literal_string {
+  = k:KW_COMMENT __ s:"="? __ c:literal_string {
     return "[Not implemented]";
   }
 
@@ -2278,7 +2278,7 @@ proc_stmt
   }
 
 assign_stmt
-  = va:(var_decl / without_prefix_var_decl) __ s: (ASSIGN / ASSIGIN_EQUAL) __ e:proc_expr {
+  = va:(var_decl / without_prefix_var_decl) __ s: (ASSIGN / "=") __ e:proc_expr {
     return "[Not implemented]";
   }
 
@@ -2630,4 +2630,3 @@ SEMICOLON     = ';'
 SINGLE_ARROW  = '->'
 DOUBLE_ARROW  = '->>'
 ASSIGN        = ':='
-ASSIGIN_EQUAL = '='
