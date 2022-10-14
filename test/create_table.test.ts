@@ -1,3 +1,4 @@
+import { parse } from "../src/parser";
 import { test } from "./test_utils";
 
 describe("create table", () => {
@@ -12,6 +13,9 @@ describe("create table", () => {
 
   it("parses CREATE TABLE with multiple column definitions", () => {
     test("CREATE TABLE foo (id INT, age SMALLINT)");
+    test(
+      "CREATE TABLE foo /*c1*/ (/*c2*/ id /*c3*/ INT /*c4*/, /*c5*/ age /*c6*/ SMALLINT /*c7*/)"
+    );
   });
 
   it("parses column options", () => {

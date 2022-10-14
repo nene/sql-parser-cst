@@ -499,7 +499,7 @@ create_table_stmt
     tmpKw:(KW_TEMPORARY __)?
     tKw:(KW_TABLE __)
     ifKw:if_not_exists_?
-    t:table_name __
+    t:table_name c1:__
     cols:create_table_definition __
     to:table_options? __
     ir:(KW_IGNORE / KW_REPLACE)? __
@@ -511,7 +511,7 @@ create_table_stmt
         temporaryKw: createKeywordList(tmpKw),
         tableKw: createKeywordList(tKw),
         ifNotExistsKw: nullToUndefined(ifKw),
-        table: t,
+        table: withComments(t, { trailing: c1 }),
         columns: cols,
       };
     }
@@ -590,15 +590,24 @@ column_definition_opt_list
 
 create_column_definition
   = name:column_ref c1:__
-    type:data_type __
-    opts:column_definition_opt_list? {
-      // TODO
-      return {
-        type: "column_definition",
-        name: withComments(name, {trailing: c1}),
-        dataType: type,
-        options: opts || [],
-      };
+    type:data_type
+    opts:(__ column_definition_opt_list)? {
+      if (opts) {
+        const [c2, options] = opts;
+        return {
+          type: "column_definition",
+          name: withComments(name, {trailing: c1}),
+          dataType: withComments(type, {trailing: c2}),
+          options,
+        };
+      } else {
+        return {
+          type: "column_definition",
+          name: withComments(name, {trailing: c1}),
+          dataType: type,
+          options: [],
+        };
+      }
     }
 
 collate_expr
@@ -2571,9 +2580,10 @@ character_string_type
   / t:KW_VARCHAR { return "[Not implemented]"; }
 
 numeric_type_suffix
-  = un: KW_UNSIGNED? __ ze: KW_ZEROFILL? {
-    return "[Not implemented]";
-  }
+  = KW_UNSIGNED __ KW_ZEROFILL { return "[Not implemented]"; }
+  / KW_UNSIGNED { return "[Not implemented]"; }
+  / KW_ZEROFILL { return "[Not implemented]"; }
+
 numeric_type
   = t:(KW_NUMERIC / KW_DECIMAL / KW_INT / KW_INTEGER / KW_SMALLINT / KW_TINYINT / KW_BIGINT / KW_FLOAT / KW_DOUBLE / KW_BIT) __ LPAREN __ l:[0-9]+ __ r:(COMMA __ [0-9]+)? __ RPAREN __ s:numeric_type_suffix? {
     return "[Not implemented]";
@@ -2581,7 +2591,7 @@ numeric_type
   / t:(KW_NUMERIC / KW_DECIMAL / KW_INT / KW_INTEGER / KW_SMALLINT / KW_TINYINT / KW_BIGINT / KW_FLOAT / KW_DOUBLE)l:[0-9]+ __ s:numeric_type_suffix? {
     return "[Not implemented]";
   }
-  / kw:(KW_NUMERIC / KW_DECIMAL / KW_INT / KW_INTEGER / KW_SMALLINT / KW_TINYINT / KW_BIGINT / KW_FLOAT / KW_DOUBLE) __ s:numeric_type_suffix? __ {
+  / kw:(KW_NUMERIC / KW_DECIMAL / KW_INT / KW_INTEGER / KW_SMALLINT / KW_TINYINT / KW_BIGINT / KW_FLOAT / KW_DOUBLE) s:(__ numeric_type_suffix)? {
     return {
       type: "data_type",
       nameKw: kw,
