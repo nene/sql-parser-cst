@@ -886,7 +886,7 @@ table_options
   }
 
 create_option_character_set_kw
-  = 'CHARACTER'i __ 'SET'i {
+  = KW_CHARACTER __ KW_SET {
     return "[Not implemented]";
   }
 create_option_character_set
@@ -2447,6 +2447,7 @@ KW_CALL                = kw:"CALL"i                !ident_start { return createK
 KW_CASE                = kw:"CASE"i                !ident_start { return createKeyword(kw); }
 KW_CAST                = kw:"CAST"i                !ident_start { return createKeyword(kw); }
 KW_CHAR                = kw:"CHAR"i                !ident_start { return createKeyword(kw); }
+KW_CHARACTER           = kw:"CHARACTER"i           !ident_start { return createKeyword(kw); }
 KW_COLLATE             = kw:"COLLATE"i             !ident_start { return createKeyword(kw); }
 KW_COLUMN              = kw:"COLUMN"i              !ident_start { return createKeyword(kw); }
 KW_COLUMN_FORMAT       = kw:"COLUMN_FORMAT"i       !ident_start { return createKeyword(kw); }
