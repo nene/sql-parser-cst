@@ -310,9 +310,15 @@
       return node;
     }
     if (leading && leading.length) {
+      if (node.leadingComments) {
+        throw new Error("withComments(): Node already has leadingComments");
+      }
       node = {...node, leadingComments: leading};
     }
     if (trailing && trailing.length) {
+      if (node.trailingComments) {
+        throw new Error("withComments(): Node already has trailingComments");
+      }
       node = {...node, trailingComments: trailing};
     }
     return node;
