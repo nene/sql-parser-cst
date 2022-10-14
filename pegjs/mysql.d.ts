@@ -149,7 +149,7 @@ type ColumnOption = ColumnOptionNullable;
 
 type ColumnOptionNullable = Comments & {
   type: "column_option_nullable";
-  kw: Keyword;
+  kw: Keyword | Keyword[];
   value: boolean;
 };
 

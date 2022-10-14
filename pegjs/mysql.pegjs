@@ -546,8 +546,8 @@ create_definition
   / create_fulltext_spatial_index_definition
 
 column_definition_opt
-  = kw:KW_NOT_NULL {
-    return { type: "column_option_nullable", kw, value: false };
+  = kws:(KW_NOT __ KW_NULL) {
+    return { type: "column_option_nullable", kw: createKeywordList(kws), value: false };
   }
   / kw:KW_NULL {
     return { type: "column_option_nullable", kw, value: true };
@@ -2000,11 +2000,6 @@ literal_null
     return { type: "null", text: kw.text };
   }
 
-literal_not_null
-  = KW_NOT_NULL {
-    return "[Not implemented]";
-  }
-
 literal_bool
   = kw:KW_TRUE {
     return { type: "bool", text: kw.text };
@@ -2198,7 +2193,6 @@ e
 
 KW_NULL     = kw:"NULL"i       !ident_start { return createKeyword(kw); }
 KW_DEFAULT  = kw:"DEFAULT"i    !ident_start { return createKeyword(kw); }
-KW_NOT_NULL = kw:"NOT NULL"i   !ident_start { return createKeyword(kw); }
 KW_TRUE     = kw:"TRUE"i       !ident_start { return createKeyword(kw); }
 KW_TO       = kw:"TO"i         !ident_start { return createKeyword(kw); }
 KW_FALSE    = kw:"FALSE"i      !ident_start { return createKeyword(kw); }

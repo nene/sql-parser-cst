@@ -21,5 +21,6 @@ describe("create table", () => {
   it("parses column options", () => {
     test("create table foo (id int NULL)");
     test("create table foo (id int NOT NULL)");
+    test("create table foo (id int /*c1*/ NOT /*c2*/ NULL /*c3*/)");
   });
 });
