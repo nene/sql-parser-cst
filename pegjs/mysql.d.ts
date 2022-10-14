@@ -148,7 +148,8 @@ type DataType = Comments & {
 type ColumnOption =
   | ColumnOptionNullable
   | ColumnOptionDefault
-  | ColumnOptionAutoIncrement;
+  | ColumnOptionAutoIncrement
+  | ColumnOptionKey;
 
 type ColumnOptionNullable = Comments & {
   type: "column_option_nullable";
@@ -165,6 +166,11 @@ type ColumnOptionDefault = Comments & {
 type ColumnOptionAutoIncrement = Comments & {
   type: "column_option_auto_increment";
   kw: Keyword;
+};
+
+type ColumnOptionKey = Comments & {
+  type: "column_option_key";
+  kw: Keyword | Keyword[];
 };
 
 // other...

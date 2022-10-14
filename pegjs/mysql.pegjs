@@ -351,6 +351,9 @@
     if (!items) {
       return undefined;
     }
+    if (!(items instanceof Array)) {
+      return [items];
+    }
     const keywords = [];
     for (const it of items) {
       if (it instanceof Array) {
@@ -577,8 +580,8 @@ column_definition_opt
   / kw:KW_AUTO_INCREMENT {
     return { type: "column_option_auto_increment", kw };
   }
-  / u:((KW_UNIQUE __ (KW_KEY)?) / ((KW_PRIMARY)? __ KW_KEY)) {
-    return "[Not implemented]";
+  / kws:(KW_UNIQUE __ KW_KEY / KW_UNIQUE / KW_PRIMARY __ KW_KEY / KW_KEY) {
+    return { type: "column_option_key", kw: createKeywordList(kws) };
   }
   / co:keyword_comment {
     return "[Not implemented]";

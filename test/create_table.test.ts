@@ -44,5 +44,14 @@ describe("create table", () => {
       testOption("AUTO_INCREMENT");
       testOption("AUTO_increment");
     });
+
+    it("UNIQUE KEY / PRIMARY KEY", () => {
+      testOption("KEY");
+      testOption("UNIQUE");
+      testOption("UNIQUE KEY");
+      testOption("PRIMARY KEY");
+      testOption("UNIQUE /*c*/ KEY");
+      testOption("PRIMARY /*c*/ KEY");
+    });
   });
 });

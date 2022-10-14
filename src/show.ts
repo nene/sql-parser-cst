@@ -6,6 +6,7 @@ import {
   ColumnDefinition,
   ColumnOptionAutoIncrement,
   ColumnOptionDefault,
+  ColumnOptionKey,
   ColumnOptionNullable,
   ColumnRef,
   Comment,
@@ -92,6 +93,7 @@ function showNode(node: Node): string {
       return showColumnDefinition(node);
     case "column_option_nullable":
     case "column_option_auto_increment":
+    case "column_option_key":
       return showColumnOption(node);
     case "column_option_default":
       return showColumnOptionDefault(node);
@@ -211,7 +213,7 @@ const showColumnDefinition = (node: ColumnDefinition) =>
   ]);
 
 const showColumnOption = (
-  node: ColumnOptionNullable | ColumnOptionAutoIncrement
+  node: ColumnOptionNullable | ColumnOptionAutoIncrement | ColumnOptionKey
 ) => show(node.kw);
 
 const showColumnOptionDefault = (node: ColumnOptionDefault) =>
