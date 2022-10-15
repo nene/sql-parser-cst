@@ -475,7 +475,7 @@ create_db_definition
 create_db_stmt
   = a:KW_CREATE __
     k:(KW_DATABASE / KW_SCHEME) __
-    ife:if_not_exists_?
+    ife:if_not_exists? __
     t:ident_name __
     c:create_db_definition? {
       return "[Not implemented]";
@@ -520,7 +520,7 @@ create_table_stmt
   = a:KW_CREATE __
     tp:KW_TEMPORARY? __
     KW_TABLE __
-    ife:if_not_exists_?
+    ife:if_not_exists? __
     t:table_name __
     lt:create_like_table {
       return "[Not implemented]";
@@ -528,7 +528,7 @@ create_table_stmt
   / cKw:(KW_CREATE __)
     tmpKw:(KW_TEMPORARY __)?
     tKw:(KW_TABLE __)
-    ifKw:if_not_exists_?
+    ifKw:(kw:if_not_exists c:__ { return trailing(kw, c); })?
     t:table_name c1:__
     cols:create_table_definition __
     to:table_options? __
@@ -546,8 +546,8 @@ create_table_stmt
       };
     }
 
-if_not_exists_
-  = kws:(KW_IF __ KW_NOT __ KW_EXISTS __) { return createKeywordList(kws); }
+if_not_exists
+  = kws:(KW_IF __ KW_NOT __ KW_EXISTS) { return createKeywordList(kws); }
 
 create_like_table_simple
   = KW_LIKE __ t: table_ref_list {
