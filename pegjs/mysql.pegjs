@@ -2387,14 +2387,13 @@ data_type
   / blob_type
 
 boolean_type
-  = 'boolean'i { return "[Not implemented]"; }
+  = kw:KW_BOOLEAN { return { type: "data_type", nameKw: kw }; }
 
 blob_type
-  = b:('blob'i / 'tinyblob'i / 'mediumblob'i / 'longblob'i) { return "[Not implemented]"; }
+  = kw:(KW_BLOB / KW_TINYBLOB / KW_MEDIUMBLOB / KW_LONGBLOB) { return { type: "data_type", nameKw: kw }; }
 
 binary_type
-  = 'binary'i { return "[Not implemented]"; }
-  / 'varbinary'i { return "[Not implemented]"; }
+  = kw:(KW_BINARY / KW_VARBINARY) { return { type: "data_type", nameKw: kw }; }
 
 character_string_type
   = kw:(KW_CHAR / KW_VARCHAR) c1:__ LPAREN c2:__ len:digits c3:__ RPAREN {
@@ -2457,7 +2456,10 @@ KW_AVG                 = kw:"AVG"i                 !ident_start { return createK
 KW_AVG_ROW_LENGTH      = kw:"AVG_ROW_LENGTH"i      !ident_start { return createKeyword(kw); }
 KW_BETWEEN             = kw:"BETWEEN"i             !ident_start { return createKeyword(kw); }
 KW_BIGINT              = kw:"BIGINT"i              !ident_start { return createKeyword(kw); }
+KW_BINARY              = kw:"BINARY"i              !ident_start { return createKeyword(kw); }
 KW_BIT                 = kw:"BIT"i                 !ident_start { return createKeyword(kw); }
+KW_BLOB                = kw:"BLOB"i                !ident_start { return createKeyword(kw); }
+KW_BOOLEAN             = kw:"BOOLEAN"i             !ident_start { return createKeyword(kw); }
 KW_BY                  = kw:"BY"i                  !ident_start { return createKeyword(kw); }
 KW_CALL                = kw:"CALL"i                !ident_start { return createKeyword(kw); }
 KW_CASCADE             = kw:"CASCADE"i             !ident_start { return createKeyword(kw); }
@@ -2537,10 +2539,12 @@ KW_LIKE                = kw:"LIKE"i                !ident_start { return createK
 KW_LIMIT               = kw:"LIMIT"i               !ident_start { return createKeyword(kw); }
 KW_LOCAL               = kw:"LOCAL"i               !ident_start { return createKeyword(kw); }
 KW_LOCK                = kw:"LOCK"i                !ident_start { return createKeyword(kw); }
+KW_LONGBLOB            = kw:"LONGBLOB"i            !ident_start { return createKeyword(kw); }
 KW_LONGTEXT            = kw:"LONGTEXT"i            !ident_start { return createKeyword(kw); }
 KW_MATCH               = kw:"MATCH"i               !ident_start { return createKeyword(kw); }
 KW_MAX                 = kw:"MAX"i                 !ident_start { return createKeyword(kw); }
 KW_MAX_ROWS            = kw:"MAX_ROWS"i            !ident_start { return createKeyword(kw); }
+KW_MEDIUMBLOB          = kw:"MEDIUMBLOB"i          !ident_start { return createKeyword(kw); }
 KW_MEDIUMTEXT          = kw:"MEDIUMTEXT"i          !ident_start { return createKeyword(kw); }
 KW_MEMORY              = kw:"MEMORY"i              !ident_start { return createKeyword(kw); }
 KW_MIN                 = kw:"MIN"i                 !ident_start { return createKeyword(kw); }
@@ -2601,6 +2605,7 @@ KW_TEXT                = kw:"TEXT"i                !ident_start { return createK
 KW_THEN                = kw:"THEN"i                !ident_start { return createKeyword(kw); }
 KW_TIME                = kw:"TIME"i                !ident_start { return createKeyword(kw); }
 KW_TIMESTAMP           = kw:"TIMESTAMP"i           !ident_start { return createKeyword(kw); }
+KW_TINYBLOB            = kw:"TINYBLOB"i            !ident_start { return createKeyword(kw); }
 KW_TINYINT             = kw:"TINYINT"i             !ident_start { return createKeyword(kw); }
 KW_TINYTEXT            = kw:"TINYTEXT"i            !ident_start { return createKeyword(kw); }
 KW_TO                  = kw:"TO"i                  !ident_start { return createKeyword(kw); }
@@ -2621,6 +2626,7 @@ KW_USE                 = kw:"USE"i                 !ident_start { return createK
 KW_USER                = kw:"USER"i                !ident_start { return createKeyword(kw); }
 KW_USING               = kw:"USING"i               !ident_start { return createKeyword(kw); }
 KW_VALUES              = kw:"VALUES"i              !ident_start { return createKeyword(kw); }
+KW_VARBINARY           = kw:"VARBINARY"i           !ident_start { return createKeyword(kw); }
 KW_VARCHAR             = kw:"VARCHAR"i             !ident_start { return createKeyword(kw); }
 KW_VIEW                = kw:"VIEW"i                !ident_start { return createKeyword(kw); }
 KW_WHEN                = kw:"WHEN"i                !ident_start { return createKeyword(kw); }

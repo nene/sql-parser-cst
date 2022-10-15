@@ -53,6 +53,22 @@ describe("create table", () => {
     it("JSON type", () => {
       testType("JSON");
     });
+
+    it("boolean type", () => {
+      testType("BOOLEAN");
+    });
+
+    it("blob types", () => {
+      testType("BLOB");
+      testType("TINYBLOB");
+      testType("MEDIUMBLOB");
+      testType("LONGBLOB");
+    });
+
+    it("binary types", () => {
+      testType("BINARY");
+      testType("VARBINARY");
+    });
   });
 
   describe("column options", () => {
