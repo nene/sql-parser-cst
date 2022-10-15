@@ -2439,7 +2439,9 @@ json_type
   = t:KW_JSON { return "[Not implemented]"; }
 
 text_type
-  = t:(KW_TINYTEXT / KW_TEXT / KW_MEDIUMTEXT / KW_LONGTEXT) { return "[Not implemented]"; }
+  = kw:(KW_TINYTEXT / KW_TEXT / KW_MEDIUMTEXT / KW_LONGTEXT) {
+    return { type: "data_type", nameKw: kw };
+  }
 
 // All keywords (sorted alphabetically)
 KW_ACTION              = kw:"ACTION"i              !ident_start { return createKeyword(kw); }

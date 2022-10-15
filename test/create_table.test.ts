@@ -42,6 +42,13 @@ describe("create table", () => {
       testType("CHAR(15)");
       testType("CHAR /*c1*/(/*c2*/ 123 /*c3*/)");
     });
+
+    it("text types", () => {
+      testType("TEXT");
+      testType("TINYTEXT");
+      testType("MEDIUMTEXT");
+      testType("LONGTEXT");
+    });
   });
 
   describe("column options", () => {
