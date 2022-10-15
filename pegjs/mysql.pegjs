@@ -2366,6 +2366,7 @@ type_params
 
 type_name
   = KW_BOOLEAN
+  / KW_BOOL
   / KW_BLOB
   / KW_TINYBLOB
   / KW_MEDIUMBLOB
@@ -2376,6 +2377,7 @@ type_name
   / KW_DATETIME
   / KW_TIME
   / KW_TIMESTAMP
+  / KW_YEAR
   / KW_CHAR
   / KW_VARCHAR
   / KW_TINYTEXT
@@ -2383,14 +2385,18 @@ type_name
   / KW_MEDIUMTEXT
   / KW_LONGTEXT
   / KW_NUMERIC
+  / KW_FIXED
   / KW_DECIMAL
+  / KW_DEC
   / KW_INT
   / KW_INTEGER
   / KW_SMALLINT
   / KW_TINYINT
   / KW_BIGINT
   / KW_FLOAT
+  / kws:(KW_DOUBLE __ KW_PRECISION) { return createKeywordList(kws); }
   / KW_DOUBLE
+  / KW_REAL
   / KW_BIT
   / KW_JSON
   / KW_ENUM
@@ -2413,6 +2419,7 @@ KW_BIGINT              = kw:"BIGINT"i              !ident_start { return createK
 KW_BINARY              = kw:"BINARY"i              !ident_start { return createKeyword(kw); }
 KW_BIT                 = kw:"BIT"i                 !ident_start { return createKeyword(kw); }
 KW_BLOB                = kw:"BLOB"i                !ident_start { return createKeyword(kw); }
+KW_BOOL                = kw:"BOOL"i                !ident_start { return createKeyword(kw); }
 KW_BOOLEAN             = kw:"BOOLEAN"i             !ident_start { return createKeyword(kw); }
 KW_BY                  = kw:"BY"i                  !ident_start { return createKeyword(kw); }
 KW_CALL                = kw:"CALL"i                !ident_start { return createKeyword(kw); }
@@ -2441,6 +2448,7 @@ KW_CURRENT_USER        = kw:"CURRENT_USER"i        !ident_start { return createK
 KW_DATABASE            = kw:"DATABASE"i            !ident_start { return createKeyword(kw); }
 KW_DATE                = kw:"DATE"i                !ident_start { return createKeyword(kw); }
 KW_DATETIME            = kw:"DATETIME"i            !ident_start { return createKeyword(kw); }
+KW_DEC                 = kw:"DEC"i                 !ident_start { return createKeyword(kw); }
 KW_DECIMAL             = kw:"DECIMAL"i             !ident_start { return createKeyword(kw); }
 KW_DEFAULT             = kw:"DEFAULT"i             !ident_start { return createKeyword(kw); }
 KW_DELETE              = kw:"DELETE"i              !ident_start { return createKeyword(kw); }
@@ -2518,7 +2526,9 @@ KW_PARTIAL             = kw:"PARTIAL"i             !ident_start { return createK
 KW_PARTITION           = kw:"PARTITION"i           !ident_start { return createKeyword(kw); }
 KW_PERSIST             = kw:"PERSIST"i             !ident_start { return createKeyword(kw); }
 KW_PERSIST_ONLY        = kw:"PERSIST_ONLY"i        !ident_start { return createKeyword(kw); }
+KW_PRECISION           = kw:"PRECISION"i           !ident_start { return createKeyword(kw); }
 KW_PRIMARY             = kw:"PRIMARY"i             !ident_start { return createKeyword(kw); }
+KW_REAL                = kw:"REAL"i                !ident_start { return createKeyword(kw); }
 KW_RECURSIVE           = kw:"RECURSIVE"            !ident_start { return createKeyword(kw); }
 KW_REDUNDANT           = kw:"REDUNDANT"i           !ident_start { return createKeyword(kw); }
 KW_REFERENCES          = kw:"REFERENCES"i          !ident_start { return createKeyword(kw); }
@@ -2587,6 +2597,7 @@ KW_WHEN                = kw:"WHEN"i                !ident_start { return createK
 KW_WHERE               = kw:"WHERE"i               !ident_start { return createKeyword(kw); }
 KW_WITH                = kw:"WITH"i                !ident_start { return createKeyword(kw); }
 KW_XOR                 = kw:"XOR"i                 !ident_start { return createKeyword(kw); }
+KW_YEAR                = kw:"YEAR"i                !ident_start { return createKeyword(kw); }
 KW_ZEROFILL            = kw:"ZEROFILL"i            !ident_start { return createKeyword(kw); }
 
 // Special characters

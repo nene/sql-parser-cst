@@ -26,11 +26,24 @@ describe("create table", () => {
 
     it("numeric types", () => {
       testType("NUMERIC");
+      testType("NUMERIC(3)");
+      testType("NUMERIC(3, 4)");
+      testType("FIXED");
+      testType("FIXED(3)");
+      testType("FIXED(3, 4)");
       testType("DECIMAL");
       testType("DECIMAL(3)");
       testType("DECIMAL(3, 4)");
+      testType("DEC");
+      testType("DEC(3)");
+      testType("DEC(3, 4)");
+
       testType("INT");
+      testType("INT(5)");
       testType("INTEGER");
+      testType("INTEGER(5)");
+      testType("TINYINT");
+      testType("TINYINT(5)");
       testType("SMALLINT");
       testType("SMALLINT(5)");
       testType("BIGINT");
@@ -41,10 +54,14 @@ describe("create table", () => {
       testType("DOUBLE");
       testType("DOUBLE(10)");
       testType("DOUBLE(10, 5)");
+      testType("REAL");
+      testType("REAL(10)");
+      testType("REAL(10, 5)");
       testType("BIT");
       testType("BIT(5)");
 
-      testType("DOUBLE /*c1*/(/*c2*/ 10 /*c3*/, /*c4*/ 5 /*c5*/)");
+      testType("DOUBLE PRECISION(10, 5)");
+      testType("DOUBLE PRECISION /*c1*/(/*c2*/ 10 /*c3*/, /*c4*/ 5 /*c5*/)");
     });
 
     it("string types", () => {
@@ -69,6 +86,7 @@ describe("create table", () => {
 
     it("boolean type", () => {
       testType("BOOLEAN");
+      testType("BOOL");
     });
 
     it("blob types", () => {
@@ -94,6 +112,8 @@ describe("create table", () => {
       testType("TIME(4)");
       testType("DATETIME(5)");
       testType("TIMESTAMP(6)");
+      testType("YEAR");
+      testType("YEAR(4)");
     });
 
     it("ENUM and SET types", () => {
