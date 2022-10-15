@@ -624,6 +624,15 @@ create_column_definition
       };
     }
 
+column_option_comment
+  = kw:KW_COMMENT c:__ str:literal_string {
+    return {
+      type: "column_option_comment",
+      kw,
+      value: withComments(str, { leading: c }),
+    };
+  }
+
 collate_expr
   = KW_COLLATE __ s:"="? __ ca:ident_name {
     return "[Not implemented]";
@@ -2219,15 +2228,6 @@ pound_sign_comment
     return {
       type: "line_comment",
       text: text(),
-    };
-  }
-
-column_option_comment
-  = kw:KW_COMMENT c:__ str:literal_string {
-    return {
-      type: "column_option_comment",
-      kw,
-      value: withComments(str, { leading: c }),
     };
   }
 
