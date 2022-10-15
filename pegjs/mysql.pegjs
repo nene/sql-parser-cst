@@ -1918,7 +1918,7 @@ star_expr
   = "*" { return "[Not implemented]"; }
 
 convert_args
-  = c:(column_ref / literal_string) __ COMMA __ ch:character_string_type  __ cs:create_option_character_set_kw __ v:ident_name {
+  = c:(column_ref / literal_string) __ COMMA __ ch:data_type  __ cs:create_option_character_set_kw __ v:ident_name {
     return "[Not implemented]";
   }
   / c:(column_ref / literal_string) __ COMMA __ d:data_type {
@@ -1965,7 +1965,7 @@ scalar_func
   / KW_SYSTEM_USER
 
 cast_expr
-  = KW_CAST __ LPAREN __ e:expr __ KW_AS __ ch:character_string_type  __ cs:create_option_character_set_kw __ v:ident_name __ RPAREN __ ca:collate_expr? {
+  = KW_CAST __ LPAREN __ e:expr __ KW_AS __ ch:data_type  __ cs:create_option_character_set_kw __ v:ident_name __ RPAREN __ ca:collate_expr? {
     return "[Not implemented]";
   }
   / KW_CAST __ LPAREN __ e:expr __ KW_AS __ t:data_type __ RPAREN {
@@ -2351,69 +2351,56 @@ mem_chain
   }
 
 data_type
-  = character_string_type
-  / numeric_type
-  / datetime_type
-  / json_type
-  / text_type
+  = generic_type
   / enum_type
-  / boolean_type
-  / binary_type
-  / blob_type
 
-boolean_type
-  = kw:KW_BOOLEAN { return { type: "data_type", nameKw: kw }; }
-
-blob_type
-  = kw:(KW_BLOB / KW_TINYBLOB / KW_MEDIUMBLOB / KW_LONGBLOB) { return { type: "data_type", nameKw: kw }; }
-
-binary_type
-  = kw:(KW_BINARY / KW_VARBINARY) { return { type: "data_type", nameKw: kw }; }
-
-character_string_type
-  = kw:(KW_CHAR / KW_VARCHAR) c1:__ LPAREN c2:__ len:digits c3:__ RPAREN {
-    return {
-      type: "data_type",
-      nameKw: withComments(kw, {trailing: c1}),
-      params: withComments({ type: "number", text: len }, {leading: c2, trailing: c3}),
-    };
+generic_type
+  = kw:type_name c:__ params:type_params {
+    return { type: "data_type", nameKw: trailing(kw, c), params };
   }
-  / kw:(KW_CHAR / KW_VARCHAR) { return { type: "data_type", nameKw: kw }; }
-
-numeric_type_suffix
-  = KW_UNSIGNED __ KW_ZEROFILL { return "[Not implemented]"; }
-  / KW_UNSIGNED { return "[Not implemented]"; }
-  / KW_ZEROFILL { return "[Not implemented]"; }
-
-numeric_type
-  = t:(KW_NUMERIC / KW_DECIMAL / KW_INT / KW_INTEGER / KW_SMALLINT / KW_TINYINT / KW_BIGINT / KW_FLOAT / KW_DOUBLE / KW_BIT) __
-    LPAREN __ l:digits __ r:(COMMA __ digits)? __ RPAREN __ s:numeric_type_suffix? {
-    return "[Not implemented]";
-  }
-  / kw:(KW_NUMERIC / KW_DECIMAL / KW_INT / KW_INTEGER / KW_SMALLINT / KW_TINYINT / KW_BIGINT / KW_FLOAT / KW_DOUBLE)
-    s:(__ numeric_type_suffix)? {
-    return {
-      type: "data_type",
-      nameKw: kw,
-      // TODO
-    };
+  / kw:type_name {
+    return { type: "data_type", nameKw: kw };
   }
 
-datetime_type
-  = t:(KW_DATE / KW_DATETIME / KW_TIME / KW_TIMESTAMP) __ LPAREN __ l:digits __ RPAREN __ s:numeric_type_suffix? { return "[Not implemented]"; }
-  / t:(KW_DATE / KW_DATETIME / KW_TIME / KW_TIMESTAMP) { return "[Not implemented]"; }
+type_params
+  = LPAREN c1:__ head:literal_numeric tail:(__ COMMA __ literal_numeric)* c2:__ RPAREN {
+    const params = readCommaSepList(head, tail);
+    return withComments(params, {leading: c1, trailing: c2});
+  }
+
+type_name
+  = KW_BOOLEAN
+  / KW_BLOB
+  / KW_TINYBLOB
+  / KW_MEDIUMBLOB
+  / KW_LONGBLOB
+  / KW_BINARY
+  / KW_VARBINARY
+  / KW_DATE
+  / KW_DATETIME
+  / KW_TIME
+  / KW_TIMESTAMP
+  / KW_CHAR
+  / KW_VARCHAR
+  / KW_TINYTEXT
+  / KW_TEXT
+  / KW_MEDIUMTEXT
+  / KW_LONGTEXT
+  / KW_NUMERIC
+  / KW_DECIMAL
+  / KW_INT
+  / KW_INTEGER
+  / KW_SMALLINT
+  / KW_TINYINT
+  / KW_BIGINT
+  / KW_FLOAT
+  / KW_DOUBLE
+  / KW_BIT
+  / KW_JSON
 
 enum_type
   = t:KW_ENUM __ e:value_item {
     return "[Not implemented]";
-  }
-
-json_type
-  = kw:KW_JSON { return { type: "data_type", nameKw: kw }; }
-
-text_type
-  = kw:(KW_TINYTEXT / KW_TEXT / KW_MEDIUMTEXT / KW_LONGTEXT) {
-    return { type: "data_type", nameKw: kw };
   }
 
 // All keywords (sorted alphabetically)

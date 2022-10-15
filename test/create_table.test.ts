@@ -27,12 +27,24 @@ describe("create table", () => {
     it("numeric types", () => {
       testType("NUMERIC");
       testType("DECIMAL");
+      testType("DECIMAL(3)");
+      testType("DECIMAL(3, 4)");
       testType("INT");
       testType("INTEGER");
       testType("SMALLINT");
+      testType("SMALLINT(5)");
       testType("BIGINT");
+      testType("BIGINT(10)");
       testType("FLOAT");
+      testType("FLOAT(10)");
+      testType("FLOAT(10, 5)");
       testType("DOUBLE");
+      testType("DOUBLE(10)");
+      testType("DOUBLE(10, 5)");
+      testType("BIT");
+      testType("BIT(5)");
+
+      testType("DOUBLE /*c1*/(/*c2*/ 10 /*c3*/, /*c4*/ 5 /*c5*/)");
     });
 
     it("string types", () => {
@@ -45,6 +57,7 @@ describe("create table", () => {
 
     it("text types", () => {
       testType("TEXT");
+      testType("TEXT(100)");
       testType("TINYTEXT");
       testType("MEDIUMTEXT");
       testType("LONGTEXT");
@@ -60,6 +73,7 @@ describe("create table", () => {
 
     it("blob types", () => {
       testType("BLOB");
+      testType("BLOB(255)");
       testType("TINYBLOB");
       testType("MEDIUMBLOB");
       testType("LONGBLOB");
@@ -68,6 +82,18 @@ describe("create table", () => {
     it("binary types", () => {
       testType("BINARY");
       testType("VARBINARY");
+      testType("BINARY(100)");
+      testType("VARBINARY(200)");
+    });
+
+    it("date types", () => {
+      testType("DATE");
+      testType("TIME");
+      testType("DATETIME");
+      testType("TIMESTAMP");
+      testType("TIME(4)");
+      testType("DATETIME(5)");
+      testType("TIMESTAMP(6)");
     });
   });
 
