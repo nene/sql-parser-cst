@@ -2436,7 +2436,7 @@ enum_type
   }
 
 json_type
-  = t:KW_JSON { return "[Not implemented]"; }
+  = kw:KW_JSON { return { type: "data_type", nameKw: kw }; }
 
 text_type
   = kw:(KW_TINYTEXT / KW_TEXT / KW_MEDIUMTEXT / KW_LONGTEXT) {

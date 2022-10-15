@@ -49,6 +49,10 @@ describe("create table", () => {
       testType("MEDIUMTEXT");
       testType("LONGTEXT");
     });
+
+    it("JSON type", () => {
+      testType("JSON");
+    });
   });
 
   describe("column options", () => {
