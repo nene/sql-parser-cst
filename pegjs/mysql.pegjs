@@ -1054,7 +1054,7 @@ locking_read
 
 select_stmt_nake
   = __ cte:with_clause? __
-    kw:KW_SELECT ___
+    kw:KW_SELECT __
     opts:option_clause? __
     d:KW_DISTINCT?      __
     columns:column_clause     __
@@ -1565,19 +1565,19 @@ expr
   / union_stmt
 
 or_expr
-  = head:xor_expr tail:(___ or_op __ xor_expr)* {
+  = head:xor_expr tail:(__ or_op __ xor_expr)* {
     return createBinaryExprChain(head, tail);
   }
 
 or_op = kw:KW_OR / "||"
 
 xor_expr
-  = head:and_expr tail:(___ KW_XOR __ and_expr)* {
+  = head:and_expr tail:(__ KW_XOR __ and_expr)* {
     return createBinaryExprChain(head, tail);
   }
 
 and_expr
-  = head:not_expr tail:(___ and_op __ not_expr)* {
+  = head:not_expr tail:(__ and_op __ not_expr)* {
     return createBinaryExprChain(head, tail);
   }
 
@@ -2205,11 +2205,6 @@ hexDigit
 // separator
 __
   = xs:(whitespace / comment)* {
-    return xs.filter(isObject);
-  }
-
-___
-  = xs:(whitespace / comment)+ {
     return xs.filter(isObject);
   }
 
