@@ -2387,7 +2387,7 @@ numeric_type_suffix
 
 numeric_type
   = t:(KW_NUMERIC / KW_DECIMAL / KW_INT / KW_INTEGER / KW_SMALLINT / KW_TINYINT / KW_BIGINT / KW_FLOAT / KW_DOUBLE / KW_BIT) __
-    LPAREN __ l:[0-9]+ __ r:(COMMA __ [0-9]+)? __ RPAREN __ s:numeric_type_suffix? {
+    LPAREN __ l:digits __ r:(COMMA __ digits)? __ RPAREN __ s:numeric_type_suffix? {
     return "[Not implemented]";
   }
   / kw:(KW_NUMERIC / KW_DECIMAL / KW_INT / KW_INTEGER / KW_SMALLINT / KW_TINYINT / KW_BIGINT / KW_FLOAT / KW_DOUBLE)
@@ -2400,7 +2400,7 @@ numeric_type
   }
 
 datetime_type
-  = t:(KW_DATE / KW_DATETIME / KW_TIME / KW_TIMESTAMP) __ LPAREN __ l:[0-6] __ RPAREN __ s:numeric_type_suffix? { return "[Not implemented]"; }
+  = t:(KW_DATE / KW_DATETIME / KW_TIME / KW_TIMESTAMP) __ LPAREN __ l:digits __ RPAREN __ s:numeric_type_suffix? { return "[Not implemented]"; }
   / t:(KW_DATE / KW_DATETIME / KW_TIME / KW_TIMESTAMP) { return "[Not implemented]"; }
 
 enum_type
