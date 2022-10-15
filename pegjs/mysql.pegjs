@@ -1053,22 +1053,22 @@ locking_read
   }
 
 select_stmt_nake
-  = cte:with_clause? __
-    kw:KW_SELECT __
-    opts:option_clause? __
-    d:KW_DISTINCT?      __
-    columns:column_clause     __
-    ci:into_clause?      __
-    from:from_clause?      __
-    fi:into_clause?      __
-    where:where_clause?     __
-    groupBy:group_by_clause?  __
-    having:having_clause?    __
-    orderBy:order_by_clause?  __
-    l:limit_clause? __
-    lr: locking_read? __
-    win:window_clause? __
-    li:into_clause? {
+  = cte:(with_clause __)?
+    kw:KW_SELECT
+    opts:(__ option_clause)?
+    d:(__ KW_DISTINCT)?
+    columns:(c:__ cls:column_clause { return withComments(cls, { leading: c }) })
+    ci:(__ into_clause)?
+    from:(c:__ cls:from_clause { return withComments(cls, { leading: c }) })?
+    fi:(__ into_clause)?
+    where:(c:__ cls:where_clause { return withComments(cls, { leading: c }) })?
+    groupBy:(c:__ cls:group_by_clause { return withComments(cls, { leading: c }) })?
+    having:(c:__ cls:having_clause { return withComments(cls, { leading: c }) })?
+    orderBy:(c:__ cls:order_by_clause { return withComments(cls, { leading: c }) })?
+    l:(__ limit_clause)?
+    lr:(__ locking_read)?
+    win:(__ window_clause)?
+    li:(__ into_clause)? {
       // TODO
       const stmt = {
         type: "select_statement",

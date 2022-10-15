@@ -6,7 +6,7 @@ describe("select", () => {
     test("SELECT 'hello'");
     test("SELECT 1, 2, 3");
     test("select 123");
-    test("SELECT 1 /*c1*/, /*c2*/ 2");
+    test("SELECT /*c0*/ 1 /*c1*/, /*c2*/ 2");
   });
 
   it("parses column aliases", () => {
@@ -20,7 +20,7 @@ describe("select", () => {
     it("parses basic syntax", () => {
       test("SELECT col FROM tbl");
       test("SELECT col from tbl");
-      test("SELECT col FROM /*com*/ tbl");
+      test("SELECT /*c1*/ col /*c2*/ FROM /*c3*/ tbl");
     });
 
     it("parses qualified table names", () => {
@@ -87,14 +87,14 @@ describe("select", () => {
     it("parses where clause", () => {
       test("SELECT name FROM pupils WHERE age > 10");
       test("SELECT name FROM pupils where true");
-      test("SELECT name FROM pupils WHERE /*c*/ name = 'Mary'");
+      test("SELECT name FROM pupils /*c1*/ WHERE /*c2*/ name = 'Mary'");
     });
   });
 
   describe("GROUP BY", () => {
     it("parses group by with single expression", () => {
       test("SELECT c FROM t GROUP BY t.id");
-      test("SELECT c FROM t Group /*c1*/ By /*c2*/ t.id");
+      test("SELECT c FROM t /*c0*/ Group /*c1*/ By /*c2*/ t.id");
     });
 
     it("parses group by with multiple expressions", () => {
@@ -106,7 +106,7 @@ describe("select", () => {
   describe("HAVING", () => {
     it("parses having clause", () => {
       test("SELECT c FROM t WHERE true GROUP BY col HAVING x > 3");
-      test("SELECT c FROM t Having /*c*/ x = 81");
+      test("SELECT c FROM t /*c1*/ Having /*c2*/ x = 81");
     });
   });
 
@@ -117,7 +117,7 @@ describe("select", () => {
       test("SELECT c FROM t ORDER BY name ASC");
       test("SELECT c FROM t ORDER BY age DESC");
       test("SELECT c FROM t ORDER BY name DESC, age ASC, salary");
-      test("SELECT c FROM t Order /*c1*/ By /*c2*/ age /*c3*/ ASC /*c4*/, /*c5*/ name");
+      test("SELECT c FROM t /*c0*/ Order /*c1*/ By /*c2*/ age /*c3*/ ASC /*c4*/, /*c5*/ name");
     });
   });
 
