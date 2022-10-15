@@ -525,24 +525,24 @@ create_table_stmt
     lt:create_like_table {
       return "[Not implemented]";
     }
-  / cKw:(KW_CREATE __)
-    tmpKw:(KW_TEMPORARY __)?
-    tKw:(KW_TABLE __)
-    ifKw:(kw:if_not_exists c:__ { return trailing(kw, c); })?
-    t:table_name c1:__
-    cols:create_table_definition __
-    to:table_options? __
-    ir:(KW_IGNORE / KW_REPLACE)? __
-    as:KW_AS? __
-    qe:union_stmt? {
+  / createKw:KW_CREATE
+    tmpKw:(c:__ kw:KW_TEMPORARY { return leading(kw, c); })?
+    tableKw:(c:__ kw:KW_TABLE { return leading(kw, c); })
+    ifKw:(c:__ kw:if_not_exists { return leading(kw, c); })?
+    table:(c1:__ t:table_name c2:__ { return withComments(t, { leading: c1, trailing: c2 }); })
+    columns:create_table_definition
+    __ table_options?
+    __ (KW_IGNORE / KW_REPLACE)?
+    __ KW_AS?
+    __ union_stmt? {
       return {
         type: "create_table_statement",
-        createKw: createKeywordList(cKw),
-        temporaryKw: createKeywordList(tmpKw),
-        tableKw: createKeywordList(tKw),
+        createKw,
+        temporaryKw: nullToUndefined(tmpKw),
+        tableKw,
         ifNotExistsKw: nullToUndefined(ifKw),
-        table: withComments(t, { trailing: c1 }),
-        columns: cols,
+        table,
+        columns,
       };
     }
 
