@@ -615,23 +615,13 @@ column_definition_opt_list
 create_column_definition
   = name:column_ref c1:__
     type:data_type
-    opts:(__ column_definition_opt_list)? {
-      if (opts) {
-        const [c2, options] = opts;
-        return {
-          type: "column_definition",
-          name: withComments(name, {trailing: c1}),
-          dataType: withComments(type, {trailing: c2}),
-          options,
-        };
-      } else {
-        return {
-          type: "column_definition",
-          name: withComments(name, {trailing: c1}),
-          dataType: type,
-          options: [],
-        };
-      }
+    options:(c:__ list:column_definition_opt_list { return leading(list, c); })? {
+      return {
+        type: "column_definition",
+        name: withComments(name, {trailing: c1}),
+        dataType: type,
+        options: options || [],
+      };
     }
 
 collate_expr
@@ -1238,22 +1228,13 @@ table_join
       table: withComments(table, { leading: c }),
     };
   }
-  / op:join_op c1:__ t:table_base jspec:(__ join_specification)? {
-    if (jspec) {
-      const [c2, spec] = jspec;
-      return {
-        type: "join",
-        operator: op,
-        table: withComments(t, { leading: c1 }),
-        specification: withComments(spec, { leading: c2 }),
-      };
-    } else {
-      return {
-        type: "join",
-        operator: op,
-        table: withComments(t, { leading: c1 }),
-      };
-    }
+  / op:join_op c1:__ t:table_base spec:(c:__ j:join_specification { return leading(j, c) })? {
+    return {
+      type: "join",
+      operator: op,
+      table: withComments(t, { leading: c1 }),
+      specification: spec || undefined,
+    };
   }
 
 //NOTE that, the table assigned to `var` shouldn't write in `table_join`
