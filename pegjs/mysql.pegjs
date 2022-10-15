@@ -324,6 +324,10 @@
     return node;
   };
 
+  // Shorthands for attaching just trailing or leading comments
+  const leading = (node, leading) => withComments(node, { leading });
+  const trailing = (node, trailing) => withComments(node, { trailing });
+
   function createBinaryExprChain(head, tail) {
     return tail.reduce((left, [c1, op, c2, right]) => createBinaryExpr(left, c1, op, c2, right), head);
   }
@@ -1057,14 +1061,14 @@ select_stmt_nake
     kw:KW_SELECT
     opts:(__ option_clause)?
     d:(__ KW_DISTINCT)?
-    columns:(c:__ cls:column_clause { return withComments(cls, { leading: c }) })
+    columns:(c:__ cls:column_clause { return leading(cls, c) })
     ci:(__ into_clause)?
-    from:(c:__ cls:from_clause { return withComments(cls, { leading: c }) })?
+    from:(c:__ cls:from_clause { return leading(cls, c) })?
     fi:(__ into_clause)?
-    where:(c:__ cls:where_clause { return withComments(cls, { leading: c }) })?
-    groupBy:(c:__ cls:group_by_clause { return withComments(cls, { leading: c }) })?
-    having:(c:__ cls:having_clause { return withComments(cls, { leading: c }) })?
-    orderBy:(c:__ cls:order_by_clause { return withComments(cls, { leading: c }) })?
+    where:(c:__ cls:where_clause { return leading(cls, c) })?
+    groupBy:(c:__ cls:group_by_clause { return leading(cls, c) })?
+    having:(c:__ cls:having_clause { return leading(cls, c) })?
+    orderBy:(c:__ cls:order_by_clause { return leading(cls, c) })?
     l:(__ limit_clause)?
     lr:(__ locking_read)?
     win:(__ window_clause)?
