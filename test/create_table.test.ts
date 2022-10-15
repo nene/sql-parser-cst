@@ -95,6 +95,10 @@ describe("create table", () => {
       testType("DATETIME(5)");
       testType("TIMESTAMP(6)");
     });
+
+    it("enum type", () => {
+      testType("ENUM('foo', 'bar', 'baz')");
+    });
   });
 
   describe("column options", () => {

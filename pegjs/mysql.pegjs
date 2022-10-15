@@ -2351,10 +2351,6 @@ mem_chain
   }
 
 data_type
-  = generic_type
-  / enum_type
-
-generic_type
   = kw:type_name c:__ params:type_params {
     return { type: "data_type", nameKw: trailing(kw, c), params };
   }
@@ -2363,7 +2359,7 @@ generic_type
   }
 
 type_params
-  = LPAREN c1:__ head:literal_numeric tail:(__ COMMA __ literal_numeric)* c2:__ RPAREN {
+  = LPAREN c1:__ head:literal tail:(__ COMMA __ literal)* c2:__ RPAREN {
     const params = readCommaSepList(head, tail);
     return withComments(params, {leading: c1, trailing: c2});
   }
@@ -2397,11 +2393,7 @@ type_name
   / KW_DOUBLE
   / KW_BIT
   / KW_JSON
-
-enum_type
-  = t:KW_ENUM __ e:value_item {
-    return "[Not implemented]";
-  }
+  / KW_ENUM
 
 // All keywords (sorted alphabetically)
 KW_ACTION              = kw:"ACTION"i              !ident_start { return createKeyword(kw); }
