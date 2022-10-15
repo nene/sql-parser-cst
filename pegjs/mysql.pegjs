@@ -2390,10 +2390,6 @@ numeric_type
     LPAREN __ l:[0-9]+ __ r:(COMMA __ [0-9]+)? __ RPAREN __ s:numeric_type_suffix? {
     return "[Not implemented]";
   }
-  / t:(KW_NUMERIC / KW_DECIMAL / KW_INT / KW_INTEGER / KW_SMALLINT / KW_TINYINT / KW_BIGINT / KW_FLOAT / KW_DOUBLE)
-    l:[0-9]+ __ s:numeric_type_suffix? {
-    return "[Not implemented]";
-  }
   / kw:(KW_NUMERIC / KW_DECIMAL / KW_INT / KW_INTEGER / KW_SMALLINT / KW_TINYINT / KW_BIGINT / KW_FLOAT / KW_DOUBLE)
     s:(__ numeric_type_suffix)? {
     return {
