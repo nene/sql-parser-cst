@@ -2179,33 +2179,28 @@ line_terminator
   = [\n\r]
 
 literal_numeric
-  = nr:(int frac? exp?) {
+  = int frac? exp? {
     return {
       type: 'number',
-      text: nr.join('')
+      text: text(),
     };
   }
 
 int
   = digits
-  / op:("-" / "+") digits:digits { return op + digits; }
+  / [+-] digits { return text(); }
 
 frac
-  = "." digits:digits { return "." + digits; }
+  = "." digits
 
 exp
-  = e:e digits:digits { return e + digits; }
+  = [eE] [+-]? digits
 
 digits
-  = digits:digit+ { return digits.join(""); }
-
-digit = [0-9]
+  = [0-9]+ { return text(); }
 
 hexDigit
   = [0-9a-fA-F]
-
-e
-  = e:[eE] sign:[+-]? { return e + (sign !== null ? sign: ''); }
 
 // separator
 __
@@ -2411,13 +2406,16 @@ numeric_type_suffix
   / KW_ZEROFILL { return "[Not implemented]"; }
 
 numeric_type
-  = t:(KW_NUMERIC / KW_DECIMAL / KW_INT / KW_INTEGER / KW_SMALLINT / KW_TINYINT / KW_BIGINT / KW_FLOAT / KW_DOUBLE / KW_BIT) __ LPAREN __ l:[0-9]+ __ r:(COMMA __ [0-9]+)? __ RPAREN __ s:numeric_type_suffix? {
+  = t:(KW_NUMERIC / KW_DECIMAL / KW_INT / KW_INTEGER / KW_SMALLINT / KW_TINYINT / KW_BIGINT / KW_FLOAT / KW_DOUBLE / KW_BIT) __
+    LPAREN __ l:[0-9]+ __ r:(COMMA __ [0-9]+)? __ RPAREN __ s:numeric_type_suffix? {
     return "[Not implemented]";
   }
-  / t:(KW_NUMERIC / KW_DECIMAL / KW_INT / KW_INTEGER / KW_SMALLINT / KW_TINYINT / KW_BIGINT / KW_FLOAT / KW_DOUBLE)l:[0-9]+ __ s:numeric_type_suffix? {
+  / t:(KW_NUMERIC / KW_DECIMAL / KW_INT / KW_INTEGER / KW_SMALLINT / KW_TINYINT / KW_BIGINT / KW_FLOAT / KW_DOUBLE)
+    l:[0-9]+ __ s:numeric_type_suffix? {
     return "[Not implemented]";
   }
-  / kw:(KW_NUMERIC / KW_DECIMAL / KW_INT / KW_INTEGER / KW_SMALLINT / KW_TINYINT / KW_BIGINT / KW_FLOAT / KW_DOUBLE) s:(__ numeric_type_suffix)? {
+  / kw:(KW_NUMERIC / KW_DECIMAL / KW_INT / KW_INTEGER / KW_SMALLINT / KW_TINYINT / KW_BIGINT / KW_FLOAT / KW_DOUBLE)
+    s:(__ numeric_type_suffix)? {
     return {
       type: "data_type",
       nameKw: kw,
