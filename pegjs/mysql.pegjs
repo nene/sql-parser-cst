@@ -1053,7 +1053,7 @@ locking_read
   }
 
 select_stmt_nake
-  = __ cte:with_clause? __
+  = cte:with_clause? __
     kw:KW_SELECT __
     opts:option_clause? __
     d:KW_DISTINCT?      __
