@@ -2223,15 +2223,12 @@ pound_sign_comment
   }
 
 column_option_comment
-  = kw:KW_COMMENT eq:(__ "=")? c2:__ str:literal_string {
-    const c1 = eq ? eq[0] : undefined;
+  = kw:KW_COMMENT c:__ str:literal_string {
     return {
       type: "column_option_comment",
-      kw: c1 ? withComments(kw, { trailing: c1 }) : kw,
-      hasEquals: Boolean(eq),
-      value: withComments(str, { leading: c2 }),
-    }
-    return "[Not implemented]";
+      kw,
+      value: withComments(str, { leading: c }),
+    };
   }
 
 char = .

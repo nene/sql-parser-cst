@@ -160,9 +160,7 @@ describe("create table", () => {
 
     it("COMMENT", () => {
       testOption("COMMENT 'Hello, world!'");
-      testOption("COMMENT = 'My comment'");
       testOption("COMMENT /*c*/ 'Hi'");
-      testOption("COMMENT /*c1*/ = /*c2*/ 'Hi'");
     });
   });
 });

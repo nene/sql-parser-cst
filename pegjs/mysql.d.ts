@@ -178,7 +178,6 @@ type ColumnOptionKey = Comments & {
 type ColumnOptionComment = Comments & {
   type: "column_option_comment";
   kw: Keyword;
-  hasEquals: boolean;
   value: StringLiteral;
 };
 

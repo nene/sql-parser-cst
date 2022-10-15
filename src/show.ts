@@ -223,7 +223,7 @@ const showColumnOptionDefault = (node: ColumnOptionDefault) =>
   show([node.kw, node.expr]);
 
 const showColumnOptionComment = (node: ColumnOptionComment) =>
-  show([node.kw, node.hasEquals ? "=" : undefined, node.value]);
+  show([node.kw, node.value]);
 
 const showDataType = (node: DataType) =>
   show(node.nameKw) + (node.params ? "(" + show(node.params, ", ") + ")" : "");
