@@ -96,8 +96,9 @@ describe("create table", () => {
       testType("TIMESTAMP(6)");
     });
 
-    it("enum type", () => {
+    it("ENUM and SET types", () => {
       testType("ENUM('foo', 'bar', 'baz')");
+      testType("SET('foo', 'bar', 'baz')");
     });
   });
 

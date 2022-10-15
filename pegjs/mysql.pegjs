@@ -2394,6 +2394,7 @@ type_name
   / KW_BIT
   / KW_JSON
   / KW_ENUM
+  / KW_SET
 
 // All keywords (sorted alphabetically)
 KW_ACTION              = kw:"ACTION"i              !ident_start { return createKeyword(kw); }
