@@ -77,6 +77,8 @@ describe("literal", () => {
     expect(parseExpr(`123e15`)).toMatchSnapshot();
     expect(parseExpr(`1.23E+13`)).toMatchSnapshot();
     expect(parseExpr(`0.107e-62`)).toMatchSnapshot();
+    expect(parseExpr(`-6`)).toMatchSnapshot();
+    expect(parseExpr(`+18`)).toMatchSnapshot();
   });
 
   it("datetime", () => {

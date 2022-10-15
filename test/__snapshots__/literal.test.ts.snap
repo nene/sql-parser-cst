@@ -288,6 +288,20 @@ exports[`literal number 6`] = `
 }
 `;
 
+exports[`literal number 7`] = `
+{
+  "text": "-6",
+  "type": "number",
+}
+`;
+
+exports[`literal number 8`] = `
+{
+  "text": "+18",
+  "type": "number",
+}
+`;
+
 exports[`literal single-quoted string 1`] = `
 {
   "text": "'hello'",
