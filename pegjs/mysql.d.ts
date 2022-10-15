@@ -143,6 +143,7 @@ type ColumnDefinition = Comments & {
 type DataType = Comments & {
   type: "data_type";
   nameKw: Keyword;
+  params?: Expr[];
 };
 
 type ColumnOption =

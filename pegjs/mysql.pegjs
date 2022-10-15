@@ -2399,11 +2399,14 @@ binary_type
   / 'varbinary'i { return "[Not implemented]"; }
 
 character_string_type
-  = t:(KW_CHAR / KW_VARCHAR) __ LPAREN __ l:[0-9]+ __ RPAREN {
-    return "[Not implemented]";
+  = kw:(KW_CHAR / KW_VARCHAR) c1:__ LPAREN c2:__ len:digits c3:__ RPAREN {
+    return {
+      type: "data_type",
+      nameKw: withComments(kw, {trailing: c1}),
+      params: withComments({ type: "number", text: len }, {leading: c2, trailing: c3}),
+    };
   }
-  / t:KW_CHAR { return "[Not implemented]"; }
-  / t:KW_VARCHAR { return "[Not implemented]"; }
+  / kw:(KW_CHAR / KW_VARCHAR) { return { type: "data_type", nameKw: kw }; }
 
 numeric_type_suffix
   = KW_UNSIGNED __ KW_ZEROFILL { return "[Not implemented]"; }

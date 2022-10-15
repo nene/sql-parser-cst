@@ -18,6 +18,32 @@ describe("create table", () => {
     );
   });
 
+  describe("data types", () => {
+    function testType(type: string) {
+      const sql = `CREATE TABLE t (id ${type})`;
+      expect(show(parse(sql))).toBe(sql);
+    }
+
+    it("numeric types", () => {
+      testType("NUMERIC");
+      testType("DECIMAL");
+      testType("INT");
+      testType("INTEGER");
+      testType("SMALLINT");
+      testType("BIGINT");
+      testType("FLOAT");
+      testType("DOUBLE");
+    });
+
+    it("string types", () => {
+      testType("VARCHAR");
+      testType("CHAR");
+      testType("VARCHAR(100)");
+      testType("CHAR(15)");
+      testType("CHAR /*c1*/(/*c2*/ 123 /*c3*/)");
+    });
+  });
+
   describe("column options", () => {
     it("parses multiple options after type", () => {
       test("CREATE TABLE foo (id INT /*c1*/ NOT /*c2*/ NULL /*c3*/ DEFAULT /*c4*/ 5 /*c5*/)");
