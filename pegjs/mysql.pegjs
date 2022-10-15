@@ -2188,9 +2188,7 @@ literal_numeric
 
 int
   = digits
-  / digit:digit
   / op:("-" / "+" ) digits:digits { return "-" + digits; }
-  / op:("-" / "+" ) digit:digit { return "-" + digit; }
 
 frac
   = "." digits:digits { return "." + digits; }
