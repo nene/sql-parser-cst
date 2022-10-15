@@ -2219,26 +2219,26 @@ comment
   / pound_sign_comment
 
 block_comment
-  = "/*" cs:(!"*/" char)* "*/" {
+  = "/*" (!"*/" char)* "*/" {
     return {
       type: "block_comment",
-      text: "/*" + cs.map(second).join('') + "*/",
+      text: text(),
     };
   }
 
 line_comment
-  = "--" cs:(!EOL char)* {
+  = "--" (!EOL char)* {
     return {
       type: "line_comment",
-      text: "--" + cs.map(second).join(''),
+      text: text(),
     };
   }
 
 pound_sign_comment
-  = "#" cs:(!EOL char)* {
+  = "#" (!EOL char)* {
     return {
       type: "line_comment",
-      text: "#" + cs.map(second).join(''),
+      text: text(),
     };
   }
 
