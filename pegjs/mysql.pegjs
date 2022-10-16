@@ -1788,7 +1788,7 @@ backticks_quoted_ident
   = q:"`" chars:([^`] / "``")+ "`" { return text(); }
 
 column_without_kw
-  = name:column_name {
+  = name:ident_name {
     return createIdentifier(name);
   }
   / quoted_ident
@@ -1796,18 +1796,12 @@ column_without_kw
 column
   = ident
 
-column_name
-  =  start:ident_start parts:column_part* { return start + parts.join(''); }
-
 ident_name
   =  start:ident_start parts:ident_part* { return start + parts.join(''); }
 
 ident_start = [A-Za-z_]
 
 ident_part  = [A-Za-z0-9_]
-
-// to support column name like `cf1:name` in hbase
-column_part  = [A-Za-z0-9_:]
 
 param
   = l:(':' ident_name) {
