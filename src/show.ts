@@ -36,7 +36,7 @@ import {
   TableRef,
   UnaryExpr,
   WhereClause,
-} from "pegjs/mysql";
+} from "../pegjs/sql";
 import { isDefined } from "./util";
 
 type NodeArray = (Node | NodeArray | string | undefined)[];

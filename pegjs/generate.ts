@@ -34,10 +34,7 @@ const pickSqlDialect: peggy.Plugin = {
   },
 };
 
-const source = fs.readFileSync(
-  path.resolve(__dirname, "./mysql.pegjs"),
-  "utf-8"
-);
+const source = fs.readFileSync(path.resolve(__dirname, "./sql.pegjs"), "utf-8");
 
 const dialects = ["mysql", "sqlite"];
 
@@ -49,5 +46,5 @@ dialects.forEach((dialect) => {
     format: "commonjs",
   } as peggy.SourceBuildOptions<"source">);
 
-  fs.writeFileSync(path.resolve(__dirname, `./${dialect}.js`), parser);
+  fs.writeFileSync(path.resolve(__dirname, `./dialects/${dialect}.js`), parser);
 });
