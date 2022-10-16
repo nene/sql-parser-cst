@@ -5,6 +5,9 @@ import path from "path";
 const pickSqlDialect: peggy.Plugin = {
   use(config, options) {
     config.passes.transform.unshift((ast) => {
+      // IMPORTANT: Peggy only allows mutating the rules array in-place.
+      // So I can't use e.g. Array.filter() to easily remove rules.
+      // See: https://github.com/peggyjs/peggy/issues/328
       const removals: Record<string, boolean> = {};
       const renames: Record<string, string> = {};
       ast.rules.forEach((rule) => {
