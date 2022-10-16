@@ -1,28 +1,31 @@
 import peggy from "peggy";
 
-const transformPlugin: peggy.Plugin = {
-  use(config) {
+const pickSql: peggy.Plugin = {
+  use(config, options) {
     config.passes.transform.unshift((ast) => {
-      const replacements1: Record<string, string> = {};
-      const replacements2: Record<string, string> = {};
+      const removals: Record<string, boolean> = {};
+      const renames: Record<string, string> = {};
       ast.rules.forEach((rule) => {
-        const m = /^(.+)\$1$/.exec(rule.name);
+        const m = /^(.+)\$(.+)$/.exec(rule.name);
         if (m) {
           const baseName = m[1];
-          replacements1[baseName] = rule.name;
-          replacements2[rule.name] = baseName;
+          const suffix = m[2];
+          removals[baseName] = true;
+          if (suffix === (options as any).pickSql) {
+            renames[rule.name] = baseName;
+          }
         }
       });
       // drop rules to be replaced
       ast.rules.forEach((rule) => {
-        if (replacements1[rule.name]) {
+        if (removals[rule.name]) {
           rule.name = rule.name + "$unused";
         }
       });
       // rename rules
       ast.rules.forEach((rule) => {
-        if (replacements2[rule.name]) {
-          rule.name = replacements2[rule.name];
+        if (renames[rule.name]) {
+          rule.name = renames[rule.name];
         }
       });
     });
@@ -36,10 +39,13 @@ start = expr
 expr = "hello"
 
 expr$1 = "world"
+
+expr$2 = "mother"
 `,
   {
-    plugins: [transformPlugin],
-  }
+    plugins: [pickSql],
+    pickSql: "2",
+  } as peggy.ParserBuildOptions
 );
 
-console.log(parser.parse("world"));
+console.log(parser.parse("mother"));
