@@ -1,3 +1,4 @@
+import { parse, show } from "../src/parser";
 import { parseExpr, testExpr } from "./test_utils";
 
 describe("expr", () => {
@@ -36,24 +37,20 @@ describe("expr", () => {
     });
 
     it("requires no space around punctuation-based operators", () => {
-      expect(parseExpr(`8+4`)).toMatchInlineSnapshot(`
-        {
-          "left": {
-            "text": "8",
-            "type": "number",
-          },
-          "operator": "+",
-          "right": {
-            "text": "4",
-            "type": "number",
-          },
-          "type": "binary_expr",
-        }
-      `);
+      expect(show(parse(`SELECT 8+4`))).toBe(`SELECT 8 + 4`);
     });
 
     it("requires space around keyword operators", () => {
-      expect(() => parseExpr(`8DIV4`)).toThrowError("Expected");
+      // this gets parsed as an identifier
+      expect(parseExpr(`8DIV4`)).toMatchInlineSnapshot(`
+        {
+          "column": {
+            "text": "8DIV4",
+            "type": "identifier",
+          },
+          "type": "column_ref",
+        }
+      `);
     });
 
     it("parses DIV operator", () => {

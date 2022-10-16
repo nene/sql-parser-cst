@@ -1798,7 +1798,8 @@ column
   = ident
 
 ident_name
-  =  start:ident_start parts:ident_part* { return start + parts.join(''); }
+  = ident_start ident_part* { return text(); }
+  / [0-9]+ ident_start ident_part* { return text(); }
 
 ident_start = [A-Za-z_]
 

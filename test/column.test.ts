@@ -62,4 +62,16 @@ describe("column", () => {
       }
     `);
   });
+
+  it("allows column name to start with number", () => {
+    expect(parseExpr("18foo")).toMatchInlineSnapshot(`
+      {
+        "column": {
+          "text": "18foo",
+          "type": "identifier",
+        },
+        "type": "column_ref",
+      }
+    `);
+  });
 });
