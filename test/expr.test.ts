@@ -52,21 +52,8 @@ describe("expr", () => {
       `);
     });
 
-    // Not quite correct yet
     it("requires space around keyword operators", () => {
-      expect(parseExpr(`8DIV4`)).toMatchInlineSnapshot(`
-        {
-          "alias": {
-            "text": "DIV4",
-            "type": "identifier",
-          },
-          "expr": {
-            "text": "8",
-            "type": "number",
-          },
-          "type": "alias",
-        }
-      `);
+      expect(() => parseExpr(`8DIV4`)).toThrowError("Expected");
     });
 
     it("parses DIV operator", () => {

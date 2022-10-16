@@ -2164,7 +2164,7 @@ line_terminator
   = [\n\r]
 
 literal_numeric
-  = int frac? exp? {
+  = int frac? exp? !ident_start {
     return {
       type: 'number',
       text: text(),
