@@ -1,3 +1,4 @@
+import { parse } from "../src/parser";
 import { parseExpr, testExpr } from "./test_utils";
 
 describe("column", () => {
@@ -9,6 +10,32 @@ describe("column", () => {
 
   it("parses quoted column name", () => {
     testExpr("`some special name`");
+  });
+
+  it("parses SQLite identifier", () => {
+    expect(parse("SELECT [some special name]", "sqlite")).toMatchInlineSnapshot(`
+      [
+        {
+          "select": {
+            "columns": [
+              {
+                "column": {
+                  "text": "[some special name]",
+                  "type": "identifier",
+                },
+                "type": "column_ref",
+              },
+            ],
+            "selectKw": {
+              "text": "SELECT",
+              "type": "keyword",
+            },
+            "type": "select_clause",
+          },
+          "type": "select_statement",
+        },
+      ]
+    `);
   });
 
   it("parses escaped quotes in column name", () => {

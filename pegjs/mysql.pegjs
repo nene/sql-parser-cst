@@ -1783,9 +1783,16 @@ ident
 
 quoted_ident
   = name:backticks_quoted_ident { return createIdentifier(name); }
+quoted_ident$mysql
+  = name:backticks_quoted_ident { return createIdentifier(name); }
+quoted_ident$sqlite
+  = name:bracket_quoted_ident { return createIdentifier(name); }
 
 backticks_quoted_ident
   = q:"`" chars:([^`] / "``")+ "`" { return text(); }
+
+bracket_quoted_ident
+  = q:"[" chars:([^\]] / "]]")+ "]" { return text(); }
 
 // Keywords can be used as column names when they are prefixed by table name, like tbl.update
 qualified_column
