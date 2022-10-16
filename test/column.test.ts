@@ -21,6 +21,10 @@ describe("column", () => {
     testExpr("foo /*c1*/./*c2*/ bar");
   });
 
+  it("allows for keywords as qualified column names", () => {
+    testExpr("foo.insert");
+  });
+
   it("does not recognize string as table name", () => {
     expect(() => parseExpr(`'foo'.bar`)).toThrowError("Expected");
     expect(() => parseExpr(`"foo".bar`)).toThrowError("Expected");

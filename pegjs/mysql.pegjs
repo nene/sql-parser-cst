@@ -1751,7 +1751,7 @@ column_ref
   = tbl:(ident __ DOT __)? col:column __ a:(("->>" / "->") __ (literal_string / literal_numeric))+ __ ca:collate_expr? {
     return "[Not implemented]";
   }
-  / tbl:ident c1:__ DOT c2:__ col:column_without_kw {
+  / tbl:ident c1:__ DOT c2:__ col:qualified_column {
     return {
       type: "column_ref",
       table: withComments(tbl, {trailing: c1}),
@@ -1787,7 +1787,8 @@ quoted_ident
 backticks_quoted_ident
   = q:"`" chars:([^`] / "``")+ "`" { return text(); }
 
-column_without_kw
+// Keywords can be used as column names when they are prefixed by table name, like tbl.update
+qualified_column
   = name:ident_name {
     return createIdentifier(name);
   }
