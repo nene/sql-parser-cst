@@ -35,6 +35,40 @@ describe("expr", () => {
       testExpr(`6 + 7 * 3 - 16 / 2`);
     });
 
+    it("requires no space around punctuation-based operators", () => {
+      expect(parseExpr(`8+4`)).toMatchInlineSnapshot(`
+        {
+          "left": {
+            "text": "8",
+            "type": "number",
+          },
+          "operator": "+",
+          "right": {
+            "text": "4",
+            "type": "number",
+          },
+          "type": "binary_expr",
+        }
+      `);
+    });
+
+    // Not quite correct yet
+    it("requires space around keyword operators", () => {
+      expect(parseExpr(`8DIV4`)).toMatchInlineSnapshot(`
+        {
+          "alias": {
+            "text": "DIV4",
+            "type": "identifier",
+          },
+          "expr": {
+            "text": "8",
+            "type": "number",
+          },
+          "type": "alias",
+        }
+      `);
+    });
+
     it("parses DIV operator", () => {
       testExpr(`8 DIV 4`);
       testExpr(`8 div 4`);
