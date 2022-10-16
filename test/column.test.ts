@@ -18,11 +18,17 @@ describe("column", () => {
   it("parses qualified column name", () => {
     testExpr("foo.bar");
     testExpr("`foo`.`bar`");
-    testExpr("foo.'bar'");
-    testExpr("`foo`.'bar'");
-    testExpr('foo."bar"');
-    testExpr('`foo`."bar"');
     testExpr("foo /*c1*/./*c2*/ bar");
+  });
+
+  it("does not recognize string as table name", () => {
+    expect(() => parseExpr(`'foo'.bar`)).toThrowError("Expected");
+    expect(() => parseExpr(`"foo".bar`)).toThrowError("Expected");
+  });
+
+  it("does not recognize string as column name", () => {
+    expect(() => parseExpr(`foo.'bar'`)).toThrowError("Expected");
+    expect(() => parseExpr(`foo."bar"`)).toThrowError("Expected");
   });
 
   it("parses column name as ColumnRef node", () => {

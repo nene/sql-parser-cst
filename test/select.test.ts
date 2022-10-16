@@ -16,6 +16,13 @@ describe("select", () => {
     test("SELECT 1 /*c*/ bar");
   });
 
+  it("supports string as column alias", () => {
+    test(`SELECT col AS 'foo'`);
+    test(`SELECT col AS "foo"`);
+    test(`SELECT col 'foo'`);
+    test(`SELECT col "foo"`);
+  });
+
   describe("FROM", () => {
     it("parses basic syntax", () => {
       test("SELECT col FROM tbl");
@@ -191,6 +198,39 @@ describe("select", () => {
                   "expr": {
                     "text": "1",
                     "type": "number",
+                  },
+                  "type": "alias",
+                },
+              ],
+              "selectKw": {
+                "text": "SELECT",
+                "type": "keyword",
+              },
+              "type": "select_clause",
+            },
+            "type": "select_statement",
+          },
+        ]
+      `);
+    });
+
+    it("parses string alias as identifier", () => {
+      expect(parse(`SELECT col 'foo'`)).toMatchInlineSnapshot(`
+        [
+          {
+            "select": {
+              "columns": [
+                {
+                  "alias": {
+                    "text": "'foo'",
+                    "type": "identifier",
+                  },
+                  "expr": {
+                    "column": {
+                      "text": "col",
+                      "type": "identifier",
+                    },
+                    "type": "column_ref",
                   },
                   "type": "alias",
                 },

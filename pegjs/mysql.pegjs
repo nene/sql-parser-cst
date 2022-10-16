@@ -1158,13 +1158,13 @@ column_list_item
   }
 
 alias_clause
-  = kw:KW_AS c:__ id:ident {
+  = kw:KW_AS c:__ id:alias_ident {
     return {
       asKw: kw,
       alias: withComments(createIdentifier(id), { leading: c }),
     };
   }
-  / id:ident {
+  / id:alias_ident {
     return { alias: createIdentifier(id) };
   }
 
@@ -1770,6 +1770,11 @@ column_list
     return "[Not implemented]";
   }
 
+alias_ident
+  = ident
+  / s:literal_single_quoted_string { return s.text; }
+  / s:literal_double_quoted_string { return s.text; }
+
 ident
   = name:ident_name !{ return reservedMap[name.toUpperCase()] === true; } {
     return name;
@@ -1777,18 +1782,10 @@ ident
   / quoted_ident
 
 quoted_ident
-  = double_quoted_ident
-  / single_quoted_ident
-  / backticks_quoted_ident
-
-double_quoted_ident
-  = q:'"' chars:([^"] / '""')+ '"' { return q + chars.join('') + q; }
-
-single_quoted_ident
-  = q:"'" chars:([^'] / "''")+ "'" { return q + chars.join('') + q; }
+  = backticks_quoted_ident
 
 backticks_quoted_ident
-  = q:"`" chars:([^`] / "``")+ "`" { return q + chars.join('') + q; }
+  = q:"`" chars:([^`] / "``")+ "`" { return text(); }
 
 column_without_kw
   = name:column_name {
