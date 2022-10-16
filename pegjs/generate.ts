@@ -1,6 +1,8 @@
 import peggy from "peggy";
+import fs from "fs";
+import path from "path";
 
-const pickSql: peggy.Plugin = {
+const pickSqlDialect: peggy.Plugin = {
   use(config, options) {
     config.passes.transform.unshift((ast) => {
       const removals: Record<string, boolean> = {};
@@ -11,7 +13,7 @@ const pickSql: peggy.Plugin = {
           const baseName = m[1];
           const suffix = m[2];
           removals[baseName] = true;
-          if (suffix === (options as any).pickSql) {
+          if (suffix === (options as any).pickSqlDialect) {
             renames[rule.name] = baseName;
           }
         }
@@ -32,20 +34,20 @@ const pickSql: peggy.Plugin = {
   },
 };
 
-const parser = peggy.generate(
-  `
-start = expr
-
-expr = "hello"
-
-expr$1 = "world"
-
-expr$2 = "mother"
-`,
-  {
-    plugins: [pickSql],
-    pickSql: "2",
-  } as peggy.ParserBuildOptions
+const source = fs.readFileSync(
+  path.resolve(__dirname, "./mysql.pegjs"),
+  "utf-8"
 );
 
-console.log(parser.parse("mother"));
+const dialects = ["mysql", "sqlite"];
+
+dialects.forEach((dialect) => {
+  const parser = peggy.generate(source, {
+    plugins: [pickSqlDialect],
+    pickSqlDialect: dialect,
+    output: "source",
+    format: "commonjs",
+  } as peggy.SourceBuildOptions<"source">);
+
+  fs.writeFileSync(path.resolve(__dirname, `./${dialect}.js`), parser);
+});

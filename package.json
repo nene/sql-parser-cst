@@ -7,8 +7,7 @@
   "private": true,
   "scripts": {
     "pretty": "prettier --write .",
-    "grammar": "peggy pegjs/mysql.pegjs",
-    "transform": "ts-node pegjs/transform.ts",
+    "grammar": "ts-node pegjs/generate.ts",
     "build": "yarn grammar && tsc",
     "test": "yarn grammar && jest"
   },
