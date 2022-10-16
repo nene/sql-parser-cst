@@ -1309,7 +1309,7 @@ using_clause
   }
 
 plain_column_ref
-  = col:ident {
+  = col:column {
     return { type: "column_ref", column: col };
   }
 
