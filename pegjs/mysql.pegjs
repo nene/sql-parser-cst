@@ -1161,11 +1161,11 @@ alias_clause
   = kw:KW_AS c:__ id:alias_ident {
     return {
       asKw: kw,
-      alias: withComments(createIdentifier(id), { leading: c }),
+      alias: withComments(id, { leading: c }),
     };
   }
   / id:alias_ident {
-    return { alias: createIdentifier(id) };
+    return { alias: id };
   }
 
 into_clause
@@ -1281,14 +1281,14 @@ table_name
   = db:ident c1:__ DOT c2:__ t:ident {
     return {
       type: "table_ref",
-      db: withComments(createIdentifier(db), { trailing: c1 }),
-      table: withComments(createIdentifier(t), { leading: c2 }),
+      db: withComments(db, { trailing: c1 }),
+      table: withComments(t, { leading: c2 }),
     };
   }
   / t:ident {
     return {
       type: "table_ref",
-      table: createIdentifier(t),
+      table: t,
     };
   }
   / v:var_decl {
@@ -1309,8 +1309,8 @@ using_clause
   }
 
 plain_column_ref
-  = c:ident_name {
-    return { type: "column_ref", column: createIdentifier(c) };
+  = col:ident {
+    return { type: "column_ref", column: col };
   }
 
 on_clause
@@ -1751,17 +1751,17 @@ column_ref
   = tbl:(ident __ DOT __)? col:column __ a:(("->>" / "->") __ (literal_string / literal_numeric))+ __ ca:collate_expr? {
     return "[Not implemented]";
   }
-  / tbl:(ident_name / backticks_quoted_ident) c1:__ DOT c2:__ col:column_without_kw {
+  / tbl:ident c1:__ DOT c2:__ col:column_without_kw {
     return {
       type: "column_ref",
-      table: withComments(createIdentifier(tbl), {trailing: c1}),
-      column: withComments(createIdentifier(col), {leading: c2}),
+      table: withComments(tbl, {trailing: c1}),
+      column: withComments(col, {leading: c2}),
     };
   }
   / col:column {
     return {
       type: "column_ref",
-      column: createIdentifier(col),
+      column: col,
     };
   }
 
@@ -1772,30 +1772,29 @@ column_list
 
 alias_ident
   = ident
-  / s:literal_single_quoted_string { return s.text; }
-  / s:literal_double_quoted_string { return s.text; }
+  / s:literal_single_quoted_string { return createIdentifier(s.text); }
+  / s:literal_double_quoted_string { return createIdentifier(s.text); }
 
 ident
   = name:ident_name !{ return reservedMap[name.toUpperCase()] === true; } {
-    return name;
+    return createIdentifier(name);
   }
   / quoted_ident
 
 quoted_ident
-  = backticks_quoted_ident
+  = name:backticks_quoted_ident { return createIdentifier(name); }
 
 backticks_quoted_ident
   = q:"`" chars:([^`] / "``")+ "`" { return text(); }
 
 column_without_kw
   = name:column_name {
-    return name;
+    return createIdentifier(name);
   }
   / quoted_ident
 
 column
-  = name:column_name !{ return reservedMap[name.toUpperCase()] === true; } { return name; }
-  / backticks_quoted_ident
+  = ident
 
 column_name
   =  start:ident_start parts:column_part* { return start + parts.join(''); }
