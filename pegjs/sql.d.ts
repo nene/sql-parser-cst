@@ -20,6 +20,7 @@ type Node =
   | SortSpecification
   | ColumnDefinition
   | ColumnOption
+  | AllColumns
   | DataType;
 
 type Statement = EmptyStatement | SelectStatement | CreateTableStatement;
@@ -186,6 +187,10 @@ type Alias = Comments & {
   alias: Identifier;
 };
 
+type AllColumns = Comments & {
+  type: "all_columns";
+};
+
 type ExprList = Comments & {
   type: "expr_list";
   children: Expr[];
@@ -253,7 +258,7 @@ type DateTimeLiteral = Comments & {
 type ColumnRef = Comments & {
   type: "column_ref";
   table?: Identifier;
-  column: Identifier;
+  column: Identifier | AllColumns;
 };
 
 type TableRef = Comments & {

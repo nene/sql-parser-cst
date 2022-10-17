@@ -1107,10 +1107,7 @@ select_option$mysql
   / KW_SQL_BUFFER_RESULT
 
 select_columns
-  = head:(STAR !ident_start) tail:(__ COMMA __ column_list_item)* {
-      return "[Not implemented]";
-    }
-  / head:column_list_item tail:(__ COMMA __ column_list_item)* {
+  = head:column_list_item tail:(__ COMMA __ column_list_item)* {
       return readCommaSepList(head, tail);
     }
 
@@ -1137,8 +1134,18 @@ column_list_item
   = fs:fulltext_search {
     return "[Not implemented]";
   }
-  / tbl:(ident __ DOT)? __ STAR {
-    return "[Not implemented]";
+  / STAR {
+    return {
+      type: "column_ref",
+      column: { type: "all_columns" },
+    };
+  }
+  / table:ident c1:__ DOT c2:__ STAR {
+    return  {
+      type: "column_ref",
+      table: trailing(table, c1),
+      column: leading({ type: "all_columns" }, c2),
+    };
   }
   / a:assign_stmt {
     return "[Not implemented]";

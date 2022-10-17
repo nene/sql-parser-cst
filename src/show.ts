@@ -1,5 +1,6 @@
 import {
   Alias,
+  AllColumns,
   BetweenExpr,
   BinaryExpr,
   BoolLiteral,
@@ -104,6 +105,8 @@ function showNode(node: Node): string {
       return showDataType(node);
     case "alias":
       return showAlias(node);
+    case "all_columns":
+      return showAllColumns(node);
     case "expr_list":
       return showExprList(node);
     case "paren_expr":
@@ -223,6 +226,8 @@ const showDataType = (node: DataType) =>
   show(node.nameKw) + (node.params ? "(" + show(node.params, ", ") + ")" : "");
 
 const showAlias = (node: Alias) => show([node.expr, node.asKw, node.alias]);
+
+const showAllColumns = (node: AllColumns) => "*";
 
 const showLiteral = (
   node: StringLiteral | NumberLiteral | BoolLiteral | NullLiteral

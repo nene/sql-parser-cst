@@ -44,6 +44,20 @@ describe("select", () => {
     test(`SELECT col "foo"`);
   });
 
+  it("supports SELECT *", () => {
+    test("SELECT *");
+    test("SELECT *, foo, bar");
+    test("SELECT foo, *, bar");
+    test("SELECT /*c*/ *");
+  });
+
+  it("supports qualified SELECT tbl.*", () => {
+    test("SELECT tbl.*");
+    test("SELECT tbl1.*, tbl2.*");
+    test("SELECT foo, tbl.*, bar");
+    test("SELECT tbl /*c1*/./*c2*/ *");
+  });
+
   describe("FROM", () => {
     it("parses basic syntax", () => {
       test("SELECT col FROM tbl");
