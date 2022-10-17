@@ -65,6 +65,7 @@ type Clause =
 type SelectClause = Comments & {
   type: "select_clause";
   selectKw: Keyword;
+  quantifierKw?: Keyword;
   columns: Expr[];
 };
 

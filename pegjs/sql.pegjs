@@ -1078,15 +1078,19 @@ other_clause
   / into_clause
 
 select_clause
-  = kw:KW_SELECT
+  = selectKw:KW_SELECT
     opts:(__ option_clause)?
-    d:(__ KW_DISTINCT)?
+    quantifierKw:(c:__ kw:(KW_DISTINCT / KW_ALL) { return leading(kw, c) })?
     columns:(c:__ cls:select_columns { return leading(cls, c) }) {
-      return {
+      const clause = {
         type: "select_clause",
-        selectKw: kw,
+        selectKw,
         columns,
       };
+      if (quantifierKw) {
+        clause.quantifierKw = quantifierKw;
+      }
+      return clause;
     }
 
 // MySQL extensions to standard SQL
@@ -1107,7 +1111,7 @@ query_option
     }
 
 select_columns
-  = head: (KW_ALL / (STAR !ident_start) / STAR) tail:(__ COMMA __ column_list_item)* {
+  = head:(STAR !ident_start) tail:(__ COMMA __ column_list_item)* {
       return "[Not implemented]";
     }
   / head:column_list_item tail:(__ COMMA __ column_list_item)* {

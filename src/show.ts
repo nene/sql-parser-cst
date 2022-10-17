@@ -152,7 +152,10 @@ const showEmptyStatement = (node: EmptyStatement) => "";
 const showSelectStatement = (node: SelectStatement) => show(node.clauses);
 
 const showSelectClause = (node: SelectClause) =>
-  show(node.selectKw) + " " + show(node.columns, ", ");
+  show(node.selectKw) +
+  (node.quantifierKw ? " " + show(node.quantifierKw) : "") +
+  " " +
+  show(node.columns, ", ");
 
 const showFromClause = (node: FromClause) => {
   // first one is always a table reference expression, the rest are joins

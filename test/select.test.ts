@@ -8,6 +8,11 @@ describe("select", () => {
     test("SELECT /*c0*/ 1 /*c1*/, /*c2*/ 2");
   });
 
+  it("parses SELECT with set quantifier", () => {
+    test("SELECT ALL foo");
+    test("SELECT DISTINCT foo");
+  });
+
   it("parses column aliases", () => {
     test("SELECT 'hello' AS foo");
     test("SELECT 1 as bar, 2 baz");
