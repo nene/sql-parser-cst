@@ -34,13 +34,16 @@ describe("select", () => {
       test("SELECT col FROM db /*c1*/./*c2*/ tbl");
     });
 
-    dialect("mysql", () => {
+    dialect(["mysql", "sqlite"], () => {
       it("parses backtick-quoted qualified table name", () => {
         test("SELECT col FROM `my db`.`my tbl`");
       });
     });
 
     dialect("sqlite", () => {
+      it("parses double-quoted qualified table name", () => {
+        test(`SELECT col FROM "my db"."my tbl"`);
+      });
       it("parses bracket-quoted qualified table name", () => {
         test("SELECT col FROM [my db].[my tbl]");
       });

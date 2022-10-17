@@ -16,7 +16,7 @@ describe("column", () => {
     testExpr("foo.insert");
   });
 
-  dialect("mysql", () => {
+  dialect(["mysql", "sqlite"], () => {
     it("parses backtick-quoted column name", () => {
       testExpr("`some special name`");
     });

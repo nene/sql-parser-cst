@@ -8,9 +8,10 @@ export function parse(sql: string) {
   return parseSql(sql, __SQL_DIALECT__);
 }
 
-export function dialect(lang: Dialect, block: () => void) {
-  if (lang === __SQL_DIALECT__) {
-    describe(lang, block);
+export function dialect(lang: Dialect | Dialect[], block: () => void) {
+  lang = typeof lang === "string" ? [lang] : lang;
+  if (lang.includes(__SQL_DIALECT__)) {
+    describe(__SQL_DIALECT__, block);
   }
 }
 
