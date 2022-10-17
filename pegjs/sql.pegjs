@@ -1359,9 +1359,6 @@ group_by_clause
     };
   }
 
-column_ref_index
-  = column_ref_list / literal_list
-
 column_ref_list
   = head:column_ref tail:(__ COMMA __ column_ref)* {
       return "[Not implemented]";
@@ -2022,11 +2019,6 @@ literal
   / literal_bool
   / literal_null
   / literal_datetime
-
-literal_list
-  = head:literal tail:(__ COMMA __ literal)* {
-    return "[Not implemented]";
-  }
 
 literal_null
   = kw:KW_NULL {
