@@ -1095,7 +1095,7 @@ select_clause
   = kw:KW_SELECT
     opts:(__ option_clause)?
     d:(__ KW_DISTINCT)?
-    columns:(c:__ cls:column_clause { return leading(cls, c) }) {
+    columns:(c:__ cls:select_columns { return leading(cls, c) }) {
       return {
         type: "select_clause",
         selectKw: kw,
@@ -1120,7 +1120,7 @@ query_option
       return "[Not implemented]";
     }
 
-column_clause
+select_columns
   = head: (KW_ALL / (STAR !ident_start) / STAR) tail:(__ COMMA __ column_list_item)* {
       return "[Not implemented]";
     }
@@ -1362,7 +1362,7 @@ having_clause
   }
 
 partition_by_clause
-  = KW_PARTITION __ KW_BY __ bc:column_clause { return "[Not implemented]"; }
+  = KW_PARTITION __ KW_BY __ bc:select_columns { return "[Not implemented]"; }
 
 order_by_clause
   = kws:(KW_ORDER __ KW_BY __) l:order_by_list {
