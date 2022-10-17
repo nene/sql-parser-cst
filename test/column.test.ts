@@ -31,41 +31,45 @@ describe("column", () => {
   });
 
   dialect("sqlite", () => {
-    it("parses bracket-quoted column name", () => {
-      expect(parse("SELECT [some special name]")).toMatchInlineSnapshot(`
-        [
-          {
-            "select": {
-              "columns": [
-                {
-                  "column": {
-                    "text": "[some special name]",
-                    "type": "identifier",
-                  },
-                  "type": "column_ref",
-                },
-              ],
-              "selectKw": {
-                "text": "SELECT",
-                "type": "keyword",
-              },
-              "type": "select_clause",
-            },
-            "type": "select_statement",
+    it("parses double-quoted column name", () => {
+      expect(parseExpr(`"some special name"`)).toMatchInlineSnapshot(`
+        {
+          "column": {
+            "text": ""some special name"",
+            "type": "identifier",
           },
-        ]
+          "type": "column_ref",
+        }
+      `);
+    });
+
+    it("parses bracket-quoted column name", () => {
+      expect(parseExpr("[some special name]")).toMatchInlineSnapshot(`
+        {
+          "column": {
+            "text": "[some special name]",
+            "type": "identifier",
+          },
+          "type": "column_ref",
+        }
       `);
     });
   });
 
-  it("does not recognize string as table name", () => {
+  it("does not recognize single-quoted string as table name", () => {
     expect(() => parseExpr(`'foo'.bar`)).toThrowError("Expected");
-    expect(() => parseExpr(`"foo".bar`)).toThrowError("Expected");
+  });
+  it("does not recognize single-quoted string as column name", () => {
+    expect(() => parseExpr(`foo.'bar'`)).toThrowError("Expected");
   });
 
-  it("does not recognize string as column name", () => {
-    expect(() => parseExpr(`foo.'bar'`)).toThrowError("Expected");
-    expect(() => parseExpr(`foo."bar"`)).toThrowError("Expected");
+  dialect("mysql", () => {
+    it("does not recognize double-quoted string as table name", () => {
+      expect(() => parseExpr(`"foo".bar`)).toThrowError("Expected");
+    });
+    it("does not recognize double-quoted string as column name", () => {
+      expect(() => parseExpr(`foo."bar"`)).toThrowError("Expected");
+    });
   });
 
   it("parses column name as ColumnRef node", () => {

@@ -1787,6 +1787,7 @@ quoted_ident$mysql
   = name:backticks_quoted_ident { return createIdentifier(name); }
 quoted_ident$sqlite
   = name:bracket_quoted_ident { return createIdentifier(name); }
+  / str:literal_double_quoted_string { return createIdentifier(str.text); }
 
 backticks_quoted_ident
   = q:"`" chars:([^`] / "``")+ "`" { return text(); }
