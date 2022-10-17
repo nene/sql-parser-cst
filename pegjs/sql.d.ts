@@ -21,6 +21,7 @@ type Node =
   | ColumnDefinition
   | ColumnOption
   | AllColumns
+  | CommonTableExpression
   | DataType;
 
 type Statement = EmptyStatement | SelectStatement | CreateTableStatement;
@@ -56,12 +57,27 @@ type SelectStatement = Comments & {
 };
 
 type Clause =
+  | WithClause
   | SelectClause
   | FromClause
   | WhereClause
   | GroupByClause
   | HavingClause
   | OrderByClause;
+
+type WithClause = Comments & {
+  type: "with_clause";
+  withKw: Keyword;
+  tables: CommonTableExpression[];
+};
+
+type CommonTableExpression = Comments & {
+  type: "common_table_expression";
+  table: Identifier;
+  columns: Identifier[];
+  asKw: Keyword;
+  expr: Expr;
+};
 
 type SelectClause = Comments & {
   type: "select_clause";

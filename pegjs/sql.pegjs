@@ -278,6 +278,9 @@
     'ZEROFILL': true,
   };
 
+  /** Identity function */
+  const identity = (x) => x;
+
   /** Extracts second item from array */
   const second = ([_, x]) => x;
 
@@ -448,7 +451,7 @@ empty_stmt
   }
 
 union_stmt
-  = head:select_stmt tail:(__ KW_UNION __ KW_ALL? __ select_stmt)* __ ob: order_by_clause? __ l:limit_clause? {
+  = head:select_stmt tail:(__ KW_UNION __ KW_ALL? __ select_stmt)* (__ ob:order_by_clause)? (__ l:limit_clause)? {
     return head; // TODO
   }
 
@@ -797,7 +800,7 @@ create_index_definition
   = kc:(KW_INDEX / KW_KEY) __
     c:column? __
     t:index_type? __
-    de:cte_column_definition __
+    de:cte_columns_definition __
     id:index_options? __ {
       return "[Not implemented]";
     }
@@ -806,7 +809,7 @@ create_fulltext_spatial_index_definition
   = p: (KW_FULLTEXT / KW_SPATIAL) __
     kc:(KW_INDEX / KW_KEY)? __
     c:column? __
-    de: cte_column_definition __
+    de: cte_columns_definition __
     id: index_options? {
       return "[Not implemented]";
     }
@@ -827,7 +830,7 @@ create_constraint_primary
   = kc:constraint_name? __
   p:(KW_PRIMARY __ KW_KEY) __
   t:index_type? __
-  de:cte_column_definition __
+  de:cte_columns_definition __
   id:index_options? {
     return "[Not implemented]";
   }
@@ -838,7 +841,7 @@ create_constraint_unique
   p:(KW_INDEX / KW_KEY)? __
   i:column? __
   t:index_type? __
-  de:cte_column_definition __
+  de:cte_columns_definition __
   id:index_options? {
     return "[Not implemented]";
   }
@@ -852,7 +855,7 @@ create_constraint_foreign
   = kc:constraint_name? __
   p:(KW_FOREIGN KW_KEY) __
   i:column? __
-  de:cte_column_definition __
+  de:cte_columns_definition __
   id:reference_definition? {
     return "[Not implemented]";
   }
@@ -865,7 +868,7 @@ check_constraint_definition
 reference_definition
   = kc:KW_REFERENCES __
   t:table_ref_list __
-  de:cte_column_definition __
+  de:cte_columns_definition __
   m:(KW_MATCH __ KW_FULL / KW_MATCH __ KW_PARTIAL / KW_MATCH __ KW_SIMPLE)? __
   od:on_reference? __
   ou:on_reference? {
@@ -1018,21 +1021,34 @@ select_stmt
     }
 
 with_clause
-  = KW_WITH __ head:cte_definition tail:(__ COMMA __ cte_definition)* {
-      return "[Not implemented]";
+  = kw:KW_WITH c:__ head:cte_definition tail:(__ COMMA __ cte_definition)* {
+      return {
+        type: "with_clause",
+        withKw: kw,
+        tables: leading(readCommaSepList(head, tail), c),
+      };
     }
-  / __ KW_WITH __ KW_RECURSIVE __ cte:cte_definition {
+  / KW_WITH __ KW_RECURSIVE __ cte:cte_definition {
       return "[Not implemented]";
     }
 
 cte_definition
-  = name:(literal_string / ident_name) __ columns:cte_column_definition? __ KW_AS __ LPAREN __ stmt:union_stmt __ RPAREN {
-    return "[Not implemented]";
-  }
+  = table:ident
+    columns:(c:__ cols:cte_columns_definition { return {cols, c}; })?
+    c1:__ asKw:KW_AS
+    c2:__ LPAREN c3:__ select:union_stmt c4:__ RPAREN {
+      return {
+        type: "common_table_expression",
+        table: columns ? trailing(table, columns.c) : table,
+        columns: columns ? columns.cols : [],
+        asKw: withComments(asKw, { leading: c1, trailing: c2 }),
+        expr: createParenExpr(c3, select, c4),
+      };
+    }
 
-cte_column_definition
-  = LPAREN __ l:column_ref_index __ RPAREN {
-      return "[Not implemented]";
+cte_columns_definition
+  = LPAREN c1:__ head:ident tail:(__ COMMA __ ident)* c2:__ RPAREN {
+      return withComments(readCommaSepList(head, tail), { leading: c1, trailing: c2 });
     }
 
 for_update
@@ -1056,12 +1072,12 @@ locking_read
   }
 
 select_stmt_nake
-  = cte:(with_clause __)?
-    select:(c:__ cls:select_clause { return leading(cls, c) })
-    otherClauses:(c:__ cls:other_clause { return leading(cls, c) })* {
+  = cte:(cls:with_clause c:__ { return trailing(cls, c); })?
+    select:(c:__ cls:select_clause { return leading(cls, c); })
+    otherClauses:(c:__ cls:other_clause { return leading(cls, c); })* {
       return {
         type: "select_statement",
-        clauses: [select, ...(otherClauses ? otherClauses : [])],
+        clauses: [cte, select, ...otherClauses].filter(identity),
       };
   }
 

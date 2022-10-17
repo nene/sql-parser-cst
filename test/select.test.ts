@@ -58,6 +58,25 @@ describe("select", () => {
     test("SELECT tbl /*c1*/./*c2*/ *");
   });
 
+  describe("WITH", () => {
+    it("parses basic syntax", () => {
+      test("WITH child AS (SELECT * FROM person WHERE age < 15) SELECT child.name");
+      test("WITH /*c1*/ child /*c2*/ AS /*c3*/ (/*c4*/ SELECT 1 /*c5*/) /*c6*/ SELECT child.name");
+    });
+
+    it("parses column names list", () => {
+      test("WITH child (age, name) AS (SELECT * FROM person WHERE age < 15) SELECT child.name");
+      test(
+        "WITH child /*c1*/ (/*c2*/ age /*c3*/, /*c4*/ name /*c5*/) /*c6*/ AS (SELECT 1) SELECT child.name"
+      );
+    });
+
+    it("parses multiple cte-s", () => {
+      test("WITH t1 AS (SELECT 1), t2 AS (SELECT 2) SELECT t1.name");
+      test("WITH t1 AS (SELECT 1) /*c1*/, /*c2*/ t2 AS (SELECT 2) SELECT t1.name");
+    });
+  });
+
   describe("FROM", () => {
     it("parses basic syntax", () => {
       test("SELECT col FROM tbl");

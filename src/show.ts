@@ -12,6 +12,7 @@ import {
   ColumnOptionNullable,
   ColumnRef,
   Comment,
+  CommonTableExpression,
   CreateTableStatement,
   DataType,
   DateTimeLiteral,
@@ -37,6 +38,7 @@ import {
   TableRef,
   UnaryExpr,
   WhereClause,
+  WithClause,
 } from "../pegjs/sql";
 import { isDefined } from "./util";
 
@@ -71,6 +73,10 @@ function showNode(node: Node): string {
       return showEmptyStatement(node);
     case "select_statement":
       return showSelectStatement(node);
+    case "with_clause":
+      return showWithClause(node);
+    case "common_table_expression":
+      return showCommonTableExpression(node);
     case "select_clause":
       return showSelectClause(node);
     case "from_clause":
@@ -153,6 +159,17 @@ const showComment = (c: Comment): string =>
 const showEmptyStatement = (node: EmptyStatement) => "";
 
 const showSelectStatement = (node: SelectStatement) => show(node.clauses);
+
+const showWithClause = (node: WithClause) =>
+  show([node.withKw, show(node.tables, ", ")]);
+
+const showCommonTableExpression = (node: CommonTableExpression) =>
+  show([
+    node.table,
+    node.columns.length > 0 ? `(${show(node.columns, ", ")})` : undefined,
+    node.asKw,
+    node.expr,
+  ]);
 
 const showSelectClause = (node: SelectClause) =>
   show([node.selectKw, node.options.length > 0 ? node.options : undefined]) +
