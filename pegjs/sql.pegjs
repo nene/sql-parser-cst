@@ -1057,10 +1057,7 @@ locking_read
 
 select_stmt_nake
   = cte:(with_clause __)?
-    kw:KW_SELECT
-    opts:(__ option_clause)?
-    d:(__ KW_DISTINCT)?
-    columns:(c:__ cls:column_clause { return leading(cls, c) })
+    select:(c:__ cls:select_clause { return leading(cls, c) })
     ci:(__ into_clause)?
     from:(c:__ cls:from_clause { return leading(cls, c) })?
     fi:(__ into_clause)?
@@ -1072,11 +1069,7 @@ select_stmt_nake
     lr:(__ locking_read)?
     win:(__ window_clause)?
     li:(__ into_clause)? {
-      const clauses = [{
-        type: "select_clause",
-        selectKw: kw,
-        columns,
-      }];
+      const clauses = [select];
       if (from) {
         clauses.push(from);
       }
@@ -1097,6 +1090,18 @@ select_stmt_nake
         clauses,
       };
   }
+
+select_clause
+  = kw:KW_SELECT
+    opts:(__ option_clause)?
+    d:(__ KW_DISTINCT)?
+    columns:(c:__ cls:column_clause { return leading(cls, c) }) {
+      return {
+        type: "select_clause",
+        selectKw: kw,
+        columns,
+      };
+    }
 
 // MySQL extensions to standard SQL
 option_clause
