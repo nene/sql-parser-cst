@@ -1079,36 +1079,32 @@ other_clause
 
 select_clause
   = selectKw:KW_SELECT
-    opts:(__ option_clause)?
-    quantifierKw:(c:__ kw:(KW_DISTINCT / KW_ALL) { return leading(kw, c) })?
+    options:(c:__ kw:select_option { return leading(kw, c) })*
     columns:(c:__ cls:select_columns { return leading(cls, c) }) {
-      const clause = {
+      return {
         type: "select_clause",
         selectKw,
+        options,
         columns,
       };
-      if (quantifierKw) {
-        clause.quantifierKw = quantifierKw;
-      }
-      return clause;
     }
 
-// MySQL extensions to standard SQL
-option_clause
-  = head:query_option tail:(__ query_option)* {
-    return "[Not implemented]";
-  }
+select_option
+  = KW_ALL
+  / KW_DISTINCT
 
-query_option
-  = option:(
-        KW_SQL_CALC_FOUND_ROWS
-        / (KW_SQL_CACHE / KW_SQL_NO_CACHE)
-        / KW_SQL_BIG_RESULT
-        / KW_SQL_SMALL_RESULT
-        / KW_SQL_BUFFER_RESULT
-    ) {
-      return "[Not implemented]";
-    }
+select_option$mysql
+  = KW_ALL
+  / KW_DISTINCT
+  / KW_DISTINCTROW
+  / KW_HIGH_PRIORITY
+  / KW_STRAIGHT_JOIN
+  / KW_SQL_CALC_FOUND_ROWS
+  / KW_SQL_CACHE
+  / KW_SQL_NO_CACHE
+  / KW_SQL_BIG_RESULT
+  / KW_SQL_SMALL_RESULT
+  / KW_SQL_BUFFER_RESULT
 
 select_columns
   = head:(STAR !ident_start) tail:(__ COMMA __ column_list_item)* {
@@ -2454,6 +2450,7 @@ KW_DESC                = kw:"DESC"i                !ident_part { return createKe
 KW_DESCRIBE            = kw:"DESCRIBE"i            !ident_part { return createKeyword(kw); }
 KW_DISK                = kw:"DISK"i                !ident_part { return createKeyword(kw); }
 KW_DISTINCT            = kw:"DISTINCT"i            !ident_part { return createKeyword(kw); }
+KW_DISTINCTROW         = kw:"DISTINCTROW"i         !ident_part { return createKeyword(kw); }
 KW_DIV                 = kw:"DIV"i                 !ident_part { return createKeyword(kw); }
 KW_DOUBLE              = kw:"DOUBLE"i              !ident_part { return createKeyword(kw); }
 KW_DROP                = kw:"DROP"i                !ident_part { return createKeyword(kw); }
@@ -2479,6 +2476,7 @@ KW_GO                  = kw:"GO"i                  !ident_part { return createKe
 KW_GROUP               = kw:"GROUP"i               !ident_part { return createKeyword(kw); }
 KW_GROUP_CONCAT        = kw:"GROUP_CONCAT"i        !ident_part { return createKeyword(kw); }
 KW_HAVING              = kw:"HAVING"i              !ident_part { return createKeyword(kw); }
+KW_HIGH_PRIORITY       = kw:"HIGH_PRIORITY"i       !ident_part { return createKeyword(kw); }
 KW_IF                  = kw:"IF"i                  !ident_part { return createKeyword(kw); }
 KW_IGNORE              = kw:"IGNORE"i              !ident_part { return createKeyword(kw); }
 KW_IN                  = kw:"IN"i                  !ident_part { return createKeyword(kw); }
@@ -2558,6 +2556,7 @@ KW_SQL_NO_CACHE        = kw:"SQL_NO_CACHE"i        !ident_part { return createKe
 KW_SQL_SMALL_RESULT    = kw:"SQL_SMALL_RESULT"i    !ident_part { return createKeyword(kw); }
 KW_STATS_SAMPLE_PAGES  = kw:"STATS_SAMPLE_PAGES"i  !ident_part { return createKeyword(kw); }
 KW_STORAGE             = kw:"STORAGE"i             !ident_part { return createKeyword(kw); }
+KW_STRAIGHT_JOIN       = kw:"STRAIGHT_JOIN"i       !ident_part { return createKeyword(kw); }
 KW_SUM                 = kw:"SUM"i                 !ident_part { return createKeyword(kw); }
 KW_SYSTEM_USER         = kw:"SYSTEM_USER"i         !ident_part { return createKeyword(kw); }
 KW_TABLE               = kw:"TABLE"i               !ident_part { return createKeyword(kw); }

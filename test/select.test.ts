@@ -13,6 +13,23 @@ describe("select", () => {
     test("SELECT DISTINCT foo");
   });
 
+  dialect("mysql", () => {
+    it("parses SELECT with MySQL-specific options", () => {
+      test("SELECT DISTINCTROW foo AS x");
+      test("SELECT HIGH_PRIORITY foo AS x");
+      test("SELECT STRAIGHT_JOIN foo AS x");
+      test("SELECT SQL_SMALL_RESULT foo AS x");
+      test("SELECT SQL_BIG_RESULT foo AS x");
+      test("SELECT SQL_BUFFER_RESULT foo AS x");
+      test("SELECT SQL_NO_CACHE foo AS x");
+      test("SELECT SQL_CALC_FOUND_ROWS foo AS x");
+    });
+
+    it("parses SELECT with multiple options", () => {
+      test("SELECT DISTINCT STRAIGHT_JOIN SQL_NO_CACHE foo");
+    });
+  });
+
   it("parses column aliases", () => {
     test("SELECT 'hello' AS foo");
     test("SELECT 1 as bar, 2 baz");
@@ -167,6 +184,7 @@ describe("select", () => {
                     "type": "number",
                   },
                 ],
+                "options": [],
                 "selectKw": {
                   "text": "SELECT",
                   "type": "keyword",
@@ -223,6 +241,7 @@ describe("select", () => {
                     "type": "alias",
                   },
                 ],
+                "options": [],
                 "selectKw": {
                   "text": "SELECT",
                   "type": "keyword",
@@ -258,6 +277,7 @@ describe("select", () => {
                     "type": "alias",
                   },
                 ],
+                "options": [],
                 "selectKw": {
                   "text": "SELECT",
                   "type": "keyword",

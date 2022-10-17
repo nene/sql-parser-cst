@@ -152,8 +152,7 @@ const showEmptyStatement = (node: EmptyStatement) => "";
 const showSelectStatement = (node: SelectStatement) => show(node.clauses);
 
 const showSelectClause = (node: SelectClause) =>
-  show(node.selectKw) +
-  (node.quantifierKw ? " " + show(node.quantifierKw) : "") +
+  show([node.selectKw, node.options.length > 0 ? node.options : undefined]) +
   " " +
   show(node.columns, ", ");
 
