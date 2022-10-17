@@ -1,4 +1,4 @@
-import { parseExpr } from "./test_utils";
+import { dialect, parseExpr, testExpr } from "./test_utils";
 
 describe("literal", () => {
   it("single-quoted string", () => {
@@ -15,18 +15,34 @@ describe("literal", () => {
     expect(parseExpr(`_latin1 /* comment */ 'hello'`)).toMatchSnapshot();
   });
 
-  it("double-quoted string", () => {
-    expect(parseExpr(`"hello"`)).toMatchSnapshot();
-  });
-  it("double-quoted string with escapes", () => {
-    expect(parseExpr(`"hel\\"lo"`)).toMatchSnapshot();
-    expect(parseExpr(`"hel""lo"`)).toMatchSnapshot();
-  });
-  it("double-quoted string with charset", () => {
-    expect(parseExpr(`_latin1"hello"`)).toMatchSnapshot();
-  });
-  it("double-quoted string with charset and comments", () => {
-    expect(parseExpr(`_latin1 -- comment1\n -- comment2\n 'hello'`)).toMatchSnapshot();
+  dialect("mysql", () => {
+    it("double-quoted string", () => {
+      expect(parseExpr(`"hello"`)).toMatchInlineSnapshot(`
+        {
+          "text": ""hello"",
+          "type": "string",
+        }
+      `);
+    });
+    it("double-quoted string with escapes", () => {
+      testExpr(`"hel\\"lo"`);
+      testExpr(`"hel""lo"`);
+    });
+    it("double-quoted string with charset", () => {
+      expect(parseExpr(`_latin1"hello"`)).toMatchInlineSnapshot(`
+        {
+          "charset": "latin1",
+          "string": {
+            "text": ""hello"",
+            "type": "string",
+          },
+          "type": "string_with_charset",
+        }
+      `);
+    });
+    it("double-quoted string with charset and comments", () => {
+      testExpr(`_latin1 -- comment1\n -- comment2\n 'hello'`);
+    });
   });
 
   it("hex literal", () => {
@@ -82,13 +98,19 @@ describe("literal", () => {
   });
 
   it("datetime", () => {
-    expect(parseExpr(`TIME '20:15:00'`)).toMatchSnapshot();
-    expect(parseExpr(`DATE "1995-06-01"`)).toMatchSnapshot();
-    expect(parseExpr(`DATEtime '1995-06-01 20:15:00'`)).toMatchSnapshot();
-    expect(parseExpr(`timestamp "1995-06-01 20:15:00"`)).toMatchSnapshot();
+    testExpr(`TIME '20:15:00'`);
+    testExpr(`DATE "1995-06-01"`);
+    testExpr(`DATEtime '1995-06-01 20:15:00'`);
+    testExpr(`timestamp "1995-06-01 20:15:00"`);
+    testExpr(`DATETIME /* com1 */ '20:15:00'`);
   });
 
-  it("datetime with comment", () => {
-    expect(parseExpr(`DATETIME /* com1 */ '20:15:00'`)).toMatchSnapshot();
+  dialect("mysql", () => {
+    it("datetime with double-quoted string", () => {
+      testExpr(`TIME "20:15:00"`);
+      testExpr(`DATE "1995-06-01"`);
+      testExpr(`DATEtime "1995-06-01 20:15:00"`);
+      testExpr(`timestamp "1995-06-01 20:15:00"`);
+    });
   });
 });

@@ -258,7 +258,7 @@ const showBetweenExpr = (node: BetweenExpr) =>
 const showKeyword = (kw: Keyword) => kw.text;
 
 const showStringWithCharset = (node: StringWithCharset) =>
-  node.charset + " " + show(node.string);
+  "_" + node.charset + " " + show(node.string);
 
 const showColumnRef = (node: ColumnRef) => show([node.table, node.column], ".");
 

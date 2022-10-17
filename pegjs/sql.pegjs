@@ -2083,6 +2083,12 @@ literal_string_without_charset
   / literal_bit_string
   / literal_hex_sequence
   / literal_single_quoted_string
+
+literal_string_without_charset$mysql
+  = literal_hex_string
+  / literal_bit_string
+  / literal_hex_sequence
+  / literal_single_quoted_string
   / literal_double_quoted_string
 
 literal_hex_string

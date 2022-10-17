@@ -15,8 +15,8 @@ const pickSqlDialect: peggy.Plugin = {
         if (m) {
           const baseName = m[1];
           const suffix = m[2];
-          removals[baseName] = true;
           if (suffix === (options as any).pickSqlDialect) {
+            removals[baseName] = true;
             renames[rule.name] = baseName;
           }
         }
