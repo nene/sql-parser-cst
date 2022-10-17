@@ -37,11 +37,25 @@ const pickSqlDialect: peggy.Plugin = {
   },
 };
 
+const allDialects = ["mysql", "sqlite"];
+
+const chosenDialect = process.argv[2];
+
+if (chosenDialect && !allDialects.includes(chosenDialect)) {
+  console.log(
+    `Expected an SQL dialect (${allDialects.join(
+      ", "
+    )}), instead got "${chosenDialect}".`
+  );
+  process.exit(1);
+}
+
+const dialects = chosenDialect ? [chosenDialect] : allDialects;
+
 const source = fs.readFileSync(path.resolve(__dirname, "./sql.pegjs"), "utf-8");
 
-const dialects = ["mysql", "sqlite"];
-
 dialects.forEach((dialect) => {
+  console.log(`Generating parser for: ${dialect}`);
   const parser = peggy.generate(source, {
     plugins: [pickSqlDialect],
     pickSqlDialect: dialect,
