@@ -1023,7 +1023,7 @@ select_stmt
 with_clause
   = withKw:KW_WITH
     recursiveKw:(c:__ kw:KW_RECURSIVE { return leading(kw, c) })?
-    c:__ head:cte_definition tail:(__ COMMA __ cte_definition)* {
+    c:__ head:common_table_expression tail:(__ COMMA __ common_table_expression)* {
       return {
         type: "with_clause",
         withKw,
@@ -1032,7 +1032,7 @@ with_clause
       };
     }
 
-cte_definition
+common_table_expression
   = table:ident
     columns:(c:__ cols:cte_columns_definition { return {cols, c}; })?
     c1:__ asKw:KW_AS
