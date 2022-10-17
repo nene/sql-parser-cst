@@ -1036,15 +1036,21 @@ cte_definition
   = table:ident
     columns:(c:__ cols:cte_columns_definition { return {cols, c}; })?
     c1:__ asKw:KW_AS
+    opt:(c:__ op:cte_option { return leading(op, c); })?
     c2:__ LPAREN c3:__ select:union_stmt c4:__ RPAREN {
       return {
         type: "common_table_expression",
         table: columns ? trailing(table, columns.c) : table,
         columns: columns ? columns.cols : [],
-        asKw: withComments(asKw, { leading: c1, trailing: c2 }),
-        expr: createParenExpr(c3, select, c4),
+        asKw: leading(asKw, c1),
+        optionKw: nullToUndefined(opt),
+        expr: leading(createParenExpr(c3, select, c4), c2),
       };
     }
+
+cte_option
+  = kws:(KW_NOT __ KW_MATERIALIZED) { return createKeywordList(kws); }
+  / KW_MATERIALIZED
 
 cte_columns_definition
   = LPAREN c1:__ head:ident tail:(__ COMMA __ ident)* c2:__ RPAREN {
@@ -2523,6 +2529,7 @@ KW_LOCK                = kw:"LOCK"i                !ident_part { return createKe
 KW_LONGBLOB            = kw:"LONGBLOB"i            !ident_part { return createKeyword(kw); }
 KW_LONGTEXT            = kw:"LONGTEXT"i            !ident_part { return createKeyword(kw); }
 KW_MATCH               = kw:"MATCH"i               !ident_part { return createKeyword(kw); }
+KW_MATERIALIZED        = kw:"MATERIALIZED"i        !ident_part { return createKeyword(kw); }
 KW_MAX                 = kw:"MAX"i                 !ident_part { return createKeyword(kw); }
 KW_MAX_ROWS            = kw:"MAX_ROWS"i            !ident_part { return createKeyword(kw); }
 KW_MEDIUMBLOB          = kw:"MEDIUMBLOB"i          !ident_part { return createKeyword(kw); }

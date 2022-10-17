@@ -80,6 +80,12 @@ describe("select", () => {
       test("WITH t1 AS (SELECT 1), t2 AS (SELECT 2) SELECT t1.name");
       test("WITH t1 AS (SELECT 1) /*c1*/, /*c2*/ t2 AS (SELECT 2) SELECT t1.name");
     });
+
+    it("supports MATERIALIZED & NOT MATERIALIZED options", () => {
+      test("WITH t1 AS MATERIALIZED (SELECT 1) SELECT t1.name");
+      test("WITH t1 AS NOT MATERIALIZED (SELECT 1) SELECT t1.name");
+      test("WITH t1 AS /*c1*/ NOT /*c2*/ MATERIALIZED /*c3*/ (SELECT 1) SELECT t1.name");
+    });
   });
 
   describe("FROM", () => {

@@ -168,6 +168,7 @@ const showCommonTableExpression = (node: CommonTableExpression) =>
     node.table,
     node.columns.length > 0 ? `(${show(node.columns, ", ")})` : undefined,
     node.asKw,
+    node.optionKw,
     node.expr,
   ]);
 

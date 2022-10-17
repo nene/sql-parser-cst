@@ -77,6 +77,7 @@ type CommonTableExpression = Comments & {
   table: Identifier;
   columns: Identifier[];
   asKw: Keyword;
+  optionKw?: Keyword[];
   expr: Expr;
 };
 
