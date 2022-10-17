@@ -1,5 +1,4 @@
-import { parse, show } from "../src/parser";
-import { test } from "./test_utils";
+import { parse, show, test } from "./test_utils";
 
 describe("create table", () => {
   it("parses simple CREATE TABLE statement", () => {

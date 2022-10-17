@@ -1,0 +1,7 @@
+{
+  "preset": "ts-jest",
+  "roots": [".."],
+  "globals": {
+    "__SQL_DIALECT__": "sqlite"
+  }
+}

@@ -1,4 +1,18 @@
-import { parse, show } from "../src/parser";
+import { parse as parseSql, show } from "../src/parser";
+
+type Dialect = "mysql" | "sqlite";
+
+declare var __SQL_DIALECT__: Dialect;
+
+export function parse(sql: string) {
+  return parseSql(sql, __SQL_DIALECT__);
+}
+
+export function dialect(lang: Dialect, block: () => void) {
+  if (lang === __SQL_DIALECT__) {
+    describe(lang, block);
+  }
+}
 
 export function test(sql: string) {
   expect(show(parse(sql))).toBe(sql);
@@ -18,3 +32,5 @@ export function parseExpr(expr: string) {
     );
   }
 }
+
+export { show };

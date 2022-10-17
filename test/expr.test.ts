@@ -1,5 +1,4 @@
-import { parse, show } from "../src/parser";
-import { parseExpr, testExpr } from "./test_utils";
+import { parse, show, parseExpr, testExpr } from "./test_utils";
 
 describe("expr", () => {
   describe("operators", () => {

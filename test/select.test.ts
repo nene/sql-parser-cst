@@ -1,5 +1,4 @@
-import { parse } from "../src/parser";
-import { test } from "./test_utils";
+import { dialect, parse, test } from "./test_utils";
 
 describe("select", () => {
   it("parses simple SELECT", () => {
@@ -32,8 +31,19 @@ describe("select", () => {
 
     it("parses qualified table names", () => {
       test("SELECT col FROM db.tbl");
-      test("SELECT col FROM `db`.`tbl`");
       test("SELECT col FROM db /*c1*/./*c2*/ tbl");
+    });
+
+    dialect("mysql", () => {
+      it("parses backtick-quoted qualified table name", () => {
+        test("SELECT col FROM `my db`.`my tbl`");
+      });
+    });
+
+    dialect("sqlite", () => {
+      it("parses bracket-quoted qualified table name", () => {
+        test("SELECT col FROM [my db].[my tbl]");
+      });
     });
 
     it("parses multiple comma-separated tables", () => {

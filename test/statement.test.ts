@@ -1,5 +1,4 @@
-import { parse } from "../src/parser";
-import { test } from "./test_utils";
+import { parse, test } from "./test_utils";
 
 describe("statement", () => {
   it("parses multiple statements", () => {

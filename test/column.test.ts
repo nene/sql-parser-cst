@@ -1,5 +1,4 @@
-import { parse } from "../src/parser";
-import { parseExpr, testExpr } from "./test_utils";
+import { dialect, parse, parseExpr, testExpr } from "./test_utils";
 
 describe("column", () => {
   it("parses simple column name", () => {
@@ -8,48 +7,55 @@ describe("column", () => {
     testExpr("_96");
   });
 
-  it("parses quoted column name", () => {
-    testExpr("`some special name`");
-  });
-
-  it("parses SQLite identifier", () => {
-    expect(parse("SELECT [some special name]", "sqlite")).toMatchInlineSnapshot(`
-      [
-        {
-          "select": {
-            "columns": [
-              {
-                "column": {
-                  "text": "[some special name]",
-                  "type": "identifier",
-                },
-                "type": "column_ref",
-              },
-            ],
-            "selectKw": {
-              "text": "SELECT",
-              "type": "keyword",
-            },
-            "type": "select_clause",
-          },
-          "type": "select_statement",
-        },
-      ]
-    `);
-  });
-
-  it("parses escaped quotes in column name", () => {
-    testExpr("`some `` name`");
-  });
-
   it("parses qualified column name", () => {
     testExpr("foo.bar");
-    testExpr("`foo`.`bar`");
     testExpr("foo /*c1*/./*c2*/ bar");
   });
 
   it("allows for keywords as qualified column names", () => {
     testExpr("foo.insert");
+  });
+
+  dialect("mysql", () => {
+    it("parses backtick-quoted column name", () => {
+      testExpr("`some special name`");
+    });
+
+    it("parses backtick-quoted table and column name", () => {
+      testExpr("`my foo`.`my bar`");
+    });
+
+    it("parses escaped quotes in column name", () => {
+      testExpr("`some `` name`");
+    });
+  });
+
+  dialect("sqlite", () => {
+    it("parses bracket-quoted column name", () => {
+      expect(parse("SELECT [some special name]")).toMatchInlineSnapshot(`
+        [
+          {
+            "select": {
+              "columns": [
+                {
+                  "column": {
+                    "text": "[some special name]",
+                    "type": "identifier",
+                  },
+                  "type": "column_ref",
+                },
+              ],
+              "selectKw": {
+                "text": "SELECT",
+                "type": "keyword",
+              },
+              "type": "select_clause",
+            },
+            "type": "select_statement",
+          },
+        ]
+      `);
+    });
   });
 
   it("does not recognize string as table name", () => {

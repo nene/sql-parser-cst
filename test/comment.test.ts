@@ -1,4 +1,4 @@
-import { parse, show } from "../src/parser";
+import { parse, show } from "./test_utils";
 
 describe("comments", () => {
   it("parses line comments", () => {
