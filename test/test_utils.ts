@@ -25,13 +25,17 @@ export function testExpr(expr: string) {
 
 export function parseExpr(expr: string) {
   const stmt = parse(`SELECT ${expr}`)[0];
-  if (stmt.type === "select_statement") {
-    return stmt.select.columns[0];
-  } else {
-    throw new Error(
-      `Expected create_table_statement, instead got ${stmt.type}`
-    );
+  if (stmt.type !== "select_statement") {
+    throw new Error(`Expected select_statement, instead got ${stmt.type}`);
   }
+  const clause = stmt.clauses[0];
+  if (clause.type !== "select_clause") {
+    throw new Error(`Expected select_clause, instead got ${clause.type}`);
+  }
+  if (clause.columns.length !== 1) {
+    throw new Error(`Expected 1 column, instead got ${clause.columns.length}`);
+  }
+  return clause.columns[0];
 }
 
 export { show };

@@ -149,15 +149,7 @@ const showComment = (c: Comment): string =>
 
 const showEmptyStatement = (node: EmptyStatement) => "";
 
-const showSelectStatement = (node: SelectStatement) =>
-  show([
-    node.select,
-    node.from,
-    node.where,
-    node.groupBy,
-    node.having,
-    node.orderBy,
-  ]);
+const showSelectStatement = (node: SelectStatement) => show(node.clauses);
 
 const showSelectClause = (node: SelectClause) =>
   show(node.selectKw) + " " + show(node.columns, ", ");

@@ -51,12 +51,7 @@ type EmptyStatement = Comments & {
 
 type SelectStatement = Comments & {
   type: "select_statement";
-  select: SelectClause;
-  from?: FromClause;
-  where?: WhereClause;
-  groupBy?: GroupByClause;
-  having?: HavingClause;
-  orderBy?: OrderByClause;
+  clauses: Clause[];
 };
 
 type Clause =

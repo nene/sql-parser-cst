@@ -1072,31 +1072,30 @@ select_stmt_nake
     lr:(__ locking_read)?
     win:(__ window_clause)?
     li:(__ into_clause)? {
-      // TODO
-      const stmt = {
-        type: "select_statement",
-        select: {
-          type: "select_clause",
-          selectKw: kw,
-          columns,
-        },
-      };
+      const clauses = [{
+        type: "select_clause",
+        selectKw: kw,
+        columns,
+      }];
       if (from) {
-        stmt.from = from;
+        clauses.push(from);
       }
       if (where) {
-        stmt.where = where;
+        clauses.push(where);
       }
       if (groupBy) {
-        stmt.groupBy = groupBy;
+        clauses.push(groupBy);
       }
       if (having) {
-        stmt.having = having;
+        clauses.push(having);
       }
       if (orderBy) {
-        stmt.orderBy = orderBy;
+        clauses.push(orderBy);
       }
-      return stmt;
+      return {
+        type: "select_statement",
+        clauses,
+      };
   }
 
 // MySQL extensions to standard SQL

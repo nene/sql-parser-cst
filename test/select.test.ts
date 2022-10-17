@@ -146,47 +146,49 @@ describe("select", () => {
       expect(parse("SELECT 1, 2, 3 FROM db.tbl")).toMatchInlineSnapshot(`
         [
           {
-            "from": {
-              "fromKw": {
-                "text": "FROM",
-                "type": "keyword",
-              },
-              "tables": [
-                {
-                  "db": {
-                    "text": "db",
-                    "type": "identifier",
+            "clauses": [
+              {
+                "columns": [
+                  {
+                    "text": "1",
+                    "type": "number",
                   },
-                  "table": {
-                    "text": "tbl",
-                    "type": "identifier",
+                  {
+                    "text": "2",
+                    "type": "number",
                   },
-                  "type": "table_ref",
+                  {
+                    "text": "3",
+                    "type": "number",
+                  },
+                ],
+                "selectKw": {
+                  "text": "SELECT",
+                  "type": "keyword",
                 },
-              ],
-              "type": "from_clause",
-            },
-            "select": {
-              "columns": [
-                {
-                  "text": "1",
-                  "type": "number",
-                },
-                {
-                  "text": "2",
-                  "type": "number",
-                },
-                {
-                  "text": "3",
-                  "type": "number",
-                },
-              ],
-              "selectKw": {
-                "text": "SELECT",
-                "type": "keyword",
+                "type": "select_clause",
               },
-              "type": "select_clause",
-            },
+              {
+                "fromKw": {
+                  "text": "FROM",
+                  "type": "keyword",
+                },
+                "tables": [
+                  {
+                    "db": {
+                      "text": "db",
+                      "type": "identifier",
+                    },
+                    "table": {
+                      "text": "tbl",
+                      "type": "identifier",
+                    },
+                    "type": "table_ref",
+                  },
+                ],
+                "type": "from_clause",
+              },
+            ],
             "type": "select_statement",
           },
         ]
@@ -197,30 +199,32 @@ describe("select", () => {
       expect(parse("SELECT 1 AS foo")).toMatchInlineSnapshot(`
         [
           {
-            "select": {
-              "columns": [
-                {
-                  "alias": {
-                    "text": "foo",
-                    "type": "identifier",
+            "clauses": [
+              {
+                "columns": [
+                  {
+                    "alias": {
+                      "text": "foo",
+                      "type": "identifier",
+                    },
+                    "asKw": {
+                      "text": "AS",
+                      "type": "keyword",
+                    },
+                    "expr": {
+                      "text": "1",
+                      "type": "number",
+                    },
+                    "type": "alias",
                   },
-                  "asKw": {
-                    "text": "AS",
-                    "type": "keyword",
-                  },
-                  "expr": {
-                    "text": "1",
-                    "type": "number",
-                  },
-                  "type": "alias",
+                ],
+                "selectKw": {
+                  "text": "SELECT",
+                  "type": "keyword",
                 },
-              ],
-              "selectKw": {
-                "text": "SELECT",
-                "type": "keyword",
+                "type": "select_clause",
               },
-              "type": "select_clause",
-            },
+            ],
             "type": "select_statement",
           },
         ]
@@ -231,29 +235,31 @@ describe("select", () => {
       expect(parse(`SELECT col 'foo'`)).toMatchInlineSnapshot(`
         [
           {
-            "select": {
-              "columns": [
-                {
-                  "alias": {
-                    "text": "'foo'",
-                    "type": "identifier",
-                  },
-                  "expr": {
-                    "column": {
-                      "text": "col",
+            "clauses": [
+              {
+                "columns": [
+                  {
+                    "alias": {
+                      "text": "'foo'",
                       "type": "identifier",
                     },
-                    "type": "column_ref",
+                    "expr": {
+                      "column": {
+                        "text": "col",
+                        "type": "identifier",
+                      },
+                      "type": "column_ref",
+                    },
+                    "type": "alias",
                   },
-                  "type": "alias",
+                ],
+                "selectKw": {
+                  "text": "SELECT",
+                  "type": "keyword",
                 },
-              ],
-              "selectKw": {
-                "text": "SELECT",
-                "type": "keyword",
+                "type": "select_clause",
               },
-              "type": "select_clause",
-            },
+            ],
             "type": "select_statement",
           },
         ]
