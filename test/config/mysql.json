@@ -1,6 +1,6 @@
 {
   "preset": "ts-jest",
-  "roots": [".."],
+  "roots": ["../../test", "../../src", "../../pegjs"],
   "globals": {
     "__SQL_DIALECT__": "mysql"
   }
