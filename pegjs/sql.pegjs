@@ -1058,38 +1058,24 @@ locking_read
 select_stmt_nake
   = cte:(with_clause __)?
     select:(c:__ cls:select_clause { return leading(cls, c) })
-    ci:(__ into_clause)?
-    from:(c:__ cls:from_clause { return leading(cls, c) })?
-    fi:(__ into_clause)?
-    where:(c:__ cls:where_clause { return leading(cls, c) })?
-    groupBy:(c:__ cls:group_by_clause { return leading(cls, c) })?
-    having:(c:__ cls:having_clause { return leading(cls, c) })?
-    orderBy:(c:__ cls:order_by_clause { return leading(cls, c) })?
-    l:(__ limit_clause)?
-    lr:(__ locking_read)?
-    win:(__ window_clause)?
-    li:(__ into_clause)? {
-      const clauses = [select];
-      if (from) {
-        clauses.push(from);
-      }
-      if (where) {
-        clauses.push(where);
-      }
-      if (groupBy) {
-        clauses.push(groupBy);
-      }
-      if (having) {
-        clauses.push(having);
-      }
-      if (orderBy) {
-        clauses.push(orderBy);
-      }
+    otherClauses:(c:__ cls:other_clause { return leading(cls, c) })* {
       return {
         type: "select_statement",
-        clauses,
+        clauses: [select, ...(otherClauses ? otherClauses : [])],
       };
   }
+
+// Other clauses of SELECT statement (besides WITH & SELECT)
+other_clause
+  = from_clause
+  / where_clause
+  / group_by_clause
+  / having_clause
+  / order_by_clause
+  / limit_clause
+  / locking_read
+  / window_clause
+  / into_clause
 
 select_clause
   = kw:KW_SELECT
