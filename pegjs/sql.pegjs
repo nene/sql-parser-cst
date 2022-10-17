@@ -1021,15 +1021,15 @@ select_stmt
     }
 
 with_clause
-  = kw:KW_WITH c:__ head:cte_definition tail:(__ COMMA __ cte_definition)* {
+  = withKw:KW_WITH
+    recursiveKw:(c:__ kw:KW_RECURSIVE { return leading(kw, c) })?
+    c:__ head:cte_definition tail:(__ COMMA __ cte_definition)* {
       return {
         type: "with_clause",
-        withKw: kw,
+        withKw,
+        recursiveKw: nullToUndefined(recursiveKw),
         tables: leading(readCommaSepList(head, tail), c),
       };
-    }
-  / KW_WITH __ KW_RECURSIVE __ cte:cte_definition {
-      return "[Not implemented]";
     }
 
 cte_definition

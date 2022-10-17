@@ -161,7 +161,7 @@ const showEmptyStatement = (node: EmptyStatement) => "";
 const showSelectStatement = (node: SelectStatement) => show(node.clauses);
 
 const showWithClause = (node: WithClause) =>
-  show([node.withKw, show(node.tables, ", ")]);
+  show([node.withKw, node.recursiveKw, show(node.tables, ", ")]);
 
 const showCommonTableExpression = (node: CommonTableExpression) =>
   show([

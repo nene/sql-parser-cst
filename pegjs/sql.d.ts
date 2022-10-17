@@ -68,6 +68,7 @@ type Clause =
 type WithClause = Comments & {
   type: "with_clause";
   withKw: Keyword;
+  recursiveKw?: Keyword;
   tables: CommonTableExpression[];
 };
 

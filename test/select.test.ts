@@ -64,6 +64,11 @@ describe("select", () => {
       test("WITH /*c1*/ child /*c2*/ AS /*c3*/ (/*c4*/ SELECT 1 /*c5*/) /*c6*/ SELECT child.name");
     });
 
+    it("parses recursive syntax", () => {
+      test("WITH RECURSIVE child AS (SELECT 1) SELECT child.name");
+      test("WITH /*c1*/ RECURSIVE /*c2*/ child AS (SELECT 1) SELECT child.name");
+    });
+
     it("parses column names list", () => {
       test("WITH child (age, name) AS (SELECT * FROM person WHERE age < 15) SELECT child.name");
       test(
