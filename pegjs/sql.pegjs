@@ -1993,7 +1993,7 @@ whitespace =
 
 EOL
   = EOF
-  / [\n\r]+
+  / [\n\r]
 
 EOF = !.
 
