@@ -17,7 +17,7 @@ describe("statement", () => {
           "type": "empty_statement",
         },
         {
-          "leadingComments": [
+          "leading": [
             {
               "text": "/*com*/",
               "type": "block_comment",

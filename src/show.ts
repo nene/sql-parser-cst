@@ -59,9 +59,9 @@ export function show(
   }
 
   return [
-    showWhitespace(node.leadingComments),
+    showWhitespace(node.leading),
     showNode(node),
-    showWhitespace(node.trailingComments),
+    showWhitespace(node.trailing),
   ]
     .filter(isDefined)
     .join(" ");

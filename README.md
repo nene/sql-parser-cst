@@ -83,12 +83,10 @@ which preserves all this information:
           "table": { "type": "keyword", "text": "persons" }
         }
       ],
-      "leadingComments": [
-        { "type": "line_comment", "text": "-- use important table" }
-      ]
+      "leading": [{ "type": "line_comment", "text": "-- use important table" }]
     }
   ],
-  "leadingComments": [{ "type": "block_comment", "text": "/* My query */" }]
+  "leading": [{ "type": "block_comment", "text": "/* My query */" }]
 }
 ```
 
@@ -96,7 +94,7 @@ Note the following conventions:
 
 - All keywords are preserved in `type: keyword` nodes, which are usually
   stored in fields named like `someNameKw`.
-- Each node can have `leadingComments` and `trailingComments` fields,
+- Each node can have `leading` and `trailing` fields,
   which store comments immediately before or after that node.
 - Parenthesis is represented by separate `type: paren_expr` node.
 - The original source code representation of strings, identifiers, keywords, etc

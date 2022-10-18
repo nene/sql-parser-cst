@@ -1,8 +1,8 @@
 type Ast = Statement[];
 
-type Comments = {
-  leadingComments?: Whitespace[];
-  trailingComments?: Whitespace[];
+type BaseNode = {
+  leading?: Whitespace[];
+  trailing?: Whitespace[];
 };
 
 type Whitespace = {
@@ -44,14 +44,14 @@ type Expr =
   | TableRef
   | Identifier;
 
-type EmptyStatement = Comments & {
+type EmptyStatement = BaseNode & {
   type: "empty_statement";
   foo: number;
 };
 
 // SELECT
 
-type SelectStatement = Comments & {
+type SelectStatement = BaseNode & {
   type: "select_statement";
   clauses: Clause[];
 };
@@ -65,14 +65,14 @@ type Clause =
   | HavingClause
   | OrderByClause;
 
-type WithClause = Comments & {
+type WithClause = BaseNode & {
   type: "with_clause";
   withKw: Keyword;
   recursiveKw?: Keyword;
   tables: CommonTableExpression[];
 };
 
-type CommonTableExpression = Comments & {
+type CommonTableExpression = BaseNode & {
   type: "common_table_expression";
   table: Identifier;
   columns: Identifier[];
@@ -81,64 +81,64 @@ type CommonTableExpression = Comments & {
   expr: Expr;
 };
 
-type SelectClause = Comments & {
+type SelectClause = BaseNode & {
   type: "select_clause";
   selectKw: Keyword;
   options: Keyword[];
   columns: Expr[];
 };
 
-type FromClause = Comments & {
+type FromClause = BaseNode & {
   type: "from_clause";
   fromKw: Keyword;
   tables: (Expr | Join)[];
 };
 
-type WhereClause = Comments & {
+type WhereClause = BaseNode & {
   type: "where_clause";
   whereKw: Keyword;
   expr: Expr;
 };
 
-type GroupByClause = Comments & {
+type GroupByClause = BaseNode & {
   type: "group_by_clause";
   groupByKw: Keyword[];
   columns: Expr[];
 };
 
-type HavingClause = Comments & {
+type HavingClause = BaseNode & {
   type: "having_clause";
   havingKw: Keyword;
   expr: Expr;
 };
 
-type OrderByClause = Comments & {
+type OrderByClause = BaseNode & {
   type: "order_by_clause";
   orderByKw: Keyword[];
   specifications: Expr[];
 };
 
-type Join = Comments & {
+type Join = BaseNode & {
   type: "join";
   operator: Keyword[] | ",";
   table: Expr;
   specification?: JoinSpecification;
 };
 
-type JoinSpecification = Comments & {
+type JoinSpecification = BaseNode & {
   type: "join_specification";
   kw: Keyword;
   expr: Expr;
 };
 
-type SortSpecification = Comments & {
+type SortSpecification = BaseNode & {
   type: "sort_specification";
   expr: Expr;
   orderKw?: Keyword;
 };
 
 // CREATE TABLE
-type CreateTableStatement = Comments & {
+type CreateTableStatement = BaseNode & {
   type: "create_table_statement";
   createKw: Keyword;
   tableKw: Keyword;
@@ -148,14 +148,14 @@ type CreateTableStatement = Comments & {
   columns: ColumnDefinition[];
 };
 
-type ColumnDefinition = Comments & {
+type ColumnDefinition = BaseNode & {
   type: "column_definition";
   name: ColumnRef;
   dataType: DataType;
   options: ColumnOption[];
 };
 
-type DataType = Comments & {
+type DataType = BaseNode & {
   type: "data_type";
   nameKw: Keyword | Keyword[];
   params?: Expr[];
@@ -168,29 +168,29 @@ type ColumnOption =
   | ColumnOptionKey
   | ColumnOptionComment;
 
-type ColumnOptionNullable = Comments & {
+type ColumnOptionNullable = BaseNode & {
   type: "column_option_nullable";
   kw: Keyword | Keyword[];
   value: boolean;
 };
 
-type ColumnOptionDefault = Comments & {
+type ColumnOptionDefault = BaseNode & {
   type: "column_option_default";
   kw: Keyword;
   expr: Expr;
 };
 
-type ColumnOptionAutoIncrement = Comments & {
+type ColumnOptionAutoIncrement = BaseNode & {
   type: "column_option_auto_increment";
   kw: Keyword;
 };
 
-type ColumnOptionKey = Comments & {
+type ColumnOptionKey = BaseNode & {
   type: "column_option_key";
   kw: Keyword | Keyword[];
 };
 
-type ColumnOptionComment = Comments & {
+type ColumnOptionComment = BaseNode & {
   type: "column_option_comment";
   kw: Keyword;
   value: StringLiteral;
@@ -198,41 +198,41 @@ type ColumnOptionComment = Comments & {
 
 // other...
 
-type Alias = Comments & {
+type Alias = BaseNode & {
   type: "alias";
   expr: Expr;
   asKw?: Keyword;
   alias: Identifier;
 };
 
-type AllColumns = Comments & {
+type AllColumns = BaseNode & {
   type: "all_columns";
 };
 
-type ExprList = Comments & {
+type ExprList = BaseNode & {
   type: "expr_list";
   children: Expr[];
 };
 
-type ParenExpr = Comments & {
+type ParenExpr = BaseNode & {
   type: "paren_expr";
   expr: Expr;
 };
 
-type BinaryExpr = Comments & {
+type BinaryExpr = BaseNode & {
   type: "binary_expr";
   left: Expr;
   operator: string | Keyword | Keyword[];
   right: Expr;
 };
 
-type UnaryExpr = Comments & {
+type UnaryExpr = BaseNode & {
   type: "unary_expr";
   operator: string | Keyword[];
   expr: Expr;
 };
 
-type BetweenExpr = Comments & {
+type BetweenExpr = BaseNode & {
   type: "between_expr";
   left: Expr;
   betweenKw: Keyword[];
@@ -241,56 +241,56 @@ type BetweenExpr = Comments & {
   end: Expr;
 };
 
-type StringWithCharset = Comments & {
+type StringWithCharset = BaseNode & {
   type: "string_with_charset";
   charset: string;
   string: StringLiteral;
 };
 
-type StringLiteral = Comments & {
+type StringLiteral = BaseNode & {
   type: "string";
   text: string;
 };
 
-type NumberLiteral = Comments & {
+type NumberLiteral = BaseNode & {
   type: "number";
   text: string;
 };
 
-type BoolLiteral = Comments & {
+type BoolLiteral = BaseNode & {
   type: "bool";
   text: string;
 };
 
-type NullLiteral = Comments & {
+type NullLiteral = BaseNode & {
   type: "null";
   text: string;
 };
 
-type DateTimeLiteral = Comments & {
+type DateTimeLiteral = BaseNode & {
   type: "datetime";
   kw: Keyword;
   string: StringLiteral;
 };
 
-type ColumnRef = Comments & {
+type ColumnRef = BaseNode & {
   type: "column_ref";
   table?: Identifier;
   column: Identifier | AllColumns;
 };
 
-type TableRef = Comments & {
+type TableRef = BaseNode & {
   type: "table_ref";
   db?: Identifier;
   table: Identifier;
 };
 
-type Identifier = Comments & {
+type Identifier = BaseNode & {
   type: "identifier";
   text: string;
 };
 
-type Keyword = Comments & {
+type Keyword = BaseNode & {
   type: "keyword";
   text: string;
 };

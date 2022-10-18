@@ -34,16 +34,16 @@
       return node;
     }
     if (leading && leading.length) {
-      if (node.leadingComments) {
-        throw new Error("withComments(): Node already has leadingComments");
+      if (node.leading) {
+        throw new Error("withComments(): Node already has leading");
       }
-      node = {...node, leadingComments: leading};
+      node = {...node, leading};
     }
     if (trailing && trailing.length) {
-      if (node.trailingComments) {
-        throw new Error("withComments(): Node already has trailingComments");
+      if (node.trailing) {
+        throw new Error("withComments(): Node already has trailing");
       }
-      node = {...node, trailingComments: trailing};
+      node = {...node, trailing};
     }
     return node;
   };
