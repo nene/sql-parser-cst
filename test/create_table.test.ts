@@ -1,4 +1,4 @@
-import { parse, show, test } from "./test_utils";
+import { parse, preserveAll, show, test } from "./test_utils";
 
 describe("create table", () => {
   it("parses simple CREATE TABLE statement", () => {
@@ -20,7 +20,7 @@ describe("create table", () => {
   describe("data types", () => {
     function testType(type: string) {
       const sql = `CREATE TABLE t (id ${type})`;
-      expect(show(parse(sql))).toBe(sql);
+      expect(show(parse(sql, preserveAll))).toBe(sql);
     }
 
     it("numeric types", () => {
@@ -128,7 +128,7 @@ describe("create table", () => {
 
     function testOption(opt: string) {
       const sql = `CREATE TABLE t (id INT ${opt})`;
-      expect(show(parse(sql))).toBe(sql);
+      expect(show(parse(sql, preserveAll))).toBe(sql);
     }
 
     it("NULL / NOT NULL", () => {

@@ -46,7 +46,7 @@ type NodeArray = (Node | NodeArray | string | undefined)[];
 
 export function show(
   node: Node | NodeArray | string,
-  joinString: string = " "
+  joinString: string = ""
 ): string {
   if (typeof node === "string") {
     return node;
@@ -64,7 +64,7 @@ export function show(
     showWhitespace(node.trailing),
   ]
     .filter(isDefined)
-    .join(" ");
+    .join("");
 }
 
 function showNode(node: Node): string {
@@ -150,23 +150,22 @@ const showWhitespace = (ws?: Whitespace[]): string | undefined => {
   if (!ws) {
     return undefined;
   }
-  return ws.map(showWhitespaceItem).join(" ");
+  return ws.map(showWhitespaceItem).join("");
 };
 
-const showWhitespaceItem = (ws: Whitespace): string =>
-  ws.type === "line_comment" ? ws.text + "\n" : ws.text;
+const showWhitespaceItem = (ws: Whitespace): string => ws.text;
 
 const showEmptyStatement = (node: EmptyStatement) => "";
 
 const showSelectStatement = (node: SelectStatement) => show(node.clauses);
 
 const showWithClause = (node: WithClause) =>
-  show([node.withKw, node.recursiveKw, show(node.tables, ", ")]);
+  show([node.withKw, node.recursiveKw, show(node.tables, ",")]);
 
 const showCommonTableExpression = (node: CommonTableExpression) =>
   show([
     node.table,
-    node.columns.length > 0 ? `(${show(node.columns, ", ")})` : undefined,
+    node.columns.length > 0 ? `(${show(node.columns, ",")})` : undefined,
     node.asKw,
     node.optionKw,
     node.expr,
@@ -174,23 +173,10 @@ const showCommonTableExpression = (node: CommonTableExpression) =>
 
 const showSelectClause = (node: SelectClause) =>
   show([node.selectKw, node.options.length > 0 ? node.options : undefined]) +
-  " " +
-  show(node.columns, ", ");
+  show(node.columns, ",");
 
 const showFromClause = (node: FromClause) => {
-  // first one is always a table reference expression, the rest are joins
-  const [first, ...rest] = node.tables;
-  return (
-    show(node.fromKw) +
-    " " +
-    rest.reduce((str, join) => {
-      if (join.type === "join" && join.operator === ",") {
-        return str + show(join); // no space before comma
-      } else {
-        return str + " " + show(join);
-      }
-    }, show(first))
-  );
+  return show([node.fromKw, node.tables]);
 };
 
 const showJoin = (node: Join) =>
@@ -202,13 +188,13 @@ const showJoinSpecification = (node: JoinSpecification) =>
 const showWhereClause = (node: WhereClause) => show([node.whereKw, node.expr]);
 
 const showGroupByClause = (node: GroupByClause) =>
-  show(node.groupByKw) + " " + show(node.columns, ", ");
+  show(node.groupByKw) + show(node.columns, ",");
 
 const showHavingClause = (node: HavingClause) =>
   show([node.havingKw, node.expr]);
 
 const showOrderByClause = (node: OrderByClause) =>
-  show(node.orderByKw) + " " + show(node.specifications, ", ");
+  show(node.orderByKw) + show(node.specifications, ",");
 
 const showSortSpecification = (node: SortSpecification) =>
   show([node.expr, node.orderKw]);
@@ -220,7 +206,7 @@ const showCreateTableStatement = (node: CreateTableStatement) =>
     node.tableKw,
     node.ifNotExistsKw,
     node.table,
-    "(" + show(node.columns, ", ") + ")",
+    "(" + show(node.columns, ",") + ")",
   ]);
 
 const showColumnDefinition = (node: ColumnDefinition) =>
@@ -241,7 +227,7 @@ const showColumnOptionComment = (node: ColumnOptionComment) =>
   show([node.kw, node.value]);
 
 const showDataType = (node: DataType) =>
-  show(node.nameKw) + (node.params ? "(" + show(node.params, ", ") + ")" : "");
+  show(node.nameKw) + (node.params ? "(" + show(node.params, ",") + ")" : "");
 
 const showAlias = (node: Alias) => show([node.expr, node.asKw, node.alias]);
 
@@ -254,7 +240,7 @@ const showLiteral = (
 const showDateTimeLiteral = (node: DateTimeLiteral) =>
   show([node.kw, node.string]);
 
-const showExprList = (node: ExprList) => show(node.children, ", ");
+const showExprList = (node: ExprList) => show(node.children, ",");
 
 const showParenExpr = (node: ParenExpr) => "(" + show(node.expr) + ")";
 
@@ -263,9 +249,9 @@ const showBinaryExpr = (node: BinaryExpr) =>
 
 const showUnaryExpr = (node: UnaryExpr) => {
   if (typeof node.operator === "string") {
-    return show([node.operator, node.expr], "");
+    return show([node.operator, node.expr]);
   } else {
-    return show([node.operator, node.expr], " ");
+    return show([node.operator, node.expr]);
   }
 };
 
@@ -275,7 +261,7 @@ const showBetweenExpr = (node: BetweenExpr) =>
 const showKeyword = (kw: Keyword) => kw.text;
 
 const showStringWithCharset = (node: StringWithCharset) =>
-  "_" + node.charset + " " + show(node.string);
+  "_" + node.charset + show(node.string);
 
 const showColumnRef = (node: ColumnRef) => show([node.table, node.column], ".");
 

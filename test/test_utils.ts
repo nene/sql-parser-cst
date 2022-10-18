@@ -4,10 +4,16 @@ type Dialect = "mysql" | "sqlite";
 
 declare var __SQL_DIALECT__: Dialect;
 
+export const preserveAll: ParserOptions = {
+  preserveComments: true,
+  preserveNewlines: true,
+  preserveSpaces: true,
+};
+
 export function parse(sql: string, options: ParserOptions = {}) {
   return parseSql(sql, {
     dialect: __SQL_DIALECT__,
-    preserveComments: true,
+    // preserveComments: true,
     ...options,
   });
 }
@@ -20,15 +26,15 @@ export function dialect(lang: Dialect | Dialect[], block: () => void) {
 }
 
 export function test(sql: string) {
-  expect(show(parse(sql))).toBe(sql);
+  expect(show(parse(sql, preserveAll))).toBe(sql);
 }
 
 export function testExpr(expr: string) {
-  expect(show(parse(`SELECT ${expr}`))).toBe(`SELECT ${expr}`);
+  expect(show(parse(`SELECT ${expr}`, preserveAll))).toBe(`SELECT ${expr}`);
 }
 
 export function parseExpr(expr: string) {
-  const stmt = parse(`SELECT ${expr}`)[0];
+  const stmt = parse(`SELECT ${expr}`, { preserveComments: true })[0];
   if (stmt.type !== "select_statement") {
     throw new Error(`Expected select_statement, instead got ${stmt.type}`);
   }

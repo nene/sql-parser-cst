@@ -11,7 +11,7 @@ describe("statement", () => {
 
   it("parses empty statements", () => {
     test("; ; ;");
-    expect(parse(";/*com*/;")).toMatchInlineSnapshot(`
+    expect(parse(";/*com*/;", { preserveComments: true })).toMatchInlineSnapshot(`
       [
         {
           "type": "empty_statement",

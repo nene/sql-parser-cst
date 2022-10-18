@@ -36,7 +36,7 @@ describe("expr", () => {
     });
 
     it("requires no space around punctuation-based operators", () => {
-      expect(show(parse(`SELECT 8+4`))).toBe(`SELECT 8 + 4`);
+      testExpr(`8+4`);
     });
 
     it("requires space around keyword operators", () => {

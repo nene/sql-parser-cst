@@ -20,5 +20,5 @@ export function parse(
 }
 
 export function show(ast: Ast): string {
-  return showSql(ast, "; ").trimEnd();
+  return showSql(ast, ";");
 }
