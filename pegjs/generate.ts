@@ -34,6 +34,22 @@ const pickSqlDialect: peggy.Plugin = {
         }
       });
     });
+
+    config.passes.generate.push((ast) => {
+      // code should always be present in code-generation pass
+      if (!ast.code) {
+        throw new Error(
+          "Expected to have some code in ast.code, but found nothing :("
+        );
+      }
+      // Find the location of "use strict" declaration.
+      // We'll insert our code right after that.
+      const useStrictIndex = ast.code.children.indexOf(
+        '"use strict";\n' as any
+      );
+      const importStmt = `const __RESERVED_KEYWORDS__ = require("../keywords/mysql.keywords.js");\n`;
+      ast.code.children.splice(useStrictIndex + 1, 0, importStmt as any);
+    });
   },
 };
 
