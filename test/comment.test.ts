@@ -18,4 +18,10 @@ describe("comments", () => {
       "SELECT 1 + /* comment 1 */ /* comment 2 */ 2"
     );
   });
+
+  it("discards comments when preserveComments option is not set", () => {
+    expect(
+      show(parse("SELECT 1 + /* comment 1 */ /* comment 2 */ 2", { preserveComments: undefined }))
+    ).toBe("SELECT 1 + 2");
+  });
 });

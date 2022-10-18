@@ -1,11 +1,15 @@
-import { parse as parseSql, show } from "../src/parser";
+import { parse as parseSql, ParserOptions, show } from "../src/parser";
 
 type Dialect = "mysql" | "sqlite";
 
 declare var __SQL_DIALECT__: Dialect;
 
-export function parse(sql: string) {
-  return parseSql(sql, __SQL_DIALECT__);
+export function parse(sql: string, options: ParserOptions = {}) {
+  return parseSql(sql, {
+    dialect: __SQL_DIALECT__,
+    preserveComments: true,
+    ...options,
+  });
 }
 
 export function dialect(lang: Dialect | Dialect[], block: () => void) {

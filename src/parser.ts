@@ -1,14 +1,21 @@
-import { Ast } from "../pegjs/sql";
+import { Ast, ParserOptions } from "../pegjs/sql";
 import { parse as mysql } from "../pegjs/dialects/mysql";
 import { parse as sqlite } from "../pegjs/dialects/sqlite";
 import { show as showSql } from "./show";
 
-export function parse(sql: string, dialect: "mysql" | "sqlite" = "mysql"): Ast {
-  switch (dialect) {
+export type DialectOption = { dialect?: "mysql" | "sqlite" };
+
+export { ParserOptions };
+
+export function parse(
+  sql: string,
+  options: ParserOptions & DialectOption = {}
+): Ast {
+  switch (options.dialect || "mysql") {
     case "mysql":
-      return mysql(sql);
+      return mysql(sql, options);
     case "sqlite":
-      return sqlite(sql);
+      return sqlite(sql, options);
   }
 }
 

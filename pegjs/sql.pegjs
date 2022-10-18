@@ -1946,7 +1946,7 @@ hexDigit
 // separator
 __
   = xs:(whitespace / comment)* {
-    return xs.filter(isObject);
+    return xs.filter((ws) => isObject(ws) && options.preserveComments);
   }
 
 comment

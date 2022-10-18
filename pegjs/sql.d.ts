@@ -295,4 +295,8 @@ type Keyword = Comments & {
   text: string;
 };
 
-export function parse(str: string): Ast;
+export type ParserOptions = {
+  preserveComments?: boolean;
+};
+
+export function parse(str: string, options?: ParserOptions): Ast;
