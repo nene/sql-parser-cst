@@ -92,6 +92,16 @@ which preserves all this information:
 }
 ```
 
+Note the following conventions:
+
+- All keywords are preserved in `type: keyword` nodes, which are usually
+  stored in fields named like `someNameKw`.
+- Each node can have `leadingComments` and `trailingComments` fields,
+  which store comments immediately before or after that node.
+- Parenthesis is represented by separate `type: paren_expr` node.
+- The original source code representation of strings, identifiers, keywords, etc
+  is preserved in `text` fields.
+
 ## Acknowledgements
 
 This started as a fork of [node-sql-parser][],
