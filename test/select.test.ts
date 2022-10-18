@@ -145,12 +145,17 @@ describe("select", () => {
       test("SELECT c FROM t1 LEFT OUTER JOIN t2");
       test("SELECT c FROM t1 RIGHT JOIN t2");
       test("SELECT c FROM t1 RIGHT OUTER JOIN t2");
-      test("SELECT c FROM t1 FULL JOIN t2");
-      test("SELECT c FROM t1 FULL OUTER JOIN t2");
       test("SELECT c FROM t1 INNER JOIN t2");
 
       test("SELECT c FROM t1 /*c0*/ FULL /*c1*/ JOIN /*c2*/ t2");
       test("SELECT c FROM t1 /*c0*/ LEFT /*c1*/ OUTER /*c2*/ JOIN /*c3*/ t2");
+    });
+
+    dialect("sqlite", () => {
+      it("supports FULL [OUTER] JOIN", () => {
+        test("SELECT c FROM t1 FULL JOIN t2");
+        test("SELECT c FROM t1 FULL OUTER JOIN t2");
+      });
     });
 
     it("parses join with USING specification", () => {

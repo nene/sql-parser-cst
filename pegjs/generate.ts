@@ -47,7 +47,8 @@ const pickSqlDialect: peggy.Plugin = {
       const useStrictIndex = ast.code.children.indexOf(
         '"use strict";\n' as any
       );
-      const importStmt = `const __RESERVED_KEYWORDS__ = require("../keywords/mysql.keywords.js");\n`;
+      const dialect = (options as any).pickSqlDialect;
+      const importStmt = `const __RESERVED_KEYWORDS__ = require("../keywords/${dialect}.keywords.js");\n`;
       ast.code.children.splice(useStrictIndex + 1, 0, importStmt as any);
     });
   },

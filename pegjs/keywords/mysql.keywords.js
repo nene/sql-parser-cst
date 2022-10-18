@@ -1,40 +1,44 @@
+// All keywords marked as reserved (R) from:
+// https://dev.mysql.com/doc/refman/8.0/en/keywords.html
 const __RESERVED_KEYWORDS__ = {
-  ALTER: true,
-  ALL: true,
+  ACCESSIBLE: true,
   ADD: true,
+  ALL: true,
+  ALTER: true,
+  ANALYZE: true,
   AND: true,
   AS: true,
   ASC: true,
-  ANALYZE: true,
-  ACCESSIBLE: true,
-
+  ASENSITIVE: true,
   BEFORE: true,
   BETWEEN: true,
   BIGINT: true,
+  BINARY: true,
   BLOB: true,
   BOTH: true,
   BY: true,
-  BOOLEAN: true,
-
   CALL: true,
   CASCADE: true,
   CASE: true,
+  CHANGE: true,
   CHAR: true,
+  CHARACTER: true,
   CHECK: true,
   COLLATE: true,
-  // 'COLUMN': true,
+  COLUMN: true,
   CONDITION: true,
   CONSTRAINT: true,
   CONTINUE: true,
   CONVERT: true,
   CREATE: true,
   CROSS: true,
+  CUBE: true,
+  CUME_DIST: true,
   CURRENT_DATE: true,
   CURRENT_TIME: true,
   CURRENT_TIMESTAMP: true,
   CURRENT_USER: true,
   CURSOR: true,
-
   DATABASE: true,
   DATABASES: true,
   DAY_HOUR: true,
@@ -47,58 +51,55 @@ const __RESERVED_KEYWORDS__ = {
   DEFAULT: true,
   DELAYED: true,
   DELETE: true,
+  DENSE_RANK: true,
   DESC: true,
   DESCRIBE: true,
   DETERMINISTIC: true,
   DISTINCT: true,
   DISTINCTROW: true,
   DIV: true,
-  DROP: true,
   DOUBLE: true,
+  DROP: true,
   DUAL: true,
-
-  ELSE: true,
   EACH: true,
+  ELSE: true,
   ELSEIF: true,
+  EMPTY: true,
   ENCLOSED: true,
   ESCAPED: true,
   EXCEPT: true,
   EXISTS: true,
   EXIT: true,
   EXPLAIN: true,
-
   FALSE: true,
-  FULL: true,
-  FROM: true,
   FETCH: true,
+  FIRST_VALUE: true,
   FLOAT: true,
   FLOAT4: true,
   FLOAT8: true,
   FOR: true,
   FORCE: true,
   FOREIGN: true,
+  FROM: true,
   FULLTEXT: true,
   FUNCTION: true,
-
   GENERATED: true,
   GET: true,
-  GO: true,
   GRANT: true,
   GROUP: true,
   GROUPING: true,
   GROUPS: true,
-
   HAVING: true,
   HIGH_PRIORITY: true,
   HOUR_MICROSECOND: true,
   HOUR_MINUTE: true,
   HOUR_SECOND: true,
-
-  // 'IF': true,
+  IF: true,
   IGNORE: true,
   IN: true,
-  INNER: true,
+  INDEX: true,
   INFILE: true,
+  INNER: true,
   INOUT: true,
   INSENSITIVE: true,
   INSERT: true,
@@ -109,21 +110,19 @@ const __RESERVED_KEYWORDS__ = {
   INT4: true,
   INT8: true,
   INTEGER: true,
+  INTERSECT: true,
   INTERVAL: true,
   INTO: true,
   IO_AFTER_GTIDS: true,
   IO_BEFORE_GTIDS: true,
   IS: true,
   ITERATE: true,
-
   JOIN: true,
   JSON_TABLE: true,
-
   KEY: true,
   KEYS: true,
   KILL: true,
-
-  LAG: true, // added in 8.0.2 (reserved)
+  LAG: true,
   LAST_VALUE: true,
   LATERAL: true,
   LEAD: true,
@@ -142,9 +141,9 @@ const __RESERVED_KEYWORDS__ = {
   LONGBLOB: true,
   LONGTEXT: true,
   LOOP: true,
-  LOW_PRIORITY: true, // for lock table
-
+  LOW_PRIORITY: true,
   MASTER_BIND: true,
+  MASTER_SSL_VERIFY_SERVER_CERT: true,
   MATCH: true,
   MAXVALUE: true,
   MEDIUMBLOB: true,
@@ -155,16 +154,14 @@ const __RESERVED_KEYWORDS__ = {
   MINUTE_SECOND: true,
   MOD: true,
   MODIFIES: true,
-
   NATURAL: true,
   NOT: true,
   NO_WRITE_TO_BINLOG: true,
-  NTH_VALUE: true, // added in 8.0.2 (reserved)
-  NTILE: true, // added in 8.0.2 (reserved)
+  NTH_VALUE: true,
+  NTILE: true,
   NULL: true,
   NUMERIC: true,
-
-  OF: true, // added in 8.0.1 (reserved)
+  OF: true,
   ON: true,
   OPTIMIZE: true,
   OPTIMIZER_COSTS: true,
@@ -175,21 +172,19 @@ const __RESERVED_KEYWORDS__ = {
   OUT: true,
   OUTER: true,
   OUTFILE: true,
-  OVER: true, // added in 8.0.2 (reserved)
-
+  OVER: true,
   PARTITION: true,
-  PERCENT_RANK: true, // added in 8.0.2 (reserved)
+  PERCENT_RANK: true,
   PRECISION: true,
   PRIMARY: true,
   PROCEDURE: true,
   PURGE: true,
-
   RANGE: true,
-  RANK: true, // added in 8.0.2 (reserved)
-  READ: true, // for lock table
-  READS: true, // for lock table
-  READ_WRITE: true, // for lock table
-  REAL: true, // for lock table
+  RANK: true,
+  READ: true,
+  READS: true,
+  READ_WRITE: true,
+  REAL: true,
   RECURSIVE: true,
   REFERENCES: true,
   REGEXP: true,
@@ -204,12 +199,12 @@ const __RESERVED_KEYWORDS__ = {
   REVOKE: true,
   RIGHT: true,
   RLIKE: true,
-  ROW: true, // // added in 8.0.2 (reserved)
-  ROWS: true, // // added in 8.0.2 (reserved)
-  ROW_NUMBER: true, // // added in 8.0.2 (reserved)
-
+  ROW: true,
+  ROWS: true,
+  ROW_NUMBER: true,
   SCHEMA: true,
   SCHEMAS: true,
+  SECOND_MICROSECOND: true,
   SELECT: true,
   SENSITIVE: true,
   SEPARATOR: true,
@@ -224,14 +219,13 @@ const __RESERVED_KEYWORDS__ = {
   SQLSTATE: true,
   SQLWARNING: true,
   SQL_BIG_RESULT: true,
-  // 'SQL_CALC_FOUND_ROWS': true,
-  // 'SQL_SMALL_RESULT': true,
+  SQL_CALC_FOUND_ROWS: true,
+  SQL_SMALL_RESULT: true,
   SSL: true,
   STARTING: true,
   STORED: true,
   STRAIGHT_JOIN: true,
   SYSTEM: true,
-
   TABLE: true,
   TERMINATED: true,
   THEN: true,
@@ -242,7 +236,7 @@ const __RESERVED_KEYWORDS__ = {
   TRAILING: true,
   TRIGGER: true,
   TRUE: true,
-
+  UNDO: true,
   UNION: true,
   UNIQUE: true,
   UNLOCK: true,
@@ -254,25 +248,20 @@ const __RESERVED_KEYWORDS__ = {
   UTC_DATE: true,
   UTC_TIME: true,
   UTC_TIMESTAMP: true,
-
   VALUES: true,
   VARBINARY: true,
   VARCHAR: true,
   VARCHARACTER: true,
   VARYING: true,
   VIRTUAL: true,
-
   WHEN: true,
   WHERE: true,
   WHILE: true,
-  WINDOW: true, // added in 8.0.2 (reserved)
+  WINDOW: true,
   WITH: true,
-  WRITE: true, // for lock table
-
+  WRITE: true,
   XOR: true,
-
   YEAR_MONTH: true,
-
   ZEROFILL: true,
 };
 
