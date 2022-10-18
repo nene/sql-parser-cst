@@ -11,7 +11,7 @@ import {
   ColumnOptionKey,
   ColumnOptionNullable,
   ColumnRef,
-  Comment,
+  Whitespace,
   CommonTableExpression,
   CreateTableStatement,
   DataType,
@@ -59,9 +59,9 @@ export function show(
   }
 
   return [
-    showComments(node.leadingComments),
+    showWhitespace(node.leadingComments),
     showNode(node),
-    showComments(node.trailingComments),
+    showWhitespace(node.trailingComments),
   ]
     .filter(isDefined)
     .join(" ");
@@ -146,15 +146,15 @@ function showNode(node: Node): string {
   }
 }
 
-const showComments = (c?: Comment[]): string | undefined => {
-  if (!c) {
+const showWhitespace = (ws?: Whitespace[]): string | undefined => {
+  if (!ws) {
     return undefined;
   }
-  return c.map(showComment).join(" ");
+  return ws.map(showWhitespaceItem).join(" ");
 };
 
-const showComment = (c: Comment): string =>
-  c.type === "line_comment" ? c.text + "\n" : c.text;
+const showWhitespaceItem = (ws: Whitespace): string =>
+  ws.type === "line_comment" ? ws.text + "\n" : ws.text;
 
 const showEmptyStatement = (node: EmptyStatement) => "";
 

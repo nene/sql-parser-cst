@@ -1,12 +1,12 @@
 type Ast = Statement[];
 
 type Comments = {
-  leadingComments?: Comment[];
-  trailingComments?: Comment[];
+  leadingComments?: Whitespace[];
+  trailingComments?: Whitespace[];
 };
 
-type Comment = {
-  type: "block_comment" | "line_comment";
+type Whitespace = {
+  type: "block_comment" | "line_comment" | "newline" | "space";
   text: string;
 };
 
