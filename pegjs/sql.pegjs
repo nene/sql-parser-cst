@@ -1945,8 +1945,12 @@ hexDigit
 
 // separator
 __
-  = xs:(whitespace / comment)* {
-    return xs.filter((ws) => isObject(ws) && options.preserveComments);
+  = xs:(space / newline / comment)* {
+    return xs.filter((ws) => (
+      (options.preserveComments && (ws.type === "line_comment" || ws.type === "block_comment")) ||
+      (options.preserveNewlines && ws.type === "newline") ||
+      (options.preserveSpaces && ws.type === "space")
+    ));
   }
 
 comment
@@ -1988,8 +1992,11 @@ interval_unit
   / KW_UNIT_MINUTE
   / KW_UNIT_SECOND
 
-whitespace =
-  [ \t\n\r]
+space
+  = [ \t]+ { return { type: "space", text: text() }; }
+
+newline
+  = ("\r\n" / "\n") { return { type: "newline", text: text() }; }
 
 EOL
   = EOF
