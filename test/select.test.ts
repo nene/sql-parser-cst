@@ -205,6 +205,12 @@ describe("select", () => {
       });
     });
 
+    dialect("mysql", () => {
+      it("parses STRAIGHT_JOIN", () => {
+        test("SELECT c FROM t1 STRAIGHT_JOIN t2");
+      });
+    });
+
     it("parses join with USING specification", () => {
       test("SELECT c FROM t1 JOIN t2 USING (id)");
       test("SELECT c FROM t1 JOIN t2 USING (col1, col2)");

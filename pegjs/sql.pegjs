@@ -1012,6 +1012,12 @@ join_op
   / cross_join
   / join_type
 
+join_op$mysql
+  = natural_join
+  / cross_join
+  / join_type
+  / KW_STRAIGHT_JOIN
+
 natural_join
   = kw:KW_NATURAL c:__ jt:join_type { return [trailing(kw, c), ...jt]; }
 
