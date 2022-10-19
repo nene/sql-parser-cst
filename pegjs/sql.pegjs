@@ -1151,13 +1151,6 @@ order_by_element
     };
   }
 
-number_or_param
-  = literal_numeric
-  / param
-  / '?' {
-    return "[Not implemented]";
-  }
-
 limit_clause
   = kw:KW_LIMIT c1:__ count:expr c2:__ offkw:KW_OFFSET c3:__ offset:expr  {
     return {
