@@ -1790,6 +1790,13 @@ literal_bool
   }
 
 literal_string "string"
+  = literal_hex_string
+  / literal_bit_string
+  / literal_hex_sequence
+  / literal_single_quoted_string
+  / literal_natural_charset_string
+
+literal_string$mysql "string"
   = charset:charset_introducer c:__ string:literal_string_without_charset {
     return {
       type: "string_with_charset",
@@ -1800,8 +1807,15 @@ literal_string "string"
   / literal_string_without_charset
   / literal_natural_charset_string
 
+literal_string_without_charset // for MySQL only
+  = literal_hex_string
+  / literal_bit_string
+  / literal_hex_sequence
+  / literal_single_quoted_string
+  / literal_double_quoted_string
+
 charset_introducer
-  = "_" cs:charset_name !ident_start { return cs; }
+  = "_" cs:charset_name !ident_part { return cs; }
 
 // these are sorted by length, so we try to match first the longest
 charset_name
@@ -1846,19 +1860,6 @@ charset_name
   / "ucs2"i
   / "hp8"i
   / "gbk"i
-
-literal_string_without_charset
-  = literal_hex_string
-  / literal_bit_string
-  / literal_hex_sequence
-  / literal_single_quoted_string
-
-literal_string_without_charset$mysql
-  = literal_hex_string
-  / literal_bit_string
-  / literal_hex_sequence
-  / literal_single_quoted_string
-  / literal_double_quoted_string
 
 literal_hex_string
   = 'X'i "'" [0-9A-Fa-f]* "'" {

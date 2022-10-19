@@ -13,21 +13,6 @@ describe("literal", () => {
     testExpr(`'hel\\'lo'`);
     testExpr(`'hel''lo'`);
   });
-  it("single-quoted string with charset", () => {
-    expect(parseExpr(`_binary 'hello'`)).toMatchInlineSnapshot(`
-      {
-        "charset": "binary",
-        "string": {
-          "text": "'hello'",
-          "type": "string",
-        },
-        "type": "string_with_charset",
-      }
-    `);
-  });
-  it("single-quoted string with charset and comment", () => {
-    testExpr(`_latin1 /* comment */ 'hello'`);
-  });
 
   dialect("mysql", () => {
     it("double-quoted string", () => {
@@ -42,21 +27,6 @@ describe("literal", () => {
       testExpr(`"hel\\"lo"`);
       testExpr(`"hel""lo"`);
     });
-    it("double-quoted string with charset", () => {
-      expect(parseExpr(`_latin1"hello"`)).toMatchInlineSnapshot(`
-        {
-          "charset": "latin1",
-          "string": {
-            "text": ""hello"",
-            "type": "string",
-          },
-          "type": "string_with_charset",
-        }
-      `);
-    });
-    it("double-quoted string with charset and comments", () => {
-      testExpr(`_latin1 -- comment1\n -- comment2\n 'hello'`);
-    });
   });
 
   it("hex literal", () => {
@@ -67,9 +37,6 @@ describe("literal", () => {
       }
     `);
   });
-  it("hex literal with charset", () => {
-    testExpr(`_utf8 0xAAFF11`);
-  });
 
   it("bit string", () => {
     expect(parseExpr(`b'011001'`)).toMatchInlineSnapshot(`
@@ -78,9 +45,6 @@ describe("literal", () => {
         "type": "string",
       }
     `);
-  });
-  it("bit string with charset", () => {
-    testExpr(`_big5 b'011001'`);
   });
 
   it("hex string", () => {
@@ -91,8 +55,38 @@ describe("literal", () => {
       }
     `);
   });
-  it("hex string with charset", () => {
-    testExpr(`_utf16le X'AFC123'`);
+
+  dialect("mysql", () => {
+    describe("string with charset", () => {
+      it("parses single-quoted string with charset to syntax tree", () => {
+        expect(parseExpr(`_binary 'hello'`)).toMatchInlineSnapshot(`
+          {
+            "charset": "binary",
+            "string": {
+              "text": "'hello'",
+              "type": "string",
+            },
+            "type": "string_with_charset",
+          }
+        `);
+      });
+      it("single-quoted string with charset", () => {
+        testExpr(`_latin1 'hello'`);
+        testExpr(`_latin1 /*c*/ 'hello'`);
+      });
+      it("double-quoted string with charset", () => {
+        testExpr(`_latin1 'hello'`);
+      });
+      it("hex literal with charset", () => {
+        testExpr(`_utf8 0xAAFF11`);
+      });
+      it("bit string with charset", () => {
+        testExpr(`_big5 b'011001'`);
+      });
+      it("hex string with charset", () => {
+        testExpr(`_utf16le X'AFC123'`);
+      });
+    });
   });
 
   it("natural character set string", () => {
