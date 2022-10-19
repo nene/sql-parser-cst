@@ -1520,7 +1520,7 @@ alias_ident
   / s:literal_single_quoted_string { return createIdentifier(s.text); }
   / s:literal_double_quoted_string { return createIdentifier(s.text); }
 
-ident
+ident "identifier"
   = name:ident_name !{ return __RESERVED_KEYWORDS__[name.toUpperCase()] === true; } {
     return createIdentifier(name);
   }
@@ -1762,7 +1762,7 @@ literal_bool
     return { type: "bool", text: kw.text};
   }
 
-literal_string
+literal_string "string"
   = charset:charset_introducer c:__ string:literal_string_without_charset {
     return {
       type: "string_with_charset",
@@ -1919,7 +1919,7 @@ escape_char
 line_terminator
   = [\n\r]
 
-literal_numeric
+literal_numeric "number"
   = int frac? exp? !ident_start {
     return {
       type: 'number',
@@ -1944,7 +1944,7 @@ hexDigit
   = [0-9a-fA-F]
 
 // separator
-__
+__ "whitespace"
   = xs:(space / newline / comment)* {
     return xs.filter((ws) => (
       (options.preserveComments && (ws.type === "line_comment" || ws.type === "block_comment")) ||
