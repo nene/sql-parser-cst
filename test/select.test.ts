@@ -115,11 +115,6 @@ describe("select", () => {
       });
     });
 
-    it("parses multiple comma-separated tables", () => {
-      test("SELECT col FROM tbl1, tbl2, tbl3");
-      test("SELECT col FROM tbl1/*c1*/ , /*c2*/ tbl2");
-    });
-
     it("parses table alias", () => {
       test("SELECT t.col FROM my_db.my_long_table_name AS t");
       test("SELECT t.col FROM my_db.my_long_table_name t");
@@ -139,22 +134,41 @@ describe("select", () => {
       test("SELECT t.col FROM (/*c1*/ SELECT x FROM tbl) /*c3*/ AS /*c4*/ t");
     });
 
-    it("parses joins", () => {
+    it("parses comma-joins", () => {
+      test("SELECT col FROM tbl1, tbl2, tbl3");
+      test("SELECT col FROM tbl1 /*c1*/ , /*c2*/ tbl2");
+    });
+
+    it("parses plain JOIN", () => {
       test("SELECT c FROM t1 JOIN t2");
+      test("SELECT c FROM t1 /*c1*/ JOIN /*c2*/ t2");
+    });
+
+    it("parses LEFT [OUTER] JOIN", () => {
       test("SELECT c FROM t1 LEFT JOIN t2");
       test("SELECT c FROM t1 LEFT OUTER JOIN t2");
+      test("SELECT c FROM t1 /*c1*/ LEFT /*c2*/ JOIN /*c3*/ t2");
+      test("SELECT c FROM t1 /*c1*/ LEFT /*c2*/ OUTER /*c3*/ JOIN /*c4*/ t2");
+    });
+
+    it("parses RIGHT [OUTER] JOIN", () => {
       test("SELECT c FROM t1 RIGHT JOIN t2");
       test("SELECT c FROM t1 RIGHT OUTER JOIN t2");
-      test("SELECT c FROM t1 INNER JOIN t2");
+      test("SELECT c FROM t1 /*c1*/ RIGHT /*c2*/ JOIN /*c3*/ t2");
+      test("SELECT c FROM t1 /*c1*/ RIGHT /*c2*/ OUTER /*c3*/ JOIN /*c4*/ t2");
+    });
 
-      test("SELECT c FROM t1 /*c0*/ FULL /*c1*/ JOIN /*c2*/ t2");
-      test("SELECT c FROM t1 /*c0*/ LEFT /*c1*/ OUTER /*c2*/ JOIN /*c3*/ t2");
+    it("parses INNER JOIN", () => {
+      test("SELECT c FROM t1 INNER JOIN t2");
+      test("SELECT c FROM t1 /*c1*/ INNER /*c2*/ JOIN /*c3*/ t2");
     });
 
     dialect("sqlite", () => {
-      it("supports FULL [OUTER] JOIN", () => {
+      it("parses FULL [OUTER] JOIN", () => {
         test("SELECT c FROM t1 FULL JOIN t2");
         test("SELECT c FROM t1 FULL OUTER JOIN t2");
+        test("SELECT c FROM t1 /*c1*/ FULL /*c2*/ JOIN /*c3*/ t2");
+        test("SELECT c FROM t1 /*c1*/ FULL /*c2*/ OUTER /*c3*/ JOIN /*c4*/ t2");
       });
     });
 
