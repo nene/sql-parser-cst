@@ -3,6 +3,7 @@ type Ast = Statement[];
 type BaseNode = {
   leading?: Whitespace[];
   trailing?: Whitespace[];
+  range?: [number, number];
 };
 
 type Whitespace = {
