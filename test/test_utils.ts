@@ -13,7 +13,6 @@ export const preserveAll: ParserOptions = {
 export function parse(sql: string, options: ParserOptions = {}) {
   return parseSql(sql, {
     dialect: __SQL_DIALECT__,
-    // preserveComments: true,
     ...options,
   });
 }
@@ -33,8 +32,8 @@ export function testExpr(expr: string) {
   expect(show(parse(`SELECT ${expr}`, preserveAll))).toBe(`SELECT ${expr}`);
 }
 
-export function parseExpr(expr: string) {
-  const stmt = parse(`SELECT ${expr}`, { preserveComments: true })[0];
+export function parseExpr(expr: string, options?: ParserOptions) {
+  const stmt = parse(`SELECT ${expr}`, options)[0];
   if (stmt.type !== "select_statement") {
     throw new Error(`Expected select_statement, instead got ${stmt.type}`);
   }
