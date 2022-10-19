@@ -144,11 +144,22 @@ describe("select", () => {
       test("SELECT c FROM t1 /*c1*/ JOIN /*c2*/ t2");
     });
 
+    it("parses NATURAL JOIN", () => {
+      test("SELECT c FROM t1 NATURAL JOIN t2");
+      test("SELECT c FROM t1 /*c1*/ NATURAL /*c2*/ JOIN /*c3*/ t2");
+    });
+
     it("parses LEFT [OUTER] JOIN", () => {
       test("SELECT c FROM t1 LEFT JOIN t2");
       test("SELECT c FROM t1 LEFT OUTER JOIN t2");
       test("SELECT c FROM t1 /*c1*/ LEFT /*c2*/ JOIN /*c3*/ t2");
       test("SELECT c FROM t1 /*c1*/ LEFT /*c2*/ OUTER /*c3*/ JOIN /*c4*/ t2");
+    });
+
+    it("parses NATURAL LEFT [OUTER] JOIN", () => {
+      test("SELECT c FROM t1 NATURAL LEFT JOIN t2");
+      test("SELECT c FROM t1 NATURAL LEFT OUTER JOIN t2");
+      test("SELECT c FROM t1 /*c1*/ NATURAL /*c2*/ LEFT /*c3*/ JOIN /*c4*/ t2");
     });
 
     it("parses RIGHT [OUTER] JOIN", () => {
@@ -158,9 +169,20 @@ describe("select", () => {
       test("SELECT c FROM t1 /*c1*/ RIGHT /*c2*/ OUTER /*c3*/ JOIN /*c4*/ t2");
     });
 
+    it("parses NATURAL RIGHT [OUTER] JOIN", () => {
+      test("SELECT c FROM t1 NATURAL RIGHT JOIN t2");
+      test("SELECT c FROM t1 NATURAL RIGHT OUTER JOIN t2");
+      test("SELECT c FROM t1 /*c1*/ NATURAL /*c2*/ RIGHT /*c3*/ JOIN /*c4*/ t2");
+    });
+
     it("parses INNER JOIN", () => {
       test("SELECT c FROM t1 INNER JOIN t2");
       test("SELECT c FROM t1 /*c1*/ INNER /*c2*/ JOIN /*c3*/ t2");
+    });
+
+    it("parses NATURAL INNER JOIN", () => {
+      test("SELECT c FROM t1 NATURAL INNER JOIN t2");
+      test("SELECT c FROM t1 /*c1*/ NATURAL /*c2*/ INNER /*c3*/ JOIN /*c4*/ t2");
     });
 
     dialect("sqlite", () => {
@@ -169,6 +191,12 @@ describe("select", () => {
         test("SELECT c FROM t1 FULL OUTER JOIN t2");
         test("SELECT c FROM t1 /*c1*/ FULL /*c2*/ JOIN /*c3*/ t2");
         test("SELECT c FROM t1 /*c1*/ FULL /*c2*/ OUTER /*c3*/ JOIN /*c4*/ t2");
+      });
+
+      it("parses NATURAL FULL [OUTER] JOIN", () => {
+        test("SELECT c FROM t1 NATURAL FULL JOIN t2");
+        test("SELECT c FROM t1 NATURAL FULL OUTER JOIN t2");
+        test("SELECT c FROM t1 /*c1*/ NATURAL /*c2*/ FULL /*c3*/ JOIN /*c4*/ t2");
       });
     });
 

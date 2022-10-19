@@ -1008,6 +1008,10 @@ table_base
   }
 
 join_op
+  = kw:KW_NATURAL c:__ jt:join_type { return [trailing(kw, c), ...jt]; }
+  / join_type
+
+join_type
   = kws:(KW_LEFT __ KW_OUTER __ KW_JOIN) { return createKeywordList(kws); }
   / kws:(KW_LEFT __ KW_JOIN) { return createKeywordList(kws); }
   / kws:(KW_RIGHT __ KW_OUTER __ KW_JOIN) { return createKeywordList(kws); }
@@ -1017,7 +1021,7 @@ join_op
   / kws:(KW_INNER __ KW_JOIN) { return createKeywordList(kws); }
   / kw:KW_JOIN { return createKeywordList([kw]); }
 
-join_op$mysql
+join_type$mysql
   = kws:(KW_LEFT __ KW_OUTER __ KW_JOIN) { return createKeywordList(kws); }
   / kws:(KW_LEFT __ KW_JOIN) { return createKeywordList(kws); }
   / kws:(KW_RIGHT __ KW_OUTER __ KW_JOIN) { return createKeywordList(kws); }
@@ -2266,6 +2270,7 @@ KW_MEMORY              = kw:"MEMORY"i              !ident_part { return createKe
 KW_MIN                 = kw:"MIN"i                 !ident_part { return createKeyword(kw); }
 KW_MIN_ROWS            = kw:"MIN_ROWS"i            !ident_part { return createKeyword(kw); }
 KW_MOD                 = kw:"MOD"i                 !ident_part { return createKeyword(kw); }
+KW_NATURAL             = kw:"NATURAL"i             !ident_part { return createKeyword(kw); }
 KW_NO                  = kw:"NO"i                  !ident_part { return createKeyword(kw); }
 KW_NOT                 = kw:"NOT"i                 !ident_part { return createKeyword(kw); }
 KW_NULL                = kw:"NULL"i                !ident_part { return createKeyword(kw); }
