@@ -1008,8 +1008,15 @@ table_base
   }
 
 join_op
-  = kw:KW_NATURAL c:__ jt:join_type { return [trailing(kw, c), ...jt]; }
+  = natural_join
+  / cross_join
   / join_type
+
+natural_join
+  = kw:KW_NATURAL c:__ jt:join_type { return [trailing(kw, c), ...jt]; }
+
+cross_join
+  = kws:(KW_CROSS __ KW_JOIN) { return createKeywordList(kws); }
 
 join_type
   = kws:(KW_LEFT __ KW_OUTER __ KW_JOIN) { return createKeywordList(kws); }
@@ -2196,6 +2203,7 @@ KW_CONNECTION          = kw:"CONNECTION"i          !ident_part { return createKe
 KW_CONSTRAINT          = kw:"CONSTRAINT"i          !ident_part { return createKeyword(kw); }
 KW_COUNT               = kw:"COUNT"i               !ident_part { return createKeyword(kw); }
 KW_CREATE              = kw:"CREATE"i              !ident_part { return createKeyword(kw); }
+KW_CROSS               = kw:"CROSS"i               !ident_part { return createKeyword(kw); }
 KW_CURRENT_DATE        = kw:"CURRENT_DATE"i        !ident_part { return createKeyword(kw); }
 KW_CURRENT_TIME        = kw:"CURRENT_TIME"i        !ident_part { return createKeyword(kw); }
 KW_CURRENT_TIMESTAMP   = kw:"CURRENT_TIMESTAMP"i   !ident_part { return createKeyword(kw); }

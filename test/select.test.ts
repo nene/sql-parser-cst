@@ -185,6 +185,11 @@ describe("select", () => {
       test("SELECT c FROM t1 /*c1*/ NATURAL /*c2*/ INNER /*c3*/ JOIN /*c4*/ t2");
     });
 
+    it("parses CROSS JOIN", () => {
+      test("SELECT c FROM t1 CROSS JOIN t2");
+      test("SELECT c FROM t1 /*c1*/ CROSS /*c2*/ JOIN /*c3*/ t2");
+    });
+
     dialect("sqlite", () => {
       it("parses FULL [OUTER] JOIN", () => {
         test("SELECT c FROM t1 FULL JOIN t2");
