@@ -1159,8 +1159,25 @@ number_or_param
   }
 
 limit_clause
-  = KW_LIMIT __ i1:(number_or_param) __ tail:((COMMA / KW_OFFSET) __ number_or_param)? {
-    return "[Not implemented]";
+  = kw:KW_LIMIT c1:__ count:expr c2:__ offkw:KW_OFFSET c3:__ offset:expr  {
+    return {
+      type: "limit_clause",
+      limitKw: kw,
+      count: withComments(count, { leading: c1, trailing: c2 }),
+      offsetKw: offkw,
+      offset: leading(offset, c3),
+    };
+  }
+  / kw:KW_LIMIT c1:__ offset:expr c2:__ COMMA c3:__ count:expr  {
+    return {
+      type: "limit_clause",
+      limitKw: kw,
+      offset: withComments(offset, { leading: c1, trailing: c2 }),
+      count: leading(count, c3),
+    };
+  }
+  / kw:KW_LIMIT c:__ count:expr {
+    return { type: "limit_clause", limitKw: kw, count: leading(count, c) };
   }
 
 update_stmt

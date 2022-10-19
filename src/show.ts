@@ -39,6 +39,7 @@ import {
   UnaryExpr,
   WhereClause,
   WithClause,
+  LimitClause,
 } from "../pegjs/sql";
 import { isDefined } from "./util";
 
@@ -89,6 +90,8 @@ function showNode(node: Node): string {
       return showHavingClause(node);
     case "order_by_clause":
       return showOrderByClause(node);
+    case "limit_clause":
+      return showLimitClause(node);
     case "join":
       return showJoin(node);
     case "join_specification":
@@ -195,6 +198,16 @@ const showHavingClause = (node: HavingClause) =>
 
 const showOrderByClause = (node: OrderByClause) =>
   show(node.orderByKw) + show(node.specifications, ",");
+
+const showLimitClause = (node: LimitClause) => {
+  if (node.offsetKw) {
+    return show([node.limitKw, node.count, node.offsetKw, node.offset]);
+  } else if (node.offset) {
+    return show([node.limitKw, node.offset, ",", node.count]);
+  } else {
+    return show([node.limitKw, node.count]);
+  }
+};
 
 const showSortSpecification = (node: SortSpecification) =>
   show([node.expr, node.orderKw]);

@@ -63,7 +63,8 @@ type Clause =
   | WhereClause
   | GroupByClause
   | HavingClause
-  | OrderByClause;
+  | OrderByClause
+  | LimitClause;
 
 type WithClause = BaseNode & {
   type: "with_clause";
@@ -116,6 +117,14 @@ type OrderByClause = BaseNode & {
   type: "order_by_clause";
   orderByKw: Keyword[];
   specifications: Expr[];
+};
+
+type LimitClause = BaseNode & {
+  type: "limit_clause";
+  limitKw: Keyword;
+  count: Expr;
+  offsetKw?: Keyword;
+  offset?: Expr;
 };
 
 type Join = BaseNode & {
