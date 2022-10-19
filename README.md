@@ -5,7 +5,7 @@ SQL Parser which produces a **Concrete Syntax Tree** (CST).
 Unlike a more usual parser which produces an Abstract Syntax Tree (AST),
 the goal of this parser is to preserve all the syntax elements present
 in the parsed source code, with the goal of being able to re-create
-this source code as close to the original as possible.
+the exact original source code.
 
 For example, given the following SQL:
 
@@ -40,12 +40,13 @@ An AST-parser might parse this to the following abstract syntax tree:
 Note that the above AST is missing the following information:
 
 - comments
+- whitespace (e.g. where the newlines are)
 - case of keywords (e.g. whether `AS` or `as` was written)
 - whether an identifier was quoted or not (and with what kind of quotes)
-- whether an expression is wrapped in parenthesis or not.
+- whether an expression is wrapped in additional (unnecessary) parenthesis.
 
-In contrast, this CST parses produces the following concrete syntax tree,
-which preserves all this information:
+In contrast, this CST parser produces the following concrete syntax tree,
+which preserves all of this information:
 
 ```json
 {
@@ -83,10 +84,17 @@ which preserves all this information:
           "table": { "type": "keyword", "text": "persons" }
         }
       ],
-      "leading": [{ "type": "line_comment", "text": "-- use important table" }]
+      "leading": [
+        { "type": "newline", "text": "\n" },
+        { "type": "line_comment", "text": "-- use important table" },
+        { "type": "newline", "text": "\n" }
+      ]
     }
   ],
-  "leading": [{ "type": "block_comment", "text": "/* My query */" }]
+  "leading": [
+    { "type": "block_comment", "text": "/* My query */" },
+    { "type": "newline", "text": "\n" }
+  ]
 }
 ```
 
@@ -94,11 +102,14 @@ Note the following conventions:
 
 - All keywords are preserved in `type: keyword` nodes, which are usually
   stored in fields named like `someNameKw`.
-- Each node can have `leading` and `trailing` fields,
-  which store comments immediately before or after that node.
 - Parenthesis is represented by separate `type: paren_expr` node.
 - The original source code representation of strings, identifiers, keywords, etc
   is preserved in `text` fields.
+- Each node can have `leading` and `trailing` fields,
+  which store comments and newlines immediately before or after that node.
+  These fields will also contain information about regular spaces/tabs
+  (e.g. `{"type": "space", "text": " \t"}`). This has been left out from this
+  example for the sake of simplicity.
 
 ## Acknowledgements
 
