@@ -308,6 +308,7 @@ export type ParserOptions = {
   preserveComments?: boolean;
   preserveNewlines?: boolean;
   preserveSpaces?: boolean;
+  includeRange?: boolean;
 };
 
 export function parse(str: string, options?: ParserOptions): Ast;

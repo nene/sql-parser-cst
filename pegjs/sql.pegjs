@@ -52,6 +52,14 @@
   const leading = (node, leading) => withComments(node, { leading });
   const trailing = (node, trailing) => withComments(node, { trailing });
 
+  const loc = (node) => {
+    if (!options.includeRange) {
+      return node;
+    }
+    const {start, end} = range();
+    return { ...node, range: [start, end] };
+  };
+
   function createBinaryExprChain(head, tail) {
     return tail.reduce((left, [c1, op, c2, right]) => createBinaryExpr(left, c1, op, c2, right), head);
   }
@@ -1949,10 +1957,10 @@ line_terminator
 
 literal_numeric "number"
   = int frac? exp? !ident_start {
-    return {
+    return loc({
       type: 'number',
       text: text(),
-    };
+    });
   }
 
 int
