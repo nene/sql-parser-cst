@@ -19,6 +19,10 @@ describe("location", () => {
                       "type": "number",
                     },
                     "operator": "+",
+                    "range": [
+                      8,
+                      15,
+                    ],
                     "right": {
                       "column": {
                         "range": [

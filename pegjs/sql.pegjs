@@ -60,8 +60,20 @@
     return { ...node, range: [start, end] };
   };
 
+  const deriveLoc = (binExpr) => {
+    if (!options.includeRange) {
+      return binExpr;
+    }
+    const start = binExpr.left.range[0];
+    const end = binExpr.right.range[1];
+    return { ...binExpr, range: [start, end] };
+  }
+
   function createBinaryExprChain(head, tail) {
-    return tail.reduce((left, [c1, op, c2, right]) => createBinaryExpr(left, c1, op, c2, right), head);
+    return tail.reduce(
+      (left, [c1, op, c2, right]) => deriveLoc(createBinaryExpr(left, c1, op, c2, right)),
+      head
+    );
   }
 
   function createBinaryExpr(left, c1, op, c2, right) {
