@@ -1,46 +1,5 @@
-import {
-  Alias,
-  AllColumns,
-  BetweenExpr,
-  BinaryExpr,
-  BoolLiteral,
-  ColumnDefinition,
-  ColumnOptionAutoIncrement,
-  ColumnOptionComment,
-  ColumnOptionDefault,
-  ColumnOptionKey,
-  ColumnOptionNullable,
-  ColumnRef,
-  Whitespace,
-  CommonTableExpression,
-  CreateTableStatement,
-  DataType,
-  DateTimeLiteral,
-  EmptyStatement,
-  ExprList,
-  FromClause,
-  GroupByClause,
-  HavingClause,
-  Identifier,
-  Join,
-  JoinSpecification,
-  Keyword,
-  Node,
-  NullLiteral,
-  NumberLiteral,
-  OrderByClause,
-  ParenExpr,
-  SelectClause,
-  SelectStatement,
-  SortSpecification,
-  StringLiteral,
-  StringWithCharset,
-  TableRef,
-  UnaryExpr,
-  WhereClause,
-  WithClause,
-  LimitClause,
-} from "../pegjs/sql";
+import { Whitespace, Node } from "../pegjs/sql";
+import { cstTransformer } from "./cstTransformer";
 import { isDefined } from "./util";
 
 type NodeArray = (Node | NodeArray | string | undefined)[];
@@ -68,87 +27,6 @@ export function show(
     .join("");
 }
 
-function showNode(node: Node): string {
-  switch (node.type) {
-    case "empty_statement":
-      return showEmptyStatement(node);
-    case "select_statement":
-      return showSelectStatement(node);
-    case "with_clause":
-      return showWithClause(node);
-    case "common_table_expression":
-      return showCommonTableExpression(node);
-    case "select_clause":
-      return showSelectClause(node);
-    case "from_clause":
-      return showFromClause(node);
-    case "where_clause":
-      return showWhereClause(node);
-    case "group_by_clause":
-      return showGroupByClause(node);
-    case "having_clause":
-      return showHavingClause(node);
-    case "order_by_clause":
-      return showOrderByClause(node);
-    case "limit_clause":
-      return showLimitClause(node);
-    case "join":
-      return showJoin(node);
-    case "join_specification":
-      return showJoinSpecification(node);
-    case "sort_specification":
-      return showSortSpecification(node);
-    case "create_table_statement":
-      return showCreateTableStatement(node);
-    case "column_definition":
-      return showColumnDefinition(node);
-    case "column_option_nullable":
-    case "column_option_auto_increment":
-    case "column_option_key":
-      return showColumnOption(node);
-    case "column_option_default":
-      return showColumnOptionDefault(node);
-    case "column_option_comment":
-      return showColumnOptionComment(node);
-    case "data_type":
-      return showDataType(node);
-    case "alias":
-      return showAlias(node);
-    case "all_columns":
-      return showAllColumns(node);
-    case "expr_list":
-      return showExprList(node);
-    case "paren_expr":
-      return showParenExpr(node);
-    case "binary_expr":
-      return showBinaryExpr(node);
-    case "unary_expr":
-      return showUnaryExpr(node);
-    case "between_expr":
-      return showBetweenExpr(node);
-    case "string":
-      return showLiteral(node);
-    case "number":
-      return showLiteral(node);
-    case "bool":
-      return showLiteral(node);
-    case "null":
-      return showLiteral(node);
-    case "datetime":
-      return showDateTimeLiteral(node);
-    case "keyword":
-      return showKeyword(node);
-    case "string_with_charset":
-      return showStringWithCharset(node);
-    case "column_ref":
-      return showColumnRef(node);
-    case "table_ref":
-      return showTableRef(node);
-    case "identifier":
-      return showIdentifier(node);
-  }
-}
-
 const showWhitespace = (ws?: Whitespace[]): string | undefined => {
   if (!ws) {
     return undefined;
@@ -158,126 +36,95 @@ const showWhitespace = (ws?: Whitespace[]): string | undefined => {
 
 const showWhitespaceItem = (ws: Whitespace): string => ws.text;
 
-const showEmptyStatement = (node: EmptyStatement) => "";
+const showNode = cstTransformer<string>({
+  empty_statement: () => "",
 
-const showSelectStatement = (node: SelectStatement) => show(node.clauses);
+  // SELECT statement
+  select_statement: (node) => show(node.clauses),
+  // WITH
+  with_clause: (node) =>
+    show([node.withKw, node.recursiveKw, show(node.tables, ",")]),
+  common_table_expression: (node) =>
+    show([
+      node.table,
+      node.columns.length > 0 ? `(${show(node.columns, ",")})` : undefined,
+      node.asKw,
+      node.optionKw,
+      node.expr,
+    ]),
+  // SELECT
+  select_clause: (node) =>
+    show([node.selectKw, node.options.length > 0 ? node.options : undefined]) +
+    show(node.columns, ","),
+  // FROM
+  from_clause: (node) => show([node.fromKw, node.tables]),
+  join: (node) => show([node.operator, node.table, node.specification]),
+  join_specification: (node) => show([node.kw, node.expr]),
+  sort_specification: (node) => show([node.expr, node.orderKw]),
+  // WHERE .. GROUP BY .. HAVING .. ORDER BY
+  where_clause: (node) => show([node.whereKw, node.expr]),
+  group_by_clause: (node) => show(node.groupByKw) + show(node.columns, ","),
+  having_clause: (node) => show([node.havingKw, node.expr]),
+  order_by_clause: (node) =>
+    show(node.orderByKw) + show(node.specifications, ","),
+  // LIMIT
+  limit_clause: (node) => {
+    if (node.offsetKw) {
+      return show([node.limitKw, node.count, node.offsetKw, node.offset]);
+    } else if (node.offset) {
+      return show([node.limitKw, node.offset, ",", node.count]);
+    } else {
+      return show([node.limitKw, node.count]);
+    }
+  },
 
-const showWithClause = (node: WithClause) =>
-  show([node.withKw, node.recursiveKw, show(node.tables, ",")]);
+  // CREATE TABLE statement
+  create_table_statement: (node) =>
+    show([
+      node.createKw,
+      node.temporaryKw,
+      node.tableKw,
+      node.ifNotExistsKw,
+      node.table,
+      "(" + show(node.columns, ",") + ")",
+    ]),
+  column_definition: (node) =>
+    show([
+      node.name,
+      node.dataType,
+      node.options.length > 0 ? node.options : undefined,
+    ]),
+  column_option_nullable: (node) => show(node.kw),
+  column_option_auto_increment: (node) => show(node.kw),
+  column_option_key: (node) => show(node.kw),
+  column_option_default: (node) => show([node.kw, node.expr]),
+  column_option_comment: (node) => show([node.kw, node.value]),
 
-const showCommonTableExpression = (node: CommonTableExpression) =>
-  show([
-    node.table,
-    node.columns.length > 0 ? `(${show(node.columns, ",")})` : undefined,
-    node.asKw,
-    node.optionKw,
-    node.expr,
-  ]);
+  // Expressions
+  expr_list: (node) => show(node.children, ","),
+  paren_expr: (node) => "(" + show(node.expr) + ")",
+  binary_expr: (node) => show([node.left, node.operator, node.right]),
+  unary_expr: (node) => show([node.operator, node.expr]),
+  between_expr: (node) =>
+    show([node.left, node.betweenKw, node.begin, node.andKw, node.end]),
+  datetime: (node) => show([node.kw, node.string]),
+  string_with_charset: (node) => "_" + node.charset + show(node.string),
 
-const showSelectClause = (node: SelectClause) =>
-  show([node.selectKw, node.options.length > 0 ? node.options : undefined]) +
-  show(node.columns, ",");
+  // Data types
+  data_type: (node) =>
+    show(node.nameKw) + (node.params ? "(" + show(node.params, ",") + ")" : ""),
 
-const showFromClause = (node: FromClause) => {
-  return show([node.fromKw, node.tables]);
-};
+  // Tables & columns
+  column_ref: (node) => show([node.table, node.column], "."),
+  table_ref: (node) => show([node.db, node.table], "."),
+  alias: (node) => show([node.expr, node.asKw, node.alias]),
+  all_columns: () => "*",
 
-const showJoin = (node: Join) =>
-  show([node.operator, node.table, node.specification]);
-
-const showJoinSpecification = (node: JoinSpecification) =>
-  show([node.kw, node.expr]);
-
-const showWhereClause = (node: WhereClause) => show([node.whereKw, node.expr]);
-
-const showGroupByClause = (node: GroupByClause) =>
-  show(node.groupByKw) + show(node.columns, ",");
-
-const showHavingClause = (node: HavingClause) =>
-  show([node.havingKw, node.expr]);
-
-const showOrderByClause = (node: OrderByClause) =>
-  show(node.orderByKw) + show(node.specifications, ",");
-
-const showLimitClause = (node: LimitClause) => {
-  if (node.offsetKw) {
-    return show([node.limitKw, node.count, node.offsetKw, node.offset]);
-  } else if (node.offset) {
-    return show([node.limitKw, node.offset, ",", node.count]);
-  } else {
-    return show([node.limitKw, node.count]);
-  }
-};
-
-const showSortSpecification = (node: SortSpecification) =>
-  show([node.expr, node.orderKw]);
-
-const showCreateTableStatement = (node: CreateTableStatement) =>
-  show([
-    node.createKw,
-    node.temporaryKw,
-    node.tableKw,
-    node.ifNotExistsKw,
-    node.table,
-    "(" + show(node.columns, ",") + ")",
-  ]);
-
-const showColumnDefinition = (node: ColumnDefinition) =>
-  show([
-    node.name,
-    node.dataType,
-    node.options.length > 0 ? node.options : undefined,
-  ]);
-
-const showColumnOption = (
-  node: ColumnOptionNullable | ColumnOptionAutoIncrement | ColumnOptionKey
-) => show(node.kw);
-
-const showColumnOptionDefault = (node: ColumnOptionDefault) =>
-  show([node.kw, node.expr]);
-
-const showColumnOptionComment = (node: ColumnOptionComment) =>
-  show([node.kw, node.value]);
-
-const showDataType = (node: DataType) =>
-  show(node.nameKw) + (node.params ? "(" + show(node.params, ",") + ")" : "");
-
-const showAlias = (node: Alias) => show([node.expr, node.asKw, node.alias]);
-
-const showAllColumns = (node: AllColumns) => "*";
-
-const showLiteral = (
-  node: StringLiteral | NumberLiteral | BoolLiteral | NullLiteral
-) => node.text;
-
-const showDateTimeLiteral = (node: DateTimeLiteral) =>
-  show([node.kw, node.string]);
-
-const showExprList = (node: ExprList) => show(node.children, ",");
-
-const showParenExpr = (node: ParenExpr) => "(" + show(node.expr) + ")";
-
-const showBinaryExpr = (node: BinaryExpr) =>
-  show([node.left, node.operator, node.right]);
-
-const showUnaryExpr = (node: UnaryExpr) => {
-  if (typeof node.operator === "string") {
-    return show([node.operator, node.expr]);
-  } else {
-    return show([node.operator, node.expr]);
-  }
-};
-
-const showBetweenExpr = (node: BetweenExpr) =>
-  show([node.left, node.betweenKw, node.begin, node.andKw, node.end]);
-
-const showKeyword = (kw: Keyword) => kw.text;
-
-const showStringWithCharset = (node: StringWithCharset) =>
-  "_" + node.charset + show(node.string);
-
-const showColumnRef = (node: ColumnRef) => show([node.table, node.column], ".");
-
-const showTableRef = (node: TableRef) => show([node.db, node.table], ".");
-
-const showIdentifier = (node: Identifier) => node.text;
+  // Basic language elements
+  keyword: (node) => node.text,
+  identifier: (node) => node.text,
+  string: (node) => node.text,
+  number: (node) => node.text,
+  bool: (node) => node.text,
+  null: (node) => node.text,
+});
