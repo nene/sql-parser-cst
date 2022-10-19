@@ -1,4 +1,4 @@
-import { test } from "./test_utils";
+import { dialect, test } from "./test_utils";
 
 describe("select WITH", () => {
   it("parses basic syntax", () => {
@@ -23,9 +23,11 @@ describe("select WITH", () => {
     test("WITH t1 AS (SELECT 1) /*c1*/, /*c2*/ t2 AS (SELECT 2) SELECT t1.name");
   });
 
-  it("supports MATERIALIZED & NOT MATERIALIZED options", () => {
-    test("WITH t1 AS MATERIALIZED (SELECT 1) SELECT t1.name");
-    test("WITH t1 AS NOT MATERIALIZED (SELECT 1) SELECT t1.name");
-    test("WITH t1 AS /*c1*/ NOT /*c2*/ MATERIALIZED /*c3*/ (SELECT 1) SELECT t1.name");
+  dialect("sqlite", () => {
+    it("supports MATERIALIZED & NOT MATERIALIZED options", () => {
+      test("WITH t1 AS MATERIALIZED (SELECT 1) SELECT t1.name");
+      test("WITH t1 AS NOT MATERIALIZED (SELECT 1) SELECT t1.name");
+      test("WITH t1 AS /*c1*/ NOT /*c2*/ MATERIALIZED /*c3*/ (SELECT 1) SELECT t1.name");
+    });
   });
 });
