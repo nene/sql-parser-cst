@@ -3,9 +3,10 @@
 SQL Parser which produces a **Concrete Syntax Tree** (CST).
 
 Unlike a more usual parser which produces an Abstract Syntax Tree (AST),
-the goal of this parser is to preserve all the syntax elements present
-in the parsed source code, with the goal of being able to re-create
-the exact original source code.
+this parser preserves all the syntax elements present in the parsed source code,
+with the goal of being able to re-create the exact original source code.
+
+## AST versus CST-parsers
 
 For example, given the following SQL:
 
