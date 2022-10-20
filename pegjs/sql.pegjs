@@ -33,6 +33,9 @@
       node = setLast(node, withComments(last(node), { trailing }));
       return node;
     }
+    if (typeof node !== "object") {
+      throw new Error(`Expected Node object, instead got ${JSON.stringify(node)}`);
+    }
     if (leading && leading.length) {
       if (node.leading) {
         throw new Error("withComments(): Node already has leading");

@@ -22,8 +22,12 @@ type TransformMap<T> = {
  */
 export function cstTransformer<T>(map: TransformMap<T>): (node: Node) => T {
   return (node: Node) => {
-    return (
-      map[node.type] as (e: Extract<Node, { type: typeof node["type"] }>) => T
-    )(node);
+    const fn = map[node.type] as (
+      e: Extract<Node, { type: typeof node["type"] }>
+    ) => T;
+    if (!fn) {
+      throw new Error(`No transform map entry for ${node.type}`);
+    }
+    return fn(node);
   };
 }
