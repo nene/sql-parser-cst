@@ -2133,6 +2133,15 @@ type_name
   / KW_ENUM
   / KW_SET
 
+
+// Special characters
+DOT           = '.'
+COMMA         = ','
+STAR          = '*'
+LPAREN        = '('
+RPAREN        = ')'
+SEMICOLON     = ';'
+
 // All keywords (sorted alphabetically)
 KW_ACTION              = kw:"ACTION"i              !ident_part { return loc(createKeyword(kw)); }
 KW_ADD                 = kw:"ADD"i                 !ident_part { return loc(createKeyword(kw)); }
@@ -2337,11 +2346,3 @@ KW_WITH                = kw:"WITH"i                !ident_part { return loc(crea
 KW_XOR                 = kw:"XOR"i                 !ident_part { return loc(createKeyword(kw)); }
 KW_YEAR                = kw:"YEAR"i                !ident_part { return loc(createKeyword(kw)); }
 KW_ZEROFILL            = kw:"ZEROFILL"i            !ident_part { return loc(createKeyword(kw)); }
-
-// Special characters
-DOT           = '.'
-COMMA         = ','
-STAR          = '*'
-LPAREN        = '('
-RPAREN        = ')'
-SEMICOLON     = ';'
