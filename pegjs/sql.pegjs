@@ -2020,46 +2020,6 @@ digits
 hexDigit
   = [0-9a-fA-F]
 
-// separator
-__ "whitespace"
-  = xs:(space / newline / comment)* {
-    return xs.filter((ws) => (
-      (options.preserveComments && (ws.type === "line_comment" || ws.type === "block_comment")) ||
-      (options.preserveNewlines && ws.type === "newline") ||
-      (options.preserveSpaces && ws.type === "space")
-    ));
-  }
-
-comment
-  = block_comment
-  / line_comment
-  / pound_sign_comment
-
-block_comment
-  = "/*" (!"*/" char)* "*/" {
-    return {
-      type: "block_comment",
-      text: text(),
-    };
-  }
-
-line_comment
-  = "--" (!EOL char)* {
-    return {
-      type: "line_comment",
-      text: text(),
-    };
-  }
-
-pound_sign_comment
-  = "#" (!EOL char)* {
-    return {
-      type: "line_comment",
-      text: text(),
-    };
-  }
-
-char = .
 
 interval_unit
   = KW_UNIT_YEAR
@@ -2069,17 +2029,6 @@ interval_unit
   / KW_UNIT_MINUTE
   / KW_UNIT_SECOND
 
-space
-  = [ \t]+ { return { type: "space", text: text() }; }
-
-newline
-  = ("\r\n" / "\n") { return { type: "newline", text: text() }; }
-
-EOL
-  = EOF
-  / [\n\r]
-
-EOF = !.
 
 data_type
   = kw:type_name c:__ params:type_params {
@@ -2133,8 +2082,59 @@ type_name
   / KW_ENUM
   / KW_SET
 
+// Optional whitespace (or comments)
+__ "whitespace"
+  = xs:(space / newline / comment)* {
+    return xs.filter((ws) => (
+      (options.preserveComments && (ws.type === "line_comment" || ws.type === "block_comment")) ||
+      (options.preserveNewlines && ws.type === "newline") ||
+      (options.preserveSpaces && ws.type === "space")
+    ));
+  }
+
+// Comments
+comment
+  = block_comment
+  / line_comment
+  / pound_sign_comment
+
+block_comment
+  = "/*" (!"*/" char)* "*/" {
+    return {
+      type: "block_comment",
+      text: text(),
+    };
+  }
+
+line_comment
+  = "--" (!EOL char)* {
+    return {
+      type: "line_comment",
+      text: text(),
+    };
+  }
+
+pound_sign_comment
+  = "#" (!EOL char)* {
+    return {
+      type: "line_comment",
+      text: text(),
+    };
+  }
+
+// Whitespace
+space
+  = [ \t]+ { return { type: "space", text: text() }; }
+
+newline
+  = ("\r\n" / "\n") { return { type: "newline", text: text() }; }
+
+// Any character
+char = .
 
 // Special characters
+EOL           = EOF / [\n\r]
+EOF           = !.
 DOT           = '.'
 COMMA         = ','
 STAR          = '*'
