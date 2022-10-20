@@ -173,10 +173,8 @@ statement
   / create_view_stmt
   / truncate_stmt
   / rename_stmt
-  / call_stmt
   / use_stmt
   / alter_table_stmt
-  / set_stmt
   / lock_stmt
   / unlock_stmt
   / show_stmt
@@ -186,7 +184,6 @@ statement
   / insert_no_columns_stmt
   / insert_into_set
   / delete_stmt
-  / proc_stmt
   / empty_stmt
 
 empty_stmt
@@ -677,13 +674,6 @@ rename_stmt
       return "[Not implemented]";
     }
 
-set_stmt
-  = KW_SET __
-  kw: (KW_GLOBAL / KW_SESSION / KW_LOCAL / KW_PERSIST / KW_PERSIST_ONLY)? __
-  a: assign_stmt {
-    return "[Not implemented]";
-  }
-
 unlock_stmt
   = KW_UNLOCK __ KW_TABLES {
     return "[Not implemented]";
@@ -709,12 +699,6 @@ lock_table_list
 
 lock_stmt
   = KW_LOCK __ KW_TABLES __ ltl:lock_table_list {
-    return "[Not implemented]";
-  }
-
-call_stmt
-  = KW_CALL __
-  e: proc_func_call {
     return "[Not implemented]";
   }
 
@@ -918,9 +902,6 @@ column_list_item
       column: leading(star, c2),
     });
   }
-  / a:assign_stmt {
-    return "[Not implemented]";
-  }
   / expr:expr alias:(__ alias_clause)? {
     return loc(createAlias(expr, alias));
   }
@@ -940,10 +921,7 @@ alias_clause
   }
 
 into_clause
-  = KW_INTO __ v:var_decl_list {
-    return "[Not implemented]";
-  }
-  / KW_INTO __ k:('OUTFILE'i / 'DUMPFILE'i)? __ f:(literal_string / ident) {
+  = KW_INTO __ k:('OUTFILE'i / 'DUMPFILE'i)? __ f:(literal_string / ident) {
     return "[Not implemented]";
   }
 
@@ -1096,9 +1074,6 @@ table_name
       type: "table_ref",
       table: t,
     });
-  }
-  / v:var_decl {
-    return "[Not implemented]";
   }
 
 join_specification
@@ -1470,7 +1445,7 @@ in_op_right
       right,
     };
   }
-  / op:in_op c:__ right:(var_decl / column_ref / literal_string) {
+  / op:in_op c:__ right:(column_ref / literal_string) {
     return { kind: "in", op, c, right };
   }
 
@@ -1559,7 +1534,6 @@ primary
   / column_ref
   / param
   / paren_expr
-  / var_decl
   / __ prepared_symbol:'?' {
     return "[Not implemented]";
   }
@@ -1803,9 +1777,6 @@ trim_func_clause
 func_call
   = trim_func_clause
   / 'convert'i __ LPAREN __ l:convert_args __ RPAREN __ ca:collate_expr? {
-    return "[Not implemented]";
-  }
-  / name:proc_func_name __ LPAREN __ l:expr? __ RPAREN __ bc:over_partition? {
     return "[Not implemented]";
   }
   / name:scalar_func __ LPAREN __ l:expr_list? __ RPAREN __ bc:over_partition? {
@@ -2110,103 +2081,6 @@ EOL
 
 EOF = !.
 
-proc_stmt
-  = __ s:(assign_stmt / return_stmt) {
-    return "[Not implemented]";
-  }
-
-assign_stmt
-  = va:(var_decl / without_prefix_var_decl) __ s: (":=" / "=") __ e:proc_expr {
-    return "[Not implemented]";
-  }
-
-return_stmt
-  = KW_RETURN __ e:proc_expr {
-    return "[Not implemented]";
-  }
-
-proc_expr
-  = select_stmt
-  / proc_join
-  / proc_additive_expr
-  / proc_array
-
-proc_additive_expr
-  = head:proc_multiplicative_expr
-    tail:(__ additive_operator  __ proc_multiplicative_expr)* {
-      return "[Not implemented]";
-    }
-
-proc_multiplicative_expr
-  = head:proc_primary
-    tail:(__ multiplicative_operator  __ proc_primary)* {
-      return "[Not implemented]";
-    }
-
-proc_join
-  = lt:var_decl __ op:join_op  __ rt:var_decl __ expr:on_clause {
-    return "[Not implemented]";
-  }
-
-proc_primary
-  = literal
-  / var_decl
-  / column_ref
-  / proc_func_call
-  / param
-  / LPAREN __ e:proc_additive_expr __ RPAREN {
-    return "[Not implemented]";
-  }
-
-proc_func_name
-  = dt:ident tail:(__ DOT __ ident)? {
-    return "[Not implemented]";
-  }
-  / n:ident_name {
-    return "[Not implemented]";
-  }
-  / quoted_ident
-
-proc_func_call
-  = name:proc_func_name __ LPAREN __ l:proc_primary_list? __ RPAREN {
-    return "[Not implemented]";
-  }
-  / name:proc_func_name {
-    return "[Not implemented]";
-  }
-
-proc_primary_list
-  = head:proc_primary tail:(__ COMMA __ proc_primary)* {
-    return "[Not implemented]";
-  }
-
-proc_array =
-  LBRAKE __ l:proc_primary_list __ RBRAKE {
-    return "[Not implemented]";
-  }
-
-var_decl_list
-  = head:var_decl tail:(__ COMMA __ var_decl)* {
-    return "[Not implemented]";
-  }
-
-var_decl
-  = p:var_prefix d: without_prefix_var_decl {
-    return "[Not implemented]";
-  }
-
-var_prefix = "@@" / "@" / "$"
-
-without_prefix_var_decl
-  = name:ident_name m:mem_chain {
-    return "[Not implemented]";
-  }
-
-mem_chain
-  = l:('.' ident_name)* {
-    return "[Not implemented]";
-  }
-
 data_type
   = kw:type_name c:__ params:type_params {
     return loc({ type: "data_type", nameKw: trailing(kw, c), params });
@@ -2470,6 +2344,4 @@ COMMA         = ','
 STAR          = '*'
 LPAREN        = '('
 RPAREN        = ')'
-LBRAKE        = '['
-RBRAKE        = ']'
 SEMICOLON     = ';'
