@@ -1667,36 +1667,59 @@ on_update_current_timestamp
   }
 
 over_partition
-  = 'OVER'i __ aws:as_window_specification {
+  = 'OVER'i __ aws:window_definition_in_parens {
     return "[Not implemented]";
   }
   / on_update_current_timestamp
 
 window_clause
-  = 'WINDOW'i __ l:named_window_expr_list {
-    return "[Not implemented]";
+  = kw:KW_WINDOW c:__ wins:named_window_list {
+    return loc({
+      type: "window_clause",
+      windowKw: trailing(kw, c),
+      namedWindows: wins,
+    });
   }
 
-named_window_expr_list
-  = head:named_window_expr tail:(__ COMMA __ named_window_expr)* {
-    return "[Not implemented]";
+named_window_list
+  = head:named_window tail:(__ COMMA __ named_window)* {
+    return readCommaSepList(head, tail);
   }
 
-named_window_expr
-  = nw:ident_name __ KW_AS __ anw:as_window_specification {
-    return "[Not implemented]";
+named_window
+  = name:ident c1:__ kw:KW_AS c2:__ def:window_definition_in_parens {
+    return loc({
+      type: "named_window",
+      name: trailing(name, c1),
+      asKw: trailing(kw, c2),
+      definition: def,
+    });
   }
 
-as_window_specification
-  = ident_name
-  / LPAREN __ ws:window_specification? __ RPAREN {
-    return "[Not implemented]";
+window_definition_in_parens
+  = LPAREN c1:__ win:window_definition c2:__ RPAREN {
+    return withComments(win, { leading: c1, trailing: c2 });
   }
 
-window_specification
-  = bc:partition_by_clause? __ l:order_by_clause? __ w:window_frame_clause? {
-    return "[Not implemented]";
-  }
+window_definition
+  = name:ident clauses:(c:__ w:window_definition_clause { return leading(w, c); })* {
+      return loc({
+        type: "window_definition",
+        baseWindowName: name,
+        clauses,
+      });
+    }
+  / head:window_definition_clause tail:(__ window_definition_clause)* {
+      return loc({
+        type: "window_definition",
+        clauses: readSpaceSepList(head, tail),
+      });
+    }
+
+window_definition_clause
+  = partition_by_clause
+  / order_by_clause
+  / window_frame_clause
 
 window_specification_frameless
   = bc:partition_by_clause? __
@@ -2435,6 +2458,7 @@ KW_VARCHAR             = kw:"VARCHAR"i             !ident_part { return loc(crea
 KW_VIEW                = kw:"VIEW"i                !ident_part { return loc(createKeyword(kw)); }
 KW_WHEN                = kw:"WHEN"i                !ident_part { return loc(createKeyword(kw)); }
 KW_WHERE               = kw:"WHERE"i               !ident_part { return loc(createKeyword(kw)); }
+KW_WINDOW              = kw:"WINDOW"i              !ident_part { return loc(createKeyword(kw)); }
 KW_WITH                = kw:"WITH"i                !ident_part { return loc(createKeyword(kw)); }
 KW_XOR                 = kw:"XOR"i                 !ident_part { return loc(createKeyword(kw)); }
 KW_YEAR                = kw:"YEAR"i                !ident_part { return loc(createKeyword(kw)); }

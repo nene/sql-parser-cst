@@ -23,7 +23,9 @@ type Node =
   | ColumnOption
   | AllColumns
   | CommonTableExpression
-  | DataType;
+  | DataType
+  | NamedWindow
+  | WindowDefinition;
 
 type Statement = EmptyStatement | SelectStatement | CreateTableStatement;
 
@@ -64,6 +66,7 @@ type Clause =
   | WhereClause
   | GroupByClause
   | HavingClause
+  | WindowClause
   | OrderByClause
   | LimitClause;
 
@@ -112,6 +115,25 @@ type HavingClause = BaseNode & {
   type: "having_clause";
   havingKw: Keyword;
   expr: Expr;
+};
+
+type WindowClause = BaseNode & {
+  type: "window_clause";
+  windowKw: Keyword;
+  namedWindows: NamedWindow[];
+};
+
+type NamedWindow = BaseNode & {
+  type: "named_window";
+  name: Identifier;
+  asKw: Keyword;
+  definition: WindowDefinition;
+};
+
+type WindowDefinition = BaseNode & {
+  type: "window_definition";
+  baseWindowName?: Identifier;
+  clauses: OrderByClause[];
 };
 
 type OrderByClause = BaseNode & {
