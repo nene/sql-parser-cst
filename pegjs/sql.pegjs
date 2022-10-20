@@ -1313,6 +1313,14 @@ interval_expr
       return "[Not implemented]";
     }
 
+interval_unit
+  = KW_UNIT_YEAR
+  / KW_UNIT_MONTH
+  / KW_UNIT_DAY
+  / KW_UNIT_HOUR
+  / KW_UNIT_MINUTE
+  / KW_UNIT_SECOND
+
 case_expr
   = KW_CASE                         __
     condition_list:case_when_then+  __
@@ -2020,16 +2028,7 @@ digits
 hexDigit
   = [0-9a-fA-F]
 
-
-interval_unit
-  = KW_UNIT_YEAR
-  / KW_UNIT_MONTH
-  / KW_UNIT_DAY
-  / KW_UNIT_HOUR
-  / KW_UNIT_MINUTE
-  / KW_UNIT_SECOND
-
-
+// Data types
 data_type
   = kw:type_name c:__ params:type_params {
     return loc({ type: "data_type", nameKw: trailing(kw, c), params });
