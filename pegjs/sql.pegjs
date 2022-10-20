@@ -1759,44 +1759,13 @@ count_arg
 star_expr
   = "*" { return "[Not implemented]"; }
 
-convert_args
-  = c:(column_ref / literal_string) __ COMMA __ ch:data_type  __ cs:create_option_character_set_kw __ v:ident_name {
-    return "[Not implemented]";
-  }
-  / c:(column_ref / literal_string) __ COMMA __ d:data_type {
-    return "[Not implemented]";
-  }
-  / c:(column_ref / literal_string) __ KW_USING __ d:ident_name {
-    return "[Not implemented]";
-  }
-
-trim_position
-  = 'BOTH'i / 'LEADING'i / 'TRAILING'i
-
-trim_rem
-  = p:trim_position? __ rm:literal_string? __ k:KW_FROM {
-    return "[Not implemented]";
-  }
-
-trim_func_clause
-  = 'trim'i __ LPAREN __ tr:trim_rem? __ s:expr __ RPAREN {
-    return "[Not implemented]";
-  }
-
 func_call
-  = trim_func_clause
-  / 'convert'i __ LPAREN __ l:convert_args __ RPAREN __ ca:collate_expr? {
-    return "[Not implemented]";
-  }
-  / name:ident c1:__ LPAREN c2:__ args:func_args_list c3:__ RPAREN (__ over_partition)? {
+  = name:ident c1:__ LPAREN c2:__ args:func_args_list c3:__ RPAREN (__ over_partition)? {
     return loc({
       type: "func_call",
       name: trailing(name, c1),
       args: withComments(args, { leading: c2, trailing: c3 }),
     });
-  }
-  / f:KW_CURRENT_TIMESTAMP __ up:on_update_current_timestamp? {
-    return "[Not implemented]";
   }
 
 func_args_list
