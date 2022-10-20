@@ -110,6 +110,8 @@ const showNode = cstTransformer<string>({
   paren_expr: (node) => "(" + show(node.expr) + ")",
   binary_expr: (node) => show([node.left, node.operator, node.right]),
   unary_expr: (node) => show([node.operator, node.expr]),
+  func_call: (node) => show(node.name) + "(" + show(node.args) + ")",
+  func_args_list: (node) => show(node.values, ","),
   between_expr: (node) =>
     show([node.left, node.betweenKw, node.begin, node.andKw, node.end]),
   datetime: (node) => show([node.kw, node.string]),

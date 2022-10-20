@@ -1782,26 +1782,36 @@ trim_func_clause
   = 'trim'i __ LPAREN __ tr:trim_rem? __ s:expr __ RPAREN {
     return "[Not implemented]";
   }
+
 func_call
   = trim_func_clause
   / 'convert'i __ LPAREN __ l:convert_args __ RPAREN __ ca:collate_expr? {
     return "[Not implemented]";
   }
-  / name:scalar_func __ LPAREN __ l:expr_list? __ RPAREN __ bc:over_partition? {
-    return "[Not implemented]";
+  / name:ident c1:__ LPAREN c2:__ args:func_args_list c3:__ RPAREN (__ over_partition)? {
+    return loc({
+      type: "func_call",
+      name: trailing(name, c1),
+      args: withComments(args, { leading: c2, trailing: c3 }),
+    });
   }
   / f:KW_CURRENT_TIMESTAMP __ up:on_update_current_timestamp? {
     return "[Not implemented]";
   }
 
-scalar_func
-  = KW_CURRENT_DATE
-  / KW_CURRENT_TIME
-  / KW_CURRENT_TIMESTAMP
-  / KW_CURRENT_USER
-  / KW_USER
-  / KW_SESSION_USER
-  / KW_SYSTEM_USER
+func_args_list
+  = head:expr tail:(__ COMMA __ expr)* {
+    return loc({
+      type: "func_args_list",
+      values: readCommaSepList(head, tail)
+    });
+  }
+  / &. {
+    // even when no parameters are present, we want to create an empty args object,
+    // so we can attach optional comments to it,
+    // allowing us to represent comments inside empty arguments list
+    return loc({ type: "func_args_list", values: [] });
+  }
 
 cast_expr
   = KW_CAST __ LPAREN __ e:expr __ KW_AS __ ch:data_type  __ cs:create_option_character_set_kw __ v:ident_name __ RPAREN __ ca:collate_expr? {

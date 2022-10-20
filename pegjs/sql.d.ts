@@ -25,7 +25,8 @@ type Node =
   | CommonTableExpression
   | DataType
   | NamedWindow
-  | WindowDefinition;
+  | WindowDefinition
+  | FuncArgsList;
 
 type Statement = EmptyStatement | SelectStatement | CreateTableStatement;
 
@@ -36,6 +37,7 @@ type Expr =
   | ParenExpr
   | BinaryExpr
   | UnaryExpr
+  | FuncCall
   | BetweenExpr
   | StringWithCharset
   | StringLiteral
@@ -262,6 +264,19 @@ type UnaryExpr = BaseNode & {
   type: "unary_expr";
   operator: string | Keyword[];
   expr: Expr;
+};
+
+type FuncCall = BaseNode & {
+  type: "func_call";
+  name: Identifier;
+  args: FuncArgsList;
+};
+
+// This is needed to support function calls with empty argument lists
+// (which might contain comments inside parenthesis)
+type FuncArgsList = BaseNode & {
+  type: "func_args_list";
+  values: Expr[];
 };
 
 type BetweenExpr = BaseNode & {
