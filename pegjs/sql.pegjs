@@ -2099,7 +2099,7 @@ comment
   / pound_sign_comment
 
 block_comment
-  = "/*" (!"*/" char)* "*/" {
+  = "/*" (!"*/" .)* "*/" {
     return {
       type: "block_comment",
       text: text(),
@@ -2107,7 +2107,7 @@ block_comment
   }
 
 line_comment
-  = "--" (!EOL char)* {
+  = "--" (!EOL .)* {
     return {
       type: "line_comment",
       text: text(),
@@ -2115,7 +2115,7 @@ line_comment
   }
 
 pound_sign_comment
-  = "#" (!EOL char)* {
+  = "#" (!EOL .)* {
     return {
       type: "line_comment",
       text: text(),
@@ -2128,9 +2128,6 @@ space
 
 newline
   = ("\r\n" / "\n") { return { type: "newline", text: text() }; }
-
-// Any character
-char = .
 
 // Special characters
 EOL           = EOF / [\n\r]
