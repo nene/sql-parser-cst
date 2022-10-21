@@ -1653,7 +1653,7 @@ named_window
       type: "named_window",
       name: trailing(name, c1),
       asKw: trailing(kw, c2),
-      definition: def,
+      window: def,
     });
   }
 
@@ -1778,7 +1778,7 @@ over_arg
     return loc({
       type: "over_arg",
       overKw: trailing(kw, c),
-      definition: win,
+      window: win,
     });
   }
 

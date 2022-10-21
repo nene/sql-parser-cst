@@ -72,7 +72,7 @@ const showNode = cstTransformer<string>({
     show(node.partitionByKw) + show(node.specifications, ","),
   // WINDOW
   window_clause: (node) => show(node.windowKw) + show(node.namedWindows, ","),
-  named_window: (node) => show([node.name, node.asKw, node.definition]),
+  named_window: (node) => show([node.name, node.asKw, node.window]),
   window_definition: (node) =>
     show([node.baseWindowName, node.partitionBy, node.orderBy]),
   // LIMIT
@@ -116,7 +116,7 @@ const showNode = cstTransformer<string>({
   func_call: (node) =>
     show(node.name) + show(node.args) + (node.over ? show(node.over) : ""),
   distinct_arg: (node) => show([node.distinctKw, node.value]),
-  over_arg: (node) => show([node.overKw, node.definition]),
+  over_arg: (node) => show([node.overKw, node.window]),
   between_expr: (node) =>
     show([node.left, node.betweenKw, node.begin, node.andKw, node.end]),
   datetime: (node) => show([node.kw, node.string]),
