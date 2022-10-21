@@ -276,7 +276,7 @@ type FuncCall = BaseNode & {
 // (which might contain comments inside parenthesis)
 type FuncArgsList = BaseNode & {
   type: "func_args_list";
-  values: Expr[];
+  values: (Expr | AllColumns)[];
 };
 
 type BetweenExpr = BaseNode & {

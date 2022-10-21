@@ -11,6 +11,11 @@ describe("function call", () => {
     testExpr(`my_func( /* some comment here */ )`);
   });
 
+  it("supports aggregate function count(*)", () => {
+    testExpr(`count(*)`);
+    testExpr(`count( /*c1*/ * /*c2*/ )`);
+  });
+
   it("parses function call to syntax tree", () => {
     expect(parseExpr(`my_func(1)`)).toMatchInlineSnapshot(`
       {

@@ -1535,7 +1535,6 @@ primary
   = cast_expr
   / literal
   / fulltext_search
-  / aggr_func
   / func_call
   / case_expr
   / interval_expr
@@ -1627,18 +1626,6 @@ param
   = l:(':' ident_name) {
       return "[Not implemented]";
     }
-
-aggr_func
-  = aggr_fun_count
-  / aggr_fun_smma
-
-aggr_fun_smma
-  = name:KW_SUM_MAX_MIN_AVG  __ LPAREN __ e:additive_expr __ RPAREN __ bc:over_partition? {
-      return "[Not implemented]";
-    }
-
-KW_SUM_MAX_MIN_AVG
-  = KW_SUM / KW_MAX / KW_MIN / KW_AVG
 
 on_update_current_timestamp
   = KW_ON __ KW_UPDATE __ kw:KW_CURRENT_TIMESTAMP __ LPAREN __ l:expr_list? __ RPAREN{
@@ -1740,25 +1727,6 @@ window_frame_value
   }
   / literal_numeric
 
-aggr_fun_count
-  = name:(KW_COUNT / KW_GROUP_CONCAT) __ LPAREN __ arg:count_arg __ RPAREN __ bc:over_partition? {
-    return "[Not implemented]";
-  }
-
-count_arg
-  = e:star_expr {
-    return "[Not implemented]";
-  }
-  / d:KW_DISTINCT? __ LPAREN __ c:expr __ RPAREN __ or:order_by_clause? {
-    return "[Not implemented]";
-  }
-  / d:KW_DISTINCT? __ c:primary __ or:order_by_clause? {
-    return "[Not implemented]";
-  }
-
-star_expr
-  = "*" { return "[Not implemented]"; }
-
 func_call
   = name:ident c1:__ LPAREN c2:__ args:func_args_list c3:__ RPAREN (__ over_partition)? {
     return loc({
@@ -1769,7 +1737,7 @@ func_call
   }
 
 func_args_list
-  = head:expr tail:(__ COMMA __ expr)* {
+  = head:func_1st_arg tail:(__ COMMA __ expr)* {
     return loc({
       type: "func_args_list",
       values: readCommaSepList(head, tail)
@@ -1781,6 +1749,11 @@ func_args_list
     // allowing us to represent comments inside empty arguments list
     return loc({ type: "func_args_list", values: [] });
   }
+
+// For aggregate functions, first argument can be "*"
+func_1st_arg
+  = star
+  / expr
 
 cast_expr
   = KW_CAST __ LPAREN __ e:expr __ KW_AS __ ch:data_type  __ cs:create_option_character_set_kw __ v:ident_name __ RPAREN __ ca:collate_expr? {
