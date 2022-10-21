@@ -174,7 +174,7 @@ type JoinOnSpecification = BaseNode & {
 type JoinUsingSpecification = BaseNode & {
   type: "join_using_specification";
   usingKw: Keyword;
-  expr: Expr;
+  expr: ParenExpr<ExprList<ColumnRef>>;
 };
 
 type SortSpecification = BaseNode & {
