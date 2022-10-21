@@ -1082,8 +1082,8 @@ join_specification
 using_clause
   = kw:KW_USING c1:__ expr:using_clause_paren_expr {
     return loc({
-      type: "join_specification",
-      kw,
+      type: "join_using_specification",
+      usingKw: kw,
       expr: leading(expr, c1),
     });
   }
@@ -1106,8 +1106,8 @@ plain_column_ref
 on_clause
   = kw:KW_ON c:__ expr:expr {
     return loc({
-      type: "join_specification",
-      kw,
+      type: "join_on_specification",
+      onKw: kw,
       expr: withComments(expr, {leading: c}),
     });
   }

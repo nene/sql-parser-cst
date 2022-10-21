@@ -17,7 +17,8 @@ type Node =
   | Expr
   | Keyword
   | Join
-  | JoinSpecification
+  | JoinOnSpecification
+  | JoinUsingSpecification
   | SortSpecification
   | ColumnDefinition
   | ColumnOption
@@ -161,12 +162,18 @@ type Join = BaseNode & {
   type: "join";
   operator: Keyword[] | ",";
   table: Expr;
-  specification?: JoinSpecification;
+  specification?: JoinOnSpecification | JoinUsingSpecification;
 };
 
-type JoinSpecification = BaseNode & {
-  type: "join_specification";
-  kw: Keyword;
+type JoinOnSpecification = BaseNode & {
+  type: "join_on_specification";
+  onKw: Keyword;
+  expr: Expr;
+};
+
+type JoinUsingSpecification = BaseNode & {
+  type: "join_using_specification";
+  usingKw: Keyword;
   expr: Expr;
 };
 
