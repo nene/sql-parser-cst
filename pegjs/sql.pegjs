@@ -1735,15 +1735,15 @@ func_args
 func_args_list
   = head:func_1st_arg tail:(__ COMMA __ expr)* {
     return loc({
-      type: "func_args_list",
-      values: readCommaSepList(head, tail)
+      type: "expr_list",
+      children: readCommaSepList(head, tail)
     });
   }
   / &. {
     // even when no parameters are present, we want to create an empty args object,
     // so we can attach optional comments to it,
     // allowing us to represent comments inside empty arguments list
-    return loc({ type: "func_args_list", values: [] });
+    return loc({ type: "expr_list", children: [] });
   }
 
 // For aggregate functions, first argument can be "*"

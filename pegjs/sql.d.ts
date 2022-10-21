@@ -28,7 +28,6 @@ type Node =
   | DataType
   | NamedWindow
   | WindowDefinition
-  | FuncArgsList
   | OverArg;
 
 type Statement = EmptyStatement | SelectStatement | CreateTableStatement;
@@ -255,7 +254,7 @@ type AllColumns = BaseNode & {
   type: "all_columns";
 };
 
-interface ExprList<T = Expr> extends BaseNode {
+interface ExprList<T = Node> extends BaseNode {
   type: "expr_list";
   children: T[];
 }
@@ -281,7 +280,7 @@ type UnaryExpr = BaseNode & {
 type FuncCall = BaseNode & {
   type: "func_call";
   name: Identifier;
-  args: ParenExpr<FuncArgsList>;
+  args: ParenExpr<ExprList<Expr | AllColumns | DistinctArg>>;
   over?: OverArg;
 };
 
@@ -289,13 +288,6 @@ type OverArg = BaseNode & {
   type: "over_arg";
   overKw: Keyword;
   definition: WindowDefinition;
-};
-
-// This is needed to support function calls with empty argument lists
-// (which might contain comments inside parenthesis)
-type FuncArgsList = BaseNode & {
-  type: "func_args_list";
-  values: (Expr | AllColumns)[];
 };
 
 type DistinctArg = BaseNode & {

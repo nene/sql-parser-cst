@@ -113,7 +113,6 @@ const showNode = cstTransformer<string>({
   unary_expr: (node) => show([node.operator, node.expr]),
   func_call: (node) =>
     show(node.name) + show(node.args) + (node.over ? show(node.over) : ""),
-  func_args_list: (node) => show(node.values, ","),
   distinct_arg: (node) => show([node.distinctKw, node.value]),
   over_arg: (node) => show(node.overKw) + "(" + show(node.definition) + ")",
   between_expr: (node) =>

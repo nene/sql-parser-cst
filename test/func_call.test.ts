@@ -28,13 +28,13 @@ describe("function call", () => {
       {
         "args": {
           "expr": {
-            "type": "func_args_list",
-            "values": [
+            "children": [
               {
                 "text": "1",
                 "type": "number",
               },
             ],
+            "type": "expr_list",
           },
           "type": "paren_expr",
         },
