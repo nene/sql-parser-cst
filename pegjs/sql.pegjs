@@ -1627,19 +1627,14 @@ param
       return "[Not implemented]";
     }
 
-on_update_current_timestamp
-  = KW_ON __ KW_UPDATE __ kw:KW_CURRENT_TIMESTAMP __ LPAREN __ l:expr_list? __ RPAREN{
-    return "[Not implemented]";
-  }
-  / KW_ON __ KW_UPDATE __ kw:KW_CURRENT_TIMESTAMP {
-    return "[Not implemented]";
-  }
-
 over_partition
-  = 'OVER'i __ aws:window_definition_in_parens {
-    return "[Not implemented]";
+  = kw:KW_OVER c:__ win:window_definition_in_parens {
+    return {
+      type: "over_arg",
+      overKw: trailing(kw, c),
+      definition: win,
+    };
   }
-  / on_update_current_timestamp
 
 window_clause
   = kw:KW_WINDOW c:__ wins:named_window_list {
@@ -1728,13 +1723,16 @@ window_frame_value
   / literal_numeric
 
 func_call
-  = name:ident c1:__ LPAREN c2:__ args:func_args_list c3:__ RPAREN (__ over_partition)? {
-    return loc({
-      type: "func_call",
-      name: trailing(name, c1),
-      args: withComments(args, { leading: c2, trailing: c3 }),
-    });
-  }
+  = name:ident c1:__
+    LPAREN c2:__ args:func_args_list c3:__ RPAREN
+    over:(c:__ o:over_partition { return leading(o, c); })? {
+      return loc({
+        type: "func_call",
+        name: trailing(name, c1),
+        args: withComments(args, { leading: c2, trailing: c3 }),
+        ...(over ? {over} : {}),
+      });
+    }
 
 func_args_list
   = head:func_1st_arg tail:(__ COMMA __ expr)* {

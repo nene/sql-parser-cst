@@ -27,7 +27,8 @@ type Node =
   | DataType
   | NamedWindow
   | WindowDefinition
-  | FuncArgsList;
+  | FuncArgsList
+  | OverArg;
 
 type Statement = EmptyStatement | SelectStatement | CreateTableStatement;
 
@@ -271,6 +272,13 @@ type FuncCall = BaseNode & {
   type: "func_call";
   name: Identifier;
   args: FuncArgsList;
+  over?: OverArg;
+};
+
+type OverArg = BaseNode & {
+  type: "over_arg";
+  overKw: Keyword;
+  definition: WindowDefinition;
 };
 
 // This is needed to support function calls with empty argument lists
