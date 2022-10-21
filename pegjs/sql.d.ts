@@ -295,7 +295,7 @@ type FuncCall = BaseNode & {
 type OverArg = BaseNode & {
   type: "over_arg";
   overKw: Keyword;
-  definition: ParenExpr<WindowDefinition>;
+  definition: ParenExpr<WindowDefinition> | Identifier;
 };
 
 type DistinctArg = BaseNode & {

@@ -1,6 +1,11 @@
 import { test } from "./test_utils";
 
 describe("window functions", () => {
+  it("supports referring to named window", () => {
+    test(`SELECT row_number() OVER my_win`);
+    test(`SELECT row_number() OVER /*c*/ my_win`);
+  });
+
   it("supports empty window specification", () => {
     test(`SELECT row_number() OVER ()`);
     test(`SELECT row_number() OVER (/*c*/)`);

@@ -1678,12 +1678,6 @@ window_definition
       });
     }
 
-window_specification_frameless
-  = bc:partition_by_clause? __
-  l:order_by_clause? {
-    return "[Not implemented]";
-  }
-
 window_frame_clause
   = kw:KW_ROWS __ s:(window_frame_following / window_frame_preceding) {
     return "[Not implemented]";
@@ -1780,7 +1774,7 @@ func_1st_arg
   / expr
 
 over_arg
-  = kw:KW_OVER c:__ win:window_definition_in_parens {
+  = kw:KW_OVER c:__ win:(window_definition_in_parens / ident) {
     return loc({
       type: "over_arg",
       overKw: trailing(kw, c),
