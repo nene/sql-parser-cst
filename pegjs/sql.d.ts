@@ -42,14 +42,17 @@ type Expr =
   | FuncCall
   | BetweenExpr
   | StringWithCharset
+  | Literal
+  | ColumnRef
+  | TableRef
+  | Identifier;
+
+type Literal =
   | StringLiteral
   | NumberLiteral
   | BoolLiteral
   | NullLiteral
-  | DateTimeLiteral
-  | ColumnRef
-  | TableRef
-  | Identifier;
+  | DateTimeLiteral;
 
 type EmptyStatement = BaseNode & {
   type: "empty_statement";
@@ -194,7 +197,7 @@ type ColumnDefinition = BaseNode & {
 type DataType = BaseNode & {
   type: "data_type";
   nameKw: Keyword | Keyword[];
-  params?: Expr[];
+  params?: ParenExpr<ExprList<Literal>>;
 };
 
 type ColumnOption =
@@ -245,15 +248,15 @@ type AllColumns = BaseNode & {
   type: "all_columns";
 };
 
-type ExprList = BaseNode & {
+interface ExprList<T = Expr> extends BaseNode {
   type: "expr_list";
-  children: Expr[];
-};
+  children: T[];
+}
 
-type ParenExpr = BaseNode & {
+interface ParenExpr<T = Node> extends BaseNode {
   type: "paren_expr";
-  expr: Expr;
-};
+  expr: T;
+}
 
 type BinaryExpr = BaseNode & {
   type: "binary_expr";

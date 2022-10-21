@@ -125,8 +125,7 @@ const showNode = cstTransformer<string>({
   string_with_charset: (node) => "_" + node.charset + show(node.string),
 
   // Data types
-  data_type: (node) =>
-    show(node.nameKw) + (node.params ? "(" + show(node.params, ",") + ")" : ""),
+  data_type: (node) => show([node.nameKw, node.params]),
 
   // Tables & columns
   column_ref: (node) => show([node.table, node.column], "."),

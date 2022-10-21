@@ -1991,9 +1991,19 @@ data_type
   }
 
 type_params
-  = LPAREN c1:__ head:literal tail:(__ COMMA __ literal)* c2:__ RPAREN {
-    const params = readCommaSepList(head, tail);
-    return withComments(params, {leading: c1, trailing: c2});
+  = LPAREN c1:__ params:literal_list c2:__ RPAREN {
+    return loc({
+      type: "paren_expr",
+      expr: withComments(params, {leading: c1, trailing: c2}),
+    });
+  }
+
+literal_list
+  = head:literal tail:(__ COMMA __ literal)* {
+    return {
+      type: "expr_list",
+      children: readCommaSepList(head, tail),
+    };
   }
 
 type_name
