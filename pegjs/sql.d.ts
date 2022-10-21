@@ -281,7 +281,7 @@ type UnaryExpr = BaseNode & {
 type FuncCall = BaseNode & {
   type: "func_call";
   name: Identifier;
-  args: FuncArgsList;
+  args: ParenExpr<FuncArgsList>;
   over?: OverArg;
 };
 

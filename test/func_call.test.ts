@@ -27,13 +27,16 @@ describe("function call", () => {
     expect(parseExpr(`my_func(1)`)).toMatchInlineSnapshot(`
       {
         "args": {
-          "type": "func_args_list",
-          "values": [
-            {
-              "text": "1",
-              "type": "number",
-            },
-          ],
+          "expr": {
+            "type": "func_args_list",
+            "values": [
+              {
+                "text": "1",
+                "type": "number",
+              },
+            ],
+          },
+          "type": "paren_expr",
         },
         "name": {
           "text": "my_func",

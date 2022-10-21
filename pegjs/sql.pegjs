@@ -1714,16 +1714,23 @@ window_frame_value
   / literal_numeric
 
 func_call
-  = name:ident c1:__
-    LPAREN c2:__ args:func_args_list c3:__ RPAREN
+  = name:ident c1:__ args:func_args
     over:(c:__ o:over_arg { return leading(o, c); })? {
       return loc({
         type: "func_call",
         name: trailing(name, c1),
-        args: withComments(args, { leading: c2, trailing: c3 }),
+        args,
         ...(over ? {over} : {}),
       });
     }
+
+func_args
+  = LPAREN c1:__ args:func_args_list c2:__ RPAREN {
+    return loc({
+      type: "paren_expr",
+      expr: withComments(args, { leading: c1, trailing: c2 }),
+    });
+  }
 
 func_args_list
   = head:func_1st_arg tail:(__ COMMA __ expr)* {
