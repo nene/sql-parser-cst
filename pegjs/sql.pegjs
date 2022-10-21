@@ -1629,11 +1629,11 @@ param
 
 over_partition
   = kw:KW_OVER c:__ win:window_definition_in_parens {
-    return {
+    return loc({
       type: "over_arg",
       overKw: trailing(kw, c),
       definition: win,
-    };
+    });
   }
 
 window_clause
