@@ -28,7 +28,7 @@ describe("function call", () => {
       {
         "args": {
           "expr": {
-            "children": [
+            "items": [
               {
                 "text": "1",
                 "type": "number",

@@ -107,7 +107,7 @@ const showNode = cstTransformer<string>({
   column_option_comment: (node) => show([node.kw, node.value]),
 
   // Expressions
-  expr_list: (node) => show(node.children, ","),
+  expr_list: (node) => show(node.items, ","),
   paren_expr: (node) => "(" + show(node.expr) + ")",
   binary_expr: (node) => show([node.left, node.operator, node.right]),
   unary_expr: (node) => show([node.operator, node.expr]),

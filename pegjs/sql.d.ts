@@ -256,7 +256,7 @@ type AllColumns = BaseNode & {
 
 interface ExprList<T = Node> extends BaseNode {
   type: "expr_list";
-  children: T[];
+  items: T[];
 }
 
 interface ParenExpr<T = Node> extends BaseNode {

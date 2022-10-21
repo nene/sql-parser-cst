@@ -1095,7 +1095,7 @@ using_clause_paren_expr
 
 using_clause_columns
   = head:plain_column_ref tail:(__ COMMA __ plain_column_ref)* {
-     return loc({ type: "expr_list", children: readCommaSepList(head, tail) });
+     return loc({ type: "expr_list", items: readCommaSepList(head, tail) });
   }
 
 plain_column_ref
@@ -1126,7 +1126,7 @@ group_by_clause
     return loc({
       type: "group_by_clause",
       groupByKw: createKeywordList(kws),
-      columns: list.children,
+      columns: list.items,
     });
   }
 
@@ -1303,7 +1303,7 @@ value_item
 
 expr_list
   = head:expr tail:(__ COMMA __ expr)* {
-    return loc({ type: "expr_list", children: readCommaSepList(head, tail) });
+    return loc({ type: "expr_list", items: readCommaSepList(head, tail) });
   }
 
 interval_expr
@@ -1736,14 +1736,14 @@ func_args_list
   = head:func_1st_arg tail:(__ COMMA __ expr)* {
     return loc({
       type: "expr_list",
-      children: readCommaSepList(head, tail)
+      items: readCommaSepList(head, tail)
     });
   }
   / &. {
     // even when no parameters are present, we want to create an empty args object,
     // so we can attach optional comments to it,
     // allowing us to represent comments inside empty arguments list
-    return loc({ type: "expr_list", children: [] });
+    return loc({ type: "expr_list", items: [] });
   }
 
 // For aggregate functions, first argument can be "*"
@@ -2009,7 +2009,7 @@ literal_list
   = head:literal tail:(__ COMMA __ literal)* {
     return {
       type: "expr_list",
-      children: readCommaSepList(head, tail),
+      items: readCommaSepList(head, tail),
     };
   }
 
