@@ -75,6 +75,7 @@ type Clause =
   | HavingClause
   | WindowClause
   | OrderByClause
+  | PartitionByClause
   | LimitClause;
 
 type WithClause = BaseNode & {
@@ -140,12 +141,19 @@ type NamedWindow = BaseNode & {
 type WindowDefinition = BaseNode & {
   type: "window_definition";
   baseWindowName?: Identifier;
+  partitionBy?: PartitionByClause;
   orderBy?: OrderByClause;
 };
 
 type OrderByClause = BaseNode & {
   type: "order_by_clause";
   orderByKw: Keyword[];
+  specifications: Expr[];
+};
+
+type PartitionByClause = BaseNode & {
+  type: "partition_by_clause";
+  partitionByKw: Keyword[];
   specifications: Expr[];
 };
 

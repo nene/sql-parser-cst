@@ -62,16 +62,19 @@ const showNode = cstTransformer<string>({
   join_on_specification: (node) => show([node.onKw, node.expr]),
   join_using_specification: (node) => show([node.usingKw, node.expr]),
   sort_specification: (node) => show([node.expr, node.orderKw]),
-  // WHERE .. GROUP BY .. HAVING .. ORDER BY
+  // WHERE .. GROUP BY .. HAVING .. ORDER BY .. PARTITION BY
   where_clause: (node) => show([node.whereKw, node.expr]),
   group_by_clause: (node) => show(node.groupByKw) + show(node.columns, ","),
   having_clause: (node) => show([node.havingKw, node.expr]),
   order_by_clause: (node) =>
     show(node.orderByKw) + show(node.specifications, ","),
+  partition_by_clause: (node) =>
+    show(node.partitionByKw) + show(node.specifications, ","),
   // WINDOW
   window_clause: (node) => show(node.windowKw) + show(node.namedWindows, ","),
   named_window: (node) => show([node.name, node.asKw, node.definition]),
-  window_definition: (node) => show([node.baseWindowName, node.orderBy]),
+  window_definition: (node) =>
+    show([node.baseWindowName, node.partitionBy, node.orderBy]),
   // LIMIT
   limit_clause: (node) => {
     if (node.offsetKw) {

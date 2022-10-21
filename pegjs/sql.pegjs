@@ -1145,7 +1145,13 @@ having_clause
   }
 
 partition_by_clause
-  = KW_PARTITION __ KW_BY __ bc:select_columns { return "[Not implemented]"; }
+  = kws:(KW_PARTITION __ KW_BY __) list:expr_list {
+    return loc({
+      type: "partition_by_clause",
+      partitionByKw: createKeywordList(kws),
+      specifications: list.items,
+    });
+  }
 
 order_by_clause
   = kws:(KW_ORDER __ KW_BY __) l:order_by_list {
@@ -1663,10 +1669,11 @@ window_definition
   = name:ident?
     partitionBy:(c:__ cls:partition_by_clause { return leading(cls, c); })?
     orderBy:(c:__ cls:order_by_clause { return leading(cls, c); })?
-    frame:(c:__ cls:order_by_clause { return leading(cls, c); })? {
+    frame:(c:__ cls:window_frame_clause { return leading(cls, c); })? {
       return loc({
         type: "window_definition",
         ...(name ? {baseWindowName: name} : {}),
+        ...(partitionBy ? {partitionBy} : {}),
         ...(orderBy ? {orderBy} : {}),
       });
     }
