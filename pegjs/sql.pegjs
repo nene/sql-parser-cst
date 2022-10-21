@@ -1653,7 +1653,10 @@ named_window
 
 window_definition_in_parens
   = LPAREN c1:__ win:window_definition c2:__ RPAREN {
-    return withComments(win, { leading: c1, trailing: c2 });
+    return loc({
+      type: "paren_expr",
+      expr: withComments(win, { leading: c1, trailing: c2 }),
+    });
   }
 
 window_definition

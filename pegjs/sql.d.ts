@@ -134,7 +134,7 @@ type NamedWindow = BaseNode & {
   type: "named_window";
   name: Identifier;
   asKw: Keyword;
-  definition: WindowDefinition;
+  definition: ParenExpr<WindowDefinition>;
 };
 
 type WindowDefinition = BaseNode & {
@@ -287,7 +287,7 @@ type FuncCall = BaseNode & {
 type OverArg = BaseNode & {
   type: "over_arg";
   overKw: Keyword;
-  definition: WindowDefinition;
+  definition: ParenExpr<WindowDefinition>;
 };
 
 type DistinctArg = BaseNode & {
