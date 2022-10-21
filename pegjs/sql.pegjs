@@ -1660,24 +1660,16 @@ window_definition_in_parens
   }
 
 window_definition
-  = name:ident clauses:(c:__ w:window_definition_clause { return leading(w, c); })* {
+  = name:ident?
+    partitionBy:(c:__ cls:partition_by_clause { return leading(cls, c); })?
+    orderBy:(c:__ cls:order_by_clause { return leading(cls, c); })?
+    frame:(c:__ cls:order_by_clause { return leading(cls, c); })? {
       return loc({
         type: "window_definition",
-        baseWindowName: name,
-        clauses,
+        ...(name ? {baseWindowName: name} : {}),
+        ...(orderBy ? {orderBy} : {}),
       });
     }
-  / head:window_definition_clause tail:(__ window_definition_clause)* {
-      return loc({
-        type: "window_definition",
-        clauses: readSpaceSepList(head, tail),
-      });
-    }
-
-window_definition_clause
-  = partition_by_clause
-  / order_by_clause
-  / window_frame_clause
 
 window_specification_frameless
   = bc:partition_by_clause? __

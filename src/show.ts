@@ -71,7 +71,7 @@ const showNode = cstTransformer<string>({
   // WINDOW
   window_clause: (node) => show(node.windowKw) + show(node.namedWindows, ","),
   named_window: (node) => show([node.name, node.asKw, node.definition]),
-  window_definition: (node) => show([node.baseWindowName, node.clauses]),
+  window_definition: (node) => show([node.baseWindowName, node.orderBy]),
   // LIMIT
   limit_clause: (node) => {
     if (node.offsetKw) {

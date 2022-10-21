@@ -140,7 +140,7 @@ type NamedWindow = BaseNode & {
 type WindowDefinition = BaseNode & {
   type: "window_definition";
   baseWindowName?: Identifier;
-  clauses: OrderByClause[];
+  orderBy?: OrderByClause;
 };
 
 type OrderByClause = BaseNode & {
