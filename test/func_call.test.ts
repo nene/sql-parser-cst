@@ -16,6 +16,13 @@ describe("function call", () => {
     testExpr(`count( /*c1*/ * /*c2*/ )`);
   });
 
+  it("supports aggregate functions with DISTINCT keyword", () => {
+    testExpr(`count(DISTINCT col)`);
+    testExpr(`avg(DISTINCT col)`);
+    testExpr(`sum(DISTINCT col)`);
+    testExpr(`sum(/*c1*/ distinct /*c2*/ col /*c3*/)`);
+  });
+
   it("parses function call to syntax tree", () => {
     expect(parseExpr(`my_func(1)`)).toMatchInlineSnapshot(`
       {

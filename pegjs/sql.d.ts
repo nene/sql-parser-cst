@@ -22,6 +22,7 @@ type Node =
   | ColumnDefinition
   | ColumnOption
   | AllColumns
+  | DistinctArg
   | CommonTableExpression
   | DataType
   | NamedWindow
@@ -277,6 +278,12 @@ type FuncCall = BaseNode & {
 type FuncArgsList = BaseNode & {
   type: "func_args_list";
   values: (Expr | AllColumns)[];
+};
+
+type DistinctArg = BaseNode & {
+  type: "distinct_arg";
+  distinctKw: Keyword;
+  value: Expr;
 };
 
 type BetweenExpr = BaseNode & {

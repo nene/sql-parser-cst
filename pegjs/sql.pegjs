@@ -1753,6 +1753,9 @@ func_args_list
 // For aggregate functions, first argument can be "*"
 func_1st_arg
   = star
+  / kw:KW_DISTINCT c:__ e:expr {
+    return { type: "distinct_arg", distinctKw: kw, value: leading(e, c) };
+  }
   / expr
 
 cast_expr
