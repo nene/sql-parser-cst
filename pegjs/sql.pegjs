@@ -1627,7 +1627,7 @@ param
       return "[Not implemented]";
     }
 
-over_partition
+over_arg
   = kw:KW_OVER c:__ win:window_definition_in_parens {
     return loc({
       type: "over_arg",
@@ -1725,7 +1725,7 @@ window_frame_value
 func_call
   = name:ident c1:__
     LPAREN c2:__ args:func_args_list c3:__ RPAREN
-    over:(c:__ o:over_partition { return leading(o, c); })? {
+    over:(c:__ o:over_arg { return leading(o, c); })? {
       return loc({
         type: "func_call",
         name: trailing(name, c1),
