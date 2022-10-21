@@ -1627,15 +1627,6 @@ param
       return "[Not implemented]";
     }
 
-over_arg
-  = kw:KW_OVER c:__ win:window_definition_in_parens {
-    return loc({
-      type: "over_arg",
-      overKw: trailing(kw, c),
-      definition: win,
-    });
-  }
-
 window_clause
   = kw:KW_WINDOW c:__ wins:named_window_list {
     return loc({
@@ -1755,6 +1746,15 @@ func_1st_arg
     return { type: "distinct_arg", distinctKw: kw, value: leading(e, c) };
   }
   / expr
+
+over_arg
+  = kw:KW_OVER c:__ win:window_definition_in_parens {
+    return loc({
+      type: "over_arg",
+      overKw: trailing(kw, c),
+      definition: win,
+    });
+  }
 
 cast_expr
   = KW_CAST __ LPAREN __ e:expr __ KW_AS __ ch:data_type  __ cs:create_option_character_set_kw __ v:ident_name __ RPAREN __ ca:collate_expr? {
