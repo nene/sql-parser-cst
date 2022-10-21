@@ -17,4 +17,11 @@ describe("window functions", () => {
     test(`SELECT row_number() OVER (ORDER BY col)`);
     test(`SELECT row_number() /*c1*/ OVER /*c2*/ ( /*c3*/ ORDER BY col /*c4*/ )`);
   });
+
+  it("supports base window", () => {
+    test(`SELECT row_number() OVER (my_win)`);
+    test(`SELECT row_number() OVER (my_win PARTITION BY product)`);
+    test(`SELECT row_number() OVER (my_win PARTITION BY product ORDER BY price)`);
+    test(`SELECT row_number() OVER (/*c1*/ my_win /*c2*/)`);
+  });
 });
