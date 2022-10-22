@@ -118,6 +118,17 @@ const showNode = cstTransformer<string>({
   column_option_default: (node) => show([node.kw, node.expr]),
   column_option_comment: (node) => show([node.kw, node.value]),
 
+  // DROP TABLE statement
+  drop_table_statement: (node) =>
+    show([
+      node.dropKw,
+      node.temporaryKw,
+      node.tableKw,
+      node.ifExistsKw,
+      show(node.tables, ","),
+      node.behaviorKw,
+    ]),
+
   // Expressions
   expr_list: (node) => show(node.items, ","),
   paren_expr: (node) => "(" + show(node.expr) + ")",

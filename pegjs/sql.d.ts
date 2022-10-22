@@ -32,7 +32,11 @@ type Node =
   | OverArg
   | FrameNode;
 
-type Statement = EmptyStatement | SelectStatement | CreateTableStatement;
+type Statement =
+  | EmptyStatement
+  | SelectStatement
+  | CreateTableStatement
+  | DropTableStatement;
 
 type Expr =
   | SelectStatement
@@ -251,6 +255,17 @@ type ColumnOptionComment = BaseNode & {
   type: "column_option_comment";
   kw: Keyword;
   value: StringLiteral;
+};
+
+// DROP TABLE
+type DropTableStatement = BaseNode & {
+  type: "drop_table_statement";
+  dropKw: Keyword;
+  temporaryKw?: Keyword;
+  tableKw: Keyword;
+  ifExistsKw?: Keyword[];
+  tables: TableRef[];
+  behaviorKw?: Keyword; // CASCADE | RESTRICT
 };
 
 // Window frame

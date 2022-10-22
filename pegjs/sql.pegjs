@@ -404,17 +404,27 @@ drop_index_opt
   = head:(alter_algorithm / alter_lock) tail:(__ (alter_algorithm / alter_lock))* {
     return "[Not implemented]";
   }
+
 if_exists
-  = IF __ EXISTS {
-    return "[Not implemented]";
-  }
+  = kws:(IF __ EXISTS) { return createKeywordList(kws); }
 
 drop_table_stmt
-  = a:DROP __
-    r:TABLE __
-    ife: if_exists? __
-    t:table_ref_list {
-      return "[Not implemented]";
+  = dropKw:(kw:DROP c:__ { return trailing(kw, c); })
+    temporaryKw:(kw:TEMPORARY c:__ { return trailing(kw, c); })?
+    tableKw:(kw:TABLE c:__ { return trailing(kw, c); })
+    ifExistsKw:(kw:if_exists c:__ { return trailing(kw, c); } )?
+    tables:table_ref_list
+    behaviorKw:(c:__ kw:(CASCADE / RESTRICT) { return leading(kw, c); })?
+    {
+      return loc({
+        type: "drop_table_statement",
+        dropKw,
+        ...(temporaryKw ? {temporaryKw} : {}),
+        tableKw,
+        ...(ifExistsKw ? {ifExistsKw} : {}),
+        tables,
+        ...(behaviorKw ? {behaviorKw} : {}),
+      });
     }
 
 drop_index_stmt
@@ -426,6 +436,11 @@ drop_index_stmt
     op:drop_index_opt? __ {
       return "[Not implemented]";
     }
+
+table_ref_list
+  = head:table_name tail:(__ "," __ table_name)* {
+    return readCommaSepList(head, tail);
+  }
 
 truncate_stmt
   = a:TRUNCATE  __
@@ -939,7 +954,7 @@ into_clause
   }
 
 from_clause
-  = kw:FROM c:__ tables:table_ref_list {
+  = kw:FROM c:__ tables:table_join_list {
     return loc({
       type: "from_clause",
       fromKw: trailing(kw, c),
@@ -981,7 +996,7 @@ index_option
   }
   / column_option_comment
 
-table_ref_list
+table_join_list
   = head:table_base tail:_table_join* {
     return [head, ...tail];
   }
