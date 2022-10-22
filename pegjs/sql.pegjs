@@ -54,6 +54,7 @@
   // Shorthands for attaching just trailing or leading comments
   const leading = (node, leading) => withComments(node, { leading });
   const trailing = (node, trailing) => withComments(node, { trailing });
+  const surrounding = (leading, node, trailing) => withComments(node, { leading, trailing });
 
   const loc = (node) => {
     if (!options.includeRange) {
@@ -83,8 +84,8 @@
     return {
       type: 'binary_expr',
       operator: op,
-      left: withComments(left, {trailing: c1}),
-      right: withComments(right, {leading: c2}),
+      left: trailing(left, c1),
+      right: leading(right, c2),
     };
   }
 
@@ -92,7 +93,7 @@
     return {
       type: "unary_expr",
       operator: op,
-      expr: withComments(right, { leading: c }),
+      expr: leading(right, c),
     };
   }
 
@@ -108,7 +109,7 @@
     const keywords = [];
     for (const it of items) {
       if (it instanceof Array) {
-        keywords[keywords.length - 1] = withComments(keywords[keywords.length - 1], {trailing: it});
+        keywords[keywords.length - 1] = trailing(keywords[keywords.length - 1], it);
       } else {
         keywords.push(it);
       }
@@ -120,8 +121,8 @@
     const items = [head];
     for (const [c1, comma, c2, expr] of tail) {
       const lastIdx = items.length - 1;
-      items[lastIdx] = withComments(items[lastIdx], { trailing: c1 });
-      items.push(withComments(expr, { leading: c2 }));
+      items[lastIdx] = trailing(items[lastIdx], c1);
+      items.push(leading(expr, c2));
     }
     return items;
   };
@@ -129,7 +130,7 @@
   const readSpaceSepList = (head, tail) => {
     const items = [head];
     for (const [c, expr] of tail) {
-      items.push(withComments(expr, { leading: c }));
+      items.push(leading(expr, c));
     }
     return items;
   };
@@ -143,7 +144,7 @@
     const [c, partialAlias] = _alias;
     return {
       type: "alias",
-      expr: withComments(expr, { trailing: c }),
+      expr: trailing(expr, c),
       ...partialAlias,
     };
   }
@@ -151,7 +152,7 @@
   const createParenExpr = (c1, expr, c2) => {
     return {
       type: "paren_expr",
-      expr: withComments(expr, { leading: c1, trailing: c2 }),
+      expr: surrounding(c1, expr, c2),
     };
   }
 }
@@ -188,7 +189,7 @@ statement
 
 empty_stmt
   = c:__ {
-    return withComments(loc({ type: "empty_statement" }), { trailing: c });
+    return trailing(loc({ type: "empty_statement" }), c);
   }
 
 union_stmt
@@ -273,7 +274,7 @@ create_table_stmt
     tmpKw:(c:__ kw:TEMPORARY { return leading(kw, c); })?
     tableKw:(c:__ kw:TABLE { return leading(kw, c); })
     ifKw:(c:__ kw:if_not_exists { return leading(kw, c); })?
-    table:(c1:__ t:table_name c2:__ { return withComments(t, { leading: c1, trailing: c2 }); })
+    table:(c1:__ t:table_name c2:__ { return surrounding(c1, t, c2); })
     columns:create_table_definition
     __ table_options?
     __ (IGNORE / REPLACE)?
@@ -306,7 +307,7 @@ create_like_table
 
 create_table_definition
   = "(" c1:__ head:create_definition tail:(__ "," __ create_definition)* c2:__ ")" {
-    return withComments(readCommaSepList(head, tail), { leading: c1, trailing: c2 });
+    return surrounding(c1, readCommaSepList(head, tail), c2);
   }
 
 create_definition
@@ -323,7 +324,7 @@ column_definition_opt
     return loc({ type: "column_option_nullable", kw, value: true });
   }
   / kw:DEFAULT c:__ e:(literal / paren_expr) {
-    return loc({ type: "column_option_default", kw, expr: withComments(e, {leading: c}) });
+    return loc({ type: "column_option_default", kw, expr: leading(e, c) });
   }
   / kw:AUTO_INCREMENT {
     return loc({ type: "column_option_auto_increment", kw });
@@ -362,7 +363,7 @@ create_column_definition
     options:(c:__ list:column_definition_opt_list { return leading(list, c); })? {
       return loc({
         type: "column_definition",
-        name: withComments(name, {trailing: c1}),
+        name: trailing(name, c1),
         dataType: type,
         options: options || [],
       });
@@ -373,7 +374,7 @@ column_option_comment
     return loc({
       type: "column_option_comment",
       kw,
-      value: withComments(str, { leading: c }),
+      value: leading(str, c),
     });
   }
 
@@ -787,7 +788,7 @@ cte_option
 
 cte_columns_definition
   = "(" c1:__ head:ident tail:(__ "," __ ident)* c2:__ ")" {
-      return withComments(readCommaSepList(head, tail), { leading: c1, trailing: c2 });
+      return surrounding(c1, readCommaSepList(head, tail), c2);
     }
 
 for_update
@@ -913,7 +914,7 @@ alias_clause
   = kw:AS c:__ id:alias_ident {
     return {
       asKw: kw,
-      alias: withComments(id, { leading: c }),
+      alias: leading(id, c),
     };
   }
   / id:alias_ident {
@@ -929,7 +930,7 @@ from_clause
   = kw:FROM c:__ tables:table_ref_list {
     return loc({
       type: "from_clause",
-      fromKw: withComments(kw, { trailing: c }),
+      fromKw: trailing(kw, c),
       tables,
     });
   }
@@ -975,7 +976,7 @@ table_ref_list
 
 _table_join
   = c:__ join:table_join {
-    return withComments(join, { leading: c });
+    return leading(join, c);
   }
 
 table_join
@@ -983,14 +984,14 @@ table_join
     return loc({
       type: "join",
       operator: ",",
-      table: withComments(table, { leading: c }),
+      table: leading(table, c),
     });
   }
   / op:join_op c1:__ t:table_base spec:(c:__ j:join_specification { return leading(j, c) })? {
     return loc({
       type: "join",
       operator: op,
-      table: withComments(t, { leading: c1 }),
+      table: leading(t, c1),
       specification: spec || undefined,
     });
   }
@@ -1065,8 +1066,8 @@ table_name
   = db:ident c1:__ "." c2:__ t:ident {
     return loc({
       type: "table_ref",
-      db: withComments(db, { trailing: c1 }),
-      table: withComments(t, { leading: c2 }),
+      db: trailing(db, c1),
+      table: leading(t, c2),
     });
   }
   / t:ident {
@@ -1108,7 +1109,7 @@ on_clause
     return loc({
       type: "join_on_specification",
       onKw: kw,
-      expr: withComments(expr, {leading: c}),
+      expr: leading(expr, c),
     });
   }
 
@@ -1117,7 +1118,7 @@ where_clause
     return loc({
       type: "where_clause",
       whereKw: kw,
-      expr: withComments(expr, {leading: c}),
+      expr: leading(expr, c),
     });
   }
 
@@ -1140,7 +1141,7 @@ having_clause
     return loc({
       type: "having_clause",
       havingKw: kw,
-      expr: withComments(expr, {leading: c}),
+      expr: leading(expr, c),
     });
   }
 
@@ -1171,7 +1172,7 @@ order_by_element
   = e:expr c:__ orderKw:(DESC / ASC) {
     return loc({
       type: "sort_specification",
-      expr: withComments(e, { trailing: c }),
+      expr: trailing(e, c),
       orderKw,
     });
   }
@@ -1187,7 +1188,7 @@ limit_clause
     return loc({
       type: "limit_clause",
       limitKw: kw,
-      count: withComments(count, { leading: c1, trailing: c2 }),
+      count: surrounding(c1, count, c2),
       offsetKw: offkw,
       offset: leading(offset, c3),
     });
@@ -1196,7 +1197,7 @@ limit_clause
     return loc({
       type: "limit_clause",
       limitKw: kw,
-      offset: withComments(offset, { leading: c1, trailing: c2 }),
+      offset: surrounding(c1, offset, c2),
       count: leading(count, c3),
     });
   }
@@ -1411,7 +1412,7 @@ comparison_expr
     else if (right.kind === "between") {
       return loc({
         type: "between_expr",
-        left: withComments(head, { trailing: c }),
+        left: trailing(head, c),
         betweenKw: right.betweenKw,
         begin: right.begin,
         andKw: right.andKw,
@@ -1501,9 +1502,9 @@ between_op_right
     return {
       kind: "between",
       betweenKw,
-      begin: withComments(begin, { leading: c1 }),
-      andKw: withComments(andKw, { leading: c2 }),
-      end: withComments(end, { leading: c3 }),
+      begin: leading(begin, c1),
+      andKw: leading(andKw, c2),
+      end: leading(end, c3),
     };
   }
 
@@ -1564,8 +1565,8 @@ column_ref
   / tbl:ident c1:__ "." c2:__ col:qualified_column {
     return loc({
       type: "column_ref",
-      table: withComments(tbl, {trailing: c1}),
-      column: withComments(col, {leading: c2}),
+      table: trailing(tbl, c1),
+      column: leading(col, c2),
     });
   }
   / col:column {
@@ -1652,7 +1653,7 @@ window_definition_in_parens
   = "(" c1:__ win:window_definition c2:__ ")" {
     return loc({
       type: "paren_expr",
-      expr: withComments(win, { leading: c1, trailing: c2 }),
+      expr: surrounding(c1, win, c2),
     });
   }
 
@@ -1692,7 +1693,7 @@ frame_between
     return loc({
       type: "frame_between",
       betweenKw: bKw,
-      begin: withComments(begin, {leading: c1, trailing: c2}),
+      begin: surrounding(c1, begin, c2),
       andKw,
       end: leading(end, c3),
     });
@@ -1767,7 +1768,7 @@ func_args
   = "(" c1:__ args:func_args_list c2:__ ")" {
     return loc({
       type: "paren_expr",
-      expr: withComments(args, { leading: c1, trailing: c2 }),
+      expr: surrounding(c1, args, c2),
     });
   }
 
@@ -1864,7 +1865,7 @@ literal_string$mysql "string"
     return loc({
       type: "string_with_charset",
       charset,
-      string: withComments(string, { leading: c }),
+      string: leading(string, c),
     });
   }
   / literal_string_without_charset
@@ -1978,7 +1979,7 @@ literal_datetime
       return loc({
         type: "datetime",
         kw,
-        string: withComments(str, { leading: c })
+        string: leading(str, c)
       });
     }
 
@@ -2047,7 +2048,7 @@ type_params
   = "(" c1:__ params:literal_list c2:__ ")" {
     return loc({
       type: "paren_expr",
-      expr: withComments(params, {leading: c1, trailing: c2}),
+      expr: surrounding(c1, params, c2),
     });
   }
 
