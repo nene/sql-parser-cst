@@ -24,6 +24,7 @@ type Node =
   | ColumnOption
   | AllColumns
   | DistinctArg
+  | CastArg
   | CommonTableExpression
   | DataType
   | NamedWindow
@@ -41,6 +42,7 @@ type Expr =
   | BinaryExpr
   | UnaryExpr
   | FuncCall
+  | CastExpr
   | BetweenExpr
   | StringWithCharset
   | Literal
@@ -356,6 +358,19 @@ type DistinctArg = BaseNode & {
   type: "distinct_arg";
   distinctKw: Keyword;
   value: Expr;
+};
+
+type CastExpr = BaseNode & {
+  type: "cast_expr";
+  castKw: Keyword;
+  args: ParenExpr<CastArg>;
+};
+
+type CastArg = BaseNode & {
+  type: "cast_arg";
+  expr: Expr;
+  asKw: Keyword;
+  dataType: DataType;
 };
 
 type BetweenExpr = BaseNode & {

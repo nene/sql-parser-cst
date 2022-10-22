@@ -1789,7 +1789,7 @@ func_args_list
 func_1st_arg
   = star
   / kw:KW_DISTINCT c:__ e:expr {
-    return { type: "distinct_arg", distinctKw: kw, value: leading(e, c) };
+    return loc({ type: "distinct_arg", distinctKw: kw, value: leading(e, c) });
   }
   / expr
 
@@ -1803,20 +1803,27 @@ over_arg
   }
 
 cast_expr
-  = KW_CAST __ LPAREN __ e:expr __ KW_AS __ ch:data_type  __ cs:create_option_character_set_kw __ v:ident_name __ RPAREN __ ca:collate_expr? {
-    return "[Not implemented]";
+  = kw:KW_CAST c:__ args:cast_args_in_parens  {
+    return loc({
+      type: "cast_expr",
+      castKw: kw,
+      args: leading(args, c),
+    });
   }
-  / KW_CAST __ LPAREN __ e:expr __ KW_AS __ t:data_type __ RPAREN {
-    return "[Not implemented]";
+
+cast_args_in_parens
+  = LPAREN c1:__ arg:cast_arg c2:__ RPAREN {
+    return loc(createParenExpr(c1, arg, c2));
   }
-  / KW_CAST __ LPAREN __ e:expr __ KW_AS __ KW_DECIMAL __ LPAREN __ precision:int __ RPAREN __ RPAREN {
-    return "[Not implemented]";
-  }
-  / KW_CAST __ LPAREN __ e:expr __ KW_AS __ KW_DECIMAL __ LPAREN __ precision:int __ COMMA __ scale:int __ RPAREN __ RPAREN {
-    return "[Not implemented]";
-  }
-  / KW_CAST __ LPAREN __ e:expr __ KW_AS __ s:signedness __ t:KW_INTEGER? __ RPAREN { /* MySQL cast to un-/signed integer */
-    return "[Not implemented]";
+
+cast_arg
+  = e:expr c1:__ kw:KW_AS c2:__ t:data_type {
+    return loc({
+      type: "cast_arg",
+      expr: trailing(e, c1),
+      asKw: kw,
+      dataType: leading(t, c2),
+    });
   }
 
 signedness
