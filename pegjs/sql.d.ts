@@ -28,7 +28,8 @@ type Node =
   | DataType
   | NamedWindow
   | WindowDefinition
-  | OverArg;
+  | OverArg
+  | FrameNode;
 
 type Statement = EmptyStatement | SelectStatement | CreateTableStatement;
 
@@ -143,6 +144,7 @@ type WindowDefinition = BaseNode & {
   baseWindowName?: Identifier;
   partitionBy?: PartitionByClause;
   orderBy?: OrderByClause;
+  frame?: FrameClause;
 };
 
 type OrderByClause = BaseNode & {
@@ -247,6 +249,58 @@ type ColumnOptionComment = BaseNode & {
   type: "column_option_comment";
   kw: Keyword;
   value: StringLiteral;
+};
+
+// Window frame
+type FrameNode =
+  | FrameClause
+  | FrameBetween
+  | FrameBound
+  | FrameUnbounded
+  | FrameExclusion;
+
+type FrameClause = BaseNode & {
+  type: "frame_clause";
+  unitKw: Keyword; // ROWS | RANGE | GROUPS
+  extent: FrameBetween | FrameBound;
+  exclusion?: FrameExclusion;
+};
+
+type FrameBetween = BaseNode & {
+  type: "frame_between";
+  betweenKw: Keyword;
+  begin: FrameBound;
+  andKw: Keyword;
+  end: FrameBound;
+};
+
+type FrameBound =
+  | FrameBoundCurrentRow
+  | FrameBoundPreceding
+  | FrameBoundFollowing;
+
+type FrameBoundCurrentRow = BaseNode & {
+  type: "frame_bound_current_row";
+  currentRowKw: Keyword[];
+};
+type FrameBoundPreceding = BaseNode & {
+  type: "frame_bound_preceding";
+  expr: Literal | FrameUnbounded;
+  precedingKw: Keyword;
+};
+type FrameBoundFollowing = BaseNode & {
+  type: "frame_bound_following";
+  expr: Literal | FrameUnbounded;
+  followingKw: Keyword;
+};
+type FrameUnbounded = BaseNode & {
+  type: "frame_unbounded";
+  unboundedKw: Keyword;
+};
+type FrameExclusion = BaseNode & {
+  type: "frame_exclusion";
+  excludeKw: Keyword;
+  kindKw: Keyword[]; // CURRENT ROW | GROUPS | TIES | NO OTHERS
 };
 
 // other...

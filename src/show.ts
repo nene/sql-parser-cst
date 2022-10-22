@@ -74,7 +74,7 @@ const showNode = cstTransformer<string>({
   window_clause: (node) => show(node.windowKw) + show(node.namedWindows, ","),
   named_window: (node) => show([node.name, node.asKw, node.window]),
   window_definition: (node) =>
-    show([node.baseWindowName, node.partitionBy, node.orderBy]),
+    show([node.baseWindowName, node.partitionBy, node.orderBy, node.frame]),
   // LIMIT
   limit_clause: (node) => {
     if (node.offsetKw) {
@@ -85,6 +85,16 @@ const showNode = cstTransformer<string>({
       return show([node.limitKw, node.count]);
     }
   },
+
+  // Window frame
+  frame_clause: (node) => show([node.unitKw, node.extent, node.exclusion]),
+  frame_between: (node) =>
+    show([node.betweenKw, node.begin, node.andKw, node.end]),
+  frame_bound_current_row: (node) => show(node.currentRowKw),
+  frame_bound_preceding: (node) => show([node.expr, node.precedingKw]),
+  frame_bound_following: (node) => show([node.expr, node.followingKw]),
+  frame_unbounded: (node) => show(node.unboundedKw),
+  frame_exclusion: (node) => show([node.excludeKw, node.kindKw]),
 
   // CREATE TABLE statement
   create_table_statement: (node) =>

@@ -30,6 +30,23 @@ describe("window functions", () => {
     test(`SELECT row_number() OVER (/*c1*/ my_win /*c2*/)`);
   });
 
+  it("supports frame clause with single bound", () => {
+    test(`SELECT sum(price) OVER (ROWS UNBOUNDED PRECEDING) as running_total`);
+    test(
+      `SELECT sum(price) OVER (/*c1*/ ROWS /*c2*/ UNBOUNDED /*c3*/ PRECEDING /*c4*/) as running_total`
+    );
+    test(`SELECT sum(price) OVER (ROWS UNBOUNDED FOLLOWING) as running_total`);
+    test(
+      `SELECT sum(price) OVER (/*c1*/ ROWS /*c2*/ UNBOUNDED /*c3*/ FOLLOWING /*c4*/) as running_total`
+    );
+    test(`SELECT sum(price) OVER (ROWS CURRENT ROW)`);
+    test(`SELECT sum(price) OVER (/*c1*/ ROWS /*c2*/ CURRENT /*c3*/ ROW /*c4*/)`);
+    test(`SELECT sum(price) OVER (ROWS 15 PRECEDING)`);
+    test(`SELECT sum(price) OVER (/*c1*/ ROWS /*c2*/ 15 /*c3*/ PRECEDING /*c4*/)`);
+    test(`SELECT sum(price) OVER (ROWS 28 FOLLOWING)`);
+    test(`SELECT sum(price) OVER (/*c1*/ ROWS /*c2*/ 28 /*c3*/ FOLLOWING /*c4*/)`);
+  });
+
   it("parses window function call to syntax tree", () => {
     expect(parseExpr("row_number() OVER (my_win PARTITION BY product ORDER BY price)"))
       .toMatchInlineSnapshot(`
