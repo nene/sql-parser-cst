@@ -176,7 +176,8 @@ multiple_stmt
 
 statement
   = union_stmt
-  / drop_stmt
+  / drop_table_stmt
+  / drop_index_stmt
   / create_table_stmt
   / create_index_stmt
   / create_db_stmt
@@ -408,14 +409,16 @@ if_exists
     return "[Not implemented]";
   }
 
-drop_stmt
+drop_table_stmt
   = a:DROP __
     r:TABLE __
     ife: if_exists? __
     t:table_ref_list {
       return "[Not implemented]";
     }
-  / a:DROP __
+
+drop_index_stmt
+  = a:DROP __
     r:INDEX __
     i:column_ref __
     ON __
