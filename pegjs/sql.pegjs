@@ -160,7 +160,7 @@ start
   = multiple_stmt
 
 multiple_stmt
-  = head:statement tail:(__ SEMICOLON __ statement)* {
+  = head:statement tail:(__ ";" __ statement)* {
     return readCommaSepList(head, tail);
   }
 
@@ -197,7 +197,7 @@ union_stmt
   }
 
 column_order_list
-  = head:column_order_item tail:(__ COMMA __ column_order_item)* {
+  = head:column_order_item tail:(__ "," __ column_order_item)* {
     return "[Not implemented]";
   }
 
@@ -239,7 +239,7 @@ create_view_stmt
   al:("ALGORITHM"i __ "=" __ ("UNDEFINED"i / "MERGE"i / "TEMPTABLE"i))? __
   df:("DEFINER"i __ "=" __ ident)? __
   ss:("SQL"i __ "SECURITY"i __ ("DEFINER"i / "INVOKER"i))? __
-  KW_VIEW __ v:table_name __ c:(LPAREN __ column_list __ RPAREN)? __
+  KW_VIEW __ v:table_name __ c:("(" __ column_list __ ")")? __
   KW_AS __ s:select_stmt_nake __
   w:view_with? {
     return "[Not implemented]";
@@ -253,7 +253,7 @@ create_index_stmt
   um:index_type? __
   on:KW_ON __
   ta:table_name __
-  LPAREN __ cols:column_order_list __ RPAREN __
+  "(" __ cols:column_order_list __ ")" __
   io:index_options? __
   al:alter_algorithm? __
   lo:alter_lock? __ {
@@ -300,12 +300,12 @@ create_like_table_simple
 
 create_like_table
   = create_like_table_simple
-  / LPAREN __ e:create_like_table  __ RPAREN {
+  / "(" __ e:create_like_table  __ ")" {
     return "[Not implemented]";
   }
 
 create_table_definition
-  = LPAREN c1:__ head:create_definition tail:(__ COMMA __ create_definition)* c2:__ RPAREN {
+  = "(" c1:__ head:create_definition tail:(__ "," __ create_definition)* c2:__ ")" {
     return withComments(readCommaSepList(head, tail), { leading: c1, trailing: c2 });
   }
 
@@ -436,7 +436,7 @@ alter_table_stmt
     }
 
 alter_action_list
-  = head:alter_action tail:(__ COMMA __ alter_action)* {
+  = head:alter_action tail:(__ "," __ alter_action)* {
       return "[Not implemented]";
     }
 
@@ -588,7 +588,7 @@ create_constraint_unique
   }
 
 create_constraint_check
-  = kc:constraint_name? __ u:KW_CHECK __ nfr:(KW_NOT __ KW_FOR __ KW_REPLICATION __)? LPAREN __ c:expr __ RPAREN {
+  = kc:constraint_name? __ u:KW_CHECK __ nfr:(KW_NOT __ KW_FOR __ KW_REPLICATION __)? "(" __ c:expr __ ")" {
     return "[Not implemented]";
   }
 
@@ -602,7 +602,7 @@ create_constraint_foreign
   }
 
 check_constraint_definition
-  = kc:constraint_name? __ u:KW_CHECK __ LPAREN __ c:expr __ RPAREN __ ne:(KW_NOT? __ KW_ENFORCED)?  {
+  = kc:constraint_name? __ u:KW_CHECK __ "(" __ c:expr __ ")" __ ne:(KW_NOT? __ KW_ENFORCED)?  {
     return "[Not implemented]";
   }
 
@@ -629,7 +629,7 @@ reference_option
   }
 
 table_options
-  = head:table_option tail:(__ COMMA? __ table_option)* {
+  = head:table_option tail:(__ ","? __ table_option)* {
     return "[Not implemented]";
   }
 
@@ -693,7 +693,7 @@ lock_table
   }
 
 lock_table_list
-  = head:lock_table tail:(__ COMMA __ lock_table)* {
+  = head:lock_table tail:(__ "," __ lock_table)* {
     return "[Not implemented]";
   }
 
@@ -733,7 +733,7 @@ show_grant_for_using
   }
 
 show_grant_for_using_list
-  = head:ident tail:(__ COMMA __ ident)* {
+  = head:ident tail:(__ "," __ ident)* {
     return "[Not implemented]";
   }
 
@@ -751,7 +751,7 @@ select_stmt
 with_clause
   = withKw:KW_WITH
     recursiveKw:(c:__ kw:KW_RECURSIVE { return leading(kw, c) })?
-    c:__ head:common_table_expression tail:(__ COMMA __ common_table_expression)* {
+    c:__ head:common_table_expression tail:(__ "," __ common_table_expression)* {
       return loc({
         type: "with_clause",
         withKw,
@@ -777,7 +777,7 @@ common_table_expression
     }
 
 cte_select
-  = LPAREN c1:__ select:union_stmt c2:__ RPAREN {
+  = "(" c1:__ select:union_stmt c2:__ ")" {
     return loc(createParenExpr(c1, select, c2));
   }
 
@@ -786,7 +786,7 @@ cte_option
   / KW_MATERIALIZED
 
 cte_columns_definition
-  = LPAREN c1:__ head:ident tail:(__ COMMA __ ident)* c2:__ RPAREN {
+  = "(" c1:__ head:ident tail:(__ "," __ ident)* c2:__ ")" {
       return withComments(readCommaSepList(head, tail), { leading: c1, trailing: c2 });
     }
 
@@ -862,7 +862,7 @@ select_option$mysql
   / KW_SQL_BUFFER_RESULT
 
 select_columns
-  = head:column_list_item tail:(__ COMMA __ column_list_item)* {
+  = head:column_list_item tail:(__ "," __ column_list_item)* {
       return readCommaSepList(head, tail);
     }
 
@@ -881,7 +881,7 @@ fulltext_search_mode
   }
 
 fulltext_search
-  = 'MATCH'i __ LPAREN __ c:column_ref_list __ RPAREN __ 'AGAINST' __ LPAREN __ e:expr __ mo:fulltext_search_mode? __ RPAREN __ as:alias_clause? {
+  = 'MATCH'i __ "(" __ c:column_ref_list __ ")" __ 'AGAINST' __ "(" __ e:expr __ mo:fulltext_search_mode? __ ")" __ as:alias_clause? {
     return "[Not implemented]";
   }
 
@@ -895,7 +895,7 @@ column_list_item
       column: star,
     });
   }
-  / table:ident c1:__ DOT c2:__ star:star {
+  / table:ident c1:__ "." c2:__ star:star {
     return  loc({
       type: "column_ref",
       table: trailing(table, c1),
@@ -907,7 +907,7 @@ column_list_item
   }
 
 star
-  = STAR { return loc({ type: "all_columns" }) }
+  = "*" { return loc({ type: "all_columns" }) }
 
 alias_clause
   = kw:KW_AS c:__ id:alias_ident {
@@ -935,7 +935,7 @@ from_clause
   }
 
 table_to_list
-  = head:table_to_item tail:(__ COMMA __ table_to_item)* {
+  = head:table_to_item tail:(__ "," __ table_to_item)* {
     return "[Not implemented]";
   }
 
@@ -979,7 +979,7 @@ _table_join
   }
 
 table_join
-  = COMMA c:__ table:table_base {
+  = "," c:__ table:table_base {
     return loc({
       type: "join",
       operator: ",",
@@ -1009,7 +1009,7 @@ table_base
   / stmt:value_clause __ alias:alias_clause? {
     return "[Not implemented]";
   }
-  / LPAREN __ stmt:value_clause __ RPAREN __ alias:alias_clause? {
+  / "(" __ stmt:value_clause __ ")" __ alias:alias_clause? {
     return "[Not implemented]";
   }
   / t:union_in_parens alias:(__ alias_clause)? {
@@ -1017,12 +1017,12 @@ table_base
   }
 
 table_in_parens
-  = LPAREN c1:__ t:table_name c2:__ RPAREN {
+  = "(" c1:__ t:table_name c2:__ ")" {
     return loc(createParenExpr(c1, t, c2));
   }
 
 union_in_parens
-  = LPAREN c1:__ stmt:union_stmt c2:__ RPAREN {
+  = "(" c1:__ stmt:union_stmt c2:__ ")" {
     return loc(createParenExpr(c1, stmt, c2));
   }
 
@@ -1062,7 +1062,7 @@ join_type$mysql
   / kw:KW_JOIN { return createKeywordList([kw]); }
 
 table_name
-  = db:ident c1:__ DOT c2:__ t:ident {
+  = db:ident c1:__ "." c2:__ t:ident {
     return loc({
       type: "table_ref",
       db: withComments(db, { trailing: c1 }),
@@ -1089,12 +1089,12 @@ using_clause
   }
 
 using_clause_paren_expr
-  = LPAREN c1:__ cols:using_clause_columns c2:__ RPAREN {
+  = "(" c1:__ cols:using_clause_columns c2:__ ")" {
     return loc(createParenExpr(c1, cols, c2));
   }
 
 using_clause_columns
-  = head:plain_column_ref tail:(__ COMMA __ plain_column_ref)* {
+  = head:plain_column_ref tail:(__ "," __ plain_column_ref)* {
      return loc({ type: "expr_list", items: readCommaSepList(head, tail) });
   }
 
@@ -1131,7 +1131,7 @@ group_by_clause
   }
 
 column_ref_list
-  = head:column_ref tail:(__ COMMA __ column_ref)* {
+  = head:column_ref tail:(__ "," __ column_ref)* {
       return "[Not implemented]";
     }
 
@@ -1163,7 +1163,7 @@ order_by_clause
   }
 
 order_by_list
-  = head:order_by_element tail:(__ COMMA __ order_by_element)* {
+  = head:order_by_element tail:(__ "," __ order_by_element)* {
     return readCommaSepList(head, tail);
   }
 
@@ -1192,7 +1192,7 @@ limit_clause
       offset: leading(offset, c3),
     });
   }
-  / kw:KW_LIMIT c1:__ offset:expr c2:__ COMMA c3:__ count:expr  {
+  / kw:KW_LIMIT c1:__ offset:expr c2:__ "," c3:__ count:expr  {
     return loc({
       type: "limit_clause",
       limitKw: kw,
@@ -1226,7 +1226,7 @@ delete_stmt
     }
 
 set_list
-  = head:set_item tail:(__ COMMA __ set_item)* {
+  = head:set_item tail:(__ "," __ set_item)* {
       return "[Not implemented]";
     }
 
@@ -1236,7 +1236,7 @@ set_list
  * 'col1 = (col2 > 3)'
  */
 set_item
-  = tbl:(ident __ DOT)? __ c:column __ '=' __ v:additive_expr {
+  = tbl:(ident __ ".")? __ c:column __ '=' __ v:additive_expr {
     return "[Not implemented]";
   }
 
@@ -1245,7 +1245,7 @@ insert_value_clause
   / select_stmt_nake
 
 insert_partition
-  = KW_PARTITION __ LPAREN __ head:ident_name tail:(__ COMMA __ ident_name)* __ RPAREN {
+  = KW_PARTITION __ "(" __ head:ident_name tail:(__ "," __ ident_name)* __ ")" {
     return "[Not implemented]";
   }
   / KW_PARTITION __ v: value_item {
@@ -1257,7 +1257,7 @@ replace_insert_stmt
     ig:KW_IGNORE?  __
     it:KW_INTO? __
     t:table_name  __
-    p:insert_partition? __ LPAREN __ c:column_list  __ RPAREN __
+    p:insert_partition? __ "(" __ c:column_list  __ ")" __
     v:insert_value_clause __
     odp:on_duplicate_update_stmt? {
       return "[Not implemented]";
@@ -1298,17 +1298,17 @@ value_clause
   = KW_VALUES __ l:value_list  { return "[Not implemented]"; }
 
 value_list
-  = head:value_item tail:(__ COMMA __ value_item)* {
+  = head:value_item tail:(__ "," __ value_item)* {
     return "[Not implemented]";
   }
 
 value_item
-  = 'ROW'i? __ LPAREN __ l:expr_list  __ RPAREN {
+  = 'ROW'i? __ "(" __ l:expr_list  __ ")" {
     return "[Not implemented]";
   }
 
 expr_list
-  = head:expr tail:(__ COMMA __ expr)* {
+  = head:expr tail:(__ "," __ expr)* {
     return loc({ type: "expr_list", items: readCommaSepList(head, tail) });
   }
 
@@ -1426,7 +1426,7 @@ comparison_expr
   / column_ref
 
 exists_expr
-  = op:exists_op __ LPAREN __ stmt:union_stmt __ RPAREN {
+  = op:exists_op __ "(" __ stmt:union_stmt __ ")" {
     return "[Not implemented]";
   }
 
@@ -1548,20 +1548,20 @@ primary
   / paren_expr
 
 paren_expr
-  = LPAREN c1:__ expr:expr c2:__ RPAREN {
+  = "(" c1:__ expr:expr c2:__ ")" {
     return loc(createParenExpr(c1, expr, c2));
   }
 
 paren_expr_list
-  = LPAREN  c2:__ list:expr_list c3:__ RPAREN {
+  = "("  c2:__ list:expr_list c3:__ ")" {
     return loc(createParenExpr(c2, list, c3));
   }
 
 column_ref
-  = tbl:(ident __ DOT __)? col:column __ a:(("->>" / "->") __ (literal_string / literal_numeric))+ __ ca:collate_expr? {
+  = tbl:(ident __ "." __)? col:column __ a:(("->>" / "->") __ (literal_string / literal_numeric))+ __ ca:collate_expr? {
     return "[Not implemented]";
   }
-  / tbl:ident c1:__ DOT c2:__ col:qualified_column {
+  / tbl:ident c1:__ "." c2:__ col:qualified_column {
     return loc({
       type: "column_ref",
       table: withComments(tbl, {trailing: c1}),
@@ -1576,7 +1576,7 @@ column_ref
   }
 
 column_list
-  = head:column tail:(__ COMMA __ column)* {
+  = head:column tail:(__ "," __ column)* {
     return "[Not implemented]";
   }
 
@@ -1634,7 +1634,7 @@ window_clause
   }
 
 named_window_list
-  = head:named_window tail:(__ COMMA __ named_window)* {
+  = head:named_window tail:(__ "," __ named_window)* {
     return readCommaSepList(head, tail);
   }
 
@@ -1649,7 +1649,7 @@ named_window
   }
 
 window_definition_in_parens
-  = LPAREN c1:__ win:window_definition c2:__ RPAREN {
+  = "(" c1:__ win:window_definition c2:__ ")" {
     return loc({
       type: "paren_expr",
       expr: withComments(win, { leading: c1, trailing: c2 }),
@@ -1764,7 +1764,7 @@ mysql_window_func_keyword
   / KW_ROW_NUMBER
 
 func_args
-  = LPAREN c1:__ args:func_args_list c2:__ RPAREN {
+  = "(" c1:__ args:func_args_list c2:__ ")" {
     return loc({
       type: "paren_expr",
       expr: withComments(args, { leading: c1, trailing: c2 }),
@@ -1772,7 +1772,7 @@ func_args
   }
 
 func_args_list
-  = head:func_1st_arg tail:(__ COMMA __ expr)* {
+  = head:func_1st_arg tail:(__ "," __ expr)* {
     return loc({
       type: "expr_list",
       items: readCommaSepList(head, tail)
@@ -1812,7 +1812,7 @@ cast_expr
   }
 
 cast_args_in_parens
-  = LPAREN c1:__ arg:cast_arg c2:__ RPAREN {
+  = "(" c1:__ arg:cast_arg c2:__ ")" {
     return loc(createParenExpr(c1, arg, c2));
   }
 
@@ -2044,7 +2044,7 @@ data_type
   }
 
 type_params
-  = LPAREN c1:__ params:literal_list c2:__ RPAREN {
+  = "(" c1:__ params:literal_list c2:__ ")" {
     return loc({
       type: "paren_expr",
       expr: withComments(params, {leading: c1, trailing: c2}),
@@ -2052,7 +2052,7 @@ type_params
   }
 
 literal_list
-  = head:literal tail:(__ COMMA __ literal)* {
+  = head:literal tail:(__ "," __ literal)* {
     return {
       type: "expr_list",
       items: readCommaSepList(head, tail),
@@ -2122,7 +2122,7 @@ block_comment
   }
 
 line_comment
-  = "--" (!EOL .)* {
+  = "--" (!end_of_line .)* {
     return {
       type: "line_comment",
       text: text(),
@@ -2130,7 +2130,7 @@ line_comment
   }
 
 pound_sign_comment
-  = "#" (!EOL .)* {
+  = "#" (!end_of_line .)* {
     return {
       type: "line_comment",
       text: text(),
@@ -2144,15 +2144,11 @@ space
 newline
   = ("\r\n" / "\n") { return { type: "newline", text: text() }; }
 
-// Special characters
-EOL           = EOF / [\n\r]
-EOF           = !.
-DOT           = '.'
-COMMA         = ','
-STAR          = '*'
-LPAREN        = '('
-RPAREN        = ')'
-SEMICOLON     = ';'
+end_of_line
+  = end_of_file / [\n\r]
+
+end_of_file
+  = !.
 
 // All keywords (sorted alphabetically)
 KW_ACTION              = kw:"ACTION"i              !ident_part { return loc(createKeyword(kw)); }
