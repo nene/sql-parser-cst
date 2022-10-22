@@ -250,7 +250,7 @@ create_view_stmt
   al:("ALGORITHM"i __ "=" __ ("UNDEFINED"i / "MERGE"i / "TEMPTABLE"i))? __
   df:("DEFINER"i __ "=" __ ident)? __
   ss:("SQL"i __ "SECURITY"i __ ("DEFINER"i / "INVOKER"i))? __
-  VIEW __ v:table_name __ c:("(" __ column_list __ ")")? __
+  VIEW __ v:table_ref __ c:("(" __ column_list __ ")")? __
   AS __ s:select_stmt_nake __
   w:view_with? {
     return "[Not implemented]";
@@ -263,7 +263,7 @@ create_index_stmt
   n:ident __
   um:index_type? __
   on:ON __
-  ta:table_name __
+  ta:table_ref __
   "(" __ cols:column_order_list __ ")" __
   io:index_options? __
   al:alter_algorithm? __
@@ -276,7 +276,7 @@ create_table_stmt
     tp:TEMPORARY? __
     TABLE __
     ife:if_not_exists? __
-    t:table_name __
+    t:table_ref __
     lt:create_like_table {
       return "[Not implemented]";
     }
@@ -284,7 +284,7 @@ create_table_stmt
     tmpKw:(c:__ kw:(TEMPORARY / TEMP) { return leading(kw, c); })?
     tableKw:(c:__ kw:TABLE { return leading(kw, c); })
     ifKw:(c:__ kw:if_not_exists { return leading(kw, c); })?
-    table:(c1:__ t:table_name c2:__ { return surrounding(c1, t, c2); })
+    table:(c1:__ t:table_ref c2:__ { return surrounding(c1, t, c2); })
     columns:create_table_definition
     __ table_options?
     __ (IGNORE / REPLACE)?
@@ -432,13 +432,13 @@ drop_index_stmt
     r:INDEX __
     i:column_ref __
     ON __
-    t:table_name __
+    t:table_ref __
     op:drop_index_opt? __ {
       return "[Not implemented]";
     }
 
 table_ref_list
-  = head:table_name tail:(__ "," __ table_name)* {
+  = head:table_ref tail:(__ "," __ table_ref)* {
     return readCommaSepList(head, tail);
   }
 
@@ -458,7 +458,7 @@ use_stmt
 alter_table_stmt
   = ALTER  __
     TABLE __
-    t:table_name __
+    t:table_ref __
     e:alter_action_list {
       return "[Not implemented]";
     }
@@ -740,7 +740,7 @@ show_stmt
   / SHOW __ k:(('CHARACTER'i __ 'SET'i) / 'COLLATION'i) __ e:(like_op_right / where_clause)? {
     return "[Not implemented]";
   }
-  / SHOW __ CREATE __ VIEW __ t:table_name {
+  / SHOW __ CREATE __ VIEW __ t:table_ref {
     return "[Not implemented]";
   }
   / show_grant_stmt
@@ -968,7 +968,7 @@ table_to_list
   }
 
 table_to_item
-  = head:table_name __ TO __ tail: (table_name) {
+  = head:table_ref __ TO __ tail: (table_ref) {
     return "[Not implemented]";
   }
 
@@ -1028,7 +1028,7 @@ table_base
   = DUAL {
     return "[Not implemented]";
   }
-  / t:table_name alias:(__ alias_clause)? {
+  / t:table_ref alias:(__ alias_clause)? {
     return loc(createAlias(t, alias));
   }
   / t:table_in_parens alias:(__ alias_clause)? {
@@ -1045,7 +1045,7 @@ table_base
   }
 
 table_in_parens
-  = "(" c1:__ t:table_name c2:__ ")" {
+  = "(" c1:__ t:table_ref c2:__ ")" {
     return loc(createParenExpr(c1, t, c2));
   }
 
@@ -1089,7 +1089,7 @@ join_type$mysql
   / kws:(INNER __ JOIN) { return createKeywordList(kws); }
   / kw:JOIN { return createKeywordList([kw]); }
 
-table_name
+table_ref
   = db:ident c1:__ "." c2:__ t:ident {
     return loc({
       type: "table_ref",
@@ -1284,7 +1284,7 @@ replace_insert_stmt
   = ri:replace_insert       __
     ig:IGNORE?  __
     it:INTO? __
-    t:table_name  __
+    t:table_ref  __
     p:insert_partition? __ "(" __ c:column_list  __ ")" __
     v:insert_value_clause __
     odp:on_duplicate_update_stmt? {
@@ -1295,7 +1295,7 @@ insert_no_columns_stmt
   = ri:replace_insert __
     ig:IGNORE?  __
     it:INTO?   __
-    t:table_name  __
+    t:table_ref  __
     p:insert_partition? __
     v:insert_value_clause __
     odp: on_duplicate_update_stmt? {
@@ -1305,7 +1305,7 @@ insert_no_columns_stmt
 insert_into_set
   = ri:replace_insert __
     INTO __
-    t:table_name  __
+    t:table_ref  __
     p:insert_partition? __
     SET       __
     l:set_list   __
