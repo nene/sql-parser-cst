@@ -1680,13 +1680,19 @@ window_definition
     }
 
 frame_clause
-  = kw:KW_ROWS c:__ extent:(frame_bound / frame_between) {
+  = kw:frame_unit c:__ extent:(frame_bound / frame_between) {
     return loc({
       type: "frame_clause",
       unitKw: kw,
       extent: leading(extent, c),
     });
   }
+
+frame_unit
+  = KW_ROWS / KW_RANGE
+
+frame_unit$sqlite
+  = KW_ROWS / KW_RANGE / KW_GROUPS
 
 frame_between
   = bKw:KW_BETWEEN c1:__ begin:frame_bound c2:__ andKw:KW_AND c3:__ end:frame_bound {
@@ -2218,6 +2224,7 @@ KW_GLOBAL              = kw:"GLOBAL"i              !ident_part { return loc(crea
 KW_GO                  = kw:"GO"i                  !ident_part { return loc(createKeyword(kw)); }
 KW_GROUP               = kw:"GROUP"i               !ident_part { return loc(createKeyword(kw)); }
 KW_GROUP_CONCAT        = kw:"GROUP_CONCAT"i        !ident_part { return loc(createKeyword(kw)); }
+KW_GROUPS              = kw:"GROUPS"i              !ident_part { return loc(createKeyword(kw)); }
 KW_HAVING              = kw:"HAVING"i              !ident_part { return loc(createKeyword(kw)); }
 KW_HIGH_PRIORITY       = kw:"HIGH_PRIORITY"i       !ident_part { return loc(createKeyword(kw)); }
 KW_IF                  = kw:"IF"i                  !ident_part { return loc(createKeyword(kw)); }
@@ -2276,6 +2283,7 @@ KW_PERSIST_ONLY        = kw:"PERSIST_ONLY"i        !ident_part { return loc(crea
 KW_PRECEDING           = kw:"PRECEDING"i           !ident_part { return loc(createKeyword(kw)); }
 KW_PRECISION           = kw:"PRECISION"i           !ident_part { return loc(createKeyword(kw)); }
 KW_PRIMARY             = kw:"PRIMARY"i             !ident_part { return loc(createKeyword(kw)); }
+KW_RANGE               = kw:"RANGE"i               !ident_part { return loc(createKeyword(kw)); }
 KW_RANK                = kw:"RANK"i                !ident_part { return loc(createKeyword(kw)); }
 KW_REAL                = kw:"REAL"i                !ident_part { return loc(createKeyword(kw)); }
 KW_RECURSIVE           = kw:"RECURSIVE"            !ident_part { return loc(createKeyword(kw)); }

@@ -1,4 +1,4 @@
-import { parseExpr, test } from "./test_utils";
+import { dialect, parseExpr, test } from "./test_utils";
 
 describe("window functions", () => {
   it("supports referring to named window", () => {
@@ -56,6 +56,18 @@ describe("window functions", () => {
     test(
       `SELECT sum(price) OVER (ROWS BETWEEN /*c1*/ 1 /*c2*/ PRECEDING /*c3*/ AND /*c4*/ 2 /*c5*/ FOLLOWING)`
     );
+  });
+
+  it("supports frame clause with RANGE unit", () => {
+    test(`SELECT sum(price) OVER (RANGE CURRENT ROW)`);
+    test(`SELECT sum(price) OVER (RANGE BETWEEN CURRENT ROW AND 1 FOLLOWING)`);
+  });
+
+  dialect("sqlite", () => {
+    it("supports frame clause with GROUPS unit", () => {
+      test(`SELECT sum(price) OVER (GROUPS CURRENT ROW)`);
+      test(`SELECT sum(price) OVER (GROUPS BETWEEN CURRENT ROW AND 1 FOLLOWING)`);
+    });
   });
 
   it("parses window function call to syntax tree", () => {
