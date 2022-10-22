@@ -25,36 +25,45 @@
     return [...rest, value];
   };
 
-  /** Attaches optional comments to AST node, or to array of AST nodes (the first and last) */
-  const withComments = (node, { leading, trailing }) => {
+  /** Attaches optional leading whitespace to AST node, or to array of AST nodes (to the first in array) */
+  const leading = (node, ws) => {
     if (node instanceof Array) {
-      // Add surrounding comments to first and last item in array (which might be the same one)
-      node = setFirst(node, withComments(node[0], { leading }));
-      node = setLast(node, withComments(last(node), { trailing }));
-      return node;
+      // Add leading whitespace to first item in array
+      return setFirst(node, leading(node[0], ws));
     }
     if (typeof node !== "object") {
       throw new Error(`Expected Node object, instead got ${JSON.stringify(node)}`);
     }
-    if (leading && leading.length) {
+    if (ws && ws.length) {
       if (node.leading) {
-        throw new Error("withComments(): Node already has leading");
+        throw new Error("leading(): Node already has leading whitespace");
       }
-      node = {...node, leading};
-    }
-    if (trailing && trailing.length) {
-      if (node.trailing) {
-        throw new Error("withComments(): Node already has trailing");
-      }
-      node = {...node, trailing};
+      return {...node, leading: ws};
     }
     return node;
   };
 
-  // Shorthands for attaching just trailing or leading comments
-  const leading = (node, leading) => withComments(node, { leading });
-  const trailing = (node, trailing) => withComments(node, { trailing });
-  const surrounding = (leading, node, trailing) => withComments(node, { leading, trailing });
+  /** Attaches optional trailing whitespace to AST node, or to array of AST nodes (to the last in array) */
+  const trailing = (node, ws) => {
+    if (node instanceof Array) {
+      // Add trailing whitespace to last item in array
+      return setLast(node, trailing(last(node), ws));
+    }
+    if (typeof node !== "object") {
+      throw new Error(`Expected Node object, instead got ${JSON.stringify(node)}`);
+    }
+    if (ws && ws.length) {
+      if (node.trailing) {
+        throw new Error("trailing(): Node already has trailing whitespace");
+      }
+      return {...node, trailing: ws};
+    }
+    return node;
+  };
+
+  // Shorthand for attaching both trailing or leading whitespace
+  const surrounding = (leadingWs, node, trailingWs) =>
+    trailing(leading(node, leadingWs), trailingWs);
 
   const loc = (node) => {
     if (!options.includeRange) {
