@@ -192,7 +192,7 @@ empty_stmt
   }
 
 union_stmt
-  = head:select_stmt tail:(__ KW_UNION __ KW_ALL? __ select_stmt)* (__ ob:order_by_clause)? (__ l:limit_clause)? {
+  = head:select_stmt tail:(__ UNION __ ALL? __ select_stmt)* (__ ob:order_by_clause)? (__ l:limit_clause)? {
     return head; // TODO
   }
 
@@ -202,13 +202,13 @@ column_order_list
   }
 
 column_order_item
-  = c:expr o:(KW_ASC / KW_DESC)? {
+  = c:expr o:(ASC / DESC)? {
     return "[Not implemented]";
   }
   / column_order
 
 column_order
-  = c:column_ref __ o:(KW_ASC / KW_DESC)? {
+  = c:column_ref __ o:(ASC / DESC)? {
     return "[Not implemented]";
   }
 create_db_definition
@@ -217,8 +217,8 @@ create_db_definition
   }
 
 create_db_stmt
-  = a:KW_CREATE __
-    k:(KW_DATABASE / KW_SCHEME) __
+  = a:CREATE __
+    k:(DATABASE / SCHEME) __
     ife:if_not_exists? __
     t:ident_name __
     c:create_db_definition? {
@@ -226,32 +226,32 @@ create_db_stmt
     }
 
 view_with
-  = KW_WITH __ c:("CASCADED"i / "LOCAL"i) __ "CHECK"i __ "OPTION" {
+  = WITH __ c:("CASCADED"i / "LOCAL"i) __ "CHECK"i __ "OPTION" {
     return "[Not implemented]";
   }
-  / KW_WITH __ "CHECK"i __ "OPTION" {
+  / WITH __ "CHECK"i __ "OPTION" {
     return "[Not implemented]";
   }
 
 create_view_stmt
-  = a:KW_CREATE __
-  or:(KW_OR __ KW_REPLACE)? __
+  = a:CREATE __
+  or:(OR __ REPLACE)? __
   al:("ALGORITHM"i __ "=" __ ("UNDEFINED"i / "MERGE"i / "TEMPTABLE"i))? __
   df:("DEFINER"i __ "=" __ ident)? __
   ss:("SQL"i __ "SECURITY"i __ ("DEFINER"i / "INVOKER"i))? __
-  KW_VIEW __ v:table_name __ c:("(" __ column_list __ ")")? __
-  KW_AS __ s:select_stmt_nake __
+  VIEW __ v:table_name __ c:("(" __ column_list __ ")")? __
+  AS __ s:select_stmt_nake __
   w:view_with? {
     return "[Not implemented]";
   }
 
 create_index_stmt
-  = a:KW_CREATE __
-  kw:(KW_UNIQUE / KW_FULLTEXT / KW_SPATIAL)? __
-  t:KW_INDEX __
+  = a:CREATE __
+  kw:(UNIQUE / FULLTEXT / SPATIAL)? __
+  t:INDEX __
   n:ident __
   um:index_type? __
-  on:KW_ON __
+  on:ON __
   ta:table_name __
   "(" __ cols:column_order_list __ ")" __
   io:index_options? __
@@ -261,23 +261,23 @@ create_index_stmt
   }
 
 create_table_stmt
-  = a:KW_CREATE __
-    tp:KW_TEMPORARY? __
-    KW_TABLE __
+  = a:CREATE __
+    tp:TEMPORARY? __
+    TABLE __
     ife:if_not_exists? __
     t:table_name __
     lt:create_like_table {
       return "[Not implemented]";
     }
-  / createKw:KW_CREATE
-    tmpKw:(c:__ kw:KW_TEMPORARY { return leading(kw, c); })?
-    tableKw:(c:__ kw:KW_TABLE { return leading(kw, c); })
+  / createKw:CREATE
+    tmpKw:(c:__ kw:TEMPORARY { return leading(kw, c); })?
+    tableKw:(c:__ kw:TABLE { return leading(kw, c); })
     ifKw:(c:__ kw:if_not_exists { return leading(kw, c); })?
     table:(c1:__ t:table_name c2:__ { return withComments(t, { leading: c1, trailing: c2 }); })
     columns:create_table_definition
     __ table_options?
-    __ (KW_IGNORE / KW_REPLACE)?
-    __ KW_AS?
+    __ (IGNORE / REPLACE)?
+    __ AS?
     __ union_stmt? {
       return loc({
         type: "create_table_statement",
@@ -291,10 +291,10 @@ create_table_stmt
     }
 
 if_not_exists
-  = kws:(KW_IF __ KW_NOT __ KW_EXISTS) { return createKeywordList(kws); }
+  = kws:(IF __ NOT __ EXISTS) { return createKeywordList(kws); }
 
 create_like_table_simple
-  = KW_LIKE __ t: table_ref_list {
+  = LIKE __ t: table_ref_list {
     return "[Not implemented]";
   }
 
@@ -316,19 +316,19 @@ create_definition
   / create_fulltext_spatial_index_definition
 
 column_definition_opt
-  = kws:(KW_NOT __ KW_NULL) {
+  = kws:(NOT __ NULL) {
     return loc({ type: "column_option_nullable", kw: createKeywordList(kws), value: false });
   }
-  / kw:KW_NULL {
+  / kw:NULL {
     return loc({ type: "column_option_nullable", kw, value: true });
   }
-  / kw:KW_DEFAULT c:__ e:(literal / paren_expr) {
+  / kw:DEFAULT c:__ e:(literal / paren_expr) {
     return loc({ type: "column_option_default", kw, expr: withComments(e, {leading: c}) });
   }
-  / kw:KW_AUTO_INCREMENT {
+  / kw:AUTO_INCREMENT {
     return loc({ type: "column_option_auto_increment", kw });
   }
-  / kws:(KW_UNIQUE __ KW_KEY / KW_UNIQUE / KW_PRIMARY __ KW_KEY / KW_KEY) {
+  / kws:(UNIQUE __ KEY / UNIQUE / PRIMARY __ KEY / KEY) {
     return loc({ type: "column_option_key", kw: createKeywordList(kws) });
   }
   / column_option_comment
@@ -369,7 +369,7 @@ create_column_definition
     }
 
 column_option_comment
-  = kw:KW_COMMENT c:__ str:literal_string {
+  = kw:COMMENT c:__ str:literal_string {
     return loc({
       type: "column_option_comment",
       kw,
@@ -378,15 +378,15 @@ column_option_comment
   }
 
 collate_expr
-  = KW_COLLATE __ s:"="? __ ca:ident_name {
+  = COLLATE __ s:"="? __ ca:ident_name {
     return "[Not implemented]";
   }
 column_format
-  = k:KW_COLUMN_FORMAT __ f:(KW_FIXED / KW_DYNAMIC / KW_DEFAULT) {
+  = k:COLUMN_FORMAT __ f:(FIXED / DYNAMIC / DEFAULT) {
     return "[Not implemented]";
   }
 storage
-  = k:KW_STORAGE __ s:(KW_DISK / KW_MEMORY) {
+  = k:STORAGE __ s:(DISK / MEMORY) {
     return "[Not implemented]";
   }
 drop_index_opt
@@ -394,42 +394,42 @@ drop_index_opt
     return "[Not implemented]";
   }
 if_exists
-  = KW_IF __ KW_EXISTS {
+  = IF __ EXISTS {
     return "[Not implemented]";
   }
 
 drop_stmt
-  = a:KW_DROP __
-    r:KW_TABLE __
+  = a:DROP __
+    r:TABLE __
     ife: if_exists? __
     t:table_ref_list {
       return "[Not implemented]";
     }
-  / a:KW_DROP __
-    r:KW_INDEX __
+  / a:DROP __
+    r:INDEX __
     i:column_ref __
-    KW_ON __
+    ON __
     t:table_name __
     op:drop_index_opt? __ {
       return "[Not implemented]";
     }
 
 truncate_stmt
-  = a:KW_TRUNCATE  __
-    kw:KW_TABLE? __
+  = a:TRUNCATE  __
+    kw:TABLE? __
     t:table_ref_list {
       return "[Not implemented]";
     }
 
 use_stmt
-  = KW_USE  __
+  = USE  __
     d:ident {
       return "[Not implemented]";
     }
 
 alter_table_stmt
-  = KW_ALTER  __
-    KW_TABLE __
+  = ALTER  __
+    TABLE __
     t:table_name __
     e:alter_action_list {
       return "[Not implemented]";
@@ -460,35 +460,35 @@ alter_action
   }
 
 alter_add_column
-  = KW_ADD __
-    kc:KW_COLUMN? __
+  = ADD __
+    kc:COLUMN? __
     cd:create_column_definition {
       return "[Not implemented]";
     }
 
 alter_drop_column
-  = KW_DROP __
-    kc:KW_COLUMN? __
+  = DROP __
+    kc:COLUMN? __
     c:column_ref {
       return "[Not implemented]";
     }
 
 alter_add_index_or_key
-  = KW_ADD __
+  = ADD __
     id:create_index_definition {
       return "[Not implemented]";
     }
 
 alter_rename_table
-  = KW_RENAME __
-  kw:(KW_TO / KW_AS)? __
+  = RENAME __
+  kw:(TO / AS)? __
   tn:ident {
     return "[Not implemented]";
   }
 
 alter_rename_column
-  = KW_RENAME __ KW_COLUMN __ c:column_ref __
-  kw:(KW_TO / KW_AS)? __
+  = RENAME __ COLUMN __ c:column_ref __
+  kw:(TO / AS)? __
   tn:column_ref {
     return "[Not implemented]";
   }
@@ -504,41 +504,41 @@ alter_lock
   }
 
 alter_change_column
-  = 'CHANGE'i __ kc:KW_COLUMN? __ od:column_ref __ cd:create_column_definition __ fa:(('FIRST'i / 'AFTER'i) __ column_ref)? {
+  = 'CHANGE'i __ kc:COLUMN? __ od:column_ref __ cd:create_column_definition __ fa:(('FIRST'i / 'AFTER'i) __ column_ref)? {
     return "[Not implemented]";
   }
 
 alter_add_constraint
-  = KW_ADD __ c:create_constraint_definition {
+  = ADD __ c:create_constraint_definition {
     return "[Not implemented]";
   }
 
 alter_drop_key
-  = KW_DROP __ 'PRIMARY'i __ KW_KEY {
+  = DROP __ 'PRIMARY'i __ KEY {
     return "[Not implemented]";
   }
-  / KW_DROP __ 'FOREIGN'i __ KW_KEY __ c:ident_name {
+  / DROP __ 'FOREIGN'i __ KEY __ c:ident_name {
     return "[Not implemented]";
   }
 
 alter_drop_constraint
-  = KW_DROP __ kc:'CHECK'i __ c:ident_name {
+  = DROP __ kc:'CHECK'i __ c:ident_name {
     return "[Not implemented]";
   }
 
 alter_enable_constraint
-  = KW_WITH __ 'CHECK'i __ 'CHECK'i __ KW_CONSTRAINT __ c:ident_name {
+  = WITH __ 'CHECK'i __ 'CHECK'i __ CONSTRAINT __ c:ident_name {
     return "[Not implemented]";
   }
 
 alter_disable_constraint
-  = 'NOCHECK'i __ KW_CONSTRAINT __ c:ident_name {
+  = 'NOCHECK'i __ CONSTRAINT __ c:ident_name {
     return "[Not implemented]";
   }
 
 
 create_index_definition
-  = kc:(KW_INDEX / KW_KEY) __
+  = kc:(INDEX / KEY) __
     c:column? __
     t:index_type? __
     de:cte_columns_definition __
@@ -547,8 +547,8 @@ create_index_definition
     }
 
 create_fulltext_spatial_index_definition
-  = p: (KW_FULLTEXT / KW_SPATIAL) __
-    kc:(KW_INDEX / KW_KEY)? __
+  = p: (FULLTEXT / SPATIAL) __
+    kc:(INDEX / KEY)? __
     c:column? __
     de: cte_columns_definition __
     id: index_options? {
@@ -562,14 +562,14 @@ create_constraint_definition
   / create_constraint_check
 
 constraint_name
-  = kc:KW_CONSTRAINT __
+  = kc:CONSTRAINT __
   c:ident? {
     return "[Not implemented]";
   }
 
 create_constraint_primary
   = kc:constraint_name? __
-  p:(KW_PRIMARY __ KW_KEY) __
+  p:(PRIMARY __ KEY) __
   t:index_type? __
   de:cte_columns_definition __
   id:index_options? {
@@ -578,8 +578,8 @@ create_constraint_primary
 
 create_constraint_unique
   = kc:constraint_name? __
-  u:KW_UNIQUE __
-  p:(KW_INDEX / KW_KEY)? __
+  u:UNIQUE __
+  p:(INDEX / KEY)? __
   i:column? __
   t:index_type? __
   de:cte_columns_definition __
@@ -588,13 +588,13 @@ create_constraint_unique
   }
 
 create_constraint_check
-  = kc:constraint_name? __ u:KW_CHECK __ nfr:(KW_NOT __ KW_FOR __ KW_REPLICATION __)? "(" __ c:expr __ ")" {
+  = kc:constraint_name? __ u:CHECK __ nfr:(NOT __ FOR __ REPLICATION __)? "(" __ c:expr __ ")" {
     return "[Not implemented]";
   }
 
 create_constraint_foreign
   = kc:constraint_name? __
-  p:(KW_FOREIGN KW_KEY) __
+  p:(FOREIGN KEY) __
   i:column? __
   de:cte_columns_definition __
   id:reference_definition? {
@@ -602,15 +602,15 @@ create_constraint_foreign
   }
 
 check_constraint_definition
-  = kc:constraint_name? __ u:KW_CHECK __ "(" __ c:expr __ ")" __ ne:(KW_NOT? __ KW_ENFORCED)?  {
+  = kc:constraint_name? __ u:CHECK __ "(" __ c:expr __ ")" __ ne:(NOT? __ ENFORCED)?  {
     return "[Not implemented]";
   }
 
 reference_definition
-  = kc:KW_REFERENCES __
+  = kc:REFERENCES __
   t:table_ref_list __
   de:cte_columns_definition __
-  m:(KW_MATCH __ KW_FULL / KW_MATCH __ KW_PARTIAL / KW_MATCH __ KW_SIMPLE)? __
+  m:(MATCH __ FULL / MATCH __ PARTIAL / MATCH __ SIMPLE)? __
   od:on_reference? __
   ou:on_reference? {
     return "[Not implemented]";
@@ -620,11 +620,11 @@ reference_definition
   }
 
 on_reference
-  = on_kw:KW_ON __ kw:(KW_DELETE / KW_UPDATE) __ ro:reference_option {
+  = on_kw:ON __ kw:(DELETE / UPDATE) __ ro:reference_option {
     return "[Not implemented]";
   }
 reference_option
-  = kc:(KW_RESTRICT / KW_CASCADE / KW_SET __ KW_NULL / KW_NO __ KW_ACTION / KW_SET __ KW_DEFAULT / KW_CURRENT_TIMESTAMP) {
+  = kc:(RESTRICT / CASCADE / SET __ NULL / NO __ ACTION / SET __ DEFAULT / CURRENT_TIMESTAMP) {
     return "[Not implemented]";
   }
 
@@ -634,48 +634,48 @@ table_options
   }
 
 create_option_character_set_kw
-  = KW_CHARACTER __ KW_SET {
+  = CHARACTER __ SET {
     return "[Not implemented]";
   }
 create_option_character_set
-  = kw:KW_DEFAULT? __ t:(create_option_character_set_kw / KW_CHARSET / KW_COLLATE) __ s:("=")? __ v:ident_name {
+  = kw:DEFAULT? __ t:(create_option_character_set_kw / CHARSET / COLLATE) __ s:("=")? __ v:ident_name {
     return "[Not implemented]";
   }
 
 table_option
-  = kw:(KW_AUTO_INCREMENT / KW_AVG_ROW_LENGTH / KW_KEY_BLOCK_SIZE / KW_MAX_ROWS / KW_MIN_ROWS / KW_STATS_SAMPLE_PAGES) __ s:("=")? __ v:literal_numeric {
+  = kw:(AUTO_INCREMENT / AVG_ROW_LENGTH / KEY_BLOCK_SIZE / MAX_ROWS / MIN_ROWS / STATS_SAMPLE_PAGES) __ s:("=")? __ v:literal_numeric {
     return "[Not implemented]";
   }
   / create_option_character_set
-  / kw:(KW_COMMENT / KW_CONNECTION) __ s:("=")? __ c:literal_string {
+  / kw:(COMMENT / CONNECTION) __ s:("=")? __ c:literal_string {
     return "[Not implemented]";
   }
-  / kw:KW_COMPRESSION __ s:("=")? __ v:("'"('ZLIB'i / 'LZ4'i / 'NONE'i)"'") {
+  / kw:COMPRESSION __ s:("=")? __ v:("'"('ZLIB'i / 'LZ4'i / 'NONE'i)"'") {
     return "[Not implemented]";
   }
-  / kw:KW_ENGINE __ s:("=")? __ c:ident_name {
+  / kw:ENGINE __ s:("=")? __ c:ident_name {
     return "[Not implemented]";
   }
-  / kw:KW_ROW_FORMAT __ s:("=")? __ c:(KW_DEFAULT / KW_DYNAMIC / KW_FIXED / KW_COMPRESSED / KW_REDUNDANT / KW_COMPACT) {
+  / kw:ROW_FORMAT __ s:("=")? __ c:(DEFAULT / DYNAMIC / FIXED / COMPRESSED / REDUNDANT / COMPACT) {
     return "[Not implemented]";
   }
 
 
 alter_add_fulletxt_sparital_index
-  = KW_ADD __
+  = ADD __
     fsid:create_fulltext_spatial_index_definition {
       return "[Not implemented]";
     }
 
 rename_stmt
-  = KW_RENAME  __
-    KW_TABLE __
+  = RENAME  __
+    TABLE __
     t:table_to_list {
       return "[Not implemented]";
     }
 
 unlock_stmt
-  = KW_UNLOCK __ KW_TABLES {
+  = UNLOCK __ TABLES {
     return "[Not implemented]";
   }
 
@@ -698,27 +698,27 @@ lock_table_list
   }
 
 lock_stmt
-  = KW_LOCK __ KW_TABLES __ ltl:lock_table_list {
+  = LOCK __ TABLES __ ltl:lock_table_list {
     return "[Not implemented]";
   }
 
 show_stmt
-  = KW_SHOW __ t:('BINARY'i / 'MASTER'i) __ 'LOGS'i {
+  = SHOW __ t:('BINARY'i / 'MASTER'i) __ 'LOGS'i {
     return "[Not implemented]";
   }
-  / KW_SHOW __ 'BINLOG'i __ 'EVENTS'i __ ins:in_op_right? __ from: from_clause? __ limit: limit_clause? {
+  / SHOW __ 'BINLOG'i __ 'EVENTS'i __ ins:in_op_right? __ from: from_clause? __ limit: limit_clause? {
     return "[Not implemented]";
   }
-  / KW_SHOW __ k:(('CHARACTER'i __ 'SET'i) / 'COLLATION'i) __ e:(like_op_right / where_clause)? {
+  / SHOW __ k:(('CHARACTER'i __ 'SET'i) / 'COLLATION'i) __ e:(like_op_right / where_clause)? {
     return "[Not implemented]";
   }
-  / KW_SHOW __ KW_CREATE __ KW_VIEW __ t:table_name {
+  / SHOW __ CREATE __ VIEW __ t:table_name {
     return "[Not implemented]";
   }
   / show_grant_stmt
 
 show_grant_stmt
-  = KW_SHOW __ 'GRANTS'i __ f:show_grant_for? {
+  = SHOW __ 'GRANTS'i __ f:show_grant_for? {
     return "[Not implemented]";
   }
 
@@ -728,7 +728,7 @@ show_grant_for
   }
 
 show_grant_for_using
-  = KW_USING __ l:show_grant_for_using_list {
+  = USING __ l:show_grant_for_using_list {
     return "[Not implemented]";
   }
 
@@ -738,7 +738,7 @@ show_grant_for_using_list
   }
 
 desc_stmt
-  = (KW_DESC / KW_DESCRIBE) __ t:ident {
+  = (DESC / DESCRIBE) __ t:ident {
     return "[Not implemented]";
   }
 
@@ -749,8 +749,8 @@ select_stmt
     }
 
 with_clause
-  = withKw:KW_WITH
-    recursiveKw:(c:__ kw:KW_RECURSIVE { return leading(kw, c) })?
+  = withKw:WITH
+    recursiveKw:(c:__ kw:RECURSIVE { return leading(kw, c) })?
     c:__ head:common_table_expression tail:(__ "," __ common_table_expression)* {
       return loc({
         type: "with_clause",
@@ -763,7 +763,7 @@ with_clause
 common_table_expression
   = table:ident
     columns:(c:__ cols:cte_columns_definition { return {cols, c}; })?
-    c1:__ asKw:KW_AS
+    c1:__ asKw:AS
     opt:(c:__ op:cte_option { return leading(op, c); })?
     c2:__ select:cte_select {
       return loc({
@@ -782,8 +782,8 @@ cte_select
   }
 
 cte_option
-  = kws:(KW_NOT __ KW_MATERIALIZED) { return createKeywordList(kws); }
-  / KW_MATERIALIZED
+  = kws:(NOT __ MATERIALIZED) { return createKeywordList(kws); }
+  / MATERIALIZED
 
 cte_columns_definition
   = "(" c1:__ head:ident tail:(__ "," __ ident)* c2:__ ")" {
@@ -791,7 +791,7 @@ cte_columns_definition
     }
 
 for_update
-  = fu:('FOR'i __ KW_UPDATE) {
+  = fu:('FOR'i __ UPDATE) {
     return "[Not implemented]";
   }
 
@@ -833,7 +833,7 @@ other_clause
   / into_clause
 
 select_clause
-  = selectKw:KW_SELECT
+  = selectKw:SELECT
     options:(c:__ kw:select_option { return leading(kw, c) })*
     columns:(c:__ cls:select_columns { return leading(cls, c) }) {
       return loc({
@@ -845,21 +845,21 @@ select_clause
     }
 
 select_option
-  = KW_ALL
-  / KW_DISTINCT
+  = ALL
+  / DISTINCT
 
 select_option$mysql
-  = KW_ALL
-  / KW_DISTINCT
-  / KW_DISTINCTROW
-  / KW_HIGH_PRIORITY
-  / KW_STRAIGHT_JOIN
-  / KW_SQL_CALC_FOUND_ROWS
-  / KW_SQL_CACHE
-  / KW_SQL_NO_CACHE
-  / KW_SQL_BIG_RESULT
-  / KW_SQL_SMALL_RESULT
-  / KW_SQL_BUFFER_RESULT
+  = ALL
+  / DISTINCT
+  / DISTINCTROW
+  / HIGH_PRIORITY
+  / STRAIGHT_JOIN
+  / SQL_CALC_FOUND_ROWS
+  / SQL_CACHE
+  / SQL_NO_CACHE
+  / SQL_BIG_RESULT
+  / SQL_SMALL_RESULT
+  / SQL_BUFFER_RESULT
 
 select_columns
   = head:column_list_item tail:(__ "," __ column_list_item)* {
@@ -867,16 +867,16 @@ select_columns
     }
 
 fulltext_search_mode
-  = KW_IN __ 'NATURAL'i __ 'LANGUAGE'i __ 'MODE'i __ 'WITH'i __ 'QUERY'i __ 'EXPANSION'i  {
+  = IN __ 'NATURAL'i __ 'LANGUAGE'i __ 'MODE'i __ 'WITH'i __ 'QUERY'i __ 'EXPANSION'i  {
     return "[Not implemented]";
   }
-  / KW_IN __ 'NATURAL'i __ 'LANGUAGE'i __ 'MODE'i {
+  / IN __ 'NATURAL'i __ 'LANGUAGE'i __ 'MODE'i {
     return "[Not implemented]";
   }
-  / KW_IN __ 'BOOLEAN'i __ 'MODE'i {
+  / IN __ 'BOOLEAN'i __ 'MODE'i {
     return "[Not implemented]";
   }
-  / KW_WITH __ 'QUERY'i __ 'EXPANSION'i {
+  / WITH __ 'QUERY'i __ 'EXPANSION'i {
     return "[Not implemented]";
   }
 
@@ -910,7 +910,7 @@ star
   = "*" { return loc({ type: "all_columns" }) }
 
 alias_clause
-  = kw:KW_AS c:__ id:alias_ident {
+  = kw:AS c:__ id:alias_ident {
     return {
       asKw: kw,
       alias: withComments(id, { leading: c }),
@@ -921,12 +921,12 @@ alias_clause
   }
 
 into_clause
-  = KW_INTO __ k:('OUTFILE'i / 'DUMPFILE'i)? __ f:(literal_string / ident) {
+  = INTO __ k:('OUTFILE'i / 'DUMPFILE'i)? __ f:(literal_string / ident) {
     return "[Not implemented]";
   }
 
 from_clause
-  = kw:KW_FROM c:__ tables:table_ref_list {
+  = kw:FROM c:__ tables:table_ref_list {
     return loc({
       type: "from_clause",
       fromKw: withComments(kw, { trailing: c }),
@@ -940,12 +940,12 @@ table_to_list
   }
 
 table_to_item
-  = head:table_name __ KW_TO __ tail: (table_name) {
+  = head:table_name __ TO __ tail: (table_name) {
     return "[Not implemented]";
   }
 
 index_type
-  = KW_USING __
+  = USING __
   t:("BTREE"i / "HASH"i) {
     return "[Not implemented]";
   }
@@ -956,7 +956,7 @@ index_options
   }
 
 index_option
-  = k:KW_KEY_BLOCK_SIZE __ e:("=")? __ kbs:literal_numeric {
+  = k:KEY_BLOCK_SIZE __ e:("=")? __ kbs:literal_numeric {
     return "[Not implemented]";
   }
   / index_type
@@ -997,7 +997,7 @@ table_join
 
 //NOTE that, the table assigned to `var` shouldn't write in `table_join`
 table_base
-  = KW_DUAL {
+  = DUAL {
     return "[Not implemented]";
   }
   / t:table_name alias:(__ alias_clause)? {
@@ -1035,31 +1035,31 @@ join_op$mysql
   = natural_join
   / cross_join
   / join_type
-  / KW_STRAIGHT_JOIN
+  / STRAIGHT_JOIN
 
 natural_join
-  = kw:KW_NATURAL c:__ jt:join_type { return [trailing(kw, c), ...jt]; }
+  = kw:NATURAL c:__ jt:join_type { return [trailing(kw, c), ...jt]; }
 
 cross_join
-  = kws:(KW_CROSS __ KW_JOIN) { return createKeywordList(kws); }
+  = kws:(CROSS __ JOIN) { return createKeywordList(kws); }
 
 join_type
-  = kws:(KW_LEFT __ KW_OUTER __ KW_JOIN) { return createKeywordList(kws); }
-  / kws:(KW_LEFT __ KW_JOIN) { return createKeywordList(kws); }
-  / kws:(KW_RIGHT __ KW_OUTER __ KW_JOIN) { return createKeywordList(kws); }
-  / kws:(KW_RIGHT __ KW_JOIN) { return createKeywordList(kws); }
-  / kws:(KW_FULL __ KW_OUTER __ KW_JOIN) { return createKeywordList(kws); }
-  / kws:(KW_FULL __ KW_JOIN) { return createKeywordList(kws); }
-  / kws:(KW_INNER __ KW_JOIN) { return createKeywordList(kws); }
-  / kw:KW_JOIN { return createKeywordList([kw]); }
+  = kws:(LEFT __ OUTER __ JOIN) { return createKeywordList(kws); }
+  / kws:(LEFT __ JOIN) { return createKeywordList(kws); }
+  / kws:(RIGHT __ OUTER __ JOIN) { return createKeywordList(kws); }
+  / kws:(RIGHT __ JOIN) { return createKeywordList(kws); }
+  / kws:(FULL __ OUTER __ JOIN) { return createKeywordList(kws); }
+  / kws:(FULL __ JOIN) { return createKeywordList(kws); }
+  / kws:(INNER __ JOIN) { return createKeywordList(kws); }
+  / kw:JOIN { return createKeywordList([kw]); }
 
 join_type$mysql
-  = kws:(KW_LEFT __ KW_OUTER __ KW_JOIN) { return createKeywordList(kws); }
-  / kws:(KW_LEFT __ KW_JOIN) { return createKeywordList(kws); }
-  / kws:(KW_RIGHT __ KW_OUTER __ KW_JOIN) { return createKeywordList(kws); }
-  / kws:(KW_RIGHT __ KW_JOIN) { return createKeywordList(kws); }
-  / kws:(KW_INNER __ KW_JOIN) { return createKeywordList(kws); }
-  / kw:KW_JOIN { return createKeywordList([kw]); }
+  = kws:(LEFT __ OUTER __ JOIN) { return createKeywordList(kws); }
+  / kws:(LEFT __ JOIN) { return createKeywordList(kws); }
+  / kws:(RIGHT __ OUTER __ JOIN) { return createKeywordList(kws); }
+  / kws:(RIGHT __ JOIN) { return createKeywordList(kws); }
+  / kws:(INNER __ JOIN) { return createKeywordList(kws); }
+  / kw:JOIN { return createKeywordList([kw]); }
 
 table_name
   = db:ident c1:__ "." c2:__ t:ident {
@@ -1080,7 +1080,7 @@ join_specification
   = using_clause / on_clause
 
 using_clause
-  = kw:KW_USING c1:__ expr:using_clause_paren_expr {
+  = kw:USING c1:__ expr:using_clause_paren_expr {
     return loc({
       type: "join_using_specification",
       usingKw: kw,
@@ -1104,7 +1104,7 @@ plain_column_ref
   }
 
 on_clause
-  = kw:KW_ON c:__ expr:expr {
+  = kw:ON c:__ expr:expr {
     return loc({
       type: "join_on_specification",
       onKw: kw,
@@ -1113,7 +1113,7 @@ on_clause
   }
 
 where_clause
-  = kw:KW_WHERE c:__ expr:expr {
+  = kw:WHERE c:__ expr:expr {
     return loc({
       type: "where_clause",
       whereKw: kw,
@@ -1122,7 +1122,7 @@ where_clause
   }
 
 group_by_clause
-  = kws:(KW_GROUP __ KW_BY __) list:expr_list {
+  = kws:(GROUP __ BY __) list:expr_list {
     return loc({
       type: "group_by_clause",
       groupByKw: createKeywordList(kws),
@@ -1136,7 +1136,7 @@ column_ref_list
     }
 
 having_clause
-  = kw:KW_HAVING c:__ expr:expr {
+  = kw:HAVING c:__ expr:expr {
     return loc({
       type: "having_clause",
       havingKw: kw,
@@ -1145,7 +1145,7 @@ having_clause
   }
 
 partition_by_clause
-  = kws:(KW_PARTITION __ KW_BY __) list:expr_list {
+  = kws:(PARTITION __ BY __) list:expr_list {
     return loc({
       type: "partition_by_clause",
       partitionByKw: createKeywordList(kws),
@@ -1154,7 +1154,7 @@ partition_by_clause
   }
 
 order_by_clause
-  = kws:(KW_ORDER __ KW_BY __) l:order_by_list {
+  = kws:(ORDER __ BY __) l:order_by_list {
     return loc({
       type: "order_by_clause",
       orderByKw: createKeywordList(kws),
@@ -1168,7 +1168,7 @@ order_by_list
   }
 
 order_by_element
-  = e:expr c:__ orderKw:(KW_DESC / KW_ASC) {
+  = e:expr c:__ orderKw:(DESC / ASC) {
     return loc({
       type: "sort_specification",
       expr: withComments(e, { trailing: c }),
@@ -1183,7 +1183,7 @@ order_by_element
   }
 
 limit_clause
-  = kw:KW_LIMIT c1:__ count:expr c2:__ offkw:KW_OFFSET c3:__ offset:expr  {
+  = kw:LIMIT c1:__ count:expr c2:__ offkw:OFFSET c3:__ offset:expr  {
     return loc({
       type: "limit_clause",
       limitKw: kw,
@@ -1192,7 +1192,7 @@ limit_clause
       offset: leading(offset, c3),
     });
   }
-  / kw:KW_LIMIT c1:__ offset:expr c2:__ "," c3:__ count:expr  {
+  / kw:LIMIT c1:__ offset:expr c2:__ "," c3:__ count:expr  {
     return loc({
       type: "limit_clause",
       limitKw: kw,
@@ -1200,14 +1200,14 @@ limit_clause
       count: leading(count, c3),
     });
   }
-  / kw:KW_LIMIT c:__ count:expr {
+  / kw:LIMIT c:__ count:expr {
     return loc({ type: "limit_clause", limitKw: kw, count: leading(count, c) });
   }
 
 update_stmt
-  = KW_UPDATE    __
+  = UPDATE    __
     t:table_ref_list __
-    KW_SET       __
+    SET       __
     l:set_list   __
     w:where_clause? __
     or:order_by_clause? __
@@ -1216,7 +1216,7 @@ update_stmt
     }
 
 delete_stmt
-  = KW_DELETE    __
+  = DELETE    __
     t: table_ref_list? __
     f:from_clause __
     w:where_clause? __
@@ -1245,17 +1245,17 @@ insert_value_clause
   / select_stmt_nake
 
 insert_partition
-  = KW_PARTITION __ "(" __ head:ident_name tail:(__ "," __ ident_name)* __ ")" {
+  = PARTITION __ "(" __ head:ident_name tail:(__ "," __ ident_name)* __ ")" {
     return "[Not implemented]";
   }
-  / KW_PARTITION __ v: value_item {
+  / PARTITION __ v: value_item {
     return "[Not implemented]";
   }
 
 replace_insert_stmt
   = ri:replace_insert       __
-    ig:KW_IGNORE?  __
-    it:KW_INTO? __
+    ig:IGNORE?  __
+    it:INTO? __
     t:table_name  __
     p:insert_partition? __ "(" __ c:column_list  __ ")" __
     v:insert_value_clause __
@@ -1265,8 +1265,8 @@ replace_insert_stmt
 
 insert_no_columns_stmt
   = ri:replace_insert __
-    ig:KW_IGNORE?  __
-    it:KW_INTO?   __
+    ig:IGNORE?  __
+    it:INTO?   __
     t:table_name  __
     p:insert_partition? __
     v:insert_value_clause __
@@ -1276,26 +1276,26 @@ insert_no_columns_stmt
 
 insert_into_set
   = ri:replace_insert __
-    KW_INTO __
+    INTO __
     t:table_name  __
     p:insert_partition? __
-    KW_SET       __
+    SET       __
     l:set_list   __
     odp:on_duplicate_update_stmt? {
       return "[Not implemented]";
     }
 
 on_duplicate_update_stmt
-  = KW_ON __ 'DUPLICATE'i __ KW_KEY __ KW_UPDATE __ s:set_list {
+  = ON __ 'DUPLICATE'i __ KEY __ UPDATE __ s:set_list {
     return "[Not implemented]";
   }
 
 replace_insert
-  = KW_INSERT   { return "[Not implemented]"; }
-  / KW_REPLACE  { return "[Not implemented]"; }
+  = INSERT   { return "[Not implemented]"; }
+  / REPLACE  { return "[Not implemented]"; }
 
 value_clause
-  = KW_VALUES __ l:value_list  { return "[Not implemented]"; }
+  = VALUES __ l:value_list  { return "[Not implemented]"; }
 
 value_list
   = head:value_item tail:(__ "," __ value_item)* {
@@ -1313,41 +1313,41 @@ expr_list
   }
 
 interval_expr
-  = KW_INTERVAL                    __
+  = INTERVAL                    __
     e:expr                       __
     u: interval_unit {
       return "[Not implemented]";
     }
 
 interval_unit
-  = KW_UNIT_YEAR
-  / KW_UNIT_MONTH
-  / KW_UNIT_DAY
-  / KW_UNIT_HOUR
-  / KW_UNIT_MINUTE
-  / KW_UNIT_SECOND
+  = UNIT_YEAR
+  / UNIT_MONTH
+  / UNIT_DAY
+  / UNIT_HOUR
+  / UNIT_MINUTE
+  / UNIT_SECOND
 
 case_expr
-  = KW_CASE                         __
+  = CASE                         __
     condition_list:case_when_then+  __
     otherwise:case_else?            __
-    KW_END __ KW_CASE? {
+    END __ CASE? {
       return "[Not implemented]";
     }
-  / KW_CASE                         __
+  / CASE                         __
     expr:expr                      __
     condition_list:case_when_then+  __
     otherwise:case_else?            __
-    KW_END __ KW_CASE? {
+    END __ CASE? {
       return "[Not implemented]";
     }
 
 case_when_then
-  = KW_WHEN __ condition:expr __ KW_THEN __ result:expr {
+  = WHEN __ condition:expr __ THEN __ result:expr {
     return "[Not implemented]";
   }
 
-case_else = KW_ELSE __ result:expr {
+case_else = ELSE __ result:expr {
     return "[Not implemented]";
   }
 
@@ -1374,10 +1374,10 @@ or_expr
     return createBinaryExprChain(head, tail);
   }
 
-or_op = kw:KW_OR / "||"
+or_op = kw:OR / "||"
 
 xor_expr
-  = head:and_expr tail:(__ KW_XOR __ and_expr)* {
+  = head:and_expr tail:(__ XOR __ and_expr)* {
     return createBinaryExprChain(head, tail);
   }
 
@@ -1386,13 +1386,13 @@ and_expr
     return createBinaryExprChain(head, tail);
   }
 
-and_op = kw:KW_AND / "&&"
+and_op = kw:AND / "&&"
 
 //here we should use `NOT` instead of `comparision_expr` to support chain-expr
 not_expr
   = comparison_expr
   / exists_expr
-  / kw:KW_NOT c:__ expr:not_expr {
+  / kw:NOT c:__ expr:not_expr {
     return loc(createUnaryExpr(kw, c, expr));
   }
 
@@ -1431,8 +1431,8 @@ exists_expr
   }
 
 exists_op
-  = nk:(KW_NOT __ KW_EXISTS) { return "[Not implemented]"; }
-  / KW_EXISTS
+  = nk:(NOT __ EXISTS) { return "[Not implemented]"; }
+  / EXISTS
 
 comparison_op_right
   = arithmetic_op_right
@@ -1464,14 +1464,14 @@ in_op_right
   }
 
 in_op
-  = kws:(KW_NOT __ KW_IN) { return createKeywordList(kws); }
-  / kw:KW_IN
+  = kws:(NOT __ IN) { return createKeywordList(kws); }
+  / kw:IN
 
 is_op_right
-  = kw:KW_IS c:__ right:additive_expr {
+  = kw:IS c:__ right:additive_expr {
     return { kind: "is", op: kw, c, right };
   }
-  / kws:(KW_IS __ KW_NOT) c:__ right:additive_expr {
+  / kws:(IS __ NOT) c:__ right:additive_expr {
     return { kind: "is", op: createKeywordList(kws), c, right };
   }
 
@@ -1481,8 +1481,8 @@ like_op_right
   }
 
 like_op
-  = kws:(KW_NOT __ KW_LIKE) { return createKeywordList(kws); }
-  / kw:KW_LIKE
+  = kws:(NOT __ LIKE) { return createKeywordList(kws); }
+  / kw:LIKE
 
 regexp_op_right
   = op:regexp_op c:__ b:'BINARY'i? __ right:(literal_string / column_ref) {
@@ -1490,14 +1490,14 @@ regexp_op_right
   }
 
 regexp_op
-  = kws:(KW_NOT __ (KW_REGEXP / KW_RLIKE)) {
+  = kws:(NOT __ (REGEXP / RLIKE)) {
     return createKeywordList(kws);
   }
-  / KW_REGEXP
-  / KW_RLIKE
+  / REGEXP
+  / RLIKE
 
 between_op_right
-  = betweenKw:between_op c1:__  begin:additive_expr c2:__ andKw:KW_AND c3:__ end:additive_expr {
+  = betweenKw:between_op c1:__  begin:additive_expr c2:__ andKw:AND c3:__ end:additive_expr {
     return {
       kind: "between",
       betweenKw,
@@ -1508,8 +1508,8 @@ between_op_right
   }
 
 between_op
-  = kws:(KW_NOT __ KW_BETWEEN) { return createKeywordList(kws); }
-  / kw:KW_BETWEEN { return createKeywordList([kw]); }
+  = kws:(NOT __ BETWEEN) { return createKeywordList(kws); }
+  / kw:BETWEEN { return createKeywordList([kw]); }
 
 additive_expr
   = head: multiplicative_expr
@@ -1527,7 +1527,7 @@ multiplicative_expr
     }
 
 multiplicative_operator
-  = "*" / "/" / "%" / '&' / '>>' / '<<' / '^' / '|' / op:KW_DIV / op:KW_MOD
+  = "*" / "/" / "%" / '&' / '>>' / '<<' / '^' / '|' / op:DIV / op:MOD
 
 negation_expr
   = primary
@@ -1625,7 +1625,7 @@ ident_start = [A-Za-z_]
 ident_part  = [A-Za-z0-9_]
 
 window_clause
-  = kw:KW_WINDOW c:__ wins:named_window_list {
+  = kw:WINDOW c:__ wins:named_window_list {
     return loc({
       type: "window_clause",
       windowKw: trailing(kw, c),
@@ -1639,7 +1639,7 @@ named_window_list
   }
 
 named_window
-  = name:ident c1:__ kw:KW_AS c2:__ def:window_definition_in_parens {
+  = name:ident c1:__ kw:AS c2:__ def:window_definition_in_parens {
     return loc({
       type: "named_window",
       name: trailing(name, c1),
@@ -1682,13 +1682,13 @@ frame_clause
     }
 
 frame_unit
-  = KW_ROWS / KW_RANGE
+  = ROWS / RANGE
 
 frame_unit$sqlite
-  = KW_ROWS / KW_RANGE / KW_GROUPS
+  = ROWS / RANGE / GROUPS
 
 frame_between
-  = bKw:KW_BETWEEN c1:__ begin:frame_bound c2:__ andKw:KW_AND c3:__ end:frame_bound {
+  = bKw:BETWEEN c1:__ begin:frame_bound c2:__ andKw:AND c3:__ end:frame_bound {
     return loc({
       type: "frame_between",
       betweenKw: bKw,
@@ -1699,23 +1699,23 @@ frame_between
   }
 
 frame_bound
-  = kws:(KW_CURRENT __ KW_ROW) {
+  = kws:(CURRENT __ ROW) {
     return loc({ type: "frame_bound_current_row", currentRowKw: createKeywordList(kws) });
   }
-  / expr:(frame_unbounded / literal) c:__ kw:KW_PRECEDING {
+  / expr:(frame_unbounded / literal) c:__ kw:PRECEDING {
     return loc({ type: "frame_bound_preceding", expr: trailing(expr, c), precedingKw: kw });
   }
-  / expr:(frame_unbounded / literal) c:__ kw:KW_FOLLOWING {
+  / expr:(frame_unbounded / literal) c:__ kw:FOLLOWING {
     return loc({ type: "frame_bound_following", expr: trailing(expr, c), followingKw: kw });
   }
 
 frame_unbounded
-  = kw:KW_UNBOUNDED {
+  = kw:UNBOUNDED {
     return loc({ type: "frame_unbounded", unboundedKw: kw })
   }
 
 frame_exclusion
-  = kw:KW_EXCLUDE c:__ kindKw:frame_exclusion_kind {
+  = kw:EXCLUDE c:__ kindKw:frame_exclusion_kind {
     return loc({
       type: "frame_exclusion",
       excludeKw: trailing(kw, c),
@@ -1724,10 +1724,10 @@ frame_exclusion
   }
 
 frame_exclusion_kind
-  = kws:(KW_CURRENT __ KW_ROW) { return createKeywordList(kws); }
-  / kws:(KW_NO __ KW_OTHERS) { return createKeywordList(kws); }
-  / KW_GROUP
-  / KW_TIES
+  = kws:(CURRENT __ ROW) { return createKeywordList(kws); }
+  / kws:(NO __ OTHERS) { return createKeywordList(kws); }
+  / GROUP
+  / TIES
 
 func_call
   = name:func_name c1:__ args:func_args
@@ -1751,17 +1751,17 @@ func_name$mysql
 
 // In MySQL, window functions are reserved keywords
 mysql_window_func_keyword
-  = KW_CUME_DIST
-  / KW_DENSE_RANK
-  / KW_FIRST_VALUE
-  / KW_LAG
-  / KW_LAST_VALUE
-  / KW_LEAD
-  / KW_NTH_VALUE
-  / KW_NTILE
-  / KW_PERCENT_RANK
-  / KW_RANK
-  / KW_ROW_NUMBER
+  = CUME_DIST
+  / DENSE_RANK
+  / FIRST_VALUE
+  / LAG
+  / LAST_VALUE
+  / LEAD
+  / NTH_VALUE
+  / NTILE
+  / PERCENT_RANK
+  / RANK
+  / ROW_NUMBER
 
 func_args
   = "(" c1:__ args:func_args_list c2:__ ")" {
@@ -1788,13 +1788,13 @@ func_args_list
 // For aggregate functions, first argument can be "*"
 func_1st_arg
   = star
-  / kw:KW_DISTINCT c:__ e:expr {
+  / kw:DISTINCT c:__ e:expr {
     return loc({ type: "distinct_arg", distinctKw: kw, value: leading(e, c) });
   }
   / expr
 
 over_arg
-  = kw:KW_OVER c:__ win:(window_definition_in_parens / ident) {
+  = kw:OVER c:__ win:(window_definition_in_parens / ident) {
     return loc({
       type: "over_arg",
       overKw: trailing(kw, c),
@@ -1803,7 +1803,7 @@ over_arg
   }
 
 cast_expr
-  = kw:KW_CAST c:__ args:cast_args_in_parens  {
+  = kw:CAST c:__ args:cast_args_in_parens  {
     return loc({
       type: "cast_expr",
       castKw: kw,
@@ -1817,7 +1817,7 @@ cast_args_in_parens
   }
 
 cast_arg
-  = e:expr c1:__ kw:KW_AS c2:__ t:data_type {
+  = e:expr c1:__ kw:AS c2:__ t:data_type {
     return loc({
       type: "cast_arg",
       expr: trailing(e, c1),
@@ -1827,8 +1827,8 @@ cast_arg
   }
 
 signedness
-  = KW_SIGNED
-  / KW_UNSIGNED
+  = SIGNED
+  / UNSIGNED
 
 literal
   = b:'BINARY'i? __ s:literal_string ca:(__ collate_expr)? {
@@ -1840,15 +1840,15 @@ literal
   / literal_datetime
 
 literal_null
-  = kw:KW_NULL {
+  = kw:NULL {
     return loc({ type: "null", text: kw.text });
   }
 
 literal_bool
-  = kw:KW_TRUE {
+  = kw:TRUE {
     return loc({ type: "bool", text: kw.text });
   }
-  / kw:KW_FALSE {
+  / kw:FALSE {
     return loc({ type: "bool", text: kw.text});
   }
 
@@ -1973,7 +1973,7 @@ literal_natural_charset_string
   }
 
 literal_datetime
-  = kw:(KW_TIME / KW_DATE / KW_TIMESTAMP / KW_DATETIME) c:__
+  = kw:(TIME / DATE / TIMESTAMP / DATETIME) c:__
     str:(literal_single_quoted_string / literal_double_quoted_string) {
       return loc({
         type: "datetime",
@@ -2060,42 +2060,42 @@ literal_list
   }
 
 type_name
-  = KW_BOOLEAN
-  / KW_BOOL
-  / KW_BLOB
-  / KW_TINYBLOB
-  / KW_MEDIUMBLOB
-  / KW_LONGBLOB
-  / KW_BINARY
-  / KW_VARBINARY
-  / KW_DATE
-  / KW_DATETIME
-  / KW_TIME
-  / KW_TIMESTAMP
-  / KW_YEAR
-  / KW_CHAR
-  / KW_VARCHAR
-  / KW_TINYTEXT
-  / KW_TEXT
-  / KW_MEDIUMTEXT
-  / KW_LONGTEXT
-  / KW_NUMERIC
-  / KW_FIXED
-  / KW_DECIMAL
-  / KW_DEC
-  / KW_INT
-  / KW_INTEGER
-  / KW_SMALLINT
-  / KW_TINYINT
-  / KW_BIGINT
-  / KW_FLOAT
-  / kws:(KW_DOUBLE __ KW_PRECISION) { return createKeywordList(kws); }
-  / KW_DOUBLE
-  / KW_REAL
-  / KW_BIT
-  / KW_JSON
-  / KW_ENUM
-  / KW_SET
+  = BOOLEAN
+  / BOOL
+  / BLOB
+  / TINYBLOB
+  / MEDIUMBLOB
+  / LONGBLOB
+  / BINARY
+  / VARBINARY
+  / DATE
+  / DATETIME
+  / TIME
+  / TIMESTAMP
+  / YEAR
+  / CHAR
+  / VARCHAR
+  / TINYTEXT
+  / TEXT
+  / MEDIUMTEXT
+  / LONGTEXT
+  / NUMERIC
+  / FIXED
+  / DECIMAL
+  / DEC
+  / INT
+  / INTEGER
+  / SMALLINT
+  / TINYINT
+  / BIGINT
+  / FLOAT
+  / kws:(DOUBLE __ PRECISION) { return createKeywordList(kws); }
+  / DOUBLE
+  / REAL
+  / BIT
+  / JSON
+  / ENUM
+  / SET
 
 // Optional whitespace (or comments)
 __ "whitespace"
@@ -2151,227 +2151,227 @@ end_of_file
   = !.
 
 // All keywords (sorted alphabetically)
-KW_ACTION              = kw:"ACTION"i              !ident_part { return loc(createKeyword(kw)); }
-KW_ADD                 = kw:"ADD"i                 !ident_part { return loc(createKeyword(kw)); }
-KW_ADD_DATE            = kw:"ADDDATE"i             !ident_part { return loc(createKeyword(kw)); }
-KW_ALL                 = kw:"ALL"i                 !ident_part { return loc(createKeyword(kw)); }
-KW_ALTER               = kw:"ALTER"i               !ident_part { return loc(createKeyword(kw)); }
-KW_AND                 = kw:"AND"i                 !ident_part { return loc(createKeyword(kw)); }
-KW_AS                  = kw:"AS"i                  !ident_part { return loc(createKeyword(kw)); }
-KW_ASC                 = kw:"ASC"i                 !ident_part { return loc(createKeyword(kw)); }
-KW_AUTO_INCREMENT      = kw:"AUTO_INCREMENT"i      !ident_part { return loc(createKeyword(kw)); }
-KW_AVG                 = kw:"AVG"i                 !ident_part { return loc(createKeyword(kw)); }
-KW_AVG_ROW_LENGTH      = kw:"AVG_ROW_LENGTH"i      !ident_part { return loc(createKeyword(kw)); }
-KW_BETWEEN             = kw:"BETWEEN"i             !ident_part { return loc(createKeyword(kw)); }
-KW_BIGINT              = kw:"BIGINT"i              !ident_part { return loc(createKeyword(kw)); }
-KW_BINARY              = kw:"BINARY"i              !ident_part { return loc(createKeyword(kw)); }
-KW_BIT                 = kw:"BIT"i                 !ident_part { return loc(createKeyword(kw)); }
-KW_BLOB                = kw:"BLOB"i                !ident_part { return loc(createKeyword(kw)); }
-KW_BOOL                = kw:"BOOL"i                !ident_part { return loc(createKeyword(kw)); }
-KW_BOOLEAN             = kw:"BOOLEAN"i             !ident_part { return loc(createKeyword(kw)); }
-KW_BY                  = kw:"BY"i                  !ident_part { return loc(createKeyword(kw)); }
-KW_CALL                = kw:"CALL"i                !ident_part { return loc(createKeyword(kw)); }
-KW_CASCADE             = kw:"CASCADE"i             !ident_part { return loc(createKeyword(kw)); }
-KW_CASE                = kw:"CASE"i                !ident_part { return loc(createKeyword(kw)); }
-KW_CAST                = kw:"CAST"i                !ident_part { return loc(createKeyword(kw)); }
-KW_CHAR                = kw:"CHAR"i                !ident_part { return loc(createKeyword(kw)); }
-KW_CHARACTER           = kw:"CHARACTER"i           !ident_part { return loc(createKeyword(kw)); }
-KW_CHARSET             = kw:"CHARSET"i             !ident_part { return loc(createKeyword(kw)); }
-KW_CHECK               = kw:"CHECK"i               !ident_part { return loc(createKeyword(kw)); }
-KW_COLLATE             = kw:"COLLATE"i             !ident_part { return loc(createKeyword(kw)); }
-KW_COLUMN              = kw:"COLUMN"i              !ident_part { return loc(createKeyword(kw)); }
-KW_COLUMN_FORMAT       = kw:"COLUMN_FORMAT"i       !ident_part { return loc(createKeyword(kw)); }
-KW_COMMENT             = kw:"COMMENT"i             !ident_part { return loc(createKeyword(kw)); }
-KW_COMPACT             = kw:"COMPACT"i             !ident_part { return loc(createKeyword(kw)); }
-KW_COMPRESSED          = kw:"COMPRESSED"i          !ident_part { return loc(createKeyword(kw)); }
-KW_COMPRESSION         = kw:"COMPRESSION"i         !ident_part { return loc(createKeyword(kw)); }
-KW_CONNECTION          = kw:"CONNECTION"i          !ident_part { return loc(createKeyword(kw)); }
-KW_CONSTRAINT          = kw:"CONSTRAINT"i          !ident_part { return loc(createKeyword(kw)); }
-KW_COUNT               = kw:"COUNT"i               !ident_part { return loc(createKeyword(kw)); }
-KW_CREATE              = kw:"CREATE"i              !ident_part { return loc(createKeyword(kw)); }
-KW_CROSS               = kw:"CROSS"i               !ident_part { return loc(createKeyword(kw)); }
-KW_CUME_DIST           = kw:"CUME_DIST"i           !ident_part { return loc(createKeyword(kw)); }
-KW_CURRENT             = kw:"CURRENT"i             !ident_part { return loc(createKeyword(kw)); }
-KW_CURRENT_DATE        = kw:"CURRENT_DATE"i        !ident_part { return loc(createKeyword(kw)); }
-KW_CURRENT_TIME        = kw:"CURRENT_TIME"i        !ident_part { return loc(createKeyword(kw)); }
-KW_CURRENT_TIMESTAMP   = kw:"CURRENT_TIMESTAMP"i   !ident_part { return loc(createKeyword(kw)); }
-KW_CURRENT_USER        = kw:"CURRENT_USER"i        !ident_part { return loc(createKeyword(kw)); }
-KW_DATABASE            = kw:"DATABASE"i            !ident_part { return loc(createKeyword(kw)); }
-KW_DATE                = kw:"DATE"i                !ident_part { return loc(createKeyword(kw)); }
-KW_DATETIME            = kw:"DATETIME"i            !ident_part { return loc(createKeyword(kw)); }
-KW_DEC                 = kw:"DEC"i                 !ident_part { return loc(createKeyword(kw)); }
-KW_DECIMAL             = kw:"DECIMAL"i             !ident_part { return loc(createKeyword(kw)); }
-KW_DEFAULT             = kw:"DEFAULT"i             !ident_part { return loc(createKeyword(kw)); }
-KW_DELETE              = kw:"DELETE"i              !ident_part { return loc(createKeyword(kw)); }
-KW_DENSE_RANK          = kw:"DENSE_RANK"i          !ident_part { return loc(createKeyword(kw)); }
-KW_DESC                = kw:"DESC"i                !ident_part { return loc(createKeyword(kw)); }
-KW_DESCRIBE            = kw:"DESCRIBE"i            !ident_part { return loc(createKeyword(kw)); }
-KW_DISK                = kw:"DISK"i                !ident_part { return loc(createKeyword(kw)); }
-KW_DISTINCT            = kw:"DISTINCT"i            !ident_part { return loc(createKeyword(kw)); }
-KW_DISTINCTROW         = kw:"DISTINCTROW"i         !ident_part { return loc(createKeyword(kw)); }
-KW_DIV                 = kw:"DIV"i                 !ident_part { return loc(createKeyword(kw)); }
-KW_DOUBLE              = kw:"DOUBLE"i              !ident_part { return loc(createKeyword(kw)); }
-KW_DROP                = kw:"DROP"i                !ident_part { return loc(createKeyword(kw)); }
-KW_DUAL                = kw:"DUAL"i                !ident_part { return loc(createKeyword(kw)); }
-KW_DYNAMIC             = kw:"DYNAMIC"i             !ident_part { return loc(createKeyword(kw)); }
-KW_ELSE                = kw:"ELSE"i                !ident_part { return loc(createKeyword(kw)); }
-KW_END                 = kw:"END"i                 !ident_part { return loc(createKeyword(kw)); }
-KW_ENFORCED            = kw:"ENFORCED"i            !ident_part { return loc(createKeyword(kw)); }
-KW_ENGINE              = kw:"ENGINE"i              !ident_part { return loc(createKeyword(kw)); }
-KW_ENUM                = kw:"ENUM"i                !ident_part { return loc(createKeyword(kw)); }
-KW_EXCLUDE             = kw:"EXCLUDE"i             !ident_part { return loc(createKeyword(kw)); }
-KW_EXISTS              = kw:"EXISTS"i              !ident_part { return loc(createKeyword(kw)); }
-KW_EXPLAIN             = kw:"EXPLAIN"i             !ident_part { return loc(createKeyword(kw)); }
-KW_FALSE               = kw:"FALSE"i               !ident_part { return loc(createKeyword(kw)); }
-KW_FIRST_VALUE         = kw:"FIRST_VALUE"i         !ident_part { return loc(createKeyword(kw)); }
-KW_FIXED               = kw:"FIXED"i               !ident_part { return loc(createKeyword(kw)); }
-KW_FLOAT               = kw:"FLOAT"i               !ident_part { return loc(createKeyword(kw)); }
-KW_FOLLOWING           = kw:"FOLLOWING"i           !ident_part { return loc(createKeyword(kw)); }
-KW_FOR                 = kw:"FOR"i                 !ident_part { return loc(createKeyword(kw)); }
-KW_FOREIGN             = kw:"FOREIGN"i             !ident_part { return loc(createKeyword(kw)); }
-KW_FROM                = kw:"FROM"i                !ident_part { return loc(createKeyword(kw)); }
-KW_FULL                = kw:"FULL"i                !ident_part { return loc(createKeyword(kw)); }
-KW_FULLTEXT            = kw:"FULLTEXT"i            !ident_part { return loc(createKeyword(kw)); }
-KW_GLOBAL              = kw:"GLOBAL"i              !ident_part { return loc(createKeyword(kw)); }
-KW_GO                  = kw:"GO"i                  !ident_part { return loc(createKeyword(kw)); }
-KW_GROUP               = kw:"GROUP"i               !ident_part { return loc(createKeyword(kw)); }
-KW_GROUP_CONCAT        = kw:"GROUP_CONCAT"i        !ident_part { return loc(createKeyword(kw)); }
-KW_GROUPS              = kw:"GROUPS"i              !ident_part { return loc(createKeyword(kw)); }
-KW_HAVING              = kw:"HAVING"i              !ident_part { return loc(createKeyword(kw)); }
-KW_HIGH_PRIORITY       = kw:"HIGH_PRIORITY"i       !ident_part { return loc(createKeyword(kw)); }
-KW_IF                  = kw:"IF"i                  !ident_part { return loc(createKeyword(kw)); }
-KW_IGNORE              = kw:"IGNORE"i              !ident_part { return loc(createKeyword(kw)); }
-KW_IN                  = kw:"IN"i                  !ident_part { return loc(createKeyword(kw)); }
-KW_INDEX               = kw:"INDEX"i               !ident_part { return loc(createKeyword(kw)); }
-KW_INNER               = kw:"INNER"i               !ident_part { return loc(createKeyword(kw)); }
-KW_INSERT              = kw:"INSERT"i              !ident_part { return loc(createKeyword(kw)); }
-KW_INT                 = kw:"INT"i                 !ident_part { return loc(createKeyword(kw)); }
-KW_INTEGER             = kw:"INTEGER"i             !ident_part { return loc(createKeyword(kw)); }
-KW_INTERVAL            = kw:"INTERVAL"i            !ident_part { return loc(createKeyword(kw)); }
-KW_INTO                = kw:"INTO"i                !ident_part { return loc(createKeyword(kw)); }
-KW_IS                  = kw:"IS"i                  !ident_part { return loc(createKeyword(kw)); }
-KW_JOIN                = kw:"JOIN"i                !ident_part { return loc(createKeyword(kw)); }
-KW_JSON                = kw:"JSON"i                !ident_part { return loc(createKeyword(kw)); }
-KW_KEY                 = kw:"KEY"i                 !ident_part { return loc(createKeyword(kw)); }
-KW_KEY_BLOCK_SIZE      = kw:"KEY_BLOCK_SIZE"i      !ident_part { return loc(createKeyword(kw)); }
-KW_LAG                 = kw:"LAG"i                 !ident_part { return loc(createKeyword(kw)); }
-KW_LAST_VALUE          = kw:"LAST_VALUE"i          !ident_part { return loc(createKeyword(kw)); }
-KW_LEAD                = kw:"LEAD"i                !ident_part { return loc(createKeyword(kw)); }
-KW_LEFT                = kw:"LEFT"i                !ident_part { return loc(createKeyword(kw)); }
-KW_LIKE                = kw:"LIKE"i                !ident_part { return loc(createKeyword(kw)); }
-KW_LIMIT               = kw:"LIMIT"i               !ident_part { return loc(createKeyword(kw)); }
-KW_LOCAL               = kw:"LOCAL"i               !ident_part { return loc(createKeyword(kw)); }
-KW_LOCK                = kw:"LOCK"i                !ident_part { return loc(createKeyword(kw)); }
-KW_LONGBLOB            = kw:"LONGBLOB"i            !ident_part { return loc(createKeyword(kw)); }
-KW_LONGTEXT            = kw:"LONGTEXT"i            !ident_part { return loc(createKeyword(kw)); }
-KW_MATCH               = kw:"MATCH"i               !ident_part { return loc(createKeyword(kw)); }
-KW_MATERIALIZED        = kw:"MATERIALIZED"i        !ident_part { return loc(createKeyword(kw)); }
-KW_MAX                 = kw:"MAX"i                 !ident_part { return loc(createKeyword(kw)); }
-KW_MAX_ROWS            = kw:"MAX_ROWS"i            !ident_part { return loc(createKeyword(kw)); }
-KW_MEDIUMBLOB          = kw:"MEDIUMBLOB"i          !ident_part { return loc(createKeyword(kw)); }
-KW_MEDIUMTEXT          = kw:"MEDIUMTEXT"i          !ident_part { return loc(createKeyword(kw)); }
-KW_MEMORY              = kw:"MEMORY"i              !ident_part { return loc(createKeyword(kw)); }
-KW_MIN                 = kw:"MIN"i                 !ident_part { return loc(createKeyword(kw)); }
-KW_MIN_ROWS            = kw:"MIN_ROWS"i            !ident_part { return loc(createKeyword(kw)); }
-KW_MOD                 = kw:"MOD"i                 !ident_part { return loc(createKeyword(kw)); }
-KW_NATURAL             = kw:"NATURAL"i             !ident_part { return loc(createKeyword(kw)); }
-KW_NO                  = kw:"NO"i                  !ident_part { return loc(createKeyword(kw)); }
-KW_NOT                 = kw:"NOT"i                 !ident_part { return loc(createKeyword(kw)); }
-KW_NTH_VALUE           = kw:"NTH_VALUE"i           !ident_part { return loc(createKeyword(kw)); }
-KW_NTILE               = kw:"NTILE"i               !ident_part { return loc(createKeyword(kw)); }
-KW_NULL                = kw:"NULL"i                !ident_part { return loc(createKeyword(kw)); }
-KW_NUMERIC             = kw:"NUMERIC"i             !ident_part { return loc(createKeyword(kw)); }
-KW_OFFSET              = kw:"OFFSET"i              !ident_part { return loc(createKeyword(kw)); }
-KW_ON                  = kw:"ON"i                  !ident_part { return loc(createKeyword(kw)); }
-KW_OR                  = kw:"OR"i                  !ident_part { return loc(createKeyword(kw)); }
-KW_ORDER               = kw:"ORDER"i               !ident_part { return loc(createKeyword(kw)); }
-KW_OTHERS              = kw:"OTHERS"i              !ident_part { return loc(createKeyword(kw)); }
-KW_OUTER               = kw:"OUTER"i               !ident_part { return loc(createKeyword(kw)); }
-KW_OVER                = kw:"OVER"i                !ident_part { return loc(createKeyword(kw)); }
-KW_PARTIAL             = kw:"PARTIAL"i             !ident_part { return loc(createKeyword(kw)); }
-KW_PARTITION           = kw:"PARTITION"i           !ident_part { return loc(createKeyword(kw)); }
-KW_PERCENT_RANK        = kw:"PERCENT_RANK"i        !ident_part { return loc(createKeyword(kw)); }
-KW_PERSIST             = kw:"PERSIST"i             !ident_part { return loc(createKeyword(kw)); }
-KW_PERSIST_ONLY        = kw:"PERSIST_ONLY"i        !ident_part { return loc(createKeyword(kw)); }
-KW_PRECEDING           = kw:"PRECEDING"i           !ident_part { return loc(createKeyword(kw)); }
-KW_PRECISION           = kw:"PRECISION"i           !ident_part { return loc(createKeyword(kw)); }
-KW_PRIMARY             = kw:"PRIMARY"i             !ident_part { return loc(createKeyword(kw)); }
-KW_RANGE               = kw:"RANGE"i               !ident_part { return loc(createKeyword(kw)); }
-KW_RANK                = kw:"RANK"i                !ident_part { return loc(createKeyword(kw)); }
-KW_REAL                = kw:"REAL"i                !ident_part { return loc(createKeyword(kw)); }
-KW_RECURSIVE           = kw:"RECURSIVE"            !ident_part { return loc(createKeyword(kw)); }
-KW_REDUNDANT           = kw:"REDUNDANT"i           !ident_part { return loc(createKeyword(kw)); }
-KW_REFERENCES          = kw:"REFERENCES"i          !ident_part { return loc(createKeyword(kw)); }
-KW_REGEXP              = kw:"REGEXP"i              !ident_part { return loc(createKeyword(kw)); }
-KW_RENAME              = kw:"RENAME"i              !ident_part { return loc(createKeyword(kw)); }
-KW_REPLACE             = kw:"REPLACE"i             !ident_part { return loc(createKeyword(kw)); }
-KW_REPLICATION         = kw:"REPLICATION"i         !ident_part { return loc(createKeyword(kw)); }
-KW_RESTRICT            = kw:"RESTRICT"i            !ident_part { return loc(createKeyword(kw)); }
-KW_RETURN              = kw:'RETURN'i              !ident_part { return loc(createKeyword(kw)); }
-KW_RIGHT               = kw:"RIGHT"i               !ident_part { return loc(createKeyword(kw)); }
-KW_RLIKE               = kw:"RLIKE"i               !ident_part { return loc(createKeyword(kw)); }
-KW_ROW                 = kw:"ROW"i                 !ident_part { return loc(createKeyword(kw)); }
-KW_ROW_FORMAT          = kw:"ROW_FORMAT"i          !ident_part { return loc(createKeyword(kw)); }
-KW_ROW_NUMBER          = kw:"ROW_NUMBER"i          !ident_part { return loc(createKeyword(kw)); }
-KW_ROWS                = kw:"ROWS"i                !ident_part { return loc(createKeyword(kw)); }
-KW_SCHEME              = kw:"SCHEME"i              !ident_part { return loc(createKeyword(kw)); }
-KW_SELECT              = kw:"SELECT"i              !ident_part { return loc(createKeyword(kw)); }
-KW_SESSION             = kw:"SESSION"i             !ident_part { return loc(createKeyword(kw)); }
-KW_SESSION_USER        = kw:"SESSION_USER"i        !ident_part { return loc(createKeyword(kw)); }
-KW_SET                 = kw:"SET"i                 !ident_part { return loc(createKeyword(kw)); }
-KW_SHOW                = kw:"SHOW"i                !ident_part { return loc(createKeyword(kw)); }
-KW_SIGNED              = kw:"SIGNED"i              !ident_part { return loc(createKeyword(kw)); }
-KW_SIMPLE              = kw:"SIMPLE"i              !ident_part { return loc(createKeyword(kw)); }
-KW_SMALLINT            = kw:"SMALLINT"i            !ident_part { return loc(createKeyword(kw)); }
-KW_SPATIAL             = kw:"SPATIAL"i             !ident_part { return loc(createKeyword(kw)); }
-KW_SQL_BIG_RESULT      = kw:"SQL_BIG_RESULT"i      !ident_part { return loc(createKeyword(kw)); }
-KW_SQL_BUFFER_RESULT   = kw:"SQL_BUFFER_RESULT"i   !ident_part { return loc(createKeyword(kw)); }
-KW_SQL_CACHE           = kw:"SQL_CACHE"i           !ident_part { return loc(createKeyword(kw)); }
-KW_SQL_CALC_FOUND_ROWS = kw:"SQL_CALC_FOUND_ROWS"i !ident_part { return loc(createKeyword(kw)); }
-KW_SQL_NO_CACHE        = kw:"SQL_NO_CACHE"i        !ident_part { return loc(createKeyword(kw)); }
-KW_SQL_SMALL_RESULT    = kw:"SQL_SMALL_RESULT"i    !ident_part { return loc(createKeyword(kw)); }
-KW_STATS_SAMPLE_PAGES  = kw:"STATS_SAMPLE_PAGES"i  !ident_part { return loc(createKeyword(kw)); }
-KW_STORAGE             = kw:"STORAGE"i             !ident_part { return loc(createKeyword(kw)); }
-KW_STRAIGHT_JOIN       = kw:"STRAIGHT_JOIN"i       !ident_part { return loc(createKeyword(kw)); }
-KW_SUM                 = kw:"SUM"i                 !ident_part { return loc(createKeyword(kw)); }
-KW_SYSTEM_USER         = kw:"SYSTEM_USER"i         !ident_part { return loc(createKeyword(kw)); }
-KW_TABLE               = kw:"TABLE"i               !ident_part { return loc(createKeyword(kw)); }
-KW_TABLES              = kw:"TABLES"i              !ident_part { return loc(createKeyword(kw)); }
-KW_TEMPORARY           = kw:"TEMPORARY"i           !ident_part { return loc(createKeyword(kw)); }
-KW_TEXT                = kw:"TEXT"i                !ident_part { return loc(createKeyword(kw)); }
-KW_THEN                = kw:"THEN"i                !ident_part { return loc(createKeyword(kw)); }
-KW_TIES                = kw:"TIES"i                !ident_part { return loc(createKeyword(kw)); }
-KW_TIME                = kw:"TIME"i                !ident_part { return loc(createKeyword(kw)); }
-KW_TIMESTAMP           = kw:"TIMESTAMP"i           !ident_part { return loc(createKeyword(kw)); }
-KW_TINYBLOB            = kw:"TINYBLOB"i            !ident_part { return loc(createKeyword(kw)); }
-KW_TINYINT             = kw:"TINYINT"i             !ident_part { return loc(createKeyword(kw)); }
-KW_TINYTEXT            = kw:"TINYTEXT"i            !ident_part { return loc(createKeyword(kw)); }
-KW_TO                  = kw:"TO"i                  !ident_part { return loc(createKeyword(kw)); }
-KW_TRUE                = kw:"TRUE"i                !ident_part { return loc(createKeyword(kw)); }
-KW_TRUNCATE            = kw:"TRUNCATE"i            !ident_part { return loc(createKeyword(kw)); }
-KW_UNBOUNDED           = kw:"UNBOUNDED"i           !ident_part { return loc(createKeyword(kw)); }
-KW_UNION               = kw:"UNION"i               !ident_part { return loc(createKeyword(kw)); }
-KW_UNIQUE              = kw:"UNIQUE"i              !ident_part { return loc(createKeyword(kw)); }
-KW_UNIT_DAY            = kw:"DAY"i                 !ident_part { return loc(createKeyword(kw)); }
-KW_UNIT_HOUR           = kw:"HOUR"i                !ident_part { return loc(createKeyword(kw)); }
-KW_UNIT_MINUTE         = kw:"MINUTE"i              !ident_part { return loc(createKeyword(kw)); }
-KW_UNIT_MONTH          = kw:"MONTH"i               !ident_part { return loc(createKeyword(kw)); }
-KW_UNIT_SECOND         = kw:"SECOND"i              !ident_part { return loc(createKeyword(kw)); }
-KW_UNIT_YEAR           = kw:"YEAR"i                !ident_part { return loc(createKeyword(kw)); }
-KW_UNLOCK              = kw:"UNLOCK"i              !ident_part { return loc(createKeyword(kw)); }
-KW_UNSIGNED            = kw:"UNSIGNED"i            !ident_part { return loc(createKeyword(kw)); }
-KW_UPDATE              = kw:"UPDATE"i              !ident_part { return loc(createKeyword(kw)); }
-KW_USE                 = kw:"USE"i                 !ident_part { return loc(createKeyword(kw)); }
-KW_USER                = kw:"USER"i                !ident_part { return loc(createKeyword(kw)); }
-KW_USING               = kw:"USING"i               !ident_part { return loc(createKeyword(kw)); }
-KW_VALUES              = kw:"VALUES"i              !ident_part { return loc(createKeyword(kw)); }
-KW_VARBINARY           = kw:"VARBINARY"i           !ident_part { return loc(createKeyword(kw)); }
-KW_VARCHAR             = kw:"VARCHAR"i             !ident_part { return loc(createKeyword(kw)); }
-KW_VIEW                = kw:"VIEW"i                !ident_part { return loc(createKeyword(kw)); }
-KW_WHEN                = kw:"WHEN"i                !ident_part { return loc(createKeyword(kw)); }
-KW_WHERE               = kw:"WHERE"i               !ident_part { return loc(createKeyword(kw)); }
-KW_WINDOW              = kw:"WINDOW"i              !ident_part { return loc(createKeyword(kw)); }
-KW_WITH                = kw:"WITH"i                !ident_part { return loc(createKeyword(kw)); }
-KW_XOR                 = kw:"XOR"i                 !ident_part { return loc(createKeyword(kw)); }
-KW_YEAR                = kw:"YEAR"i                !ident_part { return loc(createKeyword(kw)); }
-KW_ZEROFILL            = kw:"ZEROFILL"i            !ident_part { return loc(createKeyword(kw)); }
+ACTION              = kw:"ACTION"i              !ident_part { return loc(createKeyword(kw)); }
+ADD                 = kw:"ADD"i                 !ident_part { return loc(createKeyword(kw)); }
+ADD_DATE            = kw:"ADDDATE"i             !ident_part { return loc(createKeyword(kw)); }
+ALL                 = kw:"ALL"i                 !ident_part { return loc(createKeyword(kw)); }
+ALTER               = kw:"ALTER"i               !ident_part { return loc(createKeyword(kw)); }
+AND                 = kw:"AND"i                 !ident_part { return loc(createKeyword(kw)); }
+AS                  = kw:"AS"i                  !ident_part { return loc(createKeyword(kw)); }
+ASC                 = kw:"ASC"i                 !ident_part { return loc(createKeyword(kw)); }
+AUTO_INCREMENT      = kw:"AUTO_INCREMENT"i      !ident_part { return loc(createKeyword(kw)); }
+AVG                 = kw:"AVG"i                 !ident_part { return loc(createKeyword(kw)); }
+AVG_ROW_LENGTH      = kw:"AVG_ROW_LENGTH"i      !ident_part { return loc(createKeyword(kw)); }
+BETWEEN             = kw:"BETWEEN"i             !ident_part { return loc(createKeyword(kw)); }
+BIGINT              = kw:"BIGINT"i              !ident_part { return loc(createKeyword(kw)); }
+BINARY              = kw:"BINARY"i              !ident_part { return loc(createKeyword(kw)); }
+BIT                 = kw:"BIT"i                 !ident_part { return loc(createKeyword(kw)); }
+BLOB                = kw:"BLOB"i                !ident_part { return loc(createKeyword(kw)); }
+BOOL                = kw:"BOOL"i                !ident_part { return loc(createKeyword(kw)); }
+BOOLEAN             = kw:"BOOLEAN"i             !ident_part { return loc(createKeyword(kw)); }
+BY                  = kw:"BY"i                  !ident_part { return loc(createKeyword(kw)); }
+CALL                = kw:"CALL"i                !ident_part { return loc(createKeyword(kw)); }
+CASCADE             = kw:"CASCADE"i             !ident_part { return loc(createKeyword(kw)); }
+CASE                = kw:"CASE"i                !ident_part { return loc(createKeyword(kw)); }
+CAST                = kw:"CAST"i                !ident_part { return loc(createKeyword(kw)); }
+CHAR                = kw:"CHAR"i                !ident_part { return loc(createKeyword(kw)); }
+CHARACTER           = kw:"CHARACTER"i           !ident_part { return loc(createKeyword(kw)); }
+CHARSET             = kw:"CHARSET"i             !ident_part { return loc(createKeyword(kw)); }
+CHECK               = kw:"CHECK"i               !ident_part { return loc(createKeyword(kw)); }
+COLLATE             = kw:"COLLATE"i             !ident_part { return loc(createKeyword(kw)); }
+COLUMN              = kw:"COLUMN"i              !ident_part { return loc(createKeyword(kw)); }
+COLUMN_FORMAT       = kw:"COLUMN_FORMAT"i       !ident_part { return loc(createKeyword(kw)); }
+COMMENT             = kw:"COMMENT"i             !ident_part { return loc(createKeyword(kw)); }
+COMPACT             = kw:"COMPACT"i             !ident_part { return loc(createKeyword(kw)); }
+COMPRESSED          = kw:"COMPRESSED"i          !ident_part { return loc(createKeyword(kw)); }
+COMPRESSION         = kw:"COMPRESSION"i         !ident_part { return loc(createKeyword(kw)); }
+CONNECTION          = kw:"CONNECTION"i          !ident_part { return loc(createKeyword(kw)); }
+CONSTRAINT          = kw:"CONSTRAINT"i          !ident_part { return loc(createKeyword(kw)); }
+COUNT               = kw:"COUNT"i               !ident_part { return loc(createKeyword(kw)); }
+CREATE              = kw:"CREATE"i              !ident_part { return loc(createKeyword(kw)); }
+CROSS               = kw:"CROSS"i               !ident_part { return loc(createKeyword(kw)); }
+CUME_DIST           = kw:"CUME_DIST"i           !ident_part { return loc(createKeyword(kw)); }
+CURRENT             = kw:"CURRENT"i             !ident_part { return loc(createKeyword(kw)); }
+CURRENT_DATE        = kw:"CURRENT_DATE"i        !ident_part { return loc(createKeyword(kw)); }
+CURRENT_TIME        = kw:"CURRENT_TIME"i        !ident_part { return loc(createKeyword(kw)); }
+CURRENT_TIMESTAMP   = kw:"CURRENT_TIMESTAMP"i   !ident_part { return loc(createKeyword(kw)); }
+CURRENT_USER        = kw:"CURRENT_USER"i        !ident_part { return loc(createKeyword(kw)); }
+DATABASE            = kw:"DATABASE"i            !ident_part { return loc(createKeyword(kw)); }
+DATE                = kw:"DATE"i                !ident_part { return loc(createKeyword(kw)); }
+DATETIME            = kw:"DATETIME"i            !ident_part { return loc(createKeyword(kw)); }
+DEC                 = kw:"DEC"i                 !ident_part { return loc(createKeyword(kw)); }
+DECIMAL             = kw:"DECIMAL"i             !ident_part { return loc(createKeyword(kw)); }
+DEFAULT             = kw:"DEFAULT"i             !ident_part { return loc(createKeyword(kw)); }
+DELETE              = kw:"DELETE"i              !ident_part { return loc(createKeyword(kw)); }
+DENSE_RANK          = kw:"DENSE_RANK"i          !ident_part { return loc(createKeyword(kw)); }
+DESC                = kw:"DESC"i                !ident_part { return loc(createKeyword(kw)); }
+DESCRIBE            = kw:"DESCRIBE"i            !ident_part { return loc(createKeyword(kw)); }
+DISK                = kw:"DISK"i                !ident_part { return loc(createKeyword(kw)); }
+DISTINCT            = kw:"DISTINCT"i            !ident_part { return loc(createKeyword(kw)); }
+DISTINCTROW         = kw:"DISTINCTROW"i         !ident_part { return loc(createKeyword(kw)); }
+DIV                 = kw:"DIV"i                 !ident_part { return loc(createKeyword(kw)); }
+DOUBLE              = kw:"DOUBLE"i              !ident_part { return loc(createKeyword(kw)); }
+DROP                = kw:"DROP"i                !ident_part { return loc(createKeyword(kw)); }
+DUAL                = kw:"DUAL"i                !ident_part { return loc(createKeyword(kw)); }
+DYNAMIC             = kw:"DYNAMIC"i             !ident_part { return loc(createKeyword(kw)); }
+ELSE                = kw:"ELSE"i                !ident_part { return loc(createKeyword(kw)); }
+END                 = kw:"END"i                 !ident_part { return loc(createKeyword(kw)); }
+ENFORCED            = kw:"ENFORCED"i            !ident_part { return loc(createKeyword(kw)); }
+ENGINE              = kw:"ENGINE"i              !ident_part { return loc(createKeyword(kw)); }
+ENUM                = kw:"ENUM"i                !ident_part { return loc(createKeyword(kw)); }
+EXCLUDE             = kw:"EXCLUDE"i             !ident_part { return loc(createKeyword(kw)); }
+EXISTS              = kw:"EXISTS"i              !ident_part { return loc(createKeyword(kw)); }
+EXPLAIN             = kw:"EXPLAIN"i             !ident_part { return loc(createKeyword(kw)); }
+FALSE               = kw:"FALSE"i               !ident_part { return loc(createKeyword(kw)); }
+FIRST_VALUE         = kw:"FIRST_VALUE"i         !ident_part { return loc(createKeyword(kw)); }
+FIXED               = kw:"FIXED"i               !ident_part { return loc(createKeyword(kw)); }
+FLOAT               = kw:"FLOAT"i               !ident_part { return loc(createKeyword(kw)); }
+FOLLOWING           = kw:"FOLLOWING"i           !ident_part { return loc(createKeyword(kw)); }
+FOR                 = kw:"FOR"i                 !ident_part { return loc(createKeyword(kw)); }
+FOREIGN             = kw:"FOREIGN"i             !ident_part { return loc(createKeyword(kw)); }
+FROM                = kw:"FROM"i                !ident_part { return loc(createKeyword(kw)); }
+FULL                = kw:"FULL"i                !ident_part { return loc(createKeyword(kw)); }
+FULLTEXT            = kw:"FULLTEXT"i            !ident_part { return loc(createKeyword(kw)); }
+GLOBAL              = kw:"GLOBAL"i              !ident_part { return loc(createKeyword(kw)); }
+GO                  = kw:"GO"i                  !ident_part { return loc(createKeyword(kw)); }
+GROUP               = kw:"GROUP"i               !ident_part { return loc(createKeyword(kw)); }
+GROUP_CONCAT        = kw:"GROUP_CONCAT"i        !ident_part { return loc(createKeyword(kw)); }
+GROUPS              = kw:"GROUPS"i              !ident_part { return loc(createKeyword(kw)); }
+HAVING              = kw:"HAVING"i              !ident_part { return loc(createKeyword(kw)); }
+HIGH_PRIORITY       = kw:"HIGH_PRIORITY"i       !ident_part { return loc(createKeyword(kw)); }
+IF                  = kw:"IF"i                  !ident_part { return loc(createKeyword(kw)); }
+IGNORE              = kw:"IGNORE"i              !ident_part { return loc(createKeyword(kw)); }
+IN                  = kw:"IN"i                  !ident_part { return loc(createKeyword(kw)); }
+INDEX               = kw:"INDEX"i               !ident_part { return loc(createKeyword(kw)); }
+INNER               = kw:"INNER"i               !ident_part { return loc(createKeyword(kw)); }
+INSERT              = kw:"INSERT"i              !ident_part { return loc(createKeyword(kw)); }
+INT                 = kw:"INT"i                 !ident_part { return loc(createKeyword(kw)); }
+INTEGER             = kw:"INTEGER"i             !ident_part { return loc(createKeyword(kw)); }
+INTERVAL            = kw:"INTERVAL"i            !ident_part { return loc(createKeyword(kw)); }
+INTO                = kw:"INTO"i                !ident_part { return loc(createKeyword(kw)); }
+IS                  = kw:"IS"i                  !ident_part { return loc(createKeyword(kw)); }
+JOIN                = kw:"JOIN"i                !ident_part { return loc(createKeyword(kw)); }
+JSON                = kw:"JSON"i                !ident_part { return loc(createKeyword(kw)); }
+KEY                 = kw:"KEY"i                 !ident_part { return loc(createKeyword(kw)); }
+KEY_BLOCK_SIZE      = kw:"KEY_BLOCK_SIZE"i      !ident_part { return loc(createKeyword(kw)); }
+LAG                 = kw:"LAG"i                 !ident_part { return loc(createKeyword(kw)); }
+LAST_VALUE          = kw:"LAST_VALUE"i          !ident_part { return loc(createKeyword(kw)); }
+LEAD                = kw:"LEAD"i                !ident_part { return loc(createKeyword(kw)); }
+LEFT                = kw:"LEFT"i                !ident_part { return loc(createKeyword(kw)); }
+LIKE                = kw:"LIKE"i                !ident_part { return loc(createKeyword(kw)); }
+LIMIT               = kw:"LIMIT"i               !ident_part { return loc(createKeyword(kw)); }
+LOCAL               = kw:"LOCAL"i               !ident_part { return loc(createKeyword(kw)); }
+LOCK                = kw:"LOCK"i                !ident_part { return loc(createKeyword(kw)); }
+LONGBLOB            = kw:"LONGBLOB"i            !ident_part { return loc(createKeyword(kw)); }
+LONGTEXT            = kw:"LONGTEXT"i            !ident_part { return loc(createKeyword(kw)); }
+MATCH               = kw:"MATCH"i               !ident_part { return loc(createKeyword(kw)); }
+MATERIALIZED        = kw:"MATERIALIZED"i        !ident_part { return loc(createKeyword(kw)); }
+MAX                 = kw:"MAX"i                 !ident_part { return loc(createKeyword(kw)); }
+MAX_ROWS            = kw:"MAX_ROWS"i            !ident_part { return loc(createKeyword(kw)); }
+MEDIUMBLOB          = kw:"MEDIUMBLOB"i          !ident_part { return loc(createKeyword(kw)); }
+MEDIUMTEXT          = kw:"MEDIUMTEXT"i          !ident_part { return loc(createKeyword(kw)); }
+MEMORY              = kw:"MEMORY"i              !ident_part { return loc(createKeyword(kw)); }
+MIN                 = kw:"MIN"i                 !ident_part { return loc(createKeyword(kw)); }
+MIN_ROWS            = kw:"MIN_ROWS"i            !ident_part { return loc(createKeyword(kw)); }
+MOD                 = kw:"MOD"i                 !ident_part { return loc(createKeyword(kw)); }
+NATURAL             = kw:"NATURAL"i             !ident_part { return loc(createKeyword(kw)); }
+NO                  = kw:"NO"i                  !ident_part { return loc(createKeyword(kw)); }
+NOT                 = kw:"NOT"i                 !ident_part { return loc(createKeyword(kw)); }
+NTH_VALUE           = kw:"NTH_VALUE"i           !ident_part { return loc(createKeyword(kw)); }
+NTILE               = kw:"NTILE"i               !ident_part { return loc(createKeyword(kw)); }
+NULL                = kw:"NULL"i                !ident_part { return loc(createKeyword(kw)); }
+NUMERIC             = kw:"NUMERIC"i             !ident_part { return loc(createKeyword(kw)); }
+OFFSET              = kw:"OFFSET"i              !ident_part { return loc(createKeyword(kw)); }
+ON                  = kw:"ON"i                  !ident_part { return loc(createKeyword(kw)); }
+OR                  = kw:"OR"i                  !ident_part { return loc(createKeyword(kw)); }
+ORDER               = kw:"ORDER"i               !ident_part { return loc(createKeyword(kw)); }
+OTHERS              = kw:"OTHERS"i              !ident_part { return loc(createKeyword(kw)); }
+OUTER               = kw:"OUTER"i               !ident_part { return loc(createKeyword(kw)); }
+OVER                = kw:"OVER"i                !ident_part { return loc(createKeyword(kw)); }
+PARTIAL             = kw:"PARTIAL"i             !ident_part { return loc(createKeyword(kw)); }
+PARTITION           = kw:"PARTITION"i           !ident_part { return loc(createKeyword(kw)); }
+PERCENT_RANK        = kw:"PERCENT_RANK"i        !ident_part { return loc(createKeyword(kw)); }
+PERSIST             = kw:"PERSIST"i             !ident_part { return loc(createKeyword(kw)); }
+PERSIST_ONLY        = kw:"PERSIST_ONLY"i        !ident_part { return loc(createKeyword(kw)); }
+PRECEDING           = kw:"PRECEDING"i           !ident_part { return loc(createKeyword(kw)); }
+PRECISION           = kw:"PRECISION"i           !ident_part { return loc(createKeyword(kw)); }
+PRIMARY             = kw:"PRIMARY"i             !ident_part { return loc(createKeyword(kw)); }
+RANGE               = kw:"RANGE"i               !ident_part { return loc(createKeyword(kw)); }
+RANK                = kw:"RANK"i                !ident_part { return loc(createKeyword(kw)); }
+REAL                = kw:"REAL"i                !ident_part { return loc(createKeyword(kw)); }
+RECURSIVE           = kw:"RECURSIVE"            !ident_part { return loc(createKeyword(kw)); }
+REDUNDANT           = kw:"REDUNDANT"i           !ident_part { return loc(createKeyword(kw)); }
+REFERENCES          = kw:"REFERENCES"i          !ident_part { return loc(createKeyword(kw)); }
+REGEXP              = kw:"REGEXP"i              !ident_part { return loc(createKeyword(kw)); }
+RENAME              = kw:"RENAME"i              !ident_part { return loc(createKeyword(kw)); }
+REPLACE             = kw:"REPLACE"i             !ident_part { return loc(createKeyword(kw)); }
+REPLICATION         = kw:"REPLICATION"i         !ident_part { return loc(createKeyword(kw)); }
+RESTRICT            = kw:"RESTRICT"i            !ident_part { return loc(createKeyword(kw)); }
+RETURN              = kw:'RETURN'i              !ident_part { return loc(createKeyword(kw)); }
+RIGHT               = kw:"RIGHT"i               !ident_part { return loc(createKeyword(kw)); }
+RLIKE               = kw:"RLIKE"i               !ident_part { return loc(createKeyword(kw)); }
+ROW                 = kw:"ROW"i                 !ident_part { return loc(createKeyword(kw)); }
+ROW_FORMAT          = kw:"ROW_FORMAT"i          !ident_part { return loc(createKeyword(kw)); }
+ROW_NUMBER          = kw:"ROW_NUMBER"i          !ident_part { return loc(createKeyword(kw)); }
+ROWS                = kw:"ROWS"i                !ident_part { return loc(createKeyword(kw)); }
+SCHEME              = kw:"SCHEME"i              !ident_part { return loc(createKeyword(kw)); }
+SELECT              = kw:"SELECT"i              !ident_part { return loc(createKeyword(kw)); }
+SESSION             = kw:"SESSION"i             !ident_part { return loc(createKeyword(kw)); }
+SESSION_USER        = kw:"SESSION_USER"i        !ident_part { return loc(createKeyword(kw)); }
+SET                 = kw:"SET"i                 !ident_part { return loc(createKeyword(kw)); }
+SHOW                = kw:"SHOW"i                !ident_part { return loc(createKeyword(kw)); }
+SIGNED              = kw:"SIGNED"i              !ident_part { return loc(createKeyword(kw)); }
+SIMPLE              = kw:"SIMPLE"i              !ident_part { return loc(createKeyword(kw)); }
+SMALLINT            = kw:"SMALLINT"i            !ident_part { return loc(createKeyword(kw)); }
+SPATIAL             = kw:"SPATIAL"i             !ident_part { return loc(createKeyword(kw)); }
+SQL_BIG_RESULT      = kw:"SQL_BIG_RESULT"i      !ident_part { return loc(createKeyword(kw)); }
+SQL_BUFFER_RESULT   = kw:"SQL_BUFFER_RESULT"i   !ident_part { return loc(createKeyword(kw)); }
+SQL_CACHE           = kw:"SQL_CACHE"i           !ident_part { return loc(createKeyword(kw)); }
+SQL_CALC_FOUND_ROWS = kw:"SQL_CALC_FOUND_ROWS"i !ident_part { return loc(createKeyword(kw)); }
+SQL_NO_CACHE        = kw:"SQL_NO_CACHE"i        !ident_part { return loc(createKeyword(kw)); }
+SQL_SMALL_RESULT    = kw:"SQL_SMALL_RESULT"i    !ident_part { return loc(createKeyword(kw)); }
+STATS_SAMPLE_PAGES  = kw:"STATS_SAMPLE_PAGES"i  !ident_part { return loc(createKeyword(kw)); }
+STORAGE             = kw:"STORAGE"i             !ident_part { return loc(createKeyword(kw)); }
+STRAIGHT_JOIN       = kw:"STRAIGHT_JOIN"i       !ident_part { return loc(createKeyword(kw)); }
+SUM                 = kw:"SUM"i                 !ident_part { return loc(createKeyword(kw)); }
+SYSTEM_USER         = kw:"SYSTEM_USER"i         !ident_part { return loc(createKeyword(kw)); }
+TABLE               = kw:"TABLE"i               !ident_part { return loc(createKeyword(kw)); }
+TABLES              = kw:"TABLES"i              !ident_part { return loc(createKeyword(kw)); }
+TEMPORARY           = kw:"TEMPORARY"i           !ident_part { return loc(createKeyword(kw)); }
+TEXT                = kw:"TEXT"i                !ident_part { return loc(createKeyword(kw)); }
+THEN                = kw:"THEN"i                !ident_part { return loc(createKeyword(kw)); }
+TIES                = kw:"TIES"i                !ident_part { return loc(createKeyword(kw)); }
+TIME                = kw:"TIME"i                !ident_part { return loc(createKeyword(kw)); }
+TIMESTAMP           = kw:"TIMESTAMP"i           !ident_part { return loc(createKeyword(kw)); }
+TINYBLOB            = kw:"TINYBLOB"i            !ident_part { return loc(createKeyword(kw)); }
+TINYINT             = kw:"TINYINT"i             !ident_part { return loc(createKeyword(kw)); }
+TINYTEXT            = kw:"TINYTEXT"i            !ident_part { return loc(createKeyword(kw)); }
+TO                  = kw:"TO"i                  !ident_part { return loc(createKeyword(kw)); }
+TRUE                = kw:"TRUE"i                !ident_part { return loc(createKeyword(kw)); }
+TRUNCATE            = kw:"TRUNCATE"i            !ident_part { return loc(createKeyword(kw)); }
+UNBOUNDED           = kw:"UNBOUNDED"i           !ident_part { return loc(createKeyword(kw)); }
+UNION               = kw:"UNION"i               !ident_part { return loc(createKeyword(kw)); }
+UNIQUE              = kw:"UNIQUE"i              !ident_part { return loc(createKeyword(kw)); }
+UNIT_DAY            = kw:"DAY"i                 !ident_part { return loc(createKeyword(kw)); }
+UNIT_HOUR           = kw:"HOUR"i                !ident_part { return loc(createKeyword(kw)); }
+UNIT_MINUTE         = kw:"MINUTE"i              !ident_part { return loc(createKeyword(kw)); }
+UNIT_MONTH          = kw:"MONTH"i               !ident_part { return loc(createKeyword(kw)); }
+UNIT_SECOND         = kw:"SECOND"i              !ident_part { return loc(createKeyword(kw)); }
+UNIT_YEAR           = kw:"YEAR"i                !ident_part { return loc(createKeyword(kw)); }
+UNLOCK              = kw:"UNLOCK"i              !ident_part { return loc(createKeyword(kw)); }
+UNSIGNED            = kw:"UNSIGNED"i            !ident_part { return loc(createKeyword(kw)); }
+UPDATE              = kw:"UPDATE"i              !ident_part { return loc(createKeyword(kw)); }
+USE                 = kw:"USE"i                 !ident_part { return loc(createKeyword(kw)); }
+USER                = kw:"USER"i                !ident_part { return loc(createKeyword(kw)); }
+USING               = kw:"USING"i               !ident_part { return loc(createKeyword(kw)); }
+VALUES              = kw:"VALUES"i              !ident_part { return loc(createKeyword(kw)); }
+VARBINARY           = kw:"VARBINARY"i           !ident_part { return loc(createKeyword(kw)); }
+VARCHAR             = kw:"VARCHAR"i             !ident_part { return loc(createKeyword(kw)); }
+VIEW                = kw:"VIEW"i                !ident_part { return loc(createKeyword(kw)); }
+WHEN                = kw:"WHEN"i                !ident_part { return loc(createKeyword(kw)); }
+WHERE               = kw:"WHERE"i               !ident_part { return loc(createKeyword(kw)); }
+WINDOW              = kw:"WINDOW"i              !ident_part { return loc(createKeyword(kw)); }
+WITH                = kw:"WITH"i                !ident_part { return loc(createKeyword(kw)); }
+XOR                 = kw:"XOR"i                 !ident_part { return loc(createKeyword(kw)); }
+YEAR                = kw:"YEAR"i                !ident_part { return loc(createKeyword(kw)); }
+ZEROFILL            = kw:"ZEROFILL"i            !ident_part { return loc(createKeyword(kw)); }
