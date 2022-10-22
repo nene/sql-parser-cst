@@ -1545,11 +1545,7 @@ primary
   / case_expr
   / interval_expr
   / column_ref
-  / param
   / paren_expr
-  / __ prepared_symbol:'?' {
-    return "[Not implemented]";
-  }
 
 paren_expr
   = LPAREN c1:__ expr:expr c2:__ RPAREN {
@@ -1627,11 +1623,6 @@ ident_name
 ident_start = [A-Za-z_]
 
 ident_part  = [A-Za-z0-9_]
-
-param
-  = l:(':' ident_name) {
-      return "[Not implemented]";
-    }
 
 window_clause
   = kw:KW_WINDOW c:__ wins:named_window_list {
