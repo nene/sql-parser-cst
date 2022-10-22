@@ -300,7 +300,7 @@ type FrameUnbounded = BaseNode & {
 type FrameExclusion = BaseNode & {
   type: "frame_exclusion";
   excludeKw: Keyword;
-  kindKw: Keyword[]; // CURRENT ROW | GROUPS | TIES | NO OTHERS
+  kindKw: Keyword | Keyword[]; // CURRENT ROW | GROUPS | TIES | NO OTHERS
 };
 
 // other...

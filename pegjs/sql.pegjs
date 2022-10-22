@@ -1680,13 +1680,15 @@ window_definition
     }
 
 frame_clause
-  = kw:frame_unit c:__ extent:(frame_bound / frame_between) {
-    return loc({
-      type: "frame_clause",
-      unitKw: kw,
-      extent: leading(extent, c),
-    });
-  }
+  = kw:frame_unit c1:__ extent:(frame_bound / frame_between)
+    exclusion:(c:__ ex:frame_exclusion { return leading(ex, c); })? {
+      return loc({
+        type: "frame_clause",
+        unitKw: kw,
+        extent: leading(extent, c1),
+        ...(exclusion ? {exclusion} : {}),
+      });
+    }
 
 frame_unit
   = KW_ROWS / KW_RANGE
@@ -1720,6 +1722,21 @@ frame_unbounded
   = kw:KW_UNBOUNDED {
     return loc({ type: "frame_unbounded", unboundedKw: kw })
   }
+
+frame_exclusion
+  = kw:KW_EXCLUDE c:__ kindKw:frame_exclusion_kind {
+    return loc({
+      type: "frame_exclusion",
+      excludeKw: trailing(kw, c),
+      kindKw
+    });
+  }
+
+frame_exclusion_kind
+  = kws:(KW_CURRENT __ KW_ROW) { return createKeywordList(kws); }
+  / kws:(KW_NO __ KW_OTHERS) { return createKeywordList(kws); }
+  / KW_GROUP
+  / KW_TIES
 
 func_call
   = name:func_name c1:__ args:func_args
@@ -2208,6 +2225,7 @@ KW_END                 = kw:"END"i                 !ident_part { return loc(crea
 KW_ENFORCED            = kw:"ENFORCED"i            !ident_part { return loc(createKeyword(kw)); }
 KW_ENGINE              = kw:"ENGINE"i              !ident_part { return loc(createKeyword(kw)); }
 KW_ENUM                = kw:"ENUM"i                !ident_part { return loc(createKeyword(kw)); }
+KW_EXCLUDE             = kw:"EXCLUDE"i             !ident_part { return loc(createKeyword(kw)); }
 KW_EXISTS              = kw:"EXISTS"i              !ident_part { return loc(createKeyword(kw)); }
 KW_EXPLAIN             = kw:"EXPLAIN"i             !ident_part { return loc(createKeyword(kw)); }
 KW_FALSE               = kw:"FALSE"i               !ident_part { return loc(createKeyword(kw)); }
@@ -2273,6 +2291,7 @@ KW_OFFSET              = kw:"OFFSET"i              !ident_part { return loc(crea
 KW_ON                  = kw:"ON"i                  !ident_part { return loc(createKeyword(kw)); }
 KW_OR                  = kw:"OR"i                  !ident_part { return loc(createKeyword(kw)); }
 KW_ORDER               = kw:"ORDER"i               !ident_part { return loc(createKeyword(kw)); }
+KW_OTHERS              = kw:"OTHERS"i              !ident_part { return loc(createKeyword(kw)); }
 KW_OUTER               = kw:"OUTER"i               !ident_part { return loc(createKeyword(kw)); }
 KW_OVER                = kw:"OVER"i                !ident_part { return loc(createKeyword(kw)); }
 KW_PARTIAL             = kw:"PARTIAL"i             !ident_part { return loc(createKeyword(kw)); }
@@ -2327,6 +2346,7 @@ KW_TABLES              = kw:"TABLES"i              !ident_part { return loc(crea
 KW_TEMPORARY           = kw:"TEMPORARY"i           !ident_part { return loc(createKeyword(kw)); }
 KW_TEXT                = kw:"TEXT"i                !ident_part { return loc(createKeyword(kw)); }
 KW_THEN                = kw:"THEN"i                !ident_part { return loc(createKeyword(kw)); }
+KW_TIES                = kw:"TIES"i                !ident_part { return loc(createKeyword(kw)); }
 KW_TIME                = kw:"TIME"i                !ident_part { return loc(createKeyword(kw)); }
 KW_TIMESTAMP           = kw:"TIMESTAMP"i           !ident_part { return loc(createKeyword(kw)); }
 KW_TINYBLOB            = kw:"TINYBLOB"i            !ident_part { return loc(createKeyword(kw)); }

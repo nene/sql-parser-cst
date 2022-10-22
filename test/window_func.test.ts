@@ -70,6 +70,17 @@ describe("window functions", () => {
     });
   });
 
+  it("supports frame clause with exclusion", () => {
+    test(`SELECT sum(price) OVER (ROWS 1 PRECEDING EXCLUDE CURRENT ROW)`);
+    test(`SELECT sum(price) OVER (ROWS 1 PRECEDING /*c1*/ EXCLUDE /*c2*/ CURRENT /*c3*/ ROW)`);
+    test(`SELECT sum(price) OVER (ROWS 1 PRECEDING EXCLUDE NO OTHERS)`);
+    test(`SELECT sum(price) OVER (ROWS 1 PRECEDING /*c1*/ EXCLUDE /*c2*/ NO /*c3*/ OTHERS)`);
+    test(`SELECT sum(price) OVER (ROWS 1 PRECEDING EXCLUDE TIES)`);
+    test(`SELECT sum(price) OVER (ROWS 1 PRECEDING /*c1*/ EXCLUDE /*c2*/ TIES)`);
+    test(`SELECT sum(price) OVER (ROWS 1 PRECEDING EXCLUDE GROUP)`);
+    test(`SELECT sum(price) OVER (ROWS 1 PRECEDING /*c1*/ EXCLUDE /*c2*/ GROUP)`);
+  });
+
   it("parses window function call to syntax tree", () => {
     expect(parseExpr("row_number() OVER (my_win PARTITION BY product ORDER BY price)"))
       .toMatchInlineSnapshot(`
