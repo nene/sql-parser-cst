@@ -281,7 +281,7 @@ create_table_stmt
       return "[Not implemented]";
     }
   / createKw:CREATE
-    tmpKw:(c:__ kw:TEMPORARY { return leading(kw, c); })?
+    tmpKw:(c:__ kw:(TEMPORARY / TEMP) { return leading(kw, c); })?
     tableKw:(c:__ kw:TABLE { return leading(kw, c); })
     ifKw:(c:__ kw:if_not_exists { return leading(kw, c); })?
     table:(c1:__ t:table_name c2:__ { return surrounding(c1, t, c2); })
@@ -2365,6 +2365,7 @@ SUM                 = kw:"SUM"i                 !ident_part { return loc(createK
 SYSTEM_USER         = kw:"SYSTEM_USER"i         !ident_part { return loc(createKeyword(kw)); }
 TABLE               = kw:"TABLE"i               !ident_part { return loc(createKeyword(kw)); }
 TABLES              = kw:"TABLES"i              !ident_part { return loc(createKeyword(kw)); }
+TEMP                = kw:"TEMP"i                !ident_part { return loc(createKeyword(kw)); }
 TEMPORARY           = kw:"TEMPORARY"i           !ident_part { return loc(createKeyword(kw)); }
 TEXT                = kw:"TEXT"i                !ident_part { return loc(createKeyword(kw)); }
 THEN                = kw:"THEN"i                !ident_part { return loc(createKeyword(kw)); }

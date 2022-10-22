@@ -1,4 +1,4 @@
-import { parse, preserveAll, show, test } from "./test_utils";
+import { dialect, parse, preserveAll, show, test } from "./test_utils";
 
 describe("create table", () => {
   it("parses simple CREATE TABLE statement", () => {
@@ -8,6 +8,12 @@ describe("create table", () => {
     test(
       "create /*c1*/ temporary /*c2*/ table /*c3*/ if /*c4*/ not /*c5*/ exists /*c6*/ foo (id INT)"
     );
+  });
+
+  dialect("sqlite", () => {
+    it("supports CREATE TEMP TABLE", () => {
+      test("CREATE TEMP TABLE foo (id INT)");
+    });
   });
 
   it("parses CREATE TABLE with multiple column definitions", () => {
