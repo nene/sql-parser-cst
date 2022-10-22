@@ -82,8 +82,15 @@ describe("window functions", () => {
   });
 
   it("parses window function call to syntax tree", () => {
-    expect(parseExpr("row_number() OVER (my_win PARTITION BY product ORDER BY price)"))
-      .toMatchInlineSnapshot(`
+    expect(
+      parseExpr(`
+      row_number() OVER (
+        my_win
+        PARTITION BY product
+        ORDER BY price
+        ROWS BETWEEN UNBOUNDED PRECEDING AND 2 FOLLOWING EXCLUDE CURRENT ROW
+      )`)
+    ).toMatchInlineSnapshot(`
       {
         "args": {
           "expr": {
@@ -107,6 +114,66 @@ describe("window functions", () => {
               "baseWindowName": {
                 "text": "my_win",
                 "type": "identifier",
+              },
+              "frame": {
+                "exclusion": {
+                  "excludeKw": {
+                    "text": "EXCLUDE",
+                    "type": "keyword",
+                  },
+                  "kindKw": [
+                    {
+                      "text": "CURRENT",
+                      "type": "keyword",
+                    },
+                    {
+                      "text": "ROW",
+                      "type": "keyword",
+                    },
+                  ],
+                  "type": "frame_exclusion",
+                },
+                "extent": {
+                  "andKw": {
+                    "text": "AND",
+                    "type": "keyword",
+                  },
+                  "begin": {
+                    "expr": {
+                      "type": "frame_unbounded",
+                      "unboundedKw": {
+                        "text": "UNBOUNDED",
+                        "type": "keyword",
+                      },
+                    },
+                    "precedingKw": {
+                      "text": "PRECEDING",
+                      "type": "keyword",
+                    },
+                    "type": "frame_bound_preceding",
+                  },
+                  "betweenKw": {
+                    "text": "BETWEEN",
+                    "type": "keyword",
+                  },
+                  "end": {
+                    "expr": {
+                      "text": "2",
+                      "type": "number",
+                    },
+                    "followingKw": {
+                      "text": "FOLLOWING",
+                      "type": "keyword",
+                    },
+                    "type": "frame_bound_following",
+                  },
+                  "type": "frame_between",
+                },
+                "type": "frame_clause",
+                "unitKw": {
+                  "text": "ROWS",
+                  "type": "keyword",
+                },
               },
               "orderBy": {
                 "orderByKw": [
