@@ -1680,11 +1680,22 @@ window_definition
     }
 
 frame_clause
-  = kw:KW_ROWS c:__ extent:(frame_bound) {
+  = kw:KW_ROWS c:__ extent:(frame_bound / frame_between) {
     return loc({
       type: "frame_clause",
       unitKw: kw,
       extent: leading(extent, c),
+    });
+  }
+
+frame_between
+  = bKw:KW_BETWEEN c1:__ begin:frame_bound c2:__ andKw:KW_AND c3:__ end:frame_bound {
+    return loc({
+      type: "frame_between",
+      betweenKw: bKw,
+      begin: withComments(begin, {leading: c1, trailing: c2}),
+      andKw,
+      end: leading(end, c3),
     });
   }
 

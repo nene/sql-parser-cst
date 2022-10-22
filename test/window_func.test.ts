@@ -47,6 +47,17 @@ describe("window functions", () => {
     test(`SELECT sum(price) OVER (/*c1*/ ROWS /*c2*/ 28 /*c3*/ FOLLOWING /*c4*/)`);
   });
 
+  it("supports frame clause with BETWEEN", () => {
+    test(`SELECT sum(price) OVER (ROWS BETWEEN 1 PRECEDING AND 2 FOLLOWING)`);
+    test(`SELECT sum(price) OVER (ROWS BETWEEN 2 FOLLOWING AND 1 FOLLOWING)`);
+    test(`SELECT sum(price) OVER (ROWS BETWEEN UNBOUNDED PRECEDING AND 1 FOLLOWING)`);
+    test(`SELECT sum(price) OVER (ROWS BETWEEN 2 PRECEDING AND UNBOUNDED PRECEDING)`);
+    test(`SELECT sum(price) OVER (ROWS BETWEEN 7 FOLLOWING AND CURRENT ROW)`);
+    test(
+      `SELECT sum(price) OVER (ROWS BETWEEN /*c1*/ 1 /*c2*/ PRECEDING /*c3*/ AND /*c4*/ 2 /*c5*/ FOLLOWING)`
+    );
+  });
+
   it("parses window function call to syntax tree", () => {
     expect(parseExpr("row_number() OVER (my_win PARTITION BY product ORDER BY price)"))
       .toMatchInlineSnapshot(`
