@@ -30,7 +30,9 @@ type Node =
   | NamedWindow
   | WindowDefinition
   | OverArg
-  | FrameNode;
+  | FrameNode
+  | CaseWhen
+  | CaseElse;
 
 type Statement =
   | EmptyStatement
@@ -48,6 +50,7 @@ type Expr =
   | FuncCall
   | CastExpr
   | BetweenExpr
+  | CaseExpr
   | StringWithCharset
   | Literal
   | ColumnRef
@@ -395,6 +398,28 @@ type BetweenExpr = BaseNode & {
   begin: Expr;
   andKw: Keyword;
   end: Expr;
+};
+
+type CaseExpr = BaseNode & {
+  type: "case_expr";
+  expr?: Expr;
+  caseKw: Keyword;
+  endKw: Keyword;
+  clauses: (CaseWhen | CaseElse)[];
+};
+
+type CaseWhen = BaseNode & {
+  type: "case_when";
+  whenKw: Keyword;
+  condition: Expr;
+  thenKw: Keyword;
+  result: Expr;
+};
+
+type CaseElse = BaseNode & {
+  type: "case_else";
+  elseKw: Keyword;
+  result: Expr;
 };
 
 type StringWithCharset = BaseNode & {

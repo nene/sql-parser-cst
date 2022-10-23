@@ -1356,27 +1356,38 @@ interval_unit
   / UNIT_SECOND
 
 case_expr
-  = CASE                         __
-    condition_list:case_when_then+  __
-    otherwise:case_else?            __
-    END __ CASE? {
-      return "[Not implemented]";
-    }
-  / CASE                         __
-    expr:expr                      __
-    condition_list:case_when_then+  __
-    otherwise:case_else?            __
-    END __ CASE? {
-      return "[Not implemented]";
+  = caseKw:CASE
+    expr:(c:__ e:expr { return leading(e, c); })?
+    clauses:(c:__ w:case_when { return leading(w, c); })+
+    els:(c:__ e:case_else { return leading(e, c); })?
+    endKw:(c:__ kw:END { return leading(kw, c); }) {
+      return loc({
+        type: "case_expr",
+        caseKw,
+        expr: nullToUndefined(expr),
+        clauses: [...clauses, ...(els ? [els] : [])],
+        endKw,
+      });
     }
 
-case_when_then
-  = WHEN __ condition:expr __ THEN __ result:expr {
-    return "[Not implemented]";
+case_when
+  = whenKw:WHEN c1:__ condition:expr c2:__ thenKw:THEN c3:__ result:expr {
+    return loc({
+      type: "case_when",
+      whenKw,
+      condition: surrounding(c1, condition, c2),
+      thenKw,
+      result: leading(result, c3),
+    });
   }
 
-case_else = ELSE __ result:expr {
-    return "[Not implemented]";
+case_else
+  = kw:ELSE c:__ result:expr {
+    return loc({
+      type: "case_else",
+      elseKw: kw,
+      result: leading(result, c),
+    });
   }
 
 /**

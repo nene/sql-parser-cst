@@ -144,6 +144,10 @@ const showNode = cstTransformer<string>({
     show([node.left, node.betweenKw, node.begin, node.andKw, node.end]),
   datetime: (node) => show([node.kw, node.string]),
   string_with_charset: (node) => "_" + node.charset + show(node.string),
+  case_expr: (node) => show([node.caseKw, node.expr, node.clauses, node.endKw]),
+  case_when: (node) =>
+    show([node.whenKw, node.condition, node.thenKw, node.result]),
+  case_else: (node) => show([node.elseKw, node.result]),
 
   // Data types
   data_type: (node) => show([node.nameKw, node.params]),
