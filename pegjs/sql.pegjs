@@ -1335,6 +1335,72 @@ value_item
     return "[Not implemented]";
   }
 
+/**
+ * Data types
+ */
+data_type
+  = kw:type_name c:__ params:type_params {
+    return loc({ type: "data_type", nameKw: trailing(kw, c), params });
+  }
+  / kw:type_name {
+    return loc({ type: "data_type", nameKw: kw });
+  }
+
+type_params
+  = "(" c1:__ params:literal_list c2:__ ")" {
+    return loc({
+      type: "paren_expr",
+      expr: surrounding(c1, params, c2),
+    });
+  }
+
+literal_list
+  = head:literal tail:(__ "," __ literal)* {
+    return {
+      type: "expr_list",
+      items: readCommaSepList(head, tail),
+    };
+  }
+
+type_name
+  = BOOLEAN
+  / BOOL
+  / BLOB
+  / TINYBLOB
+  / MEDIUMBLOB
+  / LONGBLOB
+  / BINARY
+  / VARBINARY
+  / DATE
+  / DATETIME
+  / TIME
+  / TIMESTAMP
+  / YEAR
+  / CHAR
+  / VARCHAR
+  / TINYTEXT
+  / TEXT
+  / MEDIUMTEXT
+  / LONGTEXT
+  / NUMERIC
+  / FIXED
+  / DECIMAL
+  / DEC
+  / INT
+  / INTEGER
+  / SMALLINT
+  / TINYINT
+  / BIGINT
+  / FLOAT
+  / kws:(DOUBLE __ PRECISION) { return createKeywordList(kws); }
+  / DOUBLE
+  / REAL
+  / BIT
+  / JSON
+  / ENUM
+  / SET
+
+// Expressions
 expr_list
   = head:expr tail:(__ "," __ expr)* {
     return loc({ type: "expr_list", items: readCommaSepList(head, tail) });
@@ -1865,6 +1931,9 @@ cast_arg
     });
   }
 
+/**
+ * Literals
+ */
 literal
   = b:'BINARY'i? __ s:literal_string ca:(__ collate_expr)? {
     return s; // TODO
@@ -2068,69 +2137,6 @@ digits
 
 hexDigit
   = [0-9a-fA-F]
-
-// Data types
-data_type
-  = kw:type_name c:__ params:type_params {
-    return loc({ type: "data_type", nameKw: trailing(kw, c), params });
-  }
-  / kw:type_name {
-    return loc({ type: "data_type", nameKw: kw });
-  }
-
-type_params
-  = "(" c1:__ params:literal_list c2:__ ")" {
-    return loc({
-      type: "paren_expr",
-      expr: surrounding(c1, params, c2),
-    });
-  }
-
-literal_list
-  = head:literal tail:(__ "," __ literal)* {
-    return {
-      type: "expr_list",
-      items: readCommaSepList(head, tail),
-    };
-  }
-
-type_name
-  = BOOLEAN
-  / BOOL
-  / BLOB
-  / TINYBLOB
-  / MEDIUMBLOB
-  / LONGBLOB
-  / BINARY
-  / VARBINARY
-  / DATE
-  / DATETIME
-  / TIME
-  / TIMESTAMP
-  / YEAR
-  / CHAR
-  / VARCHAR
-  / TINYTEXT
-  / TEXT
-  / MEDIUMTEXT
-  / LONGTEXT
-  / NUMERIC
-  / FIXED
-  / DECIMAL
-  / DEC
-  / INT
-  / INTEGER
-  / SMALLINT
-  / TINYINT
-  / BIGINT
-  / FLOAT
-  / kws:(DOUBLE __ PRECISION) { return createKeywordList(kws); }
-  / DOUBLE
-  / REAL
-  / BIT
-  / JSON
-  / ENUM
-  / SET
 
 // Optional whitespace (or comments)
 __ "whitespace"
