@@ -41,6 +41,8 @@ const showNode = cstTransformer<string>({
   empty_statement: () => "",
 
   // SELECT statement
+  compound_select_statement: (node) =>
+    show([node.left, node.operator, node.right]),
   select_statement: (node) => show(node.clauses),
   // WITH
   with_clause: (node) =>

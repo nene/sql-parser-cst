@@ -40,11 +40,13 @@ type Program = BaseNode & {
 
 type Statement =
   | EmptyStatement
+  | CompoundSelectStatement
   | SelectStatement
   | CreateTableStatement
   | DropTableStatement;
 
 type Expr =
+  | CompoundSelectStatement
   | SelectStatement
   | Alias
   | ExprList
@@ -75,6 +77,12 @@ type EmptyStatement = BaseNode & {
 };
 
 // SELECT
+type CompoundSelectStatement = BaseNode & {
+  type: "compound_select_statement";
+  left: SelectStatement | CompoundSelectStatement | ParenExpr;
+  operator: Keyword | Keyword[]; // { UNION | EXCEPT | INTERSECT } [ALL | DISTINCT]
+  right: SelectStatement | CompoundSelectStatement | ParenExpr;
+};
 
 type SelectStatement = BaseNode & {
   type: "select_statement";

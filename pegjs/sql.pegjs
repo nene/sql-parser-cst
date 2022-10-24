@@ -82,16 +82,16 @@
     return { ...binExpr, range: [start, end] };
   }
 
-  function createBinaryExprChain(head, tail) {
+  function createBinaryExprChain(head, tail, type = "binary_expr") {
     return tail.reduce(
-      (left, [c1, op, c2, right]) => deriveLoc(createBinaryExpr(left, c1, op, c2, right)),
+      (left, [c1, op, c2, right]) => deriveLoc(createBinaryExpr(left, c1, op, c2, right, type)),
       head
     );
   }
 
-  function createBinaryExpr(left, c1, op, c2, right) {
+  function createBinaryExpr(left, c1, op, c2, right, type = "binary_expr") {
     return {
-      type: 'binary_expr',
+      type,
       operator: op,
       left: trailing(left, c1),
       right: leading(right, c2),
@@ -205,9 +205,13 @@ empty_stmt
   }
 
 union_stmt
-  = head:select_stmt tail:(__ UNION __ ALL? __ select_stmt)* (__ ob:order_by_clause)? (__ l:limit_clause)? {
-    return head; // TODO
+  = head:select_stmt tail:(__ compound_op __ select_stmt)* {
+    return createBinaryExprChain(head, tail, "compound_select_statement");
   }
+
+compound_op
+  = kws:(UNION __ (ALL / DISTINCT)) { return createKeywordList(kws); }
+  / UNION
 
 column_order_list
   = head:column_order_item tail:(__ "," __ column_order_item)* {
