@@ -894,25 +894,6 @@ select_columns
       return readCommaSepList(head, tail);
     }
 
-fulltext_search_mode
-  = IN __ 'NATURAL'i __ 'LANGUAGE'i __ 'MODE'i __ 'WITH'i __ 'QUERY'i __ 'EXPANSION'i  {
-    return "[Not implemented]";
-  }
-  / IN __ 'NATURAL'i __ 'LANGUAGE'i __ 'MODE'i {
-    return "[Not implemented]";
-  }
-  / IN __ 'BOOLEAN'i __ 'MODE'i {
-    return "[Not implemented]";
-  }
-  / WITH __ 'QUERY'i __ 'EXPANSION'i {
-    return "[Not implemented]";
-  }
-
-fulltext_search
-  = 'MATCH'i __ "(" __ c:column_ref_list __ ")" __ 'AGAINST' __ "(" __ e:expr __ mo:fulltext_search_mode? __ ")" __ as:alias_clause? {
-    return "[Not implemented]";
-  }
-
 column_list_item
   = fs:fulltext_search {
     return "[Not implemented]";
@@ -1698,9 +1679,9 @@ primary
   / paren_expr
   / cast_expr
   / func_call
-  / fulltext_search
   / case_expr
   / interval_expr
+  / fulltext_search
   / column_ref
 
 paren_expr
@@ -1864,6 +1845,25 @@ interval_unit
   / UNIT_HOUR
   / UNIT_MINUTE
   / UNIT_SECOND
+
+fulltext_search
+  = 'MATCH'i __ "(" __ c:column_ref_list __ ")" __ 'AGAINST' __ "(" __ e:expr __ mo:fulltext_search_mode? __ ")" __ as:alias_clause? {
+    return "[Not implemented]";
+  }
+
+fulltext_search_mode
+  = IN __ 'NATURAL'i __ 'LANGUAGE'i __ 'MODE'i __ 'WITH'i __ 'QUERY'i __ 'EXPANSION'i  {
+    return "[Not implemented]";
+  }
+  / IN __ 'NATURAL'i __ 'LANGUAGE'i __ 'MODE'i {
+    return "[Not implemented]";
+  }
+  / IN __ 'BOOLEAN'i __ 'MODE'i {
+    return "[Not implemented]";
+  }
+  / WITH __ 'QUERY'i __ 'EXPANSION'i {
+    return "[Not implemented]";
+  }
 
 /**
  * column names
