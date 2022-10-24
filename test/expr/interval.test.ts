@@ -4,11 +4,14 @@ describe("temporal intervals", () => {
   dialect("mysql", () => {
     it("supports INTERVAL expressions", () => {
       testExpr(`INTERVAL 3 YEAR`);
+      testExpr(`INTERVAL 3 QUARTER`);
       testExpr(`INTERVAL 3 MONTH`);
+      testExpr(`INTERVAL 3 WEEK`);
       testExpr(`INTERVAL 3 DAY`);
       testExpr(`INTERVAL 3 HOUR`);
       testExpr(`INTERVAL 3 MINUTE`);
       testExpr(`INTERVAL 3 SECOND`);
+      testExpr(`INTERVAL 3 MICROSECOND`);
       testExpr(`INTERVAL /*c1*/ 3 /*c2*/ DAY`);
     });
 

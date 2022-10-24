@@ -1837,11 +1837,14 @@ interval_expr
 
 interval_unit
   = YEAR
+  / QUARTER
   / MONTH
+  / WEEK
   / DAY
   / HOUR
   / MINUTE
   / SECOND
+  / MICROSECOND
 
 fulltext_search
   = MATCH __ "(" __ c:column_ref_list __ ")" __ AGAINST __ "(" __ e:expr __ mo:fulltext_search_mode? __ ")" __ as:alias_clause? {
@@ -2366,6 +2369,7 @@ MEDIUMBLOB          = kw:"MEDIUMBLOB"i          !ident_part { return loc(createK
 MEDIUMTEXT          = kw:"MEDIUMTEXT"i          !ident_part { return loc(createKeyword(kw)); }
 MEMORY              = kw:"MEMORY"i              !ident_part { return loc(createKeyword(kw)); }
 MERGE               = kw:"MERGE"i               !ident_part { return loc(createKeyword(kw)); }
+MICROSECOND         = kw:"MICROSECOND"i         !ident_part { return loc(createKeyword(kw)); }
 MIN                 = kw:"MIN"i                 !ident_part { return loc(createKeyword(kw)); }
 MIN_ROWS            = kw:"MIN_ROWS"i            !ident_part { return loc(createKeyword(kw)); }
 MINUTE              = kw:"MINUTE"i              !ident_part { return loc(createKeyword(kw)); }
@@ -2400,6 +2404,7 @@ PERSIST_ONLY        = kw:"PERSIST_ONLY"i        !ident_part { return loc(createK
 PRECEDING           = kw:"PRECEDING"i           !ident_part { return loc(createKeyword(kw)); }
 PRECISION           = kw:"PRECISION"i           !ident_part { return loc(createKeyword(kw)); }
 PRIMARY             = kw:"PRIMARY"i             !ident_part { return loc(createKeyword(kw)); }
+QUARTER             = kw:"QUARTER"i             !ident_part { return loc(createKeyword(kw)); }
 QUERY               = kw:"QUERY"i               !ident_part { return loc(createKeyword(kw)); }
 RANGE               = kw:"RANGE"i               !ident_part { return loc(createKeyword(kw)); }
 RANK                = kw:"RANK"i                !ident_part { return loc(createKeyword(kw)); }
@@ -2479,6 +2484,7 @@ VARCHAR             = kw:"VARCHAR"i             !ident_part { return loc(createK
 VIEW                = kw:"VIEW"i                !ident_part { return loc(createKeyword(kw)); }
 VISIBLE             = kw:"VISIBLE"i             !ident_part { return loc(createKeyword(kw)); }
 WAIT                = kw:"WAIT"i                !ident_part { return loc(createKeyword(kw)); }
+WEEK                = kw:"WEEK"i                !ident_part { return loc(createKeyword(kw)); }
 WHEN                = kw:"WHEN"i                !ident_part { return loc(createKeyword(kw)); }
 WHERE               = kw:"WHERE"i               !ident_part { return loc(createKeyword(kw)); }
 WINDOW              = kw:"WINDOW"i              !ident_part { return loc(createKeyword(kw)); }
