@@ -1,4 +1,4 @@
-import { dialect, parseExpr, test } from "./test_utils";
+import { dialect, parseExpr, test } from "../test_utils";
 
 describe("window functions", () => {
   it("supports referring to named window", () => {

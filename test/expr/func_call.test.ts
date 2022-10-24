@@ -1,4 +1,4 @@
-import { parseExpr, testExpr } from "./test_utils";
+import { parseExpr, testExpr } from "../test_utils";
 
 describe("function call", () => {
   it("supports simple function call", () => {

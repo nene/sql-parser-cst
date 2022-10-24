@@ -1,4 +1,4 @@
-import { parseExpr, testExpr } from "./test_utils";
+import { parseExpr, testExpr } from "../test_utils";
 
 describe("CASE expression", () => {
   it("supports simple CASE", () => {

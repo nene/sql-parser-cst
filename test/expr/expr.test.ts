@@ -1,4 +1,4 @@
-import { dialect, parseExpr, showPrecedence, testExpr } from "./test_utils";
+import { dialect, parseExpr, showPrecedence, testExpr } from "../test_utils";
 
 describe("expr", () => {
   describe("operators", () => {
