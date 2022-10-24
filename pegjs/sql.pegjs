@@ -1718,73 +1718,6 @@ expr_list
     return loc({ type: "expr_list", items: readCommaSepList(head, tail) });
   }
 
-column_ref
-  = tbl:(ident __ "." __)? col:column __ a:(("->>" / "->") __ (literal_string / literal_numeric))+ __ ca:collate_expr? {
-    return "[Not implemented]";
-  }
-  / tbl:ident c1:__ "." c2:__ col:qualified_column {
-    return loc({
-      type: "column_ref",
-      table: trailing(tbl, c1),
-      column: leading(col, c2),
-    });
-  }
-  / col:column {
-    return loc({
-      type: "column_ref",
-      column: col,
-    });
-  }
-
-column_list
-  = head:column tail:(__ "," __ column)* {
-    return "[Not implemented]";
-  }
-
-alias_ident
-  = ident
-  / s:literal_single_quoted_string { return loc(createIdentifier(s.text)); }
-  / s:literal_double_quoted_string { return loc(createIdentifier(s.text)); }
-
-ident "identifier"
-  = name:ident_name !{ return __RESERVED_KEYWORDS__[name.toUpperCase()] === true; } {
-    return loc(createIdentifier(name));
-  }
-  / quoted_ident
-
-quoted_ident
-  = name:backticks_quoted_ident { return loc(createIdentifier(name)); }
-quoted_ident$mysql
-  = name:backticks_quoted_ident { return loc(createIdentifier(name)); }
-quoted_ident$sqlite
-  = name:bracket_quoted_ident { return loc(createIdentifier(name)); }
-  / name:backticks_quoted_ident { return loc(createIdentifier(name)); }
-  / str:literal_double_quoted_string { return loc(createIdentifier(str.text)); }
-
-backticks_quoted_ident
-  = q:"`" chars:([^`] / "``")+ "`" { return text(); }
-
-bracket_quoted_ident
-  = q:"[" chars:([^\]] / "]]")+ "]" { return text(); }
-
-// Keywords can be used as column names when they are prefixed by table name, like tbl.update
-qualified_column
-  = name:ident_name {
-    return loc(createIdentifier(name));
-  }
-  / quoted_ident
-
-column
-  = ident
-
-ident_name
-  = ident_start ident_part* { return text(); }
-  / [0-9]+ ident_start ident_part* { return text(); }
-
-ident_start = [A-Za-z_]
-
-ident_part  = [A-Za-z0-9_]
-
 func_call
   = name:func_name c1:__ args:func_args
     over:(c:__ o:over_arg { return leading(o, c); })? {
@@ -1931,6 +1864,79 @@ interval_unit
   / UNIT_HOUR
   / UNIT_MINUTE
   / UNIT_SECOND
+
+/**
+ * column names
+ */
+column_list
+  = head:column tail:(__ "," __ column)* {
+    return "[Not implemented]";
+  }
+
+column_ref
+  = tbl:(ident __ "." __)? col:column __ a:(("->>" / "->") __ (literal_string / literal_numeric))+ __ ca:collate_expr? {
+    return "[Not implemented]";
+  }
+  / tbl:ident c1:__ "." c2:__ col:qualified_column {
+    return loc({
+      type: "column_ref",
+      table: trailing(tbl, c1),
+      column: leading(col, c2),
+    });
+  }
+  / col:column {
+    return loc({
+      type: "column_ref",
+      column: col,
+    });
+  }
+
+// Keywords can be used as column names when they are prefixed by table name, like tbl.update
+qualified_column
+  = name:ident_name {
+    return loc(createIdentifier(name));
+  }
+  / quoted_ident
+
+column
+  = ident
+
+/**
+ * Identifiers
+ */
+alias_ident
+  = ident
+  / s:literal_single_quoted_string { return loc(createIdentifier(s.text)); }
+  / s:literal_double_quoted_string { return loc(createIdentifier(s.text)); }
+
+ident "identifier"
+  = name:ident_name !{ return __RESERVED_KEYWORDS__[name.toUpperCase()] === true; } {
+    return loc(createIdentifier(name));
+  }
+  / quoted_ident
+
+quoted_ident
+  = name:backticks_quoted_ident { return loc(createIdentifier(name)); }
+quoted_ident$mysql
+  = name:backticks_quoted_ident { return loc(createIdentifier(name)); }
+quoted_ident$sqlite
+  = name:bracket_quoted_ident { return loc(createIdentifier(name)); }
+  / name:backticks_quoted_ident { return loc(createIdentifier(name)); }
+  / str:literal_double_quoted_string { return loc(createIdentifier(str.text)); }
+
+backticks_quoted_ident
+  = q:"`" chars:([^`] / "``")+ "`" { return text(); }
+
+bracket_quoted_ident
+  = q:"[" chars:([^\]] / "]]")+ "]" { return text(); }
+
+ident_name
+  = ident_start ident_part* { return text(); }
+  / [0-9]+ ident_start ident_part* { return text(); }
+
+ident_start = [A-Za-z_]
+
+ident_part  = [A-Za-z0-9_]
 
 /**
  * Literals
