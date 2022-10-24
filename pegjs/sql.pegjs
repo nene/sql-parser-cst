@@ -1520,6 +1520,15 @@ not_expr
     return loc(createUnaryExpr(kw, c, expr));
   }
 
+exists_expr
+  = op:exists_op __ "(" __ stmt:union_stmt __ ")" {
+    return "[Not implemented]";
+  }
+
+exists_op
+  = nk:(NOT __ EXISTS) { return "[Not implemented]"; }
+  / EXISTS
+
 comparison_expr
   = head:additive_expr tail:(__ comparison_op_right)? {
     if (!tail) {
@@ -1548,15 +1557,6 @@ comparison_expr
   }
   / literal_string
   / column_ref
-
-exists_expr
-  = op:exists_op __ "(" __ stmt:union_stmt __ ")" {
-    return "[Not implemented]";
-  }
-
-exists_op
-  = nk:(NOT __ EXISTS) { return "[Not implemented]"; }
-  / EXISTS
 
 comparison_op_right
   = arithmetic_op_right
