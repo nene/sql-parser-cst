@@ -79,9 +79,9 @@ type EmptyStatement = BaseNode & {
 // SELECT
 type CompoundSelectStatement = BaseNode & {
   type: "compound_select_statement";
-  left: SelectStatement | CompoundSelectStatement | ParenExpr;
+  left: Expr;
   operator: Keyword | Keyword[]; // { UNION | EXCEPT | INTERSECT } [ALL | DISTINCT]
-  right: SelectStatement | CompoundSelectStatement | ParenExpr;
+  right: Expr;
 };
 
 type SelectStatement = BaseNode & {

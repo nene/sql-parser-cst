@@ -1,4 +1,10 @@
-import { Expr, Program, Statement, Whitespace } from "../pegjs/sql";
+import {
+  Expr,
+  Program,
+  SelectClause,
+  Statement,
+  Whitespace,
+} from "../pegjs/sql";
 import { parse as parseSql, ParserOptions, show } from "../src/parser";
 
 type Dialect = "mysql" | "sqlite";
@@ -66,10 +72,29 @@ export function showPrecedence(sql: string): string {
   return show(addPrecedenceParens(parseExpr(sql)));
 }
 
+/**
+ * Converts compound select to parenthesized version.
+ * For example:
+ *
+ *     showCompoundPrecedence("SELECT 1 UNION SELECT 2") --> "(SELECT 1 UNION SELECT 2)"
+ */
+export function showCompoundPrecedence(sql: string): string {
+  const stmt = parseStmt(sql);
+  if (stmt.type !== "compound_select_statement") {
+    throw new Error(
+      `Expected compound_select_statement, instead got ${stmt.type}`
+    );
+  }
+  return show(addPrecedenceParens(stmt));
+}
+
 function addPrecedenceParens(expr: Expr): Expr {
   const space: Whitespace[] = [{ type: "space", text: " " }];
 
-  if (expr.type === "binary_expr") {
+  if (
+    expr.type === "binary_expr" ||
+    expr.type === "compound_select_statement"
+  ) {
     return {
       type: "paren_expr",
       expr: {
@@ -85,6 +110,18 @@ function addPrecedenceParens(expr: Expr): Expr {
         ...expr,
         expr: { ...addPrecedenceParens(expr.expr), leading: space },
       },
+    };
+  } else if (expr.type === "select_statement") {
+    // Add space inside select clause: SELECT <space_here> x
+    const selectClause = expr.clauses[0] as SelectClause;
+    return {
+      ...expr,
+      clauses: [
+        {
+          ...selectClause,
+          selectKw: { ...selectClause.selectKw, trailing: space },
+        },
+      ],
     };
   } else {
     return expr;
