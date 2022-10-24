@@ -35,4 +35,10 @@ describe("temporal intervals", () => {
       `);
     });
   });
+
+  dialect("sqlite", () => {
+    it("does not support INTERVAL expressions", () => {
+      expect(() => testExpr(`INTERVAL 1 DAY`)).toThrowError("Expected");
+    });
+  });
 });

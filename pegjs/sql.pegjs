@@ -1669,12 +1669,18 @@ negation_expr
 negation_operator = "-" / "~" / "!"
 
 primary
+  = primary_standard
+
+primary$mysql
+  = primary_standard
+  / interval_expr
+
+primary_standard
   = literal
   / paren_expr
   / cast_expr
   / func_call
   / case_expr
-  / interval_expr
   / fulltext_search
   / column_ref
 
