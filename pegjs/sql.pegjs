@@ -1232,6 +1232,111 @@ limit_clause
     return loc({ type: "limit_clause", limitKw: kw, count: leading(count, c) });
   }
 
+window_clause
+  = kw:WINDOW c:__ wins:named_window_list {
+    return loc({
+      type: "window_clause",
+      windowKw: trailing(kw, c),
+      namedWindows: wins,
+    });
+  }
+
+named_window_list
+  = head:named_window tail:(__ "," __ named_window)* {
+    return readCommaSepList(head, tail);
+  }
+
+named_window
+  = name:ident c1:__ kw:AS c2:__ def:window_definition_in_parens {
+    return loc({
+      type: "named_window",
+      name: trailing(name, c1),
+      asKw: trailing(kw, c2),
+      window: def,
+    });
+  }
+
+window_definition_in_parens
+  = "(" c1:__ win:window_definition c2:__ ")" {
+    return loc({
+      type: "paren_expr",
+      expr: surrounding(c1, win, c2),
+    });
+  }
+
+window_definition
+  = name:ident?
+    partitionBy:(c:__ cls:partition_by_clause { return leading(cls, c); })?
+    orderBy:(c:__ cls:order_by_clause { return leading(cls, c); })?
+    frame:(c:__ cls:frame_clause { return leading(cls, c); })? {
+      return loc({
+        type: "window_definition",
+        ...(name ? {baseWindowName: name} : {}),
+        ...(partitionBy ? {partitionBy} : {}),
+        ...(orderBy ? {orderBy} : {}),
+        ...(frame ? {frame} : {}),
+      });
+    }
+
+frame_clause
+  = kw:frame_unit c1:__ extent:(frame_bound / frame_between)
+    exclusion:(c:__ ex:frame_exclusion { return leading(ex, c); })? {
+      return loc({
+        type: "frame_clause",
+        unitKw: kw,
+        extent: leading(extent, c1),
+        ...(exclusion ? {exclusion} : {}),
+      });
+    }
+
+frame_unit
+  = ROWS / RANGE
+
+frame_unit$sqlite
+  = ROWS / RANGE / GROUPS
+
+frame_between
+  = bKw:BETWEEN c1:__ begin:frame_bound c2:__ andKw:AND c3:__ end:frame_bound {
+    return loc({
+      type: "frame_between",
+      betweenKw: bKw,
+      begin: surrounding(c1, begin, c2),
+      andKw,
+      end: leading(end, c3),
+    });
+  }
+
+frame_bound
+  = kws:(CURRENT __ ROW) {
+    return loc({ type: "frame_bound_current_row", currentRowKw: createKeywordList(kws) });
+  }
+  / expr:(frame_unbounded / literal) c:__ kw:PRECEDING {
+    return loc({ type: "frame_bound_preceding", expr: trailing(expr, c), precedingKw: kw });
+  }
+  / expr:(frame_unbounded / literal) c:__ kw:FOLLOWING {
+    return loc({ type: "frame_bound_following", expr: trailing(expr, c), followingKw: kw });
+  }
+
+frame_unbounded
+  = kw:UNBOUNDED {
+    return loc({ type: "frame_unbounded", unboundedKw: kw })
+  }
+
+frame_exclusion
+  = kw:EXCLUDE c:__ kindKw:frame_exclusion_kind {
+    return loc({
+      type: "frame_exclusion",
+      excludeKw: trailing(kw, c),
+      kindKw
+    });
+  }
+
+frame_exclusion_kind
+  = kws:(CURRENT __ ROW) { return createKeywordList(kws); }
+  / kws:(NO __ OTHERS) { return createKeywordList(kws); }
+  / GROUP
+  / TIES
+
 update_stmt
   = UPDATE    __
     t:table_ref_list __
@@ -1679,111 +1784,6 @@ ident_name
 ident_start = [A-Za-z_]
 
 ident_part  = [A-Za-z0-9_]
-
-window_clause
-  = kw:WINDOW c:__ wins:named_window_list {
-    return loc({
-      type: "window_clause",
-      windowKw: trailing(kw, c),
-      namedWindows: wins,
-    });
-  }
-
-named_window_list
-  = head:named_window tail:(__ "," __ named_window)* {
-    return readCommaSepList(head, tail);
-  }
-
-named_window
-  = name:ident c1:__ kw:AS c2:__ def:window_definition_in_parens {
-    return loc({
-      type: "named_window",
-      name: trailing(name, c1),
-      asKw: trailing(kw, c2),
-      window: def,
-    });
-  }
-
-window_definition_in_parens
-  = "(" c1:__ win:window_definition c2:__ ")" {
-    return loc({
-      type: "paren_expr",
-      expr: surrounding(c1, win, c2),
-    });
-  }
-
-window_definition
-  = name:ident?
-    partitionBy:(c:__ cls:partition_by_clause { return leading(cls, c); })?
-    orderBy:(c:__ cls:order_by_clause { return leading(cls, c); })?
-    frame:(c:__ cls:frame_clause { return leading(cls, c); })? {
-      return loc({
-        type: "window_definition",
-        ...(name ? {baseWindowName: name} : {}),
-        ...(partitionBy ? {partitionBy} : {}),
-        ...(orderBy ? {orderBy} : {}),
-        ...(frame ? {frame} : {}),
-      });
-    }
-
-frame_clause
-  = kw:frame_unit c1:__ extent:(frame_bound / frame_between)
-    exclusion:(c:__ ex:frame_exclusion { return leading(ex, c); })? {
-      return loc({
-        type: "frame_clause",
-        unitKw: kw,
-        extent: leading(extent, c1),
-        ...(exclusion ? {exclusion} : {}),
-      });
-    }
-
-frame_unit
-  = ROWS / RANGE
-
-frame_unit$sqlite
-  = ROWS / RANGE / GROUPS
-
-frame_between
-  = bKw:BETWEEN c1:__ begin:frame_bound c2:__ andKw:AND c3:__ end:frame_bound {
-    return loc({
-      type: "frame_between",
-      betweenKw: bKw,
-      begin: surrounding(c1, begin, c2),
-      andKw,
-      end: leading(end, c3),
-    });
-  }
-
-frame_bound
-  = kws:(CURRENT __ ROW) {
-    return loc({ type: "frame_bound_current_row", currentRowKw: createKeywordList(kws) });
-  }
-  / expr:(frame_unbounded / literal) c:__ kw:PRECEDING {
-    return loc({ type: "frame_bound_preceding", expr: trailing(expr, c), precedingKw: kw });
-  }
-  / expr:(frame_unbounded / literal) c:__ kw:FOLLOWING {
-    return loc({ type: "frame_bound_following", expr: trailing(expr, c), followingKw: kw });
-  }
-
-frame_unbounded
-  = kw:UNBOUNDED {
-    return loc({ type: "frame_unbounded", unboundedKw: kw })
-  }
-
-frame_exclusion
-  = kw:EXCLUDE c:__ kindKw:frame_exclusion_kind {
-    return loc({
-      type: "frame_exclusion",
-      excludeKw: trailing(kw, c),
-      kindKw
-    });
-  }
-
-frame_exclusion_kind
-  = kws:(CURRENT __ ROW) { return createKeywordList(kws); }
-  / kws:(NO __ OTHERS) { return createKeywordList(kws); }
-  / GROUP
-  / TIES
 
 func_call
   = name:func_name c1:__ args:func_args
