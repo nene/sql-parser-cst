@@ -1400,63 +1400,9 @@ type_name
   / ENUM
   / SET
 
-// Expressions
-expr_list
-  = head:expr tail:(__ "," __ expr)* {
-    return loc({ type: "expr_list", items: readCommaSepList(head, tail) });
-  }
-
-interval_expr
-  = INTERVAL                    __
-    e:expr                       __
-    u: interval_unit {
-      return "[Not implemented]";
-    }
-
-interval_unit
-  = UNIT_YEAR
-  / UNIT_MONTH
-  / UNIT_DAY
-  / UNIT_HOUR
-  / UNIT_MINUTE
-  / UNIT_SECOND
-
-case_expr
-  = caseKw:CASE
-    expr:(c:__ e:expr { return leading(e, c); })?
-    clauses:(c:__ w:case_when { return leading(w, c); })+
-    els:(c:__ e:case_else { return leading(e, c); })?
-    endKw:(c:__ kw:END { return leading(kw, c); }) {
-      return loc({
-        type: "case_expr",
-        caseKw,
-        expr: nullToUndefined(expr),
-        clauses: [...clauses, ...(els ? [els] : [])],
-        endKw,
-      });
-    }
-
-case_when
-  = whenKw:WHEN c1:__ condition:expr c2:__ thenKw:THEN c3:__ result:expr {
-    return loc({
-      type: "case_when",
-      whenKw,
-      condition: surrounding(c1, condition, c2),
-      thenKw,
-      result: leading(result, c3),
-    });
-  }
-
-case_else
-  = kw:ELSE c:__ result:expr {
-    return loc({
-      type: "case_else",
-      elseKw: kw,
-      result: leading(result, c),
-    });
-  }
-
 /**
+ * Expressions
+ *
  * Operator precedence, as implemented currently (though incorrect)
  * ---------------------------------------------------------------------------------------------------
  * | -, ~, !                                                  | negation, bit inversion              |
@@ -1660,6 +1606,11 @@ paren_expr
 paren_expr_list
   = "("  c2:__ list:expr_list c3:__ ")" {
     return loc(createParenExpr(c2, list, c3));
+  }
+
+expr_list
+  = head:expr tail:(__ "," __ expr)* {
+    return loc({ type: "expr_list", items: readCommaSepList(head, tail) });
   }
 
 column_ref
@@ -1930,6 +1881,56 @@ cast_arg
       dataType: leading(t, c2),
     });
   }
+
+case_expr
+  = caseKw:CASE
+    expr:(c:__ e:expr { return leading(e, c); })?
+    clauses:(c:__ w:case_when { return leading(w, c); })+
+    els:(c:__ e:case_else { return leading(e, c); })?
+    endKw:(c:__ kw:END { return leading(kw, c); }) {
+      return loc({
+        type: "case_expr",
+        caseKw,
+        expr: nullToUndefined(expr),
+        clauses: [...clauses, ...(els ? [els] : [])],
+        endKw,
+      });
+    }
+
+case_when
+  = whenKw:WHEN c1:__ condition:expr c2:__ thenKw:THEN c3:__ result:expr {
+    return loc({
+      type: "case_when",
+      whenKw,
+      condition: surrounding(c1, condition, c2),
+      thenKw,
+      result: leading(result, c3),
+    });
+  }
+
+case_else
+  = kw:ELSE c:__ result:expr {
+    return loc({
+      type: "case_else",
+      elseKw: kw,
+      result: leading(result, c),
+    });
+  }
+
+interval_expr
+  = INTERVAL                    __
+    e:expr                       __
+    u: interval_unit {
+      return "[Not implemented]";
+    }
+
+interval_unit
+  = UNIT_YEAR
+  / UNIT_MONTH
+  / UNIT_DAY
+  / UNIT_HOUR
+  / UNIT_MINUTE
+  / UNIT_SECOND
 
 /**
  * Literals
