@@ -15,6 +15,13 @@ describe("compound select", () => {
     test("SELECT 1 /*c1*/ EXCEPT /*c2*/ ALL /*c3*/ SELECT 2");
   });
 
+  it("parses INTERSECT [ALL|DISTINCT]", () => {
+    test("SELECT 1 INTERSECT SELECT 2");
+    test("SELECT 1 INTERSECT ALL SELECT 2");
+    test("SELECT 1 INTERSECT DISTINCT SELECT 2");
+    test("SELECT 1 /*c1*/ INTERSECT /*c2*/ ALL /*c3*/ SELECT 2");
+  });
+
   it("supports parenthesis around sub-selects", () => {
     test("(SELECT 1) UNION (SELECT 2)");
     test("((SELECT 1)) UNION ((SELECT 2))");
@@ -25,5 +32,11 @@ describe("compound select", () => {
     expect(showCompoundPrecedence(`SELECT 1 UNION SELECT 2 EXCEPT SELECT 3 UNION SELECT 4`)).toBe(
       `(((SELECT 1 UNION SELECT 2) EXCEPT SELECT 3) UNION SELECT 4)`
     );
+  });
+
+  it("INTERSECT has higher precedence than UNION/EXCEPT", () => {
+    expect(
+      showCompoundPrecedence(`SELECT 1 UNION SELECT 2 INTERSECT SELECT 3 UNION SELECT 4`)
+    ).toBe(`((SELECT 1 UNION (SELECT 2 INTERSECT SELECT 3)) UNION SELECT 4)`);
   });
 });

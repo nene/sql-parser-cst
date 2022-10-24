@@ -205,7 +205,7 @@ empty_stmt
   }
 
 compound_select_stmt
-  = head:select_stmt tail:(__ compound_op __ select_stmt)* {
+  = head:intersect_select_stmt tail:(__ compound_op __ intersect_select_stmt)* {
     return createBinaryExprChain(head, tail, "compound_select_statement");
   }
 
@@ -213,6 +213,15 @@ compound_op
   = kws:((UNION / EXCEPT) __ (ALL / DISTINCT)) { return createKeywordList(kws); }
   / UNION
   / EXCEPT
+
+intersect_select_stmt
+  = head:select_stmt tail:(__ intersect_op __ select_stmt)* {
+    return createBinaryExprChain(head, tail, "compound_select_statement");
+  }
+
+intersect_op
+  = kws:(INTERSECT __ (ALL / DISTINCT)) { return createKeywordList(kws); }
+  / INTERSECT
 
 column_order_list
   = head:column_order_item tail:(__ "," __ column_order_item)* {
@@ -2339,6 +2348,7 @@ INSERT              = kw:"INSERT"i              !ident_part { return loc(createK
 INSTANT             = kw:"INSTANT"i             !ident_part { return loc(createKeyword(kw)); }
 INT                 = kw:"INT"i                 !ident_part { return loc(createKeyword(kw)); }
 INTEGER             = kw:"INTEGER"i             !ident_part { return loc(createKeyword(kw)); }
+INTERSECT           = kw:"INTERSECT"i           !ident_part { return loc(createKeyword(kw)); }
 INTERVAL            = kw:"INTERVAL"i            !ident_part { return loc(createKeyword(kw)); }
 INTO                = kw:"INTO"i                !ident_part { return loc(createKeyword(kw)); }
 INVISIBLE           = kw:"INVISIBLE"i           !ident_part { return loc(createKeyword(kw)); }
