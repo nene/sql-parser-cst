@@ -215,11 +215,11 @@ compound_op
   / EXCEPT
 
 intersect_select_stmt
-  = head:query_primary tail:(__ intersect_op __ query_primary)* {
+  = head:sub_select tail:(__ intersect_op __ sub_select)* {
     return createBinaryExprChain(head, tail, "compound_select_statement");
   }
 
-query_primary
+sub_select
   = select_stmt
   / paren_expr_select
 
