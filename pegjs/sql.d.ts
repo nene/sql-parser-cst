@@ -55,6 +55,7 @@ type Expr =
   | CastExpr
   | BetweenExpr
   | CaseExpr
+  | IntervalExpr
   | StringWithCharset
   | Literal
   | ColumnRef
@@ -424,6 +425,13 @@ type CaseElse = BaseNode & {
   type: "case_else";
   elseKw: Keyword;
   result: Expr;
+};
+
+type IntervalExpr = BaseNode & {
+  type: "interval_expr";
+  intervalKw: Keyword;
+  expr: Expr;
+  unitKw: Keyword;
 };
 
 type StringWithCharset = BaseNode & {

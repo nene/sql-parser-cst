@@ -1826,11 +1826,14 @@ case_else
   }
 
 interval_expr
-  = INTERVAL                    __
-    e:expr                       __
-    u: interval_unit {
-      return "[Not implemented]";
-    }
+  = kw:INTERVAL c1:__ e:expr c2:__ unit:interval_unit {
+    return {
+      type: "interval_expr",
+      intervalKw: kw,
+      expr: surrounding(c1, e, c2),
+      unitKw: unit,
+    };
+  }
 
 interval_unit
   = YEAR

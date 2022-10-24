@@ -149,6 +149,7 @@ const showNode = cstTransformer<string>({
   case_when: (node) =>
     show([node.whenKw, node.condition, node.thenKw, node.result]),
   case_else: (node) => show([node.elseKw, node.result]),
+  interval_expr: (node) => show([node.intervalKw, node.expr, node.unitKw]),
 
   // Data types
   data_type: (node) => show([node.nameKw, node.params]),
