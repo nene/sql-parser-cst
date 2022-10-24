@@ -1,3 +1,4 @@
+import { Expr, Whitespace } from "../pegjs/sql";
 import { parse as parseSql, ParserOptions, show } from "../src/parser";
 
 type Dialect = "mysql" | "sqlite";
@@ -45,6 +46,55 @@ export function parseExpr(expr: string, options?: ParserOptions) {
     throw new Error(`Expected 1 column, instead got ${clause.columns.length}`);
   }
   return clause.columns[0];
+}
+
+/**
+ * Converts SQL expression to parenthesized version.
+ * For example:
+ *
+ *     showPrecedence("1 + 2 / 3") --> "(1 + (2 / 3))"
+ */
+export function showPrecedence(sql: string): string {
+  const expr = parseExpr(sql);
+  const newSql = show([
+    {
+      type: "select_statement",
+      clauses: [
+        {
+          type: "select_clause",
+          selectKw: { type: "keyword", text: "SELECT" },
+          options: [],
+          columns: [addPrecedenceParens(expr)],
+        },
+      ],
+    },
+  ]);
+  return newSql.replace(/^SELECT/, "");
+}
+
+function addPrecedenceParens(expr: Expr): Expr {
+  const space: Whitespace[] = [{ type: "space", text: " " }];
+
+  if (expr.type === "binary_expr") {
+    return {
+      type: "paren_expr",
+      expr: {
+        ...expr,
+        left: { ...addPrecedenceParens(expr.left), trailing: space },
+        right: { ...addPrecedenceParens(expr.right), leading: space },
+      },
+    };
+  } else if (expr.type === "unary_expr") {
+    return {
+      type: "paren_expr",
+      expr: {
+        ...expr,
+        expr: { ...addPrecedenceParens(expr.expr), leading: space },
+      },
+    };
+  } else {
+    return expr;
+  }
 }
 
 export { show };

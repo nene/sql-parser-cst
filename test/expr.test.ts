@@ -1,4 +1,4 @@
-import { parse, show, parseExpr, testExpr } from "./test_utils";
+import { dialect, parseExpr, showPrecedence, testExpr } from "./test_utils";
 
 describe("expr", () => {
   describe("operators", () => {
@@ -144,14 +144,10 @@ describe("expr", () => {
       testExpr(`NOT /*com*/ true`);
     });
 
-    it("parses AND / && operator", () => {
+    it("parses AND operator", () => {
       testExpr(`x > 1 AND false`);
       testExpr(`c < 2 AND y = 2 AND 3 > 2`);
       testExpr(`true /*com1*/ AND /*com2*/ false`);
-
-      testExpr(`x > 1 && false`);
-      testExpr(`c < 2 && y = 2 && 3 > 2`);
-      testExpr(`true /*com1*/ && /*com2*/ false`);
     });
 
     it("parses XOR operator", () => {
@@ -160,14 +156,40 @@ describe("expr", () => {
       testExpr(`true /*com1*/ XOR /*com2*/ false`);
     });
 
-    it("parses OR / || operator", () => {
+    it("parses OR operator", () => {
       testExpr(`true OR false`);
       testExpr(`x != 3 OR y > 2 OR z <> 4`);
       testExpr(`true /*com1*/ OR /*com2*/ false`);
+    });
 
-      testExpr(`true || false`);
-      testExpr(`x != 3 || y > 2 || z <> 4`);
-      testExpr(`true /*com1*/ || /*com2*/ false`);
+    dialect("mysql", () => {
+      it("parses && as equivalent to AND", () => {
+        testExpr(`x > 1 && false`);
+        testExpr(`c < 2 && y = 2 && 3 > 2`);
+        testExpr(`true /*com1*/ && /*com2*/ false`);
+      });
+
+      it("parses || as equivalent to OR", () => {
+        testExpr(`true || false`);
+        testExpr(`x != 3 || y > 2 || z <> 4`);
+        testExpr(`true /*com1*/ || /*com2*/ false`);
+      });
+
+      it("treats && with higher precedence than ||", () => {
+        expect(showPrecedence(`true || false && true`)).toBe(`(true || (false && true))`);
+      });
+
+      it("gives same precedence to && and AND", () => {
+        expect(showPrecedence(`true AND false && true AND false`)).toBe(
+          `(((true AND false) && true) AND false)`
+        );
+      });
+
+      it("gives same precedence to || and OR", () => {
+        expect(showPrecedence(`true OR false || true OR false`)).toBe(
+          `(((true OR false) || true) OR false)`
+        );
+      });
     });
   });
 
@@ -181,174 +203,27 @@ describe("expr", () => {
 
   describe("operator precedence", () => {
     it("associates same level binary operators to left", () => {
-      expect(parseExpr(`5 + 2 - 1`)).toMatchInlineSnapshot(`
-        {
-          "left": {
-            "left": {
-              "text": "5",
-              "type": "number",
-            },
-            "operator": "+",
-            "right": {
-              "text": "2",
-              "type": "number",
-            },
-            "type": "binary_expr",
-          },
-          "operator": "-",
-          "right": {
-            "text": "1",
-            "type": "number",
-          },
-          "type": "binary_expr",
-        }
-      `);
+      expect(showPrecedence(`5 + 2 - 1 + 3`)).toBe(`(((5 + 2) - 1) + 3)`);
     });
 
     it("multiplication has higher precedence than addition", () => {
-      expect(parseExpr(`5 + 2 * 3`)).toMatchInlineSnapshot(`
-        {
-          "left": {
-            "text": "5",
-            "type": "number",
-          },
-          "operator": "+",
-          "right": {
-            "left": {
-              "text": "2",
-              "type": "number",
-            },
-            "operator": "*",
-            "right": {
-              "text": "3",
-              "type": "number",
-            },
-            "type": "binary_expr",
-          },
-          "type": "binary_expr",
-        }
-      `);
+      expect(showPrecedence(`5 + 2 * 3`)).toBe(`(5 + (2 * 3))`);
     });
 
     it("addition has higher precedence than comparison", () => {
-      expect(parseExpr(`5 + 2 > 3 + 1`)).toMatchInlineSnapshot(`
-        {
-          "left": {
-            "left": {
-              "text": "5",
-              "type": "number",
-            },
-            "operator": "+",
-            "right": {
-              "text": "2",
-              "type": "number",
-            },
-            "type": "binary_expr",
-          },
-          "operator": ">",
-          "right": {
-            "left": {
-              "text": "3",
-              "type": "number",
-            },
-            "operator": "+",
-            "right": {
-              "text": "1",
-              "type": "number",
-            },
-            "type": "binary_expr",
-          },
-          "type": "binary_expr",
-        }
-      `);
+      expect(showPrecedence(`5 + 2 > 3 + 1`)).toBe(`((5 + 2) > (3 + 1))`);
     });
 
     it("comparison has higher precedence than NOT", () => {
-      expect(parseExpr(`NOT x > y`)).toMatchInlineSnapshot(`
-        {
-          "expr": {
-            "left": {
-              "column": {
-                "text": "x",
-                "type": "identifier",
-              },
-              "type": "column_ref",
-            },
-            "operator": ">",
-            "right": {
-              "column": {
-                "text": "y",
-                "type": "identifier",
-              },
-              "type": "column_ref",
-            },
-            "type": "binary_expr",
-          },
-          "operator": {
-            "text": "NOT",
-            "type": "keyword",
-          },
-          "type": "unary_expr",
-        }
-      `);
+      expect(showPrecedence(`NOT x > 1`)).toBe(`(NOT (x > 1))`);
     });
 
     it("NOT has higher precedence than AND", () => {
-      expect(parseExpr(`NOT false AND true`)).toMatchInlineSnapshot(`
-        {
-          "left": {
-            "expr": {
-              "text": "false",
-              "type": "bool",
-            },
-            "operator": {
-              "text": "NOT",
-              "type": "keyword",
-            },
-            "type": "unary_expr",
-          },
-          "operator": {
-            "text": "AND",
-            "type": "keyword",
-          },
-          "right": {
-            "text": "true",
-            "type": "bool",
-          },
-          "type": "binary_expr",
-        }
-      `);
+      expect(showPrecedence(`NOT false AND true`)).toBe(`((NOT false) AND true)`);
     });
 
     it("AND has higher precedence than OR", () => {
-      expect(parseExpr(`true OR false AND true`)).toMatchInlineSnapshot(`
-        {
-          "left": {
-            "text": "true",
-            "type": "bool",
-          },
-          "operator": {
-            "text": "OR",
-            "type": "keyword",
-          },
-          "right": {
-            "left": {
-              "text": "false",
-              "type": "bool",
-            },
-            "operator": {
-              "text": "AND",
-              "type": "keyword",
-            },
-            "right": {
-              "text": "true",
-              "type": "bool",
-            },
-            "type": "binary_expr",
-          },
-          "type": "binary_expr",
-        }
-      `);
+      expect(showPrecedence(`true OR false AND true`)).toBe(`(true OR (false AND true))`);
     });
   });
 });
