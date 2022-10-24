@@ -1471,15 +1471,15 @@ type_name
  *
  * Operator precedence, as implemented currently (though incorrect)
  * ---------------------------------------------------------------------------------------------------
- * | -, ~, !                                                  | negation, bit inversion              |
- * | ||                                                       | concatenation                        |
- * | *, /, DIV, MOD                                           | multiplication, division             |
- * | +, -                                                     | addition, subtraction, concatenation |
- * | =, <, >, <=, >=, <>, !=, <=>, IS, LIKE, BETWEEN, IN      | comparion                            |
- * | NOT                                                      | logical negation                     |
- * | AND, &&                                                  | conjunction                          |
- * | XOR                                                      | exclusive or                         |
  * | OR, ||                                                   | disjunction                          |
+ * | XOR                                                      | exclusive or                         |
+ * | AND, &&                                                  | conjunction                          |
+ * | NOT                                                      | logical negation                     |
+ * | =, <, >, <=, >=, <>, !=, <=>, IS, LIKE, BETWEEN, IN      | comparion                            |
+ * | +, -                                                     | addition, subtraction, concatenation |
+ * | *, /, DIV, MOD                                           | multiplication, division             |
+ * | ||                                                       | concatenation                        |
+ * | -, ~, !                                                  | negation, bit inversion              |
  * ---------------------------------------------------------------------------------------------------
  */
 
