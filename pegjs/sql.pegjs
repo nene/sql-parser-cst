@@ -1491,7 +1491,8 @@ or_expr
     return createBinaryExprChain(head, tail);
   }
 
-or_op = kw:OR / "||"
+or_op = OR
+or_op$mysql = OR / "||"
 
 xor_expr
   = head:and_expr tail:(__ XOR __ and_expr)* {
@@ -1503,7 +1504,8 @@ and_expr
     return createBinaryExprChain(head, tail);
   }
 
-and_op = kw:AND / "&&"
+and_op = AND
+and_op$mysql = AND / "&&"
 
 //here we should use `NOT` instead of `comparision_expr` to support chain-expr
 not_expr
