@@ -1496,6 +1496,9 @@ or_op = OR
 or_op$mysql = OR / "||"
 
 xor_expr
+  = and_expr
+
+xor_expr$mysql
   = head:and_expr tail:(__ XOR __ and_expr)* {
     return createBinaryExprChain(head, tail);
   }

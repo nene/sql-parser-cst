@@ -150,10 +150,21 @@ describe("expr", () => {
       testExpr(`true /*com1*/ AND /*com2*/ false`);
     });
 
-    it("parses XOR operator", () => {
-      testExpr(`true XOR false`);
-      testExpr(`x != 3 XOR y > 2 XOR z <> 4`);
-      testExpr(`true /*com1*/ XOR /*com2*/ false`);
+    dialect("mysql", () => {
+      it("parses XOR operator", () => {
+        testExpr(`true XOR false`);
+        testExpr(`x != 3 XOR y > 2 XOR z <> 4`);
+        testExpr(`true /*com1*/ XOR /*com2*/ false`);
+      });
+
+      it("XOR precedence: AND > XOR > OR", () => {
+        expect(showPrecedence(`true OR false XOR true OR false`)).toBe(
+          `((true OR (false XOR true)) OR false)`
+        );
+        expect(showPrecedence(`true XOR false AND true XOR false`)).toBe(
+          `((true XOR (false AND true)) XOR false)`
+        );
+      });
     });
 
     it("parses OR operator", () => {
