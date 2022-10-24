@@ -177,7 +177,7 @@ multiple_stmt
   }
 
 statement
-  = union_stmt
+  = compound_select_stmt
   / drop_table_stmt
   / drop_index_stmt
   / create_table_stmt
@@ -204,7 +204,7 @@ empty_stmt
     return trailing(loc({ type: "empty_statement" }), c);
   }
 
-union_stmt
+compound_select_stmt
   = head:select_stmt tail:(__ compound_op __ select_stmt)* {
     return createBinaryExprChain(head, tail, "compound_select_statement");
   }
@@ -296,7 +296,7 @@ create_table_stmt
     __ table_options?
     __ (IGNORE / REPLACE)?
     __ AS?
-    __ union_stmt? {
+    __ compound_select_stmt? {
       return loc({
         type: "create_table_statement",
         createKw,
@@ -1675,7 +1675,7 @@ paren_expr
   }
 
 paren_expr_select
-  = "(" c1:__ stmt:union_stmt c2:__ ")" {
+  = "(" c1:__ stmt:compound_select_stmt c2:__ ")" {
     return loc(createParenExpr(c1, stmt, c2));
   }
 
