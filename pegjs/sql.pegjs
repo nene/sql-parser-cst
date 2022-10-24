@@ -1865,10 +1865,6 @@ cast_arg
     });
   }
 
-signedness
-  = SIGNED
-  / UNSIGNED
-
 literal
   = b:'BINARY'i? __ s:literal_string ca:(__ collate_expr)? {
     return s; // TODO
