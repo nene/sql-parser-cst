@@ -774,9 +774,7 @@ desc_stmt
 
 select_stmt
   = select_stmt_nake
-  / s:('(' __ select_stmt __ ')') {
-      return "[Not implemented]";
-    }
+  / paren_expr_select
 
 with_clause
   = withKw:WITH

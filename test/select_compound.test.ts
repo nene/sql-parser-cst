@@ -15,6 +15,12 @@ describe("compound select", () => {
     test("SELECT 1 /*c1*/ EXCEPT /*c2*/ ALL /*c3*/ SELECT 2");
   });
 
+  it("supports parenthesis around sub-selects", () => {
+    test("(SELECT 1) UNION (SELECT 2)");
+    test("((SELECT 1)) UNION ((SELECT 2))");
+    test("((SELECT 1) UNION (SELECT 2))");
+  });
+
   it("treats UNION and EXCEPT as left-associative operators on same precedence level", () => {
     expect(showCompoundPrecedence(`SELECT 1 UNION SELECT 2 EXCEPT SELECT 3 UNION SELECT 4`)).toBe(
       `(((SELECT 1 UNION SELECT 2) EXCEPT SELECT 3) UNION SELECT 4)`
