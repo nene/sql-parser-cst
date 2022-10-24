@@ -1833,12 +1833,12 @@ interval_expr
     }
 
 interval_unit
-  = UNIT_YEAR
-  / UNIT_MONTH
-  / UNIT_DAY
-  / UNIT_HOUR
-  / UNIT_MINUTE
-  / UNIT_SECOND
+  = YEAR
+  / MONTH
+  / DAY
+  / HOUR
+  / MINUTE
+  / SECOND
 
 fulltext_search
   = MATCH __ "(" __ c:column_ref_list __ ")" __ AGAINST __ "(" __ e:expr __ mo:fulltext_search_mode? __ ")" __ as:alias_clause? {
@@ -2270,6 +2270,7 @@ CURRENT_USER        = kw:"CURRENT_USER"i        !ident_part { return loc(createK
 DATABASE            = kw:"DATABASE"i            !ident_part { return loc(createKeyword(kw)); }
 DATE                = kw:"DATE"i                !ident_part { return loc(createKeyword(kw)); }
 DATETIME            = kw:"DATETIME"i            !ident_part { return loc(createKeyword(kw)); }
+DAY                 = kw:"DAY"i                 !ident_part { return loc(createKeyword(kw)); }
 DEC                 = kw:"DEC"i                 !ident_part { return loc(createKeyword(kw)); }
 DECIMAL             = kw:"DECIMAL"i             !ident_part { return loc(createKeyword(kw)); }
 DEFAULT             = kw:"DEFAULT"i             !ident_part { return loc(createKeyword(kw)); }
@@ -2319,6 +2320,7 @@ GROUPS              = kw:"GROUPS"i              !ident_part { return loc(createK
 HASH                = kw:"HASH"i                !ident_part { return loc(createKeyword(kw)); }
 HAVING              = kw:"HAVING"i              !ident_part { return loc(createKeyword(kw)); }
 HIGH_PRIORITY       = kw:"HIGH_PRIORITY"i       !ident_part { return loc(createKeyword(kw)); }
+HOUR                = kw:"HOUR"i                !ident_part { return loc(createKeyword(kw)); }
 IF                  = kw:"IF"i                  !ident_part { return loc(createKeyword(kw)); }
 IGNORE              = kw:"IGNORE"i              !ident_part { return loc(createKeyword(kw)); }
 IN                  = kw:"IN"i                  !ident_part { return loc(createKeyword(kw)); }
@@ -2363,8 +2365,10 @@ MEMORY              = kw:"MEMORY"i              !ident_part { return loc(createK
 MERGE               = kw:"MERGE"i               !ident_part { return loc(createKeyword(kw)); }
 MIN                 = kw:"MIN"i                 !ident_part { return loc(createKeyword(kw)); }
 MIN_ROWS            = kw:"MIN_ROWS"i            !ident_part { return loc(createKeyword(kw)); }
+MINUTE              = kw:"MINUTE"i              !ident_part { return loc(createKeyword(kw)); }
 MOD                 = kw:"MOD"i                 !ident_part { return loc(createKeyword(kw)); }
 MODE                = kw:"MODE"i                !ident_part { return loc(createKeyword(kw)); }
+MONTH               = kw:"MONTH"i               !ident_part { return loc(createKeyword(kw)); }
 NATURAL             = kw:"NATURAL"i             !ident_part { return loc(createKeyword(kw)); }
 NO                  = kw:"NO"i                  !ident_part { return loc(createKeyword(kw)); }
 NOCHECK             = kw:"NOCHECK"i             !ident_part { return loc(createKeyword(kw)); }
@@ -2414,6 +2418,7 @@ ROW_FORMAT          = kw:"ROW_FORMAT"i          !ident_part { return loc(createK
 ROW_NUMBER          = kw:"ROW_NUMBER"i          !ident_part { return loc(createKeyword(kw)); }
 ROWS                = kw:"ROWS"i                !ident_part { return loc(createKeyword(kw)); }
 SCHEME              = kw:"SCHEME"i              !ident_part { return loc(createKeyword(kw)); }
+SECOND              = kw:"SECOND"i              !ident_part { return loc(createKeyword(kw)); }
 SECURITY            = kw:"SECURITY"i            !ident_part { return loc(createKeyword(kw)); }
 SELECT              = kw:"SELECT"i              !ident_part { return loc(createKeyword(kw)); }
 SESSION             = kw:"SESSION"i             !ident_part { return loc(createKeyword(kw)); }
@@ -2459,12 +2464,6 @@ UNBOUNDED           = kw:"UNBOUNDED"i           !ident_part { return loc(createK
 UNDEFINED           = kw:"UNDEFINED"i           !ident_part { return loc(createKeyword(kw)); }
 UNION               = kw:"UNION"i               !ident_part { return loc(createKeyword(kw)); }
 UNIQUE              = kw:"UNIQUE"i              !ident_part { return loc(createKeyword(kw)); }
-UNIT_DAY            = kw:"DAY"i                 !ident_part { return loc(createKeyword(kw)); }
-UNIT_HOUR           = kw:"HOUR"i                !ident_part { return loc(createKeyword(kw)); }
-UNIT_MINUTE         = kw:"MINUTE"i              !ident_part { return loc(createKeyword(kw)); }
-UNIT_MONTH          = kw:"MONTH"i               !ident_part { return loc(createKeyword(kw)); }
-UNIT_SECOND         = kw:"SECOND"i              !ident_part { return loc(createKeyword(kw)); }
-UNIT_YEAR           = kw:"YEAR"i                !ident_part { return loc(createKeyword(kw)); }
 UNLOCK              = kw:"UNLOCK"i              !ident_part { return loc(createKeyword(kw)); }
 UNSIGNED            = kw:"UNSIGNED"i            !ident_part { return loc(createKeyword(kw)); }
 UPDATE              = kw:"UPDATE"i              !ident_part { return loc(createKeyword(kw)); }
