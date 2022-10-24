@@ -61,128 +61,122 @@ describe("select", () => {
   describe("syntax tree", () => {
     it("parses SELECT with multiple columns", () => {
       expect(parseStmt("SELECT 1, 2, 3 FROM db.tbl")).toMatchInlineSnapshot(`
-        [
-          {
-            "clauses": [
-              {
-                "columns": [
-                  {
-                    "text": "1",
-                    "type": "number",
-                  },
-                  {
-                    "text": "2",
-                    "type": "number",
-                  },
-                  {
-                    "text": "3",
-                    "type": "number",
-                  },
-                ],
-                "options": [],
-                "selectKw": {
-                  "text": "SELECT",
-                  "type": "keyword",
+        {
+          "clauses": [
+            {
+              "columns": [
+                {
+                  "text": "1",
+                  "type": "number",
                 },
-                "type": "select_clause",
-              },
-              {
-                "fromKw": {
-                  "text": "FROM",
-                  "type": "keyword",
+                {
+                  "text": "2",
+                  "type": "number",
                 },
-                "tables": [
-                  {
-                    "db": {
-                      "text": "db",
-                      "type": "identifier",
-                    },
-                    "table": {
-                      "text": "tbl",
-                      "type": "identifier",
-                    },
-                    "type": "table_ref",
-                  },
-                ],
-                "type": "from_clause",
+                {
+                  "text": "3",
+                  "type": "number",
+                },
+              ],
+              "options": [],
+              "selectKw": {
+                "text": "SELECT",
+                "type": "keyword",
               },
-            ],
-            "type": "select_statement",
-          },
-        ]
+              "type": "select_clause",
+            },
+            {
+              "fromKw": {
+                "text": "FROM",
+                "type": "keyword",
+              },
+              "tables": [
+                {
+                  "db": {
+                    "text": "db",
+                    "type": "identifier",
+                  },
+                  "table": {
+                    "text": "tbl",
+                    "type": "identifier",
+                  },
+                  "type": "table_ref",
+                },
+              ],
+              "type": "from_clause",
+            },
+          ],
+          "type": "select_statement",
+        }
       `);
     });
 
     it("parses alias definition", () => {
       expect(parseStmt("SELECT 1 AS foo")).toMatchInlineSnapshot(`
-        [
-          {
-            "clauses": [
-              {
-                "columns": [
-                  {
-                    "alias": {
-                      "text": "foo",
-                      "type": "identifier",
-                    },
-                    "asKw": {
-                      "text": "AS",
-                      "type": "keyword",
-                    },
-                    "expr": {
-                      "text": "1",
-                      "type": "number",
-                    },
-                    "type": "alias",
+        {
+          "clauses": [
+            {
+              "columns": [
+                {
+                  "alias": {
+                    "text": "foo",
+                    "type": "identifier",
                   },
-                ],
-                "options": [],
-                "selectKw": {
-                  "text": "SELECT",
-                  "type": "keyword",
+                  "asKw": {
+                    "text": "AS",
+                    "type": "keyword",
+                  },
+                  "expr": {
+                    "text": "1",
+                    "type": "number",
+                  },
+                  "type": "alias",
                 },
-                "type": "select_clause",
+              ],
+              "options": [],
+              "selectKw": {
+                "text": "SELECT",
+                "type": "keyword",
               },
-            ],
-            "type": "select_statement",
-          },
-        ]
+              "type": "select_clause",
+            },
+          ],
+          "type": "select_statement",
+        }
       `);
     });
 
     it("parses string alias as identifier", () => {
       expect(parseStmt(`SELECT col 'foo'`)).toMatchInlineSnapshot(`
-        [
-          {
-            "clauses": [
-              {
-                "columns": [
-                  {
-                    "alias": {
-                      "text": "'foo'",
+        {
+          "clauses": [
+            {
+              "columns": [
+                {
+                  "alias": {
+                    "text": "'foo'",
+                    "type": "identifier",
+                  },
+                  "expr": {
+                    "column": {
+                      "text": "col",
                       "type": "identifier",
                     },
-                    "expr": {
-                      "column": {
-                        "text": "col",
-                        "type": "identifier",
-                      },
-                      "type": "column_ref",
-                    },
-                    "type": "alias",
+                    "type": "column_ref",
                   },
-                ],
-                "options": [],
-                "selectKw": {
-                  "text": "SELECT",
-                  "type": "keyword",
+                  "type": "alias",
                 },
-                "type": "select_clause",
+              ],
+              "options": [],
+              "selectKw": {
+                "text": "SELECT",
+                "type": "keyword",
               },
-            ],
-            "type": "select_statement",
-          },
-        ]
+              "type": "select_clause",
+            },
+          ],
+          "type": "select_statement",
+        }
       `);
     });
   });

@@ -18,11 +18,12 @@ export function parse(sql: string, options: ParserOptions = {}): Program {
   });
 }
 
-export function parseStmt(
-  sql: string,
-  options: ParserOptions = {}
-): Statement[] {
-  return parse(sql, options).statements;
+export function parseStmt(sql: string, options: ParserOptions = {}): Statement {
+  const { statements } = parse(sql, options);
+  if (statements.length !== 1) {
+    throw new Error(`Expected one statement, instead got ${statements.length}`);
+  }
+  return statements[0];
 }
 
 export function dialect(lang: Dialect | Dialect[], block: () => void) {

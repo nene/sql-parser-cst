@@ -37,28 +37,26 @@ describe("drop table", () => {
 
   it("parses to syntax tree", () => {
     expect(parseStmt("DROP TABLE my_table")).toMatchInlineSnapshot(`
-      [
-        {
-          "dropKw": {
-            "text": "DROP",
-            "type": "keyword",
-          },
-          "tableKw": {
-            "text": "TABLE",
-            "type": "keyword",
-          },
-          "tables": [
-            {
-              "table": {
-                "text": "my_table",
-                "type": "identifier",
-              },
-              "type": "table_ref",
-            },
-          ],
-          "type": "drop_table_statement",
+      {
+        "dropKw": {
+          "text": "DROP",
+          "type": "keyword",
         },
-      ]
+        "tableKw": {
+          "text": "TABLE",
+          "type": "keyword",
+        },
+        "tables": [
+          {
+            "table": {
+              "text": "my_table",
+              "type": "identifier",
+            },
+            "type": "table_ref",
+          },
+        ],
+        "type": "drop_table_statement",
+      }
     `);
   });
 });
