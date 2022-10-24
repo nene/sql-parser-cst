@@ -215,9 +215,13 @@ compound_op
   / EXCEPT
 
 intersect_select_stmt
-  = head:select_stmt tail:(__ intersect_op __ select_stmt)* {
+  = head:query_primary tail:(__ intersect_op __ query_primary)* {
     return createBinaryExprChain(head, tail, "compound_select_statement");
   }
+
+query_primary
+  = select_stmt
+  / paren_expr_select
 
 intersect_op
   = kws:(INTERSECT __ (ALL / DISTINCT)) { return createKeywordList(kws); }
@@ -267,7 +271,7 @@ create_view_stmt
   df:(DEFINER __ "=" __ ident)? __
   ss:(SQL __ SECURITY __ (DEFINER / INVOKER))? __
   VIEW __ v:table_ref __ c:("(" __ column_list __ ")")? __
-  AS __ s:select_stmt_nake __
+  AS __ s:select_stmt __
   w:view_with? {
     return "[Not implemented]";
   }
@@ -781,10 +785,6 @@ desc_stmt
     return "[Not implemented]";
   }
 
-select_stmt
-  = select_stmt_nake
-  / paren_expr_select
-
 with_clause
   = withKw:WITH
     recursiveKw:(c:__ kw:RECURSIVE { return leading(kw, c) })?
@@ -842,7 +842,7 @@ locking_read
     return "[Not implemented]";
   }
 
-select_stmt_nake
+select_stmt
   = cte:(cls:with_clause c:__ { return trailing(cls, c); })?
     select:(c:__ cls:select_clause { return leading(cls, c); })
     otherClauses:(c:__ cls:other_clause { return leading(cls, c); })* {
@@ -1340,7 +1340,7 @@ set_item
 
 insert_value_clause
   = value_clause
-  / select_stmt_nake
+  / select_stmt
 
 insert_partition
   = PARTITION __ "(" __ head:ident_name tail:(__ "," __ ident_name)* __ ")" {
