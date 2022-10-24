@@ -437,11 +437,6 @@ drop_index_stmt
       return "[Not implemented]";
     }
 
-table_ref_list
-  = head:table_ref tail:(__ "," __ table_ref)* {
-    return readCommaSepList(head, tail);
-  }
-
 truncate_stmt
   = a:TRUNCATE  __
     kw:TABLE? __
@@ -1069,21 +1064,6 @@ join_type$mysql
   / kws:(RIGHT __ JOIN) { return createKeywordList(kws); }
   / kws:(INNER __ JOIN) { return createKeywordList(kws); }
   / kw:JOIN { return createKeywordList([kw]); }
-
-table_ref
-  = db:ident c1:__ "." c2:__ t:ident {
-    return loc({
-      type: "table_ref",
-      db: trailing(db, c1),
-      table: leading(t, c2),
-    });
-  }
-  / t:ident {
-    return loc({
-      type: "table_ref",
-      table: t,
-    });
-  }
 
 join_specification
   = using_clause / on_clause
@@ -1863,6 +1843,29 @@ fulltext_search_mode
   }
   / WITH __ 'QUERY'i __ 'EXPANSION'i {
     return "[Not implemented]";
+  }
+
+/**
+ * Table names
+ */
+table_ref_list
+  = head:table_ref tail:(__ "," __ table_ref)* {
+    return readCommaSepList(head, tail);
+  }
+
+table_ref
+  = db:ident c1:__ "." c2:__ t:ident {
+    return loc({
+      type: "table_ref",
+      db: trailing(db, c1),
+      table: leading(t, c2),
+    });
+  }
+  / t:ident {
+    return loc({
+      type: "table_ref",
+      table: t,
+    });
   }
 
 /**
