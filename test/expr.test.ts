@@ -162,6 +162,21 @@ describe("expr", () => {
       testExpr(`true /*com1*/ OR /*com2*/ false`);
     });
 
+    dialect("sqlite", () => {
+      it("parses || as concatenation operator", () => {
+        testExpr(`'hello' || ' ' || 'world'`);
+        testExpr(`str1 /*c1*/ || /*c2*/ str2`);
+      });
+
+      it("treats || with higher precedence than multiplication", () => {
+        expect(showPrecedence(`2 * y || z`)).toBe(`(2 * (y || z))`);
+      });
+
+      it("treats || with lower precedence than negation", () => {
+        expect(showPrecedence(`-x || -y`)).toBe(`((- x) || (- y))`);
+      });
+    });
+
     dialect("mysql", () => {
       it("parses && as equivalent to AND", () => {
         testExpr(`x > 1 && false`);

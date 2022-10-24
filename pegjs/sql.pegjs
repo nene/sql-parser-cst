@@ -1472,6 +1472,7 @@ type_name
  * Operator precedence, as implemented currently (though incorrect)
  * ---------------------------------------------------------------------------------------------------
  * | -, ~, !                                                  | negation, bit inversion              |
+ * | ||                                                       | concatenation                        |
  * | *, /, DIV, MOD                                           | multiplication, division             |
  * | +, -                                                     | addition, subtraction, concatenation |
  * | =, <, >, <=, >=, <>, !=, <=>, IS, LIKE, BETWEEN, IN      | comparion                            |
@@ -1640,13 +1641,20 @@ additive_operator
   = "+" / "-"
 
 multiplicative_expr
-  = head:negation_expr
-    tail:(__ multiplicative_operator  __ negation_expr)* {
+  = head:concat_expr tail:(__ multiplicative_operator  __ concat_expr)* {
       return createBinaryExprChain(head, tail);
     }
 
 multiplicative_operator
   = "*" / "/" / "%" / '&' / '>>' / '<<' / '^' / '|' / op:DIV / op:MOD
+
+concat_expr
+  = negation_expr
+
+concat_expr$sqlite
+  = head:negation_expr tail:(__ "||"  __ negation_expr)* {
+      return createBinaryExprChain(head, tail);
+    }
 
 negation_expr
   = primary
