@@ -790,7 +790,7 @@ common_table_expression
     columns:(c:__ cols:cte_columns_definition { return {cols, c}; })?
     c1:__ asKw:AS
     opt:(c:__ op:cte_option { return leading(op, c); })?
-    c2:__ select:union_in_parens {
+    c2:__ select:paren_expr_select {
       return loc({
         type: "common_table_expression",
         table: columns ? trailing(table, columns.c) : table,
@@ -1013,18 +1013,13 @@ table_base
   / "(" __ stmt:value_clause __ ")" __ alias:alias_clause? {
     return "[Not implemented]";
   }
-  / t:union_in_parens alias:(__ alias_clause)? {
+  / t:paren_expr_select alias:(__ alias_clause)? {
     return loc(createAlias(t, alias));
   }
 
 table_in_parens
   = "(" c1:__ t:table_ref c2:__ ")" {
     return loc(createParenExpr(c1, t, c2));
-  }
-
-union_in_parens
-  = "(" c1:__ stmt:union_stmt c2:__ ")" {
-    return loc(createParenExpr(c1, stmt, c2));
   }
 
 join_op
@@ -1663,6 +1658,7 @@ primary$mysql
 primary_standard
   = literal
   / paren_expr
+  / paren_expr_select
   / cast_expr
   / func_call
   / case_expr
@@ -1673,6 +1669,11 @@ primary_standard
 paren_expr
   = "(" c1:__ expr:expr c2:__ ")" {
     return loc(createParenExpr(c1, expr, c2));
+  }
+
+paren_expr_select
+  = "(" c1:__ stmt:union_stmt c2:__ ")" {
+    return loc(createParenExpr(c1, stmt, c2));
   }
 
 paren_expr_list
@@ -1858,7 +1859,7 @@ fulltext_search_mode
   }
 
 exists_expr
-  = kw:EXISTS c:__ expr:union_in_parens {
+  = kw:EXISTS c:__ expr:paren_expr_select {
     return loc(createUnaryExpr(kw, c, expr));
   }
 
