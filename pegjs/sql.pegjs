@@ -1694,14 +1694,14 @@ negation_expr
 negation_operator = "-" / "~" / "!"
 
 primary
-  = cast_expr
-  / literal
-  / fulltext_search
+  = literal
+  / paren_expr
+  / cast_expr
   / func_call
+  / fulltext_search
   / case_expr
   / interval_expr
   / column_ref
-  / paren_expr
 
 paren_expr
   = "(" c1:__ expr:expr c2:__ ")" {
@@ -1716,6 +1716,30 @@ paren_expr_list
 expr_list
   = head:expr tail:(__ "," __ expr)* {
     return loc({ type: "expr_list", items: readCommaSepList(head, tail) });
+  }
+
+cast_expr
+  = kw:CAST c:__ args:cast_args_in_parens  {
+    return loc({
+      type: "cast_expr",
+      castKw: kw,
+      args: leading(args, c),
+    });
+  }
+
+cast_args_in_parens
+  = "(" c1:__ arg:cast_arg c2:__ ")" {
+    return loc(createParenExpr(c1, arg, c2));
+  }
+
+cast_arg
+  = e:expr c1:__ kw:AS c2:__ t:data_type {
+    return loc({
+      type: "cast_arg",
+      expr: trailing(e, c1),
+      asKw: kw,
+      dataType: leading(t, c2),
+    });
   }
 
 func_call
@@ -1788,30 +1812,6 @@ over_arg
       type: "over_arg",
       overKw: trailing(kw, c),
       window: win,
-    });
-  }
-
-cast_expr
-  = kw:CAST c:__ args:cast_args_in_parens  {
-    return loc({
-      type: "cast_expr",
-      castKw: kw,
-      args: leading(args, c),
-    });
-  }
-
-cast_args_in_parens
-  = "(" c1:__ arg:cast_arg c2:__ ")" {
-    return loc(createParenExpr(c1, arg, c2));
-  }
-
-cast_arg
-  = e:expr c1:__ kw:AS c2:__ t:data_type {
-    return loc({
-      type: "cast_arg",
-      expr: trailing(e, c1),
-      asKw: kw,
-      dataType: leading(t, c2),
     });
   }
 
