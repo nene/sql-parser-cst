@@ -790,7 +790,7 @@ common_table_expression
     columns:(c:__ cols:cte_columns_definition { return {cols, c}; })?
     c1:__ asKw:AS
     opt:(c:__ op:cte_option { return leading(op, c); })?
-    c2:__ select:cte_select {
+    c2:__ select:union_in_parens {
       return loc({
         type: "common_table_expression",
         table: columns ? trailing(table, columns.c) : table,
@@ -800,11 +800,6 @@ common_table_expression
         expr: leading(select, c2),
       });
     }
-
-cte_select
-  = "(" c1:__ select:union_stmt c2:__ ")" {
-    return loc(createParenExpr(c1, select, c2));
-  }
 
 cte_option
   = kws:(NOT __ MATERIALIZED) { return createKeywordList(kws); }
