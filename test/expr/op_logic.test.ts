@@ -7,18 +7,10 @@ describe("logic operators", () => {
     testExpr(`!/*com*/ true`);
   });
 
-  it("comparison has higher precedence than NOT", () => {
-    expect(showPrecedence(`NOT x > 1`)).toBe(`(NOT (x > 1))`);
-  });
-
   it("parses NOT operator", () => {
     testExpr(`NOT x > y`);
     testExpr(`NOT NOT true`);
     testExpr(`NOT /*com*/ true`);
-  });
-
-  it("NOT has higher precedence than AND", () => {
-    expect(showPrecedence(`NOT false AND true`)).toBe(`((NOT false) AND true)`);
   });
 
   it("parses AND operator", () => {
@@ -33,19 +25,6 @@ describe("logic operators", () => {
       testExpr(`x != 3 XOR y > 2 XOR z <> 4`);
       testExpr(`true /*com1*/ XOR /*com2*/ false`);
     });
-
-    it("XOR precedence: AND > XOR > OR", () => {
-      expect(showPrecedence(`true OR false XOR true OR false`)).toBe(
-        `((true OR (false XOR true)) OR false)`
-      );
-      expect(showPrecedence(`true XOR false AND true XOR false`)).toBe(
-        `((true XOR (false AND true)) XOR false)`
-      );
-    });
-  });
-
-  it("AND has higher precedence than OR", () => {
-    expect(showPrecedence(`true OR false AND true`)).toBe(`(true OR (false AND true))`);
   });
 
   it("parses OR operator", () => {
@@ -65,22 +44,6 @@ describe("logic operators", () => {
       testExpr(`true || false`);
       testExpr(`x != 3 || y > 2 || z <> 4`);
       testExpr(`true /*com1*/ || /*com2*/ false`);
-    });
-
-    it("treats && with higher precedence than ||", () => {
-      expect(showPrecedence(`true || false && true`)).toBe(`(true || (false && true))`);
-    });
-
-    it("gives same precedence to && and AND", () => {
-      expect(showPrecedence(`true AND false && true AND false`)).toBe(
-        `(((true AND false) && true) AND false)`
-      );
-    });
-
-    it("gives same precedence to || and OR", () => {
-      expect(showPrecedence(`true OR false || true OR false`)).toBe(
-        `(((true OR false) || true) OR false)`
-      );
     });
   });
 });
