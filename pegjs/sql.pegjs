@@ -210,8 +210,9 @@ union_stmt
   }
 
 compound_op
-  = kws:(UNION __ (ALL / DISTINCT)) { return createKeywordList(kws); }
+  = kws:((UNION / EXCEPT) __ (ALL / DISTINCT)) { return createKeywordList(kws); }
   / UNION
+  / EXCEPT
 
 column_order_list
   = head:column_order_item tail:(__ "," __ column_order_item)* {
@@ -2303,6 +2304,7 @@ ENFORCED            = kw:"ENFORCED"i            !ident_part { return loc(createK
 ENGINE              = kw:"ENGINE"i              !ident_part { return loc(createKeyword(kw)); }
 ENUM                = kw:"ENUM"i                !ident_part { return loc(createKeyword(kw)); }
 EVENTS              = kw:"EVENTS"i              !ident_part { return loc(createKeyword(kw)); }
+EXCEPT              = kw:"EXCEPT"i              !ident_part { return loc(createKeyword(kw)); }
 EXCLUDE             = kw:"EXCLUDE"i             !ident_part { return loc(createKeyword(kw)); }
 EXCLUSIVE           = kw:"EXCLUSIVE"i           !ident_part { return loc(createKeyword(kw)); }
 EXISTS              = kw:"EXISTS"i              !ident_part { return loc(createKeyword(kw)); }
