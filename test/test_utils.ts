@@ -1,8 +1,10 @@
 import {
   Expr,
+  ParenExpr,
   Program,
   SelectClause,
   Statement,
+  SubSelect,
   Whitespace,
 } from "../pegjs/sql";
 import { parse as parseSql, ParserOptions, show } from "../src/parser";
@@ -88,7 +90,7 @@ export function showCompoundPrecedence(sql: string): string {
   return show(addPrecedenceParens(stmt));
 }
 
-function addPrecedenceParens(expr: Expr): Expr {
+function addPrecedenceParens<T extends Expr>(expr: T): ParenExpr<T> | T {
   const space: Whitespace[] = [{ type: "space", text: " " }];
 
   if (

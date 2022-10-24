@@ -79,10 +79,15 @@ type EmptyStatement = BaseNode & {
 // SELECT
 type CompoundSelectStatement = BaseNode & {
   type: "compound_select_statement";
-  left: Expr;
+  left: SubSelect;
   operator: Keyword | Keyword[]; // { UNION | EXCEPT | INTERSECT } [ALL | DISTINCT]
-  right: Expr;
+  right: SubSelect;
 };
+
+type SubSelect =
+  | SelectStatement
+  | CompoundSelectStatement
+  | ParenExpr<SubSelect>;
 
 type SelectStatement = BaseNode & {
   type: "select_statement";
