@@ -39,6 +39,18 @@ describe("expr", () => {
       testExpr(`8+4`);
     });
 
+    it("associates same level binary operators to left", () => {
+      expect(showPrecedence(`5 + 2 - 1 + 3`)).toBe(`(((5 + 2) - 1) + 3)`);
+    });
+
+    it("multiplication has higher precedence than addition", () => {
+      expect(showPrecedence(`5 + 2 * 3`)).toBe(`(5 + (2 * 3))`);
+    });
+
+    it("addition has higher precedence than comparison", () => {
+      expect(showPrecedence(`5 + 2 > 3 + 1`)).toBe(`((5 + 2) > (3 + 1))`);
+    });
+
     it("requires space around keyword operators", () => {
       // this gets parsed as an identifier
       expect(parseExpr(`8DIV4`)).toMatchInlineSnapshot(`
@@ -138,10 +150,18 @@ describe("expr", () => {
       testExpr(`5 /*c0*/ not /*c1*/ BETWEEN /*c2*/ 1 /*c3*/ AND /*c4*/ 10`);
     });
 
+    it("comparison has higher precedence than NOT", () => {
+      expect(showPrecedence(`NOT x > 1`)).toBe(`(NOT (x > 1))`);
+    });
+
     it("parses NOT operator", () => {
       testExpr(`NOT x > y`);
       testExpr(`NOT NOT true`);
       testExpr(`NOT /*com*/ true`);
+    });
+
+    it("NOT has higher precedence than AND", () => {
+      expect(showPrecedence(`NOT false AND true`)).toBe(`((NOT false) AND true)`);
     });
 
     it("parses AND operator", () => {
@@ -165,6 +185,10 @@ describe("expr", () => {
           `((true XOR (false AND true)) XOR false)`
         );
       });
+    });
+
+    it("AND has higher precedence than OR", () => {
+      expect(showPrecedence(`true OR false AND true`)).toBe(`(true OR (false AND true))`);
     });
 
     it("parses OR operator", () => {
@@ -224,32 +248,6 @@ describe("expr", () => {
       testExpr(`2 * (2 + 3)`);
       testExpr(`((true OR false) AND true)`);
       testExpr(`(/*c1*/ 42 /*c2*/)`);
-    });
-  });
-
-  describe("operator precedence", () => {
-    it("associates same level binary operators to left", () => {
-      expect(showPrecedence(`5 + 2 - 1 + 3`)).toBe(`(((5 + 2) - 1) + 3)`);
-    });
-
-    it("multiplication has higher precedence than addition", () => {
-      expect(showPrecedence(`5 + 2 * 3`)).toBe(`(5 + (2 * 3))`);
-    });
-
-    it("addition has higher precedence than comparison", () => {
-      expect(showPrecedence(`5 + 2 > 3 + 1`)).toBe(`((5 + 2) > (3 + 1))`);
-    });
-
-    it("comparison has higher precedence than NOT", () => {
-      expect(showPrecedence(`NOT x > 1`)).toBe(`(NOT (x > 1))`);
-    });
-
-    it("NOT has higher precedence than AND", () => {
-      expect(showPrecedence(`NOT false AND true`)).toBe(`((NOT false) AND true)`);
-    });
-
-    it("AND has higher precedence than OR", () => {
-      expect(showPrecedence(`true OR false AND true`)).toBe(`(true OR (false AND true))`);
     });
   });
 });
