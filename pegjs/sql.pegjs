@@ -1877,10 +1877,7 @@ column_list
   }
 
 column_ref
-  = tbl:(ident __ "." __)? col:column __ a:(("->>" / "->") __ (literal_string / literal_numeric))+ __ ca:collate_expr? {
-    return "[Not implemented]";
-  }
-  / tbl:ident c1:__ "." c2:__ col:qualified_column {
+  = tbl:ident c1:__ "." c2:__ col:qualified_column {
     return loc({
       type: "column_ref",
       table: trailing(tbl, c1),
