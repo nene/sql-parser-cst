@@ -1515,19 +1515,9 @@ and_op$mysql = AND / "&&"
 //here we should use `NOT` instead of `comparision_expr` to support chain-expr
 not_expr
   = comparison_expr
-  / exists_expr
   / kw:NOT c:__ expr:not_expr {
     return loc(createUnaryExpr(kw, c, expr));
   }
-
-exists_expr
-  = op:exists_op __ "(" __ stmt:union_stmt __ ")" {
-    return "[Not implemented]";
-  }
-
-exists_op
-  = nk:(NOT __ EXISTS) { return "[Not implemented]"; }
-  / EXISTS
 
 comparison_expr
   = head:additive_expr tail:(__ comparison_op_right)? {
@@ -1682,6 +1672,7 @@ primary_standard
   / func_call
   / case_expr
   / fulltext_search
+  / exists_expr
   / column_ref
 
 paren_expr
@@ -1869,6 +1860,11 @@ fulltext_search_mode
   }
   / WITH __ QUERY __ EXPANSION {
     return "[Not implemented]";
+  }
+
+exists_expr
+  = kw:EXISTS c:__ expr:union_in_parens {
+    return loc(createUnaryExpr(kw, c, expr));
   }
 
 /**
