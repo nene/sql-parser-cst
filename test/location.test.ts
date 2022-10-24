@@ -3,120 +3,123 @@ import { parse } from "./test_utils";
 describe("location", () => {
   it("includeRange:true adds location data to nodes", () => {
     expect(parse("SELECT (1 + col) FROM tbl t", { includeRange: true })).toMatchInlineSnapshot(`
-      [
-        {
-          "clauses": [
-            {
-              "columns": [
-                {
-                  "expr": {
-                    "left": {
+      {
+        "statements": [
+          {
+            "clauses": [
+              {
+                "columns": [
+                  {
+                    "expr": {
+                      "left": {
+                        "range": [
+                          8,
+                          9,
+                        ],
+                        "text": "1",
+                        "type": "number",
+                      },
+                      "operator": "+",
                       "range": [
                         8,
-                        9,
+                        15,
                       ],
-                      "text": "1",
-                      "type": "number",
-                    },
-                    "operator": "+",
-                    "range": [
-                      8,
-                      15,
-                    ],
-                    "right": {
-                      "column": {
+                      "right": {
+                        "column": {
+                          "range": [
+                            12,
+                            15,
+                          ],
+                          "text": "col",
+                          "type": "identifier",
+                        },
                         "range": [
                           12,
                           15,
                         ],
-                        "text": "col",
-                        "type": "identifier",
+                        "type": "column_ref",
                       },
-                      "range": [
-                        12,
-                        15,
-                      ],
-                      "type": "column_ref",
+                      "type": "binary_expr",
                     },
-                    "type": "binary_expr",
+                    "range": [
+                      7,
+                      16,
+                    ],
+                    "type": "paren_expr",
                   },
-                  "range": [
-                    7,
-                    16,
-                  ],
-                  "type": "paren_expr",
-                },
-              ],
-              "options": [],
-              "range": [
-                0,
-                16,
-              ],
-              "selectKw": {
+                ],
+                "options": [],
                 "range": [
                   0,
-                  6,
+                  16,
                 ],
-                "text": "SELECT",
-                "type": "keyword",
+                "selectKw": {
+                  "range": [
+                    0,
+                    6,
+                  ],
+                  "text": "SELECT",
+                  "type": "keyword",
+                },
+                "type": "select_clause",
               },
-              "type": "select_clause",
-            },
-            {
-              "fromKw": {
+              {
+                "fromKw": {
+                  "range": [
+                    17,
+                    21,
+                  ],
+                  "text": "FROM",
+                  "type": "keyword",
+                },
                 "range": [
                   17,
-                  21,
+                  27,
                 ],
-                "text": "FROM",
-                "type": "keyword",
-              },
-              "range": [
-                17,
-                27,
-              ],
-              "tables": [
-                {
-                  "alias": {
-                    "range": [
-                      26,
-                      27,
-                    ],
-                    "text": "t",
-                    "type": "identifier",
-                  },
-                  "expr": {
-                    "range": [
-                      22,
-                      25,
-                    ],
-                    "table": {
+                "tables": [
+                  {
+                    "alias": {
+                      "range": [
+                        26,
+                        27,
+                      ],
+                      "text": "t",
+                      "type": "identifier",
+                    },
+                    "expr": {
                       "range": [
                         22,
                         25,
                       ],
-                      "text": "tbl",
-                      "type": "identifier",
+                      "table": {
+                        "range": [
+                          22,
+                          25,
+                        ],
+                        "text": "tbl",
+                        "type": "identifier",
+                      },
+                      "type": "table_ref",
                     },
-                    "type": "table_ref",
+                    "range": [
+                      22,
+                      27,
+                    ],
+                    "type": "alias",
                   },
-                  "range": [
-                    22,
-                    27,
-                  ],
-                  "type": "alias",
-                },
-              ],
-              "type": "from_clause",
-            },
-          ],
-          "range": [
-            0,
-            27,
-          ],
-          "type": "select_statement",
-        },
-      ]
+                ],
+                "type": "from_clause",
+              },
+            ],
+            "range": [
+              0,
+              27,
+            ],
+            "type": "select_statement",
+          },
+        ],
+        "type": "program",
+      }
     `);
   });
 });

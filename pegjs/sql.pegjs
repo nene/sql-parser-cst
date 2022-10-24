@@ -167,7 +167,9 @@
 }
 
 start
-  = multiple_stmt
+  = statements:multiple_stmt {
+    return { type: "program", statements };
+  }
 
 multiple_stmt
   = head:statement tail:(__ ";" __ statement)* {

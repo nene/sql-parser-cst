@@ -1,4 +1,4 @@
-import { Expr, Whitespace } from "../pegjs/sql";
+import { Expr, Program, Statement, Whitespace } from "../pegjs/sql";
 import { parse as parseSql, ParserOptions, show } from "../src/parser";
 
 type Dialect = "mysql" | "sqlite";
@@ -11,11 +11,18 @@ export const preserveAll: ParserOptions = {
   preserveSpaces: true,
 };
 
-export function parse(sql: string, options: ParserOptions = {}) {
+export function parse(sql: string, options: ParserOptions = {}): Program {
   return parseSql(sql, {
     dialect: __SQL_DIALECT__,
     ...options,
   });
+}
+
+export function parseStmt(
+  sql: string,
+  options: ParserOptions = {}
+): Statement[] {
+  return parse(sql, options).statements;
 }
 
 export function dialect(lang: Dialect | Dialect[], block: () => void) {
@@ -34,7 +41,7 @@ export function testExpr(expr: string) {
 }
 
 export function parseExpr(expr: string, options?: ParserOptions) {
-  const stmt = parse(`SELECT ${expr}`, options)[0];
+  const stmt = parse(`SELECT ${expr}`, options).statements[0];
   if (stmt.type !== "select_statement") {
     throw new Error(`Expected select_statement, instead got ${stmt.type}`);
   }
@@ -55,21 +62,7 @@ export function parseExpr(expr: string, options?: ParserOptions) {
  *     showPrecedence("1 + 2 / 3") --> "(1 + (2 / 3))"
  */
 export function showPrecedence(sql: string): string {
-  const expr = parseExpr(sql);
-  const newSql = show([
-    {
-      type: "select_statement",
-      clauses: [
-        {
-          type: "select_clause",
-          selectKw: { type: "keyword", text: "SELECT" },
-          options: [],
-          columns: [addPrecedenceParens(expr)],
-        },
-      ],
-    },
-  ]);
-  return newSql.replace(/^SELECT/, "");
+  return show(addPrecedenceParens(parseExpr(sql)));
 }
 
 function addPrecedenceParens(expr: Expr): Expr {

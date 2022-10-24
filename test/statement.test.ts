@@ -12,23 +12,26 @@ describe("statement", () => {
   it("parses empty statements", () => {
     test("; ; ;");
     expect(parse(";/*com*/;", { preserveComments: true })).toMatchInlineSnapshot(`
-      [
-        {
-          "type": "empty_statement",
-        },
-        {
-          "leading": [
-            {
-              "text": "/*com*/",
-              "type": "block_comment",
-            },
-          ],
-          "type": "empty_statement",
-        },
-        {
-          "type": "empty_statement",
-        },
-      ]
+      {
+        "statements": [
+          {
+            "type": "empty_statement",
+          },
+          {
+            "leading": [
+              {
+                "text": "/*com*/",
+                "type": "block_comment",
+              },
+            ],
+            "type": "empty_statement",
+          },
+          {
+            "type": "empty_statement",
+          },
+        ],
+        "type": "program",
+      }
     `);
   });
 });

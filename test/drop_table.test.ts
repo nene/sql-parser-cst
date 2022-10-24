@@ -1,4 +1,4 @@
-import { dialect, parse, test } from "./test_utils";
+import { dialect, parseStmt, test } from "./test_utils";
 
 describe("drop table", () => {
   it("simple DROP TABLE statement", () => {
@@ -36,7 +36,7 @@ describe("drop table", () => {
   });
 
   it("parses to syntax tree", () => {
-    expect(parse("DROP TABLE my_table")).toMatchInlineSnapshot(`
+    expect(parseStmt("DROP TABLE my_table")).toMatchInlineSnapshot(`
       [
         {
           "dropKw": {

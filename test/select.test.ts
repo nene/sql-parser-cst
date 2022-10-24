@@ -1,4 +1,4 @@
-import { dialect, parse, test } from "./test_utils";
+import { dialect, parseStmt, test } from "./test_utils";
 
 describe("select", () => {
   it("parses simple SELECT", () => {
@@ -60,7 +60,7 @@ describe("select", () => {
 
   describe("syntax tree", () => {
     it("parses SELECT with multiple columns", () => {
-      expect(parse("SELECT 1, 2, 3 FROM db.tbl")).toMatchInlineSnapshot(`
+      expect(parseStmt("SELECT 1, 2, 3 FROM db.tbl")).toMatchInlineSnapshot(`
         [
           {
             "clauses": [
@@ -114,7 +114,7 @@ describe("select", () => {
     });
 
     it("parses alias definition", () => {
-      expect(parse("SELECT 1 AS foo")).toMatchInlineSnapshot(`
+      expect(parseStmt("SELECT 1 AS foo")).toMatchInlineSnapshot(`
         [
           {
             "clauses": [
@@ -151,7 +151,7 @@ describe("select", () => {
     });
 
     it("parses string alias as identifier", () => {
-      expect(parse(`SELECT col 'foo'`)).toMatchInlineSnapshot(`
+      expect(parseStmt(`SELECT col 'foo'`)).toMatchInlineSnapshot(`
         [
           {
             "clauses": [

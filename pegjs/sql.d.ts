@@ -1,5 +1,3 @@
-type Ast = Statement[];
-
 type BaseNode = {
   leading?: Whitespace[];
   trailing?: Whitespace[];
@@ -12,6 +10,7 @@ type Whitespace = {
 };
 
 type Node =
+  | Program
   | Statement
   | Clause
   | Expr
@@ -33,6 +32,11 @@ type Node =
   | FrameNode
   | CaseWhen
   | CaseElse;
+
+type Program = BaseNode & {
+  type: "program";
+  statements: Statement[];
+};
 
 type Statement =
   | EmptyStatement
@@ -483,4 +487,4 @@ export type ParserOptions = {
   includeRange?: boolean;
 };
 
-export function parse(str: string, options?: ParserOptions): Ast;
+export function parse(str: string, options?: ParserOptions): Program;
