@@ -1487,7 +1487,6 @@ type_name
 
 expr
   = or_expr
-  / union_stmt
 
 or_expr
   = head:xor_expr tail:(__ or_op __ xor_expr)* {
