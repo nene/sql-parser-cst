@@ -42,7 +42,7 @@ export function testExpr(expr: string) {
 }
 
 export function parseExpr(expr: string, options?: ParserOptions) {
-  const stmt = parse(`SELECT ${expr}`, options).statements[0];
+  const stmt = parseStmt(`SELECT ${expr}`, options);
   if (stmt.type !== "select_statement") {
     throw new Error(`Expected select_statement, instead got ${stmt.type}`);
   }
