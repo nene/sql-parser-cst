@@ -227,11 +227,6 @@ intersect_op
   = kws:(INTERSECT __ (ALL / DISTINCT)) { return createKeywordList(kws); }
   / INTERSECT
 
-create_db_definition
-  = head:create_option_character_set tail:(__ create_option_character_set)* {
-    return "[Not implemented]";
-  }
-
 create_db_stmt
   = a:CREATE __
     k:(DATABASE / SCHEME) __
@@ -241,11 +236,8 @@ create_db_stmt
       return "[Not implemented]";
     }
 
-view_with
-  = WITH __ c:(CASCADED / LOCAL) __ CHECK __ OPTION {
-    return "[Not implemented]";
-  }
-  / WITH __ CHECK __ OPTION {
+create_db_definition
+  = head:create_option_character_set tail:(__ create_option_character_set)* {
     return "[Not implemented]";
   }
 
@@ -258,6 +250,14 @@ create_view_stmt
   VIEW __ v:table_ref __ c:("(" __ column_list __ ")")? __
   AS __ s:select_stmt __
   w:view_with? {
+    return "[Not implemented]";
+  }
+
+view_with
+  = WITH __ c:(CASCADED / LOCAL) __ CHECK __ OPTION {
+    return "[Not implemented]";
+  }
+  / WITH __ CHECK __ OPTION {
     return "[Not implemented]";
   }
 
