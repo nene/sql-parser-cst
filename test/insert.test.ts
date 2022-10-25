@@ -23,6 +23,11 @@ describe("insert into", () => {
     test("INSERT INTO tbl /*c1*/ SELECT 1");
   });
 
+  it("supports insert of default values", () => {
+    test("INSERT INTO tbl DEFAULT VALUES");
+    test("INSERT INTO tbl /*c1*/ DEFAULT /*c2*/ VALUES");
+  });
+
   dialect("mysql", () => {
     it("supports INSERT without INTO", () => {
       test("INSERT tbl VALUES (1, 2, 3)");

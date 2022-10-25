@@ -31,7 +31,8 @@ type Node =
   | OverArg
   | FrameNode
   | CaseWhen
-  | CaseElse;
+  | CaseElse
+  | DefaultValues;
 
 type Program = BaseNode & {
   type: "program";
@@ -295,13 +296,18 @@ type InsertStatement = BaseNode & {
   intoKw?: Keyword;
   table: TableRef;
   columns?: ParenExpr<ExprList<ColumnRef>>;
-  source: ValuesClause | SubSelect;
+  source: ValuesClause | SubSelect | DefaultValues;
 };
 
 type ValuesClause = BaseNode & {
   type: "values_clause";
   valuesKw: Keyword;
   values: ExprList<ParenExpr<ExprList<Expr>>>;
+};
+
+type DefaultValues = BaseNode & {
+  type: "default_values";
+  kw: Keyword[]; // DEFAULT VALUES
 };
 
 // Window frame

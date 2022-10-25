@@ -1430,6 +1430,7 @@ replace_insert_stmt
 insert_source
   = values_clause
   / compound_select_stmt
+  / default_values
 
 values_clause
   = kw:VALUES c:__ values:values_list {
@@ -1444,6 +1445,9 @@ values_list
   = head:paren_expr_list tail:(__ "," __ paren_expr_list)* {
     return loc({ type: "expr_list", items: readCommaSepList(head, tail) });
   }
+
+default_values
+  = kws:(DEFAULT __ VALUES) { return createKeywordList(kws); }
 
 insert_partition
   = PARTITION __ "(" __ head:ident_name tail:(__ "," __ ident_name)* __ ")" {
