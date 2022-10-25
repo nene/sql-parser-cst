@@ -1,4 +1,4 @@
-import { dialect, test } from "./test_utils";
+import { dialect, parseStmt, test } from "./test_utils";
 
 describe("insert into", () => {
   it("supports INSERT INTO with values", () => {
@@ -85,5 +85,95 @@ describe("insert into", () => {
       test("INSERT OR ROLLBACK INTO tbl VALUES (1)");
       test("INSERT /*c1*/ OR /*c2*/ ABORT /*c3*/ INTO tbl VALUES (1)");
     });
+  });
+
+  it("parses INSERT to syntax tree", () => {
+    expect(parseStmt("INSERT INTO tbl (col1, col2) VALUES (1, 2), (3, 4)")).toMatchInlineSnapshot(`
+      {
+        "columns": {
+          "expr": {
+            "items": [
+              {
+                "column": {
+                  "text": "col1",
+                  "type": "identifier",
+                },
+                "type": "column_ref",
+              },
+              {
+                "column": {
+                  "text": "col2",
+                  "type": "identifier",
+                },
+                "type": "column_ref",
+              },
+            ],
+            "type": "expr_list",
+          },
+          "type": "paren_expr",
+        },
+        "insertKw": {
+          "text": "INSERT",
+          "type": "keyword",
+        },
+        "intoKw": {
+          "text": "INTO",
+          "type": "keyword",
+        },
+        "options": [],
+        "source": {
+          "type": "values_clause",
+          "values": {
+            "items": [
+              {
+                "expr": {
+                  "items": [
+                    {
+                      "text": "1",
+                      "type": "number",
+                    },
+                    {
+                      "text": "2",
+                      "type": "number",
+                    },
+                  ],
+                  "type": "expr_list",
+                },
+                "type": "paren_expr",
+              },
+              {
+                "expr": {
+                  "items": [
+                    {
+                      "text": "3",
+                      "type": "number",
+                    },
+                    {
+                      "text": "4",
+                      "type": "number",
+                    },
+                  ],
+                  "type": "expr_list",
+                },
+                "type": "paren_expr",
+              },
+            ],
+            "type": "expr_list",
+          },
+          "valuesKw": {
+            "text": "VALUES",
+            "type": "keyword",
+          },
+        },
+        "table": {
+          "table": {
+            "text": "tbl",
+            "type": "identifier",
+          },
+          "type": "table_ref",
+        },
+        "type": "insert_statement",
+      }
+    `);
   });
 });
