@@ -88,6 +88,8 @@ const showNode = cstTransformer<string>({
       return show([node.limitKw, node.count]);
     }
   },
+  // VALUES
+  values_clause: (node) => show([node.valuesKw, node.values]),
 
   // Window frame
   frame_clause: (node) => show([node.unitKw, node.extent, node.exclusion]),
@@ -131,6 +133,10 @@ const showNode = cstTransformer<string>({
       show(node.tables, ","),
       node.behaviorKw,
     ]),
+
+  // INSERT INTO statement
+  insert_statement: (node) =>
+    show([node.insertKw, node.table, node.columns, node.values]),
 
   // Expressions
   expr_list: (node) => show(node.items, ","),

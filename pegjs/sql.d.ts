@@ -43,7 +43,8 @@ type Statement =
   | CompoundSelectStatement
   | SelectStatement
   | CreateTableStatement
-  | DropTableStatement;
+  | DropTableStatement
+  | InsertStatement;
 
 type Expr =
   | Alias
@@ -102,7 +103,8 @@ type Clause =
   | WindowClause
   | OrderByClause
   | PartitionByClause
-  | LimitClause;
+  | LimitClause
+  | ValuesClause;
 
 type WithClause = BaseNode & {
   type: "with_clause";
@@ -285,6 +287,20 @@ type DropTableStatement = BaseNode & {
   ifExistsKw?: Keyword[];
   tables: TableRef[];
   behaviorKw?: Keyword; // CASCADE | RESTRICT
+};
+
+type InsertStatement = BaseNode & {
+  type: "insert_statement";
+  insertKw: Keyword | Keyword[]; // INSERT [INTO]
+  table: TableRef;
+  columns?: ParenExpr<ExprList<ColumnRef>>;
+  values: ValuesClause;
+};
+
+type ValuesClause = BaseNode & {
+  type: "values_clause";
+  valuesKw: Keyword;
+  values: ParenExpr<ExprList<Expr>>;
 };
 
 // Window frame

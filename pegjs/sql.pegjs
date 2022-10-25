@@ -194,7 +194,6 @@ statement
   / desc_stmt
   / update_stmt
   / replace_insert_stmt
-  / insert_no_columns_stmt
   / insert_into_set
   / delete_stmt
   / empty_stmt
@@ -456,10 +455,10 @@ table_base
   / t:table_in_parens alias:(__ alias_clause)? {
     return loc(createAlias(t, alias));
   }
-  / stmt:value_clause __ alias:alias_clause? {
+  / stmt:values_clause __ alias:alias_clause? {
     return "[Not implemented]";
   }
-  / "(" __ stmt:value_clause __ ")" __ alias:alias_clause? {
+  / "(" __ stmt:values_clause __ ")" __ alias:alias_clause? {
     return "[Not implemented]";
   }
   / t:paren_expr_select alias:(__ alias_clause)? {
@@ -510,27 +509,12 @@ join_specification
   = using_clause / on_clause
 
 using_clause
-  = kw:USING c1:__ expr:using_clause_paren_expr {
+  = kw:USING c1:__ expr:column_list_in_parens {
     return loc({
       type: "join_using_specification",
       usingKw: kw,
       expr: leading(expr, c1),
     });
-  }
-
-using_clause_paren_expr
-  = "(" c1:__ cols:using_clause_columns c2:__ ")" {
-    return loc(createParenExpr(c1, cols, c2));
-  }
-
-using_clause_columns
-  = head:plain_column_ref tail:(__ "," __ plain_column_ref)* {
-     return loc({ type: "expr_list", items: readCommaSepList(head, tail) });
-  }
-
-plain_column_ref
-  = col:column {
-    return loc({ type: "column_ref", column: col });
   }
 
 on_clause
@@ -1426,19 +1410,29 @@ delete_stmt
  * INSERT INTO
  */
 replace_insert_stmt
-  = ri:replace_insert       __
-    ig:IGNORE?  __
-    it:INTO? __
-    t:table_ref  __
-    p:insert_partition? __ "(" __ c:column_list  __ ")" __
-    v:insert_value_clause __
-    odp:on_duplicate_update_stmt? {
-      return "[Not implemented]";
+  = kws:((INSERT / REPLACE) __ INTO)
+    table:(c:__ t:table_ref { return leading(t, c); })
+    p:(__ insert_partition)?
+    columns:(c:__ cols:column_list_in_parens { return leading(cols, c); })?
+    values:(c:__ v:values_clause { return leading(v, c); })
+    odp:(__ on_duplicate_update_stmt)? {
+      return loc({
+        type: "insert_statement",
+        insertKw: createKeywordList(kws),
+        table,
+        columns: nullToUndefined(columns),
+        values,
+      });
     }
 
-insert_value_clause
-  = value_clause
-  / select_stmt
+values_clause
+  = kw:VALUES c:__ values:paren_expr_list {
+    return loc({
+      type: "values_clause",
+      valuesKw: kw,
+      values: leading(values, c),
+    });
+  }
 
 insert_partition
   = PARTITION __ "(" __ head:ident_name tail:(__ "," __ ident_name)* __ ")" {
@@ -1448,19 +1442,8 @@ insert_partition
     return "[Not implemented]";
   }
 
-insert_no_columns_stmt
-  = ri:replace_insert __
-    ig:IGNORE?  __
-    it:INTO?   __
-    t:table_ref  __
-    p:insert_partition? __
-    v:insert_value_clause __
-    odp: on_duplicate_update_stmt? {
-      return "[Not implemented]";
-    }
-
 insert_into_set
-  = ri:replace_insert __
+  = ri:(INSERT / REPLACE) __
     INTO __
     t:table_ref  __
     p:insert_partition? __
@@ -1472,18 +1455,6 @@ insert_into_set
 
 on_duplicate_update_stmt
   = ON __ DUPLICATE __ KEY __ UPDATE __ s:set_list {
-    return "[Not implemented]";
-  }
-
-replace_insert
-  = INSERT   { return "[Not implemented]"; }
-  / REPLACE  { return "[Not implemented]"; }
-
-value_clause
-  = VALUES __ l:value_list  { return "[Not implemented]"; }
-
-value_list
-  = head:value_item tail:(__ "," __ value_item)* {
     return "[Not implemented]";
   }
 
@@ -1993,9 +1964,14 @@ table_ref
 /**
  * column names
  */
+column_list_in_parens
+  = "(" c1:__ cols:column_list c2:__ ")" {
+    return loc(createParenExpr(c1, cols, c2));
+  }
+
 column_list
-  = head:column tail:(__ "," __ column)* {
-    return "[Not implemented]";
+  = head:plain_column_ref tail:(__ "," __ plain_column_ref)* {
+    return loc({ type: "expr_list", items: readCommaSepList(head, tail) });
   }
 
 column_ref
@@ -2006,7 +1982,10 @@ column_ref
       column: leading(col, c2),
     });
   }
-  / col:column {
+  / plain_column_ref
+
+plain_column_ref
+  = col:column {
     return loc({
       type: "column_ref",
       column: col,
