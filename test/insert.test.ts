@@ -52,4 +52,14 @@ describe("insert into", () => {
       test("INSERT HIGH_PRIORITY IGNORE INTO tbl VALUES (1)");
     });
   });
+
+  dialect("sqlite", () => {
+    it("supports INSERT OR ... options", () => {
+      test("INSERT OR ABORT INTO tbl VALUES (1)");
+      test("INSERT OR FAIL INTO tbl VALUES (1)");
+      test("INSERT OR IGNORE INTO tbl VALUES (1)");
+      test("INSERT OR REPLACE INTO tbl VALUES (1)");
+      test("INSERT OR ROLLBACK INTO tbl VALUES (1)");
+    });
+  });
 });

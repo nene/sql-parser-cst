@@ -1444,10 +1444,16 @@ insert_options
   }
 
 insert_opt
-  = LOW_PRIORITY
-  / DELAYED
-  / HIGH_PRIORITY
-  / IGNORE
+  = never
+
+insert_opt$mysql
+  = kw:(LOW_PRIORITY / DELAYED / HIGH_PRIORITY / IGNORE) {
+    return { type: "insert_option", kw };
+  }
+insert_opt$sqlite
+  = kws:(OR __ (ABORT / FAIL / IGNORE / REPLACE / ROLLBACK)) {
+    return { type: "insert_option", kw: createKeywordList(kws) };
+  }
 
 table_ref_or_explicit_alias
   = t:table_ref alias:(__ explicit_alias)? {
@@ -2341,7 +2347,13 @@ end_of_line
 end_of_file
   = !.
 
+// Special rule that never matches
+// (though still attempts to consume some input, so Peggy won't give us a warning)
+never
+  = . &{ return false };
+
 // All keywords (sorted alphabetically)
+ABORT               = kw:"ABORT"i               !ident_part { return loc(createKeyword(kw)); }
 ACTION              = kw:"ACTION"i              !ident_part { return loc(createKeyword(kw)); }
 ADD                 = kw:"ADD"i                 !ident_part { return loc(createKeyword(kw)); }
 ADD_DATE            = kw:"ADDDATE"i             !ident_part { return loc(createKeyword(kw)); }
@@ -2431,6 +2443,7 @@ EXCLUSIVE           = kw:"EXCLUSIVE"i           !ident_part { return loc(createK
 EXISTS              = kw:"EXISTS"i              !ident_part { return loc(createKeyword(kw)); }
 EXPANSION           = kw:"EXPANSION"i           !ident_part { return loc(createKeyword(kw)); }
 EXPLAIN             = kw:"EXPLAIN"i             !ident_part { return loc(createKeyword(kw)); }
+FAIL                = kw:"FAIL"i                !ident_part { return loc(createKeyword(kw)); }
 FALSE               = kw:"FALSE"i               !ident_part { return loc(createKeyword(kw)); }
 FIRST               = kw:"FIRST"i               !ident_part { return loc(createKeyword(kw)); }
 FIRST_VALUE         = kw:"FIRST_VALUE"i         !ident_part { return loc(createKeyword(kw)); }
@@ -2547,6 +2560,7 @@ RESTRICT            = kw:"RESTRICT"i            !ident_part { return loc(createK
 RETURN              = kw:"RETURN"i              !ident_part { return loc(createKeyword(kw)); }
 RIGHT               = kw:"RIGHT"i               !ident_part { return loc(createKeyword(kw)); }
 RLIKE               = kw:"RLIKE"i               !ident_part { return loc(createKeyword(kw)); }
+ROLLBACK            = kw:"ROLLBACK"i            !ident_part { return loc(createKeyword(kw)); }
 ROW                 = kw:"ROW"i                 !ident_part { return loc(createKeyword(kw)); }
 ROW_FORMAT          = kw:"ROW_FORMAT"i          !ident_part { return loc(createKeyword(kw)); }
 ROW_NUMBER          = kw:"ROW_NUMBER"i          !ident_part { return loc(createKeyword(kw)); }
