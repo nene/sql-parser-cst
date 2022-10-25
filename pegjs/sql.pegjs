@@ -227,21 +227,6 @@ intersect_op
   = kws:(INTERSECT __ (ALL / DISTINCT)) { return createKeywordList(kws); }
   / INTERSECT
 
-column_order_list
-  = head:column_order_item tail:(__ "," __ column_order_item)* {
-    return "[Not implemented]";
-  }
-
-column_order_item
-  = c:expr o:(ASC / DESC)? {
-    return "[Not implemented]";
-  }
-  / column_order
-
-column_order
-  = c:column_ref __ o:(ASC / DESC)? {
-    return "[Not implemented]";
-  }
 create_db_definition
   = head:create_option_character_set tail:(__ create_option_character_set)* {
     return "[Not implemented]";
@@ -288,6 +273,22 @@ create_index_stmt
   io:index_options? __
   al:alter_algorithm? __
   lo:alter_lock? __ {
+    return "[Not implemented]";
+  }
+
+column_order_list
+  = head:column_order_item tail:(__ "," __ column_order_item)* {
+    return "[Not implemented]";
+  }
+
+column_order_item
+  = c:expr o:(ASC / DESC)? {
+    return "[Not implemented]";
+  }
+  / column_order
+
+column_order
+  = c:column_ref __ o:(ASC / DESC)? {
     return "[Not implemented]";
   }
 
