@@ -566,11 +566,6 @@ group_by_clause
     });
   }
 
-column_ref_list
-  = head:column_ref tail:(__ "," __ column_ref)* {
-      return "[Not implemented]";
-    }
-
 /**
  * SELECT .. HAVING
  */
@@ -1947,6 +1942,11 @@ fulltext_search
   = MATCH __ "(" __ c:column_ref_list __ ")" __ AGAINST __ "(" __ e:expr __ mo:fulltext_search_mode? __ ")" __ as:alias_clause? {
     return "[Not implemented]";
   }
+
+column_ref_list
+  = head:column_ref tail:(__ "," __ column_ref)* {
+      return "[Not implemented]";
+    }
 
 fulltext_search_mode
   = IN __ NATURAL __ LANGUAGE __ MODE __ WITH __ QUERY __ EXPANSION  {
