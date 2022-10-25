@@ -194,7 +194,6 @@ statement
   / desc_stmt
   / update_stmt
   / insert_stmt
-  / insert_set_stmt
   / delete_stmt
   / empty_stmt
 
@@ -1483,16 +1482,6 @@ values_list
 
 default_values
   = kws:(DEFAULT __ VALUES) { return createKeywordList(kws); }
-
-insert_set_stmt
-  = ri:(INSERT / REPLACE) __
-    INTO __
-    t:table_ref  __
-    SET       __
-    l:set_list   __
-    odp:on_duplicate_update_stmt? {
-      return "[Not implemented]";
-    }
 
 on_duplicate_update_stmt
   = ON __ DUPLICATE __ KEY __ UPDATE __ s:set_list {
