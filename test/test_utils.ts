@@ -90,7 +90,9 @@ export function showCompoundPrecedence(sql: string): string {
   return show(addPrecedenceParens(stmt));
 }
 
-function addPrecedenceParens<T extends Expr>(expr: T): ParenExpr<T> | T {
+function addPrecedenceParens<T extends Expr | SubSelect>(
+  expr: T
+): ParenExpr<T> | T {
   const space: Whitespace[] = [{ type: "space", text: " " }];
 
   if (

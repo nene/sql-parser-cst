@@ -46,8 +46,6 @@ type Statement =
   | DropTableStatement;
 
 type Expr =
-  | CompoundSelectStatement
-  | SelectStatement
   | Alias
   | ExprList
   | ParenExpr
