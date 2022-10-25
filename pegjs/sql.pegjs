@@ -167,6 +167,11 @@
 }
 
 start
+  = c1:__ program:program c2:__ {
+    return surrounding(c1, program, c2);
+  }
+
+program
   = statements:multiple_stmt {
     return loc({ type: "program", statements });
   }

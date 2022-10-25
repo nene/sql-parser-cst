@@ -2,11 +2,11 @@ import { parse, test } from "./test_utils";
 
 describe("statement", () => {
   it("parses multiple statements", () => {
-    test(
-      `CREATE TABLE foo (id INT);
+    test(`
+      CREATE TABLE foo (id INT);
       INSERT INTO foo VALUES (1);
-      SELECT * FROM foo`
-    );
+      SELECT * FROM foo
+    `);
   });
 
   it("parses statement with trailing semicolon", () => {
