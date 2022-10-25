@@ -193,8 +193,8 @@ statement
   / show_stmt
   / desc_stmt
   / update_stmt
-  / replace_insert_stmt
-  / insert_into_set
+  / insert_stmt
+  / insert_set_stmt
   / delete_stmt
   / empty_stmt
 
@@ -1409,7 +1409,7 @@ delete_stmt
 /**
  * INSERT INTO
  */
-replace_insert_stmt
+insert_stmt
   = insertKw:(INSERT / REPLACE)
     intoKw:(c:__ kw:INTO { return leading(kw, c) })?
     table:(c:__ t:table_ref { return leading(t, c); })
@@ -1457,7 +1457,7 @@ insert_partition
     return "[Not implemented]";
   }
 
-insert_into_set
+insert_set_stmt
   = ri:(INSERT / REPLACE) __
     INTO __
     t:table_ref  __
