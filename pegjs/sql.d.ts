@@ -364,12 +364,12 @@ type FrameExclusion = BaseNode & {
 
 // other...
 
-type Alias = BaseNode & {
+interface Alias<T = Expr> extends BaseNode {
   type: "alias";
-  expr: Expr;
+  expr: T;
   asKw?: Keyword;
   alias: Identifier;
-};
+}
 
 type AllColumns = BaseNode & {
   type: "all_columns";
