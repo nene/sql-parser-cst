@@ -7,11 +7,19 @@ import {
   SubSelect,
   Whitespace,
 } from "../pegjs/sql";
-import { parse as parseSql, ParserOptions, show } from "../src/parser";
+import {
+  parse as parseSql,
+  ParserOptions,
+  show,
+  mysql,
+  sqlite,
+} from "../src/parser";
 
-type Dialect = "mysql" | "sqlite";
+const dialectMap = { mysql, sqlite };
 
-declare var __SQL_DIALECT__: Dialect;
+type DialectName = keyof typeof dialectMap;
+
+declare var __SQL_DIALECT__: DialectName;
 
 export const preserveAll: ParserOptions = {
   preserveComments: true,
@@ -21,7 +29,7 @@ export const preserveAll: ParserOptions = {
 
 export function parse(sql: string, options: ParserOptions = {}): Program {
   return parseSql(sql, {
-    dialect: __SQL_DIALECT__,
+    dialect: dialectMap[__SQL_DIALECT__],
     ...options,
   });
 }
@@ -34,7 +42,7 @@ export function parseStmt(sql: string, options: ParserOptions = {}): Statement {
   return statements[0];
 }
 
-export function dialect(lang: Dialect | Dialect[], block: () => void) {
+export function dialect(lang: DialectName | DialectName[], block: () => void) {
   lang = typeof lang === "string" ? [lang] : lang;
   if (lang.includes(__SQL_DIALECT__)) {
     describe(__SQL_DIALECT__, block);

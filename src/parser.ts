@@ -1,9 +1,11 @@
 import { Node, ParserOptions, Program } from "../pegjs/sql";
-import { parse as mysql } from "../pegjs/dialects/mysql";
-import { parse as sqlite } from "../pegjs/dialects/sqlite";
+export { parse as mysql } from "../pegjs/dialects/mysql";
+export { parse as sqlite } from "../pegjs/dialects/sqlite";
 import { show as showSql } from "./show";
 
-export type DialectOption = { dialect: "mysql" | "sqlite" };
+export type DialectFn = (str: string, options: ParserOptions) => Program;
+
+export type DialectOption = { dialect: DialectFn };
 
 export { ParserOptions };
 
@@ -11,12 +13,7 @@ export function parse(
   sql: string,
   options: ParserOptions & DialectOption
 ): Program {
-  switch (options.dialect) {
-    case "mysql":
-      return mysql(sql, options);
-    case "sqlite":
-      return sqlite(sql, options);
-  }
+  return options.dialect(sql, options);
 }
 
 /**

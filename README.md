@@ -9,10 +9,10 @@ with the goal of being able to re-create the exact original source code.
 ## Usage
 
 ```ts
-import { parse, show } from "sql-parser-cst";
+import { parse, show, sqlite } from "sql-parser-cst";
 
 const cst = parse("SELECT * FROM my_table", {
-  dialect: "sqlite",
+  dialect: sqlite,
   // These are optional:
   preserveSpaces: true, // Adds spaces/tabs
   preserveNewlines: true, // Adds newlines
