@@ -60,6 +60,7 @@ describe("insert into", () => {
       test("INSERT LOW_PRIORITY IGNORE INTO tbl VALUES (1)");
       test("INSERT DELAYED IGNORE INTO tbl VALUES (1)");
       test("INSERT HIGH_PRIORITY IGNORE INTO tbl VALUES (1)");
+      test("INSERT /*c1*/ LOW_PRIORITY /*c2*/ IGNORE /*c3*/ INTO tbl VALUES (1)");
     });
   });
 
@@ -70,6 +71,7 @@ describe("insert into", () => {
       test("INSERT OR IGNORE INTO tbl VALUES (1)");
       test("INSERT OR REPLACE INTO tbl VALUES (1)");
       test("INSERT OR ROLLBACK INTO tbl VALUES (1)");
+      test("INSERT /*c1*/ OR /*c2*/ ABORT /*c3*/ INTO tbl VALUES (1)");
     });
   });
 });
