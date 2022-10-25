@@ -1423,8 +1423,7 @@ insert_stmt
     intoKw:(c:__ kw:INTO { return leading(kw, c) })?
     table:(c:__ t:table_ref_or_explicit_alias { return leading(t, c); })
     columns:(c:__ cols:column_list_in_parens { return leading(cols, c); })?
-    source:(c:__ src:insert_source { return leading(src, c); })
-    odp:(__ on_duplicate_update_stmt)? {
+    source:(c:__ src:insert_source { return leading(src, c); }) {
       return loc({
         type: "insert_statement",
         insertKw,
@@ -1482,11 +1481,6 @@ values_list
 
 default_values
   = kws:(DEFAULT __ VALUES) { return createKeywordList(kws); }
-
-on_duplicate_update_stmt
-  = ON __ DUPLICATE __ KEY __ UPDATE __ s:set_list {
-    return "[Not implemented]";
-  }
 
 /**
  * Data types
