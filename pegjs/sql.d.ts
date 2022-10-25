@@ -294,7 +294,7 @@ type InsertStatement = BaseNode & {
   type: "insert_statement";
   insertKw: Keyword;
   intoKw?: Keyword;
-  table: TableRef;
+  table: TableRef | Alias<TableRef>;
   columns?: ParenExpr<ExprList<ColumnRef>>;
   source: ValuesClause | SubSelect | DefaultValues;
 };

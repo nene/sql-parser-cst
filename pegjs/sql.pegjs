@@ -449,9 +449,7 @@ table_base
   = DUAL {
     return "[Not implemented]";
   }
-  / t:table_ref alias:(__ alias_clause)? {
-    return loc(createAlias(t, alias));
-  }
+  / table_ref_or_alias
   / t:table_in_parens alias:(__ alias_clause)? {
     return loc(createAlias(t, alias));
   }
@@ -1412,7 +1410,7 @@ delete_stmt
 insert_stmt
   = insertKw:(INSERT / REPLACE)
     intoKw:(c:__ kw:INTO { return leading(kw, c) })?
-    table:(c:__ t:table_ref { return leading(t, c); })
+    table:(c:__ t:table_ref_or_alias { return leading(t, c); })
     p:(__ insert_partition)?
     columns:(c:__ cols:column_list_in_parens { return leading(cols, c); })?
     source:(c:__ src:insert_source { return leading(src, c); })
@@ -1959,6 +1957,11 @@ exists_expr
 table_ref_list
   = head:table_ref tail:(__ "," __ table_ref)* {
     return readCommaSepList(head, tail);
+  }
+
+table_ref_or_alias
+  = t:table_ref alias:(__ alias_clause)? {
+    return loc(createAlias(t, alias));
   }
 
 table_ref

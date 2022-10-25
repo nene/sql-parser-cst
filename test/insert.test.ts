@@ -12,6 +12,10 @@ describe("insert into", () => {
     });
   });
 
+  it("supports INSERT with aliased table", () => {
+    test("INSERT INTO tbl AS t VALUES (1, 2, 3)");
+  });
+
   it("supports INSERT INTO with columns and values", () => {
     test("INSERT INTO tbl (col1, col2, col3) VALUES (1, 2, 3)");
     test(`INSERT /*c1*/ INTO /*c2*/ tbl /*c3*/ (/*c4*/ col1 /*c5*/,/*c6*/ col2 /*c7*/) /*c8*/
