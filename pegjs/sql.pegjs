@@ -1445,11 +1445,11 @@ insert_opt
 
 insert_opt$mysql
   = kw:(LOW_PRIORITY / DELAYED / HIGH_PRIORITY / IGNORE) {
-    return { type: "insert_option", kw };
+    return loc({ type: "insert_option", kw });
   }
 insert_opt$sqlite
   = kws:(OR __ (ABORT / FAIL / IGNORE / REPLACE / ROLLBACK)) {
-    return { type: "insert_option", kw: createKeywordList(kws) };
+    return loc({ type: "insert_option", kw: createKeywordList(kws) });
   }
 
 table_ref_or_explicit_alias
@@ -1480,7 +1480,9 @@ values_list
   }
 
 default_values
-  = kws:(DEFAULT __ VALUES) { return createKeywordList(kws); }
+  = kws:(DEFAULT __ VALUES) {
+      return loc({ type: "default_values", kw: createKeywordList(kws) });
+    }
 
 /**
  * Data types
