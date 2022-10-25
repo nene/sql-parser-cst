@@ -3,6 +3,13 @@ import { dialect, test } from "./test_utils";
 describe("insert into", () => {
   it("supports INSERT INTO with values", () => {
     test("INSERT INTO tbl VALUES (1, 2, 3)");
+    test("INSERT INTO db.tbl VALUES (1, 2, 3)");
+  });
+
+  dialect("mysql", () => {
+    it("supports INSERT without INTO", () => {
+      test("INSERT tbl VALUES (1, 2, 3)");
+    });
   });
 
   it("supports INSERT INTO with columns and values", () => {
@@ -26,11 +33,5 @@ describe("insert into", () => {
   it("supports insert of default values", () => {
     test("INSERT INTO tbl DEFAULT VALUES");
     test("INSERT INTO tbl /*c1*/ DEFAULT /*c2*/ VALUES");
-  });
-
-  dialect("mysql", () => {
-    it("supports INSERT without INTO", () => {
-      test("INSERT tbl VALUES (1, 2, 3)");
-    });
   });
 });
