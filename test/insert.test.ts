@@ -38,4 +38,18 @@ describe("insert into", () => {
     test("INSERT INTO tbl DEFAULT VALUES");
     test("INSERT INTO tbl /*c1*/ DEFAULT /*c2*/ VALUES");
   });
+
+  dialect("mysql", () => {
+    it("supports priority options", () => {
+      test("INSERT LOW_PRIORITY INTO tbl VALUES (1)");
+      test("INSERT DELAYED INTO tbl VALUES (1)");
+      test("INSERT HIGH_PRIORITY INTO tbl VALUES (1)");
+    });
+    it("supports IGNORE option", () => {
+      test("INSERT IGNORE INTO tbl VALUES (1)");
+      test("INSERT LOW_PRIORITY IGNORE INTO tbl VALUES (1)");
+      test("INSERT DELAYED IGNORE INTO tbl VALUES (1)");
+      test("INSERT HIGH_PRIORITY IGNORE INTO tbl VALUES (1)");
+    });
+  });
 });

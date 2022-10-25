@@ -1420,6 +1420,7 @@ delete_stmt
  */
 insert_stmt
   = insertKw:(INSERT / REPLACE)
+    options:(c:__ opts:insert_options { return leading(opts, c) })?
     intoKw:(c:__ kw:INTO { return leading(kw, c) })?
     table:(c:__ t:table_ref_or_explicit_alias { return leading(t, c); })
     p:(__ insert_partition)?
@@ -1429,12 +1430,24 @@ insert_stmt
       return loc({
         type: "insert_statement",
         insertKw,
+        options: options || [],
         intoKw: nullToUndefined(intoKw),
         table,
         columns: nullToUndefined(columns),
         source,
       });
     }
+
+insert_options
+  = head:insert_opt tail:(__ insert_opt)* {
+    return readSpaceSepList(head, tail);
+  }
+
+insert_opt
+  = LOW_PRIORITY
+  / DELAYED
+  / HIGH_PRIORITY
+  / IGNORE
 
 table_ref_or_explicit_alias
   = t:table_ref alias:(__ explicit_alias)? {
@@ -2391,6 +2404,7 @@ DEC                 = kw:"DEC"i                 !ident_part { return loc(createK
 DECIMAL             = kw:"DECIMAL"i             !ident_part { return loc(createKeyword(kw)); }
 DEFAULT             = kw:"DEFAULT"i             !ident_part { return loc(createKeyword(kw)); }
 DEFINER             = kw:"DEFINER"i             !ident_part { return loc(createKeyword(kw)); }
+DELAYED             = kw:"DELAYED"i             !ident_part { return loc(createKeyword(kw)); }
 DELETE              = kw:"DELETE"i              !ident_part { return loc(createKeyword(kw)); }
 DENSE_RANK          = kw:"DENSE_RANK"i          !ident_part { return loc(createKeyword(kw)); }
 DESC                = kw:"DESC"i                !ident_part { return loc(createKeyword(kw)); }

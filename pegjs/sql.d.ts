@@ -33,6 +33,7 @@ type Node =
   | CaseWhen
   | CaseElse
   | DefaultValues
+  | InsertOption
   | Alias;
 
 type Program = BaseNode & {
@@ -295,10 +296,16 @@ type DropTableStatement = BaseNode & {
 type InsertStatement = BaseNode & {
   type: "insert_statement";
   insertKw: Keyword;
+  options: InsertOption[];
   intoKw?: Keyword;
   table: TableRef | Alias<TableRef>;
   columns?: ParenExpr<ExprList<ColumnRef>>;
   source: ValuesClause | SubSelect | DefaultValues;
+};
+
+type InsertOption = BaseNode & {
+  type: "insert_option";
+  kw: Keyword | Keyword[];
 };
 
 type ValuesClause = BaseNode & {

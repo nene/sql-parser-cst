@@ -136,7 +136,15 @@ const showNode = cstTransformer<string>({
 
   // INSERT INTO statement
   insert_statement: (node) =>
-    show([node.insertKw, node.intoKw, node.table, node.columns, node.source]),
+    show([
+      node.insertKw,
+      node.options,
+      node.intoKw,
+      node.table,
+      node.columns,
+      node.source,
+    ]),
+  insert_option: (node) => show(node.kw),
   default_values: (node) => show(node.kw),
 
   // Expressions
