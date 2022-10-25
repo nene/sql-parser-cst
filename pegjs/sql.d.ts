@@ -310,7 +310,7 @@ type InsertOption = BaseNode & {
 
 type ValuesClause = BaseNode & {
   type: "values_clause";
-  valuesKw: Keyword;
+  valuesKw: Keyword; // VALUES | VALUE
   values: ExprList<ParenExpr<ExprList<Expr>>>;
 };
 

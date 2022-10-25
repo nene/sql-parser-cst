@@ -1466,13 +1466,16 @@ insert_source
   / default_values
 
 values_clause
-  = kw:VALUES c:__ values:values_list {
+  = kw:values_kw c:__ values:values_list {
     return loc({
       type: "values_clause",
       valuesKw: kw,
       values: leading(values, c),
     });
   }
+
+values_kw = VALUES
+values_kw$mysql = VALUES / VALUE
 
 values_list
   = head:paren_expr_list tail:(__ "," __ paren_expr_list)* {
@@ -2618,6 +2621,7 @@ UPDATE              = kw:"UPDATE"i              !ident_part { return loc(createK
 USE                 = kw:"USE"i                 !ident_part { return loc(createKeyword(kw)); }
 USER                = kw:"USER"i                !ident_part { return loc(createKeyword(kw)); }
 USING               = kw:"USING"i               !ident_part { return loc(createKeyword(kw)); }
+VALUE               = kw:"VALUE"i               !ident_part { return loc(createKeyword(kw)); }
 VALUES              = kw:"VALUES"i              !ident_part { return loc(createKeyword(kw)); }
 VARBINARY           = kw:"VARBINARY"i           !ident_part { return loc(createKeyword(kw)); }
 VARCHAR             = kw:"VARCHAR"i             !ident_part { return loc(createKeyword(kw)); }

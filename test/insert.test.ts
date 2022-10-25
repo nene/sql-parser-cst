@@ -22,6 +22,12 @@ describe("insert into", () => {
     });
   });
 
+  dialect("mysql", () => {
+    it("supports VALUE instead of VALUES", () => {
+      test("INSERT INTO tbl VALUE (1, 2, 3)");
+    });
+  });
+
   it("supports INSERT with aliased table", () => {
     test("INSERT INTO tbl AS t VALUES (1, 2, 3)");
   });
