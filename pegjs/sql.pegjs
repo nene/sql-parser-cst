@@ -227,6 +227,523 @@ intersect_op
   = kws:(INTERSECT __ (ALL / DISTINCT)) { return createKeywordList(kws); }
   / INTERSECT
 
+select_stmt
+  = cte:(cls:with_clause c:__ { return trailing(cls, c); })?
+    select:(c:__ cls:select_clause { return leading(cls, c); })
+    otherClauses:(c:__ cls:other_clause { return leading(cls, c); })* {
+      return loc({
+        type: "select_statement",
+        clauses: [cte, select, ...otherClauses].filter(identity),
+      });
+  }
+
+with_clause
+  = withKw:WITH
+    recursiveKw:(c:__ kw:RECURSIVE { return leading(kw, c) })?
+    c:__ head:common_table_expression tail:(__ "," __ common_table_expression)* {
+      return loc({
+        type: "with_clause",
+        withKw,
+        recursiveKw: nullToUndefined(recursiveKw),
+        tables: leading(readCommaSepList(head, tail), c),
+      });
+    }
+
+common_table_expression
+  = table:ident
+    columns:(c:__ cols:cte_columns_definition { return {cols, c}; })?
+    c1:__ asKw:AS
+    opt:(c:__ op:cte_option { return leading(op, c); })?
+    c2:__ select:paren_expr_select {
+      return loc({
+        type: "common_table_expression",
+        table: columns ? trailing(table, columns.c) : table,
+        columns: columns ? columns.cols : [],
+        asKw: leading(asKw, c1),
+        optionKw: nullToUndefined(opt),
+        expr: leading(select, c2),
+      });
+    }
+
+cte_option
+  = kws:(NOT __ MATERIALIZED) { return createKeywordList(kws); }
+  / MATERIALIZED
+
+cte_columns_definition
+  = "(" c1:__ head:ident tail:(__ "," __ ident)* c2:__ ")" {
+      return surrounding(c1, readCommaSepList(head, tail), c2);
+    }
+
+// Other clauses of SELECT statement (besides WITH & SELECT)
+other_clause
+  = from_clause
+  / where_clause
+  / group_by_clause
+  / having_clause
+  / order_by_clause
+  / limit_clause
+  / locking_read
+  / window_clause
+  / into_clause
+
+select_clause
+  = selectKw:SELECT
+    options:(c:__ kw:select_option { return leading(kw, c) })*
+    columns:(c:__ cls:select_columns { return leading(cls, c) }) {
+      return loc({
+        type: "select_clause",
+        selectKw,
+        options,
+        columns,
+      });
+    }
+
+select_option
+  = ALL
+  / DISTINCT
+
+select_option$mysql
+  = ALL
+  / DISTINCT
+  / DISTINCTROW
+  / HIGH_PRIORITY
+  / STRAIGHT_JOIN
+  / SQL_CALC_FOUND_ROWS
+  / SQL_CACHE
+  / SQL_NO_CACHE
+  / SQL_BIG_RESULT
+  / SQL_SMALL_RESULT
+  / SQL_BUFFER_RESULT
+
+select_columns
+  = head:column_list_item tail:(__ "," __ column_list_item)* {
+      return readCommaSepList(head, tail);
+    }
+
+column_list_item
+  = fs:fulltext_search {
+    return "[Not implemented]";
+  }
+  / star:star {
+    return loc({
+      type: "column_ref",
+      column: star,
+    });
+  }
+  / table:ident c1:__ "." c2:__ star:star {
+    return  loc({
+      type: "column_ref",
+      table: trailing(table, c1),
+      column: leading(star, c2),
+    });
+  }
+  / expr:expr alias:(__ alias_clause)? {
+    return loc(createAlias(expr, alias));
+  }
+
+star
+  = "*" { return loc({ type: "all_columns" }) }
+
+alias_clause
+  = kw:AS c:__ id:alias_ident {
+    return {
+      asKw: kw,
+      alias: leading(id, c),
+    };
+  }
+  / id:alias_ident {
+    return { alias: id };
+  }
+
+into_clause
+  = INTO __ k:(OUTFILE / DUMPFILE)? __ f:(literal_string / ident) {
+    return "[Not implemented]";
+  }
+
+from_clause
+  = kw:FROM c:__ tables:table_join_list {
+    return loc({
+      type: "from_clause",
+      fromKw: trailing(kw, c),
+      tables,
+    });
+  }
+
+table_to_list
+  = head:table_to_item tail:(__ "," __ table_to_item)* {
+    return "[Not implemented]";
+  }
+
+table_to_item
+  = head:table_ref __ TO __ tail: (table_ref) {
+    return "[Not implemented]";
+  }
+
+index_type
+  = USING __
+  t:(BTREE / HASH) {
+    return "[Not implemented]";
+  }
+
+index_options
+  = head:index_option tail:(__ index_option)* {
+    return "[Not implemented]";
+  }
+
+index_option
+  = k:KEY_BLOCK_SIZE __ e:("=")? __ kbs:literal_numeric {
+    return "[Not implemented]";
+  }
+  / index_type
+  / WITH __ PARSER __ pn:ident_name {
+    return "[Not implemented]";
+  }
+  / k:(VISIBLE / INVISIBLE) {
+    return "[Not implemented]";
+  }
+  / column_option_comment
+
+table_join_list
+  = head:table_base tail:_table_join* {
+    return [head, ...tail];
+  }
+
+_table_join
+  = c:__ join:table_join {
+    return leading(join, c);
+  }
+
+table_join
+  = "," c:__ table:table_base {
+    return loc({
+      type: "join",
+      operator: ",",
+      table: leading(table, c),
+    });
+  }
+  / op:join_op c1:__ t:table_base spec:(c:__ j:join_specification { return leading(j, c) })? {
+    return loc({
+      type: "join",
+      operator: op,
+      table: leading(t, c1),
+      specification: spec || undefined,
+    });
+  }
+
+//NOTE that, the table assigned to `var` shouldn't write in `table_join`
+table_base
+  = DUAL {
+    return "[Not implemented]";
+  }
+  / t:table_ref alias:(__ alias_clause)? {
+    return loc(createAlias(t, alias));
+  }
+  / t:table_in_parens alias:(__ alias_clause)? {
+    return loc(createAlias(t, alias));
+  }
+  / stmt:value_clause __ alias:alias_clause? {
+    return "[Not implemented]";
+  }
+  / "(" __ stmt:value_clause __ ")" __ alias:alias_clause? {
+    return "[Not implemented]";
+  }
+  / t:paren_expr_select alias:(__ alias_clause)? {
+    return loc(createAlias(t, alias));
+  }
+
+table_in_parens
+  = "(" c1:__ t:table_ref c2:__ ")" {
+    return loc(createParenExpr(c1, t, c2));
+  }
+
+join_op
+  = natural_join
+  / cross_join
+  / join_type
+
+join_op$mysql
+  = natural_join
+  / cross_join
+  / join_type
+  / STRAIGHT_JOIN
+
+natural_join
+  = kw:NATURAL c:__ jt:join_type { return [trailing(kw, c), ...jt]; }
+
+cross_join
+  = kws:(CROSS __ JOIN) { return createKeywordList(kws); }
+
+join_type
+  = kws:(LEFT __ OUTER __ JOIN) { return createKeywordList(kws); }
+  / kws:(LEFT __ JOIN) { return createKeywordList(kws); }
+  / kws:(RIGHT __ OUTER __ JOIN) { return createKeywordList(kws); }
+  / kws:(RIGHT __ JOIN) { return createKeywordList(kws); }
+  / kws:(FULL __ OUTER __ JOIN) { return createKeywordList(kws); }
+  / kws:(FULL __ JOIN) { return createKeywordList(kws); }
+  / kws:(INNER __ JOIN) { return createKeywordList(kws); }
+  / kw:JOIN { return createKeywordList([kw]); }
+
+join_type$mysql
+  = kws:(LEFT __ OUTER __ JOIN) { return createKeywordList(kws); }
+  / kws:(LEFT __ JOIN) { return createKeywordList(kws); }
+  / kws:(RIGHT __ OUTER __ JOIN) { return createKeywordList(kws); }
+  / kws:(RIGHT __ JOIN) { return createKeywordList(kws); }
+  / kws:(INNER __ JOIN) { return createKeywordList(kws); }
+  / kw:JOIN { return createKeywordList([kw]); }
+
+join_specification
+  = using_clause / on_clause
+
+using_clause
+  = kw:USING c1:__ expr:using_clause_paren_expr {
+    return loc({
+      type: "join_using_specification",
+      usingKw: kw,
+      expr: leading(expr, c1),
+    });
+  }
+
+using_clause_paren_expr
+  = "(" c1:__ cols:using_clause_columns c2:__ ")" {
+    return loc(createParenExpr(c1, cols, c2));
+  }
+
+using_clause_columns
+  = head:plain_column_ref tail:(__ "," __ plain_column_ref)* {
+     return loc({ type: "expr_list", items: readCommaSepList(head, tail) });
+  }
+
+plain_column_ref
+  = col:column {
+    return loc({ type: "column_ref", column: col });
+  }
+
+on_clause
+  = kw:ON c:__ expr:expr {
+    return loc({
+      type: "join_on_specification",
+      onKw: kw,
+      expr: leading(expr, c),
+    });
+  }
+
+where_clause
+  = kw:WHERE c:__ expr:expr {
+    return loc({
+      type: "where_clause",
+      whereKw: kw,
+      expr: leading(expr, c),
+    });
+  }
+
+group_by_clause
+  = kws:(GROUP __ BY __) list:expr_list {
+    return loc({
+      type: "group_by_clause",
+      groupByKw: createKeywordList(kws),
+      columns: list.items,
+    });
+  }
+
+column_ref_list
+  = head:column_ref tail:(__ "," __ column_ref)* {
+      return "[Not implemented]";
+    }
+
+having_clause
+  = kw:HAVING c:__ expr:expr {
+    return loc({
+      type: "having_clause",
+      havingKw: kw,
+      expr: leading(expr, c),
+    });
+  }
+
+partition_by_clause
+  = kws:(PARTITION __ BY __) list:expr_list {
+    return loc({
+      type: "partition_by_clause",
+      partitionByKw: createKeywordList(kws),
+      specifications: list.items,
+    });
+  }
+
+order_by_clause
+  = kws:(ORDER __ BY __) l:order_by_list {
+    return loc({
+      type: "order_by_clause",
+      orderByKw: createKeywordList(kws),
+      specifications: l,
+    });
+  }
+
+order_by_list
+  = head:order_by_element tail:(__ "," __ order_by_element)* {
+    return readCommaSepList(head, tail);
+  }
+
+order_by_element
+  = e:expr c:__ orderKw:(DESC / ASC) {
+    return loc({
+      type: "sort_specification",
+      expr: trailing(e, c),
+      orderKw,
+    });
+  }
+  / e:expr {
+    return loc({
+      type: "sort_specification",
+      expr: e,
+    });
+  }
+
+limit_clause
+  = kw:LIMIT c1:__ count:expr c2:__ offkw:OFFSET c3:__ offset:expr  {
+    return loc({
+      type: "limit_clause",
+      limitKw: kw,
+      count: surrounding(c1, count, c2),
+      offsetKw: offkw,
+      offset: leading(offset, c3),
+    });
+  }
+  / kw:LIMIT c1:__ offset:expr c2:__ "," c3:__ count:expr  {
+    return loc({
+      type: "limit_clause",
+      limitKw: kw,
+      offset: surrounding(c1, offset, c2),
+      count: leading(count, c3),
+    });
+  }
+  / kw:LIMIT c:__ count:expr {
+    return loc({ type: "limit_clause", limitKw: kw, count: leading(count, c) });
+  }
+
+window_clause
+  = kw:WINDOW c:__ wins:named_window_list {
+    return loc({
+      type: "window_clause",
+      windowKw: trailing(kw, c),
+      namedWindows: wins,
+    });
+  }
+
+named_window_list
+  = head:named_window tail:(__ "," __ named_window)* {
+    return readCommaSepList(head, tail);
+  }
+
+named_window
+  = name:ident c1:__ kw:AS c2:__ def:window_definition_in_parens {
+    return loc({
+      type: "named_window",
+      name: trailing(name, c1),
+      asKw: trailing(kw, c2),
+      window: def,
+    });
+  }
+
+window_definition_in_parens
+  = "(" c1:__ win:window_definition c2:__ ")" {
+    return loc({
+      type: "paren_expr",
+      expr: surrounding(c1, win, c2),
+    });
+  }
+
+window_definition
+  = name:ident?
+    partitionBy:(c:__ cls:partition_by_clause { return leading(cls, c); })?
+    orderBy:(c:__ cls:order_by_clause { return leading(cls, c); })?
+    frame:(c:__ cls:frame_clause { return leading(cls, c); })? {
+      return loc({
+        type: "window_definition",
+        ...(name ? {baseWindowName: name} : {}),
+        ...(partitionBy ? {partitionBy} : {}),
+        ...(orderBy ? {orderBy} : {}),
+        ...(frame ? {frame} : {}),
+      });
+    }
+
+frame_clause
+  = kw:frame_unit c1:__ extent:(frame_bound / frame_between)
+    exclusion:(c:__ ex:frame_exclusion { return leading(ex, c); })? {
+      return loc({
+        type: "frame_clause",
+        unitKw: kw,
+        extent: leading(extent, c1),
+        ...(exclusion ? {exclusion} : {}),
+      });
+    }
+
+frame_unit
+  = ROWS / RANGE
+
+frame_unit$sqlite
+  = ROWS / RANGE / GROUPS
+
+frame_between
+  = bKw:BETWEEN c1:__ begin:frame_bound c2:__ andKw:AND c3:__ end:frame_bound {
+    return loc({
+      type: "frame_between",
+      betweenKw: bKw,
+      begin: surrounding(c1, begin, c2),
+      andKw,
+      end: leading(end, c3),
+    });
+  }
+
+frame_bound
+  = kws:(CURRENT __ ROW) {
+    return loc({ type: "frame_bound_current_row", currentRowKw: createKeywordList(kws) });
+  }
+  / expr:(frame_unbounded / literal) c:__ kw:PRECEDING {
+    return loc({ type: "frame_bound_preceding", expr: trailing(expr, c), precedingKw: kw });
+  }
+  / expr:(frame_unbounded / literal) c:__ kw:FOLLOWING {
+    return loc({ type: "frame_bound_following", expr: trailing(expr, c), followingKw: kw });
+  }
+
+frame_unbounded
+  = kw:UNBOUNDED {
+    return loc({ type: "frame_unbounded", unboundedKw: kw })
+  }
+
+frame_exclusion
+  = kw:EXCLUDE c:__ kindKw:frame_exclusion_kind {
+    return loc({
+      type: "frame_exclusion",
+      excludeKw: trailing(kw, c),
+      kindKw
+    });
+  }
+
+frame_exclusion_kind
+  = kws:(CURRENT __ ROW) { return createKeywordList(kws); }
+  / kws:(NO __ OTHERS) { return createKeywordList(kws); }
+  / GROUP
+  / TIES
+
+locking_read
+  = t:(for_update / lock_in_share_mode) __ lo:lock_option? {
+    return "[Not implemented]";
+  }
+
+for_update
+  = fu:(FOR __ UPDATE) {
+    return "[Not implemented]";
+  }
+
+lock_in_share_mode
+  = m:(LOCK __ IN __ SHARE __ MODE) {
+    return "[Not implemented]";
+  }
+
+lock_option
+  = w:(WAIT __ literal_numeric) { return "[Not implemented]"; }
+  / nw:NOWAIT
+  / sl:(SKIP __ LOCKED) { return "[Not implemented]"; }
+
 create_db_stmt
   = a:CREATE __
     k:(DATABASE / SCHEME) __
@@ -785,523 +1302,6 @@ desc_stmt
   = (DESC / DESCRIBE) __ t:ident {
     return "[Not implemented]";
   }
-
-select_stmt
-  = cte:(cls:with_clause c:__ { return trailing(cls, c); })?
-    select:(c:__ cls:select_clause { return leading(cls, c); })
-    otherClauses:(c:__ cls:other_clause { return leading(cls, c); })* {
-      return loc({
-        type: "select_statement",
-        clauses: [cte, select, ...otherClauses].filter(identity),
-      });
-  }
-
-with_clause
-  = withKw:WITH
-    recursiveKw:(c:__ kw:RECURSIVE { return leading(kw, c) })?
-    c:__ head:common_table_expression tail:(__ "," __ common_table_expression)* {
-      return loc({
-        type: "with_clause",
-        withKw,
-        recursiveKw: nullToUndefined(recursiveKw),
-        tables: leading(readCommaSepList(head, tail), c),
-      });
-    }
-
-common_table_expression
-  = table:ident
-    columns:(c:__ cols:cte_columns_definition { return {cols, c}; })?
-    c1:__ asKw:AS
-    opt:(c:__ op:cte_option { return leading(op, c); })?
-    c2:__ select:paren_expr_select {
-      return loc({
-        type: "common_table_expression",
-        table: columns ? trailing(table, columns.c) : table,
-        columns: columns ? columns.cols : [],
-        asKw: leading(asKw, c1),
-        optionKw: nullToUndefined(opt),
-        expr: leading(select, c2),
-      });
-    }
-
-cte_option
-  = kws:(NOT __ MATERIALIZED) { return createKeywordList(kws); }
-  / MATERIALIZED
-
-cte_columns_definition
-  = "(" c1:__ head:ident tail:(__ "," __ ident)* c2:__ ")" {
-      return surrounding(c1, readCommaSepList(head, tail), c2);
-    }
-
-// Other clauses of SELECT statement (besides WITH & SELECT)
-other_clause
-  = from_clause
-  / where_clause
-  / group_by_clause
-  / having_clause
-  / order_by_clause
-  / limit_clause
-  / locking_read
-  / window_clause
-  / into_clause
-
-select_clause
-  = selectKw:SELECT
-    options:(c:__ kw:select_option { return leading(kw, c) })*
-    columns:(c:__ cls:select_columns { return leading(cls, c) }) {
-      return loc({
-        type: "select_clause",
-        selectKw,
-        options,
-        columns,
-      });
-    }
-
-select_option
-  = ALL
-  / DISTINCT
-
-select_option$mysql
-  = ALL
-  / DISTINCT
-  / DISTINCTROW
-  / HIGH_PRIORITY
-  / STRAIGHT_JOIN
-  / SQL_CALC_FOUND_ROWS
-  / SQL_CACHE
-  / SQL_NO_CACHE
-  / SQL_BIG_RESULT
-  / SQL_SMALL_RESULT
-  / SQL_BUFFER_RESULT
-
-select_columns
-  = head:column_list_item tail:(__ "," __ column_list_item)* {
-      return readCommaSepList(head, tail);
-    }
-
-column_list_item
-  = fs:fulltext_search {
-    return "[Not implemented]";
-  }
-  / star:star {
-    return loc({
-      type: "column_ref",
-      column: star,
-    });
-  }
-  / table:ident c1:__ "." c2:__ star:star {
-    return  loc({
-      type: "column_ref",
-      table: trailing(table, c1),
-      column: leading(star, c2),
-    });
-  }
-  / expr:expr alias:(__ alias_clause)? {
-    return loc(createAlias(expr, alias));
-  }
-
-star
-  = "*" { return loc({ type: "all_columns" }) }
-
-alias_clause
-  = kw:AS c:__ id:alias_ident {
-    return {
-      asKw: kw,
-      alias: leading(id, c),
-    };
-  }
-  / id:alias_ident {
-    return { alias: id };
-  }
-
-into_clause
-  = INTO __ k:(OUTFILE / DUMPFILE)? __ f:(literal_string / ident) {
-    return "[Not implemented]";
-  }
-
-from_clause
-  = kw:FROM c:__ tables:table_join_list {
-    return loc({
-      type: "from_clause",
-      fromKw: trailing(kw, c),
-      tables,
-    });
-  }
-
-table_to_list
-  = head:table_to_item tail:(__ "," __ table_to_item)* {
-    return "[Not implemented]";
-  }
-
-table_to_item
-  = head:table_ref __ TO __ tail: (table_ref) {
-    return "[Not implemented]";
-  }
-
-index_type
-  = USING __
-  t:(BTREE / HASH) {
-    return "[Not implemented]";
-  }
-
-index_options
-  = head:index_option tail:(__ index_option)* {
-    return "[Not implemented]";
-  }
-
-index_option
-  = k:KEY_BLOCK_SIZE __ e:("=")? __ kbs:literal_numeric {
-    return "[Not implemented]";
-  }
-  / index_type
-  / WITH __ PARSER __ pn:ident_name {
-    return "[Not implemented]";
-  }
-  / k:(VISIBLE / INVISIBLE) {
-    return "[Not implemented]";
-  }
-  / column_option_comment
-
-table_join_list
-  = head:table_base tail:_table_join* {
-    return [head, ...tail];
-  }
-
-_table_join
-  = c:__ join:table_join {
-    return leading(join, c);
-  }
-
-table_join
-  = "," c:__ table:table_base {
-    return loc({
-      type: "join",
-      operator: ",",
-      table: leading(table, c),
-    });
-  }
-  / op:join_op c1:__ t:table_base spec:(c:__ j:join_specification { return leading(j, c) })? {
-    return loc({
-      type: "join",
-      operator: op,
-      table: leading(t, c1),
-      specification: spec || undefined,
-    });
-  }
-
-//NOTE that, the table assigned to `var` shouldn't write in `table_join`
-table_base
-  = DUAL {
-    return "[Not implemented]";
-  }
-  / t:table_ref alias:(__ alias_clause)? {
-    return loc(createAlias(t, alias));
-  }
-  / t:table_in_parens alias:(__ alias_clause)? {
-    return loc(createAlias(t, alias));
-  }
-  / stmt:value_clause __ alias:alias_clause? {
-    return "[Not implemented]";
-  }
-  / "(" __ stmt:value_clause __ ")" __ alias:alias_clause? {
-    return "[Not implemented]";
-  }
-  / t:paren_expr_select alias:(__ alias_clause)? {
-    return loc(createAlias(t, alias));
-  }
-
-table_in_parens
-  = "(" c1:__ t:table_ref c2:__ ")" {
-    return loc(createParenExpr(c1, t, c2));
-  }
-
-join_op
-  = natural_join
-  / cross_join
-  / join_type
-
-join_op$mysql
-  = natural_join
-  / cross_join
-  / join_type
-  / STRAIGHT_JOIN
-
-natural_join
-  = kw:NATURAL c:__ jt:join_type { return [trailing(kw, c), ...jt]; }
-
-cross_join
-  = kws:(CROSS __ JOIN) { return createKeywordList(kws); }
-
-join_type
-  = kws:(LEFT __ OUTER __ JOIN) { return createKeywordList(kws); }
-  / kws:(LEFT __ JOIN) { return createKeywordList(kws); }
-  / kws:(RIGHT __ OUTER __ JOIN) { return createKeywordList(kws); }
-  / kws:(RIGHT __ JOIN) { return createKeywordList(kws); }
-  / kws:(FULL __ OUTER __ JOIN) { return createKeywordList(kws); }
-  / kws:(FULL __ JOIN) { return createKeywordList(kws); }
-  / kws:(INNER __ JOIN) { return createKeywordList(kws); }
-  / kw:JOIN { return createKeywordList([kw]); }
-
-join_type$mysql
-  = kws:(LEFT __ OUTER __ JOIN) { return createKeywordList(kws); }
-  / kws:(LEFT __ JOIN) { return createKeywordList(kws); }
-  / kws:(RIGHT __ OUTER __ JOIN) { return createKeywordList(kws); }
-  / kws:(RIGHT __ JOIN) { return createKeywordList(kws); }
-  / kws:(INNER __ JOIN) { return createKeywordList(kws); }
-  / kw:JOIN { return createKeywordList([kw]); }
-
-join_specification
-  = using_clause / on_clause
-
-using_clause
-  = kw:USING c1:__ expr:using_clause_paren_expr {
-    return loc({
-      type: "join_using_specification",
-      usingKw: kw,
-      expr: leading(expr, c1),
-    });
-  }
-
-using_clause_paren_expr
-  = "(" c1:__ cols:using_clause_columns c2:__ ")" {
-    return loc(createParenExpr(c1, cols, c2));
-  }
-
-using_clause_columns
-  = head:plain_column_ref tail:(__ "," __ plain_column_ref)* {
-     return loc({ type: "expr_list", items: readCommaSepList(head, tail) });
-  }
-
-plain_column_ref
-  = col:column {
-    return loc({ type: "column_ref", column: col });
-  }
-
-on_clause
-  = kw:ON c:__ expr:expr {
-    return loc({
-      type: "join_on_specification",
-      onKw: kw,
-      expr: leading(expr, c),
-    });
-  }
-
-where_clause
-  = kw:WHERE c:__ expr:expr {
-    return loc({
-      type: "where_clause",
-      whereKw: kw,
-      expr: leading(expr, c),
-    });
-  }
-
-group_by_clause
-  = kws:(GROUP __ BY __) list:expr_list {
-    return loc({
-      type: "group_by_clause",
-      groupByKw: createKeywordList(kws),
-      columns: list.items,
-    });
-  }
-
-column_ref_list
-  = head:column_ref tail:(__ "," __ column_ref)* {
-      return "[Not implemented]";
-    }
-
-having_clause
-  = kw:HAVING c:__ expr:expr {
-    return loc({
-      type: "having_clause",
-      havingKw: kw,
-      expr: leading(expr, c),
-    });
-  }
-
-partition_by_clause
-  = kws:(PARTITION __ BY __) list:expr_list {
-    return loc({
-      type: "partition_by_clause",
-      partitionByKw: createKeywordList(kws),
-      specifications: list.items,
-    });
-  }
-
-order_by_clause
-  = kws:(ORDER __ BY __) l:order_by_list {
-    return loc({
-      type: "order_by_clause",
-      orderByKw: createKeywordList(kws),
-      specifications: l,
-    });
-  }
-
-order_by_list
-  = head:order_by_element tail:(__ "," __ order_by_element)* {
-    return readCommaSepList(head, tail);
-  }
-
-order_by_element
-  = e:expr c:__ orderKw:(DESC / ASC) {
-    return loc({
-      type: "sort_specification",
-      expr: trailing(e, c),
-      orderKw,
-    });
-  }
-  / e:expr {
-    return loc({
-      type: "sort_specification",
-      expr: e,
-    });
-  }
-
-limit_clause
-  = kw:LIMIT c1:__ count:expr c2:__ offkw:OFFSET c3:__ offset:expr  {
-    return loc({
-      type: "limit_clause",
-      limitKw: kw,
-      count: surrounding(c1, count, c2),
-      offsetKw: offkw,
-      offset: leading(offset, c3),
-    });
-  }
-  / kw:LIMIT c1:__ offset:expr c2:__ "," c3:__ count:expr  {
-    return loc({
-      type: "limit_clause",
-      limitKw: kw,
-      offset: surrounding(c1, offset, c2),
-      count: leading(count, c3),
-    });
-  }
-  / kw:LIMIT c:__ count:expr {
-    return loc({ type: "limit_clause", limitKw: kw, count: leading(count, c) });
-  }
-
-window_clause
-  = kw:WINDOW c:__ wins:named_window_list {
-    return loc({
-      type: "window_clause",
-      windowKw: trailing(kw, c),
-      namedWindows: wins,
-    });
-  }
-
-named_window_list
-  = head:named_window tail:(__ "," __ named_window)* {
-    return readCommaSepList(head, tail);
-  }
-
-named_window
-  = name:ident c1:__ kw:AS c2:__ def:window_definition_in_parens {
-    return loc({
-      type: "named_window",
-      name: trailing(name, c1),
-      asKw: trailing(kw, c2),
-      window: def,
-    });
-  }
-
-window_definition_in_parens
-  = "(" c1:__ win:window_definition c2:__ ")" {
-    return loc({
-      type: "paren_expr",
-      expr: surrounding(c1, win, c2),
-    });
-  }
-
-window_definition
-  = name:ident?
-    partitionBy:(c:__ cls:partition_by_clause { return leading(cls, c); })?
-    orderBy:(c:__ cls:order_by_clause { return leading(cls, c); })?
-    frame:(c:__ cls:frame_clause { return leading(cls, c); })? {
-      return loc({
-        type: "window_definition",
-        ...(name ? {baseWindowName: name} : {}),
-        ...(partitionBy ? {partitionBy} : {}),
-        ...(orderBy ? {orderBy} : {}),
-        ...(frame ? {frame} : {}),
-      });
-    }
-
-frame_clause
-  = kw:frame_unit c1:__ extent:(frame_bound / frame_between)
-    exclusion:(c:__ ex:frame_exclusion { return leading(ex, c); })? {
-      return loc({
-        type: "frame_clause",
-        unitKw: kw,
-        extent: leading(extent, c1),
-        ...(exclusion ? {exclusion} : {}),
-      });
-    }
-
-frame_unit
-  = ROWS / RANGE
-
-frame_unit$sqlite
-  = ROWS / RANGE / GROUPS
-
-frame_between
-  = bKw:BETWEEN c1:__ begin:frame_bound c2:__ andKw:AND c3:__ end:frame_bound {
-    return loc({
-      type: "frame_between",
-      betweenKw: bKw,
-      begin: surrounding(c1, begin, c2),
-      andKw,
-      end: leading(end, c3),
-    });
-  }
-
-frame_bound
-  = kws:(CURRENT __ ROW) {
-    return loc({ type: "frame_bound_current_row", currentRowKw: createKeywordList(kws) });
-  }
-  / expr:(frame_unbounded / literal) c:__ kw:PRECEDING {
-    return loc({ type: "frame_bound_preceding", expr: trailing(expr, c), precedingKw: kw });
-  }
-  / expr:(frame_unbounded / literal) c:__ kw:FOLLOWING {
-    return loc({ type: "frame_bound_following", expr: trailing(expr, c), followingKw: kw });
-  }
-
-frame_unbounded
-  = kw:UNBOUNDED {
-    return loc({ type: "frame_unbounded", unboundedKw: kw })
-  }
-
-frame_exclusion
-  = kw:EXCLUDE c:__ kindKw:frame_exclusion_kind {
-    return loc({
-      type: "frame_exclusion",
-      excludeKw: trailing(kw, c),
-      kindKw
-    });
-  }
-
-frame_exclusion_kind
-  = kws:(CURRENT __ ROW) { return createKeywordList(kws); }
-  / kws:(NO __ OTHERS) { return createKeywordList(kws); }
-  / GROUP
-  / TIES
-
-locking_read
-  = t:(for_update / lock_in_share_mode) __ lo:lock_option? {
-    return "[Not implemented]";
-  }
-
-for_update
-  = fu:(FOR __ UPDATE) {
-    return "[Not implemented]";
-  }
-
-lock_in_share_mode
-  = m:(LOCK __ IN __ SHARE __ MODE) {
-    return "[Not implemented]";
-  }
-
-lock_option
-  = w:(WAIT __ literal_numeric) { return "[Not implemented]"; }
-  / nw:NOWAIT
-  / sl:(SKIP __ LOCKED) { return "[Not implemented]"; }
 
 update_stmt
   = UPDATE    __
