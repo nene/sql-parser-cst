@@ -295,7 +295,7 @@ type InsertStatement = BaseNode & {
   intoKw?: Keyword;
   table: TableRef;
   columns?: ParenExpr<ExprList<ColumnRef>>;
-  values: ValuesClause;
+  source: ValuesClause | SubSelect;
 };
 
 type ValuesClause = BaseNode & {

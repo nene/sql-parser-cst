@@ -1415,7 +1415,7 @@ replace_insert_stmt
     table:(c:__ t:table_ref { return leading(t, c); })
     p:(__ insert_partition)?
     columns:(c:__ cols:column_list_in_parens { return leading(cols, c); })?
-    values:(c:__ v:values_clause { return leading(v, c); })
+    source:(c:__ src:insert_source { return leading(src, c); })
     odp:(__ on_duplicate_update_stmt)? {
       return loc({
         type: "insert_statement",
@@ -1423,9 +1423,13 @@ replace_insert_stmt
         intoKw: nullToUndefined(intoKw),
         table,
         columns: nullToUndefined(columns),
-        values,
+        source,
       });
     }
+
+insert_source
+  = values_clause
+  / compound_select_stmt
 
 values_clause
   = kw:VALUES c:__ values:values_list {
