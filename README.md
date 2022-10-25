@@ -6,6 +6,27 @@ Unlike a more usual parser which produces an Abstract Syntax Tree (AST),
 this parser preserves all the syntax elements present in the parsed source code,
 with the goal of being able to re-create the exact original source code.
 
+## Usage
+
+```ts
+import { parse, show } from "sql-parser-cst";
+
+const cst = parse("SELECT * FROM my_table", {
+  dialect: "sqlite",
+  // These are optional:
+  preserveSpaces: true, // Adds spaces/tabs
+  preserveNewlines: true, // Adds newlines
+  preserveComments: true, // Adds comments
+  includeRange: true, // Adds source code location data
+});
+
+// Change table name
+cst.statements[0].clauses[1].tables[0].table.text = "your_table";
+
+// Serialize back to SQL
+show(cst); // --> SELECT * FROM your_table
+```
+
 ## AST versus CST-parsers
 
 For example, given the following SQL:
