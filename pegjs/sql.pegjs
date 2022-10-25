@@ -1475,8 +1475,26 @@ values_kw = VALUES
 values_kw$mysql = VALUES / VALUE
 
 values_list
-  = head:paren_expr_list tail:(__ "," __ paren_expr_list)* {
+  = head:values_row tail:(__ "," __ values_row)* {
     return loc({ type: "expr_list", items: readCommaSepList(head, tail) });
+  }
+
+values_row
+  = paren_expr_list
+
+values_row$mysql
+  = "(" c1:__ list:expr_list_with_default c2:__ ")" {
+    return loc(createParenExpr(c1, list, c2));
+  }
+
+expr_list_with_default
+  = head:(expr / default) tail:(__ "," __ (expr / default))* {
+    return loc({ type: "expr_list", items: readCommaSepList(head, tail) });
+  }
+
+default
+  = kw:DEFAULT {
+    return loc({ type: "default", kw });
   }
 
 default_values

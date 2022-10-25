@@ -146,6 +146,7 @@ const showNode = cstTransformer<string>({
     ]),
   insert_option: (node) => show(node.kw),
   default_values: (node) => show(node.kw),
+  default: (node) => show(node.kw),
 
   // Expressions
   expr_list: (node) => show(node.items, ","),

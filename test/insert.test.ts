@@ -56,6 +56,12 @@ describe("insert into", () => {
   });
 
   dialect("mysql", () => {
+    it("supports explicit default values for columns", () => {
+      test("INSERT INTO tbl VALUES (1, DEFAULT, 3)");
+    });
+  });
+
+  dialect("mysql", () => {
     it("supports priority options", () => {
       test("INSERT LOW_PRIORITY INTO tbl VALUES (1)");
       test("INSERT DELAYED INTO tbl VALUES (1)");

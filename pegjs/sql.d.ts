@@ -33,6 +33,7 @@ type Node =
   | CaseWhen
   | CaseElse
   | DefaultValues
+  | Default
   | InsertOption
   | Alias;
 
@@ -311,12 +312,17 @@ type InsertOption = BaseNode & {
 type ValuesClause = BaseNode & {
   type: "values_clause";
   valuesKw: Keyword; // VALUES | VALUE
-  values: ExprList<ParenExpr<ExprList<Expr>>>;
+  values: ExprList<ParenExpr<ExprList<Expr | Default>>>;
 };
 
 type DefaultValues = BaseNode & {
   type: "default_values";
   kw: Keyword[]; // DEFAULT VALUES
+};
+
+type Default = BaseNode & {
+  type: "default";
+  kw: Keyword[]; // DEFAULT
 };
 
 // Window frame
