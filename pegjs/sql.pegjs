@@ -1423,7 +1423,6 @@ insert_stmt
     options:(c:__ opts:insert_options { return leading(opts, c) })?
     intoKw:(c:__ kw:INTO { return leading(kw, c) })?
     table:(c:__ t:table_ref_or_explicit_alias { return leading(t, c); })
-    p:(__ insert_partition)?
     columns:(c:__ cols:column_list_in_parens { return leading(cols, c); })?
     source:(c:__ src:insert_source { return leading(src, c); })
     odp:(__ on_duplicate_update_stmt)? {
@@ -1485,19 +1484,10 @@ values_list
 default_values
   = kws:(DEFAULT __ VALUES) { return createKeywordList(kws); }
 
-insert_partition
-  = PARTITION __ "(" __ head:ident_name tail:(__ "," __ ident_name)* __ ")" {
-    return "[Not implemented]";
-  }
-  / PARTITION __ v: value_item {
-    return "[Not implemented]";
-  }
-
 insert_set_stmt
   = ri:(INSERT / REPLACE) __
     INTO __
     t:table_ref  __
-    p:insert_partition? __
     SET       __
     l:set_list   __
     odp:on_duplicate_update_stmt? {
@@ -1506,11 +1496,6 @@ insert_set_stmt
 
 on_duplicate_update_stmt
   = ON __ DUPLICATE __ KEY __ UPDATE __ s:set_list {
-    return "[Not implemented]";
-  }
-
-value_item
-  = ROW? __ "(" __ l:expr_list  __ ")" {
     return "[Not implemented]";
   }
 
