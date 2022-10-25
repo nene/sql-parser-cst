@@ -3,15 +3,15 @@ import { parse as mysql } from "../pegjs/dialects/mysql";
 import { parse as sqlite } from "../pegjs/dialects/sqlite";
 import { show as showSql } from "./show";
 
-export type DialectOption = { dialect?: "mysql" | "sqlite" };
+export type DialectOption = { dialect: "mysql" | "sqlite" };
 
 export { ParserOptions };
 
 export function parse(
   sql: string,
-  options: ParserOptions & DialectOption = {}
+  options: ParserOptions & DialectOption
 ): Program {
-  switch (options.dialect || "mysql") {
+  switch (options.dialect) {
     case "mysql":
       return mysql(sql, options);
     case "sqlite":
