@@ -240,6 +240,9 @@ select_stmt
       });
   }
 
+/**
+ * SELECT .. WITH
+ */
 with_clause
   = withKw:WITH
     recursiveKw:(c:__ kw:RECURSIVE { return leading(kw, c) })?
@@ -289,6 +292,9 @@ other_clause
   / window_clause
   / into_clause
 
+/**
+ * SELECT .. columns
+ */
 select_clause
   = selectKw:SELECT
     options:(c:__ kw:select_option { return leading(kw, c) })*
@@ -358,11 +364,17 @@ alias_clause
     return { alias: id };
   }
 
+/**
+ * SELECT .. INTO
+ */
 into_clause
   = INTO __ k:(OUTFILE / DUMPFILE)? __ f:(literal_string / ident) {
     return "[Not implemented]";
   }
 
+/**
+ * SELECT .. FROM
+ */
 from_clause
   = kw:FROM c:__ tables:table_join_list {
     return loc({
@@ -530,6 +542,9 @@ on_clause
     });
   }
 
+/**
+ * SELECT .. WHERE
+ */
 where_clause
   = kw:WHERE c:__ expr:expr {
     return loc({
@@ -539,6 +554,9 @@ where_clause
     });
   }
 
+/**
+ * SELECT .. GROUP BY
+ */
 group_by_clause
   = kws:(GROUP __ BY __) list:expr_list {
     return loc({
@@ -553,6 +571,9 @@ column_ref_list
       return "[Not implemented]";
     }
 
+/**
+ * SELECT .. HAVING
+ */
 having_clause
   = kw:HAVING c:__ expr:expr {
     return loc({
@@ -562,6 +583,9 @@ having_clause
     });
   }
 
+/**
+ * SELECT .. PARTITION BY
+ */
 partition_by_clause
   = kws:(PARTITION __ BY __) list:expr_list {
     return loc({
@@ -571,6 +595,9 @@ partition_by_clause
     });
   }
 
+/**
+ * SELECT .. ORDER BY
+ */
 order_by_clause
   = kws:(ORDER __ BY __) l:order_by_list {
     return loc({
@@ -600,6 +627,9 @@ order_by_element
     });
   }
 
+/**
+ * SELECT .. LIMIT
+ */
 limit_clause
   = kw:LIMIT c1:__ count:expr c2:__ offkw:OFFSET c3:__ offset:expr  {
     return loc({
@@ -622,6 +652,9 @@ limit_clause
     return loc({ type: "limit_clause", limitKw: kw, count: leading(count, c) });
   }
 
+/**
+ * SELECT .. WINDOW
+ */
 window_clause
   = kw:WINDOW c:__ wins:named_window_list {
     return loc({
@@ -727,6 +760,10 @@ frame_exclusion_kind
   / GROUP
   / TIES
 
+/**
+ * SELECT .. FOR UPDATE
+ * SELECT .. LOCK IN SHARE MODE
+ */
 locking_read
   = t:(for_update / lock_in_share_mode) __ lo:lock_option? {
     return "[Not implemented]";
