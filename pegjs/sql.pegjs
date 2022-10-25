@@ -345,14 +345,14 @@ column_list_item
       column: leading(star, c2),
     });
   }
-  / expr:expr alias:(__ alias_clause)? {
+  / expr:expr alias:(__ alias)? {
     return loc(createAlias(expr, alias));
   }
 
 star
   = "*" { return loc({ type: "all_columns" }) }
 
-alias_clause
+alias
   = explicit_alias
   / implicit_alias
 
@@ -456,21 +456,21 @@ table_base
     return "[Not implemented]";
   }
   / table_ref_or_alias
-  / t:table_in_parens alias:(__ alias_clause)? {
+  / t:table_in_parens alias:(__ alias)? {
     return loc(createAlias(t, alias));
   }
-  / stmt:values_clause __ alias:alias_clause? {
+  / stmt:values_clause __ alias:alias? {
     return "[Not implemented]";
   }
-  / "(" __ stmt:values_clause __ ")" __ alias:alias_clause? {
+  / "(" __ stmt:values_clause __ ")" __ alias:alias? {
     return "[Not implemented]";
   }
-  / t:paren_expr_select alias:(__ alias_clause)? {
+  / t:paren_expr_select alias:(__ alias)? {
     return loc(createAlias(t, alias));
   }
 
 table_ref_or_alias
-  = t:table_ref alias:(__ alias_clause)? {
+  = t:table_ref alias:(__ alias)? {
     return loc(createAlias(t, alias));
   }
 
@@ -1939,7 +1939,7 @@ interval_unit
   / MICROSECOND
 
 fulltext_search
-  = MATCH __ "(" __ c:column_ref_list __ ")" __ AGAINST __ "(" __ e:expr __ mo:fulltext_search_mode? __ ")" __ as:alias_clause? {
+  = MATCH __ "(" __ c:column_ref_list __ ")" __ AGAINST __ "(" __ e:expr __ mo:fulltext_search_mode? __ ")" __ as:alias? {
     return "[Not implemented]";
   }
 
