@@ -295,7 +295,7 @@ type DropTableStatement = BaseNode & {
 
 type InsertStatement = BaseNode & {
   type: "insert_statement";
-  insertKw: Keyword;
+  insertKw: Keyword; // INSERT | REPLACE
   options: InsertOption[];
   intoKw?: Keyword;
   table: TableRef | Alias<TableRef>;

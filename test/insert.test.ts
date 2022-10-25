@@ -6,9 +6,19 @@ describe("insert into", () => {
     test("INSERT INTO db.tbl VALUES (1, 2, 3)");
   });
 
+  dialect(["mysql", "sqlite"], () => {
+    // The REPLACE syntax is otherwise exactly the same as INSERT
+    it("supports REPLACE INTO", () => {
+      test("REPLACE INTO tbl VALUES (1, 2, 3)");
+    });
+  });
+
   dialect("mysql", () => {
     it("supports INSERT without INTO", () => {
       test("INSERT tbl VALUES (1, 2, 3)");
+    });
+    it("supports REPLACE without INTO", () => {
+      test("REPLACE tbl VALUES (1, 2, 3)");
     });
   });
 
