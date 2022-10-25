@@ -204,6 +204,9 @@ empty_stmt
     return trailing(loc({ type: "empty_statement" }), c);
   }
 
+/**
+ * SELECT
+ */
 compound_select_stmt
   = head:intersect_select_stmt tail:(__ compound_op __ intersect_select_stmt)* {
     return createBinaryExprChain(head, tail, "compound_select_statement");
@@ -744,6 +747,9 @@ lock_option
   / nw:NOWAIT
   / sl:(SKIP __ LOCKED) { return "[Not implemented]"; }
 
+/**
+ * CREATE DATABASE
+ */
 create_db_stmt
   = a:CREATE __
     k:(DATABASE / SCHEME) __
@@ -758,6 +764,9 @@ create_db_definition
     return "[Not implemented]";
   }
 
+/**
+ * CREATE VIEW
+ */
 create_view_stmt
   = a:CREATE __
   or:(OR __ REPLACE)? __
@@ -778,6 +787,9 @@ view_with
     return "[Not implemented]";
   }
 
+/**
+ * CREATE INDEX
+ */
 create_index_stmt
   = a:CREATE __
   kw:(UNIQUE / FULLTEXT / SPATIAL)? __
@@ -809,6 +821,9 @@ column_order
     return "[Not implemented]";
   }
 
+/**
+ * CREATE TABLE
+ */
 create_table_stmt
   = a:CREATE __
     tp:TEMPORARY? __
@@ -946,6 +961,9 @@ drop_index_opt
 if_exists
   = kws:(IF __ EXISTS) { return createKeywordList(kws); }
 
+/**
+ * DROP TABLE
+ */
 drop_table_stmt
   = dropKw:(kw:DROP c:__ { return trailing(kw, c); })
     temporaryKw:(kw:TEMPORARY c:__ { return trailing(kw, c); })?
@@ -965,6 +983,9 @@ drop_table_stmt
       });
     }
 
+/**
+ * DROP INDEX
+ */
 drop_index_stmt
   = a:DROP __
     r:INDEX __
@@ -975,6 +996,9 @@ drop_index_stmt
       return "[Not implemented]";
     }
 
+/**
+ * TRUNCATE TABLE
+ */
 truncate_stmt
   = a:TRUNCATE  __
     kw:TABLE? __
@@ -982,12 +1006,18 @@ truncate_stmt
       return "[Not implemented]";
     }
 
+/**
+ * USE
+ */
 use_stmt
   = USE  __
     d:ident {
       return "[Not implemented]";
     }
 
+/**
+ * ALTER TABLE
+ */
 alter_table_stmt
   = ALTER  __
     TABLE __
@@ -1228,6 +1258,9 @@ alter_add_fulletxt_sparital_index
       return "[Not implemented]";
     }
 
+/**
+ * RENAME TABLE
+ */
 rename_stmt
   = RENAME  __
     TABLE __
@@ -1235,8 +1268,29 @@ rename_stmt
       return "[Not implemented]";
     }
 
+/**
+ * UNLOCK TABLES
+ */
 unlock_stmt
   = UNLOCK __ TABLES {
+    return "[Not implemented]";
+  }
+
+/**
+ * LOCK TABLES
+ */
+lock_stmt
+  = LOCK __ TABLES __ ltl:lock_table_list {
+    return "[Not implemented]";
+  }
+
+lock_table_list
+  = head:lock_table tail:(__ "," __ lock_table)* {
+    return "[Not implemented]";
+  }
+
+lock_table
+  = t:table_base __ lt:lock_type {
     return "[Not implemented]";
   }
 
@@ -1248,21 +1302,9 @@ lock_type
     return "[Not implemented]";
   }
 
-lock_table
-  = t:table_base __ lt:lock_type {
-    return "[Not implemented]";
-  }
-
-lock_table_list
-  = head:lock_table tail:(__ "," __ lock_table)* {
-    return "[Not implemented]";
-  }
-
-lock_stmt
-  = LOCK __ TABLES __ ltl:lock_table_list {
-    return "[Not implemented]";
-  }
-
+/**
+ * SHOW
+ */
 show_stmt
   = SHOW __ t:(BINARY / MASTER) __ LOGS {
     return "[Not implemented]";
@@ -1298,11 +1340,17 @@ show_grant_for_using_list
     return "[Not implemented]";
   }
 
+/**
+ * DESCRIBE
+ */
 desc_stmt
   = (DESC / DESCRIBE) __ t:ident {
     return "[Not implemented]";
   }
 
+/**
+ * UPDATE
+ */
 update_stmt
   = UPDATE    __
     t:table_ref_list __
@@ -1311,16 +1359,6 @@ update_stmt
     w:where_clause? __
     or:order_by_clause? __
     lc:limit_clause? {
-      return "[Not implemented]";
-    }
-
-delete_stmt
-  = DELETE    __
-    t: table_ref_list? __
-    f:from_clause __
-    w:where_clause? __
-    or:order_by_clause? __
-    l:limit_clause? {
       return "[Not implemented]";
     }
 
@@ -1339,6 +1377,33 @@ set_item
     return "[Not implemented]";
   }
 
+/**
+ * DELETE
+ */
+delete_stmt
+  = DELETE    __
+    t: table_ref_list? __
+    f:from_clause __
+    w:where_clause? __
+    or:order_by_clause? __
+    l:limit_clause? {
+      return "[Not implemented]";
+    }
+
+/**
+ * INSERT INTO
+ */
+replace_insert_stmt
+  = ri:replace_insert       __
+    ig:IGNORE?  __
+    it:INTO? __
+    t:table_ref  __
+    p:insert_partition? __ "(" __ c:column_list  __ ")" __
+    v:insert_value_clause __
+    odp:on_duplicate_update_stmt? {
+      return "[Not implemented]";
+    }
+
 insert_value_clause
   = value_clause
   / select_stmt
@@ -1350,17 +1415,6 @@ insert_partition
   / PARTITION __ v: value_item {
     return "[Not implemented]";
   }
-
-replace_insert_stmt
-  = ri:replace_insert       __
-    ig:IGNORE?  __
-    it:INTO? __
-    t:table_ref  __
-    p:insert_partition? __ "(" __ c:column_list  __ ")" __
-    v:insert_value_clause __
-    odp:on_duplicate_update_stmt? {
-      return "[Not implemented]";
-    }
 
 insert_no_columns_stmt
   = ri:replace_insert __
