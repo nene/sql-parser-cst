@@ -786,26 +786,6 @@ desc_stmt
     return "[Not implemented]";
   }
 
-for_update
-  = fu:(FOR __ UPDATE) {
-    return "[Not implemented]";
-  }
-
-lock_in_share_mode
-  = m:(LOCK __ IN __ SHARE __ MODE) {
-    return "[Not implemented]";
-  }
-
-lock_option
-  = w:(WAIT __ literal_numeric) { return "[Not implemented]"; }
-  / nw:NOWAIT
-  / sl:(SKIP __ LOCKED) { return "[Not implemented]"; }
-
-locking_read
-  = t:(for_update / lock_in_share_mode) __ lo:lock_option? {
-    return "[Not implemented]";
-  }
-
 select_stmt
   = cte:(cls:with_clause c:__ { return trailing(cls, c); })?
     select:(c:__ cls:select_clause { return leading(cls, c); })
@@ -1302,6 +1282,26 @@ frame_exclusion_kind
   / kws:(NO __ OTHERS) { return createKeywordList(kws); }
   / GROUP
   / TIES
+
+locking_read
+  = t:(for_update / lock_in_share_mode) __ lo:lock_option? {
+    return "[Not implemented]";
+  }
+
+for_update
+  = fu:(FOR __ UPDATE) {
+    return "[Not implemented]";
+  }
+
+lock_in_share_mode
+  = m:(LOCK __ IN __ SHARE __ MODE) {
+    return "[Not implemented]";
+  }
+
+lock_option
+  = w:(WAIT __ literal_numeric) { return "[Not implemented]"; }
+  / nw:NOWAIT
+  / sl:(SKIP __ LOCKED) { return "[Not implemented]"; }
 
 update_stmt
   = UPDATE    __
