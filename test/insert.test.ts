@@ -1,4 +1,4 @@
-import { test } from "./test_utils";
+import { dialect, test } from "./test_utils";
 
 describe("insert into", () => {
   it("supports INSERT INTO with values", () => {
@@ -13,5 +13,11 @@ describe("insert into", () => {
 
   it("supports multiple values", () => {
     test("INSERT INTO tbl VALUES (1, 2, 3), (4, 5, 6), (7, 8, 9)");
+  });
+
+  dialect("mysql", () => {
+    it("supports INSERT without INTO", () => {
+      test("INSERT tbl VALUES (1, 2, 3)");
+    });
   });
 });

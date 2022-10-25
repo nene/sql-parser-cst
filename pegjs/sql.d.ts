@@ -291,7 +291,8 @@ type DropTableStatement = BaseNode & {
 
 type InsertStatement = BaseNode & {
   type: "insert_statement";
-  insertKw: Keyword | Keyword[]; // INSERT [INTO]
+  insertKw: Keyword;
+  intoKw?: Keyword;
   table: TableRef;
   columns?: ParenExpr<ExprList<ColumnRef>>;
   values: ValuesClause;

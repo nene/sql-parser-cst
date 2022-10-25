@@ -1410,7 +1410,8 @@ delete_stmt
  * INSERT INTO
  */
 replace_insert_stmt
-  = kws:((INSERT / REPLACE) __ INTO)
+  = insertKw:(INSERT / REPLACE)
+    intoKw:(c:__ kw:INTO { return leading(kw, c) })?
     table:(c:__ t:table_ref { return leading(t, c); })
     p:(__ insert_partition)?
     columns:(c:__ cols:column_list_in_parens { return leading(cols, c); })?
@@ -1418,7 +1419,8 @@ replace_insert_stmt
     odp:(__ on_duplicate_update_stmt)? {
       return loc({
         type: "insert_statement",
-        insertKw: createKeywordList(kws),
+        insertKw,
+        intoKw: nullToUndefined(intoKw),
         table,
         columns: nullToUndefined(columns),
         values,
