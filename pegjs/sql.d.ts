@@ -32,7 +32,8 @@ type Node =
   | FrameNode
   | CaseWhen
   | CaseElse
-  | DefaultValues;
+  | DefaultValues
+  | Alias;
 
 type Program = BaseNode & {
   type: "program";
@@ -48,7 +49,6 @@ type Statement =
   | InsertStatement;
 
 type Expr =
-  | Alias
   | ExprList
   | ParenExpr
   | BinaryExpr
@@ -127,13 +127,13 @@ type SelectClause = BaseNode & {
   type: "select_clause";
   selectKw: Keyword;
   options: Keyword[];
-  columns: Expr[];
+  columns: (Expr | Alias<Expr>)[];
 };
 
 type FromClause = BaseNode & {
   type: "from_clause";
   fromKw: Keyword;
-  tables: (Expr | Join)[];
+  tables: (JoinTable | Alias<JoinTable> | Join)[];
 };
 
 type WhereClause = BaseNode & {
@@ -198,9 +198,11 @@ type LimitClause = BaseNode & {
 type Join = BaseNode & {
   type: "join";
   operator: Keyword[] | ",";
-  table: Expr;
+  table: JoinTable | Alias<JoinTable>;
   specification?: JoinOnSpecification | JoinUsingSpecification;
 };
+
+type JoinTable = TableRef | ParenExpr<TableRef | SubSelect>;
 
 type JoinOnSpecification = BaseNode & {
   type: "join_on_specification";

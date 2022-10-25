@@ -49,7 +49,7 @@ export function testExpr(expr: string) {
   expect(show(parse(`SELECT ${expr}`, preserveAll))).toBe(`SELECT ${expr}`);
 }
 
-export function parseExpr(expr: string, options?: ParserOptions) {
+export function parseExpr(expr: string, options?: ParserOptions): Expr {
   const stmt = parseStmt(`SELECT ${expr}`, options);
   if (stmt.type !== "select_statement") {
     throw new Error(`Expected select_statement, instead got ${stmt.type}`);
@@ -61,7 +61,11 @@ export function parseExpr(expr: string, options?: ParserOptions) {
   if (clause.columns.length !== 1) {
     throw new Error(`Expected 1 column, instead got ${clause.columns.length}`);
   }
-  return clause.columns[0];
+  const result = clause.columns[0];
+  if (result.type === "alias") {
+    throw new Error(`Expected expression, instead got alias`);
+  }
+  return result;
 }
 
 /**
