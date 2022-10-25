@@ -784,7 +784,7 @@ lock_option
  */
 create_db_stmt
   = a:CREATE __
-    k:(DATABASE / SCHEME) __
+    k:(DATABASE / SCHEMA) __
     ife:if_not_exists? __
     t:ident_name __
     c:create_db_definition? {
@@ -2529,7 +2529,7 @@ ROW                 = kw:"ROW"i                 !ident_part { return loc(createK
 ROW_FORMAT          = kw:"ROW_FORMAT"i          !ident_part { return loc(createKeyword(kw)); }
 ROW_NUMBER          = kw:"ROW_NUMBER"i          !ident_part { return loc(createKeyword(kw)); }
 ROWS                = kw:"ROWS"i                !ident_part { return loc(createKeyword(kw)); }
-SCHEME              = kw:"SCHEME"i              !ident_part { return loc(createKeyword(kw)); }
+SCHEMA              = kw:"SCHEMA"i              !ident_part { return loc(createKeyword(kw)); }
 SECOND              = kw:"SECOND"i              !ident_part { return loc(createKeyword(kw)); }
 SECURITY            = kw:"SECURITY"i            !ident_part { return loc(createKeyword(kw)); }
 SELECT              = kw:"SELECT"i              !ident_part { return loc(createKeyword(kw)); }
