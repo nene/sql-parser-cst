@@ -168,7 +168,7 @@
 
 start
   = statements:multiple_stmt {
-    return { type: "program", statements };
+    return loc({ type: "program", statements });
   }
 
 multiple_stmt

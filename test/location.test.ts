@@ -4,6 +4,10 @@ describe("location", () => {
   it("includeRange:true adds location data to nodes", () => {
     expect(parse("SELECT (1 + col) FROM tbl t", { includeRange: true })).toMatchInlineSnapshot(`
       {
+        "range": [
+          0,
+          27,
+        ],
         "statements": [
           {
             "clauses": [
