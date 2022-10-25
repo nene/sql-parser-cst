@@ -300,7 +300,7 @@ type InsertStatement = BaseNode & {
 type ValuesClause = BaseNode & {
   type: "values_clause";
   valuesKw: Keyword;
-  values: ParenExpr<ExprList<Expr>>;
+  values: ExprList<ParenExpr<ExprList<Expr>>>;
 };
 
 // Window frame

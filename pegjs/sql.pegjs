@@ -1426,12 +1426,17 @@ replace_insert_stmt
     }
 
 values_clause
-  = kw:VALUES c:__ values:paren_expr_list {
+  = kw:VALUES c:__ values:values_list {
     return loc({
       type: "values_clause",
       valuesKw: kw,
       values: leading(values, c),
     });
+  }
+
+values_list
+  = head:paren_expr_list tail:(__ "," __ paren_expr_list)* {
+    return loc({ type: "expr_list", items: readCommaSepList(head, tail) });
   }
 
 insert_partition

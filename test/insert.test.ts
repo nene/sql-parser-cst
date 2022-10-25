@@ -10,4 +10,8 @@ describe("insert into", () => {
     test(`INSERT /*c1*/ INTO /*c2*/ tbl /*c3*/ (/*c4*/ col1 /*c5*/,/*c6*/ col2 /*c7*/) /*c8*/
           VALUES /*c9*/ (/*c10*/ 1 /*c11*/,/*c12*/ 2 /*c13*/)`);
   });
+
+  it("supports multiple values", () => {
+    test("INSERT INTO tbl VALUES (1, 2, 3), (4, 5, 6), (7, 8, 9)");
+  });
 });
