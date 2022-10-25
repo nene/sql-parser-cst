@@ -786,6 +786,36 @@ desc_stmt
     return "[Not implemented]";
   }
 
+for_update
+  = fu:(FOR __ UPDATE) {
+    return "[Not implemented]";
+  }
+
+lock_in_share_mode
+  = m:(LOCK __ IN __ SHARE __ MODE) {
+    return "[Not implemented]";
+  }
+
+lock_option
+  = w:(WAIT __ literal_numeric) { return "[Not implemented]"; }
+  / nw:NOWAIT
+  / sl:(SKIP __ LOCKED) { return "[Not implemented]"; }
+
+locking_read
+  = t:(for_update / lock_in_share_mode) __ lo:lock_option? {
+    return "[Not implemented]";
+  }
+
+select_stmt
+  = cte:(cls:with_clause c:__ { return trailing(cls, c); })?
+    select:(c:__ cls:select_clause { return leading(cls, c); })
+    otherClauses:(c:__ cls:other_clause { return leading(cls, c); })* {
+      return loc({
+        type: "select_statement",
+        clauses: [cte, select, ...otherClauses].filter(identity),
+      });
+  }
+
 with_clause
   = withKw:WITH
     recursiveKw:(c:__ kw:RECURSIVE { return leading(kw, c) })?
@@ -822,36 +852,6 @@ cte_columns_definition
   = "(" c1:__ head:ident tail:(__ "," __ ident)* c2:__ ")" {
       return surrounding(c1, readCommaSepList(head, tail), c2);
     }
-
-for_update
-  = fu:(FOR __ UPDATE) {
-    return "[Not implemented]";
-  }
-
-lock_in_share_mode
-  = m:(LOCK __ IN __ SHARE __ MODE) {
-    return "[Not implemented]";
-  }
-
-lock_option
-  = w:(WAIT __ literal_numeric) { return "[Not implemented]"; }
-  / nw:NOWAIT
-  / sl:(SKIP __ LOCKED) { return "[Not implemented]"; }
-
-locking_read
-  = t:(for_update / lock_in_share_mode) __ lo:lock_option? {
-    return "[Not implemented]";
-  }
-
-select_stmt
-  = cte:(cls:with_clause c:__ { return trailing(cls, c); })?
-    select:(c:__ cls:select_clause { return leading(cls, c); })
-    otherClauses:(c:__ cls:other_clause { return leading(cls, c); })* {
-      return loc({
-        type: "select_statement",
-        clauses: [cte, select, ...otherClauses].filter(identity),
-      });
-  }
 
 // Other clauses of SELECT statement (besides WITH & SELECT)
 other_clause
