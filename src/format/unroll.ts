@@ -22,7 +22,11 @@ function unrollArray(array: Layout[]): Layout[] {
   const lines: Line[] = [];
   flatArray.forEach((item, i) => {
     if (isLine(item)) {
-      lines.push(item);
+      if (item.trailing && lines.length > 0) {
+        lines[lines.length - 1].items.push(...item.items);
+      } else {
+        lines.push(item);
+      }
       if (isString(flatArray[i + 1])) {
         lines.push({ layout: "line", items: [] });
       }

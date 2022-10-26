@@ -6,6 +6,7 @@ export type Layout = Line | string | Layout[];
 export type Line = {
   layout: "line";
   indent?: number;
+  trailing?: boolean;
   items: Layout[];
 };
 

@@ -157,4 +157,25 @@ describe("format: unroll()", () => {
       { layout: "line", items: ["baz", "zap"] },
     ]);
   });
+
+  it("a trailing line after strings forms a single line", () => {
+    expect(
+      unroll(["foo", "bar", { layout: "line", items: ["sub", "line"], trailing: true }])
+    ).toEqual([{ layout: "line", items: ["foo", "bar", "sub", "line"] }]);
+  });
+
+  it("a trailing line between strings forms a single line with first, separating the next", () => {
+    expect(
+      unroll([
+        "foo",
+        "bar",
+        { layout: "line", items: ["sub", "line"], trailing: true },
+        "baz",
+        "zap",
+      ])
+    ).toEqual([
+      { layout: "line", items: ["foo", "bar", "sub", "line"] },
+      { layout: "line", items: ["baz", "zap"] },
+    ]);
+  });
 });
