@@ -2,7 +2,7 @@ import { Node, ParserOptions, Program } from "../pegjs/sql";
 export { parse as mysql } from "../pegjs/dialects/mysql";
 export { parse as sqlite } from "../pegjs/dialects/sqlite";
 import { show as showSql } from "./show";
-export { format } from "./format";
+export { format } from "./format/format";
 
 export type DialectFn = (str: string, options: ParserOptions) => Program;
 

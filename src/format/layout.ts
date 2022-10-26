@@ -1,5 +1,7 @@
-import { Node, Program } from "../pegjs/sql";
-import { cstTransformer } from "./cstTransformer";
+import { Node } from "../../pegjs/sql";
+import { cstTransformer } from "../cstTransformer";
+
+export type Layout = Line | string | Layout[];
 
 export type Line = {
   layout: "line";
@@ -7,60 +9,8 @@ export type Line = {
   items: Layout[];
 };
 
-export type Layout = Line | string | Layout[];
-
-export function format(node: Program) {
-  const lines = unroll(layout(node));
-  if (!(lines instanceof Array) || !lines.every(isLine)) {
-    throw new Error(`Expected array of lines, instead got ${lines}`);
-  }
-  return serialize(lines);
-}
-
-export function serialize(lines: Line[]): string {
-  const INDENT = "  ";
-  return lines
-    .map((line) => INDENT.repeat(line.indent || 0) + line.items.join(""))
-    .join("\n");
-}
-
-export const line = (...items: Layout[]): Line => ({ layout: "line", items });
-export const indent = (...items: Layout[]): Line => ({
-  layout: "line",
-  indent: 1,
-  items,
-});
-
-const isLine = (item: Layout): item is Line =>
+export const isLine = (item: Layout): item is Line =>
   typeof item === "object" && (item as any).layout === "line";
-
-export function unroll(item: Layout): Layout {
-  if (isLine(item)) {
-    return unrollLine(item);
-  }
-  if (item instanceof Array) {
-    return unrollArray(item);
-  }
-  return item;
-}
-
-function unrollArray(arr: Layout[]): Layout[] {
-  return arr.flatMap(unroll);
-}
-
-function unrollLine(line: Line): Line[] {
-  const lineItems = unrollArray(line.items);
-  if (lineItems.every(isLine)) {
-    return lineItems.map((subLine) => {
-      if (line.indent) {
-        return { ...subLine, indent: line.indent + (subLine.indent || 0) };
-      } else {
-        return subLine;
-      }
-    });
-  }
-  return [{ ...line, items: lineItems }];
-}
 
 export function layout(node: Node): Layout {
   return layoutNode(node);
@@ -169,4 +119,14 @@ const layoutNode = cstTransformer<Layout>({
   number: (node) => node.text,
   bool: (node) => node.text,
   null: (node) => node.text,
+});
+
+// utils for easy creation of lines
+
+const line = (...items: Layout[]): Line => ({ layout: "line", items });
+
+const indent = (...items: Layout[]): Line => ({
+  layout: "line",
+  indent: 1,
+  items,
 });
