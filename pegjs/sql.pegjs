@@ -191,7 +191,6 @@ statement
   / create_view_stmt
   / truncate_stmt
   / rename_stmt
-  / use_stmt
   / alter_table_stmt
   / update_stmt
   / insert_stmt
@@ -1028,15 +1027,6 @@ truncate_stmt
   = a:TRUNCATE  __
     kw:TABLE? __
     t:table_ref_list {
-      return "[Not implemented]";
-    }
-
-/**
- * USE
- */
-use_stmt
-  = USE  __
-    d:ident {
       return "[Not implemented]";
     }
 
