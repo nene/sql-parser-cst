@@ -33,14 +33,19 @@ export function layout(node: Node | string | NodeArray): Layout {
 
 const layoutComments = (items?: Whitespace[]): Layout[] => {
   const result: Layout[] = [];
-  for (const ws of items || []) {
+  (items || []).forEach((ws, i, arr) => {
+    const prev = arr[i - 1];
     if (ws.type === "block_comment") {
-      result.push(line(ws.text));
+      if (prev?.type === "newline") {
+        result.push(line(ws.text));
+      } else {
+        result.push(" ", ws.text, " ");
+      }
     }
     if (ws.type === "line_comment") {
       result.push(line(ws.text));
     }
-  }
+  });
   return result;
 };
 
