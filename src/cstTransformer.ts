@@ -12,7 +12,7 @@ import { Node } from "../pegjs/sql";
  *       paren_expr: (node: ParenExpr) => {},
  *       ... }
  */
-type TransformMap<T> = {
+export type FullTransformMap<T> = {
   [K in Node["type"]]: (node: Extract<Node, { type: K }>) => T;
 };
 
@@ -20,7 +20,9 @@ type TransformMap<T> = {
  * Creates a function that transforms the whole syntax tree to data type T.
  * @param map An object with a transform function for each CST node type
  */
-export function cstTransformer<T>(map: TransformMap<T>): (node: Node) => T {
+export function cstTransformer<T>(
+  map: Partial<FullTransformMap<T>>
+): (node: Node) => T {
   return (node: Node) => {
     const fn = map[node.type] as (
       e: Extract<Node, { type: typeof node["type"] }>

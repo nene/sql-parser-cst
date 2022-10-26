@@ -1,5 +1,5 @@
 import { Whitespace, Node } from "../pegjs/sql";
-import { cstTransformer } from "./cstTransformer";
+import { cstTransformer, FullTransformMap } from "./cstTransformer";
 import { isDefined } from "./util";
 
 type NodeArray = (Node | NodeArray | string | undefined)[];
@@ -185,4 +185,6 @@ const showNode = cstTransformer<string>({
   number: (node) => node.text,
   bool: (node) => node.text,
   null: (node) => node.text,
-});
+
+  // Cast to FullTransformMap, so TypeScript ensures all node types are covered
+} as FullTransformMap<string>);
