@@ -8,11 +8,12 @@ describe("format()", () => {
   }
 
   it("formats basic SELECT", () => {
-    expect(testFormat("SELECT 1, 2, 3")).toBe(dedent`
+    expect(testFormat("SELECT col1 + 3 AS c1, col2 FROM db.tbl t")).toBe(dedent`
       SELECT
-        1,
-        2,
-        3
+        col1 + 3 AS c1,
+        col2
+      FROM
+        db.tbl t
     `);
   });
 });

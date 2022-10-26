@@ -38,7 +38,10 @@ const layoutNode = cstTransformer<Layout>({
     ),
   ],
   // FROM
-  from_clause: (node) => "",
+  from_clause: (node) => [
+    line(layout(node.fromKw)),
+    indent(node.tables.map(layout)),
+  ],
   join: (node) => "",
   join_on_specification: (node) => "",
   join_using_specification: (node) => "",
@@ -88,7 +91,15 @@ const layoutNode = cstTransformer<Layout>({
   // Expressions
   expr_list: (node) => "",
   paren_expr: (node) => "",
-  binary_expr: (node) => "",
+  binary_expr: ({ left, operator, right }) => {
+    const op =
+      typeof operator === "string"
+        ? operator
+        : operator instanceof Array
+        ? operator.map(layout)
+        : layout(operator);
+    return [layout(left), " ", op, " ", layout(right)];
+  },
   unary_expr: (node) => "",
   func_call: (node) => "",
   distinct_arg: (node) => "",
@@ -107,9 +118,16 @@ const layoutNode = cstTransformer<Layout>({
   data_type: (node) => "",
 
   // Tables & columns
-  column_ref: (node) => "",
-  table_ref: (node) => "",
-  alias: (node) => "",
+  column_ref: (node) =>
+    node.table
+      ? [layout(node.table), ".", layout(node.column)]
+      : layout(node.column),
+  table_ref: (node) =>
+    node.db ? [layout(node.db), ".", layout(node.table)] : layout(node.table),
+  alias: (node) =>
+    node.asKw
+      ? [layout(node.expr), " ", layout(node.asKw), " ", layout(node.alias)]
+      : [layout(node.expr), " ", layout(node.alias)],
   all_columns: () => "*",
 
   // Basic language elements
