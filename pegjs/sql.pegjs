@@ -1381,29 +1381,33 @@ desc_stmt
  * UPDATE
  */
 update_stmt
-  = UPDATE    __
-    t:table_ref_list __
-    SET       __
-    l:set_list   __
-    w:where_clause? __
-    or:order_by_clause? __
-    lc:limit_clause? {
-      return "[Not implemented]";
+  = kw:UPDATE c1:__
+    tables:table_ref_list c2:__
+    setKw:SET c3:__
+    set:set_assignments
+    where:(c:__ w:where_clause { return leading(w, c); })? {
+      return loc({
+        type: "update_statement",
+        updateKw: trailing(kw, c1),
+        tables: trailing(tables, c2),
+        setKw: trailing(setKw, c3),
+        assignments: set,
+        where: nullToUndefined(where),
+      });
     }
 
-set_list
-  = head:set_item tail:(__ "," __ set_item)* {
-      return "[Not implemented]";
+set_assignments
+  = head:column_assignment tail:(__ "," __ column_assignment)* {
+      return readCommaSepList(head, tail);
     }
 
-/**
- * here only use `additive_expr` to support 'col1 = col1+2'
- * if you want to use lower operator, please use '()' like below
- * 'col1 = (col2 > 3)'
- */
-set_item
-  = tbl:(ident __ ".")? __ c:column __ '=' __ v:additive_expr {
-    return "[Not implemented]";
+column_assignment
+  = col:plain_column_ref c1:__ '=' c2:__ expr:expr {
+    return loc({
+      type: "column_assignment",
+      column: trailing(col, c1),
+      expr: leading(expr, c2),
+    });
   }
 
 /**

@@ -35,6 +35,7 @@ type Node =
   | DefaultValues
   | Default
   | InsertOption
+  | ColumnAssignment
   | Alias;
 
 type Program = BaseNode & {
@@ -49,7 +50,8 @@ type Statement =
   | CreateTableStatement
   | DropTableStatement
   | InsertStatement
-  | DeleteStatement;
+  | DeleteStatement
+  | UpdateStatement;
 
 type Expr =
   | ExprList
@@ -334,6 +336,22 @@ type DeleteStatement = BaseNode & {
   fromKw: Keyword;
   table: TableRef | Alias<TableRef>;
   where?: WhereClause;
+};
+
+// UPDATE
+type UpdateStatement = BaseNode & {
+  type: "update_statement";
+  updateKw: Keyword;
+  tables: TableRef[];
+  setKw: Keyword;
+  assignments: ColumnAssignment[];
+  where?: WhereClause;
+};
+
+type ColumnAssignment = BaseNode & {
+  type: "column_assignment";
+  column: ColumnRef;
+  expr: Expr;
 };
 
 // Window frame
