@@ -195,7 +195,6 @@ statement
   / alter_table_stmt
   / lock_stmt
   / unlock_stmt
-  / show_stmt
   / update_stmt
   / insert_stmt
   / delete_stmt
@@ -1327,44 +1326,6 @@ lock_type
     return "[Not implemented]";
   }
   / p:(LOW_PRIORITY)? __ WRITE {
-    return "[Not implemented]";
-  }
-
-/**
- * SHOW
- */
-show_stmt
-  = SHOW __ t:(BINARY / MASTER) __ LOGS {
-    return "[Not implemented]";
-  }
-  / SHOW __ BINLOG __ EVENTS __ ins:in_op_right? __ from: from_clause? __ limit: limit_clause? {
-    return "[Not implemented]";
-  }
-  / SHOW __ k:((CHARACTER __ SET) / COLLATION) __ e:(like_op_right / where_clause)? {
-    return "[Not implemented]";
-  }
-  / SHOW __ CREATE __ VIEW __ t:table_ref {
-    return "[Not implemented]";
-  }
-  / show_grant_stmt
-
-show_grant_stmt
-  = SHOW __ GRANTS __ f:show_grant_for? {
-    return "[Not implemented]";
-  }
-
-show_grant_for
-  = FOR __ n:ident __ h:("@" __ ident)? __ u:show_grant_for_using? {
-    return "[Not implemented]";
-  }
-
-show_grant_for_using
-  = USING __ l:show_grant_for_using_list {
-    return "[Not implemented]";
-  }
-
-show_grant_for_using_list
-  = head:ident tail:(__ "," __ ident)* {
     return "[Not implemented]";
   }
 
