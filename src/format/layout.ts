@@ -39,7 +39,7 @@ const layoutComments = (items?: Whitespace[]): Layout[] => {
       if (prev?.type === "newline") {
         result.push(line(ws.text));
       } else {
-        result.push(" ", ws.text, " ");
+        result.push(ws.text);
       }
     }
     if (ws.type === "line_comment") {

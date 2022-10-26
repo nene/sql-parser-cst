@@ -10,8 +10,7 @@ describe("format()", () => {
   it("formats basic SELECT", () => {
     expect(
       testFormat(
-        `
-        /* some comment */
+        `/* some comment */
         SELECT col1 + 3 /* inline */ AS c1, col2
         -- line comment
         FROM db.tbl t`
@@ -19,7 +18,7 @@ describe("format()", () => {
     ).toBe(dedent`
       /* some comment */
       SELECT
-        col1 + 3 /* inline */  AS c1,
+        col1 + 3/* inline */ AS c1,
         col2
       -- line comment
       FROM
