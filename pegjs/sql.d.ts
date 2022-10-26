@@ -48,7 +48,8 @@ type Statement =
   | SelectStatement
   | CreateTableStatement
   | DropTableStatement
-  | InsertStatement;
+  | InsertStatement
+  | DeleteStatement;
 
 type Expr =
   | ExprList
@@ -294,6 +295,7 @@ type DropTableStatement = BaseNode & {
   behaviorKw?: Keyword; // CASCADE | RESTRICT
 };
 
+// INSERT INTO
 type InsertStatement = BaseNode & {
   type: "insert_statement";
   insertKw: Keyword; // INSERT | REPLACE
@@ -323,6 +325,15 @@ type DefaultValues = BaseNode & {
 type Default = BaseNode & {
   type: "default";
   kw: Keyword[]; // DEFAULT
+};
+
+// DELETE FROM
+type DeleteStatement = BaseNode & {
+  type: "delete_statement";
+  deleteKw: Keyword;
+  fromKw: Keyword;
+  table: TableRef | Alias<TableRef>;
+  where?: WhereClause;
 };
 
 // Window frame

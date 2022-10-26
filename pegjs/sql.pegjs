@@ -1407,16 +1407,18 @@ set_item
   }
 
 /**
- * DELETE
+ * DELETE FROM
  */
 delete_stmt
-  = DELETE    __
-    t: table_ref_list? __
-    f:from_clause __
-    w:where_clause? __
-    or:order_by_clause? __
-    l:limit_clause? {
-      return "[Not implemented]";
+  = delKw:DELETE c1:__ fromKw:FROM c2:__ tbl:table_ref_or_alias
+    where:(c:__ w:where_clause { return leading(w, c); })? {
+      return loc({
+        type: "delete_statement",
+        deleteKw: trailing(delKw, c1),
+        fromKw: trailing(fromKw, c2),
+        table: tbl,
+        where: nullToUndefined(where),
+      });
     }
 
 /**

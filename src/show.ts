@@ -148,6 +148,10 @@ const showNode = cstTransformer<string>({
   default_values: (node) => show(node.kw),
   default: (node) => show(node.kw),
 
+  // DELETE FROM statement
+  delete_statement: (node) =>
+    show([node.deleteKw, node.fromKw, node.table, node.where]),
+
   // Expressions
   expr_list: (node) => show(node.items, ","),
   paren_expr: (node) => "(" + show(node.expr) + ")",
