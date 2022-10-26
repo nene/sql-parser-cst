@@ -1,12 +1,6 @@
 import { Node, Program } from "../pegjs/sql";
 import { cstTransformer } from "./cstTransformer";
 
-export function format(node: Program) {
-  // TODO...
-  // const lo = layout(node);
-  // return unroll(lo).join("");
-}
-
 export type Line = {
   layout: "line";
   indent?: number;
@@ -14,6 +8,21 @@ export type Line = {
 };
 
 export type Layout = Line | string | Layout[];
+
+export function format(node: Program) {
+  const lines = unroll(layout(node));
+  if (!(lines instanceof Array) || !lines.every(isLine)) {
+    throw new Error(`Expected array of lines, instead got ${lines}`);
+  }
+  return serialize(lines);
+}
+
+export function serialize(lines: Line[]): string {
+  const INDENT = "  ";
+  return lines
+    .map((line) => INDENT.repeat(line.indent || 0) + line.items.join(""))
+    .join("\n");
+}
 
 export const line = (...items: Layout[]): Line => ({ layout: "line", items });
 export const indent = (...items: Layout[]): Line => ({

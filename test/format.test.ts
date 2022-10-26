@@ -1,4 +1,4 @@
-import { layout, Line, unroll } from "../src/format";
+import { layout, Line, serialize, unroll } from "../src/format";
 import { parse } from "./test_utils";
 
 describe("format", () => {
@@ -157,6 +157,18 @@ describe("format", () => {
       expect(unroll([{ layout: "line", items: ["1", ["2"]] }])).toEqual([
         { layout: "line", items: ["1", "2"] },
       ]);
+    });
+  });
+
+  describe("serialize()", () => {
+    it("serializes array of lines", () => {
+      expect(
+        serialize([
+          { layout: "line", items: ["hello"] },
+          { layout: "line", indent: 1, items: ["my"] },
+          { layout: "line", indent: 1, items: ["world"] },
+        ])
+      ).toBe("hello\n  my\n  world");
     });
   });
 });
