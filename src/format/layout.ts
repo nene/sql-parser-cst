@@ -42,9 +42,12 @@ const layoutComments = (items?: Whitespace[]): Layout[] => {
       } else {
         result.push(ws.text);
       }
-    }
-    if (ws.type === "line_comment") {
-      result.push(line(ws.text));
+    } else if (ws.type === "line_comment") {
+      if (prev?.type === "newline") {
+        result.push(line(ws.text));
+      } else {
+        result.push(trailingLine(" ", ws.text));
+      }
     }
   });
   return result;
@@ -112,6 +115,12 @@ const layoutNode = cstTransformer<Layout>({
 // utils for easy creation of lines
 
 const line = (...items: Layout[]): Line => ({ layout: "line", items });
+
+const trailingLine = (...items: Layout[]): Line => ({
+  layout: "line",
+  items,
+  trailing: true,
+});
 
 const indent = (...items: Layout[]): Line => ({
   layout: "line",
