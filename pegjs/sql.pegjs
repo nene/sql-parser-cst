@@ -1402,7 +1402,7 @@ set_assignments
     }
 
 column_assignment
-  = col:plain_column_ref c1:__ '=' c2:__ expr:expr {
+  = col:column_ref c1:__ '=' c2:__ expr:expr {
     return loc({
       type: "column_assignment",
       column: trailing(col, c1),
