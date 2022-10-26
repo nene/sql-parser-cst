@@ -1402,13 +1402,16 @@ set_assignments
     }
 
 column_assignment
-  = col:column_ref c1:__ '=' c2:__ expr:expr {
+  = col:column_ref c1:__ '=' c2:__ expr:column_value {
     return loc({
       type: "column_assignment",
       column: trailing(col, c1),
       expr: leading(expr, c2),
     });
   }
+
+column_value = expr
+column_value$mysql = expr / default
 
 /**
  * DELETE FROM

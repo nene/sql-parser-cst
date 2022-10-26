@@ -24,4 +24,10 @@ describe("update", () => {
     test("UPDATE items, month SET items.price = month.price");
     test("UPDATE items /*c1*/,/*c2*/ month SET items.price = month.price");
   });
+
+  dialect("mysql", () => {
+    it("supports setting explicit default values", () => {
+      test("UPDATE person SET age = DEFAULT");
+    });
+  });
 });

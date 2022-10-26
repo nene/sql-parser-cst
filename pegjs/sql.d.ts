@@ -351,7 +351,7 @@ type UpdateStatement = BaseNode & {
 type ColumnAssignment = BaseNode & {
   type: "column_assignment";
   column: ColumnRef;
-  expr: Expr;
+  expr: Expr | Default;
 };
 
 // Window frame
