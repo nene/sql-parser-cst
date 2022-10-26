@@ -37,6 +37,9 @@ const layoutComments = (items?: Whitespace[]): Layout[] => {
     if (ws.type === "block_comment") {
       result.push(line(ws.text));
     }
+    if (ws.type === "line_comment") {
+      result.push(line(ws.text));
+    }
   }
   return result;
 };
