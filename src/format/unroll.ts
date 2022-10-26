@@ -1,3 +1,4 @@
+import { isString } from "../util";
 import { Line, isLine, Layout } from "./layout";
 
 export function unroll(item: Layout): Layout {
@@ -10,8 +11,30 @@ export function unroll(item: Layout): Layout {
   return item;
 }
 
-function unrollArray(arr: Layout[]): Layout[] {
-  return arr.flatMap(unroll);
+function unrollArray(array: Layout[]): Layout[] {
+  const flatArray = array.flatMap(unroll);
+
+  // No need to split when dealing with homogenous array
+  if (flatArray.every(isLine) || flatArray.every(isString)) {
+    return flatArray;
+  }
+
+  const lines: Line[] = [];
+  flatArray.forEach((item, i) => {
+    if (isLine(item)) {
+      lines.push(item);
+      if (isString(flatArray[i + 1])) {
+        lines.push({ layout: "line", items: [] });
+      }
+    } else {
+      if (lines.length === 0) {
+        lines.push({ layout: "line", items: [item] });
+      } else {
+        lines[lines.length - 1].items.push(item);
+      }
+    }
+  });
+  return lines;
 }
 
 function unrollLine(line: Line): Line[] {

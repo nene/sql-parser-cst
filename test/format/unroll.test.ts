@@ -133,4 +133,28 @@ describe("format: unroll()", () => {
       { layout: "line", items: ["1", "2"] },
     ]);
   });
+
+  it("a line before strings divides the string-sequence to multiple lines", () => {
+    expect(unroll([{ layout: "line", items: ["sub", "line"] }, "foo", "bar"])).toEqual([
+      { layout: "line", items: ["sub", "line"] },
+      { layout: "line", items: ["foo", "bar"] },
+    ]);
+  });
+
+  it("a line after strings divides the string-sequence to multiple lines", () => {
+    expect(unroll(["foo", "bar", { layout: "line", items: ["sub", "line"] }])).toEqual([
+      { layout: "line", items: ["foo", "bar"] },
+      { layout: "line", items: ["sub", "line"] },
+    ]);
+  });
+
+  it("a line between strings divides the string-sequence to multiple lines", () => {
+    expect(
+      unroll(["foo", "bar", { layout: "line", items: ["sub", "line"] }, "baz", "zap"])
+    ).toEqual([
+      { layout: "line", items: ["foo", "bar"] },
+      { layout: "line", items: ["sub", "line"] },
+      { layout: "line", items: ["baz", "zap"] },
+    ]);
+  });
 });
