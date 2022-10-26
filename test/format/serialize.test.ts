@@ -1,4 +1,5 @@
 import { serialize } from "../../src/format/serialize";
+import dedent from "dedent-js";
 
 describe("format: serialize()", () => {
   it("serializes array of lines", () => {
@@ -8,6 +9,10 @@ describe("format: serialize()", () => {
         { layout: "line", indent: 1, items: ["my"] },
         { layout: "line", indent: 1, items: ["world"] },
       ])
-    ).toBe("hello\n  my\n  world");
+    ).toBe(dedent`
+      hello
+        my
+        world
+    `);
   });
 });
