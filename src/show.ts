@@ -115,13 +115,13 @@ const showNode = cstTransformer<string>({
     show([
       node.name,
       node.dataType,
-      node.options.length > 0 ? node.options : undefined,
+      node.constraints.length > 0 ? node.constraints : undefined,
     ]),
-  column_option_nullable: (node) => show(node.kw),
-  column_option_auto_increment: (node) => show(node.kw),
-  column_option_key: (node) => show(node.kw),
-  column_option_default: (node) => show([node.kw, node.expr]),
-  column_option_comment: (node) => show([node.kw, node.value]),
+  constraint_nullable: (node) => show(node.kw),
+  constraint_auto_increment: (node) => show(node.kw),
+  constraint_key: (node) => show(node.kw),
+  constraint_default: (node) => show([node.kw, node.expr]),
+  constraint_comment: (node) => show([node.kw, node.value]),
 
   // DROP TABLE statement
   drop_table_statement: (node) =>

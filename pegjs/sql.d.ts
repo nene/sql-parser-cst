@@ -20,7 +20,7 @@ type Node =
   | JoinUsingSpecification
   | SortSpecification
   | ColumnDefinition
-  | ColumnOption
+  | ColumnConstrint
   | AllColumns
   | DistinctArg
   | CastArg
@@ -242,7 +242,7 @@ type ColumnDefinition = BaseNode & {
   type: "column_definition";
   name: ColumnRef;
   dataType: DataType;
-  options: ColumnOption[];
+  constraints: ColumnConstrint[];
 };
 
 type DataType = BaseNode & {
@@ -251,37 +251,37 @@ type DataType = BaseNode & {
   params?: ParenExpr<ExprList<Literal>>;
 };
 
-type ColumnOption =
-  | ColumnOptionNullable
-  | ColumnOptionDefault
-  | ColumnOptionAutoIncrement
-  | ColumnOptionKey
-  | ColumnOptionComment;
+type ColumnConstrint =
+  | ConstraintNullable
+  | ConstraintDefault
+  | ConstraintAutoIncrement
+  | ConstraintKey
+  | ConstraintComment;
 
-type ColumnOptionNullable = BaseNode & {
-  type: "column_option_nullable";
+type ConstraintNullable = BaseNode & {
+  type: "constraint_nullable";
   kw: Keyword | Keyword[];
   value: boolean;
 };
 
-type ColumnOptionDefault = BaseNode & {
-  type: "column_option_default";
+type ConstraintDefault = BaseNode & {
+  type: "constraint_default";
   kw: Keyword;
   expr: Expr;
 };
 
-type ColumnOptionAutoIncrement = BaseNode & {
-  type: "column_option_auto_increment";
+type ConstraintAutoIncrement = BaseNode & {
+  type: "constraint_auto_increment";
   kw: Keyword;
 };
 
-type ColumnOptionKey = BaseNode & {
-  type: "column_option_key";
+type ConstraintKey = BaseNode & {
+  type: "constraint_key";
   kw: Keyword | Keyword[];
 };
 
-type ColumnOptionComment = BaseNode & {
-  type: "column_option_comment";
+type ConstraintComment = BaseNode & {
+  type: "constraint_comment";
   kw: Keyword;
   value: StringLiteral;
 };

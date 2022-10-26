@@ -420,7 +420,7 @@ index_option
   / k:(VISIBLE / INVISIBLE) {
     return "[Not implemented]";
   }
-  / column_option_comment
+  / constraint_comment
 
 table_join_list
   = head:table_base tail:_table_join* {
@@ -903,23 +903,23 @@ create_definition
   / create_index_definition
   / create_fulltext_spatial_index_definition
 
-column_definition_opt
+column_constraint
   = kws:(NOT __ NULL) {
-    return loc({ type: "column_option_nullable", kw: createKeywordList(kws), value: false });
+    return loc({ type: "constraint_nullable", kw: createKeywordList(kws), value: false });
   }
   / kw:NULL {
-    return loc({ type: "column_option_nullable", kw, value: true });
+    return loc({ type: "constraint_nullable", kw, value: true });
   }
   / kw:DEFAULT c:__ e:(literal / paren_expr) {
-    return loc({ type: "column_option_default", kw, expr: leading(e, c) });
+    return loc({ type: "constraint_default", kw, expr: leading(e, c) });
   }
   / kw:AUTO_INCREMENT {
-    return loc({ type: "column_option_auto_increment", kw });
+    return loc({ type: "constraint_auto_increment", kw });
   }
   / kws:(UNIQUE __ KEY / UNIQUE / PRIMARY __ KEY / KEY) {
-    return loc({ type: "column_option_key", kw: createKeywordList(kws) });
+    return loc({ type: "constraint_key", kw: createKeywordList(kws) });
   }
-  / column_option_comment
+  / constraint_comment
   / ca:collate_expr {
     return "[Not implemented]";
   }
@@ -939,27 +939,27 @@ column_definition_opt
     return "[Not implemented]";
   }
 
-column_definition_opt_list
-  = head:column_definition_opt tail:(__ column_definition_opt)* {
+column_constraint_list
+  = head:column_constraint tail:(__ column_constraint)* {
     return readSpaceSepList(head, tail);
   }
 
 create_column_definition
   = name:column_ref c1:__
     type:data_type
-    options:(c:__ list:column_definition_opt_list { return leading(list, c); })? {
+    constraints:(c:__ list:column_constraint_list { return leading(list, c); })? {
       return loc({
         type: "column_definition",
         name: trailing(name, c1),
         dataType: type,
-        options: options || [],
+        constraints: constraints || [],
       });
     }
 
-column_option_comment
+constraint_comment
   = kw:COMMENT c:__ str:literal_string {
     return loc({
-      type: "column_option_comment",
+      type: "constraint_comment",
       kw,
       value: leading(str, c),
     });
