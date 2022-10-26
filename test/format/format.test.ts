@@ -8,7 +8,13 @@ describe("format()", () => {
   }
 
   it("formats basic SELECT", () => {
-    expect(testFormat("SELECT col1 + 3 AS c1, col2 FROM db.tbl t")).toBe(dedent`
+    expect(
+      testFormat(
+        `/* some comment */
+        SELECT col1 + 3 AS c1, col2 FROM db.tbl t`
+      )
+    ).toBe(dedent`
+      /* some comment */
       SELECT
         col1 + 3 AS c1,
         col2

@@ -1,4 +1,4 @@
-import { Node } from "../../pegjs/sql";
+import { Node, Whitespace } from "../../pegjs/sql";
 import { cstTransformer } from "../cstTransformer";
 
 export type Layout = Line | string | Layout[];
@@ -21,8 +21,25 @@ export function layout(node: Node | string | NodeArray): Layout {
   if (node instanceof Array) {
     return joinLayoutArray(node.map(layout), " ");
   }
+
+  const leading = layoutComments(node.leading);
+  const trailing = layoutComments(node.trailing);
+  if (leading.length || trailing.length) {
+    return [...leading, layoutNode(node), ...trailing];
+  }
+
   return layoutNode(node);
 }
+
+const layoutComments = (items?: Whitespace[]): Layout[] => {
+  const result: Layout[] = [];
+  for (const ws of items || []) {
+    if (ws.type === "block_comment") {
+      result.push(line(ws.text));
+    }
+  }
+  return result;
+};
 
 function joinLayoutArray(array: Layout[], separator = " "): Layout[] {
   const result: Layout[] = [];
