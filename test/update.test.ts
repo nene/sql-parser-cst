@@ -13,6 +13,13 @@ describe("update", () => {
     );
   });
 
+  // This is seemingly ambiguous syntax,
+  // which was explicitly not supported in the original parser code.
+  // But there's actually no ambiguity and its supported by actual databases.
+  it("supports comparison inside assignment expression", () => {
+    test("UPDATE tbl SET flag = col=1 OR col=2");
+  });
+
   dialect("sqlite", () => {
     it("supports updating multiple tables", () => {
       test("UPDATE tbl1, tbl2, tbl3 SET x=2");
