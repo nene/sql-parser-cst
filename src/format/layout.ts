@@ -12,8 +12,27 @@ export type Line = {
 export const isLine = (item: Layout): item is Line =>
   typeof item === "object" && (item as any).layout === "line";
 
-export function layout(node: Node): Layout {
+type NodeArray = (Node | NodeArray | string)[];
+
+export function layout(node: Node | string | NodeArray): Layout {
+  if (typeof node === "string") {
+    return node;
+  }
+  if (node instanceof Array) {
+    return joinLayoutArray(node.map(layout), " ");
+  }
   return layoutNode(node);
+}
+
+function joinLayoutArray(array: Layout[], separator = " "): Layout[] {
+  const result: Layout[] = [];
+  for (const it of array) {
+    if (result.length > 0) {
+      result.push(separator);
+    }
+    result.push(it);
+  }
+  return result;
 }
 
 const layoutNode = cstTransformer<Layout>({
@@ -40,7 +59,7 @@ const layoutNode = cstTransformer<Layout>({
   // FROM
   from_clause: (node) => [
     line(layout(node.fromKw)),
-    indent(node.tables.map(layout)),
+    indent(layout(node.tables)),
   ],
   join: (node) => "",
   join_on_specification: (node) => "",
@@ -91,15 +110,7 @@ const layoutNode = cstTransformer<Layout>({
   // Expressions
   expr_list: (node) => "",
   paren_expr: (node) => "",
-  binary_expr: ({ left, operator, right }) => {
-    const op =
-      typeof operator === "string"
-        ? operator
-        : operator instanceof Array
-        ? operator.map(layout)
-        : layout(operator);
-    return [layout(left), " ", op, " ", layout(right)];
-  },
+  binary_expr: ({ left, operator, right }) => layout([left, operator, right]),
   unary_expr: (node) => "",
   func_call: (node) => "",
   distinct_arg: (node) => "",
@@ -126,8 +137,8 @@ const layoutNode = cstTransformer<Layout>({
     node.db ? [layout(node.db), ".", layout(node.table)] : layout(node.table),
   alias: (node) =>
     node.asKw
-      ? [layout(node.expr), " ", layout(node.asKw), " ", layout(node.alias)]
-      : [layout(node.expr), " ", layout(node.alias)],
+      ? layout([node.expr, node.asKw, node.alias])
+      : layout([node.expr, node.alias]),
   all_columns: () => "*",
 
   // Basic language elements
