@@ -193,8 +193,6 @@ statement
   / rename_stmt
   / use_stmt
   / alter_table_stmt
-  / lock_stmt
-  / unlock_stmt
   / update_stmt
   / insert_stmt
   / delete_stmt
@@ -1294,40 +1292,6 @@ rename_stmt
     t:table_to_list {
       return "[Not implemented]";
     }
-
-/**
- * UNLOCK TABLES
- */
-unlock_stmt
-  = UNLOCK __ TABLES {
-    return "[Not implemented]";
-  }
-
-/**
- * LOCK TABLES
- */
-lock_stmt
-  = LOCK __ TABLES __ ltl:lock_table_list {
-    return "[Not implemented]";
-  }
-
-lock_table_list
-  = head:lock_table tail:(__ "," __ lock_table)* {
-    return "[Not implemented]";
-  }
-
-lock_table
-  = t:table_base __ lt:lock_type {
-    return "[Not implemented]";
-  }
-
-lock_type
-  = READ __ s:(LOCAL)? {
-    return "[Not implemented]";
-  }
-  / p:(LOW_PRIORITY)? __ WRITE {
-    return "[Not implemented]";
-  }
 
 /**
  * UPDATE
