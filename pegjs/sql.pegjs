@@ -196,7 +196,6 @@ statement
   / lock_stmt
   / unlock_stmt
   / show_stmt
-  / desc_stmt
   / update_stmt
   / insert_stmt
   / delete_stmt
@@ -1366,14 +1365,6 @@ show_grant_for_using
 
 show_grant_for_using_list
   = head:ident tail:(__ "," __ ident)* {
-    return "[Not implemented]";
-  }
-
-/**
- * DESCRIBE
- */
-desc_stmt
-  = (DESC / DESCRIBE) __ t:ident {
     return "[Not implemented]";
   }
 
