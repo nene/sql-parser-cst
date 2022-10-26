@@ -1,6 +1,5 @@
-import { Whitespace, Node, Program } from "../pegjs/sql";
+import { Node, Program } from "../pegjs/sql";
 import { cstTransformer } from "./cstTransformer";
-import { isDefined } from "./util";
 
 export function format(node: Program) {
   // TODO...
@@ -8,13 +7,51 @@ export function format(node: Program) {
   // return unroll(lo).join("");
 }
 
-type Line = { layout: "line"; items: Layout[] };
-type Indent = { layout: "indent"; items: Layout[] };
+export type Line = {
+  layout: "line";
+  indent?: number;
+  items: Layout[];
+};
 
-type Layout = Line | Indent | string | Layout[];
+export type Layout = Line | string | Layout[];
 
-const line = (...items: Layout[]): Line => ({ layout: "line", items });
-const indent = (...items: Layout[]): Indent => ({ layout: "indent", items });
+export const line = (...items: Layout[]): Line => ({ layout: "line", items });
+export const indent = (...items: Layout[]): Line => ({
+  layout: "line",
+  indent: 1,
+  items,
+});
+
+const isLine = (item: Layout): item is Line =>
+  typeof item === "object" && (item as any).layout === "line";
+
+export function unroll(item: Layout): Layout {
+  if (isLine(item)) {
+    return unrollLine(item);
+  }
+  if (item instanceof Array) {
+    return unrollArray(item);
+  }
+  return item;
+}
+
+function unrollArray(arr: Layout[]): Layout[] {
+  return arr.flatMap(unroll);
+}
+
+function unrollLine(line: Line): Line[] {
+  const lineItems = unrollArray(line.items);
+  if (lineItems.every(isLine)) {
+    return lineItems.map((subLine) => {
+      if (line.indent) {
+        return { ...subLine, indent: line.indent + (subLine.indent || 0) };
+      } else {
+        return subLine;
+      }
+    });
+  }
+  return [{ ...line, items: lineItems }];
+}
 
 export function layout(node: Node): Layout {
   return layoutNode(node);
