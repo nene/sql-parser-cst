@@ -28,6 +28,9 @@ export function cstTransformer<T>(
       e: Extract<Node, { type: typeof node["type"] }>
     ) => T;
     if (!fn) {
+      if (!node.type) {
+        throw new Error(`No type field on node: ${JSON.stringify(node)}`);
+      }
       throw new Error(`No transform map entry for ${node.type}`);
     }
     return fn(node);
