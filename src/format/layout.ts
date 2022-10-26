@@ -96,7 +96,9 @@ const layoutNode = cstTransformer<Layout>({
       ? [layout(node.table), ".", layout(node.column)]
       : layout(node.column),
   table_ref: (node) =>
-    node.db ? [layout(node.db), ".", layout(node.table)] : layout(node.table),
+    node.schema
+      ? [layout(node.schema), ".", layout(node.table)]
+      : layout(node.table),
   alias: (node) =>
     node.asKw
       ? layout([node.expr, node.asKw, node.alias])

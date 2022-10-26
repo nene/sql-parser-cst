@@ -1906,10 +1906,10 @@ table_ref_list
   }
 
 table_ref
-  = db:ident c1:__ "." c2:__ t:ident {
+  = schema:ident c1:__ "." c2:__ t:ident {
     return loc({
       type: "table_ref",
-      db: trailing(db, c1),
+      schema: trailing(schema, c1),
       table: leading(t, c2),
     });
   }

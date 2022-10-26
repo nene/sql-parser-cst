@@ -189,7 +189,7 @@ const showNode = cstTransformer<string>({
 
   // Tables & columns
   column_ref: (node) => show([node.table, node.column], "."),
-  table_ref: (node) => show([node.db, node.table], "."),
+  table_ref: (node) => show([node.schema, node.table], "."),
   alias: (node) => show([node.expr, node.asKw, node.alias]),
   all_columns: () => "*",
 

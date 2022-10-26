@@ -552,7 +552,7 @@ type ColumnRef = BaseNode & {
 
 type TableRef = BaseNode & {
   type: "table_ref";
-  db?: Identifier;
+  schema?: Identifier;
   table: Identifier;
 };
 

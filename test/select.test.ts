@@ -92,7 +92,7 @@ describe("select", () => {
               },
               "tables": [
                 {
-                  "db": {
+                  "schema": {
                     "text": "db",
                     "type": "identifier",
                   },
