@@ -6,6 +6,8 @@ Unlike a more usual parser which produces an Abstract Syntax Tree (AST),
 this parser preserves all the syntax elements present in the parsed source code,
 with the goal of being able to re-create the exact original source code.
 
+**Note:** This is pre-alpha quality software in early development stages.
+
 ## Usage
 
 ```ts
