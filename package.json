@@ -2,9 +2,9 @@
   "name": "sql-parser-cst",
   "description": "Parses SQL into Concrete Syntax Tree (CST)",
   "license": "GPL-2.0-or-later",
+  "version": "0.1.0",
   "main": "lib/parser.js",
   "types": "lib/parser.d.ts",
-  "private": true,
   "scripts": {
     "pretty": "prettier --write .",
     "generate": "ts-node pegjs/generate.ts",
