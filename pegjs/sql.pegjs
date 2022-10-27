@@ -529,7 +529,7 @@ join_specification
   = using_clause / on_clause
 
 using_clause
-  = kw:USING c1:__ expr:column_list_in_parens {
+  = kw:USING c1:__ expr:paren_plain_column_ref_list {
     return loc({
       type: "join_using_specification",
       usingKw: kw,
@@ -806,7 +806,7 @@ create_view_stmt
   al:(ALGORITHM __ "=" __ (UNDEFINED / MERGE / TEMPTABLE))? __
   df:(DEFINER __ "=" __ ident)? __
   ss:(SQL __ SECURITY __ (DEFINER / INVOKER))? __
-  VIEW __ v:table_ref __ c:("(" __ column_list __ ")")? __
+  VIEW __ v:table_ref __ c:("(" __ plain_column_ref_list __ ")")? __
   AS __ s:select_stmt __
   w:view_with? {
     return "[Not implemented]";
@@ -1376,7 +1376,7 @@ insert_stmt
     options:(c:__ opts:insert_options { return leading(opts, c) })?
     intoKw:(c:__ kw:INTO { return leading(kw, c) })?
     table:(c:__ t:table_ref_or_explicit_alias { return leading(t, c); })
-    columns:(c:__ cols:column_list_in_parens { return leading(cols, c); })?
+    columns:(c:__ cols:paren_plain_column_ref_list { return leading(cols, c); })?
     source:(c:__ src:insert_source { return leading(src, c); }) {
       return loc({
         type: "insert_statement",
@@ -1950,12 +1950,12 @@ column_ref_list
     return loc(createExprList(head, tail));
   }
 
-column_list_in_parens
-  = "(" c1:__ cols:column_list c2:__ ")" {
+paren_plain_column_ref_list
+  = "(" c1:__ cols:plain_column_ref_list c2:__ ")" {
     return loc(createParenExpr(c1, cols, c2));
   }
 
-column_list
+plain_column_ref_list
   = head:plain_column_ref tail:(__ "," __ plain_column_ref)* {
     return loc(createExprList(head, tail));
   }
