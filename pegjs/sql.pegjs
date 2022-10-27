@@ -796,7 +796,7 @@ create_view_stmt
   al:(ALGORITHM __ "=" __ (UNDEFINED / MERGE / TEMPTABLE))? __
   df:(DEFINER __ "=" __ ident)? __
   ss:(SQL __ SECURITY __ (DEFINER / INVOKER))? __
-  VIEW __ v:table_ref __ c:("(" __ plain_column_ref_list __ ")")? __
+  VIEW __ v:table_ref __ c:paren_plain_column_ref_list? __
   AS __ s:select_stmt __
   w:view_with? {
     return "[Not implemented]";
