@@ -1206,14 +1206,24 @@ table_constraint_primary_key
 
 table_constraint_unique
   = name:(id:constraint_name c:__ { return trailing(id, c); })?
-    u:UNIQUE __
-    p:(INDEX / KEY)? __
-    i:column? __
-    t:index_type? __
-    de:cte_columns_definition __
-    id:index_options? {
-      return "[Not implemented]";
+    kws:(k:unique_key c:__ { return trailing(k, c); })
+    i:(ident __)?
+    t:(index_type __)?
+    columns:cte_columns_definition
+    id:(__ index_options)? {
+      return loc({
+        type: "table_constraint_unique",
+        ...(name ? {name} : {}),
+        uniqueKw: kws,
+        columns,
+      });
     }
+
+unique_key
+  = kws:(UNIQUE __ (INDEX / KEY)) {
+    return createKeywordList(kws);
+  }
+  / UNIQUE
 
 table_constraint_foreign_key
   = name:(id:constraint_name c:__ { return trailing(id, c); })?

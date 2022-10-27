@@ -49,7 +49,8 @@ describe("constraints", () => {
     it("supports multiple table constraints inside CREATE TABLE", () => {
       test(`CREATE TABLE tbl (
         id INT,
-        PRIMARY KEY (id)
+        PRIMARY KEY (id),
+        UNIQUE (id)
       )`);
     });
 
@@ -65,6 +66,17 @@ describe("constraints", () => {
       testTblConst("CONSTRAINT prim_key PRIMARY KEY (id)");
       testTblConst(
         "CONSTRAINT /*c1*/ prim_key /*c2*/ PRIMARY /*c3*/ KEY /*c4*/ ( /*c5*/ id /*c6*/,/*c7*/ name /*c8*/ )"
+      );
+    });
+
+    it("UNIQUE", () => {
+      testTblConst("UNIQUE (id)");
+      testTblConst("UNIQUE KEY (id, name)");
+      testTblConst("UNIQUE INDEX (id)");
+      testTblConst("CONSTRAINT UNIQUE (id)");
+      testTblConst("CONSTRAINT u_key UNIQUE KEY (id)");
+      testTblConst(
+        "CONSTRAINT /*c1*/ u_key /*c2*/ UNIQUE /*c3*/ KEY /*c4*/ ( /*c5*/ id /*c6*/,/*c7*/ name /*c8*/ )"
       );
     });
   });

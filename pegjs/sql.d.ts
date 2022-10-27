@@ -259,12 +259,19 @@ type ConstraintName = BaseNode & {
   name?: Identifier;
 };
 
-type TableConstraint = TableConstraintPrimaryKey;
+type TableConstraint = TableConstraintPrimaryKey | TableConstraintUnique;
 
 type TableConstraintPrimaryKey = BaseNode & {
   type: "table_constraint_primary_key";
   name: ConstraintName;
   primaryKeyKw: Keyword[];
+  columns: ParenExpr<ExprList<Identifier>>;
+};
+
+type TableConstraintUnique = BaseNode & {
+  type: "table_constraint_unique";
+  name: ConstraintName;
+  uniqueKw: Keyword[];
   columns: ParenExpr<ExprList<Identifier>>;
 };
 
