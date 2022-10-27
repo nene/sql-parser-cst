@@ -109,7 +109,7 @@ const showNode = cstTransformer<string>({
       node.tableKw,
       node.ifNotExistsKw,
       node.table,
-      "(" + show(node.columns, ",") + ")",
+      node.columns,
     ]),
   column_definition: (node) =>
     show([

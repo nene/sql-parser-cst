@@ -893,8 +893,13 @@ create_like_table
   }
 
 create_table_definition
-  = "(" c1:__ head:create_definition tail:(__ "," __ create_definition)* c2:__ ")" {
-    return surrounding(c1, readCommaSepList(head, tail), c2);
+  = "(" c1:__ list:create_definition_list c2:__ ")" {
+    return loc(createParenExpr(c1, list, c2));
+  }
+
+create_definition_list
+  = head:create_definition tail:(__ "," __ create_definition)* {
+    return loc({ type: "expr_list", items: readCommaSepList(head, tail) });
   }
 
 create_definition

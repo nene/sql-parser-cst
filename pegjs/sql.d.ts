@@ -235,7 +235,7 @@ type CreateTableStatement = BaseNode & {
   temporaryKw?: Keyword;
   ifNotExistsKw?: Keyword[];
   table: TableRef;
-  columns: ColumnDefinition[];
+  columns: ParenExpr<ExprList<ColumnDefinition>>;
 };
 
 type ColumnDefinition = BaseNode & {
