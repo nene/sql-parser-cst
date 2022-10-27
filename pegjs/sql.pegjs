@@ -1161,7 +1161,7 @@ create_index_definition
   = kc:(INDEX / KEY) __
     c:column? __
     t:index_type? __
-    de:cte_columns_definition __
+    de:paren_column_ref_list __
     id:index_options? __ {
       return "[Not implemented]";
     }
@@ -1170,7 +1170,7 @@ create_fulltext_spatial_index_definition
   = p: (FULLTEXT / SPATIAL) __
     kc:(INDEX / KEY)? __
     c:column? __
-    de: cte_columns_definition __
+    de: paren_column_ref_list __
     id: index_options? {
       return "[Not implemented]";
     }
@@ -1194,7 +1194,7 @@ table_constraint_primary_key
   = name:(id:constraint_name c:__ { return trailing(id, c); })?
     kws:(PRIMARY __ KEY __)
     t:(index_type __)?
-    columns:cte_columns_definition
+    columns:paren_column_ref_list
     opts:(__ index_options)? {
       return loc({
         type: "table_constraint_primary_key",
@@ -1209,7 +1209,7 @@ table_constraint_unique
     kws:(k:unique_key c:__ { return trailing(k, c); })
     i:(ident __)?
     t:(index_type __)?
-    columns:cte_columns_definition
+    columns:paren_column_ref_list
     id:(__ index_options)? {
       return loc({
         type: "table_constraint_unique",
@@ -1229,7 +1229,7 @@ table_constraint_foreign_key
   = name:(id:constraint_name c:__ { return trailing(id, c); })?
     p:(FOREIGN __ KEY) __
     i:column? __
-    de:cte_columns_definition __
+    de:paren_column_ref_list __
     id:reference_definition? {
       return "[Not implemented]";
     }
@@ -1249,7 +1249,7 @@ check_constraint_definition
 reference_definition
   = kc:REFERENCES __
   t:table_ref_list __
-  de:cte_columns_definition __
+  de:paren_column_ref_list __
   m:(MATCH __ FULL / MATCH __ PARTIAL / MATCH __ SIMPLE)? __
   od:on_reference? __
   ou:on_reference? {
@@ -1895,11 +1895,6 @@ fulltext_search
     return "[Not implemented]";
   }
 
-column_ref_list
-  = head:column_ref tail:(__ "," __ column_ref)* {
-      return "[Not implemented]";
-    }
-
 fulltext_search_mode
   = IN __ NATURAL __ LANGUAGE __ MODE __ WITH __ QUERY __ EXPANSION  {
     return "[Not implemented]";
@@ -1945,6 +1940,16 @@ table_ref
 /**
  * column names
  */
+paren_column_ref_list
+  = "(" c1:__ cols:column_ref_list c2:__ ")" {
+    return loc(createParenExpr(c1, cols, c2));
+  }
+
+column_ref_list
+  = head:column_ref tail:(__ "," __ column_ref)* {
+    return loc(createExprList(head, tail));
+  }
+
 column_list_in_parens
   = "(" c1:__ cols:column_list c2:__ ")" {
     return loc(createParenExpr(c1, cols, c2));

@@ -265,14 +265,14 @@ type TableConstraintPrimaryKey = BaseNode & {
   type: "table_constraint_primary_key";
   name: ConstraintName;
   primaryKeyKw: Keyword[];
-  columns: ParenExpr<ExprList<Identifier>>;
+  columns: ParenExpr<ExprList<ColumnRef>>;
 };
 
 type TableConstraintUnique = BaseNode & {
   type: "table_constraint_unique";
   name: ConstraintName;
   uniqueKw: Keyword[];
-  columns: ParenExpr<ExprList<Identifier>>;
+  columns: ParenExpr<ExprList<ColumnRef>>;
 };
 
 type ColumnConstraint =
