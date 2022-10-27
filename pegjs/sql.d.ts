@@ -23,6 +23,7 @@ type Node =
   | ColumnConstraint
   | TableConstraint
   | ConstraintName
+  | ForeignKeyReference
   | AllColumns
   | DistinctArg
   | CastArg
@@ -261,6 +262,7 @@ type ConstraintName = BaseNode & {
 
 type TableConstraint =
   | TableConstraintPrimaryKey
+  | TableConstraintForeignKey
   | TableConstraintUnique
   | TableConstraintCheck;
 
@@ -269,6 +271,21 @@ type TableConstraintPrimaryKey = BaseNode & {
   name: ConstraintName;
   primaryKeyKw: Keyword[];
   columns: ParenExpr<ExprList<ColumnRef>>;
+};
+
+type TableConstraintForeignKey = BaseNode & {
+  type: "table_constraint_foreign_key";
+  name: ConstraintName;
+  foreignKeyKw: Keyword[];
+  columns: ParenExpr<ExprList<ColumnRef>>;
+  reference: ForeignKeyReference;
+};
+
+type ForeignKeyReference = BaseNode & {
+  type: "foreign_key_reference";
+  referencesKw: Keyword;
+  table: TableRef;
+  columns?: ParenExpr<ExprList<ColumnRef>>;
 };
 
 type TableConstraintUnique = BaseNode & {

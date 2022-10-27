@@ -86,5 +86,19 @@ describe("constraints", () => {
       testTblConst("CONSTRAINT check_c CHECK (false)");
       testTblConst("CONSTRAINT /*c1*/ check_c /*c2*/ CHECK /*c3*/ (/*c4*/ true /*c5*/)");
     });
+
+    describe("FOREIGN KEY", () => {
+      it("basic FOREIGN KEY", () => {
+        testTblConst("FOREIGN KEY (id) REFERENCES tbl2 (id)");
+        testTblConst("FOREIGN KEY (id, name) REFERENCES tbl2 (id, name)");
+        testTblConst("CONSTRAINT FOREIGN KEY (id) REFERENCES tbl2 (t2_id)");
+        testTblConst("CONSTRAINT f_key FOREIGN KEY (id) REFERENCES tbl2 (id)");
+        testTblConst(
+          `CONSTRAINT /*c1*/ f_key /*c2*/
+          FOREIGN /*c3*/ KEY /*c4*/ (/*c5*/ id /*c6*/) /*c7*/
+          REFERENCES /*c8*/ tbl2 /*c9*/ (/*c10*/ t2id /*c11*/)`
+        );
+      });
+    });
   });
 });

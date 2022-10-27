@@ -933,7 +933,7 @@ column_constraint
   / s:storage {
     return "[Not implemented]";
   }
-  / re:reference_definition {
+  / re:foreign_key_reference {
     return "[Not implemented]";
   }
   / ck:table_constraint_check {
@@ -1215,15 +1215,6 @@ unique_key
   }
   / UNIQUE
 
-table_constraint_foreign_key
-  = name:(id:constraint_name c:__ { return trailing(id, c); })?
-    p:(FOREIGN __ KEY) __
-    i:column? __
-    de:paren_column_ref_list __
-    id:reference_definition? {
-      return "[Not implemented]";
-    }
-
 table_constraint_check
   = name:(id:constraint_name c:__ { return trailing(id, c); })?
     kw:CHECK c:__ expr:paren_expr
@@ -1236,18 +1227,35 @@ table_constraint_check
       });
     }
 
-reference_definition
-  = kc:REFERENCES __
-  t:table_ref_list __
-  de:paren_column_ref_list __
-  m:(MATCH __ FULL / MATCH __ PARTIAL / MATCH __ SIMPLE)? __
-  od:on_reference? __
-  ou:on_reference? {
-    return "[Not implemented]";
-  }
-  / oa:on_reference {
-    return "[Not implemented]";
-  }
+table_constraint_foreign_key
+  = name:(id:constraint_name c:__ { return trailing(id, c); })?
+    kws:(FOREIGN __ KEY __)
+    i:(ident __)?
+    columns:paren_column_ref_list
+    c1:__ ref:foreign_key_reference {
+      return loc({
+        type: "table_constraint_foreign_key",
+        ...(name ? {name} : {}),
+        foreignKeyKw: createKeywordList(kws),
+        columns,
+        reference: leading(ref, c1),
+      });
+    }
+
+foreign_key_reference
+  = kw:REFERENCES c1:__
+    table:table_ref c2:__
+    columns:paren_column_ref_list
+    m:(__ (MATCH __ FULL / MATCH __ PARTIAL / MATCH __ SIMPLE))?
+    od:(__ on_reference)?
+    ou:(__ on_reference)? {
+      return loc({
+        type: "foreign_key_reference",
+        referencesKw: trailing(kw, c1),
+        table: trailing(table, c2),
+        columns: columns,
+      });
+    }
 
 on_reference
   = on_kw:ON __ kw:(DELETE / UPDATE) __ ro:reference_option {
