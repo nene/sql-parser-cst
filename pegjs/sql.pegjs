@@ -936,7 +936,7 @@ column_constraint
   / re:reference_definition {
     return "[Not implemented]";
   }
-  / ck:check_constraint_definition {
+  / ck:table_constraint_check {
     return "[Not implemented]";
   }
   / t:create_option_character_set_kw __ s:"="? __ v:ident_name {
@@ -1225,12 +1225,6 @@ table_constraint_foreign_key
     }
 
 table_constraint_check
-  = name:(id:constraint_name c:__ { return trailing(id, c); })?
-    u:CHECK __ nfr:(NOT __ FOR __ REPLICATION __)? "(" __ c:expr __ ")" {
-    return "[Not implemented]";
-  }
-
-check_constraint_definition
   = name:(id:constraint_name c:__ { return trailing(id, c); })?
     u:CHECK __ "(" __ c:expr __ ")" __ ne:(NOT? __ ENFORCED)?  {
     return "[Not implemented]";
