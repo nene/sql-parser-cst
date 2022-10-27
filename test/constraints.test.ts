@@ -105,6 +105,20 @@ describe("constraints", () => {
           testTblConst("FOREIGN KEY (id) REFERENCES tbl2");
         });
       });
+
+      it("supports ON DELETE/UPDATE actions", () => {
+        testTblConst("FOREIGN KEY (id) REFERENCES tbl2 (id) ON UPDATE RESTRICT");
+        testTblConst("FOREIGN KEY (id) REFERENCES tbl2 (id) ON DELETE CASCADE");
+        testTblConst("FOREIGN KEY (id) REFERENCES tbl2 (id) ON UPDATE SET NULL");
+        testTblConst(
+          "FOREIGN KEY (id) REFERENCES tbl2 (id) ON DELETE SET DEFAULT ON UPDATE NO ACTION"
+        );
+        testTblConst(
+          `FOREIGN KEY (id) REFERENCES tbl2 (id)
+          ON /*c1*/ DELETE /*c2*/ SET /*c3*/ DEFAULT /*c4*/
+          ON /*c5*/ UPDATE /*c6*/ NO /*c7*/ ACTION`
+        );
+      });
     });
   });
 });

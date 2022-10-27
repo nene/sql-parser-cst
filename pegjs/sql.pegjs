@@ -1247,24 +1247,30 @@ foreign_key_reference
     table:table_ref
     columns:(c:__ cols:paren_column_ref_list { return leading(cols, c); })?
     m:(__ (MATCH __ FULL / MATCH __ PARTIAL / MATCH __ SIMPLE))?
-    od:(__ on_reference)?
-    ou:(__ on_reference)? {
+    actions:(c:__ a:reference_action { return leading(a, c); })* {
       return loc({
         type: "foreign_key_reference",
         referencesKw: trailing(kw, c1),
         table,
         columns: nullToUndefined(columns),
+        actions,
       });
     }
 
-on_reference
-  = on_kw:ON __ kw:(DELETE / UPDATE) __ ro:reference_option {
-    return "[Not implemented]";
+reference_action
+  = onKw:ON c1:__ eventKw:(UPDATE / DELETE) c2:__ actionKw:reference_action_type {
+    return loc({
+      type: "reference_action",
+      onKw: trailing(onKw, c1),
+      eventKw: trailing(eventKw, c2),
+      actionKw,
+    });
   }
-reference_option
-  = kc:(RESTRICT / CASCADE / SET __ NULL / NO __ ACTION / SET __ DEFAULT / CURRENT_TIMESTAMP) {
-    return "[Not implemented]";
-  }
+
+reference_action_type
+  = RESTRICT
+  / CASCADE
+  / kws:(SET __ NULL / NO __ ACTION / SET __ DEFAULT) { return createKeywordList(kws); }
 
 table_options
   = head:table_option tail:(__ ","? __ table_option)* {
