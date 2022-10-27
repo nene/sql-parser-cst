@@ -18,6 +18,7 @@
   ],
   "scripts": {
     "prepublishOnly": "yarn build",
+    "postinstall": "yarn generate",
     "pretty": "prettier --write .",
     "generate": "ts-node pegjs/generate.ts",
     "watch:generate": "npm-watch",
