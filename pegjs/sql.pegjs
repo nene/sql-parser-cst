@@ -262,7 +262,7 @@ with_clause
 
 common_table_expression
   = table:ident
-    columns:(c:__ cols:cte_columns_definition { return leading(cols, c); })?
+    columns:(c:__ cols:paren_plain_column_ref_list { return leading(cols, c); })?
     c1:__ asKw:AS
     opt:(c:__ op:cte_option { return leading(op, c); })?
     c2:__ select:paren_expr_select {
@@ -279,16 +279,6 @@ common_table_expression
 cte_option
   = kws:(NOT __ MATERIALIZED) { return createKeywordList(kws); }
   / MATERIALIZED
-
-cte_columns_definition
-  = "(" c1:__ cols:cte_columns_list c2:__ ")" {
-      return loc(createParenExpr(c1, cols, c2));
-    }
-
-cte_columns_list
-  = head:ident tail:(__ "," __ ident)* {
-    return loc(createExprList(head, tail));
-  }
 
 // Other clauses of SELECT statement (besides WITH & SELECT)
 other_clause
