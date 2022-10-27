@@ -164,6 +164,13 @@
       expr: surrounding(c1, expr, c2),
     };
   }
+
+  const createExprList = (head, tail) => {
+    return {
+      type: "expr_list",
+      items: readCommaSepList(head, tail),
+    };
+  }
 }
 
 start
@@ -899,7 +906,7 @@ create_table_definition
 
 create_definition_list
   = head:create_definition tail:(__ "," __ create_definition)* {
-    return loc({ type: "expr_list", items: readCommaSepList(head, tail) });
+    return loc(createExprList(head, tail));
   }
 
 create_definition
@@ -1401,7 +1408,7 @@ values_kw$mysql = VALUES / VALUE
 
 values_list
   = head:values_row tail:(__ "," __ values_row)* {
-    return loc({ type: "expr_list", items: readCommaSepList(head, tail) });
+    return loc(createExprList(head, tail));
   }
 
 values_row
@@ -1414,7 +1421,7 @@ values_row$mysql
 
 expr_list_with_default
   = head:(expr / default) tail:(__ "," __ (expr / default))* {
-    return loc({ type: "expr_list", items: readCommaSepList(head, tail) });
+    return loc(createExprList(head, tail));
   }
 
 default
@@ -1448,10 +1455,7 @@ type_params
 
 literal_list
   = head:literal tail:(__ "," __ literal)* {
-    return {
-      type: "expr_list",
-      items: readCommaSepList(head, tail),
-    };
+    return loc(createExprList(head, tail));
   }
 
 type_name
@@ -1717,7 +1721,7 @@ paren_expr_list
 
 expr_list
   = head:expr tail:(__ "," __ expr)* {
-    return loc({ type: "expr_list", items: readCommaSepList(head, tail) });
+    return loc(createExprList(head, tail));
   }
 
 cast_expr
@@ -1788,10 +1792,7 @@ func_args
 
 func_args_list
   = head:func_1st_arg tail:(__ "," __ expr)* {
-    return loc({
-      type: "expr_list",
-      items: readCommaSepList(head, tail)
-    });
+    return loc(createExprList(head, tail));
   }
   / &. {
     // even when no parameters are present, we want to create an empty args object,
@@ -1935,7 +1936,7 @@ column_list_in_parens
 
 column_list
   = head:plain_column_ref tail:(__ "," __ plain_column_ref)* {
-    return loc({ type: "expr_list", items: readCommaSepList(head, tail) });
+    return loc(createExprList(head, tail));
   }
 
 column_ref
