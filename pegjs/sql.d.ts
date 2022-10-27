@@ -20,7 +20,9 @@ type Node =
   | JoinUsingSpecification
   | SortSpecification
   | ColumnDefinition
-  | ColumnConstrint
+  | ColumnConstraint
+  | TableConstraint
+  | TableConstraintDef
   | AllColumns
   | DistinctArg
   | CastArg
@@ -235,14 +237,14 @@ type CreateTableStatement = BaseNode & {
   temporaryKw?: Keyword;
   ifNotExistsKw?: Keyword[];
   table: TableRef;
-  columns: ParenExpr<ExprList<ColumnDefinition>>;
+  columns: ParenExpr<ExprList<ColumnDefinition | TableConstraint>>;
 };
 
 type ColumnDefinition = BaseNode & {
   type: "column_definition";
   name: ColumnRef;
   dataType: DataType;
-  constraints: ColumnConstrint[];
+  constraints: ColumnConstraint[];
 };
 
 type DataType = BaseNode & {
@@ -251,7 +253,22 @@ type DataType = BaseNode & {
   params?: ParenExpr<ExprList<Literal>>;
 };
 
-type ColumnConstrint =
+type TableConstraint = BaseNode & {
+  type: "table_constraint";
+  constraintKw?: Keyword;
+  name?: Identifier;
+  constraint: TableConstraintDef;
+};
+
+type TableConstraintDef = TableConstraintPrimaryKey;
+
+type TableConstraintPrimaryKey = BaseNode & {
+  type: "table_constraint_primary_key";
+  primaryKeyKw: Keyword[];
+  columns: ParenExpr<ExprList<Identifier>>;
+};
+
+type ColumnConstraint =
   | ConstraintNullable
   | ConstraintDefault
   | ConstraintAutoIncrement

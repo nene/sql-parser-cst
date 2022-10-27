@@ -8,8 +8,8 @@ describe("constraints", () => {
       )`);
     });
 
-    function testColConst(opt: string) {
-      const sql = `CREATE TABLE t (id INT ${opt})`;
+    function testColConst(constraint: string) {
+      const sql = `CREATE TABLE t (id INT ${constraint})`;
       expect(show(parse(sql, preserveAll))).toBe(sql);
     }
 
@@ -42,6 +42,30 @@ describe("constraints", () => {
     it("COMMENT", () => {
       testColConst("COMMENT 'Hello, world!'");
       testColConst("COMMENT /*c*/ 'Hi'");
+    });
+  });
+
+  describe("table constraints", () => {
+    it("supports multiple table constraints inside CREATE TABLE", () => {
+      test(`CREATE TABLE tbl (
+        id INT,
+        PRIMARY KEY (id)
+      )`);
+    });
+
+    function testTblConst(constraint: string) {
+      const sql = `CREATE TABLE t (${constraint})`;
+      expect(show(parse(sql, preserveAll))).toBe(sql);
+    }
+
+    it("PRIMARY KEY", () => {
+      testTblConst("PRIMARY KEY (id)");
+      testTblConst("PRIMARY KEY (id, name)");
+      testTblConst("CONSTRAINT PRIMARY KEY (id)");
+      testTblConst("CONSTRAINT prim_key PRIMARY KEY (id)");
+      testTblConst(
+        "CONSTRAINT /*c1*/ prim_key /*c2*/ PRIMARY /*c3*/ KEY /*c4*/ ( /*c5*/ id /*c6*/,/*c7*/ name /*c8*/ )"
+      );
     });
   });
 });
