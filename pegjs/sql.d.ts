@@ -22,7 +22,7 @@ type Node =
   | ColumnDefinition
   | ColumnConstraint
   | TableConstraint
-  | TableConstraintDef
+  | ConstraintName
   | AllColumns
   | DistinctArg
   | CastArg
@@ -253,17 +253,17 @@ type DataType = BaseNode & {
   params?: ParenExpr<ExprList<Literal>>;
 };
 
-type TableConstraint = BaseNode & {
-  type: "table_constraint";
-  constraintKw?: Keyword;
+type ConstraintName = BaseNode & {
+  type: "constraint_name";
+  constraintKw: Keyword;
   name?: Identifier;
-  constraint: TableConstraintDef;
 };
 
-type TableConstraintDef = TableConstraintPrimaryKey;
+type TableConstraint = TableConstraintPrimaryKey;
 
 type TableConstraintPrimaryKey = BaseNode & {
   type: "table_constraint_primary_key";
+  name: ConstraintName;
   primaryKeyKw: Keyword[];
   columns: ParenExpr<ExprList<Identifier>>;
 };

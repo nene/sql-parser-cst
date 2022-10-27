@@ -912,7 +912,7 @@ create_definition_list
   }
 
 create_definition
-  = create_constraint_definition
+  = table_constraint
   / create_column_definition
   / create_index_definition
   / create_fulltext_spatial_index_definition
@@ -1129,7 +1129,7 @@ alter_change_column
   }
 
 alter_add_constraint
-  = ADD __ c:create_constraint_definition {
+  = ADD __ c:table_constraint {
     return "[Not implemented]";
   }
 
@@ -1175,61 +1175,64 @@ create_fulltext_spatial_index_definition
       return "[Not implemented]";
     }
 
-create_constraint_definition
-  = create_constraint_primary
-  / create_constraint_unique
-  / create_constraint_foreign
-  / create_constraint_check
+table_constraint
+  = table_constraint_primary_key
+  / table_constraint_unique
+  / table_constraint_foreign_key
+  / table_constraint_check
 
-constraint_name_
-  = kw:CONSTRAINT c1: __ name:(id:ident c2:__ { return trailing(id, c2); })? {
-    return { constraintKw: trailing(kw, c1), name: nullToUndefined(name) };
-  }
-
-create_constraint_primary
-  = name:constraint_name_?
-  kws:(PRIMARY __ KEY __)
-  t:(index_type __)?
-  columns:cte_columns_definition
-  opts:(__ index_options)? {
+constraint_name
+  = kw:CONSTRAINT name:(c:__ id:ident { return leading(id, c); })? {
     return loc({
-      type: "table_constraint",
-      ...(name || {}),
-      constraint: {
-        type: "table_constraint_primary_key",
-        primaryKeyKw: createKeywordList(kws),
-        columns,
-      },
+      type: "constraint_name",
+      constraintKw: kw,
+      ...(name ? {name} : {}),
     });
   }
 
-create_constraint_unique
-  = kc:constraint_name_? __
-  u:UNIQUE __
-  p:(INDEX / KEY)? __
-  i:column? __
-  t:index_type? __
-  de:cte_columns_definition __
-  id:index_options? {
-    return "[Not implemented]";
-  }
+table_constraint_primary_key
+  = name:(id:constraint_name c:__ { return trailing(id, c); })?
+    kws:(PRIMARY __ KEY __)
+    t:(index_type __)?
+    columns:cte_columns_definition
+    opts:(__ index_options)? {
+      return loc({
+        type: "table_constraint_primary_key",
+        ...(name ? {name} : {}),
+        primaryKeyKw: createKeywordList(kws),
+        columns,
+      });
+    }
 
-create_constraint_check
-  = kc:constraint_name_? __ u:CHECK __ nfr:(NOT __ FOR __ REPLICATION __)? "(" __ c:expr __ ")" {
-    return "[Not implemented]";
-  }
+table_constraint_unique
+  = name:(id:constraint_name c:__ { return trailing(id, c); })?
+    u:UNIQUE __
+    p:(INDEX / KEY)? __
+    i:column? __
+    t:index_type? __
+    de:cte_columns_definition __
+    id:index_options? {
+      return "[Not implemented]";
+    }
 
-create_constraint_foreign
-  = kc:constraint_name_? __
-  p:(FOREIGN KEY) __
-  i:column? __
-  de:cte_columns_definition __
-  id:reference_definition? {
+table_constraint_foreign_key
+  = name:(id:constraint_name c:__ { return trailing(id, c); })?
+    p:(FOREIGN __ KEY) __
+    i:column? __
+    de:cte_columns_definition __
+    id:reference_definition? {
+      return "[Not implemented]";
+    }
+
+table_constraint_check
+  = name:(id:constraint_name c:__ { return trailing(id, c); })?
+    u:CHECK __ nfr:(NOT __ FOR __ REPLICATION __)? "(" __ c:expr __ ")" {
     return "[Not implemented]";
   }
 
 check_constraint_definition
-  = kc:constraint_name_? __ u:CHECK __ "(" __ c:expr __ ")" __ ne:(NOT? __ ENFORCED)?  {
+  = name:(id:constraint_name c:__ { return trailing(id, c); })?
+    u:CHECK __ "(" __ c:expr __ ")" __ ne:(NOT? __ ENFORCED)?  {
     return "[Not implemented]";
   }
 

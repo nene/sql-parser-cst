@@ -116,10 +116,9 @@ const showNode = cstTransformer<string>({
   constraint_key: (node) => show(node.kw),
   constraint_default: (node) => show([node.kw, node.expr]),
   constraint_comment: (node) => show([node.kw, node.value]),
-  table_constraint: (node) =>
-    show([node.constraintKw, node.name, node.constraint]),
+  constraint_name: (node) => show([node.constraintKw, node.name]),
   table_constraint_primary_key: (node) =>
-    show([node.primaryKeyKw, node.columns]),
+    show([node.name, node.primaryKeyKw, node.columns]),
 
   // DROP TABLE statement
   drop_table_statement: (node) =>
