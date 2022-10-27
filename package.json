@@ -13,6 +13,13 @@
     "windyrobin <windyrobin@Gmail.com>",
     "Robert Plummer <robertleeplummerjr@gmail.com>"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nene/sql-parser-cst"
+  },
+  "bugs": {
+    "url": "https://github.com/nene/sql-parser-cst/issues"
+  },
   "scripts": {
     "pretty": "prettier --write .",
     "generate": "ts-node pegjs/generate.ts",
