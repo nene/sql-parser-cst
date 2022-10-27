@@ -1270,7 +1270,7 @@ table_option
   / kw:(COMMENT / CONNECTION) __ s:("=")? __ c:literal_string {
     return "[Not implemented]";
   }
-  / kw:COMPRESSION __ s:("=")? __ v:("'"('ZLIB'i / 'LZ4'i / 'NONE'i)"'") {
+  / kw:COMPRESSION __ s:("=")? __ v:("'" ("ZLIB"i / "LZ4"i / "NONE"i) "'") {
     return "[Not implemented]";
   }
   / kw:ENGINE __ s:("=")? __ c:ident_name {
@@ -1322,7 +1322,7 @@ set_assignments
     }
 
 column_assignment
-  = col:column_ref c1:__ '=' c2:__ expr:column_value {
+  = col:column_ref c1:__ "=" c2:__ expr:column_value {
     return loc({
       type: "column_assignment",
       column: trailing(col, c1),
@@ -1667,7 +1667,7 @@ multiplicative_expr
     }
 
 multiplicative_operator
-  = "*" / "/" / "%" / '&' / '>>' / '<<' / '^' / '|' / op:DIV / op:MOD
+  = "*" / "/" / "%" / "&" / ">>" / "<<" / "^" / "|" / op:DIV / op:MOD
 
 concat_expr
   = negation_expr
@@ -2098,25 +2098,25 @@ charset_name
   / "gbk"i
 
 literal_hex_string
-  = 'X'i "'" [0-9A-Fa-f]* "'" {
+  = "X"i "'" [0-9A-Fa-f]* "'" {
     return loc({
-      type: 'string',
+      type: "string",
       text: text(),
     });
   }
 
 literal_bit_string
-  = 'b'i "'" [01]* "'" {
+  = "b"i "'" [01]* "'" {
     return loc({
-      type: 'string',
+      type: "string",
       text: text(),
     });
   }
 
 literal_hex_sequence
-  = '0x' [0-9A-Fa-f]* {
+  = "0x" [0-9A-Fa-f]* {
     return loc({
-      type: 'string',
+      type: "string",
       text: text(),
     });
   }
@@ -2124,7 +2124,7 @@ literal_hex_sequence
 literal_single_quoted_string
   = "'" single_quoted_char* "'" {
     return loc({
-      type: 'string',
+      type: "string",
       text: text(),
     });
   }
@@ -2132,7 +2132,7 @@ literal_single_quoted_string
 literal_double_quoted_string
   = "\"" double_quoted_char* "\"" {
     return loc({
-      type: 'string',
+      type: "string",
       text: text(),
     });
   }
@@ -2140,7 +2140,7 @@ literal_double_quoted_string
 literal_natural_charset_string
   = "N"i literal_single_quoted_string {
     return loc({
-      type: 'string',
+      type: "string",
       text: text(),
     });
   }
@@ -2186,7 +2186,7 @@ line_terminator
 literal_numeric "number"
   = int frac? exp? !ident_start {
     return loc({
-      type: 'number',
+      type: "number",
       text: text(),
     });
   }
