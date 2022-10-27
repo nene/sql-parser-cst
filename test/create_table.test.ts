@@ -126,46 +126,4 @@ describe("create table", () => {
       testType("SET('foo', 'bar', 'baz')");
     });
   });
-
-  describe("column options", () => {
-    it("parses multiple options after type", () => {
-      test("CREATE TABLE foo (id INT /*c1*/ NOT /*c2*/ NULL /*c3*/ DEFAULT /*c4*/ 5 /*c5*/)");
-    });
-
-    function testOption(opt: string) {
-      const sql = `CREATE TABLE t (id INT ${opt})`;
-      expect(show(parse(sql, preserveAll))).toBe(sql);
-    }
-
-    it("NULL / NOT NULL", () => {
-      testOption("NULL");
-      testOption("NOT NULL");
-      testOption("NOT /*c2*/ NULL");
-    });
-
-    it("DEFAULT", () => {
-      testOption("DEFAULT 10");
-      testOption("DEFAULT (5 + 6 > 0 AND true)");
-      testOption("DEFAULT /*c1*/ 10");
-    });
-
-    it("AUTO_INCREMENT", () => {
-      testOption("AUTO_INCREMENT");
-      testOption("AUTO_increment");
-    });
-
-    it("UNIQUE KEY / PRIMARY KEY", () => {
-      testOption("KEY");
-      testOption("UNIQUE");
-      testOption("UNIQUE KEY");
-      testOption("PRIMARY KEY");
-      testOption("UNIQUE /*c*/ KEY");
-      testOption("PRIMARY /*c*/ KEY");
-    });
-
-    it("COMMENT", () => {
-      testOption("COMMENT 'Hello, world!'");
-      testOption("COMMENT /*c*/ 'Hi'");
-    });
-  });
 });
