@@ -1,4 +1,4 @@
-import { parse, preserveAll, show, test } from "./test_utils";
+import { dialect, parse, preserveAll, show, test } from "./test_utils";
 
 describe("constraints", () => {
   describe("column constraints", () => {
@@ -98,6 +98,12 @@ describe("constraints", () => {
           FOREIGN /*c3*/ KEY /*c4*/ (/*c5*/ id /*c6*/) /*c7*/
           REFERENCES /*c8*/ tbl2 /*c9*/ (/*c10*/ t2id /*c11*/)`
         );
+      });
+
+      dialect("sqlite", () => {
+        it("column names are optional in REFERENCES-clause", () => {
+          testTblConst("FOREIGN KEY (id) REFERENCES tbl2");
+        });
       });
     });
   });

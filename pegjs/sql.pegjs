@@ -1244,16 +1244,16 @@ table_constraint_foreign_key
 
 foreign_key_reference
   = kw:REFERENCES c1:__
-    table:table_ref c2:__
-    columns:paren_column_ref_list
+    table:table_ref
+    columns:(c:__ cols:paren_column_ref_list { return leading(cols, c); })?
     m:(__ (MATCH __ FULL / MATCH __ PARTIAL / MATCH __ SIMPLE))?
     od:(__ on_reference)?
     ou:(__ on_reference)? {
       return loc({
         type: "foreign_key_reference",
         referencesKw: trailing(kw, c1),
-        table: trailing(table, c2),
-        columns: columns,
+        table,
+        columns: nullToUndefined(columns),
       });
     }
 
