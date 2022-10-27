@@ -5,14 +5,6 @@
   "version": "0.1.0",
   "main": "lib/parser.js",
   "types": "lib/parser.d.ts",
-  "author": "Rene Saarsoo <nene@triin.net>",
-  "contributors": [
-    "taozhi <taozhi8833998@163.com>",
-    "BörseGo AG <it@boerse-go.de>",
-    "Nico Kaiser <nico@kaiser.me>",
-    "windyrobin <windyrobin@Gmail.com>",
-    "Robert Plummer <robertleeplummerjr@gmail.com>"
-  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/nene/sql-parser-cst"
