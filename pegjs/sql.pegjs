@@ -675,10 +675,7 @@ named_window
 
 window_definition_in_parens
   = "(" c1:__ win:window_definition c2:__ ")" {
-    return loc({
-      type: "paren_expr",
-      expr: surrounding(c1, win, c2),
-    });
+    return loc(createParenExpr(c1, win, c2));
   }
 
 window_definition
@@ -1447,10 +1444,7 @@ data_type
 
 type_params
   = "(" c1:__ params:literal_list c2:__ ")" {
-    return loc({
-      type: "paren_expr",
-      expr: surrounding(c1, params, c2),
-    });
+    return loc(createParenExpr(c1, params, c2));
   }
 
 literal_list
@@ -1784,10 +1778,7 @@ mysql_window_func_keyword
 
 func_args
   = "(" c1:__ args:func_args_list c2:__ ")" {
-    return loc({
-      type: "paren_expr",
-      expr: surrounding(c1, args, c2),
-    });
+    return loc(createParenExpr(c1, args, c2));
   }
 
 func_args_list
