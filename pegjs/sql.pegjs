@@ -262,14 +262,14 @@ with_clause
 
 common_table_expression
   = table:ident
-    columns:(c:__ cols:cte_columns_definition { return {cols, c}; })?
+    columns:(c:__ cols:cte_columns_definition { return leading(cols, c); })?
     c1:__ asKw:AS
     opt:(c:__ op:cte_option { return leading(op, c); })?
     c2:__ select:paren_expr_select {
       return loc({
         type: "common_table_expression",
-        table: columns ? trailing(table, columns.c) : table,
-        columns: columns ? columns.cols : [],
+        table: table,
+        columns: nullToUndefined(columns),
         asKw: leading(asKw, c1),
         optionKw: nullToUndefined(opt),
         expr: leading(select, c2),
@@ -281,9 +281,14 @@ cte_option
   / MATERIALIZED
 
 cte_columns_definition
-  = "(" c1:__ head:ident tail:(__ "," __ ident)* c2:__ ")" {
-      return surrounding(c1, readCommaSepList(head, tail), c2);
+  = "(" c1:__ cols:cte_columns_list c2:__ ")" {
+      return loc(createParenExpr(c1, cols, c2));
     }
+
+cte_columns_list
+  = head:ident tail:(__ "," __ ident)* {
+    return loc(createExprList(head, tail));
+  }
 
 // Other clauses of SELECT statement (besides WITH & SELECT)
 other_clause

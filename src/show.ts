@@ -48,13 +48,7 @@ const showNode = cstTransformer<string>({
   with_clause: (node) =>
     show([node.withKw, node.recursiveKw, show(node.tables, ",")]),
   common_table_expression: (node) =>
-    show([
-      node.table,
-      node.columns.length > 0 ? `(${show(node.columns, ",")})` : undefined,
-      node.asKw,
-      node.optionKw,
-      node.expr,
-    ]),
+    show([node.table, node.columns, node.asKw, node.optionKw, node.expr]),
   // SELECT
   select_clause: (node) =>
     show([node.selectKw, node.options.length > 0 ? node.options : undefined]) +

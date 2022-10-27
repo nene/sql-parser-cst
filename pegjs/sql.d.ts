@@ -122,7 +122,7 @@ type WithClause = BaseNode & {
 type CommonTableExpression = BaseNode & {
   type: "common_table_expression";
   table: Identifier;
-  columns: Identifier[];
+  columns?: ParenExpr<ExprList<Identifier>>;
   asKw: Keyword;
   optionKw?: Keyword[];
   expr: Expr;
