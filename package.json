@@ -17,6 +17,7 @@
     "pegjs/"
   ],
   "scripts": {
+    "prepublishOnly": "yarn build",
     "pretty": "prettier --write .",
     "generate": "ts-node pegjs/generate.ts",
     "watch:generate": "npm-watch",
