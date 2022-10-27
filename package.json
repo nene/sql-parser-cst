@@ -17,7 +17,7 @@
     "pegjs/"
   ],
   "scripts": {
-    "prepublishOnly": "yarn build",
+    "prepublishOnly": "yarn test && yarn build",
     "postinstall": "yarn generate",
     "pretty": "prettier --write .",
     "generate": "ts-node pegjs/generate.ts",
