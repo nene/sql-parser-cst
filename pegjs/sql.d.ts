@@ -259,7 +259,10 @@ type ConstraintName = BaseNode & {
   name?: Identifier;
 };
 
-type TableConstraint = TableConstraintPrimaryKey | TableConstraintUnique;
+type TableConstraint =
+  | TableConstraintPrimaryKey
+  | TableConstraintUnique
+  | TableConstraintCheck;
 
 type TableConstraintPrimaryKey = BaseNode & {
   type: "table_constraint_primary_key";
@@ -271,8 +274,15 @@ type TableConstraintPrimaryKey = BaseNode & {
 type TableConstraintUnique = BaseNode & {
   type: "table_constraint_unique";
   name: ConstraintName;
-  uniqueKw: Keyword[];
+  uniqueKw: Keyword | Keyword[];
   columns: ParenExpr<ExprList<ColumnRef>>;
+};
+
+type TableConstraintCheck = BaseNode & {
+  type: "table_constraint_check";
+  name: ConstraintName;
+  checkKw: Keyword;
+  expr: ParenExpr<Expr>;
 };
 
 type ColumnConstraint =

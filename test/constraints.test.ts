@@ -79,5 +79,12 @@ describe("constraints", () => {
         "CONSTRAINT /*c1*/ u_key /*c2*/ UNIQUE /*c3*/ KEY /*c4*/ ( /*c5*/ id /*c6*/,/*c7*/ name /*c8*/ )"
       );
     });
+
+    it("CHECK", () => {
+      testTblConst("CHECK (col > 10)");
+      testTblConst("CONSTRAINT CHECK (true)");
+      testTblConst("CONSTRAINT check_c CHECK (false)");
+      testTblConst("CONSTRAINT /*c1*/ check_c /*c2*/ CHECK /*c3*/ (/*c4*/ true /*c5*/)");
+    });
   });
 });

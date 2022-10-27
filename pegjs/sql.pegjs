@@ -1226,9 +1226,15 @@ table_constraint_foreign_key
 
 table_constraint_check
   = name:(id:constraint_name c:__ { return trailing(id, c); })?
-    u:CHECK __ "(" __ c:expr __ ")" __ ne:(NOT? __ ENFORCED)?  {
-    return "[Not implemented]";
-  }
+    kw:CHECK c:__ expr:paren_expr
+    ((__ NOT)? __ ENFORCED)?  {
+      return loc({
+        type: "table_constraint_check",
+        ...(name ? {name} : {}),
+        checkKw: kw,
+        expr: leading(expr, c),
+      });
+    }
 
 reference_definition
   = kc:REFERENCES __
