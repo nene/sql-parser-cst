@@ -365,11 +365,6 @@ type ConstraintAutoIncrement = BaseNode & {
   autoIncrementKw: Keyword;
 };
 
-type ConstraintKey = BaseNode & {
-  type: "constraint_key";
-  keyKw: Keyword | Keyword[];
-};
-
 type ConstraintComment = BaseNode & {
   type: "constraint_comment";
   commentKw: Keyword;
