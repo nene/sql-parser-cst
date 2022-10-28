@@ -22,9 +22,9 @@
     "generate": "ts-node pegjs/generate.ts",
     "watch:generate": "npm-watch",
     "build": "yarn generate && tsc",
-    "test:mysql": "yarn generate mysql && jest --config test/config/mysql.json",
-    "test:sqlite": "yarn generate sqlite && jest --config test/config/sqlite.json",
-    "test": "yarn test:mysql && yarn test:sqlite"
+    "test:mysql": "jest --config test/config/mysql.json",
+    "test:sqlite": "jest --config test/config/sqlite.json",
+    "test": "yarn generate && yarn test:mysql && yarn test:sqlite"
   },
   "devDependencies": {
     "@types/jest": "^29.1.2",
