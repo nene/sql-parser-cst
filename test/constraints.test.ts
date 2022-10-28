@@ -49,6 +49,11 @@ describe("constraints", () => {
       testColConst("REFERENCES tbl2 (col1)");
     });
 
+    it("COLLATE", () => {
+      testColConst("COLLATE utf8mb4_bin");
+      testColConst("COLLATE /*c1*/ utf8");
+    });
+
     dialect("mysql", () => {
       it("AUTO_INCREMENT", () => {
         testColConst("AUTO_INCREMENT");
@@ -84,6 +89,7 @@ describe("constraints", () => {
       testColConst("CONSTRAINT UNIQUE");
       testColConst("CONSTRAINT CHECK (true)");
       testColConst("CONSTRAINT REFERENCES tbl2 (col)");
+      testColConst("CONSTRAINT COLLATE utf8");
 
       testColConst("CONSTRAINT /*c1*/ NULL");
     });
@@ -96,6 +102,7 @@ describe("constraints", () => {
       testColConst("CONSTRAINT cname UNIQUE");
       testColConst("CONSTRAINT cname CHECK (true)");
       testColConst("CONSTRAINT cname REFERENCES tbl2 (col)");
+      testColConst("CONSTRAINT cname COLLATE utf8");
 
       testColConst("CONSTRAINT /*c1*/ cname /*c2*/ NULL");
     });

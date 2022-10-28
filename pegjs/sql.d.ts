@@ -289,7 +289,8 @@ type ColumnConstraint =
   | ConstraintComment
   | ConstraintCheck
   | ConstraintIndex
-  | ConstraintGenerated;
+  | ConstraintGenerated
+  | ConstraintCollate;
 
 type ConstraintPrimaryKey = BaseNode & {
   type: "constraint_primary_key";
@@ -381,6 +382,12 @@ type ConstraintGenerated = BaseNode & {
   asKw: Keyword[]; // AS
   expr: ParenExpr<Expr>;
   storageKw?: Keyword; // STORED | VIRTUAL
+};
+
+type ConstraintCollate = BaseNode & {
+  type: "constraint_collate";
+  collateKw: Keyword; // COLLATE
+  collation: Identifier;
 };
 
 // DROP TABLE

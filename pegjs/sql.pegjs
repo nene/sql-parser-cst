@@ -1334,15 +1334,13 @@ column_constraint_type_standard
   / column_constraint_unique
   / references_specification
   / constraint_check
+  / constraint_collate
 
 column_constraint_type$mysql
   = column_constraint_type_standard
   / column_constraint_index
   / constraint_auto_increment
   / constraint_comment
-  / ca:collate_expr {
-    return "[Not implemented]";
-  }
   / cf:column_format {
     return "[Not implemented]";
   }
@@ -1356,9 +1354,6 @@ column_constraint_type$mysql
 column_constraint_type$sqlite
   = column_constraint_type_standard
   / constraint_generated
-  / ca:collate_expr {
-    return "[Not implemented]";
-  }
 
 constraint_not_null
   = kws:(NOT __ NULL) {
@@ -1386,6 +1381,15 @@ constraint_comment
       type: "constraint_comment",
       commentKw: kw,
       value: leading(str, c),
+    });
+  }
+
+constraint_collate
+  = kw:COLLATE c:__ id:ident {
+    return loc({
+      type: "constraint_collate",
+      collateKw: kw,
+      collation: leading(id, c),
     });
   }
 
