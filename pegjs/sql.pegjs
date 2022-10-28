@@ -915,13 +915,13 @@ column_constraint
     return loc({ type: "constraint_null", nullKw: kw });
   }
   / kw:DEFAULT c:__ e:(literal / paren_expr) {
-    return loc({ type: "constraint_default", kw, expr: leading(e, c) });
+    return loc({ type: "constraint_default", defaultKw: kw, expr: leading(e, c) });
   }
   / kw:AUTO_INCREMENT {
-    return loc({ type: "constraint_auto_increment", kw });
+    return loc({ type: "constraint_auto_increment", autoIncrementKw: kw });
   }
   / kws:(UNIQUE __ KEY / UNIQUE / PRIMARY __ KEY / KEY) {
-    return loc({ type: "constraint_key", kw: createKeywordList(kws) });
+    return loc({ type: "constraint_key", keyKw: createKeywordList(kws) });
   }
   / constraint_comment
   / ca:collate_expr {
@@ -964,7 +964,7 @@ constraint_comment
   = kw:COMMENT c:__ str:literal_string {
     return loc({
       type: "constraint_comment",
-      kw,
+      commentKw: kw,
       value: leading(str, c),
     });
   }

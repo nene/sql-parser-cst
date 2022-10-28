@@ -338,23 +338,23 @@ type ConstraintNotNull = BaseNode & {
 
 type ConstraintDefault = BaseNode & {
   type: "constraint_default";
-  kw: Keyword;
+  defaultKw: Keyword;
   expr: Expr;
 };
 
 type ConstraintAutoIncrement = BaseNode & {
   type: "constraint_auto_increment";
-  kw: Keyword;
+  autoIncrementKw: Keyword;
 };
 
 type ConstraintKey = BaseNode & {
   type: "constraint_key";
-  kw: Keyword | Keyword[];
+  keyKw: Keyword | Keyword[];
 };
 
 type ConstraintComment = BaseNode & {
   type: "constraint_comment";
-  kw: Keyword;
+  commentKw: Keyword;
   value: StringLiteral;
 };
 
