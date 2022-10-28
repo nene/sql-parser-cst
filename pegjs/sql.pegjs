@@ -1330,6 +1330,7 @@ column_constraint_type
   / constraint_auto_increment
   / column_constraint_primary_key
   / column_constraint_unique
+  / column_constraint_index
   / references_specification
   / constraint_check
   / constraint_comment
@@ -1400,6 +1401,7 @@ table_constraint_type
   / table_constraint_unique
   / constraint_foreign_key
   / constraint_check
+  / table_constraint_index
 
 table_constraint_primary_key
   = kws:(PRIMARY __ KEY __)
@@ -1508,6 +1510,24 @@ reference_action_type
   = RESTRICT
   / CASCADE
   / kws:(SET __ NULL / NO __ ACTION / SET __ DEFAULT) { return createKeywordList(kws); }
+
+table_constraint_index
+  = kw:(k:(INDEX / KEY) c:__ { return trailing(k, c); })
+    columns:paren_column_ref_list {
+      return loc({
+        type: "constraint_index",
+        indexKw: kw,
+        columns,
+      });
+    }
+
+column_constraint_index
+  = kw:KEY {
+      return loc({
+        type: "constraint_index",
+        indexKw: kw,
+      });
+    }
 
 /**
  * Data types

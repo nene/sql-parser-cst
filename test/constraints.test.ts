@@ -59,6 +59,10 @@ describe("constraints", () => {
         testColConst("COMMENT 'Hello, world!'");
         testColConst("COMMENT /*c*/ 'Hi'");
       });
+
+      it("KEY", () => {
+        testColConst("KEY");
+      });
     });
 
     it("supports CONSTRAINT keyword for column constraints", () => {
@@ -158,6 +162,15 @@ describe("constraints", () => {
       it("supports combining MATCH type and ON UPDATE/DELETE", () => {
         testTblConst("FOREIGN KEY (id) REFERENCES tbl2 (id) MATCH FULL ON UPDATE CASCADE");
         testTblConst("FOREIGN KEY (id) REFERENCES tbl2 (id) ON DELETE SET NULL MATCH SIMPLE");
+      });
+    });
+
+    dialect("mysql", () => {
+      it("INDEX / KEY", () => {
+        testTblConst("KEY (id)");
+        testTblConst("INDEX (id)");
+        testTblConst("KEY (id, name)");
+        testTblConst("KEY /*c1*/ (/*c2*/ id /*c3*/,/*c4*/ name /*c5*/)");
       });
     });
 

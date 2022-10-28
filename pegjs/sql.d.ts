@@ -275,7 +275,8 @@ type TableConstraint =
   | ConstraintPrimaryKey
   | ConstraintForeignKey
   | ConstraintUnique
-  | ConstraintCheck;
+  | ConstraintCheck
+  | ConstraintIndex;
 
 type ColumnConstraint =
   | ConstraintNull
@@ -286,7 +287,8 @@ type ColumnConstraint =
   | ConstraintPrimaryKey
   | ReferencesSpecification
   | ConstraintComment
-  | ConstraintCheck;
+  | ConstraintCheck
+  | ConstraintIndex;
 
 type ConstraintPrimaryKey = BaseNode & {
   type: "constraint_primary_key";
@@ -332,6 +334,12 @@ type ConstraintCheck = BaseNode & {
   type: "constraint_check";
   checkKw: Keyword;
   expr: ParenExpr<Expr>;
+};
+
+type ConstraintIndex = BaseNode & {
+  type: "constraint_index";
+  indexKw: Keyword; // INDEX | KEY
+  columns?: ParenExpr<ExprList<ColumnRef>>;
 };
 
 type ConstraintNull = BaseNode & {

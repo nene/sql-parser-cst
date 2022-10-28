@@ -128,6 +128,7 @@ const showNode = cstTransformer<string>({
   referential_match: (node) => show([node.matchKw, node.typeKw]),
   constraint_unique: (node) => show([node.uniqueKw, node.columns]),
   constraint_check: (node) => show([node.checkKw, node.expr]),
+  constraint_index: (node) => show([node.indexKw, node.columns]),
 
   // DROP TABLE statement
   drop_table_statement: (node) =>
