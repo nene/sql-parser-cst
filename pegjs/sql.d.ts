@@ -290,7 +290,8 @@ type ColumnConstraint =
   | ConstraintCheck
   | ConstraintIndex
   | ConstraintGenerated
-  | ConstraintCollate;
+  | ConstraintCollate
+  | ConstraintVisible;
 
 type ConstraintPrimaryKey = BaseNode & {
   type: "constraint_primary_key";
@@ -383,6 +384,11 @@ type ConstraintCollate = BaseNode & {
   type: "constraint_collate";
   collateKw: Keyword; // COLLATE
   collation: Identifier;
+};
+
+type ConstraintVisible = BaseNode & {
+  type: "constraint_visible";
+  visibleKw: Keyword; // VISIBLE | INVISIBLE
 };
 
 // DROP TABLE

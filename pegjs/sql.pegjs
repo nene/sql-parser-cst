@@ -1342,6 +1342,7 @@ column_constraint_type$mysql
   / column_constraint_index
   / constraint_auto_increment
   / constraint_comment
+  / constraint_visible
   / cf:column_format {
     return "[Not implemented]";
   }
@@ -1388,6 +1389,11 @@ constraint_collate
       collateKw: kw,
       collation: leading(id, c),
     });
+  }
+
+constraint_visible
+  = kw:(VISIBLE / INVISIBLE) {
+    return loc({ type: "constraint_visible", visibleKw: kw });
   }
 
 column_format

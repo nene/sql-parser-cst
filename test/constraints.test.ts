@@ -77,6 +77,11 @@ describe("constraints", () => {
       it("KEY", () => {
         testColConst("KEY");
       });
+
+      it("VISIBLE / INVISIBLE", () => {
+        testColConst("VISIBLE");
+        testColConst("INVISIBLE");
+      });
     });
 
     it("supports CONSTRAINT keyword for column constraints", () => {
