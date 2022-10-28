@@ -54,6 +54,15 @@ describe("constraints", () => {
       testColConst("COLLATE /*c1*/ utf8");
     });
 
+    it("GENERATED ALWAYS", () => {
+      testColConst("GENERATED ALWAYS AS (col1 + col2)");
+      testColConst("AS (col1 + col2)");
+      testColConst("GENERATED ALWAYS AS (true) STORED");
+      testColConst("GENERATED ALWAYS AS (true) VIRTUAL");
+
+      testColConst("GENERATED /*c1*/ ALWAYS /*c2*/ AS /*c3*/ (/*c4*/ 5 /*c5*/) /*c6*/ STORED");
+    });
+
     dialect("mysql", () => {
       it("AUTO_INCREMENT", () => {
         testColConst("AUTO_INCREMENT");
@@ -70,17 +79,6 @@ describe("constraints", () => {
       });
     });
 
-    dialect("sqlite", () => {
-      it("GENERATED ALWAYS", () => {
-        testColConst("GENERATED ALWAYS AS (col1 + col2)");
-        testColConst("AS (col1 + col2)");
-        testColConst("GENERATED ALWAYS AS (true) STORED");
-        testColConst("GENERATED ALWAYS AS (true) VIRTUAL");
-
-        testColConst("GENERATED /*c1*/ ALWAYS /*c2*/ AS /*c3*/ (/*c4*/ 5 /*c5*/) /*c6*/ STORED");
-      });
-    });
-
     it("supports CONSTRAINT keyword for column constraints", () => {
       testColConst("CONSTRAINT NULL");
       testColConst("CONSTRAINT NOT NULL");
@@ -90,6 +88,7 @@ describe("constraints", () => {
       testColConst("CONSTRAINT CHECK (true)");
       testColConst("CONSTRAINT REFERENCES tbl2 (col)");
       testColConst("CONSTRAINT COLLATE utf8");
+      testColConst("CONSTRAINT GENERATED ALWAYS AS (x + y)");
 
       testColConst("CONSTRAINT /*c1*/ NULL");
     });
@@ -103,6 +102,7 @@ describe("constraints", () => {
       testColConst("CONSTRAINT cname CHECK (true)");
       testColConst("CONSTRAINT cname REFERENCES tbl2 (col)");
       testColConst("CONSTRAINT cname COLLATE utf8");
+      testColConst("CONSTRAINT cname GENERATED ALWAYS AS (x + y)");
 
       testColConst("CONSTRAINT /*c1*/ cname /*c2*/ NULL");
     });

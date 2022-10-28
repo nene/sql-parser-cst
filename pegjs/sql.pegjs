@@ -1335,6 +1335,7 @@ column_constraint_type_standard
   / references_specification
   / constraint_check
   / constraint_collate
+  / constraint_generated
 
 column_constraint_type$mysql
   = column_constraint_type_standard
@@ -1350,10 +1351,6 @@ column_constraint_type$mysql
   / t:(CHARACTER __ SET) __ s:"="? __ v:ident_name {
     return "[Not implemented]";
   }
-
-column_constraint_type$sqlite
-  = column_constraint_type_standard
-  / constraint_generated
 
 constraint_not_null
   = kws:(NOT __ NULL) {
