@@ -933,7 +933,7 @@ column_constraint
   / s:storage {
     return "[Not implemented]";
   }
-  / re:foreign_key_reference {
+  / re:references_specification {
     return "[Not implemented]";
   }
   / ck:table_constraint_check {
@@ -1232,24 +1232,24 @@ table_constraint_foreign_key
     kws:(FOREIGN __ KEY __)
     i:(ident __)?
     columns:paren_column_ref_list
-    c1:__ ref:foreign_key_reference {
+    c1:__ ref:references_specification {
       return loc({
         type: "table_constraint_foreign_key",
         ...(name ? {name} : {}),
         foreignKeyKw: createKeywordList(kws),
         columns,
-        reference: leading(ref, c1),
+        references: leading(ref, c1),
       });
     }
 
-foreign_key_reference
+references_specification
   = kw:REFERENCES c1:__
     table:table_ref
     columns:(c:__ cols:paren_column_ref_list { return leading(cols, c); })?
     m:(__ (MATCH __ FULL / MATCH __ PARTIAL / MATCH __ SIMPLE))?
     actions:(c:__ a:referencial_action { return leading(a, c); })* {
       return loc({
-        type: "foreign_key_reference",
+        type: "references_specification",
         referencesKw: trailing(kw, c1),
         table,
         columns: nullToUndefined(columns),

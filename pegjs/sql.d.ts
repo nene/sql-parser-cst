@@ -23,7 +23,7 @@ type Node =
   | ColumnConstraint
   | TableConstraint
   | ConstraintName
-  | ForeignKeyReference
+  | ReferencesSpecification
   | ReferencialAction
   | AllColumns
   | DistinctArg
@@ -279,11 +279,11 @@ type TableConstraintForeignKey = BaseNode & {
   name: ConstraintName;
   foreignKeyKw: Keyword[];
   columns: ParenExpr<ExprList<ColumnRef>>;
-  reference: ForeignKeyReference;
+  references: ReferencesSpecification;
 };
 
-type ForeignKeyReference = BaseNode & {
-  type: "foreign_key_reference";
+type ReferencesSpecification = BaseNode & {
+  type: "references_specification";
   referencesKw: Keyword;
   table: TableRef;
   columns?: ParenExpr<ExprList<ColumnRef>>;
