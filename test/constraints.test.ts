@@ -44,6 +44,11 @@ describe("constraints", () => {
       testColConst("CHECK (col > 10)");
     });
 
+    it("REFERENCES", () => {
+      // full syntax is tested under table constraints tests
+      testColConst("REFERENCES tbl2 (col1)");
+    });
+
     dialect("mysql", () => {
       it("AUTO_INCREMENT", () => {
         testColConst("AUTO_INCREMENT");
@@ -63,6 +68,7 @@ describe("constraints", () => {
       testColConst("CONSTRAINT PRIMARY KEY");
       testColConst("CONSTRAINT UNIQUE");
       testColConst("CONSTRAINT CHECK (true)");
+      testColConst("CONSTRAINT REFERENCES tbl2 (col)");
 
       testColConst("CONSTRAINT /*c1*/ NULL");
     });
@@ -74,6 +80,7 @@ describe("constraints", () => {
       testColConst("CONSTRAINT cname PRIMARY KEY");
       testColConst("CONSTRAINT cname UNIQUE");
       testColConst("CONSTRAINT cname CHECK (true)");
+      testColConst("CONSTRAINT cname REFERENCES tbl2 (col)");
 
       testColConst("CONSTRAINT /*c1*/ cname /*c2*/ NULL");
     });

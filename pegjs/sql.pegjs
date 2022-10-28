@@ -1330,6 +1330,8 @@ column_constraint_type
   / constraint_auto_increment
   / column_constraint_primary_key
   / column_constraint_unique
+  / references_specification
+  / constraint_check
   / constraint_comment
   / ca:collate_expr {
     return "[Not implemented]";
@@ -1340,10 +1342,6 @@ column_constraint_type
   / s:storage {
     return "[Not implemented]";
   }
-  / re:references_specification {
-    return "[Not implemented]";
-  }
-  / constraint_check
   / t:(CHARACTER __ SET) __ s:"="? __ v:ident_name {
     return "[Not implemented]";
   }

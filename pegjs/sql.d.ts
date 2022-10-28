@@ -284,6 +284,7 @@ type ColumnConstraint =
   | ConstraintAutoIncrement
   | ConstraintUnique
   | ConstraintPrimaryKey
+  | ReferencesSpecification
   | ConstraintComment
   | ConstraintCheck;
 
