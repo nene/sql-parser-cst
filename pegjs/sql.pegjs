@@ -1345,9 +1345,6 @@ column_constraint_type$mysql
   / constraint_visible
   / constraint_column_format
   / constraint_storage
-  / t:(CHARACTER __ SET) __ s:"="? __ v:ident_name {
-    return "[Not implemented]";
-  }
 
 constraint_not_null
   = kws:(NOT __ NULL) {
