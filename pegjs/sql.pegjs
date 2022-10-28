@@ -1295,29 +1295,35 @@ default_values
 /**
  * Constraints
  */
-column_constraint =
-  name:(id:constraint_name c:__ { return trailing(id, c); })? constraint:column_constraint_type {
-    if (!name) {
-      return constraint;
+column_constraint
+  = name:(id:constraint_name c:__ { return trailing(id, c); })?
+    constraint:column_constraint_type
+    defer:(c:__ d:constraint_deferrable { return leading(d, c) })? {
+      if (!name && !defer) {
+        return constraint;
+      }
+      return loc({
+        type: "constraint",
+        ...(name ? {name} : {}),
+        constraint,
+        ...(defer ? {deferrable: defer} : {}),
+      });
     }
-    return loc({
-      type: "constraint",
-      ...(name ? {name} : {}),
-      constraint,
-    })
-  }
 
-table_constraint =
-  name:(id:constraint_name c:__ { return trailing(id, c); })? constraint:table_constraint_type {
-    if (!name) {
-      return constraint;
+table_constraint
+  = name:(id:constraint_name c:__ { return trailing(id, c); })?
+    constraint:table_constraint_type
+    defer:(c:__ d:constraint_deferrable { return leading(d, c) })? {
+      if (!name && !defer) {
+        return constraint;
+      }
+      return loc({
+        type: "constraint",
+        ...(name ? {name} : {}),
+        constraint,
+        ...(defer ? {deferrable: defer} : {}),
+      });
     }
-    return loc({
-      type: "constraint",
-      ...(name ? {name} : {}),
-      constraint,
-    })
-  }
 
 constraint_name
   = kw:CONSTRAINT name:(c:__ id:ident { return leading(id, c); })? {
@@ -1327,6 +1333,19 @@ constraint_name
       ...(name ? {name} : {}),
     });
   }
+
+constraint_deferrable
+  = kw:(DEFERRABLE / NOT __ DEFERRABLE)
+    init:(c:__ k:initially_immediate_or_deferred { return leading(k, c); })? {
+      return loc({
+        type: "constraint_deferrable",
+        deferrableKw: createKeywordList(kw),
+        initiallyKw: nullToUndefined(init),
+      });
+    }
+
+initially_immediate_or_deferred
+  = kws:(INITIALLY __ (IMMEDIATE / DEFERRED)) { return createKeywordList(kws); }
 
 column_constraint_type
   = column_constraint_type_standard
@@ -2482,6 +2501,8 @@ DAY                 = kw:"DAY"i                 !ident_part { return loc(createK
 DEC                 = kw:"DEC"i                 !ident_part { return loc(createKeyword(kw)); }
 DECIMAL             = kw:"DECIMAL"i             !ident_part { return loc(createKeyword(kw)); }
 DEFAULT             = kw:"DEFAULT"i             !ident_part { return loc(createKeyword(kw)); }
+DEFERRABLE          = kw:"DEFERRABLE"i          !ident_part { return loc(createKeyword(kw)); }
+DEFERRED            = kw:"DEFERRED"i            !ident_part { return loc(createKeyword(kw)); }
 DEFINER             = kw:"DEFINER"i             !ident_part { return loc(createKeyword(kw)); }
 DELAYED             = kw:"DELAYED"i             !ident_part { return loc(createKeyword(kw)); }
 DELETE              = kw:"DELETE"i              !ident_part { return loc(createKeyword(kw)); }
@@ -2536,8 +2557,10 @@ HIGH_PRIORITY       = kw:"HIGH_PRIORITY"i       !ident_part { return loc(createK
 HOUR                = kw:"HOUR"i                !ident_part { return loc(createKeyword(kw)); }
 IF                  = kw:"IF"i                  !ident_part { return loc(createKeyword(kw)); }
 IGNORE              = kw:"IGNORE"i              !ident_part { return loc(createKeyword(kw)); }
+IMMEDIATE           = kw:"IMMEDIATE"i           !ident_part { return loc(createKeyword(kw)); }
 IN                  = kw:"IN"i                  !ident_part { return loc(createKeyword(kw)); }
 INDEX               = kw:"INDEX"i               !ident_part { return loc(createKeyword(kw)); }
+INITIALLY           = kw:"INITIALLY"i           !ident_part { return loc(createKeyword(kw)); }
 INNER               = kw:"INNER"i               !ident_part { return loc(createKeyword(kw)); }
 INPLACE             = kw:"INPLACE"i             !ident_part { return loc(createKeyword(kw)); }
 INSERT              = kw:"INSERT"i              !ident_part { return loc(createKeyword(kw)); }

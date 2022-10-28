@@ -24,6 +24,7 @@ type Node =
   | ColumnConstraint
   | TableConstraint
   | ConstraintName
+  | ConstraintDeferrable
   | ReferencesSpecification
   | ReferentialAction
   | ReferentialMatch
@@ -263,12 +264,19 @@ type Constraint<T> = BaseNode & {
   type: "constraint";
   name?: ConstraintName;
   constraint: T;
+  deferrable?: ConstraintDeferrable;
 };
 
 type ConstraintName = BaseNode & {
   type: "constraint_name";
   constraintKw: Keyword;
   name?: Identifier;
+};
+
+type ConstraintDeferrable = BaseNode & {
+  type: "constraint_deferrable";
+  deferrableKw: Keyword | Keyword[]; // DEFERRABLE | NOT DEFERRABLE
+  initiallyKw?: Keyword[]; // INITIALLY IMMEDIATE | INITIALLY DEFERRED
 };
 
 type TableConstraint =

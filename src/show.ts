@@ -112,8 +112,9 @@ const showNode = cstTransformer<string>({
       node.constraints.length > 0 ? node.constraints : undefined,
     ]),
   // constraints
-  constraint: (node) => show([node.name, node.constraint]),
+  constraint: (node) => show([node.name, node.constraint, node.deferrable]),
   constraint_name: (node) => show([node.constraintKw, node.name]),
+  constraint_deferrable: (node) => show([node.deferrableKw, node.initiallyKw]),
   constraint_null: (node) => show(node.nullKw),
   constraint_not_null: (node) => show(node.notNullKw),
   constraint_auto_increment: (node) => show(node.autoIncrementKw),

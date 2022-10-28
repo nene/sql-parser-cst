@@ -49,6 +49,12 @@ describe("constraints", () => {
       testColConst("REFERENCES tbl2 (col1)");
     });
 
+    dialect("sqlite", () => {
+      it("supports deferrability in references clause", () => {
+        testColConst("REFERENCES tbl2 (id) DEFERRABLE");
+      });
+    });
+
     it("COLLATE", () => {
       testColConst("COLLATE utf8mb4_bin");
       testColConst("COLLATE /*c1*/ utf8");
@@ -208,6 +214,19 @@ describe("constraints", () => {
       it("supports combining MATCH type and ON UPDATE/DELETE", () => {
         testTblConst("FOREIGN KEY (id) REFERENCES tbl2 (id) MATCH FULL ON UPDATE CASCADE");
         testTblConst("FOREIGN KEY (id) REFERENCES tbl2 (id) ON DELETE SET NULL MATCH SIMPLE");
+      });
+    });
+
+    dialect("sqlite", () => {
+      it("supports deferrability of foreign keys", () => {
+        testTblConst("FOREIGN KEY (id) REFERENCES tbl2 (id) DEFERRABLE");
+        testTblConst("FOREIGN KEY (id) REFERENCES tbl2 (id) NOT DEFERRABLE");
+        testTblConst("FOREIGN KEY (id) REFERENCES tbl2 (id) DEFERRABLE INITIALLY DEFERRED");
+        testTblConst("FOREIGN KEY (id) REFERENCES tbl2 (id) DEFERRABLE INITIALLY IMMEDIATE");
+        testTblConst(
+          `FOREIGN KEY (id) REFERENCES tbl2 (id)
+          /*c1*/ NOT /*c2*/ DEFERRABLE /*c3*/ INITIALLY /*c4*/ IMMEDIATE`
+        );
       });
     });
 
