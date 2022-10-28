@@ -291,7 +291,9 @@ type ColumnConstraint =
   | ConstraintIndex
   | ConstraintGenerated
   | ConstraintCollate
-  | ConstraintVisible;
+  | ConstraintVisible
+  | ConstraintColumnFormat
+  | ConstraintStorage;
 
 type ConstraintPrimaryKey = BaseNode & {
   type: "constraint_primary_key";
@@ -389,6 +391,18 @@ type ConstraintCollate = BaseNode & {
 type ConstraintVisible = BaseNode & {
   type: "constraint_visible";
   visibleKw: Keyword; // VISIBLE | INVISIBLE
+};
+
+type ConstraintColumnFormat = BaseNode & {
+  type: "constraint_column_format";
+  columnFormatKw: Keyword; // COLUMN_FORMAT
+  formatKw: Keyword; // FIXED | DYNAMIC | DEFAULT
+};
+
+type ConstraintStorage = BaseNode & {
+  type: "constraint_storage";
+  storageKw: Keyword; // STORAGE
+  typeKw: Keyword; // DISK | MEMORY
 };
 
 // DROP TABLE

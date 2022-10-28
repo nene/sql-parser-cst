@@ -82,6 +82,19 @@ describe("constraints", () => {
         testColConst("VISIBLE");
         testColConst("INVISIBLE");
       });
+
+      it("COLUMN_FORMAT", () => {
+        testColConst("COLUMN_FORMAT FIXED");
+        testColConst("COLUMN_FORMAT DYNAMIC");
+        testColConst("COLUMN_FORMAT DEFAULT");
+        testColConst("COLUMN_FORMAT /*c*/ DEFAULT");
+      });
+
+      it("STORAGE", () => {
+        testColConst("STORAGE DISK");
+        testColConst("STORAGE MEMORY");
+        testColConst("STORAGE /*c*/ MEMORY");
+      });
     });
 
     it("supports CONSTRAINT keyword for column constraints", () => {

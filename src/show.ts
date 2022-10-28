@@ -133,6 +133,9 @@ const showNode = cstTransformer<string>({
     show([node.generatedKw, node.asKw, node.expr, node.storageKw]),
   constraint_collate: (node) => show([node.collateKw, node.collation]),
   constraint_visible: (node) => show(node.visibleKw),
+  constraint_column_format: (node) =>
+    show([node.columnFormatKw, node.formatKw]),
+  constraint_storage: (node) => show([node.storageKw, node.typeKw]),
 
   // DROP TABLE statement
   drop_table_statement: (node) =>

@@ -1343,12 +1343,8 @@ column_constraint_type$mysql
   / constraint_auto_increment
   / constraint_comment
   / constraint_visible
-  / cf:column_format {
-    return "[Not implemented]";
-  }
-  / s:storage {
-    return "[Not implemented]";
-  }
+  / constraint_column_format
+  / constraint_storage
   / t:(CHARACTER __ SET) __ s:"="? __ v:ident_name {
     return "[Not implemented]";
   }
@@ -1396,14 +1392,22 @@ constraint_visible
     return loc({ type: "constraint_visible", visibleKw: kw });
   }
 
-column_format
-  = k:COLUMN_FORMAT __ f:(FIXED / DYNAMIC / DEFAULT) {
-    return "[Not implemented]";
+constraint_column_format
+  = kw:COLUMN_FORMAT c:__ f:(FIXED / DYNAMIC / DEFAULT) {
+    return loc({
+      type: "constraint_column_format",
+      columnFormatKw: trailing(kw, c),
+      formatKw: f,
+    });
   }
 
-storage
-  = k:STORAGE __ s:(DISK / MEMORY) {
-    return "[Not implemented]";
+constraint_storage
+  = kw:STORAGE c:__ t:(DISK / MEMORY) {
+    return loc({
+      type: "constraint_storage",
+      storageKw: trailing(kw, c),
+      typeKw: t,
+    });
   }
 
 drop_index_opt
