@@ -24,7 +24,7 @@ type Node =
   | TableConstraint
   | ConstraintName
   | ForeignKeyReference
-  | ReferenceAction
+  | ReferencialAction
   | AllColumns
   | DistinctArg
   | CastArg
@@ -287,11 +287,11 @@ type ForeignKeyReference = BaseNode & {
   referencesKw: Keyword;
   table: TableRef;
   columns?: ParenExpr<ExprList<ColumnRef>>;
-  actions: ReferenceAction[];
+  actions: ReferencialAction[];
 };
 
-type ReferenceAction = BaseNode & {
-  type: "reference_action";
+type ReferencialAction = BaseNode & {
+  type: "referencial_action";
   onKw: Keyword; // ON
   eventKw: Keyword; // DELETE | UPDATE
   actionKw: Keyword | Keyword[]; // RESTRICT | CASCADE | SET NULL | NO ACTION | SET DEFAULT

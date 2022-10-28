@@ -1247,7 +1247,7 @@ foreign_key_reference
     table:table_ref
     columns:(c:__ cols:paren_column_ref_list { return leading(cols, c); })?
     m:(__ (MATCH __ FULL / MATCH __ PARTIAL / MATCH __ SIMPLE))?
-    actions:(c:__ a:reference_action { return leading(a, c); })* {
+    actions:(c:__ a:referencial_action { return leading(a, c); })* {
       return loc({
         type: "foreign_key_reference",
         referencesKw: trailing(kw, c1),
@@ -1257,10 +1257,10 @@ foreign_key_reference
       });
     }
 
-reference_action
+referencial_action
   = onKw:ON c1:__ eventKw:(UPDATE / DELETE) c2:__ actionKw:reference_action_type {
     return loc({
-      type: "reference_action",
+      type: "referencial_action",
       onKw: trailing(onKw, c1),
       eventKw: trailing(eventKw, c2),
       actionKw,
