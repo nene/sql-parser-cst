@@ -288,7 +288,8 @@ type ColumnConstraint =
   | ReferencesSpecification
   | ConstraintComment
   | ConstraintCheck
-  | ConstraintIndex;
+  | ConstraintIndex
+  | ConstraintGenerated;
 
 type ConstraintPrimaryKey = BaseNode & {
   type: "constraint_primary_key";
@@ -372,6 +373,14 @@ type ConstraintComment = BaseNode & {
   type: "constraint_comment";
   commentKw: Keyword;
   value: StringLiteral;
+};
+
+type ConstraintGenerated = BaseNode & {
+  type: "constraint_generated";
+  generatedKw?: Keyword[]; // GENERATED ALWAYS
+  asKw: Keyword[]; // AS
+  expr: ParenExpr<Expr>;
+  storageKw?: Keyword; // STORED | VIRTUAL
 };
 
 // DROP TABLE

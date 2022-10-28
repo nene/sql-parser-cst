@@ -65,6 +65,17 @@ describe("constraints", () => {
       });
     });
 
+    dialect("sqlite", () => {
+      it("GENERATED ALWAYS", () => {
+        testColConst("GENERATED ALWAYS AS (col1 + col2)");
+        testColConst("AS (col1 + col2)");
+        testColConst("GENERATED ALWAYS AS (true) STORED");
+        testColConst("GENERATED ALWAYS AS (true) VIRTUAL");
+
+        testColConst("GENERATED /*c1*/ ALWAYS /*c2*/ AS /*c3*/ (/*c4*/ 5 /*c5*/) /*c6*/ STORED");
+      });
+    });
+
     it("supports CONSTRAINT keyword for column constraints", () => {
       testColConst("CONSTRAINT NULL");
       testColConst("CONSTRAINT NOT NULL");

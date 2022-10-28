@@ -1355,6 +1355,7 @@ column_constraint_type$mysql
 
 column_constraint_type$sqlite
   = column_constraint_type_standard
+  / constraint_generated
   / ca:collate_expr {
     return "[Not implemented]";
   }
@@ -1407,6 +1408,18 @@ drop_index_opt
   = head:(alter_algorithm / alter_lock) tail:(__ (alter_algorithm / alter_lock))* {
     return "[Not implemented]";
   }
+
+constraint_generated
+  = kws:(GENERATED __ ALWAYS __)? asKw:AS c1:__ expr:paren_expr
+    stKw:(c:__ k:(STORED / VIRTUAL) { return leading(k, c); })? {
+      return loc({
+        type: "constraint_generated",
+        generatedKw: kws ? createKeywordList(kws) : undefined,
+        asKw,
+        expr: leading(expr, c1),
+        storageKw: nullToUndefined(stKw),
+      });
+    }
 
 table_constraint_type
   = table_constraint_type_standard
@@ -2391,6 +2404,7 @@ AGAINST             = kw:"AGAINST"              !ident_part { return loc(createK
 ALGORITHM           = kw:"ALGORITHM"i           !ident_part { return loc(createKeyword(kw)); }
 ALL                 = kw:"ALL"i                 !ident_part { return loc(createKeyword(kw)); }
 ALTER               = kw:"ALTER"i               !ident_part { return loc(createKeyword(kw)); }
+ALWAYS              = kw:"ALWAYS"i              !ident_part { return loc(createKeyword(kw)); }
 AND                 = kw:"AND"i                 !ident_part { return loc(createKeyword(kw)); }
 AS                  = kw:"AS"i                  !ident_part { return loc(createKeyword(kw)); }
 ASC                 = kw:"ASC"i                 !ident_part { return loc(createKeyword(kw)); }
@@ -2484,6 +2498,7 @@ FOREIGN             = kw:"FOREIGN"i             !ident_part { return loc(createK
 FROM                = kw:"FROM"i                !ident_part { return loc(createKeyword(kw)); }
 FULL                = kw:"FULL"i                !ident_part { return loc(createKeyword(kw)); }
 FULLTEXT            = kw:"FULLTEXT"i            !ident_part { return loc(createKeyword(kw)); }
+GENERATED           = kw:"GENERATED"i           !ident_part { return loc(createKeyword(kw)); }
 GLOBAL              = kw:"GLOBAL"i              !ident_part { return loc(createKeyword(kw)); }
 GO                  = kw:"GO"i                  !ident_part { return loc(createKeyword(kw)); }
 GRANTS              = kw:"GRANTS"i              !ident_part { return loc(createKeyword(kw)); }
@@ -2618,6 +2633,7 @@ SQL_NO_CACHE        = kw:"SQL_NO_CACHE"i        !ident_part { return loc(createK
 SQL_SMALL_RESULT    = kw:"SQL_SMALL_RESULT"i    !ident_part { return loc(createKeyword(kw)); }
 STATS_SAMPLE_PAGES  = kw:"STATS_SAMPLE_PAGES"i  !ident_part { return loc(createKeyword(kw)); }
 STORAGE             = kw:"STORAGE"i             !ident_part { return loc(createKeyword(kw)); }
+STORED              = kw:"STORED"i              !ident_part { return loc(createKeyword(kw)); }
 STRAIGHT_JOIN       = kw:"STRAIGHT_JOIN"i       !ident_part { return loc(createKeyword(kw)); }
 SUM                 = kw:"SUM"i                 !ident_part { return loc(createKeyword(kw)); }
 SYSTEM_USER         = kw:"SYSTEM_USER"i         !ident_part { return loc(createKeyword(kw)); }
@@ -2652,6 +2668,7 @@ VALUES              = kw:"VALUES"i              !ident_part { return loc(createK
 VARBINARY           = kw:"VARBINARY"i           !ident_part { return loc(createKeyword(kw)); }
 VARCHAR             = kw:"VARCHAR"i             !ident_part { return loc(createKeyword(kw)); }
 VIEW                = kw:"VIEW"i                !ident_part { return loc(createKeyword(kw)); }
+VIRTUAL             = kw:"VIRTUAL"i             !ident_part { return loc(createKeyword(kw)); }
 VISIBLE             = kw:"VISIBLE"i             !ident_part { return loc(createKeyword(kw)); }
 WAIT                = kw:"WAIT"i                !ident_part { return loc(createKeyword(kw)); }
 WEEK                = kw:"WEEK"i                !ident_part { return loc(createKeyword(kw)); }

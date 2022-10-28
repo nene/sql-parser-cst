@@ -129,6 +129,8 @@ const showNode = cstTransformer<string>({
   constraint_unique: (node) => show([node.uniqueKw, node.columns]),
   constraint_check: (node) => show([node.checkKw, node.expr]),
   constraint_index: (node) => show([node.indexKw, node.columns]),
+  constraint_generated: (node) =>
+    show([node.generatedKw, node.asKw, node.expr, node.storageKw]),
 
   // DROP TABLE statement
   drop_table_statement: (node) =>
