@@ -1324,15 +1324,21 @@ constraint_name
   }
 
 column_constraint_type
+  = column_constraint_type_standard
+
+column_constraint_type_standard
   = constraint_not_null
   / constraint_null
   / constraint_default
-  / constraint_auto_increment
   / column_constraint_primary_key
   / column_constraint_unique
-  / column_constraint_index
   / references_specification
   / constraint_check
+
+column_constraint_type$mysql
+  = column_constraint_type_standard
+  / column_constraint_index
+  / constraint_auto_increment
   / constraint_comment
   / ca:collate_expr {
     return "[Not implemented]";
@@ -1344,6 +1350,12 @@ column_constraint_type
     return "[Not implemented]";
   }
   / t:(CHARACTER __ SET) __ s:"="? __ v:ident_name {
+    return "[Not implemented]";
+  }
+
+column_constraint_type$sqlite
+  = column_constraint_type_standard
+  / ca:collate_expr {
     return "[Not implemented]";
   }
 
@@ -1397,10 +1409,16 @@ drop_index_opt
   }
 
 table_constraint_type
+  = table_constraint_type_standard
+
+table_constraint_type_standard
   = table_constraint_primary_key
   / table_constraint_unique
   / constraint_foreign_key
   / constraint_check
+
+table_constraint_type$mysql
+  = table_constraint_type_standard
   / table_constraint_index
 
 table_constraint_primary_key
