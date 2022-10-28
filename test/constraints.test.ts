@@ -119,6 +119,18 @@ describe("constraints", () => {
           ON /*c5*/ UPDATE /*c6*/ NO /*c7*/ ACTION`
         );
       });
+
+      it("supports MATCH types", () => {
+        testTblConst("FOREIGN KEY (id) REFERENCES tbl2 (id) MATCH FULL");
+        testTblConst("FOREIGN KEY (id) REFERENCES tbl2 (id) MATCH PARTIAL");
+        testTblConst("FOREIGN KEY (id) REFERENCES tbl2 (id) MATCH SIMPLE");
+        testTblConst(`FOREIGN KEY (id) REFERENCES tbl2 (id) MATCH /*c1*/ FULL`);
+      });
+
+      it("supports combining MATCH type and ON UPDATE/DELETE", () => {
+        testTblConst("FOREIGN KEY (id) REFERENCES tbl2 (id) MATCH FULL ON UPDATE CASCADE");
+        testTblConst("FOREIGN KEY (id) REFERENCES tbl2 (id) ON DELETE SET NULL MATCH SIMPLE");
+      });
     });
   });
 });

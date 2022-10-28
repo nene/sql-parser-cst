@@ -1246,24 +1246,32 @@ references_specification
   = kw:REFERENCES c1:__
     table:table_ref
     columns:(c:__ cols:paren_column_ref_list { return leading(cols, c); })?
-    m:(__ (MATCH __ FULL / MATCH __ PARTIAL / MATCH __ SIMPLE))?
-    actions:(c:__ a:referencial_action { return leading(a, c); })* {
+    options:(c:__ op:(referential_action / referential_match) { return leading(op, c); })* {
       return loc({
         type: "references_specification",
         referencesKw: trailing(kw, c1),
         table,
         columns: nullToUndefined(columns),
-        actions,
+        options,
       });
     }
 
-referencial_action
+referential_action
   = onKw:ON c1:__ eventKw:(UPDATE / DELETE) c2:__ actionKw:reference_action_type {
     return loc({
-      type: "referencial_action",
+      type: "referential_action",
       onKw: trailing(onKw, c1),
       eventKw: trailing(eventKw, c2),
       actionKw,
+    });
+  }
+
+referential_match
+  = matchKw:MATCH c:__ typeKw:(FULL / PARTIAL / SIMPLE) {
+    return loc({
+      type: "referential_match",
+      matchKw: trailing(matchKw, c),
+      typeKw,
     });
   }
 

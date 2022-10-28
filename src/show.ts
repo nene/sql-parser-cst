@@ -122,8 +122,9 @@ const showNode = cstTransformer<string>({
   table_constraint_foreign_key: (node) =>
     show([node.name, node.foreignKeyKw, node.columns, node.references]),
   references_specification: (node) =>
-    show([node.referencesKw, node.table, node.columns, node.actions]),
-  referencial_action: (node) => show([node.onKw, node.eventKw, node.actionKw]),
+    show([node.referencesKw, node.table, node.columns, node.options]),
+  referential_action: (node) => show([node.onKw, node.eventKw, node.actionKw]),
+  referential_match: (node) => show([node.matchKw, node.typeKw]),
   table_constraint_unique: (node) =>
     show([node.name, node.uniqueKw, node.columns]),
   table_constraint_check: (node) => show([node.name, node.checkKw, node.expr]),

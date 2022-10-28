@@ -24,7 +24,8 @@ type Node =
   | TableConstraint
   | ConstraintName
   | ReferencesSpecification
-  | ReferencialAction
+  | ReferentialAction
+  | ReferentialMatch
   | AllColumns
   | DistinctArg
   | CastArg
@@ -287,14 +288,20 @@ type ReferencesSpecification = BaseNode & {
   referencesKw: Keyword;
   table: TableRef;
   columns?: ParenExpr<ExprList<ColumnRef>>;
-  actions: ReferencialAction[];
+  options: (ReferentialAction | ReferentialMatch)[];
 };
 
-type ReferencialAction = BaseNode & {
-  type: "referencial_action";
+type ReferentialAction = BaseNode & {
+  type: "referential_action";
   onKw: Keyword; // ON
   eventKw: Keyword; // DELETE | UPDATE
   actionKw: Keyword | Keyword[]; // RESTRICT | CASCADE | SET NULL | NO ACTION | SET DEFAULT
+};
+
+type ReferentialMatch = BaseNode & {
+  type: "referential_match";
+  matchKw: Keyword;
+  typeKw: Keyword; // FULL | PARTIAL | SIMPLE
 };
 
 type TableConstraintUnique = BaseNode & {
