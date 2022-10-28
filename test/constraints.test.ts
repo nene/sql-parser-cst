@@ -44,6 +44,26 @@ describe("constraints", () => {
       testColConst("COMMENT 'Hello, world!'");
       testColConst("COMMENT /*c*/ 'Hi'");
     });
+
+    it("supports CONSTRAINT keyword for column constraints", () => {
+      testColConst("CONSTRAINT NULL");
+      testColConst("CONSTRAINT NOT NULL");
+      testColConst("CONSTRAINT DEFAULT 10");
+      testColConst("CONSTRAINT PRIMARY KEY");
+      testColConst("CONSTRAINT UNIQUE");
+
+      testColConst("CONSTRAINT /*c1*/ NULL");
+    });
+
+    it("supports named column constraints", () => {
+      testColConst("CONSTRAINT cname NULL");
+      testColConst("CONSTRAINT cname NOT NULL");
+      testColConst("CONSTRAINT cname DEFAULT 10");
+      testColConst("CONSTRAINT cname PRIMARY KEY");
+      testColConst("CONSTRAINT cname UNIQUE");
+
+      testColConst("CONSTRAINT /*c1*/ cname /*c2*/ NULL");
+    });
   });
 
   describe("table constraints", () => {

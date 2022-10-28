@@ -1290,31 +1290,58 @@ default_values
 /**
  * Constraints
  */
-column_constraint
+column_constraint =
+  name:(id:constraint_name c:__ { return trailing(id, c); })? constraint:column_constraint_type {
+    return loc({
+      type: "constraint",
+      ...(name ? {name} : {}),
+      constraint,
+    })
+  }
+
+table_constraint =
+  name:(id:constraint_name c:__ { return trailing(id, c); })? constraint:table_constraint_type {
+    return loc({
+      type: "constraint",
+      ...(name ? {name} : {}),
+      constraint,
+    })
+  }
+
+constraint_name
+  = kw:CONSTRAINT name:(c:__ id:ident { return leading(id, c); })? {
+    return loc({
+      type: "constraint_name",
+      constraintKw: kw,
+      ...(name ? {name} : {}),
+    });
+  }
+
+column_constraint_type
   = constraint_not_null
   / constraint_null
   / constraint_default
   / constraint_auto_increment
   / constraint_key
   / constraint_comment
-  / ca:collate_expr {
-    return "[Not implemented]";
-  }
-  / cf:column_format {
-    return "[Not implemented]";
-  }
-  / s:storage {
-    return "[Not implemented]";
-  }
-  / re:references_specification {
-    return "[Not implemented]";
-  }
-  / ck:table_constraint_check {
-    return "[Not implemented]";
-  }
-  / t:(CHARACTER __ SET) __ s:"="? __ v:ident_name {
-    return "[Not implemented]";
-  }
+  // / ca:collate_expr {
+  //   return "[Not implemented]";
+  // }
+  // / cf:column_format {
+  //   return "[Not implemented]";
+  // }
+  // / s:storage {
+  //   return "[Not implemented]";
+  // }
+  // / re:references_specification {
+  //   return "[Not implemented]";
+  // }
+  // / ck:table_constraint_check {
+  //   return "[Not implemented]";
+  // }
+  // / t:(CHARACTER __ SET) __ s:"="? __ v:ident_name {
+  //   return "[Not implemented]";
+  // }
 
 constraint_not_null
   = kws:(NOT __ NULL) {
@@ -1368,24 +1395,6 @@ storage
 drop_index_opt
   = head:(alter_algorithm / alter_lock) tail:(__ (alter_algorithm / alter_lock))* {
     return "[Not implemented]";
-  }
-
-table_constraint =
-  name:(id:constraint_name c:__ { return trailing(id, c); })? constraint:table_constraint_type {
-    return loc({
-      type: "constraint",
-      ...(name ? {name} : {}),
-      constraint,
-    })
-  }
-
-constraint_name
-  = kw:CONSTRAINT name:(c:__ id:ident { return leading(id, c); })? {
-    return loc({
-      type: "constraint_name",
-      constraintKw: kw,
-      ...(name ? {name} : {}),
-    });
   }
 
 table_constraint_type

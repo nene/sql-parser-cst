@@ -20,8 +20,8 @@ type Node =
   | JoinUsingSpecification
   | SortSpecification
   | ColumnDefinition
+  | Constraint<ColumnConstraint | TableConstraint>
   | ColumnConstraint
-  | Constraint<TableConstraint>
   | TableConstraint
   | ConstraintName
   | ReferencesSpecification
@@ -248,7 +248,7 @@ type ColumnDefinition = BaseNode & {
   type: "column_definition";
   name: ColumnRef;
   dataType: DataType;
-  constraints: ColumnConstraint[];
+  constraints: Constraint<ColumnConstraint>[];
 };
 
 type DataType = BaseNode & {
