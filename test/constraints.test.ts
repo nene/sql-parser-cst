@@ -14,8 +14,11 @@ describe("constraints", () => {
       expect(show(parse(sql, preserveAll))).toBe(sql);
     }
 
-    it("NULL / NOT NULL", () => {
+    it("NULL", () => {
       testColConst("NULL");
+    });
+
+    it("NOT NULL", () => {
       testColConst("NOT NULL");
       testColConst("NOT /*c2*/ NULL");
     });
