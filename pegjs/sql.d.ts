@@ -319,16 +319,21 @@ type TableConstraintCheck = BaseNode & {
 };
 
 type ColumnConstraint =
-  | ConstraintNullable
+  | ConstraintNull
+  | ConstraintNotNull
   | ConstraintDefault
   | ConstraintAutoIncrement
   | ConstraintKey
   | ConstraintComment;
 
-type ConstraintNullable = BaseNode & {
-  type: "constraint_nullable";
-  kw: Keyword | Keyword[];
-  value: boolean;
+type ConstraintNull = BaseNode & {
+  type: "constraint_null";
+  nullKw: Keyword;
+};
+
+type ConstraintNotNull = BaseNode & {
+  type: "constraint_not_null";
+  notNullKw: Keyword[];
 };
 
 type ConstraintDefault = BaseNode & {

@@ -909,10 +909,10 @@ create_definition
 
 column_constraint
   = kws:(NOT __ NULL) {
-    return loc({ type: "constraint_nullable", kw: createKeywordList(kws), value: false });
+    return loc({ type: "constraint_not_null", notNullKw: createKeywordList(kws) });
   }
   / kw:NULL {
-    return loc({ type: "constraint_nullable", kw, value: true });
+    return loc({ type: "constraint_null", nullKw: kw });
   }
   / kw:DEFAULT c:__ e:(literal / paren_expr) {
     return loc({ type: "constraint_default", kw, expr: leading(e, c) });
