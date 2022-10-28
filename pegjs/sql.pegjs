@@ -962,6 +962,11 @@ drop_index_stmt
       return "[Not implemented]";
     }
 
+drop_index_opt
+  = head:(alter_algorithm / alter_lock) tail:(__ (alter_algorithm / alter_lock))* {
+    return "[Not implemented]";
+  }
+
 /**
  * TRUNCATE TABLE
  */
@@ -1405,11 +1410,6 @@ constraint_storage
       storageKw: trailing(kw, c),
       typeKw: t,
     });
-  }
-
-drop_index_opt
-  = head:(alter_algorithm / alter_lock) tail:(__ (alter_algorithm / alter_lock))* {
-    return "[Not implemented]";
   }
 
 constraint_generated
