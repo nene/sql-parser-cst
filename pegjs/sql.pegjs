@@ -1342,7 +1342,7 @@ column_constraint_type
   / re:references_specification {
     return "[Not implemented]";
   }
-  / ck:table_constraint_check {
+  / ck:constraint_check {
     return "[Not implemented]";
   }
   / t:(CHARACTER __ SET) __ s:"="? __ v:ident_name {
@@ -1407,7 +1407,7 @@ table_constraint_type
   = table_constraint_primary_key
   / table_constraint_unique
   / table_constraint_foreign_key
-  / table_constraint_check
+  / constraint_check
 
 table_constraint_primary_key
   = kws:(PRIMARY __ KEY __)
@@ -1440,11 +1440,11 @@ unique_key
   }
   / UNIQUE
 
-table_constraint_check
+constraint_check
   = kw:CHECK c:__ expr:paren_expr
     ((__ NOT)? __ ENFORCED)?  {
       return loc({
-        type: "table_constraint_check",
+        type: "constraint_check",
         checkKw: kw,
         expr: leading(expr, c),
       });

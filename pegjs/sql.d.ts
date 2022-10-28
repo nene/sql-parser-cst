@@ -275,7 +275,7 @@ type TableConstraint =
   | TableConstraintPrimaryKey
   | TableConstraintForeignKey
   | TableConstraintUnique
-  | TableConstraintCheck;
+  | ConstraintCheck;
 
 type TableConstraintPrimaryKey = BaseNode & {
   type: "table_constraint_primary_key";
@@ -317,8 +317,8 @@ type TableConstraintUnique = BaseNode & {
   columns: ParenExpr<ExprList<ColumnRef>>;
 };
 
-type TableConstraintCheck = BaseNode & {
-  type: "table_constraint_check";
+type ConstraintCheck = BaseNode & {
+  type: "constraint_check";
   checkKw: Keyword;
   expr: ParenExpr<Expr>;
 };
