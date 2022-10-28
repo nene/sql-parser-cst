@@ -111,24 +111,27 @@ const showNode = cstTransformer<string>({
       node.dataType,
       node.constraints.length > 0 ? node.constraints : undefined,
     ]),
+  // constraints
+  constraint: (node) => show([node.name, node.constraint]),
+  constraint_name: (node) => show([node.constraintKw, node.name]),
+  // column constraints
   constraint_null: (node) => show(node.nullKw),
   constraint_not_null: (node) => show(node.notNullKw),
   constraint_auto_increment: (node) => show(node.autoIncrementKw),
   constraint_key: (node) => show(node.keyKw),
   constraint_default: (node) => show([node.defaultKw, node.expr]),
   constraint_comment: (node) => show([node.commentKw, node.value]),
-  constraint_name: (node) => show([node.constraintKw, node.name]),
+  // table constraints
   table_constraint_primary_key: (node) =>
-    show([node.name, node.primaryKeyKw, node.columns]),
+    show([node.primaryKeyKw, node.columns]),
   table_constraint_foreign_key: (node) =>
-    show([node.name, node.foreignKeyKw, node.columns, node.references]),
+    show([node.foreignKeyKw, node.columns, node.references]),
   references_specification: (node) =>
     show([node.referencesKw, node.table, node.columns, node.options]),
   referential_action: (node) => show([node.onKw, node.eventKw, node.actionKw]),
   referential_match: (node) => show([node.matchKw, node.typeKw]),
-  table_constraint_unique: (node) =>
-    show([node.name, node.uniqueKw, node.columns]),
-  table_constraint_check: (node) => show([node.name, node.checkKw, node.expr]),
+  table_constraint_unique: (node) => show([node.uniqueKw, node.columns]),
+  table_constraint_check: (node) => show([node.checkKw, node.expr]),
 
   // DROP TABLE statement
   drop_table_statement: (node) =>

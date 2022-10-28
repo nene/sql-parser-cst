@@ -21,6 +21,7 @@ type Node =
   | SortSpecification
   | ColumnDefinition
   | ColumnConstraint
+  | Constraint<TableConstraint>
   | TableConstraint
   | ConstraintName
   | ReferencesSpecification
@@ -240,7 +241,7 @@ type CreateTableStatement = BaseNode & {
   temporaryKw?: Keyword;
   ifNotExistsKw?: Keyword[];
   table: TableRef;
-  columns: ParenExpr<ExprList<ColumnDefinition | TableConstraint>>;
+  columns: ParenExpr<ExprList<ColumnDefinition | Constraint<TableConstraint>>>;
 };
 
 type ColumnDefinition = BaseNode & {
@@ -254,6 +255,12 @@ type DataType = BaseNode & {
   type: "data_type";
   nameKw: Keyword | Keyword[];
   params?: ParenExpr<ExprList<Literal>>;
+};
+
+type Constraint<T> = BaseNode & {
+  type: "constraint";
+  name?: ConstraintName;
+  constraint: T;
 };
 
 type ConstraintName = BaseNode & {
@@ -270,14 +277,12 @@ type TableConstraint =
 
 type TableConstraintPrimaryKey = BaseNode & {
   type: "table_constraint_primary_key";
-  name: ConstraintName;
   primaryKeyKw: Keyword[];
   columns: ParenExpr<ExprList<ColumnRef>>;
 };
 
 type TableConstraintForeignKey = BaseNode & {
   type: "table_constraint_foreign_key";
-  name: ConstraintName;
   foreignKeyKw: Keyword[];
   columns: ParenExpr<ExprList<ColumnRef>>;
   references: ReferencesSpecification;
@@ -306,14 +311,12 @@ type ReferentialMatch = BaseNode & {
 
 type TableConstraintUnique = BaseNode & {
   type: "table_constraint_unique";
-  name: ConstraintName;
   uniqueKw: Keyword | Keyword[];
   columns: ParenExpr<ExprList<ColumnRef>>;
 };
 
 type TableConstraintCheck = BaseNode & {
   type: "table_constraint_check";
-  name: ConstraintName;
   checkKw: Keyword;
   expr: ParenExpr<Expr>;
 };

@@ -1165,11 +1165,14 @@ create_fulltext_spatial_index_definition
       return "[Not implemented]";
     }
 
-table_constraint
-  = table_constraint_primary_key
-  / table_constraint_unique
-  / table_constraint_foreign_key
-  / table_constraint_check
+table_constraint =
+  name:(id:constraint_name c:__ { return trailing(id, c); })? constraint:table_constraint_type {
+    return loc({
+      type: "constraint",
+      ...(name ? {name} : {}),
+      constraint,
+    })
+  }
 
 constraint_name
   = kw:CONSTRAINT name:(c:__ id:ident { return leading(id, c); })? {
@@ -1180,30 +1183,32 @@ constraint_name
     });
   }
 
+table_constraint_type
+  = table_constraint_primary_key
+  / table_constraint_unique
+  / table_constraint_foreign_key
+  / table_constraint_check
+
 table_constraint_primary_key
-  = name:(id:constraint_name c:__ { return trailing(id, c); })?
-    kws:(PRIMARY __ KEY __)
+  = kws:(PRIMARY __ KEY __)
     t:(index_type __)?
     columns:paren_column_ref_list
     opts:(__ index_options)? {
       return loc({
         type: "table_constraint_primary_key",
-        ...(name ? {name} : {}),
         primaryKeyKw: createKeywordList(kws),
         columns,
       });
     }
 
 table_constraint_unique
-  = name:(id:constraint_name c:__ { return trailing(id, c); })?
-    kws:(k:unique_key c:__ { return trailing(k, c); })
+  = kws:(k:unique_key c:__ { return trailing(k, c); })
     i:(ident __)?
     t:(index_type __)?
     columns:paren_column_ref_list
     id:(__ index_options)? {
       return loc({
         type: "table_constraint_unique",
-        ...(name ? {name} : {}),
         uniqueKw: kws,
         columns,
       });
@@ -1216,26 +1221,22 @@ unique_key
   / UNIQUE
 
 table_constraint_check
-  = name:(id:constraint_name c:__ { return trailing(id, c); })?
-    kw:CHECK c:__ expr:paren_expr
+  = kw:CHECK c:__ expr:paren_expr
     ((__ NOT)? __ ENFORCED)?  {
       return loc({
         type: "table_constraint_check",
-        ...(name ? {name} : {}),
         checkKw: kw,
         expr: leading(expr, c),
       });
     }
 
 table_constraint_foreign_key
-  = name:(id:constraint_name c:__ { return trailing(id, c); })?
-    kws:(FOREIGN __ KEY __)
+  = kws:(FOREIGN __ KEY __)
     i:(ident __)?
     columns:paren_column_ref_list
     c1:__ ref:references_specification {
       return loc({
         type: "table_constraint_foreign_key",
-        ...(name ? {name} : {}),
         foreignKeyKw: createKeywordList(kws),
         columns,
         references: leading(ref, c1),
