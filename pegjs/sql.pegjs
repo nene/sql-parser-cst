@@ -1291,21 +1291,11 @@ default_values
  * Constraints
  */
 column_constraint
-  = kws:(NOT __ NULL) {
-    return loc({ type: "constraint_not_null", notNullKw: createKeywordList(kws) });
-  }
-  / kw:NULL {
-    return loc({ type: "constraint_null", nullKw: kw });
-  }
-  / kw:DEFAULT c:__ e:(literal / paren_expr) {
-    return loc({ type: "constraint_default", defaultKw: kw, expr: leading(e, c) });
-  }
-  / kw:AUTO_INCREMENT {
-    return loc({ type: "constraint_auto_increment", autoIncrementKw: kw });
-  }
-  / kws:(UNIQUE __ KEY / UNIQUE / PRIMARY __ KEY / KEY) {
-    return loc({ type: "constraint_key", keyKw: createKeywordList(kws) });
-  }
+  = constraint_not_null
+  / constraint_null
+  / constraint_default
+  / constraint_auto_increment
+  / constraint_key
   / constraint_comment
   / ca:collate_expr {
     return "[Not implemented]";
@@ -1326,6 +1316,31 @@ column_constraint
     return "[Not implemented]";
   }
 
+constraint_not_null
+  = kws:(NOT __ NULL) {
+    return loc({ type: "constraint_not_null", notNullKw: createKeywordList(kws) });
+  }
+
+constraint_null
+  = kw:NULL {
+    return loc({ type: "constraint_null", nullKw: kw });
+  }
+
+constraint_default
+  = kw:DEFAULT c:__ e:(literal / paren_expr) {
+    return loc({ type: "constraint_default", defaultKw: kw, expr: leading(e, c) });
+  }
+
+constraint_auto_increment
+  = kw:AUTO_INCREMENT {
+    return loc({ type: "constraint_auto_increment", autoIncrementKw: kw });
+  }
+
+constraint_key
+  = kws:(UNIQUE __ KEY / UNIQUE / PRIMARY __ KEY / KEY) {
+    return loc({ type: "constraint_key", keyKw: createKeywordList(kws) });
+  }
+
 constraint_comment
   = kw:COMMENT c:__ str:literal_string {
     return loc({
@@ -1339,14 +1354,17 @@ collate_expr
   = COLLATE __ s:"="? __ ca:ident_name {
     return "[Not implemented]";
   }
+
 column_format
   = k:COLUMN_FORMAT __ f:(FIXED / DYNAMIC / DEFAULT) {
     return "[Not implemented]";
   }
+
 storage
   = k:STORAGE __ s:(DISK / MEMORY) {
     return "[Not implemented]";
   }
+
 drop_index_opt
   = head:(alter_algorithm / alter_lock) tail:(__ (alter_algorithm / alter_lock))* {
     return "[Not implemented]";
