@@ -1402,31 +1402,31 @@ drop_index_opt
   }
 
 table_constraint_type
-  = table_constraint_primary_key
-  / table_constraint_unique
-  / table_constraint_foreign_key
+  = constraint_primary_key
+  / constraint_unique
+  / constraint_foreign_key
   / constraint_check
 
-table_constraint_primary_key
+constraint_primary_key
   = kws:(PRIMARY __ KEY __)
     t:(index_type __)?
     columns:paren_column_ref_list
     opts:(__ index_options)? {
       return loc({
-        type: "table_constraint_primary_key",
+        type: "constraint_primary_key",
         primaryKeyKw: createKeywordList(kws),
         columns,
       });
     }
 
-table_constraint_unique
+constraint_unique
   = kws:(k:unique_key c:__ { return trailing(k, c); })
     i:(ident __)?
     t:(index_type __)?
     columns:paren_column_ref_list
     id:(__ index_options)? {
       return loc({
-        type: "table_constraint_unique",
+        type: "constraint_unique",
         uniqueKw: kws,
         columns,
       });
@@ -1448,13 +1448,13 @@ constraint_check
       });
     }
 
-table_constraint_foreign_key
+constraint_foreign_key
   = kws:(FOREIGN __ KEY __)
     i:(ident __)?
     columns:paren_column_ref_list
     c1:__ ref:references_specification {
       return loc({
-        type: "table_constraint_foreign_key",
+        type: "constraint_foreign_key",
         foreignKeyKw: createKeywordList(kws),
         columns,
         references: leading(ref, c1),

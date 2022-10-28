@@ -272,19 +272,19 @@ type ConstraintName = BaseNode & {
 };
 
 type TableConstraint =
-  | TableConstraintPrimaryKey
-  | TableConstraintForeignKey
-  | TableConstraintUnique
+  | ConstraintPrimaryKey
+  | ConstraintForeignKey
+  | ConstraintUnique
   | ConstraintCheck;
 
-type TableConstraintPrimaryKey = BaseNode & {
-  type: "table_constraint_primary_key";
+type ConstraintPrimaryKey = BaseNode & {
+  type: "constraint_primary_key";
   primaryKeyKw: Keyword[];
   columns: ParenExpr<ExprList<ColumnRef>>;
 };
 
-type TableConstraintForeignKey = BaseNode & {
-  type: "table_constraint_foreign_key";
+type ConstraintForeignKey = BaseNode & {
+  type: "constraint_foreign_key";
   foreignKeyKw: Keyword[];
   columns: ParenExpr<ExprList<ColumnRef>>;
   references: ReferencesSpecification;
@@ -311,8 +311,8 @@ type ReferentialMatch = BaseNode & {
   typeKw: Keyword; // FULL | PARTIAL | SIMPLE
 };
 
-type TableConstraintUnique = BaseNode & {
-  type: "table_constraint_unique";
+type ConstraintUnique = BaseNode & {
+  type: "constraint_unique";
   uniqueKw: Keyword | Keyword[];
   columns: ParenExpr<ExprList<ColumnRef>>;
 };

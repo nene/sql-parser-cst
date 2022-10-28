@@ -122,15 +122,14 @@ const showNode = cstTransformer<string>({
   constraint_default: (node) => show([node.defaultKw, node.expr]),
   constraint_comment: (node) => show([node.commentKw, node.value]),
   // table constraints
-  table_constraint_primary_key: (node) =>
-    show([node.primaryKeyKw, node.columns]),
-  table_constraint_foreign_key: (node) =>
+  constraint_primary_key: (node) => show([node.primaryKeyKw, node.columns]),
+  constraint_foreign_key: (node) =>
     show([node.foreignKeyKw, node.columns, node.references]),
   references_specification: (node) =>
     show([node.referencesKw, node.table, node.columns, node.options]),
   referential_action: (node) => show([node.onKw, node.eventKw, node.actionKw]),
   referential_match: (node) => show([node.matchKw, node.typeKw]),
-  table_constraint_unique: (node) => show([node.uniqueKw, node.columns]),
+  constraint_unique: (node) => show([node.uniqueKw, node.columns]),
   constraint_check: (node) => show([node.checkKw, node.expr]),
 
   // DROP TABLE statement
