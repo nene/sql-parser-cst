@@ -118,7 +118,6 @@ const showNode = cstTransformer<string>({
   constraint_null: (node) => show(node.nullKw),
   constraint_not_null: (node) => show(node.notNullKw),
   constraint_auto_increment: (node) => show(node.autoIncrementKw),
-  constraint_key: (node) => show(node.keyKw),
   constraint_default: (node) => show([node.defaultKw, node.expr]),
   constraint_comment: (node) => show([node.commentKw, node.value]),
   // table constraints

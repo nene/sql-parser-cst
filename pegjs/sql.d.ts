@@ -282,14 +282,15 @@ type ColumnConstraint =
   | ConstraintNotNull
   | ConstraintDefault
   | ConstraintAutoIncrement
-  | ConstraintKey
+  | ConstraintUnique
+  | ConstraintPrimaryKey
   | ConstraintComment
   | ConstraintCheck;
 
 type ConstraintPrimaryKey = BaseNode & {
   type: "constraint_primary_key";
   primaryKeyKw: Keyword[];
-  columns: ParenExpr<ExprList<ColumnRef>>;
+  columns?: ParenExpr<ExprList<ColumnRef>>;
 };
 
 type ConstraintForeignKey = BaseNode & {
@@ -323,7 +324,7 @@ type ReferentialMatch = BaseNode & {
 type ConstraintUnique = BaseNode & {
   type: "constraint_unique";
   uniqueKw: Keyword | Keyword[];
-  columns: ParenExpr<ExprList<ColumnRef>>;
+  columns?: ParenExpr<ExprList<ColumnRef>>;
 };
 
 type ConstraintCheck = BaseNode & {

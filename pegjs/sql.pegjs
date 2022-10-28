@@ -1328,7 +1328,8 @@ column_constraint_type
   / constraint_null
   / constraint_default
   / constraint_auto_increment
-  / constraint_key
+  / column_constraint_primary_key
+  / column_constraint_unique
   / constraint_comment
   / ca:collate_expr {
     return "[Not implemented]";
@@ -1367,11 +1368,6 @@ constraint_auto_increment
     return loc({ type: "constraint_auto_increment", autoIncrementKw: kw });
   }
 
-constraint_key
-  = kws:(UNIQUE __ KEY / UNIQUE / PRIMARY __ KEY / KEY) {
-    return loc({ type: "constraint_key", keyKw: createKeywordList(kws) });
-  }
-
 constraint_comment
   = kw:COMMENT c:__ str:literal_string {
     return loc({
@@ -1402,12 +1398,12 @@ drop_index_opt
   }
 
 table_constraint_type
-  = constraint_primary_key
-  / constraint_unique
+  = table_constraint_primary_key
+  / table_constraint_unique
   / constraint_foreign_key
   / constraint_check
 
-constraint_primary_key
+table_constraint_primary_key
   = kws:(PRIMARY __ KEY __)
     t:(index_type __)?
     columns:paren_column_ref_list
@@ -1419,7 +1415,15 @@ constraint_primary_key
       });
     }
 
-constraint_unique
+column_constraint_primary_key
+  = kws:(PRIMARY __ KEY) {
+      return loc({
+        type: "constraint_primary_key",
+        primaryKeyKw: createKeywordList(kws)
+      });
+    }
+
+table_constraint_unique
   = kws:(k:unique_key c:__ { return trailing(k, c); })
     i:(ident __)?
     t:(index_type __)?
@@ -1429,6 +1433,14 @@ constraint_unique
         type: "constraint_unique",
         uniqueKw: kws,
         columns,
+      });
+    }
+
+column_constraint_unique
+  = kws:unique_key {
+      return loc({
+        type: "constraint_unique",
+        uniqueKw: kws,
       });
     }
 

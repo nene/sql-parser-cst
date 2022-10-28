@@ -29,13 +29,15 @@ describe("constraints", () => {
       testColConst("DEFAULT /*c1*/ 10");
     });
 
-    it("UNIQUE KEY / PRIMARY KEY", () => {
-      testColConst("KEY");
+    it("PRIMARY KEY", () => {
+      testColConst("PRIMARY KEY");
+      testColConst("PRIMARY /*c*/ KEY");
+    });
+
+    it("UNIQUE", () => {
       testColConst("UNIQUE");
       testColConst("UNIQUE KEY");
-      testColConst("PRIMARY KEY");
       testColConst("UNIQUE /*c*/ KEY");
-      testColConst("PRIMARY /*c*/ KEY");
     });
 
     it("CHECK", () => {
