@@ -907,42 +907,6 @@ create_definition
   / create_index_definition
   / create_fulltext_spatial_index_definition
 
-column_constraint
-  = kws:(NOT __ NULL) {
-    return loc({ type: "constraint_not_null", notNullKw: createKeywordList(kws) });
-  }
-  / kw:NULL {
-    return loc({ type: "constraint_null", nullKw: kw });
-  }
-  / kw:DEFAULT c:__ e:(literal / paren_expr) {
-    return loc({ type: "constraint_default", defaultKw: kw, expr: leading(e, c) });
-  }
-  / kw:AUTO_INCREMENT {
-    return loc({ type: "constraint_auto_increment", autoIncrementKw: kw });
-  }
-  / kws:(UNIQUE __ KEY / UNIQUE / PRIMARY __ KEY / KEY) {
-    return loc({ type: "constraint_key", keyKw: createKeywordList(kws) });
-  }
-  / constraint_comment
-  / ca:collate_expr {
-    return "[Not implemented]";
-  }
-  / cf:column_format {
-    return "[Not implemented]";
-  }
-  / s:storage {
-    return "[Not implemented]";
-  }
-  / re:references_specification {
-    return "[Not implemented]";
-  }
-  / ck:table_constraint_check {
-    return "[Not implemented]";
-  }
-  / t:create_option_character_set_kw __ s:"="? __ v:ident_name {
-    return "[Not implemented]";
-  }
-
 column_constraint_list
   = head:column_constraint tail:(__ column_constraint)* {
     return readSpaceSepList(head, tail);
@@ -959,32 +923,6 @@ create_column_definition
         constraints: constraints || [],
       });
     }
-
-constraint_comment
-  = kw:COMMENT c:__ str:literal_string {
-    return loc({
-      type: "constraint_comment",
-      commentKw: kw,
-      value: leading(str, c),
-    });
-  }
-
-collate_expr
-  = COLLATE __ s:"="? __ ca:ident_name {
-    return "[Not implemented]";
-  }
-column_format
-  = k:COLUMN_FORMAT __ f:(FIXED / DYNAMIC / DEFAULT) {
-    return "[Not implemented]";
-  }
-storage
-  = k:STORAGE __ s:(DISK / MEMORY) {
-    return "[Not implemented]";
-  }
-drop_index_opt
-  = head:(alter_algorithm / alter_lock) tail:(__ (alter_algorithm / alter_lock))* {
-    return "[Not implemented]";
-  }
 
 if_exists
   = kws:(IF __ EXISTS) { return createKeywordList(kws); }
@@ -1165,133 +1103,13 @@ create_fulltext_spatial_index_definition
       return "[Not implemented]";
     }
 
-table_constraint =
-  name:(id:constraint_name c:__ { return trailing(id, c); })? constraint:table_constraint_type {
-    return loc({
-      type: "constraint",
-      ...(name ? {name} : {}),
-      constraint,
-    })
-  }
-
-constraint_name
-  = kw:CONSTRAINT name:(c:__ id:ident { return leading(id, c); })? {
-    return loc({
-      type: "constraint_name",
-      constraintKw: kw,
-      ...(name ? {name} : {}),
-    });
-  }
-
-table_constraint_type
-  = table_constraint_primary_key
-  / table_constraint_unique
-  / table_constraint_foreign_key
-  / table_constraint_check
-
-table_constraint_primary_key
-  = kws:(PRIMARY __ KEY __)
-    t:(index_type __)?
-    columns:paren_column_ref_list
-    opts:(__ index_options)? {
-      return loc({
-        type: "table_constraint_primary_key",
-        primaryKeyKw: createKeywordList(kws),
-        columns,
-      });
-    }
-
-table_constraint_unique
-  = kws:(k:unique_key c:__ { return trailing(k, c); })
-    i:(ident __)?
-    t:(index_type __)?
-    columns:paren_column_ref_list
-    id:(__ index_options)? {
-      return loc({
-        type: "table_constraint_unique",
-        uniqueKw: kws,
-        columns,
-      });
-    }
-
-unique_key
-  = kws:(UNIQUE __ (INDEX / KEY)) {
-    return createKeywordList(kws);
-  }
-  / UNIQUE
-
-table_constraint_check
-  = kw:CHECK c:__ expr:paren_expr
-    ((__ NOT)? __ ENFORCED)?  {
-      return loc({
-        type: "table_constraint_check",
-        checkKw: kw,
-        expr: leading(expr, c),
-      });
-    }
-
-table_constraint_foreign_key
-  = kws:(FOREIGN __ KEY __)
-    i:(ident __)?
-    columns:paren_column_ref_list
-    c1:__ ref:references_specification {
-      return loc({
-        type: "table_constraint_foreign_key",
-        foreignKeyKw: createKeywordList(kws),
-        columns,
-        references: leading(ref, c1),
-      });
-    }
-
-references_specification
-  = kw:REFERENCES c1:__
-    table:table_ref
-    columns:(c:__ cols:paren_column_ref_list { return leading(cols, c); })?
-    options:(c:__ op:(referential_action / referential_match) { return leading(op, c); })* {
-      return loc({
-        type: "references_specification",
-        referencesKw: trailing(kw, c1),
-        table,
-        columns: nullToUndefined(columns),
-        options,
-      });
-    }
-
-referential_action
-  = onKw:ON c1:__ eventKw:(UPDATE / DELETE) c2:__ actionKw:reference_action_type {
-    return loc({
-      type: "referential_action",
-      onKw: trailing(onKw, c1),
-      eventKw: trailing(eventKw, c2),
-      actionKw,
-    });
-  }
-
-referential_match
-  = matchKw:MATCH c:__ typeKw:(FULL / PARTIAL / SIMPLE) {
-    return loc({
-      type: "referential_match",
-      matchKw: trailing(matchKw, c),
-      typeKw,
-    });
-  }
-
-reference_action_type
-  = RESTRICT
-  / CASCADE
-  / kws:(SET __ NULL / NO __ ACTION / SET __ DEFAULT) { return createKeywordList(kws); }
-
 table_options
   = head:table_option tail:(__ ","? __ table_option)* {
     return "[Not implemented]";
   }
 
-create_option_character_set_kw
-  = CHARACTER __ SET {
-    return "[Not implemented]";
-  }
 create_option_character_set
-  = kw:DEFAULT? __ t:(create_option_character_set_kw / CHARSET / COLLATE) __ s:("=")? __ v:ident_name {
+  = kw:DEFAULT? __ t:(CHARACTER __ SET / CHARSET / COLLATE) __ s:("=")? __ v:ident_name {
     return "[Not implemented]";
   }
 
@@ -1468,6 +1286,187 @@ default_values
   = kws:(DEFAULT __ VALUES) {
       return loc({ type: "default_values", kw: createKeywordList(kws) });
     }
+
+/**
+ * Constraints
+ */
+column_constraint
+  = kws:(NOT __ NULL) {
+    return loc({ type: "constraint_not_null", notNullKw: createKeywordList(kws) });
+  }
+  / kw:NULL {
+    return loc({ type: "constraint_null", nullKw: kw });
+  }
+  / kw:DEFAULT c:__ e:(literal / paren_expr) {
+    return loc({ type: "constraint_default", defaultKw: kw, expr: leading(e, c) });
+  }
+  / kw:AUTO_INCREMENT {
+    return loc({ type: "constraint_auto_increment", autoIncrementKw: kw });
+  }
+  / kws:(UNIQUE __ KEY / UNIQUE / PRIMARY __ KEY / KEY) {
+    return loc({ type: "constraint_key", keyKw: createKeywordList(kws) });
+  }
+  / constraint_comment
+  / ca:collate_expr {
+    return "[Not implemented]";
+  }
+  / cf:column_format {
+    return "[Not implemented]";
+  }
+  / s:storage {
+    return "[Not implemented]";
+  }
+  / re:references_specification {
+    return "[Not implemented]";
+  }
+  / ck:table_constraint_check {
+    return "[Not implemented]";
+  }
+  / t:(CHARACTER __ SET) __ s:"="? __ v:ident_name {
+    return "[Not implemented]";
+  }
+
+constraint_comment
+  = kw:COMMENT c:__ str:literal_string {
+    return loc({
+      type: "constraint_comment",
+      commentKw: kw,
+      value: leading(str, c),
+    });
+  }
+
+collate_expr
+  = COLLATE __ s:"="? __ ca:ident_name {
+    return "[Not implemented]";
+  }
+column_format
+  = k:COLUMN_FORMAT __ f:(FIXED / DYNAMIC / DEFAULT) {
+    return "[Not implemented]";
+  }
+storage
+  = k:STORAGE __ s:(DISK / MEMORY) {
+    return "[Not implemented]";
+  }
+drop_index_opt
+  = head:(alter_algorithm / alter_lock) tail:(__ (alter_algorithm / alter_lock))* {
+    return "[Not implemented]";
+  }
+
+table_constraint =
+  name:(id:constraint_name c:__ { return trailing(id, c); })? constraint:table_constraint_type {
+    return loc({
+      type: "constraint",
+      ...(name ? {name} : {}),
+      constraint,
+    })
+  }
+
+constraint_name
+  = kw:CONSTRAINT name:(c:__ id:ident { return leading(id, c); })? {
+    return loc({
+      type: "constraint_name",
+      constraintKw: kw,
+      ...(name ? {name} : {}),
+    });
+  }
+
+table_constraint_type
+  = table_constraint_primary_key
+  / table_constraint_unique
+  / table_constraint_foreign_key
+  / table_constraint_check
+
+table_constraint_primary_key
+  = kws:(PRIMARY __ KEY __)
+    t:(index_type __)?
+    columns:paren_column_ref_list
+    opts:(__ index_options)? {
+      return loc({
+        type: "table_constraint_primary_key",
+        primaryKeyKw: createKeywordList(kws),
+        columns,
+      });
+    }
+
+table_constraint_unique
+  = kws:(k:unique_key c:__ { return trailing(k, c); })
+    i:(ident __)?
+    t:(index_type __)?
+    columns:paren_column_ref_list
+    id:(__ index_options)? {
+      return loc({
+        type: "table_constraint_unique",
+        uniqueKw: kws,
+        columns,
+      });
+    }
+
+unique_key
+  = kws:(UNIQUE __ (INDEX / KEY)) {
+    return createKeywordList(kws);
+  }
+  / UNIQUE
+
+table_constraint_check
+  = kw:CHECK c:__ expr:paren_expr
+    ((__ NOT)? __ ENFORCED)?  {
+      return loc({
+        type: "table_constraint_check",
+        checkKw: kw,
+        expr: leading(expr, c),
+      });
+    }
+
+table_constraint_foreign_key
+  = kws:(FOREIGN __ KEY __)
+    i:(ident __)?
+    columns:paren_column_ref_list
+    c1:__ ref:references_specification {
+      return loc({
+        type: "table_constraint_foreign_key",
+        foreignKeyKw: createKeywordList(kws),
+        columns,
+        references: leading(ref, c1),
+      });
+    }
+
+references_specification
+  = kw:REFERENCES c1:__
+    table:table_ref
+    columns:(c:__ cols:paren_column_ref_list { return leading(cols, c); })?
+    options:(c:__ op:(referential_action / referential_match) { return leading(op, c); })* {
+      return loc({
+        type: "references_specification",
+        referencesKw: trailing(kw, c1),
+        table,
+        columns: nullToUndefined(columns),
+        options,
+      });
+    }
+
+referential_action
+  = onKw:ON c1:__ eventKw:(UPDATE / DELETE) c2:__ actionKw:reference_action_type {
+    return loc({
+      type: "referential_action",
+      onKw: trailing(onKw, c1),
+      eventKw: trailing(eventKw, c2),
+      actionKw,
+    });
+  }
+
+referential_match
+  = matchKw:MATCH c:__ typeKw:(FULL / PARTIAL / SIMPLE) {
+    return loc({
+      type: "referential_match",
+      matchKw: trailing(matchKw, c),
+      typeKw,
+    });
+  }
+
+reference_action_type
+  = RESTRICT
+  / CASCADE
+  / kws:(SET __ NULL / NO __ ACTION / SET __ DEFAULT) { return createKeywordList(kws); }
 
 /**
  * Data types
