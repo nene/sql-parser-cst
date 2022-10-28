@@ -1,4 +1,4 @@
-# SQL Parser CST [![npm version](https://img.shields.io/npm/v/sql-parser-cst)](https://www.npmjs.com/package/sql-parser-cst)
+# SQL Parser CST [![npm version](https://img.shields.io/npm/v/sql-parser-cst)](https://www.npmjs.com/package/sql-parser-cst) ![example workflow](https://github.com/nene/sql-parser-cst/actions/workflows/test.yml/badge.svg)
 
 SQL Parser which produces a **Concrete Syntax Tree** (CST).
 
