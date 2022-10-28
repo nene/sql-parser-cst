@@ -62,40 +62,27 @@ describe("constraints", () => {
     it("PRIMARY KEY", () => {
       testTblConst("PRIMARY KEY (id)");
       testTblConst("PRIMARY KEY (id, name)");
-      testTblConst("CONSTRAINT PRIMARY KEY (id)");
-      testTblConst("CONSTRAINT prim_key PRIMARY KEY (id)");
-      testTblConst(
-        "CONSTRAINT /*c1*/ prim_key /*c2*/ PRIMARY /*c3*/ KEY /*c4*/ ( /*c5*/ id /*c6*/,/*c7*/ name /*c8*/ )"
-      );
+      testTblConst("PRIMARY /*c3*/ KEY /*c4*/ ( /*c5*/ id /*c6*/,/*c7*/ name /*c8*/ )");
     });
 
     it("UNIQUE", () => {
       testTblConst("UNIQUE (id)");
       testTblConst("UNIQUE KEY (id, name)");
       testTblConst("UNIQUE INDEX (id)");
-      testTblConst("CONSTRAINT UNIQUE (id)");
-      testTblConst("CONSTRAINT u_key UNIQUE KEY (id)");
-      testTblConst(
-        "CONSTRAINT /*c1*/ u_key /*c2*/ UNIQUE /*c3*/ KEY /*c4*/ ( /*c5*/ id /*c6*/,/*c7*/ name /*c8*/ )"
-      );
+      testTblConst("UNIQUE /*c3*/ KEY /*c4*/ ( /*c5*/ id /*c6*/,/*c7*/ name /*c8*/ )");
     });
 
     it("CHECK", () => {
       testTblConst("CHECK (col > 10)");
-      testTblConst("CONSTRAINT CHECK (true)");
-      testTblConst("CONSTRAINT check_c CHECK (false)");
-      testTblConst("CONSTRAINT /*c1*/ check_c /*c2*/ CHECK /*c3*/ (/*c4*/ true /*c5*/)");
+      testTblConst("CHECK /*c3*/ (/*c4*/ true /*c5*/)");
     });
 
     describe("FOREIGN KEY", () => {
       it("basic FOREIGN KEY", () => {
         testTblConst("FOREIGN KEY (id) REFERENCES tbl2 (id)");
         testTblConst("FOREIGN KEY (id, name) REFERENCES tbl2 (id, name)");
-        testTblConst("CONSTRAINT FOREIGN KEY (id) REFERENCES tbl2 (t2_id)");
-        testTblConst("CONSTRAINT f_key FOREIGN KEY (id) REFERENCES tbl2 (id)");
         testTblConst(
-          `CONSTRAINT /*c1*/ f_key /*c2*/
-          FOREIGN /*c3*/ KEY /*c4*/ (/*c5*/ id /*c6*/) /*c7*/
+          `FOREIGN /*c3*/ KEY /*c4*/ (/*c5*/ id /*c6*/) /*c7*/
           REFERENCES /*c8*/ tbl2 /*c9*/ (/*c10*/ t2id /*c11*/)`
         );
       });
@@ -131,6 +118,22 @@ describe("constraints", () => {
         testTblConst("FOREIGN KEY (id) REFERENCES tbl2 (id) MATCH FULL ON UPDATE CASCADE");
         testTblConst("FOREIGN KEY (id) REFERENCES tbl2 (id) ON DELETE SET NULL MATCH SIMPLE");
       });
+    });
+
+    it("supports CONSTRAINT keyword for table constraints", () => {
+      testTblConst("CONSTRAINT PRIMARY KEY (id)");
+      testTblConst("CONSTRAINT UNIQUE KEY (id)");
+      testTblConst("CONSTRAINT CHECK (false)");
+      testTblConst("CONSTRAINT FOREIGN KEY (id) REFERENCES tbl2 (id)");
+      testTblConst("CONSTRAINT /*c1*/ CHECK (true)");
+    });
+
+    it("supports named table constraints", () => {
+      testTblConst("CONSTRAINT cname PRIMARY KEY (id)");
+      testTblConst("CONSTRAINT cname UNIQUE KEY (id)");
+      testTblConst("CONSTRAINT cname CHECK (false)");
+      testTblConst("CONSTRAINT cname FOREIGN KEY (id) REFERENCES tbl2 (id)");
+      testTblConst("CONSTRAINT /*c1*/ cname /*c2*/ CHECK (true)");
     });
   });
 });
