@@ -1565,6 +1565,16 @@ table_constraint_index
         columns,
       });
     }
+  / typeKw:(FULLTEXT / SPATIAL) c1:__
+    kw:(k:(INDEX / KEY) c:__ { return trailing(k, c); })?
+    columns:paren_column_ref_list {
+      return loc({
+        type: "constraint_index",
+        indexTypeKw: trailing(typeKw, c1),
+        indexKw: nullToUndefined(kw),
+        columns,
+      });
+    }
 
 column_constraint_index
   = kw:KEY {

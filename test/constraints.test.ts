@@ -218,6 +218,17 @@ describe("constraints", () => {
         testTblConst("KEY (id, name)");
         testTblConst("KEY /*c1*/ (/*c2*/ id /*c3*/,/*c4*/ name /*c5*/)");
       });
+
+      it("FULLTEXT INDEX", () => {
+        testTblConst("FULLTEXT (name)");
+        testTblConst("SPATIAL (name)");
+        testTblConst("FULLTEXT INDEX (name)");
+        testTblConst("SPATIAL INDEX (name, name2)");
+        testTblConst("FULLTEXT KEY (name, name2)");
+        testTblConst("SPATIAL KEY (name)");
+
+        testTblConst("FULLTEXT /*c1*/ KEY /*c2*/ (/*c3*/ name /*c4*/)");
+      });
     });
 
     it("supports CONSTRAINT keyword for table constraints", () => {

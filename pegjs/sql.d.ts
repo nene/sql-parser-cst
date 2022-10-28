@@ -344,6 +344,7 @@ type ConstraintCheck = BaseNode & {
 
 type ConstraintIndex = BaseNode & {
   type: "constraint_index";
+  indexTypeKw?: Keyword; // FULLTEXT | SPATIAL
   indexKw: Keyword; // INDEX | KEY
   columns?: ParenExpr<ExprList<ColumnRef>>;
 };
