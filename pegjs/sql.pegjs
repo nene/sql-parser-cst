@@ -1342,9 +1342,7 @@ column_constraint_type
   / re:references_specification {
     return "[Not implemented]";
   }
-  / ck:constraint_check {
-    return "[Not implemented]";
-  }
+  / constraint_check
   / t:(CHARACTER __ SET) __ s:"="? __ v:ident_name {
     return "[Not implemented]";
   }

@@ -329,7 +329,8 @@ type ColumnConstraint =
   | ConstraintDefault
   | ConstraintAutoIncrement
   | ConstraintKey
-  | ConstraintComment;
+  | ConstraintComment
+  | ConstraintCheck;
 
 type ConstraintNull = BaseNode & {
   type: "constraint_null";

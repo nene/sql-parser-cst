@@ -38,6 +38,10 @@ describe("constraints", () => {
       testColConst("PRIMARY /*c*/ KEY");
     });
 
+    it("CHECK", () => {
+      testColConst("CHECK (col > 10)");
+    });
+
     dialect("mysql", () => {
       it("AUTO_INCREMENT", () => {
         testColConst("AUTO_INCREMENT");
@@ -56,6 +60,7 @@ describe("constraints", () => {
       testColConst("CONSTRAINT DEFAULT 10");
       testColConst("CONSTRAINT PRIMARY KEY");
       testColConst("CONSTRAINT UNIQUE");
+      testColConst("CONSTRAINT CHECK (true)");
 
       testColConst("CONSTRAINT /*c1*/ NULL");
     });
@@ -66,6 +71,7 @@ describe("constraints", () => {
       testColConst("CONSTRAINT cname DEFAULT 10");
       testColConst("CONSTRAINT cname PRIMARY KEY");
       testColConst("CONSTRAINT cname UNIQUE");
+      testColConst("CONSTRAINT cname CHECK (true)");
 
       testColConst("CONSTRAINT /*c1*/ cname /*c2*/ NULL");
     });
