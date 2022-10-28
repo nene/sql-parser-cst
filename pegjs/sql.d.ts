@@ -277,6 +277,15 @@ type TableConstraint =
   | ConstraintUnique
   | ConstraintCheck;
 
+type ColumnConstraint =
+  | ConstraintNull
+  | ConstraintNotNull
+  | ConstraintDefault
+  | ConstraintAutoIncrement
+  | ConstraintKey
+  | ConstraintComment
+  | ConstraintCheck;
+
 type ConstraintPrimaryKey = BaseNode & {
   type: "constraint_primary_key";
   primaryKeyKw: Keyword[];
@@ -322,15 +331,6 @@ type ConstraintCheck = BaseNode & {
   checkKw: Keyword;
   expr: ParenExpr<Expr>;
 };
-
-type ColumnConstraint =
-  | ConstraintNull
-  | ConstraintNotNull
-  | ConstraintDefault
-  | ConstraintAutoIncrement
-  | ConstraintKey
-  | ConstraintComment
-  | ConstraintCheck;
 
 type ConstraintNull = BaseNode & {
   type: "constraint_null";
