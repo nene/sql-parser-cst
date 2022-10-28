@@ -1393,11 +1393,6 @@ constraint_collate
     });
   }
 
-collate_expr
-  = COLLATE __ s:"="? __ ca:ident_name {
-    return "[Not implemented]";
-  }
-
 column_format
   = k:COLUMN_FORMAT __ f:(FIXED / DYNAMIC / DEFAULT) {
     return "[Not implemented]";
@@ -2137,7 +2132,7 @@ ident_part  = [A-Za-z0-9_]
  * Literals
  */
 literal
-  = b:BINARY? __ s:literal_string ca:(__ collate_expr)? {
+  = b:BINARY? __ s:literal_string ca:(__ COLLATE __ ident)? {
     return s; // TODO
   }
   / literal_numeric
