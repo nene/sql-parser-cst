@@ -277,8 +277,7 @@ common_table_expression
     }
 
 cte_option
-  = kws:(NOT __ MATERIALIZED) { return createKeywordList(kws); }
-  / MATERIALIZED
+  = kws:(NOT __ MATERIALIZED / MATERIALIZED) { return createKeywordList(kws); }
 
 // Other clauses of SELECT statement (besides WITH & SELECT)
 other_clause
@@ -498,22 +497,20 @@ cross_join
   = kws:(CROSS __ JOIN) { return createKeywordList(kws); }
 
 join_type
-  = kws:(LEFT __ OUTER __ JOIN) { return createKeywordList(kws); }
-  / kws:(LEFT __ JOIN) { return createKeywordList(kws); }
-  / kws:(RIGHT __ OUTER __ JOIN) { return createKeywordList(kws); }
-  / kws:(RIGHT __ JOIN) { return createKeywordList(kws); }
-  / kws:(FULL __ OUTER __ JOIN) { return createKeywordList(kws); }
-  / kws:(FULL __ JOIN) { return createKeywordList(kws); }
-  / kws:(INNER __ JOIN) { return createKeywordList(kws); }
-  / kw:JOIN { return createKeywordList([kw]); }
+  = kws:(
+      (LEFT / RIGHT / FULL) __ OUTER __ JOIN
+    / (LEFT / RIGHT / FULL) __ JOIN
+    / INNER __ JOIN
+    / JOIN
+  ) { return createKeywordList(kws); }
 
 join_type$mysql
-  = kws:(LEFT __ OUTER __ JOIN) { return createKeywordList(kws); }
-  / kws:(LEFT __ JOIN) { return createKeywordList(kws); }
-  / kws:(RIGHT __ OUTER __ JOIN) { return createKeywordList(kws); }
-  / kws:(RIGHT __ JOIN) { return createKeywordList(kws); }
-  / kws:(INNER __ JOIN) { return createKeywordList(kws); }
-  / kw:JOIN { return createKeywordList([kw]); }
+  = kws:(
+      (LEFT / RIGHT) __ OUTER __ JOIN
+    / (LEFT / RIGHT) __ JOIN
+    / INNER __ JOIN
+    / JOIN
+  ) { return createKeywordList(kws); }
 
 join_specification
   = using_clause / on_clause
@@ -741,10 +738,7 @@ frame_exclusion
   }
 
 frame_exclusion_kind
-  = kws:(CURRENT __ ROW) { return createKeywordList(kws); }
-  / kws:(NO __ OTHERS) { return createKeywordList(kws); }
-  / GROUP
-  / TIES
+  = kws:(CURRENT __ ROW / NO __ OTHERS / GROUP / TIES) { return createKeywordList(kws); }
 
 /**
  * SELECT .. FOR UPDATE
@@ -1509,10 +1503,9 @@ column_constraint_unique
     }
 
 unique_key
-  = kws:(UNIQUE __ (INDEX / KEY)) {
+  = kws:(UNIQUE __ (INDEX / KEY) / UNIQUE) {
     return createKeywordList(kws);
   }
-  / UNIQUE
 
 constraint_check
   = kw:CHECK c:__ expr:paren_expr
@@ -1571,9 +1564,7 @@ referential_match
   }
 
 reference_action_type
-  = RESTRICT
-  / CASCADE
-  / kws:(SET __ NULL / NO __ ACTION / SET __ DEFAULT) { return createKeywordList(kws); }
+  = kws:(RESTRICT / CASCADE / SET __ NULL / NO __ ACTION / SET __ DEFAULT) { return createKeywordList(kws); }
 
 table_constraint_index
   = kw:(k:(INDEX / KEY) c:__ { return trailing(k, c); })
@@ -1772,14 +1763,10 @@ in_op_right
   }
 
 in_op
-  = kws:(NOT __ IN) { return createKeywordList(kws); }
-  / kw:IN
+  = kws:(NOT __ IN / IN) { return createKeywordList(kws); }
 
 is_op_right
-  = kw:IS c:__ right:additive_expr {
-    return { kind: "is", op: kw, c, right };
-  }
-  / kws:(IS __ NOT) c:__ right:additive_expr {
+  = kws:(IS __ NOT / IS) c:__ right:additive_expr {
     return { kind: "is", op: createKeywordList(kws), c, right };
   }
 
@@ -1789,8 +1776,7 @@ like_op_right
   }
 
 like_op
-  = kws:(NOT __ LIKE) { return createKeywordList(kws); }
-  / kw:LIKE
+  = kws:(NOT __ LIKE / LIKE) { return createKeywordList(kws); }
 
 regexp_op_right
   = op:regexp_op c:__ b:BINARY? __ right:(literal_string / column_ref) {
@@ -1798,11 +1784,9 @@ regexp_op_right
   }
 
 regexp_op
-  = kws:(NOT __ (REGEXP / RLIKE)) {
+  = kws:(NOT __ (REGEXP / RLIKE) / REGEXP / RLIKE) {
     return createKeywordList(kws);
   }
-  / REGEXP
-  / RLIKE
 
 between_op_right
   = betweenKw:between_op c1:__  begin:additive_expr c2:__ andKw:AND c3:__ end:additive_expr {
@@ -1816,8 +1800,7 @@ between_op_right
   }
 
 between_op
-  = kws:(NOT __ BETWEEN) { return createKeywordList(kws); }
-  / kw:BETWEEN { return createKeywordList([kw]); }
+  = kws:(NOT __ BETWEEN / BETWEEN) { return createKeywordList(kws); }
 
 additive_expr
   = head: multiplicative_expr
