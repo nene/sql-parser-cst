@@ -1350,6 +1350,7 @@ column_constraint_type$mysql
   / constraint_visible
   / constraint_column_format
   / constraint_storage
+  / constraint_engine_attribute
 
 constraint_not_null
   = kws:(NOT __ NULL) {
@@ -1410,6 +1411,16 @@ constraint_storage
       storageKw: trailing(kw, c),
       typeKw: t,
     });
+  }
+
+constraint_engine_attribute
+  = kw:(ENGINE_ATTRIBUTE /  SECONDARY_ENGINE_ATTRIBUTE) eq:(__ "=")? c:__ v:literal_string {
+    return loc({
+      type: "constraint_engine_attribute",
+      engineAttributeKw: eq ? trailing(kw, eq[0]) : kw,
+      hasEq: !!eq,
+      value: leading(v, c),
+    })
   }
 
 constraint_generated
@@ -2481,6 +2492,7 @@ ELSE                = kw:"ELSE"i                !ident_part { return loc(createK
 END                 = kw:"END"i                 !ident_part { return loc(createKeyword(kw)); }
 ENFORCED            = kw:"ENFORCED"i            !ident_part { return loc(createKeyword(kw)); }
 ENGINE              = kw:"ENGINE"i              !ident_part { return loc(createKeyword(kw)); }
+ENGINE_ATTRIBUTE    = kw:"ENGINE_ATTRIBUTE"i    !ident_part { return loc(createKeyword(kw)); }
 ENUM                = kw:"ENUM"i                !ident_part { return loc(createKeyword(kw)); }
 EVENTS              = kw:"EVENTS"i              !ident_part { return loc(createKeyword(kw)); }
 EXCEPT              = kw:"EXCEPT"i              !ident_part { return loc(createKeyword(kw)); }
@@ -2614,6 +2626,7 @@ ROW_NUMBER          = kw:"ROW_NUMBER"i          !ident_part { return loc(createK
 ROWS                = kw:"ROWS"i                !ident_part { return loc(createKeyword(kw)); }
 SCHEMA              = kw:"SCHEMA"i              !ident_part { return loc(createKeyword(kw)); }
 SECOND              = kw:"SECOND"i              !ident_part { return loc(createKeyword(kw)); }
+SECONDARY_ENGINE_ATTRIBUTE = kw:"SECONDARY_ENGINE_ATTRIBUTE"i !ident_part { return loc(createKeyword(kw)); }
 SECURITY            = kw:"SECURITY"i            !ident_part { return loc(createKeyword(kw)); }
 SELECT              = kw:"SELECT"i              !ident_part { return loc(createKeyword(kw)); }
 SESSION             = kw:"SESSION"i             !ident_part { return loc(createKeyword(kw)); }

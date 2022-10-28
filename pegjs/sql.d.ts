@@ -293,7 +293,8 @@ type ColumnConstraint =
   | ConstraintCollate
   | ConstraintVisible
   | ConstraintColumnFormat
-  | ConstraintStorage;
+  | ConstraintStorage
+  | ConstraintEngineAttribute;
 
 type ConstraintPrimaryKey = BaseNode & {
   type: "constraint_primary_key";
@@ -403,6 +404,13 @@ type ConstraintStorage = BaseNode & {
   type: "constraint_storage";
   storageKw: Keyword; // STORAGE
   typeKw: Keyword; // DISK | MEMORY
+};
+
+type ConstraintEngineAttribute = BaseNode & {
+  type: "constraint_engine_attribute";
+  engineAttributeKw: Keyword; // ENGINE_ATTRIBUTE | SECONDARY_ENGINE_ATTRIBUTE
+  hasEq: boolean; // True when "=" sign is used
+  value: StringLiteral;
 };
 
 // DROP TABLE

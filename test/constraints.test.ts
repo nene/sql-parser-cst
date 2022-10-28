@@ -95,6 +95,16 @@ describe("constraints", () => {
         testColConst("STORAGE MEMORY");
         testColConst("STORAGE /*c*/ MEMORY");
       });
+
+      it("engine attributes", () => {
+        testColConst("ENGINE_ATTRIBUTE = 'blah'");
+        testColConst("ENGINE_ATTRIBUTE 'blah'");
+        testColConst("SECONDARY_ENGINE_ATTRIBUTE = 'blah'");
+        testColConst("SECONDARY_ENGINE_ATTRIBUTE 'blah'");
+
+        testColConst("ENGINE_ATTRIBUTE /*c1*/ = /*c2*/ 'blah'");
+        testColConst("ENGINE_ATTRIBUTE /*c1*/ 'blah'");
+      });
     });
 
     it("supports CONSTRAINT keyword for column constraints", () => {

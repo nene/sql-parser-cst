@@ -136,6 +136,8 @@ const showNode = cstTransformer<string>({
   constraint_column_format: (node) =>
     show([node.columnFormatKw, node.formatKw]),
   constraint_storage: (node) => show([node.storageKw, node.typeKw]),
+  constraint_engine_attribute: (node) =>
+    show([node.engineAttributeKw, node.hasEq ? "=" : undefined, node.value]),
 
   // DROP TABLE statement
   drop_table_statement: (node) =>
