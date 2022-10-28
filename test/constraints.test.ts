@@ -4,7 +4,8 @@ describe("constraints", () => {
   describe("column constraints", () => {
     it("parses multiple constraints after column data type", () => {
       test(`CREATE TABLE foo (
-        id INT /*c1*/ NOT /*c2*/ NULL /*c3*/ DEFAULT /*c4*/ 5 /*c5*/
+        id INT  NOT NULL  DEFAULT 5,
+        age INT NULL UNIQUE
       )`);
     });
 
