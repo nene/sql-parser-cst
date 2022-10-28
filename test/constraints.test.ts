@@ -26,11 +26,6 @@ describe("constraints", () => {
       testColConst("DEFAULT /*c1*/ 10");
     });
 
-    it("AUTO_INCREMENT", () => {
-      testColConst("AUTO_INCREMENT");
-      testColConst("AUTO_increment");
-    });
-
     it("UNIQUE KEY / PRIMARY KEY", () => {
       testColConst("KEY");
       testColConst("UNIQUE");
@@ -40,9 +35,16 @@ describe("constraints", () => {
       testColConst("PRIMARY /*c*/ KEY");
     });
 
-    it("COMMENT", () => {
-      testColConst("COMMENT 'Hello, world!'");
-      testColConst("COMMENT /*c*/ 'Hi'");
+    dialect("mysql", () => {
+      it("AUTO_INCREMENT", () => {
+        testColConst("AUTO_INCREMENT");
+        testColConst("AUTO_increment");
+      });
+
+      it("COMMENT", () => {
+        testColConst("COMMENT 'Hello, world!'");
+        testColConst("COMMENT /*c*/ 'Hi'");
+      });
     });
 
     it("supports CONSTRAINT keyword for column constraints", () => {
