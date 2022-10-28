@@ -241,14 +241,16 @@ type CreateTableStatement = BaseNode & {
   temporaryKw?: Keyword;
   ifNotExistsKw?: Keyword[];
   table: TableRef;
-  columns: ParenExpr<ExprList<ColumnDefinition | Constraint<TableConstraint>>>;
+  columns: ParenExpr<
+    ExprList<ColumnDefinition | TableConstraint | Constraint<TableConstraint>>
+  >;
 };
 
 type ColumnDefinition = BaseNode & {
   type: "column_definition";
   name: ColumnRef;
   dataType: DataType;
-  constraints: Constraint<ColumnConstraint>[];
+  constraints: (ColumnConstraint | Constraint<ColumnConstraint>)[];
 };
 
 type DataType = BaseNode & {
