@@ -14,7 +14,7 @@
   },
   "files": [
     "lib/",
-    "pegjs/"
+    "AUTHORS"
   ],
   "scripts": {
     "prepublishOnly": "yarn test && yarn build",
