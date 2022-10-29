@@ -1023,16 +1023,20 @@ truncate_stmt
  * ALTER TABLE
  */
 alter_table_stmt
-  = ALTER  __
-    TABLE __
-    t:table_ref __
-    e:alter_action_list {
-      return "[Not implemented]";
+  = kw:(ALTER __ TABLE __)
+    t:(table_ref __)
+    actions:alter_action_list {
+      return loc({
+        type: "alter_table_statement",
+        alterTableKw: read(kw),
+        table: read(t),
+        actions,
+      });
     }
 
 alter_action_list
   = head:alter_action tail:(__ "," __ alter_action)* {
-      return "[Not implemented]";
+      return readCommaSepList(head, tail);
     }
 
 alter_action
@@ -1074,11 +1078,19 @@ alter_add_index_or_key
     }
 
 alter_rename_table
-  = RENAME __
-  kw:(TO / AS)? __
-  tn:ident {
-    return "[Not implemented]";
+  = kw:(alter_rename_table_kw __) t:table_ref {
+    return loc({
+      type: "alter_rename_table",
+      renameKw: read(kw),
+      name: t,
+    });
   }
+
+alter_rename_table_kw
+  = kw:(RENAME __ TO) { return read(kw); }
+
+alter_rename_table_kw$mysql
+  = kw:(RENAME __ (TO / AS) / RENAME) { return read(kw); }
 
 alter_rename_column
   = RENAME __ COLUMN __ c:column_ref __

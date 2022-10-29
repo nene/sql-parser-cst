@@ -29,6 +29,7 @@ type Node =
   | ReferentialAction
   | ReferentialMatch
   | OnConflictClause
+  | AlterAction
   | AllColumns
   | DistinctArg
   | CastArg
@@ -56,6 +57,7 @@ type Statement =
   | CompoundSelectStatement
   | SelectStatement
   | CreateTableStatement
+  | AlterTableStatement
   | DropTableStatement
   | InsertStatement
   | DeleteStatement
@@ -433,6 +435,22 @@ type OnConflictClause = BaseNode & {
   type: "on_conflict_clause";
   onConflictKw: Keyword[]; // ON CONFLICT
   resolutionKw: Keyword; // ROLLBACK | ABORT | FAIL | IGNORE | REPLACE
+};
+
+// ALTER TABLE
+type AlterTableStatement = BaseNode & {
+  type: "alter_table_statement";
+  alterTableKw: Keyword[];
+  table: TableRef;
+  actions: AlterAction[];
+};
+
+type AlterAction = AlterRenameTable;
+
+type AlterRenameTable = BaseNode & {
+  type: "alter_rename_table";
+  renameKw: Keyword[]; // RENAME | RENAME TO | RENAME AS
+  name: TableRef;
 };
 
 // DROP TABLE

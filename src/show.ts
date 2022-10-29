@@ -144,6 +144,11 @@ const showNode = cstTransformer<string>({
     show([node.engineAttributeKw, node.hasEq ? "=" : undefined, node.value]),
   on_conflict_clause: (node) => show([node.onConflictKw, node.resolutionKw]),
 
+  // ALTER TABLE statement
+  alter_table_statement: (node) =>
+    show([node.alterTableKw, node.table, node.actions]),
+  alter_rename_table: (node) => show([node.renameKw, node.name]),
+
   // DROP TABLE statement
   drop_table_statement: (node) =>
     show([
