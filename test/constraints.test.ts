@@ -113,6 +113,21 @@ describe("constraints", () => {
       });
     });
 
+    dialect("sqlite", () => {
+      it("supports ON CONFLICT clause", () => {
+        testColConst("UNIQUE ON CONFLICT ROLLBACK");
+        testColConst("UNIQUE ON CONFLICT ABORT");
+        testColConst("UNIQUE ON CONFLICT FAIL");
+        testColConst("UNIQUE ON CONFLICT IGNORE");
+        testColConst("UNIQUE ON CONFLICT REPLACE");
+        testColConst("UNIQUE /*c1*/ ON /*c2*/ CONFLICT /*c3*/ REPLACE");
+
+        testColConst("PRIMARY KEY ON CONFLICT ABORT");
+        testColConst("NOT NULL ON CONFLICT ABORT");
+        testColConst("CHECK (x > 0) ON CONFLICT ABORT");
+      });
+    });
+
     it("supports CONSTRAINT keyword for column constraints", () => {
       testColConst("CONSTRAINT NULL");
       testColConst("CONSTRAINT NOT NULL");
@@ -247,6 +262,20 @@ describe("constraints", () => {
         testTblConst("SPATIAL KEY (name)");
 
         testTblConst("FULLTEXT /*c1*/ KEY /*c2*/ (/*c3*/ name /*c4*/)");
+      });
+    });
+
+    dialect("sqlite", () => {
+      it("supports ON CONFLICT clause", () => {
+        testTblConst("PRIMARY KEY (id) ON CONFLICT ROLLBACK");
+        testTblConst("PRIMARY KEY (id) ON CONFLICT ABORT");
+        testTblConst("PRIMARY KEY (id) ON CONFLICT FAIL");
+        testTblConst("PRIMARY KEY (id) ON CONFLICT IGNORE");
+        testTblConst("PRIMARY KEY (id) ON CONFLICT REPLACE");
+        testTblConst("PRIMARY KEY (id) /*c1*/ ON /*c2*/ CONFLICT /*c3*/ REPLACE");
+
+        testTblConst("UNIQUE (id) ON CONFLICT FAIL");
+        testTblConst("CHECK (id > 0) ON CONFLICT ROLLBACK");
       });
     });
 

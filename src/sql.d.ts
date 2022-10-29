@@ -28,6 +28,7 @@ type Node =
   | ReferencesSpecification
   | ReferentialAction
   | ReferentialMatch
+  | OnConflictClause
   | AllColumns
   | DistinctArg
   | CastArg
@@ -308,6 +309,7 @@ type ConstraintPrimaryKey = BaseNode & {
   type: "constraint_primary_key";
   primaryKeyKw: Keyword[];
   columns?: ParenExpr<ExprList<ColumnRef>>;
+  onConflict?: OnConflictClause;
 };
 
 type ConstraintForeignKey = BaseNode & {
@@ -342,12 +344,14 @@ type ConstraintUnique = BaseNode & {
   type: "constraint_unique";
   uniqueKw: Keyword | Keyword[];
   columns?: ParenExpr<ExprList<ColumnRef>>;
+  onConflict?: OnConflictClause;
 };
 
 type ConstraintCheck = BaseNode & {
   type: "constraint_check";
   checkKw: Keyword;
   expr: ParenExpr<Expr>;
+  onConflict?: OnConflictClause;
 };
 
 type ConstraintIndex = BaseNode & {
@@ -365,6 +369,7 @@ type ConstraintNull = BaseNode & {
 type ConstraintNotNull = BaseNode & {
   type: "constraint_not_null";
   notNullKw: Keyword[];
+  onConflict?: OnConflictClause;
 };
 
 type ConstraintDefault = BaseNode & {
@@ -420,6 +425,12 @@ type ConstraintEngineAttribute = BaseNode & {
   engineAttributeKw: Keyword; // ENGINE_ATTRIBUTE | SECONDARY_ENGINE_ATTRIBUTE
   hasEq: boolean; // True when "=" sign is used
   value: StringLiteral;
+};
+
+type OnConflictClause = BaseNode & {
+  type: "on_conflict_clause";
+  onConflictKw: Keyword[]; // ON CONFLICT
+  resolutionKw: Keyword; // ROLLBACK | ABORT | FAIL | IGNORE | REPLACE
 };
 
 // DROP TABLE

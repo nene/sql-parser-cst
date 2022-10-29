@@ -1366,8 +1366,12 @@ column_constraint_type$mysql
   / constraint_engine_attribute
 
 constraint_not_null
-  = kws:(NOT __ NULL) {
-    return loc({ type: "constraint_not_null", notNullKw: createKeywordList(kws) });
+  = kws:(NOT __ NULL) confl:(c:__ on:on_conflict_clause { return leading(on, c); })? {
+    return loc({
+      type: "constraint_not_null",
+      notNullKw: createKeywordList(kws),
+      onConflict: nullToUndefined(confl),
+    });
   }
 
 constraint_null
@@ -1465,19 +1469,22 @@ table_constraint_primary_key
   = kws:(PRIMARY __ KEY __)
     t:(index_type __)?
     columns:paren_column_ref_list
-    opts:(__ index_options)? {
+    opts:(__ index_options)?
+    confl:(c:__ on:on_conflict_clause { return leading(on, c); })? {
       return loc({
         type: "constraint_primary_key",
         primaryKeyKw: createKeywordList(kws),
         columns,
+        onConflict: nullToUndefined(confl),
       });
     }
 
 column_constraint_primary_key
-  = kws:(PRIMARY __ KEY) {
+  = kws:(PRIMARY __ KEY) confl:(c:__ on:on_conflict_clause { return leading(on, c); })? {
       return loc({
         type: "constraint_primary_key",
-        primaryKeyKw: createKeywordList(kws)
+        primaryKeyKw: createKeywordList(kws),
+        onConflict: nullToUndefined(confl),
       });
     }
 
@@ -1486,19 +1493,22 @@ table_constraint_unique
     i:(ident __)?
     t:(index_type __)?
     columns:paren_column_ref_list
-    id:(__ index_options)? {
+    id:(__ index_options)?
+    confl:(c:__ on:on_conflict_clause { return leading(on, c); })? {
       return loc({
         type: "constraint_unique",
         uniqueKw: kws,
         columns,
+        onConflict: nullToUndefined(confl),
       });
     }
 
 column_constraint_unique
-  = kws:unique_key {
+  = kws:unique_key confl:(c:__ on:on_conflict_clause { return leading(on, c); })? {
       return loc({
         type: "constraint_unique",
         uniqueKw: kws,
+        onConflict: nullToUndefined(confl),
       });
     }
 
@@ -1508,12 +1518,14 @@ unique_key
   }
 
 constraint_check
-  = kw:CHECK c:__ expr:paren_expr
-    ((__ NOT)? __ ENFORCED)?  {
+  = kw:CHECK c1:__ expr:paren_expr
+    ((__ NOT)? __ ENFORCED)?
+    confl:(c:__ on:on_conflict_clause { return leading(on, c); })? {
       return loc({
         type: "constraint_check",
         checkKw: kw,
-        expr: leading(expr, c),
+        expr: leading(expr, c1),
+        onConflict: nullToUndefined(confl),
       });
     }
 
@@ -1593,6 +1605,15 @@ column_constraint_index
         indexKw: kw,
       });
     }
+
+on_conflict_clause
+  = kws:(ON __ CONFLICT __) res:(ROLLBACK / ABORT / FAIL / IGNORE / REPLACE) {
+    return loc({
+      type: "on_conflict_clause",
+      onConflictKw: createKeywordList(kws),
+      resolutionKw: res,
+    });
+  }
 
 /**
  * Data types
@@ -2465,6 +2486,7 @@ COMMENT             = kw:"COMMENT"i             !ident_part { return loc(createK
 COMPACT             = kw:"COMPACT"i             !ident_part { return loc(createKeyword(kw)); }
 COMPRESSED          = kw:"COMPRESSED"i          !ident_part { return loc(createKeyword(kw)); }
 COMPRESSION         = kw:"COMPRESSION"i         !ident_part { return loc(createKeyword(kw)); }
+CONFLICT            = kw:"CONFLICT"i            !ident_part { return loc(createKeyword(kw)); }
 CONNECTION          = kw:"CONNECTION"i          !ident_part { return loc(createKeyword(kw)); }
 CONSTRAINT          = kw:"CONSTRAINT"i          !ident_part { return loc(createKeyword(kw)); }
 COPY                = kw:"COPY"i                !ident_part { return loc(createKeyword(kw)); }
