@@ -899,11 +899,6 @@ create_definition
   = table_constraint
   / column_definition
 
-column_constraint_list
-  = head:column_constraint tail:(__ column_constraint)* {
-    return readSpaceSepList(head, tail);
-  }
-
 column_definition
   = name:column_ref c1:__
     type:data_type
@@ -916,8 +911,10 @@ column_definition
       });
     }
 
-if_exists
-  = kws:(IF __ EXISTS) { return createKeywordList(kws); }
+column_constraint_list
+  = head:column_constraint tail:(__ column_constraint)* {
+    return readSpaceSepList(head, tail);
+  }
 
 /**
  * DROP TABLE
@@ -940,6 +937,9 @@ drop_table_stmt
         ...(behaviorKw ? {behaviorKw} : {}),
       });
     }
+
+if_exists
+  = kws:(IF __ EXISTS) { return createKeywordList(kws); }
 
 /**
  * DROP INDEX
