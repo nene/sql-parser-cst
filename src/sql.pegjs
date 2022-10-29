@@ -785,24 +785,26 @@ create_db_definition
  * CREATE VIEW
  */
 create_view_stmt
-  = a:CREATE __
-  or:(OR __ REPLACE)? __
-  al:(ALGORITHM __ "=" __ (UNDEFINED / MERGE / TEMPTABLE))? __
-  df:(DEFINER __ "=" __ ident)? __
-  ss:(SQL __ SECURITY __ (DEFINER / INVOKER))? __
-  VIEW __ v:table_ref __ c:paren_plain_column_ref_list? __
-  AS __ s:select_stmt __
-  w:view_with? {
-    return "[Not implemented]";
-  }
-
-view_with
-  = WITH __ c:(CASCADED / LOCAL) __ CHECK __ OPTION {
-    return "[Not implemented]";
-  }
-  / WITH __ CHECK __ OPTION {
-    return "[Not implemented]";
-  }
+  = createKw:CREATE
+    tmpKw:(c:__ t:(TEMP / TEMPORARY) { return leading(t, c); })?
+    c1:__ viewKw:VIEW
+    ifKw:(c:__ i:if_not_exists { return leading(i, c); })?
+    c2:__ name:table_ref
+    cols:(c:__ co:paren_plain_column_ref_list { return leading(co, c); })?
+    c3:__ asKw:AS
+    c4:__ select:compound_select_stmt {
+      return loc({
+        type: "create_view_statement",
+        createKw,
+        temporaryKw: nullToUndefined(tmpKw),
+        viewKw: leading(viewKw, c1),
+        ifNotExistsKw: nullToUndefined(ifKw),
+        name: leading(name, c2),
+        columns: nullToUndefined(cols),
+        asKw: leading(asKw, c3),
+        expr: leading(select, c4),
+      });
+    }
 
 /**
  * CREATE INDEX

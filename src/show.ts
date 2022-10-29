@@ -184,6 +184,19 @@ const showNode = cstTransformer<string>({
   delete_statement: (node) =>
     show([node.deleteKw, node.fromKw, node.table, node.where]),
 
+  // CREATE VIEW statement
+  create_view_statement: (node) =>
+    show([
+      node.createKw,
+      node.temporaryKw,
+      node.viewKw,
+      node.ifNotExistsKw,
+      node.name,
+      node.columns,
+      node.asKw,
+      node.expr,
+    ]),
+
   // Expressions
   expr_list: (node) => show(node.items, ","),
   paren_expr: (node) => "(" + show(node.expr) + ")",

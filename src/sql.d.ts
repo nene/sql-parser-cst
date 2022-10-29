@@ -59,7 +59,8 @@ type Statement =
   | DropTableStatement
   | InsertStatement
   | DeleteStatement
-  | UpdateStatement;
+  | UpdateStatement
+  | CreateViewStatement;
 
 type Expr =
   | ExprList
@@ -499,6 +500,19 @@ type ColumnAssignment = BaseNode & {
   type: "column_assignment";
   column: ColumnRef;
   expr: Expr | Default;
+};
+
+// CREATE VIEW
+type CreateViewStatement = BaseNode & {
+  type: "create_view_statement";
+  createKw: Keyword;
+  temporaryKw?: Keyword;
+  viewKw: Keyword;
+  ifNotExistsKw?: Keyword[];
+  name: TableRef;
+  columns?: ParenExpr<ExprList<ColumnRef>>;
+  asKw: Keyword;
+  expr: SubSelect;
 };
 
 // Window frame
