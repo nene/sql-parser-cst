@@ -142,7 +142,7 @@ You can also target a specific dialect, like `yarn generate sqlite`.
 
 The testsuite contains two kinds of tests:
 
-- tests are applicable for all dialects
+- tests applicable for all dialects
 - tests applicable for only some specific dialects
 
 When running the testsuite one always needs to pick a dialect.
