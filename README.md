@@ -135,6 +135,42 @@ Note the following conventions:
   (e.g. `{"type": "space", "text": " \t"}`). This has been left out from this
   example for the sake of simplicity.
 
+## Development
+
+`yarn generate` will generate parser for each supported dialect.
+You can also target a specific dialect, like `yarn generate sqlite`.
+
+The testsuite contains two kinds of tests:
+
+- tests are applicable for all dialects
+- tests applicable for only some specific dialects
+
+When running the testsuite one always needs to pick a dialect.
+For example `yarn test:sqlite` or `yarn test:mysql`.
+Running one of these commands will run the testsuite against the parser
+of that dialect. It will execute all the generic tests plus tests
+applicable for that dialect.
+
+`yarn test` will execute the testsuite for each supported dialect,
+covering all the possible combinations.
+
+### During development
+
+Start the parser-generator watch process in one terminal:
+
+```
+yarn watch:generate
+```
+
+and the tests watch process in another terminal:
+
+```
+yarn test:sqlite --watch
+```
+
+Note that `yarn test --watch` doesn't work.
+A separate watch process needs to be started manually for each dialect.
+
 ## Acknowledgements
 
 This started as a fork of [node-sql-parser][],
