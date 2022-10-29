@@ -196,6 +196,14 @@ const showNode = cstTransformer<string>({
       node.asKw,
       node.expr,
     ]),
+  // DROP VIEW statement
+  drop_view_statement: (node) =>
+    show([
+      node.dropViewKw,
+      node.ifExistsKw,
+      show(node.views, ","),
+      node.behaviorKw,
+    ]),
 
   // Expressions
   expr_list: (node) => show(node.items, ","),

@@ -192,6 +192,7 @@ statement
   = compound_select_stmt
   / drop_table_stmt
   / drop_index_stmt
+  / drop_view_stmt
   / create_table_stmt
   / create_index_stmt
   / create_db_stmt
@@ -959,6 +960,23 @@ drop_index_stmt
 drop_index_opt
   = head:(alter_algorithm / alter_lock) tail:(__ (alter_algorithm / alter_lock))* {
     return "[Not implemented]";
+  }
+
+/**
+ * DROP VIEW
+ */
+drop_view_stmt
+  = kws:(DROP __ VIEW)
+    ifKw:(c:__ i:if_exists { return leading(i, c); })?
+    c1:__ views:table_ref_list
+    behaviorKw:(c:__ kw:(CASCADE / RESTRICT) { return leading(kw, c); })? {
+    return loc({
+      type: "drop_view_statement",
+      dropViewKw: createKeywordList(kws),
+      ifExistsKw: nullToUndefined(ifKw),
+      views: leading(views, c1),
+      behaviorKw: nullToUndefined(behaviorKw),
+    });
   }
 
 /**

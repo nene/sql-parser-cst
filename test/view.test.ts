@@ -28,4 +28,30 @@ describe("view", () => {
       });
     });
   });
+
+  describe("DROP VIEW", () => {
+    it("simple DROP VIEW statement", () => {
+      test("DROP VIEW my_view");
+      test("DROP VIEW schemata.my_view");
+      test("DROP /*c1*/ VIEW /*c2*/ my_view");
+    });
+
+    it("supports IF EXISTS", () => {
+      test("DROP VIEW IF EXISTS my_view");
+      test("DROP VIEW /*c1*/ IF /*c2*/ EXISTS /*c4*/ my_view");
+    });
+
+    it("supports multiple views", () => {
+      test("DROP VIEW view1, view2, view3");
+      test("DROP VIEW view1 /*c1*/,/*c2*/ view2");
+    });
+
+    dialect("mysql", () => {
+      it("with CASCADE/RESTRICT behavior", () => {
+        test("DROP VIEW v1 CASCADE");
+        test("DROP VIEW v1 RESTRICT");
+        test("DROP VIEW v1 /*c1*/ RESTRICT");
+      });
+    });
+  });
 });

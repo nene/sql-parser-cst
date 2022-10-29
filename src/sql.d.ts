@@ -60,7 +60,8 @@ type Statement =
   | InsertStatement
   | DeleteStatement
   | UpdateStatement
-  | CreateViewStatement;
+  | CreateViewStatement
+  | DropViewStatement;
 
 type Expr =
   | ExprList
@@ -513,6 +514,15 @@ type CreateViewStatement = BaseNode & {
   columns?: ParenExpr<ExprList<ColumnRef>>;
   asKw: Keyword;
   expr: SubSelect;
+};
+
+// DROP VIEW
+type DropViewStatement = BaseNode & {
+  type: "drop_view_statement";
+  dropViewKw: Keyword[];
+  ifExistsKw?: Keyword[];
+  views: TableRef[];
+  behaviorKw?: Keyword; // CASCADE | RESTRICT
 };
 
 // Window frame
