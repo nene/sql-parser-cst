@@ -899,9 +899,9 @@ create_table_stmt
       return "[Not implemented]";
     }
   / createKw:CREATE
-    tmpKw:(c:__ kw:(TEMPORARY / TEMP) { return leading(kw, c); })?
+    tmpKw:(__ (TEMPORARY / TEMP))?
     tableKw:(c:__ kw:TABLE { return leading(kw, c); })
-    ifKw:(c:__ kw:if_not_exists { return leading(kw, c); })?
+    ifKw:(__ if_not_exists)?
     table:(c1:__ t:table_ref c2:__ { return surrounding(c1, t, c2); })
     columns:create_table_definition
     __ table_options?
@@ -911,9 +911,9 @@ create_table_stmt
       return loc({
         type: "create_table_statement",
         createKw,
-        temporaryKw: nullToUndefined(tmpKw),
+        temporaryKw: readKeywords(tmpKw),
         tableKw,
-        ifNotExistsKw: nullToUndefined(ifKw),
+        ifNotExistsKw: readKeywords(ifKw),
         table,
         columns,
       });
@@ -1240,7 +1240,7 @@ delete_stmt
 insert_stmt
   = insertKw:(INSERT / REPLACE)
     options:(c:__ opts:insert_options { return leading(opts, c) })?
-    intoKw:(c:__ kw:INTO { return leading(kw, c) })?
+    intoKw:(__ INTO)?
     table:(c:__ t:table_ref_or_explicit_alias { return leading(t, c); })
     columns:(c:__ cols:paren_plain_column_ref_list { return leading(cols, c); })?
     source:(c:__ src:insert_source { return leading(src, c); }) {
@@ -1248,7 +1248,7 @@ insert_stmt
         type: "insert_statement",
         insertKw,
         options: options || [],
-        intoKw: nullToUndefined(intoKw),
+        intoKw: readKeywords(intoKw),
         table,
         columns: nullToUndefined(columns),
         source,
@@ -1478,13 +1478,13 @@ constraint_engine_attribute
 
 constraint_generated
   = kws:(GENERATED __ ALWAYS __)? asKw:AS c1:__ expr:paren_expr
-    stKw:(c:__ k:(STORED / VIRTUAL) { return leading(k, c); })? {
+    stKw:(__ (STORED / VIRTUAL))? {
       return loc({
         type: "constraint_generated",
         generatedKw: kws ? createKeywordList(kws) : undefined,
         asKw,
         expr: leading(expr, c1),
-        storageKw: nullToUndefined(stKw),
+        storageKw: readKeywords(stKw),
       });
     }
 
@@ -1525,7 +1525,7 @@ column_constraint_primary_key
     }
 
 table_constraint_unique
-  = kws:(k:unique_key c:__ { return trailing(k, c); })
+  = kws:(unique_key __)
     i:(ident __)?
     t:(index_type __)?
     columns:paren_column_ref_list
@@ -1533,7 +1533,7 @@ table_constraint_unique
     confl:(c:__ on:on_conflict_clause { return leading(on, c); })? {
       return loc({
         type: "constraint_unique",
-        uniqueKw: kws,
+        uniqueKw: readKeywords(kws),
         columns,
         onConflict: nullToUndefined(confl),
       });
@@ -1615,21 +1615,21 @@ reference_action_type
   = kws:(RESTRICT / CASCADE / SET __ NULL / NO __ ACTION / SET __ DEFAULT) { return createKeywordList(kws); }
 
 table_constraint_index
-  = kw:(k:(INDEX / KEY) c:__ { return trailing(k, c); })
+  = kw:((INDEX / KEY) __)
     columns:paren_column_ref_list {
       return loc({
         type: "constraint_index",
-        indexKw: kw,
+        indexKw: readKeywords(kw),
         columns,
       });
     }
   / typeKw:(FULLTEXT / SPATIAL) c1:__
-    kw:(k:(INDEX / KEY) c:__ { return trailing(k, c); })?
+    kw:((INDEX / KEY) __ )?
     columns:paren_column_ref_list {
       return loc({
         type: "constraint_index",
         indexTypeKw: trailing(typeKw, c1),
-        indexKw: nullToUndefined(kw),
+        indexKw: readKeywords(kw),
         columns,
       });
     }
@@ -2026,13 +2026,13 @@ case_expr
     expr:(c:__ e:expr { return leading(e, c); })?
     clauses:(c:__ w:case_when { return leading(w, c); })+
     els:(c:__ e:case_else { return leading(e, c); })?
-    endKw:(c:__ kw:END { return leading(kw, c); }) {
+    endKw:(__ END) {
       return loc({
         type: "case_expr",
         caseKw,
         expr: nullToUndefined(expr),
         clauses: [...clauses, ...(els ? [els] : [])],
-        endKw,
+        endKw: readKeywords(endKw),
       });
     }
 
