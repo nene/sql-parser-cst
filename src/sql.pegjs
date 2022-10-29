@@ -897,14 +897,14 @@ create_definition_list
 
 create_definition
   = table_constraint
-  / create_column_definition
+  / column_definition
 
 column_constraint_list
   = head:column_constraint tail:(__ column_constraint)* {
     return readSpaceSepList(head, tail);
   }
 
-create_column_definition
+column_definition
   = name:column_ref c1:__
     type:data_type
     constraints:(c:__ list:column_constraint_list { return leading(list, c); })? {
@@ -1006,7 +1006,7 @@ alter_action
 alter_add_column
   = ADD __
     kc:COLUMN? __
-    cd:create_column_definition {
+    cd:column_definition {
       return "[Not implemented]";
     }
 
@@ -1048,7 +1048,7 @@ alter_lock
   }
 
 alter_change_column
-  = CHANGE __ kc:COLUMN? __ od:column_ref __ cd:create_column_definition __ fa:((FIRST / AFTER) __ column_ref)? {
+  = CHANGE __ kc:COLUMN? __ od:column_ref __ cd:column_definition __ fa:((FIRST / AFTER) __ column_ref)? {
     return "[Not implemented]";
   }
 
