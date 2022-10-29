@@ -108,12 +108,22 @@
 
   const createKeyword = (text) => ({ type: "keyword", text });
 
-  // True when dealing with a single keyword or array of keywords
-  const isKeyword = (item) => {
-    if (item instanceof Array) {
-      return item.length > 0 && item[0].type === "keyword";
+  const whitespaceType = {
+    "space": true,
+    "newline": true,
+    "line_comment": true,
+    "block_comment": true,
+  };
+
+  // True when dealing with whitespace array (as returned by __ rule)
+  const isWhitespace = (item) => {
+    if (!(item instanceof Array)) {
+      return false;
     }
-    return item.type === "keyword";
+    if (item.length === 0) {
+      return true;
+    }
+    return Boolean(whitespaceType[item[0].type]);
   }
 
   /**
@@ -135,23 +145,25 @@
     const keywords = [];
     let leadingWhitespace = undefined;
     for (const it of items) {
-      if (isKeyword(it)) {
+      if (isWhitespace(it)) {
+        if (keywords.length > 0) {
+          keywords[keywords.length - 1] = trailing(keywords[keywords.length - 1], it);
+        } else {
+          leadingWhitespace = it;
+        }
+      } else {
         if (leadingWhitespace) {
           keywords.push(leading(it, leadingWhitespace));
           leadingWhitespace = undefined;
         } else {
           keywords.push(it);
         }
-      } else {
-        if (keywords.length > 0) {
-          keywords[keywords.length - 1] = trailing(keywords[keywords.length - 1], it);
-        } else {
-          leadingWhitespace = it;
-        }
       }
     }
     return keywords.length > 1 ? keywords : keywords[0];
   };
+
+  const read = readKeywords;
 
   const readCommaSepList = (head, tail) => {
     const items = [head];
@@ -264,12 +276,12 @@ intersect_op
   / INTERSECT
 
 select_stmt
-  = cte:(cls:with_clause c:__ { return trailing(cls, c); })?
-    select:(c:__ cls:select_clause { return leading(cls, c); })
-    otherClauses:(c:__ cls:other_clause { return leading(cls, c); })* {
+  = cte:(with_clause __)?
+    select:(__ select_clause)
+    otherClauses:(__ other_clause)* {
       return loc({
         type: "select_statement",
-        clauses: [cte, select, ...otherClauses].filter(identity),
+        clauses: [read(cte), read(select), ...otherClauses.map(read)].filter(identity),
       });
   }
 
@@ -290,14 +302,14 @@ with_clause
 
 common_table_expression
   = table:ident
-    columns:(c:__ cols:paren_plain_column_ref_list { return leading(cols, c); })?
+    columns:(__ paren_plain_column_ref_list)?
     c1:__ asKw:AS
     opt:(__ cte_option)?
     c2:__ select:paren_expr_select {
       return loc({
         type: "common_table_expression",
         table: table,
-        columns: nullToUndefined(columns),
+        columns: read(columns),
         asKw: leading(asKw, c1),
         optionKw: readKeywords(opt),
         expr: leading(select, c2),
@@ -324,13 +336,13 @@ other_clause
  */
 select_clause
   = selectKw:SELECT
-    options:(c:__ kw:select_option { return leading(kw, c) })*
-    columns:(c:__ cls:select_columns { return leading(cls, c) }) {
+    options:(__ select_option)*
+    columns:(__ select_columns) {
       return loc({
         type: "select_clause",
         selectKw,
-        options,
-        columns,
+        options: options.map(read),
+        columns: read(columns),
       });
     }
 
@@ -469,12 +481,12 @@ table_join
       table: leading(table, c),
     });
   }
-  / op:join_op c1:__ t:table_base spec:(c:__ j:join_specification { return leading(j, c) })? {
+  / op:join_op c1:__ t:table_base spec:(__ join_specification)? {
     return loc({
       type: "join",
       operator: op,
       table: leading(t, c1),
-      specification: spec || undefined,
+      specification: read(spec),
     });
   }
 
@@ -702,26 +714,26 @@ window_definition_in_parens
 
 window_definition
   = name:ident?
-    partitionBy:(c:__ cls:partition_by_clause { return leading(cls, c); })?
-    orderBy:(c:__ cls:order_by_clause { return leading(cls, c); })?
-    frame:(c:__ cls:frame_clause { return leading(cls, c); })? {
+    partitionBy:(__ partition_by_clause)?
+    orderBy:(__ order_by_clause)?
+    frame:(__ frame_clause)? {
       return loc({
         type: "window_definition",
-        ...(name ? {baseWindowName: name} : {}),
-        ...(partitionBy ? {partitionBy} : {}),
-        ...(orderBy ? {orderBy} : {}),
-        ...(frame ? {frame} : {}),
+        baseWindowName: read(name),
+        partitionBy: read(partitionBy),
+        orderBy: read(orderBy),
+        frame: read(frame),
       });
     }
 
 frame_clause
   = kw:frame_unit c1:__ extent:(frame_bound / frame_between)
-    exclusion:(c:__ ex:frame_exclusion { return leading(ex, c); })? {
+    exclusion:(__ frame_exclusion)? {
       return loc({
         type: "frame_clause",
         unitKw: kw,
         extent: leading(extent, c1),
-        ...(exclusion ? {exclusion} : {}),
+        exclusion: read(exclusion),
       });
     }
 
@@ -820,7 +832,7 @@ create_view_stmt
     c1:__ viewKw:VIEW
     ifKw:(__ if_not_exists)?
     c2:__ name:table_ref
-    cols:(c:__ co:paren_plain_column_ref_list { return leading(co, c); })?
+    cols:(__ paren_plain_column_ref_list)?
     c3:__ asKw:AS
     c4:__ select:compound_select_stmt {
       return loc({
@@ -830,7 +842,7 @@ create_view_stmt
         viewKw: leading(viewKw, c1),
         ifNotExistsKw: readKeywords(ifKw),
         name: leading(name, c2),
-        columns: nullToUndefined(cols),
+        columns: read(cols),
         asKw: leading(asKw, c3),
         expr: leading(select, c4),
       });
@@ -884,9 +896,9 @@ create_table_stmt
     }
   / createKw:CREATE
     tmpKw:(__ (TEMPORARY / TEMP))?
-    tableKw:(c:__ kw:TABLE { return leading(kw, c); })
+    tableKw:(__ TABLE)
     ifKw:(__ if_not_exists)?
-    table:(c1:__ t:table_ref c2:__ { return surrounding(c1, t, c2); })
+    table:(__ table_ref __)
     columns:create_table_definition
     __ table_options?
     __ (IGNORE / REPLACE)?
@@ -896,9 +908,9 @@ create_table_stmt
         type: "create_table_statement",
         createKw,
         temporaryKw: readKeywords(tmpKw),
-        tableKw,
+        tableKw: readKeywords(tableKw),
         ifNotExistsKw: readKeywords(ifKw),
-        table,
+        table: read(table),
         columns,
       });
     }
@@ -934,12 +946,12 @@ create_definition
 column_definition
   = name:column_ref c1:__
     type:data_type
-    constraints:(c:__ list:column_constraint_list { return leading(list, c); })? {
+    constraints:(__ column_constraint_list)? {
       return loc({
         type: "column_definition",
         name: trailing(name, c1),
         dataType: type,
-        constraints: constraints || [],
+        constraints: read(constraints) || [],
       });
     }
 
@@ -1175,14 +1187,14 @@ update_stmt
     tables:table_ref_list c2:__
     setKw:SET c3:__
     set:set_assignments
-    where:(c:__ w:where_clause { return leading(w, c); })? {
+    where:(__ where_clause)? {
       return loc({
         type: "update_statement",
         updateKw: trailing(kw, c1),
         tables: trailing(tables, c2),
         setKw: trailing(setKw, c3),
         assignments: set,
-        where: nullToUndefined(where),
+        where: read(where),
       });
     }
 
@@ -1208,13 +1220,13 @@ column_value$mysql = expr / default
  */
 delete_stmt
   = delKw:DELETE c1:__ fromKw:FROM c2:__ tbl:table_ref_or_alias
-    where:(c:__ w:where_clause { return leading(w, c); })? {
+    where:(__ where_clause)? {
       return loc({
         type: "delete_statement",
         deleteKw: trailing(delKw, c1),
         fromKw: trailing(fromKw, c2),
         table: tbl,
-        where: nullToUndefined(where),
+        where: read(where),
       });
     }
 
@@ -1223,19 +1235,19 @@ delete_stmt
  */
 insert_stmt
   = insertKw:(INSERT / REPLACE)
-    options:(c:__ opts:insert_options { return leading(opts, c) })?
+    options:(__ insert_options)?
     intoKw:(__ INTO)?
-    table:(c:__ t:table_ref_or_explicit_alias { return leading(t, c); })
-    columns:(c:__ cols:paren_plain_column_ref_list { return leading(cols, c); })?
-    source:(c:__ src:insert_source { return leading(src, c); }) {
+    table:(__ table_ref_or_explicit_alias)
+    columns:(__ paren_plain_column_ref_list)?
+    source:(__ insert_source) {
       return loc({
         type: "insert_statement",
         insertKw,
-        options: options || [],
+        options: read(options) || [],
         intoKw: readKeywords(intoKw),
-        table,
-        columns: nullToUndefined(columns),
-        source,
+        table: read(table),
+        columns: read(columns),
+        source: read(source),
       });
     }
 
@@ -1310,41 +1322,41 @@ default_values
  * Constraints
  */
 column_constraint
-  = name:(id:constraint_name c:__ { return trailing(id, c); })?
+  = name:(constraint_name __)?
     constraint:column_constraint_type
-    defer:(c:__ d:constraint_deferrable { return leading(d, c) })? {
+    defer:(__ constraint_deferrable)? {
       if (!name && !defer) {
         return constraint;
       }
       return loc({
         type: "constraint",
-        ...(name ? {name} : {}),
+        name: read(name),
         constraint,
-        ...(defer ? {deferrable: defer} : {}),
+        deferrable: read(defer),
       });
     }
 
 table_constraint
-  = name:(id:constraint_name c:__ { return trailing(id, c); })?
+  = name:(constraint_name __)?
     constraint:table_constraint_type
-    defer:(c:__ d:constraint_deferrable { return leading(d, c) })? {
+    defer:(__ constraint_deferrable)? {
       if (!name && !defer) {
         return constraint;
       }
       return loc({
         type: "constraint",
-        ...(name ? {name} : {}),
+        name: read(name),
         constraint,
-        ...(defer ? {deferrable: defer} : {}),
+        deferrable: read(defer),
       });
     }
 
 constraint_name
-  = kw:CONSTRAINT name:(c:__ id:ident { return leading(id, c); })? {
+  = kw:CONSTRAINT name:(__ ident)? {
     return loc({
       type: "constraint_name",
       constraintKw: kw,
-      ...(name ? {name} : {}),
+      name: read(name),
     });
   }
 
@@ -1386,11 +1398,11 @@ column_constraint_type$mysql
   / constraint_engine_attribute
 
 constraint_not_null
-  = kws:(NOT __ NULL) confl:(c:__ on:on_conflict_clause { return leading(on, c); })? {
+  = kws:(NOT __ NULL) confl:(__ on_conflict_clause)? {
     return loc({
       type: "constraint_not_null",
       notNullKw: readKeywords(kws),
-      onConflict: nullToUndefined(confl),
+      onConflict: read(confl),
     });
   }
 
@@ -1490,21 +1502,21 @@ table_constraint_primary_key
     t:(index_type __)?
     columns:paren_column_ref_list
     opts:(__ index_options)?
-    confl:(c:__ on:on_conflict_clause { return leading(on, c); })? {
+    confl:(__ on_conflict_clause)? {
       return loc({
         type: "constraint_primary_key",
         primaryKeyKw: readKeywords(kws),
         columns,
-        onConflict: nullToUndefined(confl),
+        onConflict: read(confl),
       });
     }
 
 column_constraint_primary_key
-  = kws:(PRIMARY __ KEY) confl:(c:__ on:on_conflict_clause { return leading(on, c); })? {
+  = kws:(PRIMARY __ KEY) confl:(__ on_conflict_clause)? {
       return loc({
         type: "constraint_primary_key",
         primaryKeyKw: readKeywords(kws),
-        onConflict: nullToUndefined(confl),
+        onConflict: read(confl),
       });
     }
 
@@ -1514,21 +1526,21 @@ table_constraint_unique
     t:(index_type __)?
     columns:paren_column_ref_list
     id:(__ index_options)?
-    confl:(c:__ on:on_conflict_clause { return leading(on, c); })? {
+    confl:(__ on_conflict_clause)? {
       return loc({
         type: "constraint_unique",
         uniqueKw: readKeywords(kws),
         columns,
-        onConflict: nullToUndefined(confl),
+        onConflict: read(confl),
       });
     }
 
 column_constraint_unique
-  = kws:unique_key confl:(c:__ on:on_conflict_clause { return leading(on, c); })? {
+  = kws:unique_key confl:(__ on_conflict_clause)? {
       return loc({
         type: "constraint_unique",
         uniqueKw: kws,
-        onConflict: nullToUndefined(confl),
+        onConflict: read(confl),
       });
     }
 
@@ -1540,12 +1552,12 @@ unique_key
 constraint_check
   = kw:CHECK c1:__ expr:paren_expr
     ((__ NOT)? __ ENFORCED)?
-    confl:(c:__ on:on_conflict_clause { return leading(on, c); })? {
+    confl:(__ on_conflict_clause)? {
       return loc({
         type: "constraint_check",
         checkKw: kw,
         expr: leading(expr, c1),
-        onConflict: nullToUndefined(confl),
+        onConflict: read(confl),
       });
     }
 
@@ -1565,14 +1577,14 @@ constraint_foreign_key
 references_specification
   = kw:REFERENCES c1:__
     table:table_ref
-    columns:(c:__ cols:paren_column_ref_list { return leading(cols, c); })?
-    options:(c:__ op:(referential_action / referential_match) { return leading(op, c); })* {
+    columns:(__ paren_column_ref_list)?
+    options:(__ (referential_action / referential_match))* {
       return loc({
         type: "references_specification",
         referencesKw: trailing(kw, c1),
         table,
-        columns: nullToUndefined(columns),
-        options,
+        columns: read(columns),
+        options: options.map(read),
       });
     }
 
@@ -1940,12 +1952,12 @@ cast_arg
 
 func_call
   = name:func_name c1:__ args:func_args
-    over:(c:__ o:over_arg { return leading(o, c); })? {
+    over:(__ o:over_arg)? {
       return loc({
         type: "func_call",
         name: trailing(name, c1),
         args,
-        ...(over ? {over} : {}),
+        ...(over ? {over: read(over)} : {}),
       });
     }
 
@@ -2007,15 +2019,15 @@ over_arg
 
 case_expr
   = caseKw:CASE
-    expr:(c:__ e:expr { return leading(e, c); })?
-    clauses:(c:__ w:case_when { return leading(w, c); })+
-    els:(c:__ e:case_else { return leading(e, c); })?
+    expr:(__ expr)?
+    clauses:(__ case_when)+
+    els:(__ case_else)?
     endKw:(__ END) {
       return loc({
         type: "case_expr",
         caseKw,
-        expr: nullToUndefined(expr),
-        clauses: [...clauses, ...(els ? [els] : [])],
+        expr: read(expr),
+        clauses: [...clauses.map(read), ...(els ? [read(els)] : [])],
         endKw: readKeywords(endKw),
       });
     }
