@@ -2,14 +2,8 @@
   /** Identity function */
   const identity = (x) => x;
 
-  /** Extracts second item from array */
-  const second = ([_, x]) => x;
-
   /** Last item in array */
   const last = (arr) => arr[arr.length-1];
-
-  /** True when value is object */
-  const isObject = (value) => typeof value === "object";
 
   /** Creates new array with first item replaced by value */
   const setFirst = ([oldFirst, ...rest], value) => {
