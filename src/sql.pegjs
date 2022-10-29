@@ -124,7 +124,52 @@
       }
     }
     return keywords;
+  };
+
+  // True when dealing with a single keyword or array of keywords
+  const isKeyword = (item) => {
+    if (item instanceof Array) {
+      return item.length > 0 && item[0].type === "keyword";
+    }
+    return item.type === "keyword";
   }
+
+  /**
+   * Given array of keywords and whitespace or single keyword or null,
+   * associates whitespace with keywords.
+   *
+   * @param {(Keyword | Whitespace)[] | Keyword | null} items
+   * @return {Keyword[] | Keyword | undefined}
+   */
+  const readKeywords = (items) => {
+    if (!items) {
+      return undefined; // convert null to undefined
+    }
+    if (!(items instanceof Array)) {
+      return items; // leave single keyword as-is
+    }
+
+    // associate leading/trailing whitespace with keywords
+    const keywords = [];
+    let leadingWhitespace = undefined;
+    for (const it of items) {
+      if (isKeyword(it)) {
+        if (leadingWhitespace) {
+          keywords.push(leading(it, leadingWhitespace));
+          leadingWhitespace = undefined;
+        } else {
+          keywords.push(it);
+        }
+      } else {
+        if (keywords.length > 0) {
+          keywords[keywords.length - 1] = trailing(keywords[keywords.length - 1], it);
+        } else {
+          leadingWhitespace = it;
+        }
+      }
+    }
+    return keywords.length > 1 ? keywords : keywords[0];
+  };
 
   const readCommaSepList = (head, tail) => {
     const items = [head];
@@ -787,9 +832,9 @@ create_db_definition
  */
 create_view_stmt
   = createKw:CREATE
-    tmpKw:(c:__ t:(TEMP / TEMPORARY) { return leading(t, c); })?
+    tmpKw:(__ (TEMP / TEMPORARY))?
     c1:__ viewKw:VIEW
-    ifKw:(c:__ i:if_not_exists { return leading(i, c); })?
+    ifKw:(__ if_not_exists)?
     c2:__ name:table_ref
     cols:(c:__ co:paren_plain_column_ref_list { return leading(co, c); })?
     c3:__ asKw:AS
@@ -797,9 +842,9 @@ create_view_stmt
       return loc({
         type: "create_view_statement",
         createKw,
-        temporaryKw: nullToUndefined(tmpKw),
+        temporaryKw: readKeywords(tmpKw),
         viewKw: leading(viewKw, c1),
-        ifNotExistsKw: nullToUndefined(ifKw),
+        ifNotExistsKw: readKeywords(ifKw),
         name: leading(name, c2),
         columns: nullToUndefined(cols),
         asKw: leading(asKw, c3),
@@ -923,21 +968,21 @@ column_constraint_list
  * DROP TABLE
  */
 drop_table_stmt
-  = dropKw:(kw:DROP c:__ { return trailing(kw, c); })
-    temporaryKw:(kw:TEMPORARY c:__ { return trailing(kw, c); })?
-    tableKw:(kw:TABLE c:__ { return trailing(kw, c); })
-    ifExistsKw:(kw:if_exists c:__ { return trailing(kw, c); } )?
+  = dropKw:(DROP __)
+    temporaryKw:(TEMPORARY __)?
+    tableKw:(TABLE __)
+    ifExistsKw:(if_exists __)?
     tables:table_ref_list
-    behaviorKw:(c:__ kw:(CASCADE / RESTRICT) { return leading(kw, c); })?
+    behaviorKw:(__ (CASCADE / RESTRICT))?
     {
       return loc({
         type: "drop_table_statement",
-        dropKw,
-        ...(temporaryKw ? {temporaryKw} : {}),
-        tableKw,
-        ...(ifExistsKw ? {ifExistsKw} : {}),
+        dropKw: readKeywords(dropKw),
+        ...(temporaryKw ? {temporaryKw: readKeywords(temporaryKw)} : {}),
+        tableKw: readKeywords(tableKw),
+        ...(ifExistsKw ? {ifExistsKw: readKeywords(ifExistsKw)} : {}),
         tables,
-        ...(behaviorKw ? {behaviorKw} : {}),
+        ...(behaviorKw ? {behaviorKw: readKeywords(behaviorKw)} : {}),
       });
     }
 
@@ -967,17 +1012,17 @@ drop_index_opt
  */
 drop_view_stmt
   = kws:(DROP __ VIEW)
-    ifKw:(c:__ i:if_exists { return leading(i, c); })?
+    ifKw:(__ if_exists)?
     c1:__ views:table_ref_list
-    behaviorKw:(c:__ kw:(CASCADE / RESTRICT) { return leading(kw, c); })? {
-    return loc({
-      type: "drop_view_statement",
-      dropViewKw: createKeywordList(kws),
-      ifExistsKw: nullToUndefined(ifKw),
-      views: leading(views, c1),
-      behaviorKw: nullToUndefined(behaviorKw),
-    });
-  }
+    behaviorKw:(__ (CASCADE / RESTRICT))? {
+      return loc({
+        type: "drop_view_statement",
+        dropViewKw: readKeywords(kws),
+        ifExistsKw: readKeywords(ifKw),
+        views: leading(views, c1),
+        behaviorKw: readKeywords(behaviorKw),
+      });
+    }
 
 /**
  * TRUNCATE TABLE
