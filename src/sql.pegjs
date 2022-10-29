@@ -301,16 +301,16 @@ with_clause
 common_table_expression
   = table:ident
     columns:(__ paren_plain_column_ref_list)?
-    c1:__ asKw:AS
+    asKw:(__ AS)
     opt:(__ cte_option)?
-    c2:__ select:paren_expr_select {
+    select:(__ paren_expr_select) {
       return loc({
         type: "common_table_expression",
         table: table,
         columns: read(columns),
-        asKw: leading(asKw, c1),
+        asKw: read(asKw),
         optionKw: read(opt),
-        expr: leading(select, c2),
+        expr: read(select),
       });
     }
 
@@ -376,11 +376,11 @@ column_list_item
       column: star,
     });
   }
-  / table:ident c1:__ "." c2:__ star:star {
-    return  loc({
+  / table:(ident __) "." star:(__ star) {
+    return loc({
       type: "column_ref",
-      table: trailing(table, c1),
-      column: leading(star, c2),
+      table: read(table),
+      column: read(star),
     });
   }
   / expr:expr alias:(__ alias)? {
@@ -395,10 +395,10 @@ alias
   / implicit_alias
 
 explicit_alias
-  = kw:AS c:__ id:alias_ident {
+  = kw:AS id:(__ alias_ident) {
     return {
       asKw: kw,
-      alias: leading(id, c),
+      alias: read(id),
     };
   }
 
@@ -419,10 +419,10 @@ into_clause
  * SELECT .. FROM
  */
 from_clause
-  = kw:FROM c:__ tables:table_join_list {
+  = kw:(FROM __) tables:table_join_list {
     return loc({
       type: "from_clause",
-      fromKw: trailing(kw, c),
+      fromKw: read(kw),
       tables,
     });
   }
@@ -467,23 +467,23 @@ table_join_list
   }
 
 _table_join
-  = c:__ join:table_join {
-    return leading(join, c);
+  = join:(__ table_join) {
+    return read(join);
   }
 
 table_join
-  = "," c:__ table:table_base {
+  = "," table:(__ table_base) {
     return loc({
       type: "join",
       operator: ",",
-      table: leading(table, c),
+      table: read(table),
     });
   }
-  / op:join_op c1:__ t:table_base spec:(__ join_specification)? {
+  / op:join_op t:(__ table_base) spec:(__ join_specification)? {
     return loc({
       type: "join",
       operator: op,
-      table: leading(t, c1),
+      table: read(t),
       specification: read(spec),
     });
   }
@@ -529,8 +529,8 @@ join_op$mysql
   / STRAIGHT_JOIN
 
 natural_join
-  = kw:NATURAL c:__ jt:join_type {
-    return [trailing(kw, c), ...(jt instanceof Array ? jt : [jt])];
+  = kw:(NATURAL __) jt:join_type {
+    return [read(kw), ...(jt instanceof Array ? jt : [jt])];
   }
 
 cross_join
@@ -556,20 +556,20 @@ join_specification
   = using_clause / on_clause
 
 using_clause
-  = kw:USING c1:__ expr:paren_plain_column_ref_list {
+  = kw:USING expr:(__ paren_plain_column_ref_list) {
     return loc({
       type: "join_using_specification",
       usingKw: kw,
-      expr: leading(expr, c1),
+      expr: read(expr),
     });
   }
 
 on_clause
-  = kw:ON c:__ expr:expr {
+  = kw:ON expr:(__ expr) {
     return loc({
       type: "join_on_specification",
       onKw: kw,
-      expr: leading(expr, c),
+      expr: read(expr),
     });
   }
 
@@ -577,11 +577,11 @@ on_clause
  * SELECT .. WHERE
  */
 where_clause
-  = kw:WHERE c:__ expr:expr {
+  = kw:WHERE expr:(__ expr) {
     return loc({
       type: "where_clause",
       whereKw: kw,
-      expr: leading(expr, c),
+      expr: read(expr),
     });
   }
 
@@ -601,11 +601,11 @@ group_by_clause
  * SELECT .. HAVING
  */
 having_clause
-  = kw:HAVING c:__ expr:expr {
+  = kw:HAVING expr:(__ expr) {
     return loc({
       type: "having_clause",
       havingKw: kw,
-      expr: leading(expr, c),
+      expr: read(expr),
     });
   }
 
@@ -639,10 +639,10 @@ order_by_list
   }
 
 order_by_element
-  = e:expr c:__ orderKw:(DESC / ASC) {
+  = e:(expr __) orderKw:(DESC / ASC) {
     return loc({
       type: "sort_specification",
-      expr: trailing(e, c),
+      expr: read(e),
       orderKw,
     });
   }
@@ -657,35 +657,35 @@ order_by_element
  * SELECT .. LIMIT
  */
 limit_clause
-  = kw:LIMIT c1:__ count:expr c2:__ offkw:OFFSET c3:__ offset:expr  {
+  = kw:LIMIT count:(__ expr __) offkw:OFFSET offset:(__ expr)  {
     return loc({
       type: "limit_clause",
       limitKw: kw,
-      count: surrounding(c1, count, c2),
+      count: read(count),
       offsetKw: offkw,
-      offset: leading(offset, c3),
+      offset: read(offset),
     });
   }
-  / kw:LIMIT c1:__ offset:expr c2:__ "," c3:__ count:expr  {
+  / kw:LIMIT offset:(__ expr __) "," count:(__ expr)  {
     return loc({
       type: "limit_clause",
       limitKw: kw,
-      offset: surrounding(c1, offset, c2),
-      count: leading(count, c3),
+      offset: read(offset),
+      count: read(count),
     });
   }
-  / kw:LIMIT c:__ count:expr {
-    return loc({ type: "limit_clause", limitKw: kw, count: leading(count, c) });
+  / kw:LIMIT count:(__ expr) {
+    return loc({ type: "limit_clause", limitKw: kw, count: read(count) });
   }
 
 /**
  * SELECT .. WINDOW
  */
 window_clause
-  = kw:WINDOW c:__ wins:named_window_list {
+  = kw:(WINDOW __) wins:named_window_list {
     return loc({
       type: "window_clause",
-      windowKw: trailing(kw, c),
+      windowKw: read(kw),
       namedWindows: wins,
     });
   }
@@ -696,11 +696,11 @@ named_window_list
   }
 
 named_window
-  = name:ident c1:__ kw:AS c2:__ def:window_definition_in_parens {
+  = name:(ident __) kw:(AS __) def:window_definition_in_parens {
     return loc({
       type: "named_window",
-      name: trailing(name, c1),
-      asKw: trailing(kw, c2),
+      name: read(name),
+      asKw: read(kw),
       window: def,
     });
   }
@@ -725,12 +725,12 @@ window_definition
     }
 
 frame_clause
-  = kw:frame_unit c1:__ extent:(frame_bound / frame_between)
+  = kw:frame_unit extent:(__ (frame_bound / frame_between))
     exclusion:(__ frame_exclusion)? {
       return loc({
         type: "frame_clause",
         unitKw: kw,
-        extent: leading(extent, c1),
+        extent: read(extent),
         exclusion: read(exclusion),
       });
     }
@@ -742,13 +742,13 @@ frame_unit$sqlite
   = ROWS / RANGE / GROUPS
 
 frame_between
-  = bKw:BETWEEN c1:__ begin:frame_bound c2:__ andKw:AND c3:__ end:frame_bound {
+  = bKw:BETWEEN begin:(__ frame_bound __) andKw:AND end:(__ frame_bound) {
     return loc({
       type: "frame_between",
       betweenKw: bKw,
-      begin: surrounding(c1, begin, c2),
+      begin: read(begin),
       andKw,
-      end: leading(end, c3),
+      end: read(end),
     });
   }
 
@@ -756,11 +756,11 @@ frame_bound
   = kws:(CURRENT __ ROW) {
     return loc({ type: "frame_bound_current_row", currentRowKw: read(kws) });
   }
-  / expr:(frame_unbounded / literal) c:__ kw:PRECEDING {
-    return loc({ type: "frame_bound_preceding", expr: trailing(expr, c), precedingKw: kw });
+  / expr:((frame_unbounded / literal) __) kw:PRECEDING {
+    return loc({ type: "frame_bound_preceding", expr: read(expr), precedingKw: kw });
   }
-  / expr:(frame_unbounded / literal) c:__ kw:FOLLOWING {
-    return loc({ type: "frame_bound_following", expr: trailing(expr, c), followingKw: kw });
+  / expr:((frame_unbounded / literal) __) kw:FOLLOWING {
+    return loc({ type: "frame_bound_following", expr: read(expr), followingKw: kw });
   }
 
 frame_unbounded
@@ -769,10 +769,10 @@ frame_unbounded
   }
 
 frame_exclusion
-  = kw:EXCLUDE c:__ kindKw:frame_exclusion_kind {
+  = kw:(EXCLUDE __) kindKw:frame_exclusion_kind {
     return loc({
       type: "frame_exclusion",
-      excludeKw: trailing(kw, c),
+      excludeKw: read(kw),
       kindKw
     });
   }
@@ -827,22 +827,22 @@ create_db_definition
 create_view_stmt
   = createKw:CREATE
     tmpKw:(__ (TEMP / TEMPORARY))?
-    c1:__ viewKw:VIEW
+    viewKw:(__ VIEW)
     ifKw:(__ if_not_exists)?
-    c2:__ name:table_ref
+    name:(__ table_ref)
     cols:(__ paren_plain_column_ref_list)?
-    c3:__ asKw:AS
-    c4:__ select:compound_select_stmt {
+    asKw:(__ AS)
+    select:(__ compound_select_stmt) {
       return loc({
         type: "create_view_statement",
         createKw,
         temporaryKw: read(tmpKw),
-        viewKw: leading(viewKw, c1),
+        viewKw: read(viewKw),
         ifNotExistsKw: read(ifKw),
-        name: leading(name, c2),
+        name: read(name),
         columns: read(cols),
-        asKw: leading(asKw, c3),
-        expr: leading(select, c4),
+        asKw: read(asKw),
+        expr: read(select),
       });
     }
 
@@ -942,12 +942,12 @@ create_definition
   / column_definition
 
 column_definition
-  = name:column_ref c1:__
+  = name:(column_ref __)
     type:data_type
     constraints:(__ column_constraint_list)? {
       return loc({
         type: "column_definition",
-        name: trailing(name, c1),
+        name: read(name),
         dataType: type,
         constraints: read(constraints) || [],
       });
@@ -1007,13 +1007,13 @@ drop_index_opt
 drop_view_stmt
   = kws:(DROP __ VIEW)
     ifKw:(__ if_exists)?
-    c1:__ views:table_ref_list
+    views:(__ table_ref_list)
     behaviorKw:(__ (CASCADE / RESTRICT))? {
       return loc({
         type: "drop_view_statement",
         dropViewKw: read(kws),
         ifExistsKw: read(ifKw),
-        views: leading(views, c1),
+        views: read(views),
         behaviorKw: read(behaviorKw),
       });
     }
@@ -1181,16 +1181,16 @@ rename_stmt
  * UPDATE
  */
 update_stmt
-  = kw:UPDATE c1:__
-    tables:table_ref_list c2:__
-    setKw:SET c3:__
+  = kw:(UPDATE __)
+    tables:(table_ref_list __)
+    setKw:(SET __)
     set:set_assignments
     where:(__ where_clause)? {
       return loc({
         type: "update_statement",
-        updateKw: trailing(kw, c1),
-        tables: trailing(tables, c2),
-        setKw: trailing(setKw, c3),
+        updateKw: read(kw),
+        tables: read(tables),
+        setKw: read(setKw),
         assignments: set,
         where: read(where),
       });
@@ -1202,11 +1202,11 @@ set_assignments
     }
 
 column_assignment
-  = col:column_ref c1:__ "=" c2:__ expr:column_value {
+  = col:(column_ref __) "=" expr:(__ column_value) {
     return loc({
       type: "column_assignment",
-      column: trailing(col, c1),
-      expr: leading(expr, c2),
+      column: read(col),
+      expr: read(expr),
     });
   }
 
@@ -1217,12 +1217,12 @@ column_value$mysql = expr / default
  * DELETE FROM
  */
 delete_stmt
-  = delKw:DELETE c1:__ fromKw:FROM c2:__ tbl:table_ref_or_alias
+  = delKw:(DELETE __) fromKw:(FROM __) tbl:table_ref_or_alias
     where:(__ where_clause)? {
       return loc({
         type: "delete_statement",
-        deleteKw: trailing(delKw, c1),
-        fromKw: trailing(fromKw, c2),
+        deleteKw: read(delKw),
+        fromKw: read(fromKw),
         table: tbl,
         where: read(where),
       });
@@ -1277,11 +1277,11 @@ insert_source
   / default_values
 
 values_clause
-  = kw:values_kw c:__ values:values_list {
+  = kw:values_kw values:(__ values_list) {
     return loc({
       type: "values_clause",
       valuesKw: kw,
-      values: leading(values, c),
+      values: read(values),
     });
   }
 
@@ -1410,8 +1410,8 @@ constraint_null
   }
 
 constraint_default
-  = kw:DEFAULT c:__ e:(literal / paren_expr) {
-    return loc({ type: "constraint_default", defaultKw: kw, expr: leading(e, c) });
+  = kw:DEFAULT e:(__ (literal / paren_expr)) {
+    return loc({ type: "constraint_default", defaultKw: kw, expr: read(e) });
   }
 
 constraint_auto_increment
@@ -1420,20 +1420,20 @@ constraint_auto_increment
   }
 
 constraint_comment
-  = kw:COMMENT c:__ str:literal_string {
+  = kw:COMMENT str:(__ literal_string) {
     return loc({
       type: "constraint_comment",
       commentKw: kw,
-      value: leading(str, c),
+      value: read(str),
     });
   }
 
 constraint_collate
-  = kw:COLLATE c:__ id:ident {
+  = kw:COLLATE id:(__ ident) {
     return loc({
       type: "constraint_collate",
       collateKw: kw,
-      collation: leading(id, c),
+      collation: read(id),
     });
   }
 
@@ -1443,41 +1443,41 @@ constraint_visible
   }
 
 constraint_column_format
-  = kw:COLUMN_FORMAT c:__ f:(FIXED / DYNAMIC / DEFAULT) {
+  = kw:(COLUMN_FORMAT __) f:(FIXED / DYNAMIC / DEFAULT) {
     return loc({
       type: "constraint_column_format",
-      columnFormatKw: trailing(kw, c),
+      columnFormatKw: read(kw),
       formatKw: f,
     });
   }
 
 constraint_storage
-  = kw:STORAGE c:__ t:(DISK / MEMORY) {
+  = kw:(STORAGE __) t:(DISK / MEMORY) {
     return loc({
       type: "constraint_storage",
-      storageKw: trailing(kw, c),
+      storageKw: read(kw),
       typeKw: t,
     });
   }
 
 constraint_engine_attribute
-  = kw:(ENGINE_ATTRIBUTE /  SECONDARY_ENGINE_ATTRIBUTE) eq:(__ "=")? c:__ v:literal_string {
+  = kw:(ENGINE_ATTRIBUTE / SECONDARY_ENGINE_ATTRIBUTE) eq:(__ "=")? v:(__ literal_string) {
     return loc({
       type: "constraint_engine_attribute",
       engineAttributeKw: eq ? trailing(kw, eq[0]) : kw,
       hasEq: !!eq,
-      value: leading(v, c),
-    })
+      value: read(v),
+    });
   }
 
 constraint_generated
-  = kws:(GENERATED __ ALWAYS __)? asKw:AS c1:__ expr:paren_expr
+  = kws:(GENERATED __ ALWAYS __)? asKw:AS expr:(__ paren_expr)
     stKw:(__ (STORED / VIRTUAL))? {
       return loc({
         type: "constraint_generated",
         generatedKw: kws ? read(kws) : undefined,
         asKw,
-        expr: leading(expr, c1),
+        expr: read(expr),
         storageKw: read(stKw),
       });
     }
@@ -1548,13 +1548,13 @@ unique_key
   }
 
 constraint_check
-  = kw:CHECK c1:__ expr:paren_expr
+  = kw:CHECK expr:(__ paren_expr)
     ((__ NOT)? __ ENFORCED)?
     confl:(__ on_conflict_clause)? {
       return loc({
         type: "constraint_check",
         checkKw: kw,
-        expr: leading(expr, c1),
+        expr: read(expr),
         onConflict: read(confl),
       });
     }
@@ -1563,23 +1563,23 @@ constraint_foreign_key
   = kws:(FOREIGN __ KEY __)
     i:(ident __)?
     columns:paren_column_ref_list
-    c1:__ ref:references_specification {
+    ref:(__ references_specification) {
       return loc({
         type: "constraint_foreign_key",
         foreignKeyKw: read(kws),
         columns,
-        references: leading(ref, c1),
+        references: read(ref),
       });
     }
 
 references_specification
-  = kw:REFERENCES c1:__
+  = kw:(REFERENCES __)
     table:table_ref
     columns:(__ paren_column_ref_list)?
     options:(__ (referential_action / referential_match))* {
       return loc({
         type: "references_specification",
-        referencesKw: trailing(kw, c1),
+        referencesKw: read(kw),
         table,
         columns: read(columns),
         options: options.map(read),
@@ -1587,20 +1587,20 @@ references_specification
     }
 
 referential_action
-  = onKw:ON c1:__ eventKw:(UPDATE / DELETE) c2:__ actionKw:reference_action_type {
+  = onKw:(ON __) eventKw:((UPDATE / DELETE) __) actionKw:reference_action_type {
     return loc({
       type: "referential_action",
-      onKw: trailing(onKw, c1),
-      eventKw: trailing(eventKw, c2),
+      onKw: read(onKw),
+      eventKw: read(eventKw),
       actionKw,
     });
   }
 
 referential_match
-  = matchKw:MATCH c:__ typeKw:(FULL / PARTIAL / SIMPLE) {
+  = matchKw:(MATCH __) typeKw:(FULL / PARTIAL / SIMPLE) {
     return loc({
       type: "referential_match",
-      matchKw: trailing(matchKw, c),
+      matchKw: read(matchKw),
       typeKw,
     });
   }
@@ -1617,12 +1617,12 @@ table_constraint_index
         columns,
       });
     }
-  / typeKw:(FULLTEXT / SPATIAL) c1:__
+  / typeKw:((FULLTEXT / SPATIAL) __)
     kw:((INDEX / KEY) __ )?
     columns:paren_column_ref_list {
       return loc({
         type: "constraint_index",
-        indexTypeKw: trailing(typeKw, c1),
+        indexTypeKw: read(typeKw),
         indexKw: read(kw),
         columns,
       });
@@ -1649,8 +1649,8 @@ on_conflict_clause
  * Data types
  */
 data_type
-  = kw:type_name c:__ params:type_params {
-    return loc({ type: "data_type", nameKw: trailing(kw, c), params });
+  = kw:(type_name __) params:type_params {
+    return loc({ type: "data_type", nameKw: read(kw), params });
   }
   / kw:type_name {
     return loc({ type: "data_type", nameKw: kw });
@@ -1840,13 +1840,13 @@ regexp_op
   }
 
 between_op_right
-  = betweenKw:between_op c1:__  begin:additive_expr c2:__ andKw:AND c3:__ end:additive_expr {
+  = betweenKw:between_op begin:(__ additive_expr) andKw:(__ AND) end:(__ additive_expr) {
     return {
       kind: "between",
       betweenKw,
-      begin: leading(begin, c1),
-      andKw: leading(andKw, c2),
-      end: leading(end, c3),
+      begin: read(begin),
+      andKw: read(andKw),
+      end: read(end),
     };
   }
 
@@ -1925,11 +1925,11 @@ expr_list
   }
 
 cast_expr
-  = kw:CAST c:__ args:cast_args_in_parens  {
+  = kw:CAST args:(__ cast_args_in_parens)  {
     return loc({
       type: "cast_expr",
       castKw: kw,
-      args: leading(args, c),
+      args: read(args),
     });
   }
 
@@ -1939,21 +1939,21 @@ cast_args_in_parens
   }
 
 cast_arg
-  = e:expr c1:__ kw:AS c2:__ t:data_type {
+  = e:(expr __) kw:AS t:(__ data_type) {
     return loc({
       type: "cast_arg",
-      expr: trailing(e, c1),
+      expr: read(e),
       asKw: kw,
-      dataType: leading(t, c2),
+      dataType: read(t),
     });
   }
 
 func_call
-  = name:func_name c1:__ args:func_args
+  = name:(func_name __) args:func_args
     over:(__ o:over_arg)? {
       return loc({
         type: "func_call",
-        name: trailing(name, c1),
+        name: read(name),
         args,
         ...(over ? {over: read(over)} : {}),
       });
@@ -2001,16 +2001,16 @@ func_args_list
 // For aggregate functions, first argument can be "*"
 func_1st_arg
   = star
-  / kw:DISTINCT c:__ e:expr {
-    return loc({ type: "distinct_arg", distinctKw: kw, value: leading(e, c) });
+  / kw:DISTINCT e:(__ expr) {
+    return loc({ type: "distinct_arg", distinctKw: kw, value: read(e) });
   }
   / expr
 
 over_arg
-  = kw:OVER c:__ win:(window_definition_in_parens / ident) {
+  = kw:(OVER __) win:(window_definition_in_parens / ident) {
     return loc({
       type: "over_arg",
-      overKw: trailing(kw, c),
+      overKw: read(kw),
       window: win,
     });
   }
@@ -2031,31 +2031,31 @@ case_expr
     }
 
 case_when
-  = whenKw:WHEN c1:__ condition:expr c2:__ thenKw:THEN c3:__ result:expr {
+  = whenKw:WHEN condition:(__ expr __) thenKw:THEN result:(__ expr) {
     return loc({
       type: "case_when",
       whenKw,
-      condition: surrounding(c1, condition, c2),
+      condition: read(condition),
       thenKw,
-      result: leading(result, c3),
+      result: read(result),
     });
   }
 
 case_else
-  = kw:ELSE c:__ result:expr {
+  = kw:ELSE result:(__ expr) {
     return loc({
       type: "case_else",
       elseKw: kw,
-      result: leading(result, c),
+      result: read(result),
     });
   }
 
 interval_expr
-  = kw:INTERVAL c1:__ e:expr c2:__ unit:interval_unit {
+  = kw:INTERVAL e:(__ expr __) unit:interval_unit {
     return {
       type: "interval_expr",
       intervalKw: kw,
-      expr: surrounding(c1, e, c2),
+      expr: read(e),
       unitKw: unit,
     };
   }
@@ -2104,11 +2104,11 @@ table_ref_list
   }
 
 table_ref
-  = schema:ident c1:__ "." c2:__ t:ident {
+  = schema:(ident __) "." t:(__ ident) {
     return loc({
       type: "table_ref",
-      schema: trailing(schema, c1),
-      table: leading(t, c2),
+      schema: read(schema),
+      table: read(t),
     });
   }
   / t:ident {
@@ -2142,11 +2142,11 @@ plain_column_ref_list
   }
 
 column_ref
-  = tbl:ident c1:__ "." c2:__ col:qualified_column {
+  = tbl:(ident __) "." col:(__ qualified_column) {
     return loc({
       type: "column_ref",
-      table: trailing(tbl, c1),
-      column: leading(col, c2),
+      table: read(tbl),
+      column: read(col),
     });
   }
   / plain_column_ref
@@ -2239,11 +2239,11 @@ literal_string "string"
   / literal_natural_charset_string
 
 literal_string$mysql "string"
-  = charset:charset_introducer c:__ string:literal_string_without_charset {
+  = charset:charset_introducer string:(__ literal_string_without_charset) {
     return loc({
       type: "string_with_charset",
       charset,
-      string: leading(string, c),
+      string: read(string),
     });
   }
   / literal_string_without_charset
@@ -2352,12 +2352,12 @@ literal_natural_charset_string
   }
 
 literal_datetime
-  = kw:(TIME / DATE / TIMESTAMP / DATETIME) c:__
-    str:(literal_single_quoted_string / literal_double_quoted_string) {
+  = kw:(TIME / DATE / TIMESTAMP / DATETIME)
+    str:(__ (literal_single_quoted_string / literal_double_quoted_string)) {
       return loc({
         type: "datetime",
         kw,
-        string: leading(str, c)
+        string: read(str)
       });
     }
 
