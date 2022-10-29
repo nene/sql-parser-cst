@@ -11,9 +11,6 @@
   /** True when value is object */
   const isObject = (value) => typeof value === "object";
 
-  /** Prefer undefined over null */
-  const nullToUndefined = (value) => value === null ? undefined : value;
-
   /** Creates new array with first item replaced by value */
   const setFirst = ([oldFirst, ...rest], value) => {
     return [value, ...rest];
