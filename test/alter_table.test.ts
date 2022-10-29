@@ -13,4 +13,19 @@ describe("alter table", () => {
       test("ALTER TABLE my_tbl RENAME AS new_name");
     });
   });
+
+  it("RENAME COLUMN col1 TO col2", () => {
+    test("ALTER TABLE my_tbl RENAME COLUMN col1 TO col2");
+    test("ALTER TABLE my_tbl RENAME /*c1*/ COLUMN /*c2*/ col1 /*c3*/ TO /*c4*/ col2");
+  });
+  dialect("sqlite", () => {
+    it("supports RENAME col1 TO col2", () => {
+      test("ALTER TABLE my_tbl RENAME col1 TO col2");
+    });
+  });
+  dialect("mysql", () => {
+    it("supports RENAME COLUMN col1 AS col2", () => {
+      test("ALTER TABLE my_tbl RENAME COLUMN col1 AS col2");
+    });
+  });
 });

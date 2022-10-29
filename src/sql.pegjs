@@ -1078,26 +1078,36 @@ alter_add_index_or_key
     }
 
 alter_rename_table
-  = kw:(alter_rename_table_kw __) t:table_ref {
+  = kw:(rename_table_kw __) t:table_ref {
     return loc({
       type: "alter_rename_table",
       renameKw: read(kw),
-      name: t,
+      newName: t,
     });
   }
 
-alter_rename_table_kw
+rename_table_kw
   = kw:(RENAME __ TO) { return read(kw); }
 
-alter_rename_table_kw$mysql
+rename_table_kw$mysql
   = kw:(RENAME __ (TO / AS) / RENAME) { return read(kw); }
 
 alter_rename_column
-  = RENAME __ COLUMN __ c:column_ref __
-  kw:(TO / AS)? __
-  tn:column_ref {
-    return "[Not implemented]";
+  = kw:(rename_column_kw __) oldName:(column_ref __) toKw:((TO / AS) __) newName:column_ref {
+    return loc({
+      type: "alter_rename_column",
+      renameKw: read(kw),
+      oldName: read(oldName),
+      toKw: read(toKw),
+      newName,
+    });
   }
+
+rename_column_kw
+  = kw:(RENAME __ COLUMN) { return read(kw); }
+
+rename_column_kw$sqlite
+  = kw:(RENAME __ COLUMN / RENAME) { return read(kw); }
 
 alter_algorithm
   = ALGORITHM __ s:"="? __ val:(DEFAULT / INSTANT / INPLACE / COPY) {
