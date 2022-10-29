@@ -1,6 +1,6 @@
-import { Node, ParserOptions, Program } from "../pegjs/sql";
-export { parse as mysql } from "../pegjs/dialects/mysql";
-export { parse as sqlite } from "../pegjs/dialects/sqlite";
+import { Node, ParserOptions, Program } from "./sql";
+export { parse as mysql } from "./dialects/mysql";
+export { parse as sqlite } from "./dialects/sqlite";
 import { show as showSql } from "./show";
 export { format } from "./format/format";
 

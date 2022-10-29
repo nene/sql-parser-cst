@@ -1,4 +1,4 @@
-import { Program } from "../../pegjs/sql";
+import { Program } from "../sql";
 import { isLine, layout } from "./layout";
 import { serialize } from "./serialize";
 import { unroll } from "./unroll";

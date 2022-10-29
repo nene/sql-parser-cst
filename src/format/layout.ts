@@ -1,4 +1,4 @@
-import { Node, Whitespace } from "../../pegjs/sql";
+import { Node, Whitespace } from "../sql";
 import { cstTransformer } from "../cstTransformer";
 
 export type Layout = Line | string | Layout[];

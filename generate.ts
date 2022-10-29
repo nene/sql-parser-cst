@@ -70,7 +70,7 @@ if (chosenDialect && !allDialects.includes(chosenDialect)) {
 const dialects = chosenDialect ? [chosenDialect] : allDialects;
 
 const source = fs.readFileSync(
-  path.resolve(__dirname, "./pegjs/sql.pegjs"),
+  path.resolve(__dirname, "./src/sql.pegjs"),
   "utf-8"
 );
 
@@ -84,7 +84,7 @@ dialects.forEach((dialect) => {
   } as peggy.SourceBuildOptions<"source">);
 
   fs.writeFileSync(
-    path.resolve(__dirname, `./pegjs/dialects/${dialect}.js`),
+    path.resolve(__dirname, `./src/dialects/${dialect}.js`),
     parser
   );
 });

@@ -1,4 +1,4 @@
-import { Node } from "../pegjs/sql";
+import { Node } from "./sql";
 
 // Types are getting somewhat intimidating in this file.
 // Learned this TypeScript-Fu from here:

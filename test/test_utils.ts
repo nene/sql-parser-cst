@@ -6,7 +6,7 @@ import {
   Statement,
   SubSelect,
   Whitespace,
-} from "../pegjs/sql";
+} from "../src/sql";
 import {
   parse as parseSql,
   ParserOptions,

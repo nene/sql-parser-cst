@@ -1,4 +1,4 @@
-import { Whitespace, Node } from "../pegjs/sql";
+import { Whitespace, Node } from "./sql";
 import { cstTransformer, FullTransformMap } from "./cstTransformer";
 import { isDefined } from "./util";
 
