@@ -108,10 +108,6 @@
 
   const createKeyword = (text) => ({ type: "keyword", text });
 
-  const createKeywordList = (items) => {
-    return readKeywords(items);
-  };
-
   // True when dealing with a single keyword or array of keywords
   const isKeyword = (item) => {
     if (item instanceof Array) {
@@ -250,7 +246,7 @@ compound_select_stmt
   }
 
 compound_op
-  = kws:((UNION / EXCEPT) __ (ALL / DISTINCT)) { return createKeywordList(kws); }
+  = kws:((UNION / EXCEPT) __ (ALL / DISTINCT)) { return readKeywords(kws); }
   / UNION
   / EXCEPT
 
@@ -264,7 +260,7 @@ sub_select
   / paren_expr_select
 
 intersect_op
-  = kws:(INTERSECT __ (ALL / DISTINCT)) { return createKeywordList(kws); }
+  = kws:(INTERSECT __ (ALL / DISTINCT)) { return readKeywords(kws); }
   / INTERSECT
 
 select_stmt
@@ -309,7 +305,7 @@ common_table_expression
     }
 
 cte_option
-  = kws:(NOT __ MATERIALIZED / MATERIALIZED) { return createKeywordList(kws); }
+  = kws:(NOT __ MATERIALIZED / MATERIALIZED) { return readKeywords(kws); }
 
 // Other clauses of SELECT statement (besides WITH & SELECT)
 other_clause
@@ -528,7 +524,7 @@ natural_join
   }
 
 cross_join
-  = kws:(CROSS __ JOIN) { return createKeywordList(kws); }
+  = kws:(CROSS __ JOIN) { return readKeywords(kws); }
 
 join_type
   = kws:(
@@ -536,7 +532,7 @@ join_type
     / (LEFT / RIGHT / FULL) __ JOIN
     / INNER __ JOIN
     / JOIN
-  ) { return createKeywordList(kws); }
+  ) { return readKeywords(kws); }
 
 join_type$mysql
   = kws:(
@@ -544,7 +540,7 @@ join_type$mysql
     / (LEFT / RIGHT) __ JOIN
     / INNER __ JOIN
     / JOIN
-  ) { return createKeywordList(kws); }
+  ) { return readKeywords(kws); }
 
 join_specification
   = using_clause / on_clause
@@ -586,7 +582,7 @@ group_by_clause
   = kws:(GROUP __ BY __) list:expr_list {
     return loc({
       type: "group_by_clause",
-      groupByKw: createKeywordList(kws),
+      groupByKw: readKeywords(kws),
       columns: list.items,
     });
   }
@@ -610,7 +606,7 @@ partition_by_clause
   = kws:(PARTITION __ BY __) list:expr_list {
     return loc({
       type: "partition_by_clause",
-      partitionByKw: createKeywordList(kws),
+      partitionByKw: readKeywords(kws),
       specifications: list.items,
     });
   }
@@ -622,7 +618,7 @@ order_by_clause
   = kws:(ORDER __ BY __) l:order_by_list {
     return loc({
       type: "order_by_clause",
-      orderByKw: createKeywordList(kws),
+      orderByKw: readKeywords(kws),
       specifications: l,
     });
   }
@@ -748,7 +744,7 @@ frame_between
 
 frame_bound
   = kws:(CURRENT __ ROW) {
-    return loc({ type: "frame_bound_current_row", currentRowKw: createKeywordList(kws) });
+    return loc({ type: "frame_bound_current_row", currentRowKw: readKeywords(kws) });
   }
   / expr:(frame_unbounded / literal) c:__ kw:PRECEDING {
     return loc({ type: "frame_bound_preceding", expr: trailing(expr, c), precedingKw: kw });
@@ -772,7 +768,7 @@ frame_exclusion
   }
 
 frame_exclusion_kind
-  = kws:(CURRENT __ ROW / NO __ OTHERS / GROUP / TIES) { return createKeywordList(kws); }
+  = kws:(CURRENT __ ROW / NO __ OTHERS / GROUP / TIES) { return readKeywords(kws); }
 
 /**
  * SELECT .. FOR UPDATE
@@ -908,7 +904,7 @@ create_table_stmt
     }
 
 if_not_exists
-  = kws:(IF __ NOT __ EXISTS) { return createKeywordList(kws); }
+  = kws:(IF __ NOT __ EXISTS) { return readKeywords(kws); }
 
 create_like_table_simple
   = LIKE __ t: table_ref_list {
@@ -975,7 +971,7 @@ drop_table_stmt
     }
 
 if_exists
-  = kws:(IF __ EXISTS) { return createKeywordList(kws); }
+  = kws:(IF __ EXISTS) { return readKeywords(kws); }
 
 /**
  * DROP INDEX
@@ -1257,7 +1253,7 @@ insert_opt$mysql
   }
 insert_opt$sqlite
   = kws:(OR __ (ABORT / FAIL / IGNORE / REPLACE / ROLLBACK)) {
-    return loc({ type: "insert_option", kw: createKeywordList(kws) });
+    return loc({ type: "insert_option", kw: readKeywords(kws) });
   }
 
 table_ref_or_explicit_alias
@@ -1307,7 +1303,7 @@ default
 
 default_values
   = kws:(DEFAULT __ VALUES) {
-      return loc({ type: "default_values", kw: createKeywordList(kws) });
+      return loc({ type: "default_values", kw: readKeywords(kws) });
     }
 
 /**
@@ -1357,13 +1353,13 @@ constraint_deferrable
     init:(c:__ k:initially_immediate_or_deferred { return leading(k, c); })? {
       return loc({
         type: "constraint_deferrable",
-        deferrableKw: createKeywordList(kw),
+        deferrableKw: readKeywords(kw),
         initiallyKw: nullToUndefined(init),
       });
     }
 
 initially_immediate_or_deferred
-  = kws:(INITIALLY __ (IMMEDIATE / DEFERRED)) { return createKeywordList(kws); }
+  = kws:(INITIALLY __ (IMMEDIATE / DEFERRED)) { return readKeywords(kws); }
 
 column_constraint_type
   = column_constraint_type_standard
@@ -1393,7 +1389,7 @@ constraint_not_null
   = kws:(NOT __ NULL) confl:(c:__ on:on_conflict_clause { return leading(on, c); })? {
     return loc({
       type: "constraint_not_null",
-      notNullKw: createKeywordList(kws),
+      notNullKw: readKeywords(kws),
       onConflict: nullToUndefined(confl),
     });
   }
@@ -1469,7 +1465,7 @@ constraint_generated
     stKw:(__ (STORED / VIRTUAL))? {
       return loc({
         type: "constraint_generated",
-        generatedKw: kws ? createKeywordList(kws) : undefined,
+        generatedKw: kws ? readKeywords(kws) : undefined,
         asKw,
         expr: leading(expr, c1),
         storageKw: readKeywords(stKw),
@@ -1497,7 +1493,7 @@ table_constraint_primary_key
     confl:(c:__ on:on_conflict_clause { return leading(on, c); })? {
       return loc({
         type: "constraint_primary_key",
-        primaryKeyKw: createKeywordList(kws),
+        primaryKeyKw: readKeywords(kws),
         columns,
         onConflict: nullToUndefined(confl),
       });
@@ -1507,7 +1503,7 @@ column_constraint_primary_key
   = kws:(PRIMARY __ KEY) confl:(c:__ on:on_conflict_clause { return leading(on, c); })? {
       return loc({
         type: "constraint_primary_key",
-        primaryKeyKw: createKeywordList(kws),
+        primaryKeyKw: readKeywords(kws),
         onConflict: nullToUndefined(confl),
       });
     }
@@ -1538,7 +1534,7 @@ column_constraint_unique
 
 unique_key
   = kws:(UNIQUE __ (INDEX / KEY) / UNIQUE) {
-    return createKeywordList(kws);
+    return readKeywords(kws);
   }
 
 constraint_check
@@ -1560,7 +1556,7 @@ constraint_foreign_key
     c1:__ ref:references_specification {
       return loc({
         type: "constraint_foreign_key",
-        foreignKeyKw: createKeywordList(kws),
+        foreignKeyKw: readKeywords(kws),
         columns,
         references: leading(ref, c1),
       });
@@ -1600,7 +1596,7 @@ referential_match
   }
 
 reference_action_type
-  = kws:(RESTRICT / CASCADE / SET __ NULL / NO __ ACTION / SET __ DEFAULT) { return createKeywordList(kws); }
+  = kws:(RESTRICT / CASCADE / SET __ NULL / NO __ ACTION / SET __ DEFAULT) { return readKeywords(kws); }
 
 table_constraint_index
   = kw:((INDEX / KEY) __)
@@ -1634,7 +1630,7 @@ on_conflict_clause
   = kws:(ON __ CONFLICT __) res:(ROLLBACK / ABORT / FAIL / IGNORE / REPLACE) {
     return loc({
       type: "on_conflict_clause",
-      onConflictKw: createKeywordList(kws),
+      onConflictKw: readKeywords(kws),
       resolutionKw: res,
     });
   }
@@ -1690,7 +1686,7 @@ type_name
   / TINYINT
   / BIGINT
   / FLOAT
-  / kws:(DOUBLE __ PRECISION) { return createKeywordList(kws); }
+  / kws:(DOUBLE __ PRECISION) { return readKeywords(kws); }
   / DOUBLE
   / REAL
   / BIT
@@ -1808,11 +1804,11 @@ in_op_right
   }
 
 in_op
-  = kws:(NOT __ IN / IN) { return createKeywordList(kws); }
+  = kws:(NOT __ IN / IN) { return readKeywords(kws); }
 
 is_op_right
   = kws:(IS __ NOT / IS) c:__ right:additive_expr {
-    return { kind: "is", op: createKeywordList(kws), c, right };
+    return { kind: "is", op: readKeywords(kws), c, right };
   }
 
 like_op_right
@@ -1821,7 +1817,7 @@ like_op_right
   }
 
 like_op
-  = kws:(NOT __ LIKE / LIKE) { return createKeywordList(kws); }
+  = kws:(NOT __ LIKE / LIKE) { return readKeywords(kws); }
 
 regexp_op_right
   = op:regexp_op c:__ b:BINARY? __ right:(literal_string / column_ref) {
@@ -1830,7 +1826,7 @@ regexp_op_right
 
 regexp_op
   = kws:(NOT __ (REGEXP / RLIKE) / REGEXP / RLIKE) {
-    return createKeywordList(kws);
+    return readKeywords(kws);
   }
 
 between_op_right
@@ -1845,7 +1841,7 @@ between_op_right
   }
 
 between_op
-  = kws:(NOT __ BETWEEN / BETWEEN) { return createKeywordList(kws); }
+  = kws:(NOT __ BETWEEN / BETWEEN) { return readKeywords(kws); }
 
 additive_expr
   = head: multiplicative_expr
