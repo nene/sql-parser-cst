@@ -898,8 +898,6 @@ create_definition_list
 create_definition
   = table_constraint
   / create_column_definition
-  / create_index_definition
-  / create_fulltext_spatial_index_definition
 
 column_constraint_list
   = head:column_constraint tail:(__ column_constraint)* {
@@ -996,7 +994,6 @@ alter_action
   / alter_add_column
   / alter_drop_column
   / alter_add_index_or_key
-  / alter_add_fulletxt_sparital_index
   / alter_rename_column
   / alter_rename_table
   / alter_algorithm
@@ -1022,7 +1019,7 @@ alter_drop_column
 
 alter_add_index_or_key
   = ADD __
-    id:create_index_definition {
+    id:table_constraint_index {
       return "[Not implemented]";
     }
 
@@ -1083,25 +1080,6 @@ alter_disable_constraint
     return "[Not implemented]";
   }
 
-
-create_index_definition
-  = kc:(INDEX / KEY) __
-    c:column? __
-    t:index_type? __
-    de:paren_column_ref_list __
-    id:index_options? __ {
-      return "[Not implemented]";
-    }
-
-create_fulltext_spatial_index_definition
-  = p: (FULLTEXT / SPATIAL) __
-    kc:(INDEX / KEY)? __
-    c:column? __
-    de: paren_column_ref_list __
-    id: index_options? {
-      return "[Not implemented]";
-    }
-
 table_options
   = head:table_option tail:(__ ","? __ table_option)* {
     return "[Not implemented]";
@@ -1129,13 +1107,6 @@ table_option
   / kw:ROW_FORMAT __ s:("=")? __ c:(DEFAULT / DYNAMIC / FIXED / COMPRESSED / REDUNDANT / COMPACT) {
     return "[Not implemented]";
   }
-
-
-alter_add_fulletxt_sparital_index
-  = ADD __
-    fsid:create_fulltext_spatial_index_definition {
-      return "[Not implemented]";
-    }
 
 /**
  * RENAME TABLE
