@@ -978,11 +978,11 @@ drop_table_stmt
       return loc({
         type: "drop_table_statement",
         dropKw: readKeywords(dropKw),
-        ...(temporaryKw ? {temporaryKw: readKeywords(temporaryKw)} : {}),
+        temporaryKw: readKeywords(temporaryKw),
         tableKw: readKeywords(tableKw),
-        ...(ifExistsKw ? {ifExistsKw: readKeywords(ifExistsKw)} : {}),
+        ifExistsKw: readKeywords(ifExistsKw),
         tables,
-        ...(behaviorKw ? {behaviorKw: readKeywords(behaviorKw)} : {}),
+        behaviorKw: readKeywords(behaviorKw),
       });
     }
 
