@@ -42,10 +42,18 @@ describe("alter table", () => {
   });
 
   describe("add column", () => {
-    it("ADD COLUMN", () => {
+    it("ADD [COLUMN]", () => {
       testAlter("ADD COLUMN col1 INT NOT NULL");
       testAlter("ADD col1 INT");
       testAlter("ADD /*c1*/ COLUMN /*c2*/ col1 INT");
+    });
+  });
+
+  describe("drop column", () => {
+    it("DROP [COLUMN]", () => {
+      testAlter("DROP COLUMN col1");
+      testAlter("DROP col1");
+      testAlter("DROP /*c1*/ COLUMN /*c2*/ col1");
     });
   });
 });

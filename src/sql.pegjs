@@ -1067,10 +1067,12 @@ alter_add_column
     }
 
 alter_drop_column
-  = DROP __
-    kc:COLUMN? __
-    c:column_ref {
-      return "[Not implemented]";
+  = kw:(DROP __ COLUMN __ / DROP __) col:column_ref {
+      return loc({
+        type: "alter_drop_column",
+        dropKw: read(kw),
+        column: col,
+      })
     }
 
 alter_add_index_or_key

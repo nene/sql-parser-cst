@@ -151,6 +151,7 @@ const showNode = cstTransformer<string>({
   alter_rename_column: (node) =>
     show([node.renameKw, node.oldName, node.toKw, node.newName]),
   alter_add_column: (node) => show([node.addKw, node.column]),
+  alter_drop_column: (node) => show([node.dropKw, node.column]),
 
   // DROP TABLE statement
   drop_table_statement: (node) =>

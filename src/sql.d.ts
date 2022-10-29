@@ -445,7 +445,11 @@ type AlterTableStatement = BaseNode & {
   actions: AlterAction[];
 };
 
-type AlterAction = AlterRenameTable | AlterRenameColumn | AlterAddColumn;
+type AlterAction =
+  | AlterRenameTable
+  | AlterRenameColumn
+  | AlterAddColumn
+  | AlterDropColumn;
 
 type AlterRenameTable = BaseNode & {
   type: "alter_rename_table";
@@ -465,6 +469,12 @@ type AlterAddColumn = BaseNode & {
   type: "alter_add_column";
   addKw: Keyword | Keyword[]; // ADD | ADD COLUMN
   column: ColumnDefinition;
+};
+
+type AlterDropColumn = BaseNode & {
+  type: "alter_drop_column";
+  dropKw: Keyword | Keyword[]; // DROP | DROP COLUMN
+  column: ColumnRef;
 };
 
 // DROP TABLE
