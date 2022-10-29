@@ -19,7 +19,7 @@
   "scripts": {
     "prepublishOnly": "yarn test && yarn build",
     "pretty": "prettier --write .",
-    "generate": "ts-node pegjs/generate.ts",
+    "generate": "ts-node ./generate.ts",
     "watch:generate": "npm-watch",
     "build": "yarn generate && tsc",
     "test:mysql": "jest --config test/config/mysql.json",
