@@ -109,21 +109,7 @@
   const createKeyword = (text) => ({ type: "keyword", text });
 
   const createKeywordList = (items) => {
-    if (!items) {
-      return undefined;
-    }
-    if (!(items instanceof Array)) {
-      return [items];
-    }
-    const keywords = [];
-    for (const it of items) {
-      if (it instanceof Array) {
-        keywords[keywords.length - 1] = trailing(keywords[keywords.length - 1], it);
-      } else {
-        keywords.push(it);
-      }
-    }
-    return keywords;
+    return readKeywords(items);
   };
 
   // True when dealing with a single keyword or array of keywords
@@ -537,7 +523,9 @@ join_op$mysql
   / STRAIGHT_JOIN
 
 natural_join
-  = kw:NATURAL c:__ jt:join_type { return [trailing(kw, c), ...jt]; }
+  = kw:NATURAL c:__ jt:join_type {
+    return [trailing(kw, c), ...(jt instanceof Array ? jt : [jt])];
+  }
 
 cross_join
   = kws:(CROSS __ JOIN) { return createKeywordList(kws); }
