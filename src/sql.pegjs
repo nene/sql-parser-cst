@@ -278,12 +278,12 @@ select_stmt
  */
 with_clause
   = withKw:WITH
-    recursiveKw:(c:__ kw:RECURSIVE { return leading(kw, c) })?
+    recursiveKw:(__ RECURSIVE)?
     c:__ head:common_table_expression tail:(__ "," __ common_table_expression)* {
       return loc({
         type: "with_clause",
         withKw,
-        recursiveKw: nullToUndefined(recursiveKw),
+        recursiveKw: readKeywords(recursiveKw),
         tables: leading(readCommaSepList(head, tail), c),
       });
     }
@@ -292,14 +292,14 @@ common_table_expression
   = table:ident
     columns:(c:__ cols:paren_plain_column_ref_list { return leading(cols, c); })?
     c1:__ asKw:AS
-    opt:(c:__ op:cte_option { return leading(op, c); })?
+    opt:(__ cte_option)?
     c2:__ select:paren_expr_select {
       return loc({
         type: "common_table_expression",
         table: table,
         columns: nullToUndefined(columns),
         asKw: leading(asKw, c1),
-        optionKw: nullToUndefined(opt),
+        optionKw: readKeywords(opt),
         expr: leading(select, c2),
       });
     }
@@ -1350,11 +1350,11 @@ constraint_name
 
 constraint_deferrable
   = kw:(DEFERRABLE / NOT __ DEFERRABLE)
-    init:(c:__ k:initially_immediate_or_deferred { return leading(k, c); })? {
+    init:(__ initially_immediate_or_deferred)? {
       return loc({
         type: "constraint_deferrable",
         deferrableKw: readKeywords(kw),
-        initiallyKw: nullToUndefined(init),
+        initiallyKw: readKeywords(init),
       });
     }
 
