@@ -11,6 +11,10 @@ describe("alter table", () => {
     test("ALTER /*c1*/ TABLE /*c2*/ my_tbl /*c3*/ RENAME TO new_name");
   });
 
+  it("supports multiple alter actions", () => {
+    test("ALTER TABLE tbl ADD COLUMN col1 INT, DROP COLUMN col2");
+  });
+
   describe("rename table", () => {
     it("RENAME TO", () => {
       testAlter("RENAME TO new_name");
