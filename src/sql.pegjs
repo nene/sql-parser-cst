@@ -127,43 +127,41 @@
   }
 
   /**
-   * Given array of keywords and whitespace or single keyword or null,
-   * associates whitespace with keywords.
+   * Given array of syntax nodes and whitespace or single node or null,
+   * associates whitespace with syntax nodes.
    *
-   * @param {(Keyword | Whitespace)[] | Keyword | null} items
-   * @return {Keyword[] | Keyword | undefined}
+   * @param {(Node | Whitespace)[] | Node | null} items
+   * @return {Node[] | Node | undefined}
    */
-  const readKeywords = (items) => {
+  const read = (items) => {
     if (!items) {
       return undefined; // convert null to undefined
     }
     if (!(items instanceof Array)) {
-      return items; // leave single keyword as-is
+      return items; // leave single syntax node as-is
     }
 
-    // associate leading/trailing whitespace with keywords
-    const keywords = [];
+    // associate leading/trailing whitespace with nodes
+    const nodes = [];
     let leadingWhitespace = undefined;
     for (const it of items) {
       if (isWhitespace(it)) {
-        if (keywords.length > 0) {
-          keywords[keywords.length - 1] = trailing(keywords[keywords.length - 1], it);
+        if (nodes.length > 0) {
+          nodes[nodes.length - 1] = trailing(nodes[nodes.length - 1], it);
         } else {
           leadingWhitespace = it;
         }
       } else {
         if (leadingWhitespace) {
-          keywords.push(leading(it, leadingWhitespace));
+          nodes.push(leading(it, leadingWhitespace));
           leadingWhitespace = undefined;
         } else {
-          keywords.push(it);
+          nodes.push(it);
         }
       }
     }
-    return keywords.length > 1 ? keywords : keywords[0];
+    return nodes.length > 1 ? nodes : nodes[0];
   };
-
-  const read = readKeywords;
 
   const readCommaSepList = (head, tail) => {
     const items = [head];
@@ -258,7 +256,7 @@ compound_select_stmt
   }
 
 compound_op
-  = kws:((UNION / EXCEPT) __ (ALL / DISTINCT)) { return readKeywords(kws); }
+  = kws:((UNION / EXCEPT) __ (ALL / DISTINCT)) { return read(kws); }
   / UNION
   / EXCEPT
 
@@ -272,7 +270,7 @@ sub_select
   / paren_expr_select
 
 intersect_op
-  = kws:(INTERSECT __ (ALL / DISTINCT)) { return readKeywords(kws); }
+  = kws:(INTERSECT __ (ALL / DISTINCT)) { return read(kws); }
   / INTERSECT
 
 select_stmt
@@ -295,7 +293,7 @@ with_clause
       return loc({
         type: "with_clause",
         withKw,
-        recursiveKw: readKeywords(recursiveKw),
+        recursiveKw: read(recursiveKw),
         tables: leading(readCommaSepList(head, tail), c),
       });
     }
@@ -311,13 +309,13 @@ common_table_expression
         table: table,
         columns: read(columns),
         asKw: leading(asKw, c1),
-        optionKw: readKeywords(opt),
+        optionKw: read(opt),
         expr: leading(select, c2),
       });
     }
 
 cte_option
-  = kws:(NOT __ MATERIALIZED / MATERIALIZED) { return readKeywords(kws); }
+  = kws:(NOT __ MATERIALIZED / MATERIALIZED) { return read(kws); }
 
 // Other clauses of SELECT statement (besides WITH & SELECT)
 other_clause
@@ -536,7 +534,7 @@ natural_join
   }
 
 cross_join
-  = kws:(CROSS __ JOIN) { return readKeywords(kws); }
+  = kws:(CROSS __ JOIN) { return read(kws); }
 
 join_type
   = kws:(
@@ -544,7 +542,7 @@ join_type
     / (LEFT / RIGHT / FULL) __ JOIN
     / INNER __ JOIN
     / JOIN
-  ) { return readKeywords(kws); }
+  ) { return read(kws); }
 
 join_type$mysql
   = kws:(
@@ -552,7 +550,7 @@ join_type$mysql
     / (LEFT / RIGHT) __ JOIN
     / INNER __ JOIN
     / JOIN
-  ) { return readKeywords(kws); }
+  ) { return read(kws); }
 
 join_specification
   = using_clause / on_clause
@@ -594,7 +592,7 @@ group_by_clause
   = kws:(GROUP __ BY __) list:expr_list {
     return loc({
       type: "group_by_clause",
-      groupByKw: readKeywords(kws),
+      groupByKw: read(kws),
       columns: list.items,
     });
   }
@@ -618,7 +616,7 @@ partition_by_clause
   = kws:(PARTITION __ BY __) list:expr_list {
     return loc({
       type: "partition_by_clause",
-      partitionByKw: readKeywords(kws),
+      partitionByKw: read(kws),
       specifications: list.items,
     });
   }
@@ -630,7 +628,7 @@ order_by_clause
   = kws:(ORDER __ BY __) l:order_by_list {
     return loc({
       type: "order_by_clause",
-      orderByKw: readKeywords(kws),
+      orderByKw: read(kws),
       specifications: l,
     });
   }
@@ -756,7 +754,7 @@ frame_between
 
 frame_bound
   = kws:(CURRENT __ ROW) {
-    return loc({ type: "frame_bound_current_row", currentRowKw: readKeywords(kws) });
+    return loc({ type: "frame_bound_current_row", currentRowKw: read(kws) });
   }
   / expr:(frame_unbounded / literal) c:__ kw:PRECEDING {
     return loc({ type: "frame_bound_preceding", expr: trailing(expr, c), precedingKw: kw });
@@ -780,7 +778,7 @@ frame_exclusion
   }
 
 frame_exclusion_kind
-  = kws:(CURRENT __ ROW / NO __ OTHERS / GROUP / TIES) { return readKeywords(kws); }
+  = kws:(CURRENT __ ROW / NO __ OTHERS / GROUP / TIES) { return read(kws); }
 
 /**
  * SELECT .. FOR UPDATE
@@ -838,9 +836,9 @@ create_view_stmt
       return loc({
         type: "create_view_statement",
         createKw,
-        temporaryKw: readKeywords(tmpKw),
+        temporaryKw: read(tmpKw),
         viewKw: leading(viewKw, c1),
-        ifNotExistsKw: readKeywords(ifKw),
+        ifNotExistsKw: read(ifKw),
         name: leading(name, c2),
         columns: read(cols),
         asKw: leading(asKw, c3),
@@ -907,16 +905,16 @@ create_table_stmt
       return loc({
         type: "create_table_statement",
         createKw,
-        temporaryKw: readKeywords(tmpKw),
-        tableKw: readKeywords(tableKw),
-        ifNotExistsKw: readKeywords(ifKw),
+        temporaryKw: read(tmpKw),
+        tableKw: read(tableKw),
+        ifNotExistsKw: read(ifKw),
         table: read(table),
         columns,
       });
     }
 
 if_not_exists
-  = kws:(IF __ NOT __ EXISTS) { return readKeywords(kws); }
+  = kws:(IF __ NOT __ EXISTS) { return read(kws); }
 
 create_like_table_simple
   = LIKE __ t: table_ref_list {
@@ -973,17 +971,17 @@ drop_table_stmt
     {
       return loc({
         type: "drop_table_statement",
-        dropKw: readKeywords(dropKw),
-        temporaryKw: readKeywords(temporaryKw),
-        tableKw: readKeywords(tableKw),
-        ifExistsKw: readKeywords(ifExistsKw),
+        dropKw: read(dropKw),
+        temporaryKw: read(temporaryKw),
+        tableKw: read(tableKw),
+        ifExistsKw: read(ifExistsKw),
         tables,
-        behaviorKw: readKeywords(behaviorKw),
+        behaviorKw: read(behaviorKw),
       });
     }
 
 if_exists
-  = kws:(IF __ EXISTS) { return readKeywords(kws); }
+  = kws:(IF __ EXISTS) { return read(kws); }
 
 /**
  * DROP INDEX
@@ -1013,10 +1011,10 @@ drop_view_stmt
     behaviorKw:(__ (CASCADE / RESTRICT))? {
       return loc({
         type: "drop_view_statement",
-        dropViewKw: readKeywords(kws),
-        ifExistsKw: readKeywords(ifKw),
+        dropViewKw: read(kws),
+        ifExistsKw: read(ifKw),
         views: leading(views, c1),
-        behaviorKw: readKeywords(behaviorKw),
+        behaviorKw: read(behaviorKw),
       });
     }
 
@@ -1244,7 +1242,7 @@ insert_stmt
         type: "insert_statement",
         insertKw,
         options: read(options) || [],
-        intoKw: readKeywords(intoKw),
+        intoKw: read(intoKw),
         table: read(table),
         columns: read(columns),
         source: read(source),
@@ -1265,7 +1263,7 @@ insert_opt$mysql
   }
 insert_opt$sqlite
   = kws:(OR __ (ABORT / FAIL / IGNORE / REPLACE / ROLLBACK)) {
-    return loc({ type: "insert_option", kw: readKeywords(kws) });
+    return loc({ type: "insert_option", kw: read(kws) });
   }
 
 table_ref_or_explicit_alias
@@ -1315,7 +1313,7 @@ default
 
 default_values
   = kws:(DEFAULT __ VALUES) {
-      return loc({ type: "default_values", kw: readKeywords(kws) });
+      return loc({ type: "default_values", kw: read(kws) });
     }
 
 /**
@@ -1365,13 +1363,13 @@ constraint_deferrable
     init:(__ initially_immediate_or_deferred)? {
       return loc({
         type: "constraint_deferrable",
-        deferrableKw: readKeywords(kw),
-        initiallyKw: readKeywords(init),
+        deferrableKw: read(kw),
+        initiallyKw: read(init),
       });
     }
 
 initially_immediate_or_deferred
-  = kws:(INITIALLY __ (IMMEDIATE / DEFERRED)) { return readKeywords(kws); }
+  = kws:(INITIALLY __ (IMMEDIATE / DEFERRED)) { return read(kws); }
 
 column_constraint_type
   = column_constraint_type_standard
@@ -1401,7 +1399,7 @@ constraint_not_null
   = kws:(NOT __ NULL) confl:(__ on_conflict_clause)? {
     return loc({
       type: "constraint_not_null",
-      notNullKw: readKeywords(kws),
+      notNullKw: read(kws),
       onConflict: read(confl),
     });
   }
@@ -1477,10 +1475,10 @@ constraint_generated
     stKw:(__ (STORED / VIRTUAL))? {
       return loc({
         type: "constraint_generated",
-        generatedKw: kws ? readKeywords(kws) : undefined,
+        generatedKw: kws ? read(kws) : undefined,
         asKw,
         expr: leading(expr, c1),
-        storageKw: readKeywords(stKw),
+        storageKw: read(stKw),
       });
     }
 
@@ -1505,7 +1503,7 @@ table_constraint_primary_key
     confl:(__ on_conflict_clause)? {
       return loc({
         type: "constraint_primary_key",
-        primaryKeyKw: readKeywords(kws),
+        primaryKeyKw: read(kws),
         columns,
         onConflict: read(confl),
       });
@@ -1515,7 +1513,7 @@ column_constraint_primary_key
   = kws:(PRIMARY __ KEY) confl:(__ on_conflict_clause)? {
       return loc({
         type: "constraint_primary_key",
-        primaryKeyKw: readKeywords(kws),
+        primaryKeyKw: read(kws),
         onConflict: read(confl),
       });
     }
@@ -1529,7 +1527,7 @@ table_constraint_unique
     confl:(__ on_conflict_clause)? {
       return loc({
         type: "constraint_unique",
-        uniqueKw: readKeywords(kws),
+        uniqueKw: read(kws),
         columns,
         onConflict: read(confl),
       });
@@ -1546,7 +1544,7 @@ column_constraint_unique
 
 unique_key
   = kws:(UNIQUE __ (INDEX / KEY) / UNIQUE) {
-    return readKeywords(kws);
+    return read(kws);
   }
 
 constraint_check
@@ -1568,7 +1566,7 @@ constraint_foreign_key
     c1:__ ref:references_specification {
       return loc({
         type: "constraint_foreign_key",
-        foreignKeyKw: readKeywords(kws),
+        foreignKeyKw: read(kws),
         columns,
         references: leading(ref, c1),
       });
@@ -1608,14 +1606,14 @@ referential_match
   }
 
 reference_action_type
-  = kws:(RESTRICT / CASCADE / SET __ NULL / NO __ ACTION / SET __ DEFAULT) { return readKeywords(kws); }
+  = kws:(RESTRICT / CASCADE / SET __ NULL / NO __ ACTION / SET __ DEFAULT) { return read(kws); }
 
 table_constraint_index
   = kw:((INDEX / KEY) __)
     columns:paren_column_ref_list {
       return loc({
         type: "constraint_index",
-        indexKw: readKeywords(kw),
+        indexKw: read(kw),
         columns,
       });
     }
@@ -1625,7 +1623,7 @@ table_constraint_index
       return loc({
         type: "constraint_index",
         indexTypeKw: trailing(typeKw, c1),
-        indexKw: readKeywords(kw),
+        indexKw: read(kw),
         columns,
       });
     }
@@ -1642,7 +1640,7 @@ on_conflict_clause
   = kws:(ON __ CONFLICT __) res:(ROLLBACK / ABORT / FAIL / IGNORE / REPLACE) {
     return loc({
       type: "on_conflict_clause",
-      onConflictKw: readKeywords(kws),
+      onConflictKw: read(kws),
       resolutionKw: res,
     });
   }
@@ -1698,7 +1696,7 @@ type_name
   / TINYINT
   / BIGINT
   / FLOAT
-  / kws:(DOUBLE __ PRECISION) { return readKeywords(kws); }
+  / kws:(DOUBLE __ PRECISION) { return read(kws); }
   / DOUBLE
   / REAL
   / BIT
@@ -1816,11 +1814,11 @@ in_op_right
   }
 
 in_op
-  = kws:(NOT __ IN / IN) { return readKeywords(kws); }
+  = kws:(NOT __ IN / IN) { return read(kws); }
 
 is_op_right
   = kws:(IS __ NOT / IS) c:__ right:additive_expr {
-    return { kind: "is", op: readKeywords(kws), c, right };
+    return { kind: "is", op: read(kws), c, right };
   }
 
 like_op_right
@@ -1829,7 +1827,7 @@ like_op_right
   }
 
 like_op
-  = kws:(NOT __ LIKE / LIKE) { return readKeywords(kws); }
+  = kws:(NOT __ LIKE / LIKE) { return read(kws); }
 
 regexp_op_right
   = op:regexp_op c:__ b:BINARY? __ right:(literal_string / column_ref) {
@@ -1838,7 +1836,7 @@ regexp_op_right
 
 regexp_op
   = kws:(NOT __ (REGEXP / RLIKE) / REGEXP / RLIKE) {
-    return readKeywords(kws);
+    return read(kws);
   }
 
 between_op_right
@@ -1853,7 +1851,7 @@ between_op_right
   }
 
 between_op
-  = kws:(NOT __ BETWEEN / BETWEEN) { return readKeywords(kws); }
+  = kws:(NOT __ BETWEEN / BETWEEN) { return read(kws); }
 
 additive_expr
   = head: multiplicative_expr
@@ -2028,7 +2026,7 @@ case_expr
         caseKw,
         expr: read(expr),
         clauses: [...clauses.map(read), ...(els ? [read(els)] : [])],
-        endKw: readKeywords(endKw),
+        endKw: read(endKw),
       });
     }
 
