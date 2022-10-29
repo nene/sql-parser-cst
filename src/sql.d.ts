@@ -445,20 +445,26 @@ type AlterTableStatement = BaseNode & {
   actions: AlterAction[];
 };
 
-type AlterAction = AlterRenameTable | AlterRenameColumn;
+type AlterAction = AlterRenameTable | AlterRenameColumn | AlterAddColumn;
 
 type AlterRenameTable = BaseNode & {
   type: "alter_rename_table";
-  renameKw: Keyword[]; // RENAME | RENAME TO | RENAME AS
+  renameKw: Keyword | Keyword[]; // RENAME | RENAME TO | RENAME AS
   newName: TableRef;
 };
 
 type AlterRenameColumn = BaseNode & {
   type: "alter_rename_column";
-  renameKw: Keyword[]; // RENAME | RENAME COLUMN
+  renameKw: Keyword | Keyword[]; // RENAME | RENAME COLUMN
   oldName: ColumnRef;
   toKw: Keyword; // TO | AS
   newName: ColumnRef;
+};
+
+type AlterAddColumn = BaseNode & {
+  type: "alter_add_column";
+  addKw: Keyword | Keyword[]; // ADD | ADD COLUMN
+  column: ColumnDefinition;
 };
 
 // DROP TABLE

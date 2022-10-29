@@ -40,4 +40,12 @@ describe("alter table", () => {
       });
     });
   });
+
+  describe("add column", () => {
+    it("ADD COLUMN", () => {
+      testAlter("ADD COLUMN col1 INT NOT NULL");
+      testAlter("ADD col1 INT");
+      testAlter("ADD /*c1*/ COLUMN /*c2*/ col1 INT");
+    });
+  });
 });

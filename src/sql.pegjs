@@ -1058,10 +1058,12 @@ alter_action
   }
 
 alter_add_column
-  = ADD __
-    kc:COLUMN? __
-    cd:column_definition {
-      return "[Not implemented]";
+  = addKw:(ADD __ COLUMN __ / ADD __)? col:column_definition {
+      return loc({
+        type: "alter_add_column",
+        addKw: read(addKw),
+        column: col
+      });
     }
 
 alter_drop_column
