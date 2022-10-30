@@ -225,8 +225,6 @@ statement
   / create_index_stmt
   / create_db_stmt
   / create_view_stmt
-  / truncate_stmt
-  / rename_stmt
   / alter_table_stmt
   / update_stmt
   / insert_stmt
@@ -1044,20 +1042,6 @@ if_exists
 /**
  * ------------------------------------------------------------------------------------ *
  *                                                                                      *
- * TRUNCATE TABLE                                                                       *
- *                                                                                      *
- * ------------------------------------------------------------------------------------ *
- */
-truncate_stmt
-  = a:TRUNCATE  __
-    kw:TABLE? __
-    t:table_ref_list {
-      return "[Not implemented]";
-    }
-
-/**
- * ------------------------------------------------------------------------------------ *
- *                                                                                      *
  * ALTER TABLE                                                                          *
  *                                                                                      *
  * ------------------------------------------------------------------------------------ *
@@ -1223,16 +1207,6 @@ table_option
   / kw:ROW_FORMAT __ s:("=")? __ c:(DEFAULT / DYNAMIC / FIXED / COMPRESSED / REDUNDANT / COMPACT) {
     return "[Not implemented]";
   }
-
-/**
- * RENAME TABLE
- */
-rename_stmt
-  = RENAME  __
-    TABLE __
-    t:table_to_list {
-      return "[Not implemented]";
-    }
 
 /**
  * ------------------------------------------------------------------------------------ *
