@@ -231,6 +231,7 @@ statement
   / update_stmt
   / insert_stmt
   / delete_stmt
+  / transaction_stmt
   / empty_stmt
 
 empty_stmt
@@ -1332,6 +1333,69 @@ default_values
   = kws:(DEFAULT __ VALUES) {
       return loc({ type: "default_values", kw: read(kws) });
     }
+
+/**
+ * ------------------------------------------------------------------------------------ *
+ *                                                                                      *
+ * Transactions                                                                         *
+ *                                                                                      *
+ * ------------------------------------------------------------------------------------ *
+ */
+transaction_stmt
+  = start_transaction_stmt
+  / commit_transaction_stmt
+  / rollback_transaction_stmt
+
+start_transaction_stmt
+  = never
+start_transaction_stmt$sqlite
+  = kw:BEGIN bKw:(__ (DEFERRED / IMMEDIATE / EXCLUSIVE))? tKw:(__ TRANSACTION)? {
+    return loc({
+      type: "start_transaction_statement",
+      startKw: kw,
+      behaviorKw: read(bKw),
+      transactionKw: read(tKw),
+    });
+  }
+start_transaction_stmt$mysql
+  = kw:BEGIN tKw:(__ WORK)? {
+    return loc({
+      type: "start_transaction_statement",
+      startKw: kw,
+      transactionKw: read(tKw),
+    });
+  }
+  / kw:START tKw:(__ TRANSACTION) {
+    return loc({
+      type: "start_transaction_statement",
+      startKw: kw,
+      transactionKw: read(tKw),
+    });
+  }
+
+commit_transaction_stmt
+  = kw:commit_kw tKw:(__ transaction_kw)? {
+    return loc({
+      type: "commit_transaction_statement",
+      commitKw: kw,
+      transactionKw: read(tKw),
+    });
+  }
+
+commit_kw = COMMIT
+commit_kw$sqlite = COMMIT / END
+
+rollback_transaction_stmt
+  = kw:ROLLBACK tKw:(__ transaction_kw)? {
+    return loc({
+      type: "rollback_transaction_statement",
+      rollbackKw: kw,
+      transactionKw: read(tKw),
+    });
+  }
+
+transaction_kw = TRANSACTION
+transaction_kw$mysql = WORK
 
 /**
  * Constraints
@@ -2505,6 +2569,7 @@ ASC                 = kw:"ASC"i                 !ident_part { return loc(createK
 AUTO_INCREMENT      = kw:"AUTO_INCREMENT"i      !ident_part { return loc(createKeyword(kw)); }
 AVG                 = kw:"AVG"i                 !ident_part { return loc(createKeyword(kw)); }
 AVG_ROW_LENGTH      = kw:"AVG_ROW_LENGTH"i      !ident_part { return loc(createKeyword(kw)); }
+BEGIN               = kw:"BEGIN"i               !ident_part { return loc(createKeyword(kw)); }
 BETWEEN             = kw:"BETWEEN"i             !ident_part { return loc(createKeyword(kw)); }
 BIGINT              = kw:"BIGINT"i              !ident_part { return loc(createKeyword(kw)); }
 BINARY              = kw:"BINARY"i              !ident_part { return loc(createKeyword(kw)); }
@@ -2530,6 +2595,7 @@ COLLATION           = kw:"COLLATION"i           !ident_part { return loc(createK
 COLUMN              = kw:"COLUMN"i              !ident_part { return loc(createKeyword(kw)); }
 COLUMN_FORMAT       = kw:"COLUMN_FORMAT"i       !ident_part { return loc(createKeyword(kw)); }
 COMMENT             = kw:"COMMENT"i             !ident_part { return loc(createKeyword(kw)); }
+COMMIT              = kw:"COMMIT"i              !ident_part { return loc(createKeyword(kw)); }
 COMPACT             = kw:"COMPACT"i             !ident_part { return loc(createKeyword(kw)); }
 COMPRESSED          = kw:"COMPRESSED"i          !ident_part { return loc(createKeyword(kw)); }
 COMPRESSION         = kw:"COMPRESSION"i         !ident_part { return loc(createKeyword(kw)); }
@@ -2732,6 +2798,7 @@ SQL_CACHE           = kw:"SQL_CACHE"i           !ident_part { return loc(createK
 SQL_CALC_FOUND_ROWS = kw:"SQL_CALC_FOUND_ROWS"i !ident_part { return loc(createKeyword(kw)); }
 SQL_NO_CACHE        = kw:"SQL_NO_CACHE"i        !ident_part { return loc(createKeyword(kw)); }
 SQL_SMALL_RESULT    = kw:"SQL_SMALL_RESULT"i    !ident_part { return loc(createKeyword(kw)); }
+START               = kw:"START"i               !ident_part { return loc(createKeyword(kw)); }
 STATS_SAMPLE_PAGES  = kw:"STATS_SAMPLE_PAGES"i  !ident_part { return loc(createKeyword(kw)); }
 STORAGE             = kw:"STORAGE"i             !ident_part { return loc(createKeyword(kw)); }
 STORED              = kw:"STORED"i              !ident_part { return loc(createKeyword(kw)); }
@@ -2752,6 +2819,7 @@ TINYBLOB            = kw:"TINYBLOB"i            !ident_part { return loc(createK
 TINYINT             = kw:"TINYINT"i             !ident_part { return loc(createKeyword(kw)); }
 TINYTEXT            = kw:"TINYTEXT"i            !ident_part { return loc(createKeyword(kw)); }
 TO                  = kw:"TO"i                  !ident_part { return loc(createKeyword(kw)); }
+TRANSACTION         = kw:"TRANSACTION"i         !ident_part { return loc(createKeyword(kw)); }
 TRUE                = kw:"TRUE"i                !ident_part { return loc(createKeyword(kw)); }
 TRUNCATE            = kw:"TRUNCATE"i            !ident_part { return loc(createKeyword(kw)); }
 UNBOUNDED           = kw:"UNBOUNDED"i           !ident_part { return loc(createKeyword(kw)); }
@@ -2777,6 +2845,7 @@ WHEN                = kw:"WHEN"i                !ident_part { return loc(createK
 WHERE               = kw:"WHERE"i               !ident_part { return loc(createKeyword(kw)); }
 WINDOW              = kw:"WINDOW"i              !ident_part { return loc(createKeyword(kw)); }
 WITH                = kw:"WITH"i                !ident_part { return loc(createKeyword(kw)); }
+WORK                = kw:"WORK"i                !ident_part { return loc(createKeyword(kw)); }
 WRITE               = kw:"WRITE"i               !ident_part { return loc(createKeyword(kw)); }
 XOR                 = kw:"XOR"i                 !ident_part { return loc(createKeyword(kw)); }
 YEAR                = kw:"YEAR"i                !ident_part { return loc(createKeyword(kw)); }

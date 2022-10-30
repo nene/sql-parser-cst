@@ -63,7 +63,8 @@ type Statement =
   | DeleteStatement
   | UpdateStatement
   | CreateViewStatement
-  | DropViewStatement;
+  | DropViewStatement
+  | TransactionStatement;
 
 type Expr =
   | ExprList
@@ -565,6 +566,31 @@ type DropViewStatement = BaseNode & {
   ifExistsKw?: Keyword[];
   views: TableRef[];
   behaviorKw?: Keyword; // CASCADE | RESTRICT
+};
+
+// Transactions
+type TransactionStatement =
+  | StartTransactionStatement
+  | CommitTransactionStatement
+  | RollbackTransactionStatement;
+
+type StartTransactionStatement = BaseNode & {
+  type: "start_transaction_statement";
+  startKw: Keyword; // START | BEGIN
+  behaviorKw?: Keyword; // DEFERRED | IMMEDIATE | EXCLUSIVE
+  transactionKw?: Keyword; // TRANSACTION | WORK
+};
+
+type CommitTransactionStatement = BaseNode & {
+  type: "commit_transaction_statement";
+  commitKw: Keyword; // COMMIT | END
+  transactionKw?: Keyword; // TRANSACTION | WORK
+};
+
+type RollbackTransactionStatement = BaseNode & {
+  type: "rollback_transaction_statement";
+  rollbackKw: Keyword; // ROLLBACK
+  transactionKw?: Keyword; // TRANSACTION | WORK
 };
 
 // Window frame
