@@ -227,6 +227,14 @@ const showNode = cstTransformer<string>({
       node.columns,
       node.where,
     ]),
+  drop_index_statement: (node) =>
+    show([
+      node.dropIndexKw,
+      node.ifExistsKw,
+      show(node.indexes, ","),
+      node.onKw,
+      node.table,
+    ]),
 
   // Transactions
   start_transaction_statement: (node) =>

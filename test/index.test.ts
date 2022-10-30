@@ -32,4 +32,27 @@ describe("index", () => {
       });
     });
   });
+
+  describe("DROP INDEX", () => {
+    dialect("sqlite", () => {
+      it("supports DROP INDEX name", () => {
+        test("DROP INDEX my_idx");
+        test("DROP INDEX schm.my_idx");
+        test("DROP /*c1*/ INDEX /*c2*/ idx");
+      });
+
+      it("supports IF EXISTS", () => {
+        test("DROP INDEX IF EXISTS my_idx");
+        test("DROP INDEX /*c1*/ IF /*c2*/ EXISTS /*c3*/ my_idx");
+      });
+    });
+
+    dialect("mysql", () => {
+      it("supports DROP INDEX name ON table", () => {
+        test("DROP INDEX my_idx ON tbl");
+        test("DROP INDEX idx ON schm.tbl");
+        test("DROP /*c1*/ INDEX /*c2*/ idx /*c3*/ ON /*c4*/ tbl");
+      });
+    });
+  });
 });

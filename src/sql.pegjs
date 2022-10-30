@@ -1058,19 +1058,30 @@ create_index_stmt
 
 // DROP INDEX
 drop_index_stmt
-  = a:DROP __
-    r:INDEX __
-    i:column_ref __
-    ON __
-    t:table_ref __
-    op:drop_index_opt? __ {
-      return "[Not implemented]";
+  = kws:(DROP __ INDEX __)
+    ifKw:(if_exists __)?
+    indexes:table_ref_list {
+      return loc({
+        type: "drop_index_statement",
+        dropIndexKw: read(kws),
+        ifExistsKw: read(ifKw),
+        indexes: read(indexes)
+      });
     }
 
-drop_index_opt
-  = head:(alter_algorithm / alter_lock) tail:(__ (alter_algorithm / alter_lock))* {
-    return "[Not implemented]";
-  }
+drop_index_stmt$mysql
+  = kws:(DROP __ INDEX __)
+    index:(table_ref __)
+    onKw:(ON __)
+    table:table_ref {
+      return loc({
+        type: "drop_index_statement",
+        dropIndexKw: read(kws),
+        indexes: [read(index)],
+        onKw: read(onKw),
+        table,
+      });
+    }
 
 /**
  * ------------------------------------------------------------------------------------ *
