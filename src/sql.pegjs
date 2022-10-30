@@ -813,6 +813,157 @@ lock_option
 /**
  * ------------------------------------------------------------------------------------ *
  *                                                                                      *
+ * INSERT INTO                                                                          *
+ *                                                                                      *
+ * ------------------------------------------------------------------------------------ *
+ */
+insert_stmt
+  = insertKw:(INSERT / REPLACE)
+    options:(__ insert_options)?
+    intoKw:(__ INTO)?
+    table:(__ table_ref_or_explicit_alias)
+    columns:(__ paren_plain_column_ref_list)?
+    source:(__ insert_source) {
+      return loc({
+        type: "insert_statement",
+        insertKw,
+        options: read(options) || [],
+        intoKw: read(intoKw),
+        table: read(table),
+        columns: read(columns),
+        source: read(source),
+      });
+    }
+
+insert_options
+  = head:insert_opt tail:(__ insert_opt)* {
+    return readSpaceSepList(head, tail);
+  }
+
+insert_opt
+  = never
+
+insert_opt$mysql
+  = kw:(LOW_PRIORITY / DELAYED / HIGH_PRIORITY / IGNORE) {
+    return loc({ type: "insert_option", kw });
+  }
+insert_opt$sqlite
+  = kws:(OR __ (ABORT / FAIL / IGNORE / REPLACE / ROLLBACK)) {
+    return loc({ type: "insert_option", kw: read(kws) });
+  }
+
+table_ref_or_explicit_alias
+  = t:table_ref alias:(__ explicit_alias)? {
+    return loc(createAlias(t, alias));
+  }
+
+insert_source
+  = values_clause
+  / compound_select_stmt
+  / default_values
+
+values_clause
+  = kw:values_kw values:(__ values_list) {
+    return loc({
+      type: "values_clause",
+      valuesKw: kw,
+      values: read(values),
+    });
+  }
+
+values_kw = VALUES
+values_kw$mysql = VALUES / VALUE
+
+values_list
+  = head:values_row tail:(__ "," __ values_row)* {
+    return loc(createExprList(head, tail));
+  }
+
+values_row
+  = paren_expr_list
+
+values_row$mysql
+  = "(" c1:__ list:expr_list_with_default c2:__ ")" {
+    return loc(createParenExpr(c1, list, c2));
+  }
+
+expr_list_with_default
+  = head:(expr / default) tail:(__ "," __ (expr / default))* {
+    return loc(createExprList(head, tail));
+  }
+
+default
+  = kw:DEFAULT {
+    return loc({ type: "default", kw });
+  }
+
+default_values
+  = kws:(DEFAULT __ VALUES) {
+      return loc({ type: "default_values", kw: read(kws) });
+    }
+
+/**
+ * ------------------------------------------------------------------------------------ *
+ *                                                                                      *
+ * UPDATE                                                                               *
+ *                                                                                      *
+ * ------------------------------------------------------------------------------------ *
+ */
+update_stmt
+  = kw:(UPDATE __)
+    tables:(table_ref_list __)
+    setKw:(SET __)
+    set:set_assignments
+    where:(__ where_clause)? {
+      return loc({
+        type: "update_statement",
+        updateKw: read(kw),
+        tables: read(tables),
+        setKw: read(setKw),
+        assignments: set,
+        where: read(where),
+      });
+    }
+
+set_assignments
+  = head:column_assignment tail:(__ "," __ column_assignment)* {
+      return readCommaSepList(head, tail);
+    }
+
+column_assignment
+  = col:(column_ref __) "=" expr:(__ column_value) {
+    return loc({
+      type: "column_assignment",
+      column: read(col),
+      expr: read(expr),
+    });
+  }
+
+column_value = expr
+column_value$mysql = expr / default
+
+/**
+ * ------------------------------------------------------------------------------------ *
+ *                                                                                      *
+ * DELETE FROM                                                                          *
+ *                                                                                      *
+ * ------------------------------------------------------------------------------------ *
+ */
+delete_stmt
+  = delKw:(DELETE __) fromKw:(FROM __) tbl:table_ref_or_alias
+    where:(__ where_clause)? {
+      return loc({
+        type: "delete_statement",
+        deleteKw: read(delKw),
+        fromKw: read(fromKw),
+        table: tbl,
+        where: read(where),
+      });
+    }
+
+/**
+ * ------------------------------------------------------------------------------------ *
+ *                                                                                      *
  * CREATE SCHEMA                                                                        *
  *                                                                                      *
  * ------------------------------------------------------------------------------------ *
@@ -1207,157 +1358,6 @@ table_option
   / kw:ROW_FORMAT __ s:("=")? __ c:(DEFAULT / DYNAMIC / FIXED / COMPRESSED / REDUNDANT / COMPACT) {
     return "[Not implemented]";
   }
-
-/**
- * ------------------------------------------------------------------------------------ *
- *                                                                                      *
- * UPDATE                                                                               *
- *                                                                                      *
- * ------------------------------------------------------------------------------------ *
- */
-update_stmt
-  = kw:(UPDATE __)
-    tables:(table_ref_list __)
-    setKw:(SET __)
-    set:set_assignments
-    where:(__ where_clause)? {
-      return loc({
-        type: "update_statement",
-        updateKw: read(kw),
-        tables: read(tables),
-        setKw: read(setKw),
-        assignments: set,
-        where: read(where),
-      });
-    }
-
-set_assignments
-  = head:column_assignment tail:(__ "," __ column_assignment)* {
-      return readCommaSepList(head, tail);
-    }
-
-column_assignment
-  = col:(column_ref __) "=" expr:(__ column_value) {
-    return loc({
-      type: "column_assignment",
-      column: read(col),
-      expr: read(expr),
-    });
-  }
-
-column_value = expr
-column_value$mysql = expr / default
-
-/**
- * ------------------------------------------------------------------------------------ *
- *                                                                                      *
- * DELETE FROM                                                                          *
- *                                                                                      *
- * ------------------------------------------------------------------------------------ *
- */
-delete_stmt
-  = delKw:(DELETE __) fromKw:(FROM __) tbl:table_ref_or_alias
-    where:(__ where_clause)? {
-      return loc({
-        type: "delete_statement",
-        deleteKw: read(delKw),
-        fromKw: read(fromKw),
-        table: tbl,
-        where: read(where),
-      });
-    }
-
-/**
- * ------------------------------------------------------------------------------------ *
- *                                                                                      *
- * INSERT INTO                                                                          *
- *                                                                                      *
- * ------------------------------------------------------------------------------------ *
- */
-insert_stmt
-  = insertKw:(INSERT / REPLACE)
-    options:(__ insert_options)?
-    intoKw:(__ INTO)?
-    table:(__ table_ref_or_explicit_alias)
-    columns:(__ paren_plain_column_ref_list)?
-    source:(__ insert_source) {
-      return loc({
-        type: "insert_statement",
-        insertKw,
-        options: read(options) || [],
-        intoKw: read(intoKw),
-        table: read(table),
-        columns: read(columns),
-        source: read(source),
-      });
-    }
-
-insert_options
-  = head:insert_opt tail:(__ insert_opt)* {
-    return readSpaceSepList(head, tail);
-  }
-
-insert_opt
-  = never
-
-insert_opt$mysql
-  = kw:(LOW_PRIORITY / DELAYED / HIGH_PRIORITY / IGNORE) {
-    return loc({ type: "insert_option", kw });
-  }
-insert_opt$sqlite
-  = kws:(OR __ (ABORT / FAIL / IGNORE / REPLACE / ROLLBACK)) {
-    return loc({ type: "insert_option", kw: read(kws) });
-  }
-
-table_ref_or_explicit_alias
-  = t:table_ref alias:(__ explicit_alias)? {
-    return loc(createAlias(t, alias));
-  }
-
-insert_source
-  = values_clause
-  / compound_select_stmt
-  / default_values
-
-values_clause
-  = kw:values_kw values:(__ values_list) {
-    return loc({
-      type: "values_clause",
-      valuesKw: kw,
-      values: read(values),
-    });
-  }
-
-values_kw = VALUES
-values_kw$mysql = VALUES / VALUE
-
-values_list
-  = head:values_row tail:(__ "," __ values_row)* {
-    return loc(createExprList(head, tail));
-  }
-
-values_row
-  = paren_expr_list
-
-values_row$mysql
-  = "(" c1:__ list:expr_list_with_default c2:__ ")" {
-    return loc(createParenExpr(c1, list, c2));
-  }
-
-expr_list_with_default
-  = head:(expr / default) tail:(__ "," __ (expr / default))* {
-    return loc(createExprList(head, tail));
-  }
-
-default
-  = kw:DEFAULT {
-    return loc({ type: "default", kw });
-  }
-
-default_values
-  = kws:(DEFAULT __ VALUES) {
-      return loc({ type: "default_values", kw: read(kws) });
-    }
 
 /**
  * ------------------------------------------------------------------------------------ *
