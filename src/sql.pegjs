@@ -836,7 +836,7 @@ create_db_definition
 /**
  * ------------------------------------------------------------------------------------ *
  *                                                                                      *
- * CREATE VIEW                                                                          *
+ * CREATE VIEW  /  DROP VIEW                                                            *
  *                                                                                      *
  * ------------------------------------------------------------------------------------ *
  */
@@ -862,10 +862,24 @@ create_view_stmt
       });
     }
 
+drop_view_stmt
+  = kws:(DROP __ VIEW)
+    ifKw:(__ if_exists)?
+    views:(__ table_ref_list)
+    behaviorKw:(__ (CASCADE / RESTRICT))? {
+      return loc({
+        type: "drop_view_statement",
+        dropViewKw: read(kws),
+        ifExistsKw: read(ifKw),
+        views: read(views),
+        behaviorKw: read(behaviorKw),
+      });
+    }
+
 /**
  * ------------------------------------------------------------------------------------ *
  *                                                                                      *
- * CREATE INDEX                                                                         *
+ * CREATE INDEX  /  DROP INDEX                                                          *
  *                                                                                      *
  * ------------------------------------------------------------------------------------ *
  */
@@ -897,6 +911,22 @@ column_order_item
 
 column_order
   = c:column_ref __ o:(ASC / DESC)? {
+    return "[Not implemented]";
+  }
+
+// DROP INDEX
+drop_index_stmt
+  = a:DROP __
+    r:INDEX __
+    i:column_ref __
+    ON __
+    t:table_ref __
+    op:drop_index_opt? __ {
+      return "[Not implemented]";
+    }
+
+drop_index_opt
+  = head:(alter_algorithm / alter_lock) tail:(__ (alter_algorithm / alter_lock))* {
     return "[Not implemented]";
   }
 
@@ -1010,41 +1040,6 @@ drop_table_stmt
 
 if_exists
   = kws:(IF __ EXISTS) { return read(kws); }
-
-/**
- * DROP INDEX
- */
-drop_index_stmt
-  = a:DROP __
-    r:INDEX __
-    i:column_ref __
-    ON __
-    t:table_ref __
-    op:drop_index_opt? __ {
-      return "[Not implemented]";
-    }
-
-drop_index_opt
-  = head:(alter_algorithm / alter_lock) tail:(__ (alter_algorithm / alter_lock))* {
-    return "[Not implemented]";
-  }
-
-/**
- * DROP VIEW
- */
-drop_view_stmt
-  = kws:(DROP __ VIEW)
-    ifKw:(__ if_exists)?
-    views:(__ table_ref_list)
-    behaviorKw:(__ (CASCADE / RESTRICT))? {
-      return loc({
-        type: "drop_view_statement",
-        dropViewKw: read(kws),
-        ifExistsKw: read(ifKw),
-        views: read(views),
-        behaviorKw: read(behaviorKw),
-      });
-    }
 
 /**
  * ------------------------------------------------------------------------------------ *
