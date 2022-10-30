@@ -6,6 +6,11 @@ Unlike a more usual parser which produces an Abstract Syntax Tree (AST),
 this parser preserves all the syntax elements present in the parsed source code,
 with the goal of being able to re-create the exact original source code.
 
+For now it supports the following SQL dialects:
+
+- **SQLite** - most of the syntax is supported.
+- **MySQL** - basic support for the most common SQL statements.
+
 **Note:** This is pre-alpha quality software in early development stages.
 
 ## Usage
