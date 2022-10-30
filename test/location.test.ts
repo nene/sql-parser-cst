@@ -119,7 +119,7 @@ describe("location", () => {
               0,
               27,
             ],
-            "type": "select_statement",
+            "type": "select_stmt",
           },
         ],
         "type": "program",

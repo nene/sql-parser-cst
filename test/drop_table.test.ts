@@ -58,7 +58,7 @@ describe("drop table", () => {
           },
         ],
         "temporaryKw": undefined,
-        "type": "drop_table_statement",
+        "type": "drop_table_stmt",
       }
     `);
   });

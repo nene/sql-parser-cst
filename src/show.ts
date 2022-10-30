@@ -38,12 +38,11 @@ const showWhitespaceItem = (ws: Whitespace): string => ws.text;
 
 const showNode = cstTransformer<string>({
   program: (node) => show(node.statements, ";"),
-  empty_statement: () => "",
+  empty_stmt: () => "",
 
   // SELECT statement
-  compound_select_statement: (node) =>
-    show([node.left, node.operator, node.right]),
-  select_statement: (node) => show(node.clauses),
+  compound_select_stmt: (node) => show([node.left, node.operator, node.right]),
+  select_stmt: (node) => show(node.clauses),
   // WITH
   with_clause: (node) =>
     show([node.withKw, node.recursiveKw, show(node.tables, ",")]),
@@ -96,7 +95,7 @@ const showNode = cstTransformer<string>({
   frame_exclusion: (node) => show([node.excludeKw, node.kindKw]),
 
   // CREATE TABLE statement
-  create_table_statement: (node) =>
+  create_table_stmt: (node) =>
     show([
       node.createKw,
       node.temporaryKw,
@@ -145,7 +144,7 @@ const showNode = cstTransformer<string>({
   on_conflict_clause: (node) => show([node.onConflictKw, node.resolutionKw]),
 
   // ALTER TABLE statement
-  alter_table_statement: (node) =>
+  alter_table_stmt: (node) =>
     show([node.alterTableKw, node.table, show(node.actions, ",")]),
   alter_rename_table: (node) => show([node.renameKw, node.newName]),
   alter_rename_column: (node) =>
@@ -154,7 +153,7 @@ const showNode = cstTransformer<string>({
   alter_drop_column: (node) => show([node.dropKw, node.column]),
 
   // DROP TABLE statement
-  drop_table_statement: (node) =>
+  drop_table_stmt: (node) =>
     show([
       node.dropKw,
       node.temporaryKw,
@@ -165,7 +164,7 @@ const showNode = cstTransformer<string>({
     ]),
 
   // INSERT INTO statement
-  insert_statement: (node) =>
+  insert_stmt: (node) =>
     show([
       node.insertKw,
       node.options,
@@ -179,7 +178,7 @@ const showNode = cstTransformer<string>({
   default: (node) => show(node.kw),
 
   // UPDATE statement
-  update_statement: (node) =>
+  update_stmt: (node) =>
     show([
       node.updateKw,
       show(node.tables, ","),
@@ -190,11 +189,11 @@ const showNode = cstTransformer<string>({
   column_assignment: (node) => show([node.column, "=", node.expr]),
 
   // DELETE FROM statement
-  delete_statement: (node) =>
+  delete_stmt: (node) =>
     show([node.deleteKw, node.fromKw, node.table, node.where]),
 
   // CREATE VIEW statement
-  create_view_statement: (node) =>
+  create_view_stmt: (node) =>
     show([
       node.createKw,
       node.temporaryKw,
@@ -206,7 +205,7 @@ const showNode = cstTransformer<string>({
       node.expr,
     ]),
   // DROP VIEW statement
-  drop_view_statement: (node) =>
+  drop_view_stmt: (node) =>
     show([
       node.dropViewKw,
       node.ifExistsKw,
@@ -215,7 +214,7 @@ const showNode = cstTransformer<string>({
     ]),
 
   // CREATE INDEX statement
-  create_index_statement: (node) =>
+  create_index_stmt: (node) =>
     show([
       node.createKw,
       node.indexTypeKw,
@@ -227,7 +226,7 @@ const showNode = cstTransformer<string>({
       node.columns,
       node.where,
     ]),
-  drop_index_statement: (node) =>
+  drop_index_stmt: (node) =>
     show([
       node.dropIndexKw,
       node.ifExistsKw,
@@ -237,16 +236,15 @@ const showNode = cstTransformer<string>({
     ]),
 
   // Transactions
-  start_transaction_statement: (node) =>
+  start_transaction_stmt: (node) =>
     show([node.startKw, node.behaviorKw, node.transactionKw]),
-  commit_transaction_statement: (node) =>
-    show([node.commitKw, node.transactionKw]),
-  rollback_transaction_statement: (node) =>
+  commit_transaction_stmt: (node) => show([node.commitKw, node.transactionKw]),
+  rollback_transaction_stmt: (node) =>
     show([node.rollbackKw, node.transactionKw, node.savepoint]),
   rollback_to_savepoint: (node) =>
     show([node.toKw, node.savepointKw, node.savepoint]),
-  savepoint_statement: (node) => show([node.savepointKw, node.savepoint]),
-  release_savepoint_statement: (node) =>
+  savepoint_stmt: (node) => show([node.savepointKw, node.savepoint]),
+  release_savepoint_stmt: (node) =>
     show([node.releaseKw, node.savepointKw, node.savepoint]),
 
   // Expressions

@@ -49,7 +49,7 @@ An AST-parser might parse this to the following abstract syntax tree:
 
 ```json
 {
-  "type": "select_statement",
+  "type": "select_stmt",
   "columns": [
     {
       "type": "alias",
@@ -79,7 +79,7 @@ which preserves all of this information:
 
 ```json
 {
-  "type": "select_statement",
+  "type": "select_stmt",
   "clauses": [
     {
       "type": "select_clause",

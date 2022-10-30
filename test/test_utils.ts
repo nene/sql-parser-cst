@@ -59,8 +59,8 @@ export function testExpr(expr: string) {
 
 export function parseExpr(expr: string, options?: ParserOptions): Expr {
   const stmt = parseStmt(`SELECT ${expr}`, options);
-  if (stmt.type !== "select_statement") {
-    throw new Error(`Expected select_statement, instead got ${stmt.type}`);
+  if (stmt.type !== "select_stmt") {
+    throw new Error(`Expected select_stmt, instead got ${stmt.type}`);
   }
   const clause = stmt.clauses[0];
   if (clause.type !== "select_clause") {
@@ -94,10 +94,8 @@ export function showPrecedence(sql: string): string {
  */
 export function showCompoundPrecedence(sql: string): string {
   const stmt = parseStmt(sql);
-  if (stmt.type !== "compound_select_statement") {
-    throw new Error(
-      `Expected compound_select_statement, instead got ${stmt.type}`
-    );
+  if (stmt.type !== "compound_select_stmt") {
+    throw new Error(`Expected compound_select_stmt, instead got ${stmt.type}`);
   }
   return show(addPrecedenceParens(stmt));
 }
@@ -107,10 +105,7 @@ function addPrecedenceParens<T extends Expr | SubSelect>(
 ): ParenExpr<T> | T {
   const space: Whitespace[] = [{ type: "space", text: " " }];
 
-  if (
-    expr.type === "binary_expr" ||
-    expr.type === "compound_select_statement"
-  ) {
+  if (expr.type === "binary_expr" || expr.type === "compound_select_stmt") {
     return {
       type: "paren_expr",
       expr: {
@@ -127,7 +122,7 @@ function addPrecedenceParens<T extends Expr | SubSelect>(
         expr: { ...addPrecedenceParens(expr.expr), leading: space },
       },
     };
-  } else if (expr.type === "select_statement") {
+  } else if (expr.type === "select_stmt") {
     // Add space inside select clause: SELECT <space_here> x
     const selectClause = expr.clauses[0] as SelectClause;
     return {

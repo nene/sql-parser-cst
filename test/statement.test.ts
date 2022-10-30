@@ -19,7 +19,7 @@ describe("statement", () => {
       {
         "statements": [
           {
-            "type": "empty_statement",
+            "type": "empty_stmt",
           },
           {
             "leading": [
@@ -28,10 +28,10 @@ describe("statement", () => {
                 "type": "block_comment",
               },
             ],
-            "type": "empty_statement",
+            "type": "empty_stmt",
           },
           {
-            "type": "empty_statement",
+            "type": "empty_stmt",
           },
         ],
         "type": "program",

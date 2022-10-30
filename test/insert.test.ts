@@ -172,7 +172,7 @@ describe("insert into", () => {
           },
           "type": "table_ref",
         },
-        "type": "insert_statement",
+        "type": "insert_stmt",
       }
     `);
   });

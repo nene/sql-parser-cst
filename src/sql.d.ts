@@ -54,20 +54,20 @@ type Program = BaseNode & {
 };
 
 type Statement =
-  | EmptyStatement
-  | CompoundSelectStatement
-  | SelectStatement
-  | CreateTableStatement
-  | AlterTableStatement
-  | DropTableStatement
-  | InsertStatement
-  | DeleteStatement
-  | UpdateStatement
-  | CreateViewStatement
-  | DropViewStatement
-  | CreateIndexStatement
-  | DropIndexStatement
-  | TransactionStatement;
+  | EmptyStmt
+  | CompoundSelectStmt
+  | SelectStmt
+  | CreateTableStmt
+  | AlterTableStmt
+  | DropTableStmt
+  | InsertStmt
+  | DeleteStmt
+  | UpdateStmt
+  | CreateViewStmt
+  | DropViewStmt
+  | CreateIndexStmt
+  | DropIndexStmt
+  | TransactionStmt;
 
 type Expr =
   | ExprList
@@ -92,26 +92,23 @@ type Literal =
   | NullLiteral
   | DateTimeLiteral;
 
-type EmptyStatement = BaseNode & {
-  type: "empty_statement";
+type EmptyStmt = BaseNode & {
+  type: "empty_stmt";
   foo: number;
 };
 
 // SELECT
-type CompoundSelectStatement = BaseNode & {
-  type: "compound_select_statement";
+type CompoundSelectStmt = BaseNode & {
+  type: "compound_select_stmt";
   left: SubSelect;
   operator: Keyword | Keyword[]; // { UNION | EXCEPT | INTERSECT } [ALL | DISTINCT]
   right: SubSelect;
 };
 
-type SubSelect =
-  | SelectStatement
-  | CompoundSelectStatement
-  | ParenExpr<SubSelect>;
+type SubSelect = SelectStmt | CompoundSelectStmt | ParenExpr<SubSelect>;
 
-type SelectStatement = BaseNode & {
-  type: "select_statement";
+type SelectStmt = BaseNode & {
+  type: "select_stmt";
   clauses: Clause[];
 };
 
@@ -244,8 +241,8 @@ type SortSpecification = BaseNode & {
 };
 
 // CREATE TABLE
-type CreateTableStatement = BaseNode & {
-  type: "create_table_statement";
+type CreateTableStmt = BaseNode & {
+  type: "create_table_stmt";
   createKw: Keyword;
   tableKw: Keyword;
   temporaryKw?: Keyword;
@@ -442,8 +439,8 @@ type OnConflictClause = BaseNode & {
 };
 
 // ALTER TABLE
-type AlterTableStatement = BaseNode & {
-  type: "alter_table_statement";
+type AlterTableStmt = BaseNode & {
+  type: "alter_table_stmt";
   alterTableKw: Keyword[];
   table: TableRef;
   actions: AlterAction[];
@@ -482,8 +479,8 @@ type AlterDropColumn = BaseNode & {
 };
 
 // DROP TABLE
-type DropTableStatement = BaseNode & {
-  type: "drop_table_statement";
+type DropTableStmt = BaseNode & {
+  type: "drop_table_stmt";
   dropKw: Keyword;
   temporaryKw?: Keyword;
   tableKw: Keyword;
@@ -493,8 +490,8 @@ type DropTableStatement = BaseNode & {
 };
 
 // INSERT INTO
-type InsertStatement = BaseNode & {
-  type: "insert_statement";
+type InsertStmt = BaseNode & {
+  type: "insert_stmt";
   insertKw: Keyword; // INSERT | REPLACE
   options: InsertOption[];
   intoKw?: Keyword;
@@ -525,8 +522,8 @@ type Default = BaseNode & {
 };
 
 // DELETE FROM
-type DeleteStatement = BaseNode & {
-  type: "delete_statement";
+type DeleteStmt = BaseNode & {
+  type: "delete_stmt";
   deleteKw: Keyword;
   fromKw: Keyword;
   table: TableRef | Alias<TableRef>;
@@ -534,8 +531,8 @@ type DeleteStatement = BaseNode & {
 };
 
 // UPDATE
-type UpdateStatement = BaseNode & {
-  type: "update_statement";
+type UpdateStmt = BaseNode & {
+  type: "update_stmt";
   updateKw: Keyword;
   tables: TableRef[];
   setKw: Keyword;
@@ -550,8 +547,8 @@ type ColumnAssignment = BaseNode & {
 };
 
 // CREATE VIEW
-type CreateViewStatement = BaseNode & {
-  type: "create_view_statement";
+type CreateViewStmt = BaseNode & {
+  type: "create_view_stmt";
   createKw: Keyword;
   temporaryKw?: Keyword;
   viewKw: Keyword;
@@ -563,8 +560,8 @@ type CreateViewStatement = BaseNode & {
 };
 
 // DROP VIEW
-type DropViewStatement = BaseNode & {
-  type: "drop_view_statement";
+type DropViewStmt = BaseNode & {
+  type: "drop_view_stmt";
   dropViewKw: Keyword[];
   ifExistsKw?: Keyword[];
   views: TableRef[];
@@ -572,8 +569,8 @@ type DropViewStatement = BaseNode & {
 };
 
 // CREATE INDEX
-type CreateIndexStatement = BaseNode & {
-  type: "create_index_statement";
+type CreateIndexStmt = BaseNode & {
+  type: "create_index_stmt";
   createKw: Keyword; // CREATE
   indexTypeKw?: Keyword; // UNIQUE | FULLTEXT | SPATIAL
   indexKw: Keyword; // INDEX
@@ -586,8 +583,8 @@ type CreateIndexStatement = BaseNode & {
 };
 
 // DROP INDEX
-type DropIndexStatement = BaseNode & {
-  type: "drop_index_statement";
+type DropIndexStmt = BaseNode & {
+  type: "drop_index_stmt";
   dropIndexKw: Keyword[]; // DROP INDEX
   ifExistsKw?: Keyword[]; // IF EXISTS
   indexes: TableRef[];
@@ -596,28 +593,28 @@ type DropIndexStatement = BaseNode & {
 };
 
 // Transactions
-type TransactionStatement =
-  | StartTransactionStatement
-  | CommitTransactionStatement
-  | RollbackTransactionStatement
-  | SavepointStatement
-  | ReleaseSavepointStatement;
+type TransactionStmt =
+  | StartTransactionStmt
+  | CommitTransactionStmt
+  | RollbackTransactionStmt
+  | SavepointStmt
+  | ReleaseSavepointStmt;
 
-type StartTransactionStatement = BaseNode & {
-  type: "start_transaction_statement";
+type StartTransactionStmt = BaseNode & {
+  type: "start_transaction_stmt";
   startKw: Keyword; // START | BEGIN
   behaviorKw?: Keyword; // DEFERRED | IMMEDIATE | EXCLUSIVE
   transactionKw?: Keyword; // TRANSACTION | WORK
 };
 
-type CommitTransactionStatement = BaseNode & {
-  type: "commit_transaction_statement";
+type CommitTransactionStmt = BaseNode & {
+  type: "commit_transaction_stmt";
   commitKw: Keyword; // COMMIT | END
   transactionKw?: Keyword; // TRANSACTION | WORK
 };
 
-type RollbackTransactionStatement = BaseNode & {
-  type: "rollback_transaction_statement";
+type RollbackTransactionStmt = BaseNode & {
+  type: "rollback_transaction_stmt";
   rollbackKw: Keyword; // ROLLBACK
   transactionKw?: Keyword; // TRANSACTION | WORK
   savepoint?: RollbackToSavepoint;
@@ -630,14 +627,14 @@ type RollbackToSavepoint = BaseNode & {
   savepoint: Identifier;
 };
 
-type SavepointStatement = BaseNode & {
-  type: "savepoint_statement";
+type SavepointStmt = BaseNode & {
+  type: "savepoint_stmt";
   savepointKw: Keyword; // SAVEPOINT
   savepoint: Identifier;
 };
 
-type ReleaseSavepointStatement = BaseNode & {
-  type: "release_savepoint_statement";
+type ReleaseSavepointStmt = BaseNode & {
+  type: "release_savepoint_stmt";
   releaseKw: Keyword; // RELEASE
   savepointKw?: Keyword; // SAVEPOINT
   savepoint: Identifier;

@@ -106,7 +106,7 @@ describe("select", () => {
               "type": "from_clause",
             },
           ],
-          "type": "select_statement",
+          "type": "select_stmt",
         }
       `);
     });
@@ -141,7 +141,7 @@ describe("select", () => {
               "type": "select_clause",
             },
           ],
-          "type": "select_statement",
+          "type": "select_stmt",
         }
       `);
     });
@@ -175,7 +175,7 @@ describe("select", () => {
               "type": "select_clause",
             },
           ],
-          "type": "select_statement",
+          "type": "select_stmt",
         }
       `);
     });

@@ -66,10 +66,10 @@ function joinLayoutArray(array: Layout[], separator = " "): Layout[] {
 
 const layoutNode = cstTransformer<Layout>({
   program: (node) => node.statements.map(layout),
-  empty_statement: () => "",
+  empty_stmt: () => "",
 
   // SELECT statement
-  select_statement: (node) => node.clauses.map(layout),
+  select_stmt: (node) => node.clauses.map(layout),
   // SELECT
   select_clause: (node) => [
     line(layout(node.selectKw)),

@@ -234,7 +234,7 @@ statement
 
 empty_stmt
   = c:__ {
-    return trailing(loc({ type: "empty_statement" }), c);
+    return trailing(loc({ type: "empty_stmt" }), c);
   }
 
 /**
@@ -246,7 +246,7 @@ empty_stmt
  */
 compound_select_stmt
   = head:intersect_select_stmt tail:(__ compound_op __ intersect_select_stmt)* {
-    return createBinaryExprChain(head, tail, "compound_select_statement");
+    return createBinaryExprChain(head, tail, "compound_select_stmt");
   }
 
 compound_op
@@ -256,7 +256,7 @@ compound_op
 
 intersect_select_stmt
   = head:sub_select tail:(__ intersect_op __ sub_select)* {
-    return createBinaryExprChain(head, tail, "compound_select_statement");
+    return createBinaryExprChain(head, tail, "compound_select_stmt");
   }
 
 sub_select
@@ -272,7 +272,7 @@ select_stmt
     select:(__ select_clause)
     otherClauses:(__ other_clause)* {
       return loc({
-        type: "select_statement",
+        type: "select_stmt",
         clauses: [read(cte), read(select), ...otherClauses.map(read)].filter(identity),
       });
   }
@@ -825,7 +825,7 @@ insert_stmt
     columns:(__ paren_plain_column_ref_list)?
     source:(__ insert_source) {
       return loc({
-        type: "insert_statement",
+        type: "insert_stmt",
         insertKw,
         options: read(options) || [],
         intoKw: read(intoKw),
@@ -916,7 +916,7 @@ update_stmt
     set:set_assignments
     where:(__ where_clause)? {
       return loc({
-        type: "update_statement",
+        type: "update_stmt",
         updateKw: read(kw),
         tables: read(tables),
         setKw: read(setKw),
@@ -953,7 +953,7 @@ delete_stmt
   = delKw:(DELETE __) fromKw:(FROM __) tbl:table_ref_or_alias
     where:(__ where_clause)? {
       return loc({
-        type: "delete_statement",
+        type: "delete_stmt",
         deleteKw: read(delKw),
         fromKw: read(fromKw),
         table: tbl,
@@ -999,7 +999,7 @@ create_view_stmt
     asKw:(__ AS)
     select:(__ compound_select_stmt) {
       return loc({
-        type: "create_view_statement",
+        type: "create_view_stmt",
         createKw,
         temporaryKw: read(tmpKw),
         viewKw: read(viewKw),
@@ -1017,7 +1017,7 @@ drop_view_stmt
     views:(__ table_ref_list)
     behaviorKw:(__ (CASCADE / RESTRICT))? {
       return loc({
-        type: "drop_view_statement",
+        type: "drop_view_stmt",
         dropViewKw: read(kws),
         ifExistsKw: read(ifKw),
         views: read(views),
@@ -1043,7 +1043,7 @@ create_index_stmt
     columns:paren_column_ref_list
     where:(__ where_clause)? {
       return loc({
-        type: "create_index_statement",
+        type: "create_index_stmt",
         createKw: read(kw),
         indexTypeKw: read(typeKw),
         indexKw: read(indexKw),
@@ -1062,7 +1062,7 @@ drop_index_stmt
     ifKw:(if_exists __)?
     indexes:table_ref_list {
       return loc({
-        type: "drop_index_statement",
+        type: "drop_index_stmt",
         dropIndexKw: read(kws),
         ifExistsKw: read(ifKw),
         indexes: read(indexes)
@@ -1075,7 +1075,7 @@ drop_index_stmt$mysql
     onKw:(ON __)
     table:table_ref {
       return loc({
-        type: "drop_index_statement",
+        type: "drop_index_stmt",
         dropIndexKw: read(kws),
         indexes: [read(index)],
         onKw: read(onKw),
@@ -1110,7 +1110,7 @@ create_table_stmt
     __ AS?
     __ compound_select_stmt? {
       return loc({
-        type: "create_table_statement",
+        type: "create_table_stmt",
         createKw,
         temporaryKw: read(tmpKw),
         tableKw: read(tableKw),
@@ -1181,7 +1181,7 @@ drop_table_stmt
     behaviorKw:(__ (CASCADE / RESTRICT))?
     {
       return loc({
-        type: "drop_table_statement",
+        type: "drop_table_stmt",
         dropKw: read(dropKw),
         temporaryKw: read(temporaryKw),
         tableKw: read(tableKw),
@@ -1206,7 +1206,7 @@ alter_table_stmt
     t:(table_ref __)
     actions:alter_action_list {
       return loc({
-        type: "alter_table_statement",
+        type: "alter_table_stmt",
         alterTableKw: read(kw),
         table: read(t),
         actions,
@@ -1382,7 +1382,7 @@ start_transaction_stmt
 start_transaction_stmt$sqlite
   = kw:BEGIN bKw:(__ (DEFERRED / IMMEDIATE / EXCLUSIVE))? tKw:(__ TRANSACTION)? {
     return loc({
-      type: "start_transaction_statement",
+      type: "start_transaction_stmt",
       startKw: kw,
       behaviorKw: read(bKw),
       transactionKw: read(tKw),
@@ -1391,14 +1391,14 @@ start_transaction_stmt$sqlite
 start_transaction_stmt$mysql
   = kw:BEGIN tKw:(__ WORK)? {
     return loc({
-      type: "start_transaction_statement",
+      type: "start_transaction_stmt",
       startKw: kw,
       transactionKw: read(tKw),
     });
   }
   / kw:START tKw:(__ TRANSACTION) {
     return loc({
-      type: "start_transaction_statement",
+      type: "start_transaction_stmt",
       startKw: kw,
       transactionKw: read(tKw),
     });
@@ -1407,7 +1407,7 @@ start_transaction_stmt$mysql
 commit_transaction_stmt
   = kw:commit_kw tKw:(__ transaction_kw)? {
     return loc({
-      type: "commit_transaction_statement",
+      type: "commit_transaction_stmt",
       commitKw: kw,
       transactionKw: read(tKw),
     });
@@ -1419,7 +1419,7 @@ commit_kw$sqlite = COMMIT / END
 rollback_transaction_stmt
   = kw:ROLLBACK tKw:(__ transaction_kw)? sp:(__ rollback_to_savepoint)? {
     return loc({
-      type: "rollback_transaction_statement",
+      type: "rollback_transaction_stmt",
       rollbackKw: kw,
       transactionKw: read(tKw),
       savepoint: read(sp),
@@ -1442,7 +1442,7 @@ transaction_kw$mysql = WORK
 savepoint_stmt
   = spKw:(SAVEPOINT __) id:ident {
     return loc({
-      type: "savepoint_statement",
+      type: "savepoint_stmt",
       savepointKw: read(spKw),
       savepoint: id,
     });
@@ -1451,7 +1451,7 @@ savepoint_stmt
 release_savepoint_stmt
   = kw:(RELEASE __) spKw:(SAVEPOINT __)? id:ident {
     return loc({
-      type: "release_savepoint_statement",
+      type: "release_savepoint_stmt",
       releaseKw: read(kw),
       savepointKw: read(spKw),
       savepoint: id,

@@ -33,7 +33,7 @@ describe("EXISTS expression", () => {
                   "type": "select_clause",
                 },
               ],
-              "type": "select_statement",
+              "type": "select_stmt",
             },
             "type": "paren_expr",
           },
