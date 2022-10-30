@@ -83,4 +83,17 @@ describe("trigger", () => {
       });
     });
   });
+
+  describe("DROP TRIGGER", () => {
+    it("simple DROP TRIGGER statement", () => {
+      test("DROP TRIGGER my_trg");
+      test("DROP TRIGGER schemata.my_trg");
+      test("DROP /*c1*/ TRIGGER /*c2*/ my_trg");
+    });
+
+    it("supports IF EXISTS", () => {
+      test("DROP TRIGGER IF EXISTS my_trg");
+      test("DROP TRIGGER /*c1*/ IF /*c2*/ EXISTS /*c4*/ my_trg");
+    });
+  });
 });

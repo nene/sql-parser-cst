@@ -226,6 +226,7 @@ const showNode = cstTransformer<string>({
       node.columns,
       node.where,
     ]),
+  // DROP INDEX
   drop_index_stmt: (node) =>
     show([
       node.dropIndexKw,
@@ -260,6 +261,9 @@ const showNode = cstTransformer<string>({
   trigger_condition: (node) => show([node.whenKw, node.expr]),
   trigger_body: (node) =>
     show([node.beginKw, show(node.statements, ";"), ";", node.endKw]),
+  // DROP TRIGGER
+  drop_trigger_stmt: (node) =>
+    show([node.dropTriggerKw, node.ifExistsKw, node.trigger]),
 
   // Transactions
   start_transaction_stmt: (node) =>

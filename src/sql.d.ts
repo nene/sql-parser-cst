@@ -71,6 +71,7 @@ type Statement =
   | CreateIndexStmt
   | DropIndexStmt
   | CreateTriggerStmt
+  | DropTriggerStmt
   | TransactionStmt;
 
 type Expr =
@@ -631,6 +632,14 @@ type TriggerBody = BaseNode & {
   beginKw: Keyword; // BEGIN
   statements: Statement[];
   endKw: Keyword; // END
+};
+
+// DROP TRIGGER
+type DropTriggerStmt = BaseNode & {
+  type: "drop_trigger_stmt";
+  dropTriggerKw: Keyword[]; // DROP TRIGGER
+  ifExistsKw?: Keyword[]; // IF EXISTS
+  trigger: TableRef;
 };
 
 // Transactions

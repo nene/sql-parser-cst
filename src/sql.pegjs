@@ -230,6 +230,7 @@ statement
   / drop_table_stmt
   / alter_table_stmt
   / create_trigger_stmt
+  / drop_trigger_stmt
   / transaction_stmt
   / empty_stmt
 
@@ -1367,7 +1368,7 @@ table_option
 /**
  * ------------------------------------------------------------------------------------ *
  *                                                                                      *
- * CREATE TRIGGER                                                                       *
+ * CREATE TRIGGER  /  DROP TRIGGER                                                      *
  *                                                                                      *
  * ------------------------------------------------------------------------------------ *
  */
@@ -1443,6 +1444,19 @@ trigger_body_statement
   = st:(statement __) ";" {
     return read(st);
   }
+
+// DROP TRIGGER
+drop_trigger_stmt
+  = kw:(DROP __ TRIGGER __)
+    ifKw:(if_exists __)?
+    trigger:table_ref {
+      return loc({
+        type: "drop_trigger_stmt",
+        dropTriggerKw: read(kw),
+        ifExistsKw: read(ifKw),
+        trigger,
+      });
+    }
 
 /**
  * ------------------------------------------------------------------------------------ *
