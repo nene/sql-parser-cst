@@ -84,12 +84,43 @@ describe("transactions", () => {
     });
   });
 
-  // describe("supports savepoints", () => {
-  //   it("supports ROLLBACK [TRANSACTION] TO [SAVEPOINT]", () => {
-  //     test("ROLLBACK TRANSACTION");
-  //     test("ROLLBACK TO SAVEPOINT my_savepoint");
-  //     test("ROLLBACK TO my_savepoint");
-  //     test("ROLLBACK /*c1*/ TRANSACTION /*c2*/ TO /*c3*/ my_savepoint");
-  //   });
-  // });
+  describe("creating savepoints", () => {
+    it("supports SAVEPOINT", () => {
+      test("SAVEPOINT my_sp");
+    });
+  });
+
+  describe("removing savepoints", () => {
+    it("supports RELEASE SAVEPOINT", () => {
+      test("RELEASE SAVEPOINT my_sp");
+    });
+
+    dialect("sqlite", () => {
+      it("supports RELEASE", () => {
+        test("RELEASE my_sp");
+      });
+    });
+  });
+
+  describe("rolling back to savepoints", () => {
+    it("supports ROLLBACK TO [SAVEPOINT]", () => {
+      test("ROLLBACK TO SAVEPOINT my_savepoint");
+      test("ROLLBACK TO my_savepoint");
+      test("ROLLBACK /*c1*/ TO /*c2*/ SAVEPOINT /*c3*/ my_savepoint");
+    });
+
+    dialect("sqlite", () => {
+      it("supports ROLLBACK TRANSACTION TO [SAVEPOINT]", () => {
+        test("ROLLBACK TRANSACTION TO SAVEPOINT my_savepoint");
+        test("ROLLBACK TRANSACTION TO my_savepoint");
+      });
+    });
+
+    dialect("mysql", () => {
+      it("supports ROLLBACK WORK TO [SAVEPOINT]", () => {
+        test("ROLLBACK WORK TO SAVEPOINT my_savepoint");
+        test("ROLLBACK WORK TO my_savepoint");
+      });
+    });
+  });
 });

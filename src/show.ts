@@ -220,7 +220,12 @@ const showNode = cstTransformer<string>({
   commit_transaction_statement: (node) =>
     show([node.commitKw, node.transactionKw]),
   rollback_transaction_statement: (node) =>
-    show([node.rollbackKw, node.transactionKw]),
+    show([node.rollbackKw, node.transactionKw, node.savepoint]),
+  rollback_to_savepoint: (node) =>
+    show([node.toKw, node.savepointKw, node.savepoint]),
+  savepoint_statement: (node) => show([node.savepointKw, node.savepoint]),
+  release_savepoint_statement: (node) =>
+    show([node.releaseKw, node.savepointKw, node.savepoint]),
 
   // Expressions
   expr_list: (node) => show(node.items, ","),

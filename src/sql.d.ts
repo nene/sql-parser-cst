@@ -31,6 +31,7 @@ type Node =
   | OnConflictClause
   | AlterAction
   | AllColumns
+  | RollbackToSavepoint
   | DistinctArg
   | CastArg
   | CommonTableExpression
@@ -572,7 +573,9 @@ type DropViewStatement = BaseNode & {
 type TransactionStatement =
   | StartTransactionStatement
   | CommitTransactionStatement
-  | RollbackTransactionStatement;
+  | RollbackTransactionStatement
+  | SavepointStatement
+  | ReleaseSavepointStatement;
 
 type StartTransactionStatement = BaseNode & {
   type: "start_transaction_statement";
@@ -591,6 +594,27 @@ type RollbackTransactionStatement = BaseNode & {
   type: "rollback_transaction_statement";
   rollbackKw: Keyword; // ROLLBACK
   transactionKw?: Keyword; // TRANSACTION | WORK
+  savepoint?: RollbackToSavepoint;
+};
+
+type RollbackToSavepoint = BaseNode & {
+  type: "rollback_to_savepoint";
+  toKw: Keyword; // TO
+  savepointKw?: Keyword; // SAVEPOINT
+  savepoint: Identifier;
+};
+
+type SavepointStatement = BaseNode & {
+  type: "savepoint_statement";
+  savepointKw: Keyword; // SAVEPOINT
+  savepoint: Identifier;
+};
+
+type ReleaseSavepointStatement = BaseNode & {
+  type: "release_savepoint_statement";
+  releaseKw: Keyword; // RELEASE
+  savepointKw?: Keyword; // SAVEPOINT
+  savepoint: Identifier;
 };
 
 // Window frame

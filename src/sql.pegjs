@@ -1345,6 +1345,8 @@ transaction_stmt
   = start_transaction_stmt
   / commit_transaction_stmt
   / rollback_transaction_stmt
+  / savepoint_stmt
+  / release_savepoint_stmt
 
 start_transaction_stmt
   = never
@@ -1386,16 +1388,46 @@ commit_kw = COMMIT
 commit_kw$sqlite = COMMIT / END
 
 rollback_transaction_stmt
-  = kw:ROLLBACK tKw:(__ transaction_kw)? {
+  = kw:ROLLBACK tKw:(__ transaction_kw)? sp:(__ rollback_to_savepoint)? {
     return loc({
       type: "rollback_transaction_statement",
       rollbackKw: kw,
       transactionKw: read(tKw),
+      savepoint: read(sp),
+    });
+  }
+
+rollback_to_savepoint
+  = toKw:(TO __) spKw:(SAVEPOINT __)? id:ident {
+    return loc({
+      type: "rollback_to_savepoint",
+      toKw: read(toKw),
+      savepointKw: read(spKw),
+      savepoint: id,
     });
   }
 
 transaction_kw = TRANSACTION
 transaction_kw$mysql = WORK
+
+savepoint_stmt
+  = spKw:(SAVEPOINT __) id:ident {
+    return loc({
+      type: "savepoint_statement",
+      savepointKw: read(spKw),
+      savepoint: id,
+    });
+  }
+
+release_savepoint_stmt
+  = kw:(RELEASE __) spKw:(SAVEPOINT __)? id:ident {
+    return loc({
+      type: "release_savepoint_statement",
+      releaseKw: read(kw),
+      savepointKw: read(spKw),
+      savepoint: id,
+    });
+  }
 
 /**
  * Constraints
@@ -2763,6 +2795,7 @@ RECURSIVE           = kw:"RECURSIVE"            !ident_part { return loc(createK
 REDUNDANT           = kw:"REDUNDANT"i           !ident_part { return loc(createKeyword(kw)); }
 REFERENCES          = kw:"REFERENCES"i          !ident_part { return loc(createKeyword(kw)); }
 REGEXP              = kw:"REGEXP"i              !ident_part { return loc(createKeyword(kw)); }
+RELEASE             = kw:"RELEASE"i             !ident_part { return loc(createKeyword(kw)); }
 RENAME              = kw:"RENAME"i              !ident_part { return loc(createKeyword(kw)); }
 REPLACE             = kw:"REPLACE"i             !ident_part { return loc(createKeyword(kw)); }
 REPLICATION         = kw:"REPLICATION"i         !ident_part { return loc(createKeyword(kw)); }
@@ -2775,6 +2808,7 @@ ROW                 = kw:"ROW"i                 !ident_part { return loc(createK
 ROW_FORMAT          = kw:"ROW_FORMAT"i          !ident_part { return loc(createKeyword(kw)); }
 ROW_NUMBER          = kw:"ROW_NUMBER"i          !ident_part { return loc(createKeyword(kw)); }
 ROWS                = kw:"ROWS"i                !ident_part { return loc(createKeyword(kw)); }
+SAVEPOINT           = kw:"SAVEPOINT"i           !ident_part { return loc(createKeyword(kw)); }
 SCHEMA              = kw:"SCHEMA"i              !ident_part { return loc(createKeyword(kw)); }
 SECOND              = kw:"SECOND"i              !ident_part { return loc(createKeyword(kw)); }
 SECONDARY_ENGINE_ATTRIBUTE = kw:"SECONDARY_ENGINE_ATTRIBUTE"i !ident_part { return loc(createKeyword(kw)); }
