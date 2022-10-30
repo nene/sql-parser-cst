@@ -218,17 +218,17 @@ multiple_stmt
 
 statement
   = compound_select_stmt
-  / drop_table_stmt
-  / drop_index_stmt
-  / drop_view_stmt
-  / create_table_stmt
-  / create_index_stmt
+  / insert_stmt
+  / update_stmt
+  / delete_stmt
   / create_db_stmt
   / create_view_stmt
+  / drop_view_stmt
+  / create_index_stmt
+  / drop_index_stmt
+  / create_table_stmt
+  / drop_table_stmt
   / alter_table_stmt
-  / update_stmt
-  / insert_stmt
-  / delete_stmt
   / transaction_stmt
   / empty_stmt
 
