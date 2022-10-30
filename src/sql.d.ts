@@ -30,6 +30,9 @@ type Node =
   | ReferentialMatch
   | OnConflictClause
   | AlterAction
+  | TriggerEvent
+  | TriggerCondition
+  | TriggerBody
   | AllColumns
   | RollbackToSavepoint
   | DistinctArg
@@ -67,6 +70,7 @@ type Statement =
   | DropViewStmt
   | CreateIndexStmt
   | DropIndexStmt
+  | CreateTriggerStmt
   | TransactionStmt;
 
 type Expr =
@@ -590,6 +594,43 @@ type DropIndexStmt = BaseNode & {
   indexes: TableRef[];
   onKw?: Keyword; // ON
   table?: TableRef;
+};
+
+// CREATE TRIGGER
+type CreateTriggerStmt = BaseNode & {
+  type: "create_trigger_stmt";
+  createKw: Keyword; // CREATE
+  temporaryKw?: Keyword; // TEMPORARY | TEMP
+  triggerKw: Keyword; // TRIGGER
+  ifNotExistsKw?: Keyword[]; // IF NOT EXISTS
+  name: TableRef;
+  event: TriggerEvent;
+  onKw: Keyword; // ON
+  table: TableRef;
+  forEachRowKw?: Keyword[]; // FOR EACH ROW
+  condition?: TriggerCondition;
+  body: TriggerBody;
+};
+
+type TriggerEvent = BaseNode & {
+  type: "trigger_event";
+  timeKw?: Keyword | Keyword[]; // BEFORE | AFTER | INSTEAD OF
+  eventKw: Keyword; // INSERT | DELETE | UPDATE
+  ofKw?: Keyword; // OF
+  columns?: ColumnRef[];
+};
+
+type TriggerCondition = BaseNode & {
+  type: "trigger_condition";
+  whenKw?: Keyword; // WHEN
+  expr: Expr;
+};
+
+type TriggerBody = BaseNode & {
+  type: "trigger_body";
+  beginKw: Keyword; // BEGIN
+  statements: Statement[];
+  endKw: Keyword; // END
 };
 
 // Transactions

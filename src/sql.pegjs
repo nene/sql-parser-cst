@@ -229,6 +229,7 @@ statement
   / create_table_stmt
   / drop_table_stmt
   / alter_table_stmt
+  / create_trigger_stmt
   / transaction_stmt
   / empty_stmt
 
@@ -1361,6 +1362,86 @@ table_option
   }
   / kw:ROW_FORMAT __ s:("=")? __ c:(DEFAULT / DYNAMIC / FIXED / COMPRESSED / REDUNDANT / COMPACT) {
     return "[Not implemented]";
+  }
+
+/**
+ * ------------------------------------------------------------------------------------ *
+ *                                                                                      *
+ * CREATE TRIGGER                                                                       *
+ *                                                                                      *
+ * ------------------------------------------------------------------------------------ *
+ */
+create_trigger_stmt
+  = kw:(CREATE __)
+    tmpKw:((TEMPORARY / TEMP) __)?
+    trigKw:(TRIGGER __)
+    ifKw:(if_not_exists __)?
+    name:(table_ref __)
+    event:(trigger_event __)
+    onKw:(ON __)
+    table:(table_ref __)
+    eachKw:(FOR __ EACH __ ROW __)?
+    when:(trigger_condition __)?
+    body:trigger_body
+    {
+      return loc({
+        type: "create_trigger_stmt",
+        createKw: read(kw),
+        temporaryKw: read(tmpKw),
+        triggerKw: read(trigKw),
+        ifNotExistsKw: read(ifKw),
+        name: read(name),
+        event: read(event),
+        onKw: read(onKw),
+        table: read(table),
+        forEachRowKw: read(eachKw),
+        condition: read(when),
+        body,
+      });
+    }
+
+trigger_event
+  = timeKw:(trigger_time_kw __)? eventKw:(UPDATE __) ofKw:(OF __) cols:column_ref_list {
+      return loc({
+        type: "trigger_event",
+        timeKw: read(timeKw),
+        eventKw: read(eventKw),
+        ofKw: read(ofKw),
+        columns: cols.items,
+      });
+    }
+  / timeKw:(trigger_time_kw __)? eventKw:(DELETE / INSERT / UPDATE) {
+      return loc({
+        type: "trigger_event",
+        timeKw: read(timeKw),
+        eventKw: eventKw,
+      });
+    }
+
+trigger_time_kw = kw:(BEFORE / AFTER / INSTEAD __ OF) { return read(kw); }
+
+trigger_condition
+  = kw:(WHEN __) e:expr {
+    return loc({
+      type: "trigger_condition",
+      whenKw: read(kw),
+      expr: e,
+    });
+  }
+
+trigger_body
+  = beginKw:BEGIN statements:(__ trigger_body_statement)+ endKw:(__ END) {
+    return loc({
+      type: "trigger_body",
+      beginKw,
+      statements: statements.map(read),
+      endKw: read(endKw),
+    });
+  }
+
+trigger_body_statement
+  = st:(statement __) ";" {
+    return read(st);
   }
 
 /**
@@ -2654,6 +2735,7 @@ ASC                 = kw:"ASC"i                 !ident_part { return loc(createK
 AUTO_INCREMENT      = kw:"AUTO_INCREMENT"i      !ident_part { return loc(createKeyword(kw)); }
 AVG                 = kw:"AVG"i                 !ident_part { return loc(createKeyword(kw)); }
 AVG_ROW_LENGTH      = kw:"AVG_ROW_LENGTH"i      !ident_part { return loc(createKeyword(kw)); }
+BEFORE              = kw:"BEFORE"i              !ident_part { return loc(createKeyword(kw)); }
 BEGIN               = kw:"BEGIN"i               !ident_part { return loc(createKeyword(kw)); }
 BETWEEN             = kw:"BETWEEN"i             !ident_part { return loc(createKeyword(kw)); }
 BIGINT              = kw:"BIGINT"i              !ident_part { return loc(createKeyword(kw)); }
@@ -2722,6 +2804,7 @@ DUAL                = kw:"DUAL"i                !ident_part { return loc(createK
 DUMPFILE            = kw:"DUMPFILE"i            !ident_part { return loc(createKeyword(kw)); }
 DUPLICATE           = kw:"DUPLICATE"i           !ident_part { return loc(createKeyword(kw)); }
 DYNAMIC             = kw:"DYNAMIC"i             !ident_part { return loc(createKeyword(kw)); }
+EACH                = kw:"EACH"i                !ident_part { return loc(createKeyword(kw)); }
 ELSE                = kw:"ELSE"i                !ident_part { return loc(createKeyword(kw)); }
 END                 = kw:"END"i                 !ident_part { return loc(createKeyword(kw)); }
 ENFORCED            = kw:"ENFORCED"i            !ident_part { return loc(createKeyword(kw)); }
@@ -2768,6 +2851,7 @@ INNER               = kw:"INNER"i               !ident_part { return loc(createK
 INPLACE             = kw:"INPLACE"i             !ident_part { return loc(createKeyword(kw)); }
 INSERT              = kw:"INSERT"i              !ident_part { return loc(createKeyword(kw)); }
 INSTANT             = kw:"INSTANT"i             !ident_part { return loc(createKeyword(kw)); }
+INSTEAD             = kw:"INSTEAD"i             !ident_part { return loc(createKeyword(kw)); }
 INT                 = kw:"INT"i                 !ident_part { return loc(createKeyword(kw)); }
 INTEGER             = kw:"INTEGER"i             !ident_part { return loc(createKeyword(kw)); }
 INTERSECT           = kw:"INTERSECT"i           !ident_part { return loc(createKeyword(kw)); }
@@ -2820,6 +2904,7 @@ NTH_VALUE           = kw:"NTH_VALUE"i           !ident_part { return loc(createK
 NTILE               = kw:"NTILE"i               !ident_part { return loc(createKeyword(kw)); }
 NULL                = kw:"NULL"i                !ident_part { return loc(createKeyword(kw)); }
 NUMERIC             = kw:"NUMERIC"i             !ident_part { return loc(createKeyword(kw)); }
+OF                  = kw:"OF"i                  !ident_part { return loc(createKeyword(kw)); }
 OFFSET              = kw:"OFFSET"i              !ident_part { return loc(createKeyword(kw)); }
 ON                  = kw:"ON"i                  !ident_part { return loc(createKeyword(kw)); }
 OPTION              = kw:"OPTION"i              !ident_part { return loc(createKeyword(kw)); }
@@ -2907,6 +2992,7 @@ TINYINT             = kw:"TINYINT"i             !ident_part { return loc(createK
 TINYTEXT            = kw:"TINYTEXT"i            !ident_part { return loc(createKeyword(kw)); }
 TO                  = kw:"TO"i                  !ident_part { return loc(createKeyword(kw)); }
 TRANSACTION         = kw:"TRANSACTION"i         !ident_part { return loc(createKeyword(kw)); }
+TRIGGER             = kw:"TRIGGER"i             !ident_part { return loc(createKeyword(kw)); }
 TRUE                = kw:"TRUE"i                !ident_part { return loc(createKeyword(kw)); }
 TRUNCATE            = kw:"TRUNCATE"i            !ident_part { return loc(createKeyword(kw)); }
 UNBOUNDED           = kw:"UNBOUNDED"i           !ident_part { return loc(createKeyword(kw)); }

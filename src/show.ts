@@ -235,6 +235,32 @@ const showNode = cstTransformer<string>({
       node.table,
     ]),
 
+  // CREATE TRIGGER statement
+  create_trigger_stmt: (node) =>
+    show([
+      node.createKw,
+      node.temporaryKw,
+      node.triggerKw,
+      node.ifNotExistsKw,
+      node.name,
+      node.event,
+      node.onKw,
+      node.table,
+      node.forEachRowKw,
+      node.condition,
+      node.body,
+    ]),
+  trigger_event: (node) =>
+    show([
+      node.timeKw,
+      node.eventKw,
+      node.ofKw,
+      node.columns ? show(node.columns, ",") : undefined,
+    ]),
+  trigger_condition: (node) => show([node.whenKw, node.expr]),
+  trigger_body: (node) =>
+    show([node.beginKw, show(node.statements, ";"), ";", node.endKw]),
+
   // Transactions
   start_transaction_stmt: (node) =>
     show([node.startKw, node.behaviorKw, node.transactionKw]),
