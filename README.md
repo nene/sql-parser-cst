@@ -16,9 +16,9 @@ For now it supports the following SQL dialects:
 ## Usage
 
 ```ts
-import { parse, show, sqlite } from "sql-parser-cst";
+import { parse, show, sqlite, cstVisitor } from "sql-parser-cst";
 
-const cst = parse("SELECT * FROM my_table", {
+const cst = parse("select * from my_table", {
   dialect: sqlite,
   // These are optional:
   preserveSpaces: true, // Adds spaces/tabs
@@ -27,11 +27,16 @@ const cst = parse("SELECT * FROM my_table", {
   includeRange: true, // Adds source code location data
 });
 
-// Change table name
-cst.statements[0].clauses[1].tables[0].table.text = "your_table";
+// convert all keywords to uppercase
+const toUpper = cstVisitor({
+  keyword: (kw) => {
+    kw.text = kw.text.toUpperCase();
+  },
+});
+toUpper(cst);
 
 // Serialize back to SQL
-show(cst); // --> SELECT * FROM your_table
+show(cst); // --> SELECT * FROM my_table
 ```
 
 ## AST versus CST-parsers
