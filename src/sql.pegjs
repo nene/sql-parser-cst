@@ -1033,35 +1033,28 @@ drop_view_stmt
  * ------------------------------------------------------------------------------------ *
  */
 create_index_stmt
-  = a:CREATE __
-  kw:(UNIQUE / FULLTEXT / SPATIAL)? __
-  t:INDEX __
-  n:ident __
-  um:index_type? __
-  on:ON __
-  ta:table_ref __
-  "(" __ cols:column_order_list __ ")" __
-  io:index_options? __
-  al:alter_algorithm? __
-  lo:alter_lock? __ {
-    return "[Not implemented]";
-  }
-
-column_order_list
-  = head:column_order_item tail:(__ "," __ column_order_item)* {
-    return "[Not implemented]";
-  }
-
-column_order_item
-  = c:expr o:(ASC / DESC)? {
-    return "[Not implemented]";
-  }
-  / column_order
-
-column_order
-  = c:column_ref __ o:(ASC / DESC)? {
-    return "[Not implemented]";
-  }
+  = kw:(CREATE __)
+    typeKw:((UNIQUE / FULLTEXT / SPATIAL) __)?
+    indexKw:(INDEX __)
+    ifKw:(if_not_exists __)?
+    name:(table_ref __)
+    onKw:(ON __)
+    table:(table_ref __)
+    columns:paren_column_ref_list
+    where:(__ where_clause)? {
+      return loc({
+        type: "create_index_statement",
+        createKw: read(kw),
+        indexTypeKw: read(typeKw),
+        indexKw: read(indexKw),
+        ifNotExistsKw: read(ifKw),
+        name: read(name),
+        onKw: read(onKw),
+        table: read(table),
+        columns,
+        where: read(where),
+      });
+    }
 
 // DROP INDEX
 drop_index_stmt

@@ -65,6 +65,7 @@ type Statement =
   | UpdateStatement
   | CreateViewStatement
   | DropViewStatement
+  | CreateIndexStatement
   | TransactionStatement;
 
 type Expr =
@@ -567,6 +568,20 @@ type DropViewStatement = BaseNode & {
   ifExistsKw?: Keyword[];
   views: TableRef[];
   behaviorKw?: Keyword; // CASCADE | RESTRICT
+};
+
+// CREATE INDEX
+type CreateIndexStatement = BaseNode & {
+  type: "create_index_statement";
+  createKw: Keyword; // CREATE
+  indexTypeKw?: Keyword; // UNIQUE | FULLTEXT | SPATIAL
+  indexKw: Keyword; // INDEX
+  ifNotExistsKw?: Keyword[]; // IF NOT EXISTS
+  name: TableRef;
+  onKw: Keyword; // ON
+  table: TableRef;
+  columns: ParenExpr<ExprList<ColumnRef>>;
+  where?: WhereClause;
 };
 
 // Transactions

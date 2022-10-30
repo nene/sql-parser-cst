@@ -214,6 +214,20 @@ const showNode = cstTransformer<string>({
       node.behaviorKw,
     ]),
 
+  // CREATE INDEX statement
+  create_index_statement: (node) =>
+    show([
+      node.createKw,
+      node.indexTypeKw,
+      node.indexKw,
+      node.ifNotExistsKw,
+      node.name,
+      node.onKw,
+      node.table,
+      node.columns,
+      node.where,
+    ]),
+
   // Transactions
   start_transaction_statement: (node) =>
     show([node.startKw, node.behaviorKw, node.transactionKw]),
