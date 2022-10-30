@@ -3,6 +3,7 @@ export { parse as mysql } from "./dialects/mysql";
 export { parse as sqlite } from "./dialects/sqlite";
 import { show as showSql } from "./show";
 export { format } from "./format/format";
+export * from "./cstVisitor";
 
 export type DialectFn = (str: string, options: ParserOptions) => Program;
 
