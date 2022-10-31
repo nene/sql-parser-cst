@@ -933,7 +933,7 @@ update_stmt
   = kw:(UPDATE __)
     tables:(table_ref_list __)
     setKw:(SET __)
-    set:set_assignments
+    set:column_assignment_list
     where:(__ where_clause)? {
       return loc({
         type: "update_stmt",
@@ -945,9 +945,9 @@ update_stmt
       });
     }
 
-set_assignments
+column_assignment_list
   = head:column_assignment tail:(__ "," __ column_assignment)* {
-      return readCommaSepList(head, tail);
+      return loc(createExprList(head, tail));
     }
 
 column_assignment

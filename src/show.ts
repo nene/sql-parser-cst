@@ -179,7 +179,7 @@ const showNode = cstTransformer<string>({
       node.updateKw,
       node.tables,
       node.setKw,
-      show(node.assignments, ","),
+      node.assignments,
       node.where,
     ]),
   column_assignment: (node) => show([node.column, "=", node.expr]),
