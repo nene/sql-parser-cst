@@ -217,11 +217,13 @@ multiple_stmt
   }
 
 statement
+  = statement_standard
+
+statement_standard
   = compound_select_stmt
   / insert_stmt
   / update_stmt
   / delete_stmt
-  / create_db_stmt
   / create_view_stmt
   / drop_view_stmt
   / create_index_stmt
@@ -232,6 +234,15 @@ statement
   / create_trigger_stmt
   / drop_trigger_stmt
   / transaction_stmt
+
+statement$sqlite
+  = statement_standard
+  / sqlite_stmt
+  / empty_stmt
+
+statement$mysql
+  = statement_standard
+  / create_db_stmt
   / empty_stmt
 
 empty_stmt
@@ -1556,6 +1567,39 @@ release_savepoint_stmt
 /**
  * ------------------------------------------------------------------------------------ *
  *                                                                                      *
+ * SQLite statements                                                                    *
+ *                                                                                      *
+ * ------------------------------------------------------------------------------------ *
+ */
+sqlite_stmt
+  = attach_database_stmt
+  / detach_database_stmt
+
+attach_database_stmt
+  = kw:(ATTACH __) dbKw:(DATABASE __)? file:(expr __) asKw:(AS __) schema:ident {
+    return loc({
+      type: "attach_database_stmt",
+      attachKw: read(kw),
+      databaseKw: read(dbKw),
+      file: read(file),
+      asKw: read(asKw),
+      schema,
+    });
+  }
+
+detach_database_stmt
+  = kw:(DETACH __) dbKw:(DATABASE __)? schema:ident {
+    return loc({
+      type: "detach_database_stmt",
+      detachKw: read(kw),
+      databaseKw: read(dbKw),
+      schema,
+    });
+  }
+
+/**
+ * ------------------------------------------------------------------------------------ *
+ *                                                                                      *
  * Constraints                                                                          *
  *                                                                                      *
  * ------------------------------------------------------------------------------------ *
@@ -2746,6 +2790,7 @@ ALWAYS              = kw:"ALWAYS"i              !ident_part { return loc(createK
 AND                 = kw:"AND"i                 !ident_part { return loc(createKeyword(kw)); }
 AS                  = kw:"AS"i                  !ident_part { return loc(createKeyword(kw)); }
 ASC                 = kw:"ASC"i                 !ident_part { return loc(createKeyword(kw)); }
+ATTACH              = kw:"ATTACH"i              !ident_part { return loc(createKeyword(kw)); }
 AUTO_INCREMENT      = kw:"AUTO_INCREMENT"i      !ident_part { return loc(createKeyword(kw)); }
 AVG                 = kw:"AVG"i                 !ident_part { return loc(createKeyword(kw)); }
 AVG_ROW_LENGTH      = kw:"AVG_ROW_LENGTH"i      !ident_part { return loc(createKeyword(kw)); }
@@ -2808,6 +2853,7 @@ DELETE              = kw:"DELETE"i              !ident_part { return loc(createK
 DENSE_RANK          = kw:"DENSE_RANK"i          !ident_part { return loc(createKeyword(kw)); }
 DESC                = kw:"DESC"i                !ident_part { return loc(createKeyword(kw)); }
 DESCRIBE            = kw:"DESCRIBE"i            !ident_part { return loc(createKeyword(kw)); }
+DETACH              = kw:"DETACH"i              !ident_part { return loc(createKeyword(kw)); }
 DISK                = kw:"DISK"i                !ident_part { return loc(createKeyword(kw)); }
 DISTINCT            = kw:"DISTINCT"i            !ident_part { return loc(createKeyword(kw)); }
 DISTINCTROW         = kw:"DISTINCTROW"i         !ident_part { return loc(createKeyword(kw)); }

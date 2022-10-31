@@ -277,6 +277,12 @@ const showNode = cstTransformer<string>({
   release_savepoint_stmt: (node) =>
     show([node.releaseKw, node.savepointKw, node.savepoint]),
 
+  // SQLite-specific statements
+  attach_database_stmt: (node) =>
+    show([node.attachKw, node.databaseKw, node.file, node.asKw, node.schema]),
+  detach_database_stmt: (node) =>
+    show([node.detachKw, node.databaseKw, node.schema]),
+
   // Expressions
   expr_list: (node) => show(node.items, ","),
   paren_expr: (node) => "(" + show(node.expr) + ")",

@@ -72,7 +72,8 @@ type Statement =
   | DropIndexStmt
   | CreateTriggerStmt
   | DropTriggerStmt
-  | TransactionStmt;
+  | TransactionStmt
+  | SqliteStmt;
 
 type Expr =
   | ExprList
@@ -688,6 +689,25 @@ type ReleaseSavepointStmt = BaseNode & {
   releaseKw: Keyword; // RELEASE
   savepointKw?: Keyword; // SAVEPOINT
   savepoint: Identifier;
+};
+
+// SQLite-specific statements
+type SqliteStmt = AttachDatabaseStmt | DetachDatabaseStmt;
+
+type AttachDatabaseStmt = BaseNode & {
+  type: "attach_database_stmt";
+  attachKw: Keyword; // ATTACH
+  databaseKw?: Keyword; // DATABASE
+  file: Expr;
+  asKw: Keyword; // AS
+  schema: Identifier;
+};
+
+type DetachDatabaseStmt = BaseNode & {
+  type: "detach_database_stmt";
+  detachKw: Keyword; // DETACH
+  databaseKw?: Keyword; // DATABASE
+  schema: Identifier;
 };
 
 // Window frame
