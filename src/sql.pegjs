@@ -1576,6 +1576,7 @@ sqlite_stmt
   / detach_database_stmt
   / vacuum_stmt
   / reindex_stmt
+  / pragma_stmt
   / create_virtual_table_stmt
 
 attach_database_stmt
@@ -1622,6 +1623,42 @@ reindex_stmt
   = kw:REINDEX table:(__ table_ref)? {
     return loc({ type: "reindex_stmt", reindexKw: kw, table: read(table) });
   }
+
+pragma_stmt
+  = kw:(PRAGMA __) pragma:(pragma_assignment / pragma_func_call / table_ref) {
+    return loc({
+      type: "pragma_stmt",
+      pragmaKw: read(kw),
+      pragma,
+    });
+  }
+
+pragma_assignment
+  = name:(table_ref __) "=" value:(__ pragma_value) {
+    return loc({
+      type: "pragma_assignment",
+      name: read(name),
+      value: read(value),
+    });
+  }
+
+pragma_func_call
+  = name:(__ table_ref) args:(__ pragma_func_call_args) {
+    return loc({
+      type: "pragma_func_call",
+      name: read(name),
+      args: read(args),
+    });
+  }
+
+pragma_func_call_args
+  = "(" c1:__ v:pragma_value c2:__ ")" {
+    return loc(createParenExpr(c1, v, c2));
+  }
+
+pragma_value
+  = kw:ident_name { return createKeyword(kw); }
+  / literal
 
 create_virtual_table_stmt
   = kw:(CREATE __ VIRTUAL __ TABLE __) ifKw:(if_not_exists __)? table:(table_ref __)
@@ -3019,6 +3056,7 @@ PARTITION           = kw:"PARTITION"i           !ident_part { return loc(createK
 PERCENT_RANK        = kw:"PERCENT_RANK"i        !ident_part { return loc(createKeyword(kw)); }
 PERSIST             = kw:"PERSIST"i             !ident_part { return loc(createKeyword(kw)); }
 PERSIST_ONLY        = kw:"PERSIST_ONLY"i        !ident_part { return loc(createKeyword(kw)); }
+PRAGMA              = kw:"PRAGMA"i              !ident_part { return loc(createKeyword(kw)); }
 PRECEDING           = kw:"PRECEDING"i           !ident_part { return loc(createKeyword(kw)); }
 PRECISION           = kw:"PRECISION"i           !ident_part { return loc(createKeyword(kw)); }
 PRIMARY             = kw:"PRIMARY"i             !ident_part { return loc(createKeyword(kw)); }

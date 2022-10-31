@@ -49,6 +49,34 @@ describe("SQLite specific statements", () => {
         );
       });
     });
+
+    describe("PRAGMA", () => {
+      it("supports quering PRAGMA name", () => {
+        test("PRAGMA function_list");
+        test("PRAGMA my_schema.foreign_key_check");
+        test("PRAGMA /*c1*/ function_list");
+      });
+
+      it("supports setting PRAGMA value", () => {
+        test("PRAGMA encoding = 'UTF-8'");
+        test("PRAGMA my_schema.synchronous = 2");
+        test("PRAGMA /*c1*/ encoding /*c2*/ = /*c3*/ 'UTF-16'");
+      });
+
+      it("supports setting PRAGMA value with keyword", () => {
+        test("PRAGMA my_schema.journal_mode = DELETE");
+      });
+
+      it("supports calling PRAGMA function", () => {
+        test("PRAGMA optimize(0x02)");
+        test("PRAGMA my_schema.integrity_check(my_table)");
+        test("PRAGMA /*c1*/ table_list /*c1*/( /*c2*/ my_tbl /*c3*/)");
+      });
+
+      it("supports calling PRAGMA function with keyword", () => {
+        test("PRAGMA my_schema.wal_checkpoint(FULL)");
+      });
+    });
   });
 
   // This is need for the non-SQLite case, otherwise Jest will fail because of empty test suite

@@ -49,7 +49,9 @@ type Node =
   | Default
   | InsertOption
   | ColumnAssignment
-  | Alias;
+  | Alias
+  | PragmaAssignment
+  | PragmaFuncCall;
 
 type Program = BaseNode & {
   type: "program";
@@ -649,8 +651,7 @@ type TransactionStmt =
   | CommitTransactionStmt
   | RollbackTransactionStmt
   | SavepointStmt
-  | ReleaseSavepointStmt
-  | CreateVirtualTableStmt;
+  | ReleaseSavepointStmt;
 
 type StartTransactionStmt = BaseNode & {
   type: "start_transaction_stmt";
@@ -697,7 +698,9 @@ type SqliteStmt =
   | AttachDatabaseStmt
   | DetachDatabaseStmt
   | VacuumStmt
-  | ReindexStmt;
+  | ReindexStmt
+  | PragmaStmt
+  | CreateVirtualTableStmt;
 
 type AttachDatabaseStmt = BaseNode & {
   type: "attach_database_stmt";
@@ -727,6 +730,24 @@ type ReindexStmt = BaseNode & {
   type: "reindex_stmt";
   reindexKw: Keyword; // REINDEX
   table?: TableRef;
+};
+
+type PragmaStmt = BaseNode & {
+  type: "pragma_stmt";
+  pragmaKw: Keyword; // PRAGMA
+  pragma: TableRef | PragmaAssignment | PragmaFuncCall;
+};
+
+type PragmaAssignment = BaseNode & {
+  type: "pragma_assignment";
+  name: TableRef;
+  value: Literal | Keyword;
+};
+
+type PragmaFuncCall = BaseNode & {
+  type: "pragma_func_call";
+  name: TableRef;
+  args: ParenExpr<Literal | Keyword>;
 };
 
 type CreateVirtualTableStmt = BaseNode & {

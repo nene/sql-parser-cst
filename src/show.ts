@@ -285,6 +285,9 @@ const showNode = cstTransformer<string>({
   vacuum_stmt: (node) =>
     show([node.vacuumKw, node.schema, node.intoKw, node.file]),
   reindex_stmt: (node) => show([node.reindexKw, node.table]),
+  pragma_stmt: (node) => show([node.pragmaKw, node.pragma]),
+  pragma_assignment: (node) => show([node.name, "=", node.value]),
+  pragma_func_call: (node) => show([node.name, node.args]),
   create_virtual_table_stmt: (node) =>
     show([
       node.createVirtualTableKw,
