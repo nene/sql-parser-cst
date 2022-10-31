@@ -27,6 +27,15 @@ describe("SQLite specific statements", () => {
         test("VACUUM /*c1*/ my_schema /*c2*/ INTO /*c3*/ '/my/file.db'");
       });
     });
+
+    describe("REINDEX", () => {
+      it("supports REINDEX statement", () => {
+        test("REINDEX");
+        test("REINDEX tbl");
+        test("REINDEX my_schema.tbl");
+        test("REINDEX /*c1*/ tbl");
+      });
+    });
   });
 
   // This is need for the non-SQLite case, otherwise Jest will fail because of empty test suite

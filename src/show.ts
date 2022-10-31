@@ -284,6 +284,7 @@ const showNode = cstTransformer<string>({
     show([node.detachKw, node.databaseKw, node.schema]),
   vacuum_stmt: (node) =>
     show([node.vacuumKw, node.schema, node.intoKw, node.file]),
+  reindex_stmt: (node) => show([node.reindexKw, node.table]),
 
   // Expressions
   expr_list: (node) => show(node.items, ","),

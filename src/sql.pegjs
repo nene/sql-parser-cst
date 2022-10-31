@@ -1575,6 +1575,7 @@ sqlite_stmt
   = attach_database_stmt
   / detach_database_stmt
   / vacuum_stmt
+  / reindex_stmt
 
 attach_database_stmt
   = kw:(ATTACH __) dbKw:(DATABASE __)? file:(expr __) asKw:(AS __) schema:ident {
@@ -1614,6 +1615,11 @@ vacuum_stmt
       vacuumKw: read(kw),
       schema: read(schema),
     });
+  }
+
+reindex_stmt
+  = kw:REINDEX table:(__ table_ref)? {
+    return loc({ type: "reindex_stmt", reindexKw: kw, table: read(table) });
   }
 
 /**
@@ -3012,6 +3018,7 @@ RECURSIVE           = kw:"RECURSIVE"            !ident_part { return loc(createK
 REDUNDANT           = kw:"REDUNDANT"i           !ident_part { return loc(createKeyword(kw)); }
 REFERENCES          = kw:"REFERENCES"i          !ident_part { return loc(createKeyword(kw)); }
 REGEXP              = kw:"REGEXP"i              !ident_part { return loc(createKeyword(kw)); }
+REINDEX             = kw:"REINDEX"i             !ident_part { return loc(createKeyword(kw)); }
 RELEASE             = kw:"RELEASE"i             !ident_part { return loc(createKeyword(kw)); }
 RENAME              = kw:"RENAME"i              !ident_part { return loc(createKeyword(kw)); }
 REPLACE             = kw:"REPLACE"i             !ident_part { return loc(createKeyword(kw)); }

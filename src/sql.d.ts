@@ -692,7 +692,11 @@ type ReleaseSavepointStmt = BaseNode & {
 };
 
 // SQLite-specific statements
-type SqliteStmt = AttachDatabaseStmt | DetachDatabaseStmt | VacuumStmt;
+type SqliteStmt =
+  | AttachDatabaseStmt
+  | DetachDatabaseStmt
+  | VacuumStmt
+  | ReindexStmt;
 
 type AttachDatabaseStmt = BaseNode & {
   type: "attach_database_stmt";
@@ -716,6 +720,12 @@ type VacuumStmt = BaseNode & {
   schema?: Identifier;
   intoKw?: Keyword; // INTO
   file?: StringLiteral;
+};
+
+type ReindexStmt = BaseNode & {
+  type: "reindex_stmt";
+  reindexKw: Keyword; // REINDEX
+  table?: TableRef;
 };
 
 // Window frame
