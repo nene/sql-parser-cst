@@ -17,6 +17,16 @@ describe("SQLite specific statements", () => {
         test("DETACH /*c1*/ DATABASE /*c2*/ my_schema");
       });
     });
+
+    describe("VACUUM", () => {
+      it("supports VACUUM statement", () => {
+        test("VACUUM");
+        test("VACUUM my_schema");
+        test("VACUUM INTO '/my/file.db'");
+        test("VACUUM my_schema INTO '/my/file.db'");
+        test("VACUUM /*c1*/ my_schema /*c2*/ INTO /*c3*/ '/my/file.db'");
+      });
+    });
   });
 
   // This is need for the non-SQLite case, otherwise Jest will fail because of empty test suite

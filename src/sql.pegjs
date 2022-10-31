@@ -1574,6 +1574,7 @@ release_savepoint_stmt
 sqlite_stmt
   = attach_database_stmt
   / detach_database_stmt
+  / vacuum_stmt
 
 attach_database_stmt
   = kw:(ATTACH __) dbKw:(DATABASE __)? file:(expr __) asKw:(AS __) schema:ident {
@@ -1594,6 +1595,24 @@ detach_database_stmt
       detachKw: read(kw),
       databaseKw: read(dbKw),
       schema,
+    });
+  }
+
+vacuum_stmt
+  = kw:(VACUUM __) schema:(ident __)? intoKw:(INTO __) file:literal_string {
+    return loc({
+      type: "vacuum_stmt",
+      vacuumKw: read(kw),
+      schema: read(schema),
+      intoKw: read(intoKw),
+      file,
+    });
+  }
+  / kw:(VACUUM __) schema:ident? {
+    return loc({
+      type: "vacuum_stmt",
+      vacuumKw: read(kw),
+      schema: read(schema),
     });
   }
 
@@ -3065,6 +3084,7 @@ UPDATE              = kw:"UPDATE"i              !ident_part { return loc(createK
 USE                 = kw:"USE"i                 !ident_part { return loc(createKeyword(kw)); }
 USER                = kw:"USER"i                !ident_part { return loc(createKeyword(kw)); }
 USING               = kw:"USING"i               !ident_part { return loc(createKeyword(kw)); }
+VACUUM              = kw:"VACUUM"i              !ident_part { return loc(createKeyword(kw)); }
 VALUE               = kw:"VALUE"i               !ident_part { return loc(createKeyword(kw)); }
 VALUES              = kw:"VALUES"i              !ident_part { return loc(createKeyword(kw)); }
 VARBINARY           = kw:"VARBINARY"i           !ident_part { return loc(createKeyword(kw)); }
