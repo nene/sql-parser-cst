@@ -57,12 +57,11 @@ const showNode = cstTransformer<string>({
   sort_specification: (node) => show([node.expr, node.orderKw]),
   // WHERE .. GROUP BY .. HAVING .. ORDER BY .. PARTITION BY
   where_clause: (node) => show([node.whereKw, node.expr]),
-  group_by_clause: (node) => show(node.groupByKw) + show(node.columns, ","),
+  group_by_clause: (node) => show([node.groupByKw, node.columns]),
   having_clause: (node) => show([node.havingKw, node.expr]),
-  order_by_clause: (node) =>
-    show(node.orderByKw) + show(node.specifications, ","),
+  order_by_clause: (node) => show([node.orderByKw, node.specifications]),
   partition_by_clause: (node) =>
-    show(node.partitionByKw) + show(node.specifications, ","),
+    show([node.partitionByKw, node.specifications]),
   // WINDOW
   window_clause: (node) => show(node.windowKw) + show(node.namedWindows, ","),
   named_window: (node) => show([node.name, node.asKw, node.window]),

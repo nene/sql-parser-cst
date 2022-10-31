@@ -186,18 +186,21 @@ describe("window functions", () => {
                     "type": "keyword",
                   },
                 ],
-                "specifications": [
-                  {
-                    "expr": {
-                      "column": {
-                        "text": "price",
-                        "type": "identifier",
+                "specifications": {
+                  "items": [
+                    {
+                      "expr": {
+                        "column": {
+                          "text": "price",
+                          "type": "identifier",
+                        },
+                        "type": "column_ref",
                       },
-                      "type": "column_ref",
+                      "type": "sort_specification",
                     },
-                    "type": "sort_specification",
-                  },
-                ],
+                  ],
+                  "type": "expr_list",
+                },
                 "type": "order_by_clause",
               },
               "partitionBy": {
@@ -211,15 +214,18 @@ describe("window functions", () => {
                     "type": "keyword",
                   },
                 ],
-                "specifications": [
-                  {
-                    "column": {
-                      "text": "product",
-                      "type": "identifier",
+                "specifications": {
+                  "items": [
+                    {
+                      "column": {
+                        "text": "product",
+                        "type": "identifier",
+                      },
+                      "type": "column_ref",
                     },
-                    "type": "column_ref",
-                  },
-                ],
+                  ],
+                  "type": "expr_list",
+                },
                 "type": "partition_by_clause",
               },
               "type": "window_definition",

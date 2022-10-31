@@ -613,7 +613,7 @@ group_by_clause
     return loc({
       type: "group_by_clause",
       groupByKw: read(kws),
-      columns: list.items,
+      columns: list,
     });
   }
 
@@ -639,7 +639,7 @@ partition_by_clause
     return loc({
       type: "partition_by_clause",
       partitionByKw: read(kws),
-      specifications: list.items,
+      specifications: list,
     });
   }
 
@@ -658,7 +658,7 @@ order_by_clause
 
 order_by_list
   = head:order_by_element tail:(__ "," __ order_by_element)* {
-    return readCommaSepList(head, tail);
+    return loc(createExprList(head, tail));
   }
 
 order_by_element

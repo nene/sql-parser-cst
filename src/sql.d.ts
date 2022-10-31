@@ -173,7 +173,7 @@ type WhereClause = BaseNode & {
 type GroupByClause = BaseNode & {
   type: "group_by_clause";
   groupByKw: Keyword[];
-  columns: Expr[];
+  columns: ExprList<Expr>;
 };
 
 type HavingClause = BaseNode & {
@@ -206,13 +206,13 @@ type WindowDefinition = BaseNode & {
 type OrderByClause = BaseNode & {
   type: "order_by_clause";
   orderByKw: Keyword[];
-  specifications: Expr[];
+  specifications: ExprList<Expr>;
 };
 
 type PartitionByClause = BaseNode & {
   type: "partition_by_clause";
   partitionByKw: Keyword[];
-  specifications: Expr[];
+  specifications: ExprList<Expr>;
 };
 
 type LimitClause = BaseNode & {
