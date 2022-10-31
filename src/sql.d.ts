@@ -206,7 +206,7 @@ type WindowDefinition = BaseNode & {
 type OrderByClause = BaseNode & {
   type: "order_by_clause";
   orderByKw: Keyword[];
-  specifications: ExprList<Expr>;
+  specifications: ExprList<SortSpecification>;
 };
 
 type PartitionByClause = BaseNode & {

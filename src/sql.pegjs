@@ -648,7 +648,7 @@ partition_by_clause
  * --------------------------------------------------------------------------------------
  */
 order_by_clause
-  = kws:(ORDER __ BY __) l:order_by_list {
+  = kws:(ORDER __ BY __) l:sort_specification_list {
     return loc({
       type: "order_by_clause",
       orderByKw: read(kws),
@@ -656,12 +656,12 @@ order_by_clause
     });
   }
 
-order_by_list
-  = head:order_by_element tail:(__ "," __ order_by_element)* {
+sort_specification_list
+  = head:sort_specification tail:(__ "," __ sort_specification)* {
     return loc(createExprList(head, tail));
   }
 
-order_by_element
+sort_specification
   = e:(expr __) orderKw:(DESC / ASC) {
     return loc({
       type: "sort_specification",
