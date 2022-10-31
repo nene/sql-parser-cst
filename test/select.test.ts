@@ -64,20 +64,23 @@ describe("select", () => {
         {
           "clauses": [
             {
-              "columns": [
-                {
-                  "text": "1",
-                  "type": "number",
-                },
-                {
-                  "text": "2",
-                  "type": "number",
-                },
-                {
-                  "text": "3",
-                  "type": "number",
-                },
-              ],
+              "columns": {
+                "items": [
+                  {
+                    "text": "1",
+                    "type": "number",
+                  },
+                  {
+                    "text": "2",
+                    "type": "number",
+                  },
+                  {
+                    "text": "3",
+                    "type": "number",
+                  },
+                ],
+                "type": "expr_list",
+              },
               "options": [],
               "selectKw": {
                 "text": "SELECT",
@@ -116,23 +119,26 @@ describe("select", () => {
         {
           "clauses": [
             {
-              "columns": [
-                {
-                  "alias": {
-                    "text": "foo",
-                    "type": "identifier",
+              "columns": {
+                "items": [
+                  {
+                    "alias": {
+                      "text": "foo",
+                      "type": "identifier",
+                    },
+                    "asKw": {
+                      "text": "AS",
+                      "type": "keyword",
+                    },
+                    "expr": {
+                      "text": "1",
+                      "type": "number",
+                    },
+                    "type": "alias",
                   },
-                  "asKw": {
-                    "text": "AS",
-                    "type": "keyword",
-                  },
-                  "expr": {
-                    "text": "1",
-                    "type": "number",
-                  },
-                  "type": "alias",
-                },
-              ],
+                ],
+                "type": "expr_list",
+              },
               "options": [],
               "selectKw": {
                 "text": "SELECT",
@@ -151,22 +157,25 @@ describe("select", () => {
         {
           "clauses": [
             {
-              "columns": [
-                {
-                  "alias": {
-                    "text": "'foo'",
-                    "type": "identifier",
-                  },
-                  "expr": {
-                    "column": {
-                      "text": "col",
+              "columns": {
+                "items": [
+                  {
+                    "alias": {
+                      "text": "'foo'",
                       "type": "identifier",
                     },
-                    "type": "column_ref",
+                    "expr": {
+                      "column": {
+                        "text": "col",
+                        "type": "identifier",
+                      },
+                      "type": "column_ref",
+                    },
+                    "type": "alias",
                   },
-                  "type": "alias",
-                },
-              ],
+                ],
+                "type": "expr_list",
+              },
               "options": [],
               "selectKw": {
                 "text": "SELECT",

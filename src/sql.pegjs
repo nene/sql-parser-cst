@@ -379,7 +379,7 @@ select_option$mysql
 
 select_columns
   = head:column_list_item tail:(__ "," __ column_list_item)* {
-      return readCommaSepList(head, tail);
+      return loc(createExprList(head, tail));
     }
 
 column_list_item

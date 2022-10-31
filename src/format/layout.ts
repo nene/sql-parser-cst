@@ -74,10 +74,10 @@ const layoutNode = cstTransformer<Layout>({
   select_clause: (node) => [
     line(layout(node.selectKw)),
     indent(
-      ...node.columns
+      ...node.columns.items
         .map(layout)
         .map((col, i) =>
-          i < node.columns.length - 1 ? line(col, ",") : line(col)
+          i < node.columns.items.length - 1 ? line(col, ",") : line(col)
         )
     ),
   ],

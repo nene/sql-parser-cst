@@ -12,46 +12,53 @@ describe("location", () => {
           {
             "clauses": [
               {
-                "columns": [
-                  {
-                    "expr": {
-                      "left": {
+                "columns": {
+                  "items": [
+                    {
+                      "expr": {
+                        "left": {
+                          "range": [
+                            8,
+                            9,
+                          ],
+                          "text": "1",
+                          "type": "number",
+                        },
+                        "operator": "+",
                         "range": [
                           8,
-                          9,
+                          15,
                         ],
-                        "text": "1",
-                        "type": "number",
-                      },
-                      "operator": "+",
-                      "range": [
-                        8,
-                        15,
-                      ],
-                      "right": {
-                        "column": {
+                        "right": {
+                          "column": {
+                            "range": [
+                              12,
+                              15,
+                            ],
+                            "text": "col",
+                            "type": "identifier",
+                          },
                           "range": [
                             12,
                             15,
                           ],
-                          "text": "col",
-                          "type": "identifier",
+                          "type": "column_ref",
                         },
-                        "range": [
-                          12,
-                          15,
-                        ],
-                        "type": "column_ref",
+                        "type": "binary_expr",
                       },
-                      "type": "binary_expr",
+                      "range": [
+                        7,
+                        16,
+                      ],
+                      "type": "paren_expr",
                     },
-                    "range": [
-                      7,
-                      16,
-                    ],
-                    "type": "paren_expr",
-                  },
-                ],
+                  ],
+                  "range": [
+                    7,
+                    16,
+                  ],
+                  "type": "expr_list",
+                },
                 "options": [],
                 "range": [
                   0,

@@ -66,10 +66,12 @@ export function parseExpr(expr: string, options?: ParserOptions): Expr {
   if (clause.type !== "select_clause") {
     throw new Error(`Expected select_clause, instead got ${clause.type}`);
   }
-  if (clause.columns.length !== 1) {
-    throw new Error(`Expected 1 column, instead got ${clause.columns.length}`);
+  if (clause.columns.items.length !== 1) {
+    throw new Error(
+      `Expected 1 column, instead got ${clause.columns.items.length}`
+    );
   }
-  const result = clause.columns[0];
+  const result = clause.columns.items[0];
   if (result.type === "alias") {
     throw new Error(`Expected expression, instead got alias`);
   }

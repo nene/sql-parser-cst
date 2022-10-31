@@ -155,7 +155,7 @@ type SelectClause = BaseNode & {
   type: "select_clause";
   selectKw: Keyword;
   options: Keyword[];
-  columns: (Expr | Alias<Expr>)[];
+  columns: ExprList<Expr | Alias<Expr>>;
 };
 
 type FromClause = BaseNode & {

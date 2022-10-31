@@ -50,12 +50,6 @@ describe("whitespace", () => {
   it("preserveSpaces:true adds horizontal spaces to syntax tree", () => {
     expect(parseExpr("1 /*com*/ + \n\n 2", { preserveSpaces: true })).toMatchInlineSnapshot(`
       {
-        "leading": [
-          {
-            "text": " ",
-            "type": "space",
-          },
-        ],
         "left": {
           "text": "1",
           "trailing": [
@@ -122,12 +116,6 @@ describe("whitespace", () => {
       })
     ).toMatchInlineSnapshot(`
       {
-        "leading": [
-          {
-            "text": " ",
-            "type": "space",
-          },
-        ],
         "left": {
           "text": "1",
           "trailing": [

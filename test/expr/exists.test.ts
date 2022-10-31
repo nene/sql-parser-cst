@@ -19,12 +19,15 @@ describe("EXISTS expression", () => {
             "expr": {
               "clauses": [
                 {
-                  "columns": [
-                    {
-                      "text": "1",
-                      "type": "number",
-                    },
-                  ],
+                  "columns": {
+                    "items": [
+                      {
+                        "text": "1",
+                        "type": "number",
+                      },
+                    ],
+                    "type": "expr_list",
+                  },
                   "options": [],
                   "selectKw": {
                     "text": "SELECT",
