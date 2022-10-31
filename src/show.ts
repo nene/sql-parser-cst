@@ -269,6 +269,10 @@ const showNode = cstTransformer<string>({
   analyze_stmt: (node) =>
     show([node.analyzeKw, node.tableKw, show(node.tables, ",")]),
 
+  // EXPLAIN statement
+  explain_stmt: (node) =>
+    show([node.explainKw, node.analyzeKw, node.queryPlanKw, node.statement]),
+
   // Transactions
   start_transaction_stmt: (node) =>
     show([node.startKw, node.behaviorKw, node.transactionKw]),

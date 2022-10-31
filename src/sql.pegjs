@@ -234,6 +234,7 @@ statement_standard
   / create_trigger_stmt
   / drop_trigger_stmt
   / analyze_stmt
+  / explain_stmt
   / transaction_stmt
 
 statement$sqlite
@@ -1486,6 +1487,27 @@ analyze_stmt
       tables: read(tables) || [],
     });
   }
+
+/**
+ * ------------------------------------------------------------------------------------ *
+ *                                                                                      *
+ * EXPLAIN                                                                              *
+ *                                                                                      *
+ * ------------------------------------------------------------------------------------ *
+ */
+explain_stmt
+  = kw:(explain_kw __) anKw:(ANALYZE __)? qpKw:(QUERY __ PLAN __)? stmt:statement {
+    return loc({
+      type: "explain_stmt",
+      explainKw: read(kw),
+      analyzeKw: read(anKw),
+      queryPlanKw: read(qpKw),
+      statement: stmt,
+    });
+  }
+
+explain_kw = EXPLAIN
+explain_kw$mysql = EXPLAIN / DESCRIBE / DESC
 
 /**
  * ------------------------------------------------------------------------------------ *
@@ -3075,6 +3097,7 @@ PARTITION           = kw:"PARTITION"i           !ident_part { return loc(createK
 PERCENT_RANK        = kw:"PERCENT_RANK"i        !ident_part { return loc(createKeyword(kw)); }
 PERSIST             = kw:"PERSIST"i             !ident_part { return loc(createKeyword(kw)); }
 PERSIST_ONLY        = kw:"PERSIST_ONLY"i        !ident_part { return loc(createKeyword(kw)); }
+PLAN                = kw:"PLAN"i                !ident_part { return loc(createKeyword(kw)); }
 PRAGMA              = kw:"PRAGMA"i              !ident_part { return loc(createKeyword(kw)); }
 PRECEDING           = kw:"PRECEDING"i           !ident_part { return loc(createKeyword(kw)); }
 PRECISION           = kw:"PRECISION"i           !ident_part { return loc(createKeyword(kw)); }

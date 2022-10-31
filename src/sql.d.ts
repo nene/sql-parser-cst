@@ -75,6 +75,7 @@ type Statement =
   | CreateTriggerStmt
   | DropTriggerStmt
   | AnalyzeStmt
+  | ExplainStmt
   | TransactionStmt
   | SqliteStmt;
 
@@ -652,6 +653,15 @@ type AnalyzeStmt = BaseNode & {
   analyzeKw: Keyword; // ANALYZE
   tableKw?: Keyword; // TABLE
   tables: TableRef[];
+};
+
+// EXPLAIN
+type ExplainStmt = BaseNode & {
+  type: "explain_stmt";
+  explainKw: Keyword; // EXPLAIN | DESCRIBE | DESC
+  analyzeKw?: Keyword; // ANALYZE
+  queryPlanKw?: Keyword[]; // QUERY PLAN
+  statement: Statement;
 };
 
 // Transactions
