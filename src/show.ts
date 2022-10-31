@@ -265,6 +265,10 @@ const showNode = cstTransformer<string>({
   drop_trigger_stmt: (node) =>
     show([node.dropTriggerKw, node.ifExistsKw, node.trigger]),
 
+  // ANALYZE statement
+  analyze_stmt: (node) =>
+    show([node.analyzeKw, node.tableKw, show(node.tables, ",")]),
+
   // Transactions
   start_transaction_stmt: (node) =>
     show([node.startKw, node.behaviorKw, node.transactionKw]),

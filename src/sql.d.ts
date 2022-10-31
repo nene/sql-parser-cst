@@ -74,6 +74,7 @@ type Statement =
   | DropIndexStmt
   | CreateTriggerStmt
   | DropTriggerStmt
+  | AnalyzeStmt
   | TransactionStmt
   | SqliteStmt;
 
@@ -643,6 +644,14 @@ type DropTriggerStmt = BaseNode & {
   dropTriggerKw: Keyword[]; // DROP TRIGGER
   ifExistsKw?: Keyword[]; // IF EXISTS
   trigger: TableRef;
+};
+
+// ANALYZE
+type AnalyzeStmt = BaseNode & {
+  type: "analyze_stmt";
+  analyzeKw: Keyword; // ANALYZE
+  tableKw?: Keyword; // TABLE
+  tables: TableRef[];
 };
 
 // Transactions

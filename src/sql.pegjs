@@ -233,6 +233,7 @@ statement_standard
   / alter_table_stmt
   / create_trigger_stmt
   / drop_trigger_stmt
+  / analyze_stmt
   / transaction_stmt
 
 statement$sqlite
@@ -1468,6 +1469,23 @@ drop_trigger_stmt
         trigger,
       });
     }
+
+/**
+ * ------------------------------------------------------------------------------------ *
+ *                                                                                      *
+ * ANALYZE                                                                              *
+ *                                                                                      *
+ * ------------------------------------------------------------------------------------ *
+ */
+analyze_stmt
+  = kw:ANALYZE tKw:(__ TABLE)? tables:(__ table_ref_list)? {
+    return loc({
+      type: "analyze_stmt",
+      analyzeKw: kw,
+      tableKw: read(tKw),
+      tables: read(tables) || [],
+    });
+  }
 
 /**
  * ------------------------------------------------------------------------------------ *
@@ -2863,6 +2881,7 @@ ALGORITHM           = kw:"ALGORITHM"i           !ident_part { return loc(createK
 ALL                 = kw:"ALL"i                 !ident_part { return loc(createKeyword(kw)); }
 ALTER               = kw:"ALTER"i               !ident_part { return loc(createKeyword(kw)); }
 ALWAYS              = kw:"ALWAYS"i              !ident_part { return loc(createKeyword(kw)); }
+ANALYZE             = kw:"ANALYZE"i             !ident_part { return loc(createKeyword(kw)); }
 AND                 = kw:"AND"i                 !ident_part { return loc(createKeyword(kw)); }
 AS                  = kw:"AS"i                  !ident_part { return loc(createKeyword(kw)); }
 ASC                 = kw:"ASC"i                 !ident_part { return loc(createKeyword(kw)); }
