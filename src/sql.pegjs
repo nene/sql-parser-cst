@@ -299,14 +299,19 @@ select_stmt
 with_clause
   = withKw:WITH
     recursiveKw:(__ RECURSIVE)?
-    c:__ head:common_table_expression tail:(__ "," __ common_table_expression)* {
+    tables:(__ common_table_expression_list) {
       return loc({
         type: "with_clause",
         withKw,
         recursiveKw: read(recursiveKw),
-        tables: leading(readCommaSepList(head, tail), c),
+        tables: read(tables),
       });
     }
+
+common_table_expression_list
+  = head:common_table_expression tail:(__ "," __ common_table_expression)* {
+    return loc(createExprList(head, tail));
+  }
 
 common_table_expression
   = table:ident

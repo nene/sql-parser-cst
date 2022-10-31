@@ -139,7 +139,7 @@ type WithClause = BaseNode & {
   type: "with_clause";
   withKw: Keyword;
   recursiveKw?: Keyword;
-  tables: CommonTableExpression[];
+  tables: ExprList<CommonTableExpression>;
 };
 
 type CommonTableExpression = BaseNode & {
