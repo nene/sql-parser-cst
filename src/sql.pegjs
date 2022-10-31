@@ -2509,7 +2509,7 @@ exists_expr
  */
 table_ref_list
   = head:table_ref tail:(__ "," __ table_ref)* {
-    return readCommaSepList(head, tail);
+    return loc(createExprList(head, tail));
   }
 
 table_ref

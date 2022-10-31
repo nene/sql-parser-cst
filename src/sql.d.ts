@@ -495,7 +495,7 @@ type DropTableStmt = BaseNode & {
   temporaryKw?: Keyword;
   tableKw: Keyword;
   ifExistsKw?: Keyword[];
-  tables: TableRef[];
+  tables: ExprList<TableRef>;
   behaviorKw?: Keyword; // CASCADE | RESTRICT
 };
 
@@ -544,7 +544,7 @@ type DeleteStmt = BaseNode & {
 type UpdateStmt = BaseNode & {
   type: "update_stmt";
   updateKw: Keyword;
-  tables: TableRef[];
+  tables: ExprList<TableRef>;
   setKw: Keyword;
   assignments: ColumnAssignment[];
   where?: WhereClause;
@@ -574,7 +574,7 @@ type DropViewStmt = BaseNode & {
   type: "drop_view_stmt";
   dropViewKw: Keyword[];
   ifExistsKw?: Keyword[];
-  views: TableRef[];
+  views: ExprList<TableRef>;
   behaviorKw?: Keyword; // CASCADE | RESTRICT
 };
 
@@ -597,7 +597,7 @@ type DropIndexStmt = BaseNode & {
   type: "drop_index_stmt";
   dropIndexKw: Keyword[]; // DROP INDEX
   ifExistsKw?: Keyword[]; // IF EXISTS
-  indexes: TableRef[];
+  indexes: ExprList<TableRef>;
   onKw?: Keyword; // ON
   table?: TableRef;
 };
@@ -652,7 +652,7 @@ type AnalyzeStmt = BaseNode & {
   type: "analyze_stmt";
   analyzeKw: Keyword; // ANALYZE
   tableKw?: Keyword; // TABLE
-  tables: TableRef[];
+  tables: ExprList<TableRef>;
 };
 
 // EXPLAIN

@@ -159,7 +159,7 @@ const showNode = cstTransformer<string>({
       node.temporaryKw,
       node.tableKw,
       node.ifExistsKw,
-      show(node.tables, ","),
+      node.tables,
       node.behaviorKw,
     ]),
 
@@ -181,7 +181,7 @@ const showNode = cstTransformer<string>({
   update_stmt: (node) =>
     show([
       node.updateKw,
-      show(node.tables, ","),
+      node.tables,
       node.setKw,
       show(node.assignments, ","),
       node.where,
@@ -206,12 +206,7 @@ const showNode = cstTransformer<string>({
     ]),
   // DROP VIEW statement
   drop_view_stmt: (node) =>
-    show([
-      node.dropViewKw,
-      node.ifExistsKw,
-      show(node.views, ","),
-      node.behaviorKw,
-    ]),
+    show([node.dropViewKw, node.ifExistsKw, node.views, node.behaviorKw]),
 
   // CREATE INDEX statement
   create_index_stmt: (node) =>
@@ -231,7 +226,7 @@ const showNode = cstTransformer<string>({
     show([
       node.dropIndexKw,
       node.ifExistsKw,
-      show(node.indexes, ","),
+      node.indexes,
       node.onKw,
       node.table,
     ]),
@@ -266,8 +261,7 @@ const showNode = cstTransformer<string>({
     show([node.dropTriggerKw, node.ifExistsKw, node.trigger]),
 
   // ANALYZE statement
-  analyze_stmt: (node) =>
-    show([node.analyzeKw, node.tableKw, show(node.tables, ",")]),
+  analyze_stmt: (node) => show([node.analyzeKw, node.tableKw, node.tables]),
 
   // EXPLAIN statement
   explain_stmt: (node) =>

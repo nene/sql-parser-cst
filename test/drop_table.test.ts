@@ -48,15 +48,18 @@ describe("drop table", () => {
           "text": "TABLE",
           "type": "keyword",
         },
-        "tables": [
-          {
-            "table": {
-              "text": "my_table",
-              "type": "identifier",
+        "tables": {
+          "items": [
+            {
+              "table": {
+                "text": "my_table",
+                "type": "identifier",
+              },
+              "type": "table_ref",
             },
-            "type": "table_ref",
-          },
-        ],
+          ],
+          "type": "expr_list",
+        },
         "temporaryKw": undefined,
         "type": "drop_table_stmt",
       }
