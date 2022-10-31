@@ -623,7 +623,7 @@ type TriggerEvent = BaseNode & {
   timeKw?: Keyword | Keyword[]; // BEFORE | AFTER | INSTEAD OF
   eventKw: Keyword; // INSERT | DELETE | UPDATE
   ofKw?: Keyword; // OF
-  columns?: ColumnRef[];
+  columns?: ExprList<ColumnRef>;
 };
 
 type TriggerCondition = BaseNode & {

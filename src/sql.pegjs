@@ -1421,7 +1421,7 @@ trigger_event
         timeKw: read(timeKw),
         eventKw: read(eventKw),
         ofKw: read(ofKw),
-        columns: cols.items,
+        columns: cols,
       });
     }
   / timeKw:(trigger_time_kw __)? eventKw:(DELETE / INSERT / UPDATE) {

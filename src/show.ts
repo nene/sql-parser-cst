@@ -247,12 +247,7 @@ const showNode = cstTransformer<string>({
       node.body,
     ]),
   trigger_event: (node) =>
-    show([
-      node.timeKw,
-      node.eventKw,
-      node.ofKw,
-      node.columns ? show(node.columns, ",") : undefined,
-    ]),
+    show([node.timeKw, node.eventKw, node.ofKw, node.columns]),
   trigger_condition: (node) => show([node.whenKw, node.expr]),
   trigger_body: (node) =>
     show([node.beginKw, show(node.statements, ";"), ";", node.endKw]),
