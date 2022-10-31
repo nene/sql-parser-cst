@@ -1576,6 +1576,7 @@ sqlite_stmt
   / detach_database_stmt
   / vacuum_stmt
   / reindex_stmt
+  / create_virtual_table_stmt
 
 attach_database_stmt
   = kw:(ATTACH __) dbKw:(DATABASE __)? file:(expr __) asKw:(AS __) schema:ident {
@@ -1621,6 +1622,19 @@ reindex_stmt
   = kw:REINDEX table:(__ table_ref)? {
     return loc({ type: "reindex_stmt", reindexKw: kw, table: read(table) });
   }
+
+create_virtual_table_stmt
+  = kw:(CREATE __ VIRTUAL __ TABLE __) ifKw:(if_not_exists __)? table:(table_ref __)
+    usingKw:(USING __) func:(func_call / ident) {
+      return loc({
+        type: "create_virtual_table_stmt",
+        createVirtualTableKw: read(kw),
+        ifNotExistsKw: read(ifKw),
+        table: read(table),
+        usingKw: read(usingKw),
+        module: func.type === "identifier" ? { type: "func_call", name: func } : func,
+      });
+    }
 
 /**
  * ------------------------------------------------------------------------------------ *

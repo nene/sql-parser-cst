@@ -649,7 +649,8 @@ type TransactionStmt =
   | CommitTransactionStmt
   | RollbackTransactionStmt
   | SavepointStmt
-  | ReleaseSavepointStmt;
+  | ReleaseSavepointStmt
+  | CreateVirtualTableStmt;
 
 type StartTransactionStmt = BaseNode & {
   type: "start_transaction_stmt";
@@ -726,6 +727,15 @@ type ReindexStmt = BaseNode & {
   type: "reindex_stmt";
   reindexKw: Keyword; // REINDEX
   table?: TableRef;
+};
+
+type CreateVirtualTableStmt = BaseNode & {
+  type: "create_virtual_table_stmt";
+  createVirtualTableKw: Keyword[]; // CREATE VIRTUAL TABLE
+  ifNotExistsKw?: Keyword[]; // IF NOT EXISTS
+  table: TableRef;
+  usingKw: Keyword; // USING
+  module: FuncCall;
 };
 
 // Window frame
@@ -819,7 +829,7 @@ type UnaryExpr = BaseNode & {
 type FuncCall = BaseNode & {
   type: "func_call";
   name: Identifier;
-  args: ParenExpr<ExprList<Expr | AllColumns | DistinctArg>>;
+  args?: ParenExpr<ExprList<Expr | AllColumns | DistinctArg>>;
   over?: OverArg;
 };
 

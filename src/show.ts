@@ -285,14 +285,21 @@ const showNode = cstTransformer<string>({
   vacuum_stmt: (node) =>
     show([node.vacuumKw, node.schema, node.intoKw, node.file]),
   reindex_stmt: (node) => show([node.reindexKw, node.table]),
+  create_virtual_table_stmt: (node) =>
+    show([
+      node.createVirtualTableKw,
+      node.ifNotExistsKw,
+      node.table,
+      node.usingKw,
+      node.module,
+    ]),
 
   // Expressions
   expr_list: (node) => show(node.items, ","),
   paren_expr: (node) => "(" + show(node.expr) + ")",
   binary_expr: (node) => show([node.left, node.operator, node.right]),
   unary_expr: (node) => show([node.operator, node.expr]),
-  func_call: (node) =>
-    show(node.name) + show(node.args) + (node.over ? show(node.over) : ""),
+  func_call: (node) => show([node.name, node.args, node.over]),
   distinct_arg: (node) => show([node.distinctKw, node.value]),
   cast_expr: (node) => show([node.castKw, node.args]),
   cast_arg: (node) => show([node.expr, node.asKw, node.dataType]),
