@@ -453,7 +453,7 @@ type AlterTableStmt = BaseNode & {
   type: "alter_table_stmt";
   alterTableKw: Keyword[];
   table: TableRef;
-  actions: AlterAction[];
+  actions: ExprList<AlterAction>;
 };
 
 type AlterAction =

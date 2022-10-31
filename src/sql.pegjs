@@ -1235,7 +1235,7 @@ alter_table_stmt
 
 alter_action_list
   = head:alter_action tail:(__ "," __ alter_action)* {
-      return readCommaSepList(head, tail);
+      return loc(createExprList(head, tail));
     }
 
 alter_action
