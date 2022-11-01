@@ -1,4 +1,4 @@
-import { dialect, showPrecedence, testExpr } from "../test_utils";
+import { dialect, testExpr } from "../test_utils";
 
 describe("string operators", () => {
   it("parses LIKE operator", () => {
@@ -27,14 +27,6 @@ describe("string operators", () => {
     it("parses || as concatenation operator", () => {
       testExpr(`'hello' || ' ' || 'world'`);
       testExpr(`str1 /*c1*/ || /*c2*/ str2`);
-    });
-
-    it("treats || with higher precedence than multiplication", () => {
-      expect(showPrecedence(`2 * y || z`)).toBe(`(2 * (y || z))`);
-    });
-
-    it("treats || with lower precedence than negation", () => {
-      expect(showPrecedence(`-x || -y`)).toBe(`((- x) || (- y))`);
     });
   });
 });
