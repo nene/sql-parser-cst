@@ -2246,12 +2246,18 @@ is_op_right
   }
 
 like_op_right
-  = op:like_op c:__ right:(literal / comparison_expr) {
+  = op:like_op c:__ right:escape_expr {
     return { kind: "like", op, c, right };
   }
 
 like_op
   = kws:(NOT __ LIKE / LIKE) { return read(kws); }
+
+escape_expr
+  = left:additive_expr c1:__ op:ESCAPE c2:__ right:literal_string {
+    return loc(createBinaryExpr(left, c1, op, c2, right));
+  }
+  / additive_expr
 
 regexp_op_right
   = op:regexp_op c:__ b:BINARY? __ right:(literal_string / column_ref) {
@@ -3016,6 +3022,7 @@ ENFORCED            = kw:"ENFORCED"i            !ident_part { return loc(createK
 ENGINE              = kw:"ENGINE"i              !ident_part { return loc(createKeyword(kw)); }
 ENGINE_ATTRIBUTE    = kw:"ENGINE_ATTRIBUTE"i    !ident_part { return loc(createKeyword(kw)); }
 ENUM                = kw:"ENUM"i                !ident_part { return loc(createKeyword(kw)); }
+ESCAPE              = kw:"ESCAPE"i              !ident_part { return loc(createKeyword(kw)); }
 EVENTS              = kw:"EVENTS"i              !ident_part { return loc(createKeyword(kw)); }
 EXCEPT              = kw:"EXCEPT"i              !ident_part { return loc(createKeyword(kw)); }
 EXCLUDE             = kw:"EXCLUDE"i             !ident_part { return loc(createKeyword(kw)); }

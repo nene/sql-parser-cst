@@ -11,6 +11,12 @@ describe("string operators", () => {
     testExpr(`'foobar' /*c1*/ NOT /*c2*/ LIKE /*c3*/ 'foo%'`);
   });
 
+  it("supports LIKE with ESCAPE", () => {
+    testExpr(`'foobar' LIKE 'percentage |%' ESCAPE '|'`);
+    testExpr(`'foobar' NOT LIKE 'foo^_bar' ESCAPE '^'`);
+    testExpr(`'foobar' LIKE 'foo' /*c1*/ ESCAPE /*c2*/ '|'`);
+  });
+
   it("parses REGEXP/RLIKE operator", () => {
     testExpr(`'foooo' REGEXP 'fo*'`);
     testExpr(`'foooo' RLIKE 'fo*'`);
