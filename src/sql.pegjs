@@ -2295,9 +2295,6 @@ multiplicative_operator
   = "*" / "/" / "%" / "&" / ">>" / "<<" / "^" / "|" / op:DIV / op:MOD
 
 concat_or_json_expr
-  = collate_expr
-
-concat_or_json_expr$sqlite
   = head:collate_expr tail:(__ concat_or_json_op  __ collate_expr)* {
       return createBinaryExprChain(head, tail);
     }
