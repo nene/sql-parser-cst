@@ -2233,7 +2233,7 @@ in_op_right
       right,
     };
   }
-  / op:in_op c:__ right:(column_ref / literal_string) {
+  / op:in_op c:__ right:(additive_expr) {
     return { kind: "in", op, c, right };
   }
 
@@ -2260,7 +2260,7 @@ escape_expr
   / additive_expr
 
 regexp_op_right
-  = op:(NOT __ regexp_op / regexp_op) c:__ right:(literal_string / column_ref) {
+  = op:(NOT __ regexp_op / regexp_op) c:__ right:(additive_expr) {
     return { kind: "regexp", op: read(op), c, right };
   }
 
