@@ -2260,14 +2260,13 @@ escape_expr
   / additive_expr
 
 regexp_op_right
-  = op:regexp_op c:__ b:BINARY? __ right:(literal_string / column_ref) {
-    return { kind: "regexp", op, c, right }; // TODO
+  = op:(NOT __ regexp_op / regexp_op) c:__ b:BINARY? __ right:(literal_string / column_ref) {
+    return { kind: "regexp", op: read(op), c, right }; // TODO
   }
 
-regexp_op
-  = kws:(NOT __ (REGEXP / RLIKE) / REGEXP / RLIKE) {
-    return read(kws);
-  }
+regexp_op = REGEXP
+regexp_op$mysql = REGEXP / RLIKE
+regexp_op$sqlite = REGEXP / GLOB / MATCH
 
 between_op_right
   = betweenKw:between_op begin:(__ additive_expr) andKw:(__ AND) end:(__ additive_expr) {
@@ -3043,6 +3042,7 @@ FROM                = kw:"FROM"i                !ident_part { return loc(createK
 FULL                = kw:"FULL"i                !ident_part { return loc(createKeyword(kw)); }
 FULLTEXT            = kw:"FULLTEXT"i            !ident_part { return loc(createKeyword(kw)); }
 GENERATED           = kw:"GENERATED"i           !ident_part { return loc(createKeyword(kw)); }
+GLOB                = kw:"GLOB"i                !ident_part { return loc(createKeyword(kw)); }
 GLOBAL              = kw:"GLOBAL"i              !ident_part { return loc(createKeyword(kw)); }
 GO                  = kw:"GO"i                  !ident_part { return loc(createKeyword(kw)); }
 GRANTS              = kw:"GRANTS"i              !ident_part { return loc(createKeyword(kw)); }
