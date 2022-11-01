@@ -60,7 +60,8 @@ const showNode = cstTransformer<string>({
   where_clause: (node) => show([node.whereKw, node.expr]),
   group_by_clause: (node) => show([node.groupByKw, node.columns]),
   having_clause: (node) => show([node.havingKw, node.expr]),
-  order_by_clause: (node) => show([node.orderByKw, node.specifications]),
+  order_by_clause: (node) =>
+    show([node.orderByKw, node.specifications, node.withRollupKw]),
   partition_by_clause: (node) =>
     show([node.partitionByKw, node.specifications]),
   // WINDOW

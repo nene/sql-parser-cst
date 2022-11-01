@@ -22,4 +22,11 @@ describe("select ORDER BY", () => {
       test("SELECT c FROM t ORDER BY name ASC /*c1*/ NULLS /*c2*/ LAST");
     });
   });
+
+  dialect("mysql", () => {
+    it("supports WITH ROLLUP", () => {
+      test("SELECT c FROM t ORDER BY name, age WITH ROLLUP");
+      test("SELECT c FROM t ORDER BY name /*c1*/ WITH /*c2*/ ROLLUP");
+    });
+  });
 });

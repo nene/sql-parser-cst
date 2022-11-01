@@ -648,11 +648,12 @@ partition_by_clause
  * --------------------------------------------------------------------------------------
  */
 order_by_clause
-  = kws:(ORDER __ BY __) l:sort_specification_list {
+  = kws:(ORDER __ BY __) l:sort_specification_list rolKw:(__ WITH __ ROLLUP)? {
     return loc({
       type: "order_by_clause",
       orderByKw: read(kws),
       specifications: l,
+      withRollupKw: read(rolKw),
     });
   }
 
@@ -676,7 +677,7 @@ sort_specification$sqlite
       type: "sort_specification",
       expr: read(e),
       orderKw: read(orderKw),
-      nullHandlingKw: read(nullsKw),
+      ...(nullsKw ? {nullHandlingKw: read(nullsKw)} : {}),
     });
   }
 
@@ -3142,6 +3143,7 @@ RETURN              = kw:"RETURN"i              !ident_part { return loc(createK
 RIGHT               = kw:"RIGHT"i               !ident_part { return loc(createKeyword(kw)); }
 RLIKE               = kw:"RLIKE"i               !ident_part { return loc(createKeyword(kw)); }
 ROLLBACK            = kw:"ROLLBACK"i            !ident_part { return loc(createKeyword(kw)); }
+ROLLUP              = kw:"ROLLUP"i              !ident_part { return loc(createKeyword(kw)); }
 ROW                 = kw:"ROW"i                 !ident_part { return loc(createKeyword(kw)); }
 ROW_FORMAT          = kw:"ROW_FORMAT"i          !ident_part { return loc(createKeyword(kw)); }
 ROW_NUMBER          = kw:"ROW_NUMBER"i          !ident_part { return loc(createKeyword(kw)); }

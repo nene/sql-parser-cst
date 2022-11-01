@@ -196,7 +196,6 @@ describe("window functions", () => {
                         },
                         "type": "column_ref",
                       },
-                      "nullHandlingKw": undefined,
                       "orderKw": undefined,
                       "type": "sort_specification",
                     },
@@ -204,6 +203,7 @@ describe("window functions", () => {
                   "type": "expr_list",
                 },
                 "type": "order_by_clause",
+                "withRollupKw": undefined,
               },
               "partitionBy": {
                 "partitionByKw": [

@@ -208,6 +208,7 @@ type OrderByClause = BaseNode & {
   type: "order_by_clause";
   orderByKw: Keyword[];
   specifications: ExprList<SortSpecification>;
+  withRollupKw?: Keyword[]; // WITH ROLLUP
 };
 
 type PartitionByClause = BaseNode & {
