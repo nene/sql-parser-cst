@@ -196,6 +196,8 @@ describe("window functions", () => {
                         },
                         "type": "column_ref",
                       },
+                      "nullHandlingKw": undefined,
+                      "orderKw": undefined,
                       "type": "sort_specification",
                     },
                   ],

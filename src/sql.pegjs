@@ -662,17 +662,21 @@ sort_specification_list
   }
 
 sort_specification
-  = e:(expr __) orderKw:(DESC / ASC) {
-    return loc({
-      type: "sort_specification",
-      expr: read(e),
-      orderKw,
-    });
-  }
-  / e:expr {
+  = e:expr orderKw:(__ (DESC / ASC))? {
     return loc({
       type: "sort_specification",
       expr: e,
+      orderKw: read(orderKw),
+    });
+  }
+
+sort_specification$sqlite
+  = e:expr orderKw:(__ (DESC / ASC))? nullsKw:(__ NULLS __ (FIRST / LAST))? {
+    return loc({
+      type: "sort_specification",
+      expr: read(e),
+      orderKw: read(orderKw),
+      nullHandlingKw: read(nullsKw),
     });
   }
 
@@ -3057,6 +3061,7 @@ KEY                 = kw:"KEY"i                 !ident_part { return loc(createK
 KEY_BLOCK_SIZE      = kw:"KEY_BLOCK_SIZE"i      !ident_part { return loc(createKeyword(kw)); }
 LAG                 = kw:"LAG"i                 !ident_part { return loc(createKeyword(kw)); }
 LANGUAGE            = kw:"LANGUAGE"i            !ident_part { return loc(createKeyword(kw)); }
+LAST                = kw:"LAST"i                !ident_part { return loc(createKeyword(kw)); }
 LAST_VALUE          = kw:"LAST_VALUE"i          !ident_part { return loc(createKeyword(kw)); }
 LEAD                = kw:"LEAD"i                !ident_part { return loc(createKeyword(kw)); }
 LEFT                = kw:"LEFT"i                !ident_part { return loc(createKeyword(kw)); }
@@ -3094,6 +3099,7 @@ NOWAIT              = kw:"NOWAIT"i              !ident_part { return loc(createK
 NTH_VALUE           = kw:"NTH_VALUE"i           !ident_part { return loc(createKeyword(kw)); }
 NTILE               = kw:"NTILE"i               !ident_part { return loc(createKeyword(kw)); }
 NULL                = kw:"NULL"i                !ident_part { return loc(createKeyword(kw)); }
+NULLS               = kw:"NULLS"i               !ident_part { return loc(createKeyword(kw)); }
 NUMERIC             = kw:"NUMERIC"i             !ident_part { return loc(createKeyword(kw)); }
 OF                  = kw:"OF"i                  !ident_part { return loc(createKeyword(kw)); }
 OFFSET              = kw:"OFFSET"i              !ident_part { return loc(createKeyword(kw)); }

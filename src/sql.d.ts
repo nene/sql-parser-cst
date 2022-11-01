@@ -248,7 +248,8 @@ type JoinUsingSpecification = BaseNode & {
 type SortSpecification = BaseNode & {
   type: "sort_specification";
   expr: Expr;
-  orderKw?: Keyword;
+  orderKw?: Keyword; // ASC | DESC
+  nullHandlingKw?: Keyword[]; // NULLS FIRST | NULLS LAST
 };
 
 // CREATE TABLE

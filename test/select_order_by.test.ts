@@ -1,7 +1,7 @@
-import { test } from "./test_utils";
+import { dialect, test } from "./test_utils";
 
 describe("select ORDER BY", () => {
-  it("parses order by clause", () => {
+  it("supports ORDER BY clause", () => {
     test("SELECT c FROM t ORDER BY name");
     test("SELECT c FROM t ORDER BY salary - tax");
     test("SELECT c FROM t ORDER BY name ASC");
@@ -12,5 +12,14 @@ describe("select ORDER BY", () => {
 
   it("supports ORDER BY with collation", () => {
     test("SELECT c FROM t ORDER BY name COLLATE utf8 DESC");
+  });
+
+  dialect("sqlite", () => {
+    it("supports null handling specifiers", () => {
+      test("SELECT c FROM t ORDER BY name NULLS FIRST");
+      test("SELECT c FROM t ORDER BY name DESC NULLS FIRST");
+      test("SELECT c FROM t ORDER BY name ASC NULLS LAST");
+      test("SELECT c FROM t ORDER BY name ASC /*c1*/ NULLS /*c2*/ LAST");
+    });
   });
 });
