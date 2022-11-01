@@ -2287,20 +2287,23 @@ additive_operator
   = "+" / "-"
 
 multiplicative_expr
-  = head:concat_expr tail:(__ multiplicative_operator  __ concat_expr)* {
+  = head:concat_or_json_expr tail:(__ multiplicative_operator  __ concat_or_json_expr)* {
       return createBinaryExprChain(head, tail);
     }
 
 multiplicative_operator
   = "*" / "/" / "%" / "&" / ">>" / "<<" / "^" / "|" / op:DIV / op:MOD
 
-concat_expr
+concat_or_json_expr
   = collate_expr
 
-concat_expr$sqlite
-  = head:collate_expr tail:(__ "||"  __ collate_expr)* {
+concat_or_json_expr$sqlite
+  = head:collate_expr tail:(__ concat_or_json_op  __ collate_expr)* {
       return createBinaryExprChain(head, tail);
     }
+
+concat_or_json_op = "||" / "->>" / "->"
+concat_or_json_op$mysql = "->>" / "->"
 
 collate_expr
   = expr:negation_expr kw:(__ COLLATE __) collation:ident {

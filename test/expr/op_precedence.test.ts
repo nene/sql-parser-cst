@@ -8,10 +8,6 @@ describe("operator precedence", () => {
     expect(showPrecedence(`x * -y`)).toBe(`(x * (- y))`);
   });
 
-  it("COLLATE > multiplication", () => {
-    expect(showPrecedence(`x * y COLLATE z`)).toBe(`(x * (y COLLATE z))`);
-  });
-
   dialect("sqlite", () => {
     it("negation > COLLATE", () => {
       expect(showPrecedence(`-x COLLATE rtrim`)).toBe(`((- x) COLLATE rtrim)`);
@@ -26,6 +22,22 @@ describe("operator precedence", () => {
     it("concatenation > multiplication", () => {
       expect(showPrecedence(`2 * y || z`)).toBe(`(2 * (y || z))`);
     });
+
+    it("concatenation and JSON operators have same precedence", () => {
+      expect(showPrecedence(`col1 || col2 -> 'field' || ' jr.'`)).toBe(
+        `(((col1 || col2) -> 'field') || ' jr.')`
+      );
+    });
+  });
+
+  it("COLLATE > JSON", () => {
+    expect(showPrecedence(`col COLLATE utf8 -> 'items[0]'`)).toBe(
+      `((col COLLATE utf8) -> 'items[0]')`
+    );
+  });
+
+  it("JSON > multiplication", () => {
+    expect(showPrecedence(`col1 -> 'items[0]' * 10`)).toBe(`((col1 -> 'items[0]') * 10)`);
   });
 
   it("multiplication > addition", () => {

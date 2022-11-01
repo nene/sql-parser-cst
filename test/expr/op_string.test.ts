@@ -29,4 +29,18 @@ describe("string operators", () => {
       testExpr(`str1 /*c1*/ || /*c2*/ str2`);
     });
   });
+
+  dialect(["sqlite", "mysql"], () => {
+    it("supports JSON operators", () => {
+      testExpr(`col->'items[0].id'`);
+      testExpr(`x /*c1*/ -> /*c2*/ 'op'`);
+
+      testExpr(`col->>'items[0].id'`);
+      testExpr(`x /*c1*/ ->> /*c2*/ 'op'`);
+    });
+
+    it("supports chain of JSON operators", () => {
+      testExpr(`col->'items'->'[0]'->'id'`);
+    });
+  });
 });
