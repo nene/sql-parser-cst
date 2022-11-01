@@ -8,9 +8,19 @@ describe("operator precedence", () => {
     expect(showPrecedence(`x * -y`)).toBe(`(x * (- y))`);
   });
 
+  it("COLLATE > multiplication", () => {
+    expect(showPrecedence(`x * y COLLATE z`)).toBe(`(x * (y COLLATE z))`);
+  });
+
   dialect("sqlite", () => {
-    it("negation > concatenation", () => {
-      expect(showPrecedence(`-x || -y`)).toBe(`((- x) || (- y))`);
+    it("negation > COLLATE", () => {
+      expect(showPrecedence(`-x COLLATE rtrim`)).toBe(`((- x) COLLATE rtrim)`);
+    });
+
+    it("COLLATE > concatenation", () => {
+      expect(showPrecedence(`x COLLATE binary || y COLLATE nocase`)).toBe(
+        `((x COLLATE binary) || (y COLLATE nocase))`
+      );
     });
 
     it("concatenation > multiplication", () => {

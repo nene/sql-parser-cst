@@ -2281,12 +2281,23 @@ multiplicative_operator
   = "*" / "/" / "%" / "&" / ">>" / "<<" / "^" / "|" / op:DIV / op:MOD
 
 concat_expr
-  = negation_expr
+  = collate_expr
 
 concat_expr$sqlite
-  = head:negation_expr tail:(__ "||"  __ negation_expr)* {
+  = head:collate_expr tail:(__ "||"  __ collate_expr)* {
       return createBinaryExprChain(head, tail);
     }
+
+collate_expr
+  = expr:negation_expr kw:(__ COLLATE __) collation:ident {
+    return loc({
+      type: "collate_expr",
+      expr,
+      collateKw: read(kw),
+      collation,
+    });
+  }
+  / negation_expr
 
 negation_expr
   = primary
@@ -2636,9 +2647,7 @@ ident_part  = [A-Za-z0-9_]
  * ------------------------------------------------------------------------------------ *
  */
 literal
-  = b:BINARY? __ s:literal_string ca:(__ COLLATE __ ident)? {
-    return s; // TODO
-  }
+  = literal_string
   / literal_numeric
   / literal_bool
   / literal_null

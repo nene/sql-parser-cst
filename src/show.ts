@@ -303,6 +303,7 @@ const showNode = cstTransformer<string>({
   between_expr: (node) =>
     show([node.left, node.betweenKw, node.begin, node.andKw, node.end]),
   datetime: (node) => show([node.kw, node.string]),
+  collate_expr: (node) => show([node.expr, node.collateKw, node.collation]),
   string_with_charset: (node) => "_" + node.charset + show(node.string),
   case_expr: (node) => show([node.caseKw, node.expr, node.clauses, node.endKw]),
   case_when: (node) =>

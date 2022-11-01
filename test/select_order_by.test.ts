@@ -9,4 +9,8 @@ describe("select ORDER BY", () => {
     test("SELECT c FROM t ORDER BY name DESC, age ASC, salary");
     test("SELECT c FROM t /*c0*/ Order /*c1*/ By /*c2*/ age /*c3*/ ASC /*c4*/, /*c5*/ name");
   });
+
+  it("supports ORDER BY with collation", () => {
+    test("SELECT c FROM t ORDER BY name COLLATE utf8 DESC");
+  });
 });
