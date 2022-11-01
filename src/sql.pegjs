@@ -2260,8 +2260,8 @@ escape_expr
   / additive_expr
 
 regexp_op_right
-  = op:(NOT __ regexp_op / regexp_op) c:__ b:BINARY? __ right:(literal_string / column_ref) {
-    return { kind: "regexp", op: read(op), c, right }; // TODO
+  = op:(NOT __ regexp_op / regexp_op) c:__ right:(literal_string / column_ref) {
+    return { kind: "regexp", op: read(op), c, right };
   }
 
 regexp_op = REGEXP
