@@ -2200,20 +2200,29 @@ comparison_expr
   / column_ref
 
 comparison_op_right
-  = arithmetic_op_right
+  = arithmetic_comparison_op_right
   / in_op_right
   / is_op_right
   / like_op_right
   / regexp_op_right
   / between_op_right
 
-arithmetic_op_right
-  = tail:(__ arithmetic_comparison_operator __ additive_expr)+ {
+arithmetic_comparison_op_right
+  = tail:(__ comparison_op __ additive_expr)+ {
     return { kind: "arithmetic", tail };
   }
 
-arithmetic_comparison_operator
-  = "<=>" / ">=" / ">" / "<=" / "<>" / "<" / "=" / "!="
+comparison_op
+  = comparison_op_standard
+
+comparison_op_standard
+  = ">=" / ">" / "<=" / "<>" / "<" / "=" / "!="
+
+comparison_op$mysql
+  = "<=>" / comparison_op_standard
+
+comparison_op$sqlite
+  = "==" / comparison_op_standard
 
 in_op_right
   = op:in_op c1:__ right:paren_expr_list {

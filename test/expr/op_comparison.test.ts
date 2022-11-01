@@ -1,10 +1,24 @@
-import { testExpr } from "../test_utils";
+import { dialect, testExpr } from "../test_utils";
 
 describe("comparison operators", () => {
-  ["<=>", ">=", ">", "<=", "<>", "<", "=", "!="].forEach((op) => {
+  [">=", ">", "<=", "<>", "<", "=", "!="].forEach((op) => {
     it(`parses ${op} operator`, () => {
       testExpr(`5 ${op} 7`);
       testExpr(`6 /* com1 */ ${op} /* com2 */ 7`);
+    });
+  });
+
+  dialect("sqlite", () => {
+    it(`supports == operator`, () => {
+      testExpr(`5 == 7`);
+      testExpr(`6 /* com1 */ == /* com2 */ 7`);
+    });
+  });
+
+  dialect("mysql", () => {
+    it(`supports <=> operator`, () => {
+      testExpr(`5 <=> 7`);
+      testExpr(`6 /* com1 */ <=> /* com2 */ 7`);
     });
   });
 
