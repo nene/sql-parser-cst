@@ -78,6 +78,11 @@ export function parseExpr(expr: string, options?: ParserOptions): Expr {
   return result;
 }
 
+export function testClause(clause: string) {
+  const sql = `SELECT c FROM t ${clause}`;
+  expect(show(parse(sql, preserveAll))).toBe(sql);
+}
+
 /**
  * Converts SQL expression to parenthesized version.
  * For example:
