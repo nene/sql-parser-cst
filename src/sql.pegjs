@@ -2223,15 +2223,7 @@ comparison_op$sqlite
   = "==" / comparison_op_standard
 
 in_op_right
-  = op:in_op c1:__ right:paren_expr_list {
-    return {
-      kind: "in",
-      op,
-      c: c1,
-      right,
-    };
-  }
-  / op:in_op c:__ right:(additive_expr) {
+  = op:in_op c:__ right:(paren_expr_list / additive_expr) {
     return { kind: "in", op, c, right };
   }
 
