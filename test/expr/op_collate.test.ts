@@ -9,22 +9,22 @@ describe("COLLATE operator", () => {
   it("parses COLLATE operator to syntax tree", () => {
     expect(parseExpr("my_col COLLATE utf8")).toMatchInlineSnapshot(`
       {
-        "collateKw": {
-          "text": "COLLATE",
-          "type": "keyword",
-        },
-        "collation": {
-          "text": "utf8",
-          "type": "identifier",
-        },
-        "expr": {
+        "left": {
           "column": {
             "text": "my_col",
             "type": "identifier",
           },
           "type": "column_ref",
         },
-        "type": "collate_expr",
+        "operator": {
+          "text": "COLLATE",
+          "type": "keyword",
+        },
+        "right": {
+          "text": "utf8",
+          "type": "identifier",
+        },
+        "type": "binary_expr",
       }
     `);
   });

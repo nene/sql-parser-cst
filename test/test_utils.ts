@@ -137,15 +137,6 @@ function addPrecedenceParens<T extends Expr | SubSelect>(
         expr: { ...addPrecedenceParens(expr.expr), trailing: space },
       },
     };
-  } else if (expr.type === "collate_expr") {
-    return {
-      type: "paren_expr",
-      expr: {
-        ...expr,
-        expr: { ...addPrecedenceParens(expr.expr), trailing: space },
-        collation: { ...expr.collation, leading: space },
-      },
-    };
   } else if (expr.type === "select_stmt") {
     // Add space inside select clause: SELECT <space_here> x
     const selectClause = expr.clauses[0] as SelectClause;

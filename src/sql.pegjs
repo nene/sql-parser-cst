@@ -2270,13 +2270,8 @@ concat_or_json_op = "||" / "->>" / "->"
 concat_or_json_op$mysql = "->>" / "->"
 
 collate_expr
-  = expr:negation_expr kw:(__ COLLATE __) collation:ident {
-    return loc({
-      type: "collate_expr",
-      expr,
-      collateKw: read(kw),
-      collation,
-    });
+  = left:negation_expr c1:__ op:COLLATE c2:__ right:ident {
+    return loc(createBinaryExpr(left, c1, op, c2, right));
   }
   / negation_expr
 

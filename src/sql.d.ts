@@ -90,7 +90,6 @@ type Expr =
   | BetweenExpr
   | CaseExpr
   | IntervalExpr
-  | CollateExpr
   | StringWithCharset
   | Literal
   | ColumnRef
@@ -944,13 +943,6 @@ type IntervalExpr = BaseNode & {
   intervalKw: Keyword;
   expr: Expr;
   unitKw: Keyword;
-};
-
-type CollateExpr = BaseNode & {
-  type: "collate_expr";
-  expr: Expr;
-  collateKw: Keyword; // COLLATE
-  collation: Identifier;
 };
 
 type StringWithCharset = BaseNode & {
