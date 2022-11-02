@@ -2171,42 +2171,26 @@ not_expr
   }
 
 comparison_expr
-  = head:additive_expr tail:(__ comparison_op_right)? {
-    if (!tail) {
-      return head;
-    }
-    const [c, right] = tail;
-    if (right.kind === "arithmetic") {
-      // overwrite the first comment (which never matches) in tail,
-      // because the comment inside this rule matches first.
-      right.tail[0][0] = c;
-      return createBinaryExprChain(head, right.tail);
-    }
-    else if (right.kind === "between") {
-      return loc({
-        type: "between_expr",
-        left: trailing(head, c),
-        betweenKw: right.betweenKw,
-        begin: right.begin,
-        andKw: right.andKw,
-        end: right.end,
-      });
-    }
-    else {
-      return loc(createBinaryExpr(head, c, right.op, right.c, right.right));
-    }
+  = head:additive_expr tail:(__ comparison_op __ additive_expr)+ {
+    return createBinaryExprChain(head, tail);
   }
-
-comparison_op_right
-  = arithmetic_comparison_op_right
-  / in_op_right
-  / like_op_right
-  / between_op_right
-
-arithmetic_comparison_op_right
-  = tail:(__ comparison_op __ additive_expr)+ {
-    return { kind: "arithmetic", tail };
+  / left:additive_expr c1:__ op:(NOT __ IN / IN) c2:__ right:(paren_expr_list / additive_expr) {
+    return loc(createBinaryExpr(left, c1, read(op), c2, right))
   }
+  / left:additive_expr c1:__ op:(NOT __ LIKE / LIKE) c2:__ right:escape_expr {
+    return loc(createBinaryExpr(left, c1, read(op), c2, right))
+  }
+  / left:(additive_expr __) betweenKw:between_op begin:(__ additive_expr) andKw:(__ AND) end:(__ additive_expr) {
+    return loc({
+      type: "between_expr",
+      left: read(left),
+      betweenKw,
+      begin: read(begin),
+      andKw: read(andKw),
+      end: read(end),
+    });
+  }
+  / additive_expr
 
 comparison_op
   = comparison_op_standard
@@ -2230,38 +2214,11 @@ regexp_op_kw = REGEXP
 regexp_op_kw$mysql = REGEXP / RLIKE
 regexp_op_kw$sqlite = REGEXP / GLOB / MATCH
 
-in_op_right
-  = op:in_op c:__ right:(paren_expr_list / additive_expr) {
-    return { kind: "in", op, c, right };
-  }
-
-in_op
-  = kws:(NOT __ IN / IN) { return read(kws); }
-
-like_op_right
-  = op:like_op c:__ right:escape_expr {
-    return { kind: "like", op, c, right };
-  }
-
-like_op
-  = kws:(NOT __ LIKE / LIKE) { return read(kws); }
-
 escape_expr
   = left:additive_expr c1:__ op:ESCAPE c2:__ right:literal_string {
     return loc(createBinaryExpr(left, c1, op, c2, right));
   }
   / additive_expr
-
-between_op_right
-  = betweenKw:between_op begin:(__ additive_expr) andKw:(__ AND) end:(__ additive_expr) {
-    return {
-      kind: "between",
-      betweenKw,
-      begin: read(begin),
-      andKw: read(andKw),
-      end: read(end),
-    };
-  }
 
 between_op
   = kws:(NOT __ BETWEEN / BETWEEN) { return read(kws); }
