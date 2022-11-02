@@ -2163,7 +2163,6 @@ and_expr
 and_op = AND
 and_op$mysql = AND / "&&"
 
-//here we should use `NOT` instead of `comparision_expr` to support chain-expr
 not_expr
   = comparison_expr
   / kw:NOT c:__ expr:not_expr {
