@@ -83,7 +83,8 @@ type Expr =
   | ExprList
   | ParenExpr
   | BinaryExpr
-  | UnaryExpr
+  | PrefixOpExpr
+  | PostfixOpExpr
   | FuncCall
   | CastExpr
   | BetweenExpr
@@ -863,8 +864,14 @@ type BinaryExpr = BaseNode & {
   right: Expr;
 };
 
-type UnaryExpr = BaseNode & {
-  type: "unary_expr";
+type PrefixOpExpr = BaseNode & {
+  type: "prefix_op_expr";
+  operator: string | Keyword[];
+  expr: Expr;
+};
+
+type PostfixOpExpr = BaseNode & {
+  type: "postfix_op_expr";
   operator: string | Keyword[];
   expr: Expr;
 };

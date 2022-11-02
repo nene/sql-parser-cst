@@ -121,12 +121,20 @@ function addPrecedenceParens<T extends Expr | SubSelect>(
         right: { ...addPrecedenceParens(expr.right), leading: space },
       },
     };
-  } else if (expr.type === "unary_expr") {
+  } else if (expr.type === "prefix_op_expr") {
     return {
       type: "paren_expr",
       expr: {
         ...expr,
         expr: { ...addPrecedenceParens(expr.expr), leading: space },
+      },
+    };
+  } else if (expr.type === "postfix_op_expr") {
+    return {
+      type: "paren_expr",
+      expr: {
+        ...expr,
+        expr: { ...addPrecedenceParens(expr.expr), trailing: space },
       },
     };
   } else if (expr.type === "collate_expr") {

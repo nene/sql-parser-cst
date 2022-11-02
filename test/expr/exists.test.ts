@@ -44,13 +44,13 @@ describe("EXISTS expression", () => {
             "text": "EXISTS",
             "type": "keyword",
           },
-          "type": "unary_expr",
+          "type": "prefix_op_expr",
         },
         "operator": {
           "text": "NOT",
           "type": "keyword",
         },
-        "type": "unary_expr",
+        "type": "prefix_op_expr",
       }
     `);
   });

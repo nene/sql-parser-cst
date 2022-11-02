@@ -89,9 +89,9 @@
     };
   }
 
-  function createUnaryExpr(op, c, right) {
+  function createPrefixOpExpr(op, c, right) {
     return {
-      type: "unary_expr",
+      type: "prefix_op_expr",
       operator: op,
       expr: leading(right, c),
     };
@@ -2166,7 +2166,7 @@ and_op$mysql = AND / "&&"
 not_expr
   = comparison_expr
   / kw:NOT c:__ expr:not_expr {
-    return loc(createUnaryExpr(kw, c, expr));
+    return loc(createPrefixOpExpr(kw, c, expr));
   }
 
 comparison_expr
@@ -2268,7 +2268,7 @@ collate_expr
 negation_expr
   = primary
   / op:negation_operator c:__ right:negation_expr {
-    return loc(createUnaryExpr(op, c, right));
+    return loc(createPrefixOpExpr(op, c, right));
   }
 
 negation_operator = "-" / "~" / "!"
@@ -2479,7 +2479,7 @@ fulltext_search_mode
 
 exists_expr
   = kw:EXISTS c:__ expr:paren_expr_select {
-    return loc(createUnaryExpr(kw, c, expr));
+    return loc(createPrefixOpExpr(kw, c, expr));
   }
 
 /**
