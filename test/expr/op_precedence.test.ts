@@ -35,8 +35,17 @@ describe("operator precedence", () => {
       expect(showPrecedence(`5 + 2 * 3`)).toBe(`(5 + (2 * 3))`);
     });
 
-    it("addition > comparison", () => {
-      expect(showPrecedence(`5 + 2 > 3 + 1`)).toBe(`((5 + 2) > (3 + 1))`);
+    it("addition > bitwise operators", () => {
+      expect(showPrecedence(`5 + 2 & 3 + 1`)).toBe(`((5 + 2) & (3 + 1))`);
+      expect(showPrecedence(`5 + 2 | 3 - 1`)).toBe(`((5 + 2) | (3 - 1))`);
+      expect(showPrecedence(`5 + 2 << 3 - 1`)).toBe(`((5 + 2) << (3 - 1))`);
+      expect(showPrecedence(`5 + 2 >> 3 - 1`)).toBe(`((5 + 2) >> (3 - 1))`);
+    });
+
+    it("bitwise operators > comparison", () => {
+      expect(showPrecedence(`5 | 2 > 3 >> 1`)).toBe(`((5 | 2) > (3 >> 1))`);
+      expect(showPrecedence(`5 <= 2 & 3`)).toBe(`(5 <= (2 & 3))`);
+      expect(showPrecedence(`5 >= 2 << 3`)).toBe(`(5 >= (2 << 3))`);
     });
 
     it("comparison > NOT", () => {
@@ -76,8 +85,21 @@ describe("operator precedence", () => {
       expect(showPrecedence(`5 + 2 * 3`)).toBe(`(5 + (2 * 3))`);
     });
 
-    it("addition > comparison", () => {
-      expect(showPrecedence(`5 + 2 > 3 + 1`)).toBe(`((5 + 2) > (3 + 1))`);
+    it("addition > bit shift", () => {
+      expect(showPrecedence(`5 + 2 >> 3 + 1`)).toBe(`((5 + 2) >> (3 + 1))`);
+      expect(showPrecedence(`5 + 2 << 3 - 1`)).toBe(`((5 + 2) << (3 - 1))`);
+    });
+
+    it("bit shift > bitwise AND", () => {
+      expect(showPrecedence(`5 >> 2 & 3 << 1`)).toBe(`((5 >> 2) & (3 << 1))`);
+    });
+
+    it("bitwise AND > bitwise OR", () => {
+      expect(showPrecedence(`5 & 2 | 3 & 1`)).toBe(`((5 & 2) | (3 & 1))`);
+    });
+
+    it("bitwise OR > comparison", () => {
+      expect(showPrecedence(`5 | 2 > 3 | 1`)).toBe(`((5 | 2) > (3 | 1))`);
     });
 
     it("comparison > NOT", () => {

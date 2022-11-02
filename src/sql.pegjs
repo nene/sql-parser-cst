@@ -2127,15 +2127,18 @@ type_name
 /**
  * Expressions
  *
- * Operator precedence, as implemented currently (though not fully correct)
+ * Operator precedence, as implemented currently
  * ---------------------------------------------------------------------------------------------------
  * | OR, ||                                                   | disjunction                          |
  * | XOR                                                      | exclusive or                         |
  * | AND, &&                                                  | conjunction                          |
  * | NOT                                                      | logical negation                     |
  * | =, <, >, <=, >=, <>, !=, <=>, IS, LIKE, BETWEEN, IN      | comparion                            |
+ * | |                                                        | bitwise or                           |
+ * | &                                                        | bitwise and                          |
+ * | >>, <<                                                   | bit shift                            |
  * | +, -                                                     | addition, subtraction                |
- * | *, /, %, DIV, MOD, (&, |, >>, <<)                        | multiplication, division (bitwise ops - incorrect) |
+ * | *, /, %, DIV, MOD                                        | multiplication, division, modulo     |
  * | ^                                                        | bitwise XOR                          |
  * | ||, ->, ->>                                              | concatenation and JSON               |
  * | COLLATE                                                  | collation                            |
@@ -2177,16 +2180,16 @@ not_expr
   }
 
 comparison_expr
-  = head:additive_expr tail:(__ comparison_op __ additive_expr)+ {
+  = head:bitwise_or_expr tail:(__ comparison_op __ bitwise_or_expr)+ {
     return createBinaryExprChain(head, tail);
   }
-  / left:additive_expr c1:__ op:(NOT __ IN / IN) c2:__ right:(paren_expr_list / additive_expr) {
+  / left:bitwise_or_expr c1:__ op:(NOT __ IN / IN) c2:__ right:(paren_expr_list / bitwise_or_expr) {
     return loc(createBinaryExpr(left, c1, read(op), c2, right))
   }
-  / left:additive_expr c1:__ op:(NOT __ LIKE / LIKE) c2:__ right:escape_expr {
+  / left:bitwise_or_expr c1:__ op:(NOT __ LIKE / LIKE) c2:__ right:escape_expr {
     return loc(createBinaryExpr(left, c1, read(op), c2, right))
   }
-  / left:(additive_expr __) betweenKw:between_op begin:(__ additive_expr) andKw:(__ AND) end:(__ additive_expr) {
+  / left:(bitwise_or_expr __) betweenKw:between_op begin:(__ bitwise_or_expr) andKw:(__ AND) end:(__ bitwise_or_expr) {
     return loc({
       type: "between_expr",
       left: read(left),
@@ -2196,10 +2199,10 @@ comparison_expr
       end: read(end),
     });
   }
-  / expr:(additive_expr __) op:unary_null_op {
+  / expr:(bitwise_or_expr __) op:unary_null_op {
     return loc(createPostfixOpExpr(op, read(expr)));
   }
-  / additive_expr
+  / bitwise_or_expr
 
 comparison_op
   = comparison_op_standard
@@ -2231,10 +2234,10 @@ regexp_op_kw$mysql = REGEXP / RLIKE
 regexp_op_kw$sqlite = REGEXP / GLOB / MATCH
 
 escape_expr
-  = left:additive_expr c1:__ op:ESCAPE c2:__ right:literal_string {
+  = left:bitwise_or_expr c1:__ op:ESCAPE c2:__ right:literal_string {
     return loc(createBinaryExpr(left, c1, op, c2, right));
   }
-  / additive_expr
+  / bitwise_or_expr
 
 between_op
   = kws:(NOT __ BETWEEN / BETWEEN) { return read(kws); }
@@ -2242,6 +2245,21 @@ between_op
 unary_null_op = never
 unary_null_op$sqlite
   = kws:(NOT __ NULL / NOTNULL / ISNULL) { return read(kws); }
+
+bitwise_or_expr
+  = head:bitwise_and_expr tail:(__ "|"  __ bitwise_and_expr)* {
+    return createBinaryExprChain(head, tail);
+  }
+
+bitwise_and_expr
+  = head:bit_shift_expr tail:(__ "&"  __ bit_shift_expr)* {
+    return createBinaryExprChain(head, tail);
+  }
+
+bit_shift_expr
+  = head:additive_expr tail:(__ (">>" / "<<")  __ additive_expr)* {
+    return createBinaryExprChain(head, tail);
+  }
 
 additive_expr
   = head: multiplicative_expr
@@ -2258,7 +2276,7 @@ multiplicative_expr
     }
 
 multiplicative_operator
-  = "*" / "/" / "%" / "&" / ">>" / "<<" / "|" / op:DIV / op:MOD
+  = "*" / "/" / "%" / op:DIV / op:MOD
 
 bitwise_xor_expr
   = head:concat_or_json_expr tail:(__ "^"  __ concat_or_json_expr)* {
