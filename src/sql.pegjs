@@ -2201,7 +2201,6 @@ comparison_op_right
   = arithmetic_comparison_op_right
   / in_op_right
   / like_op_right
-  / regexp_op_right
   / between_op_right
 
 arithmetic_comparison_op_right
@@ -2213,7 +2212,7 @@ comparison_op
   = comparison_op_standard
 
 comparison_op_standard
-  = ">=" / ">" / "<=" / "<>" / "<" / "=" / "!=" / is_op
+  = ">=" / ">" / "<=" / "<>" / "<" / "=" / "!=" / is_op / regexp_op
 
 comparison_op$mysql
   = "<=>" / comparison_op_standard
@@ -2223,6 +2222,13 @@ comparison_op$sqlite
 
 is_op
   = kws:(IS __ NOT / IS) { return read(kws); }
+
+regexp_op
+  = op:(NOT __ regexp_op_kw / regexp_op_kw) { return read(op); }
+
+regexp_op_kw = REGEXP
+regexp_op_kw$mysql = REGEXP / RLIKE
+regexp_op_kw$sqlite = REGEXP / GLOB / MATCH
 
 in_op_right
   = op:in_op c:__ right:(paren_expr_list / additive_expr) {
@@ -2245,15 +2251,6 @@ escape_expr
     return loc(createBinaryExpr(left, c1, op, c2, right));
   }
   / additive_expr
-
-regexp_op_right
-  = op:(NOT __ regexp_op / regexp_op) c:__ right:(additive_expr) {
-    return { kind: "regexp", op: read(op), c, right };
-  }
-
-regexp_op = REGEXP
-regexp_op$mysql = REGEXP / RLIKE
-regexp_op$sqlite = REGEXP / GLOB / MATCH
 
 between_op_right
   = betweenKw:between_op begin:(__ additive_expr) andKw:(__ AND) end:(__ additive_expr) {
