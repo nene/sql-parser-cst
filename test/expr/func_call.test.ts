@@ -46,4 +46,22 @@ describe("function call", () => {
       }
     `);
   });
+
+  it("supports special functions without parenthesis", () => {
+    testExpr("CURRENT_TIME");
+    testExpr("CURRENT_DATE");
+    testExpr("CURRENT_TIMESTAMP");
+  });
+
+  it("parses special paren-less function to func_call node", () => {
+    expect(parseExpr("CURRENT_TIME")).toMatchInlineSnapshot(`
+      {
+        "name": {
+          "text": "CURRENT_TIME",
+          "type": "identifier",
+        },
+        "type": "func_call",
+      }
+    `);
+  });
 });

@@ -2376,6 +2376,12 @@ func_call
         ...(over ? {over: read(over)} : {}),
       });
     }
+  / name:paren_less_func_name {
+      return loc({
+        type: "func_call",
+        name,
+      });
+    }
 
 func_name
   = ident
@@ -2399,6 +2405,11 @@ mysql_window_func_keyword
   / PERCENT_RANK
   / RANK
   / ROW_NUMBER
+
+paren_less_func_name
+  = kw:(CURRENT_DATE / CURRENT_TIME / CURRENT_TIMESTAMP) {
+    return loc(createIdentifier(kw.text));
+  }
 
 func_args
   = "(" c1:__ args:func_args_list c2:__ ")" {
