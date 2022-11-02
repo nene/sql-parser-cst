@@ -1,6 +1,6 @@
-import { dialect, parseExpr, testExpr } from "./test_utils";
+import { dialect, parseExpr, testExpr } from "../test_utils";
 
-describe("literal", () => {
+describe("string literal", () => {
   it("single-quoted string", () => {
     expect(parseExpr(`'hello'`)).toMatchInlineSnapshot(`
       {
@@ -100,73 +100,5 @@ describe("literal", () => {
   it("natural character set string with escapes", () => {
     testExpr(`n'hel\\'lo'`);
     testExpr(`N'hel''lo'`);
-  });
-
-  it("boolean", () => {
-    expect(parseExpr(`true`)).toMatchInlineSnapshot(`
-      {
-        "text": "true",
-        "type": "bool",
-      }
-    `);
-    testExpr(`TRUE`);
-    testExpr(`false`);
-    testExpr(`FALSE`);
-  });
-
-  it("null", () => {
-    expect(parseExpr(`null`)).toMatchInlineSnapshot(`
-      {
-        "text": "null",
-        "type": "null",
-      }
-    `);
-    testExpr(`NULL`);
-  });
-
-  it("number", () => {
-    expect(parseExpr(`0`)).toMatchInlineSnapshot(`
-      {
-        "text": "0",
-        "type": "number",
-      }
-    `);
-    testExpr(`123`);
-    testExpr(`0.15`);
-    testExpr(`123e15`);
-    testExpr(`1.23E+13`);
-    testExpr(`0.107e-62`);
-    testExpr(`-6`);
-    testExpr(`+18`);
-  });
-
-  it("datetime", () => {
-    expect(parseExpr(`TIME '10:05:58'`)).toMatchInlineSnapshot(`
-      {
-        "kw": {
-          "text": "TIME",
-          "type": "keyword",
-        },
-        "string": {
-          "text": "'10:05:58'",
-          "type": "string",
-        },
-        "type": "datetime",
-      }
-    `);
-    testExpr(`TIME '20:15:00'`);
-    testExpr(`DATE "1995-06-01"`);
-    testExpr(`DATEtime '1995-06-01 20:15:00'`);
-    testExpr(`timestamp "1995-06-01 20:15:00"`);
-    testExpr(`DATETIME /* com1 */ '20:15:00'`);
-  });
-
-  dialect("mysql", () => {
-    it("datetime with double-quoted string", () => {
-      testExpr(`TIME "20:15:00"`);
-      testExpr(`DATE "1995-06-01"`);
-      testExpr(`DATEtime "1995-06-01 20:15:00"`);
-      testExpr(`timestamp "1995-06-01 20:15:00"`);
-    });
   });
 });
