@@ -49,6 +49,10 @@ describe("comparison operators", () => {
     testExpr(`7 /**/ NOT /*c*/ IN /*c0*/ (/*c1*/ 1 /*c2*/, /*c3*/ 2 /*c4*/)`);
   });
 
+  it("parses IN (SELECT) operator", () => {
+    testExpr(`7 IN (SELECT * FROM numbers)`);
+  });
+
   it("parses BETWEEN operator", () => {
     testExpr(`5 BETWEEN 1 AND 10`);
     testExpr(`5 between 1 and 10`);
