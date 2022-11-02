@@ -391,10 +391,7 @@ select_columns
     }
 
 column_list_item
-  = fs:fulltext_search {
-    return "[Not implemented]";
-  }
-  / star:star {
+  = star:star {
     return loc({
       type: "column_ref",
       column: star,
@@ -2297,7 +2294,6 @@ primary_standard
   / cast_expr
   / func_call
   / case_expr
-  / fulltext_search
   / exists_expr
   / column_ref
 
@@ -2467,25 +2463,6 @@ interval_unit
   / MINUTE
   / SECOND
   / MICROSECOND
-
-fulltext_search
-  = MATCH __ "(" __ c:column_ref_list __ ")" __ AGAINST __ "(" __ e:expr __ mo:fulltext_search_mode? __ ")" __ as:alias? {
-    return "[Not implemented]";
-  }
-
-fulltext_search_mode
-  = IN __ NATURAL __ LANGUAGE __ MODE __ WITH __ QUERY __ EXPANSION  {
-    return "[Not implemented]";
-  }
-  / IN __ NATURAL __ LANGUAGE __ MODE {
-    return "[Not implemented]";
-  }
-  / IN __ BOOLEAN __ MODE {
-    return "[Not implemented]";
-  }
-  / WITH __ QUERY __ EXPANSION {
-    return "[Not implemented]";
-  }
 
 exists_expr
   = kw:EXISTS expr:(__ paren_expr_select) {
