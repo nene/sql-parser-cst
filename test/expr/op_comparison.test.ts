@@ -1,4 +1,5 @@
-import { dialect, testExpr } from "../test_utils";
+import { BinaryExpr } from "../../src/sql";
+import { dialect, parseExpr, testExpr } from "../test_utils";
 
 describe("comparison operators", () => {
   [">=", ">", "<=", "<>", "<", "=", "!="].forEach((op) => {
@@ -22,14 +23,27 @@ describe("comparison operators", () => {
     });
   });
 
-  it("parses IS operator", () => {
-    testExpr(`7 IS 5`);
-    testExpr(`7 /*c1*/ IS /*c2*/ 5`);
-  });
+  describe("IS", () => {
+    it("supports IS [NOT] operator", () => {
+      testExpr(`col IS NULL`);
+      testExpr(`col IS NOT NULL`);
+      testExpr(`c /*c1*/ IS /*c2*/ NOT /*c3*/ NULL`);
+    });
 
-  it("parses IS NOT operator", () => {
-    testExpr(`7 IS NOT 5`);
-    testExpr(`7 /*c1*/ IS /*c2*/ NOT /*c3*/ 5`);
+    it("parses IS NOT as single operator (not IS + NOT)", () => {
+      expect((parseExpr(`x IS NOT NULL`) as BinaryExpr).operator).toMatchInlineSnapshot(`
+        [
+          {
+            "text": "IS",
+            "type": "keyword",
+          },
+          {
+            "text": "NOT",
+            "type": "keyword",
+          },
+        ]
+      `);
+    });
   });
 
   describe("IN", () => {
