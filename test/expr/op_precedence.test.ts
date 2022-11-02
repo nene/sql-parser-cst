@@ -64,8 +64,12 @@ describe("operator precedence", () => {
       );
     });
 
-    it("JSON > multiplication", () => {
-      expect(showPrecedence(`col1 -> 'items[0]' * 10`)).toBe(`((col1 -> 'items[0]') * 10)`);
+    it("JSON > bitwise XOR (^)", () => {
+      expect(showPrecedence(`col1 -> 'items[0]' ^ 10`)).toBe(`((col1 -> 'items[0]') ^ 10)`);
+    });
+
+    it("bitwise XOR (^) > multiplication", () => {
+      expect(showPrecedence(`1 ^ 0 * 10 ^ 8`)).toBe(`((1 ^ 0) * (10 ^ 8))`);
     });
 
     it("multiplication > addition", () => {

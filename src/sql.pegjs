@@ -2135,7 +2135,8 @@ type_name
  * | NOT                                                      | logical negation                     |
  * | =, <, >, <=, >=, <>, !=, <=>, IS, LIKE, BETWEEN, IN      | comparion                            |
  * | +, -                                                     | addition, subtraction                |
- * | *, /, %, DIV, MOD, (^, &, |, >>, << )                    | multiplication, division (bitwise ops - incorrect) |
+ * | *, /, %, DIV, MOD, (&, |, >>, <<)                        | multiplication, division (bitwise ops - incorrect) |
+ * | ^                                                        | bitwise XOR                          |
  * | ||, ->, ->>                                              | concatenation and JSON               |
  * | COLLATE                                                  | collation                            |
  * | -, ~, !                                                  | negation, bit inversion, logical not |
@@ -2252,12 +2253,17 @@ additive_operator
   = "+" / "-"
 
 multiplicative_expr
-  = head:concat_or_json_expr tail:(__ multiplicative_operator  __ concat_or_json_expr)* {
+  = head:bitwise_xor_expr tail:(__ multiplicative_operator  __ bitwise_xor_expr)* {
       return createBinaryExprChain(head, tail);
     }
 
 multiplicative_operator
-  = "*" / "/" / "%" / "&" / ">>" / "<<" / "^" / "|" / op:DIV / op:MOD
+  = "*" / "/" / "%" / "&" / ">>" / "<<" / "|" / op:DIV / op:MOD
+
+bitwise_xor_expr
+  = head:concat_or_json_expr tail:(__ "^"  __ concat_or_json_expr)* {
+    return createBinaryExprChain(head, tail);
+  }
 
 concat_or_json_expr
   = head:collate_expr tail:(__ concat_or_json_op  __ collate_expr)* {
