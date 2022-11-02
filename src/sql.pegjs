@@ -89,18 +89,18 @@
     };
   }
 
-  function createPrefixOpExpr(op, c, expr) {
+  function createPrefixOpExpr(op, expr) {
     return {
       type: "prefix_op_expr",
       operator: op,
-      expr: leading(expr, c),
+      expr: expr,
     };
   }
 
-  function createPostfixOpExpr(op, c, expr) {
+  function createPostfixOpExpr(op, expr) {
     return {
       type: "postfix_op_expr",
-      expr: trailing(expr, c),
+      expr: expr,
       operator: op,
     };
   }
@@ -2173,8 +2173,8 @@ and_op$mysql = AND / "&&"
 
 not_expr
   = comparison_expr
-  / kw:NOT c:__ expr:not_expr {
-    return loc(createPrefixOpExpr(kw, c, expr));
+  / kw:NOT expr:(__ not_expr) {
+    return loc(createPrefixOpExpr(kw, read(expr)));
   }
 
 comparison_expr
@@ -2197,8 +2197,8 @@ comparison_expr
       end: read(end),
     });
   }
-  / expr:additive_expr c:__ op:unary_null_op {
-    return loc(createPostfixOpExpr(op, c, expr));
+  / expr:(additive_expr __) op:unary_null_op {
+    return loc(createPostfixOpExpr(op, read(expr)));
   }
   / additive_expr
 
@@ -2282,8 +2282,8 @@ collate_expr
 
 negation_expr
   = primary
-  / op:negation_operator c:__ right:negation_expr {
-    return loc(createPrefixOpExpr(op, c, right));
+  / op:negation_operator right:(__ negation_expr) {
+    return loc(createPrefixOpExpr(op, read(right)));
   }
 
 negation_operator = "-" / "~" / "!"
@@ -2493,8 +2493,8 @@ fulltext_search_mode
   }
 
 exists_expr
-  = kw:EXISTS c:__ expr:paren_expr_select {
-    return loc(createPrefixOpExpr(kw, c, expr));
+  = kw:EXISTS expr:(__ paren_expr_select) {
+    return loc(createPrefixOpExpr(kw, read(expr)));
   }
 
 /**
