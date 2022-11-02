@@ -32,25 +32,23 @@ describe("comparison operators", () => {
     testExpr(`7 /*c1*/ IS /*c2*/ NOT /*c3*/ 5`);
   });
 
-  it("parses basic IN operator", () => {
-    testExpr(`'oo' IN 'foobar'`);
-    testExpr(`'oo' /*c1*/ IN /*c2*/ 'foobar'`);
-  });
+  describe("IN", () => {
+    it("supports basic [NOT] IN operator", () => {
+      testExpr(`x IN col1`);
+      testExpr(`x NOT IN col1`);
+      testExpr(`x /*c1*/ NOT /*c2*/ IN /*c3*/ col1`);
+    });
 
-  it("parses basic NOT IN operator", () => {
-    testExpr(`'oo' NOT IN 'foobar'`);
-    testExpr(`'oo' /*c1*/ NOT /*c2*/ IN /*c3*/ 'foobar'`);
-  });
+    it("supports [NOT] IN (...) operator", () => {
+      testExpr(`7 IN (1, 2, 3, 4)`);
+      testExpr(`7 NOT IN (1, 2, 3, 4)`);
+      testExpr(`7 /**/ NOT /*c*/ IN /*c0*/ (/*c1*/ 1 /*c2*/, /*c3*/ 2 /*c4*/)`);
+    });
 
-  it("parses IN (...) operator", () => {
-    testExpr(`7 IN (1, 2, 3, 4)`);
-    testExpr(`7 NOT IN (1, 2, 3, 4)`);
-    testExpr(`7 /*c*/ IN /*c0*/ (/*c1*/ 1 /*c2*/, /*c3*/ 2 /*c4*/)`);
-    testExpr(`7 /**/ NOT /*c*/ IN /*c0*/ (/*c1*/ 1 /*c2*/, /*c3*/ 2 /*c4*/)`);
-  });
-
-  it("parses IN (SELECT) operator", () => {
-    testExpr(`7 IN (SELECT * FROM numbers)`);
+    it("supports [NOT] IN (SELECT) operator", () => {
+      testExpr(`7 IN (SELECT * FROM numbers)`);
+      testExpr(`7 NOT IN (SELECT 1)`);
+    });
   });
 
   it("parses BETWEEN operator", () => {
