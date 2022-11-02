@@ -2200,7 +2200,6 @@ comparison_expr
 comparison_op_right
   = arithmetic_comparison_op_right
   / in_op_right
-  / is_op_right
   / like_op_right
   / regexp_op_right
   / between_op_right
@@ -2214,13 +2213,16 @@ comparison_op
   = comparison_op_standard
 
 comparison_op_standard
-  = ">=" / ">" / "<=" / "<>" / "<" / "=" / "!="
+  = ">=" / ">" / "<=" / "<>" / "<" / "=" / "!=" / is_op
 
 comparison_op$mysql
   = "<=>" / comparison_op_standard
 
 comparison_op$sqlite
   = "==" / comparison_op_standard
+
+is_op
+  = kws:(IS __ NOT / IS) { return read(kws); }
 
 in_op_right
   = op:in_op c:__ right:(paren_expr_list / additive_expr) {
@@ -2229,11 +2231,6 @@ in_op_right
 
 in_op
   = kws:(NOT __ IN / IN) { return read(kws); }
-
-is_op_right
-  = kws:(IS __ NOT / IS) c:__ right:additive_expr {
-    return { kind: "is", op: read(kws), c, right };
-  }
 
 like_op_right
   = op:like_op c:__ right:escape_expr {
