@@ -2196,8 +2196,6 @@ comparison_expr
       return loc(createBinaryExpr(head, c, right.op, right.c, right.right));
     }
   }
-  / literal_string
-  / column_ref
 
 comparison_op_right
   = arithmetic_comparison_op_right
