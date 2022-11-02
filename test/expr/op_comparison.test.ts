@@ -30,6 +30,13 @@ describe("comparison operators", () => {
       testExpr(`c /*c1*/ IS /*c2*/ NOT /*c3*/ NULL`);
     });
 
+    dialect("sqlite", () => {
+      it("supports IS [NOT] DISTINCT FROM as alternative spelling for IS [NOT]", () => {
+        testExpr(`col IS DISTINCT FROM NULL`);
+        testExpr(`col /*c1*/ IS /*c2*/ NOT /*c3*/ DISTINCT /*c4*/ FROM /*c5*/ NULL`);
+      });
+    });
+
     it("parses IS NOT as single operator (not IS + NOT)", () => {
       expect((parseExpr(`x IS NOT NULL`) as BinaryExpr).operator).toMatchInlineSnapshot(`
         [

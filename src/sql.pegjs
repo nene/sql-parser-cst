@@ -2206,6 +2206,13 @@ comparison_op$sqlite
 is_op
   = kws:(IS __ NOT / IS) { return read(kws); }
 
+is_op$sqlite
+  = kws:(
+      IS __ NOT __ DISTINCT __ FROM
+    / IS __ DISTINCT __ FROM
+    / IS __ NOT
+    / IS) { return read(kws); }
+
 regexp_op
   = op:(NOT __ regexp_op_kw / regexp_op_kw) { return read(op); }
 
