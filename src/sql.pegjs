@@ -2127,17 +2127,18 @@ type_name
 /**
  * Expressions
  *
- * Operator precedence, as implemented currently (though incorrect)
+ * Operator precedence, as implemented currently (though not fully correct)
  * ---------------------------------------------------------------------------------------------------
  * | OR, ||                                                   | disjunction                          |
  * | XOR                                                      | exclusive or                         |
  * | AND, &&                                                  | conjunction                          |
  * | NOT                                                      | logical negation                     |
  * | =, <, >, <=, >=, <>, !=, <=>, IS, LIKE, BETWEEN, IN      | comparion                            |
- * | +, -                                                     | addition, subtraction, concatenation |
- * | *, /, DIV, MOD                                           | multiplication, division             |
- * | ||                                                       | concatenation                        |
- * | -, ~, !                                                  | negation, bit inversion              |
+ * | +, -                                                     | addition, subtraction                |
+ * | *, /, %, DIV, MOD, (^, &, |, >>, << )                    | multiplication, division (bitwise ops - incorrect) |
+ * | ||, ->, ->>                                              | concatenation and JSON               |
+ * | COLLATE                                                  | collation                            |
+ * | -, ~, !                                                  | negation, bit inversion, logical not |
  * ---------------------------------------------------------------------------------------------------
  */
 
