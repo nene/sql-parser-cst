@@ -53,6 +53,40 @@ describe("comparison operators", () => {
     });
   });
 
+  dialect("sqlite", () => {
+    it("supports unary null-check operators", () => {
+      testExpr("col ISNULL");
+      testExpr("col NOTNULL");
+      testExpr("col NOT NULL");
+      testExpr("col /*c1*/ NOT /*c2*/ NULL");
+    });
+
+    it("parses unary null-check operators as postfix operators", () => {
+      expect(parseExpr("col NOT NULL")).toMatchInlineSnapshot(`
+        {
+          "expr": {
+            "column": {
+              "text": "col",
+              "type": "identifier",
+            },
+            "type": "column_ref",
+          },
+          "operator": [
+            {
+              "text": "NOT",
+              "type": "keyword",
+            },
+            {
+              "text": "NULL",
+              "type": "keyword",
+            },
+          ],
+          "type": "postfix_op_expr",
+        }
+      `);
+    });
+  });
+
   describe("IN", () => {
     it("supports basic [NOT] IN operator", () => {
       testExpr(`x IN col1`);

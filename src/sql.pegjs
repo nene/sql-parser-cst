@@ -89,11 +89,19 @@
     };
   }
 
-  function createPrefixOpExpr(op, c, right) {
+  function createPrefixOpExpr(op, c, expr) {
     return {
       type: "prefix_op_expr",
       operator: op,
-      expr: leading(right, c),
+      expr: leading(expr, c),
+    };
+  }
+
+  function createPostfixOpExpr(op, c, expr) {
+    return {
+      type: "postfix_op_expr",
+      expr: trailing(expr, c),
+      operator: op,
     };
   }
 
@@ -2189,6 +2197,9 @@ comparison_expr
       end: read(end),
     });
   }
+  / expr:additive_expr c:__ op:unary_null_op {
+    return loc(createPostfixOpExpr(op, c, expr));
+  }
   / additive_expr
 
 comparison_op
@@ -2228,6 +2239,10 @@ escape_expr
 
 between_op
   = kws:(NOT __ BETWEEN / BETWEEN) { return read(kws); }
+
+unary_null_op = never
+unary_null_op$sqlite
+  = kws:(NOT __ NULL / NOTNULL / ISNULL) { return read(kws); }
 
 additive_expr
   = head: multiplicative_expr
@@ -3019,6 +3034,7 @@ INTO                = kw:"INTO"i                !ident_part { return loc(createK
 INVISIBLE           = kw:"INVISIBLE"i           !ident_part { return loc(createKeyword(kw)); }
 INVOKER             = kw:"INVOKER"i             !ident_part { return loc(createKeyword(kw)); }
 IS                  = kw:"IS"i                  !ident_part { return loc(createKeyword(kw)); }
+ISNULL              = kw:"ISNULL"               !ident_part { return loc(createKeyword(kw)); }
 JOIN                = kw:"JOIN"i                !ident_part { return loc(createKeyword(kw)); }
 JSON                = kw:"JSON"i                !ident_part { return loc(createKeyword(kw)); }
 KEY                 = kw:"KEY"i                 !ident_part { return loc(createKeyword(kw)); }
@@ -3059,6 +3075,7 @@ NO                  = kw:"NO"i                  !ident_part { return loc(createK
 NOCHECK             = kw:"NOCHECK"i             !ident_part { return loc(createKeyword(kw)); }
 NONE                = kw:"NONE"i                !ident_part { return loc(createKeyword(kw)); }
 NOT                 = kw:"NOT"i                 !ident_part { return loc(createKeyword(kw)); }
+NOTNULL             = kw:"NOTNULL"              !ident_part { return loc(createKeyword(kw)); }
 NOWAIT              = kw:"NOWAIT"i              !ident_part { return loc(createKeyword(kw)); }
 NTH_VALUE           = kw:"NTH_VALUE"i           !ident_part { return loc(createKeyword(kw)); }
 NTILE               = kw:"NTILE"i               !ident_part { return loc(createKeyword(kw)); }
