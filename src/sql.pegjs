@@ -2638,7 +2638,7 @@ ident_part  = [A-Za-z0-9_]
 literal
   = literal_string
   / literal_numeric
-  / literal_bool
+  / literal_boolean
   / literal_null
   / literal_datetime
 
@@ -2647,12 +2647,12 @@ literal_null
     return loc({ type: "null", text: kw.text });
   }
 
-literal_bool
+literal_boolean
   = kw:TRUE {
-    return loc({ type: "bool", text: kw.text });
+    return loc({ type: "boolean", text: kw.text });
   }
   / kw:FALSE {
-    return loc({ type: "bool", text: kw.text});
+    return loc({ type: "boolean", text: kw.text});
   }
 
 literal_string "string"

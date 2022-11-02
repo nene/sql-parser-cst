@@ -110,7 +110,7 @@ const layoutNode = cstTransformer<Layout>({
   identifier: (node) => node.text,
   string: (node) => node.text,
   number: (node) => node.text,
-  bool: (node) => node.text,
+  boolean: (node) => node.text,
   null: (node) => node.text,
 });
 

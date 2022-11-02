@@ -327,7 +327,7 @@ const showNode = cstTransformer<string>({
   identifier: (node) => node.text,
   string: (node) => node.text,
   number: (node) => node.text,
-  bool: (node) => node.text,
+  boolean: (node) => node.text,
   null: (node) => node.text,
 
   // Cast to FullTransformMap, so TypeScript ensures all node types are covered

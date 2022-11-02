@@ -99,7 +99,7 @@ type Expr =
 type Literal =
   | StringLiteral
   | NumberLiteral
-  | BoolLiteral
+  | BooleanLiteral
   | NullLiteral
   | DateTimeLiteral;
 
@@ -961,8 +961,8 @@ type NumberLiteral = BaseNode & {
   text: string;
 };
 
-type BoolLiteral = BaseNode & {
-  type: "bool";
+type BooleanLiteral = BaseNode & {
+  type: "boolean";
   text: string;
 };
 
