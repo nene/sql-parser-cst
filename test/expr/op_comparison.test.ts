@@ -65,14 +65,43 @@ describe("comparison operators", () => {
     });
   });
 
-  it("parses BETWEEN operator", () => {
-    testExpr(`5 BETWEEN 1 AND 10`);
-    testExpr(`5 between 1 and 10`);
-    testExpr(`5 /*c1*/ BETWEEN /*c2*/ 1 /*c3*/ AND /*c4*/ 10`);
-  });
+  describe("BETWEEN", () => {
+    it("supports [NOT] BETWEEN operator", () => {
+      testExpr(`5 BETWEEN 1 AND 10`);
+      testExpr(`5 between 1 and 10`);
+      testExpr(`col NOT BETWEEN 1 AND 10`);
+      testExpr(`5 /*c0*/ not /*c1*/ BETWEEN /*c2*/ 1 /*c3*/ AND /*c4*/ 10`);
+    });
 
-  it("parses NOT BETWEEN operator", () => {
-    testExpr(`5 NOT BETWEEN 1 AND 10`);
-    testExpr(`5 /*c0*/ not /*c1*/ BETWEEN /*c2*/ 1 /*c3*/ AND /*c4*/ 10`);
+    it("parses BETWEEN..AND as single expression (not BETWEEN + AND)", () => {
+      expect(parseExpr(`age BETWEEN 7 AND 20`)).toMatchInlineSnapshot(`
+        {
+          "andKw": {
+            "text": "AND",
+            "type": "keyword",
+          },
+          "begin": {
+            "text": "7",
+            "type": "number",
+          },
+          "betweenKw": {
+            "text": "BETWEEN",
+            "type": "keyword",
+          },
+          "end": {
+            "text": "20",
+            "type": "number",
+          },
+          "left": {
+            "column": {
+              "text": "age",
+              "type": "identifier",
+            },
+            "type": "column_ref",
+          },
+          "type": "between_expr",
+        }
+      `);
+    });
   });
 });
