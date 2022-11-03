@@ -1,4 +1,4 @@
-import { parseExpr, testExpr } from "../test_utils";
+import { dialect, parseExpr, testExpr } from "../test_utils";
 
 describe("number literal", () => {
   it("number", () => {
@@ -15,5 +15,27 @@ describe("number literal", () => {
     testExpr(`0.107e-62`);
     testExpr(`-6`);
     testExpr(`+18`);
+  });
+
+  dialect("sqlite", () => {
+    it("parses 0x12FC0a as hex number", () => {
+      expect(parseExpr(`0x12FC0a`)).toMatchInlineSnapshot(`
+        {
+          "text": "0x12FC0a",
+          "type": "number",
+        }
+      `);
+    });
+  });
+
+  dialect("mysql", () => {
+    it("parses 0x12FC0a as hex string", () => {
+      expect(parseExpr(`0x12FC0a`)).toMatchInlineSnapshot(`
+        {
+          "text": "0x12FC0a",
+          "type": "string",
+        }
+      `);
+    });
   });
 });

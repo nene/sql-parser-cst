@@ -472,7 +472,7 @@ index_options
   }
 
 index_option
-  = k:KEY_BLOCK_SIZE __ e:("=")? __ kbs:literal_numeric {
+  = k:KEY_BLOCK_SIZE __ e:("=")? __ kbs:literal_number {
     return "[Not implemented]";
   }
   / index_type
@@ -836,7 +836,7 @@ lock_in_share_mode
   }
 
 lock_option
-  = w:(WAIT __ literal_numeric) { return "[Not implemented]"; }
+  = w:(WAIT __ literal_number) { return "[Not implemented]"; }
   / nw:NOWAIT
   / sl:(SKIP __ LOCKED) { return "[Not implemented]"; }
 
@@ -1376,7 +1376,7 @@ create_option_character_set
   }
 
 table_option
-  = kw:(AUTO_INCREMENT / AVG_ROW_LENGTH / KEY_BLOCK_SIZE / MAX_ROWS / MIN_ROWS / STATS_SAMPLE_PAGES) __ s:("=")? __ v:literal_numeric {
+  = kw:(AUTO_INCREMENT / AVG_ROW_LENGTH / KEY_BLOCK_SIZE / MAX_ROWS / MIN_ROWS / STATS_SAMPLE_PAGES) __ s:("=")? __ v:literal_number {
     return "[Not implemented]";
   }
   / create_option_character_set
@@ -2636,7 +2636,7 @@ ident_part  = [A-Za-z0-9_]
  */
 literal
   = literal_string
-  / literal_numeric
+  / literal_number
   / literal_boolean
   / literal_null
   / literal_datetime
@@ -2656,7 +2656,6 @@ literal_boolean
 
 literal_string "string"
   = literal_hex_string
-  / literal_hex_sequence
   / literal_plain_string
 
 literal_string$mysql "string"
@@ -2673,7 +2672,7 @@ literal_string$mysql "string"
 literal_string_without_charset // for MySQL only
   = literal_hex_string
   / literal_bit_string
-  / literal_hex_sequence
+  / nr:literal_hex_number { return {...nr, type: "string" }; }
   / literal_plain_string
 
 // The most ordinary string type, without any prefixes
@@ -2741,14 +2740,6 @@ literal_hex_string
 
 literal_bit_string
   = "b"i "'" [01]* "'" {
-    return loc({
-      type: "string",
-      text: text(),
-    });
-  }
-
-literal_hex_sequence
-  = "0x" [0-9A-Fa-f]* {
     return loc({
       type: "string",
       text: text(),
@@ -2833,7 +2824,21 @@ escape_char
 line_terminator
   = [\n\r]
 
-literal_numeric "number"
+literal_number "number"
+  = literal_decimal_number
+
+literal_number$sqlite "number"
+  = literal_decimal_number / literal_hex_number
+
+literal_hex_number
+  = "0x" [0-9A-Fa-f]+ {
+    return loc({
+      type: "number",
+      text: text(),
+    });
+  }
+
+literal_decimal_number
   = int frac? exp? !ident_start {
     return loc({
       type: "number",

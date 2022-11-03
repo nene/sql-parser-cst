@@ -35,15 +35,6 @@ describe("string literal", () => {
     });
   });
 
-  it("hex literal", () => {
-    expect(parseExpr(`0xAAFF11`)).toMatchInlineSnapshot(`
-      {
-        "text": "0xAAFF11",
-        "type": "string",
-      }
-    `);
-  });
-
   it("hex string", () => {
     expect(parseExpr(`x'AFC123'`)).toMatchInlineSnapshot(`
       {
