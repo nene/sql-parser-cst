@@ -9,9 +9,13 @@ describe("string literal", () => {
       }
     `);
   });
-  it("single-quoted string with escapes", () => {
-    testExpr(`'hel\\'lo'`);
+  it("single-quoted string with repeated-quote escapes", () => {
     testExpr(`'hel''lo'`);
+  });
+  dialect("mysql", () => {
+    it("single-quoted string with backslash escapes", () => {
+      testExpr(`'hel\\'lo'`);
+    });
   });
 
   dialect("mysql", () => {
@@ -23,9 +27,11 @@ describe("string literal", () => {
         }
       `);
     });
-    it("double-quoted string with escapes", () => {
-      testExpr(`"hel\\"lo"`);
+    it("double-quoted string with repeated-quote escapes", () => {
       testExpr(`"hel""lo"`);
+    });
+    it("double-quoted string with backslash escapes", () => {
+      testExpr(`"hel\\"lo"`);
     });
   });
 
@@ -38,15 +44,6 @@ describe("string literal", () => {
     `);
   });
 
-  it("bit string", () => {
-    expect(parseExpr(`b'011001'`)).toMatchInlineSnapshot(`
-      {
-        "text": "b'011001'",
-        "type": "string",
-      }
-    `);
-  });
-
   it("hex string", () => {
     expect(parseExpr(`x'AFC123'`)).toMatchInlineSnapshot(`
       {
@@ -54,6 +51,17 @@ describe("string literal", () => {
         "type": "string",
       }
     `);
+  });
+
+  dialect("mysql", () => {
+    it("bit string", () => {
+      expect(parseExpr(`b'011001'`)).toMatchInlineSnapshot(`
+        {
+          "text": "b'011001'",
+          "type": "string",
+        }
+      `);
+    });
   });
 
   dialect("mysql", () => {
@@ -89,16 +97,20 @@ describe("string literal", () => {
     });
   });
 
-  it("natural character set string", () => {
-    expect(parseExpr(`N'hello'`)).toMatchInlineSnapshot(`
-      {
-        "text": "N'hello'",
-        "type": "string",
-      }
-    `);
-  });
-  it("natural character set string with escapes", () => {
-    testExpr(`n'hel\\'lo'`);
-    testExpr(`N'hel''lo'`);
+  dialect("mysql", () => {
+    it("natural character set string", () => {
+      expect(parseExpr(`N'hello'`)).toMatchInlineSnapshot(`
+        {
+          "text": "N'hello'",
+          "type": "string",
+        }
+      `);
+    });
+    it("natural character set string with repeated-quote escapes", () => {
+      testExpr(`N'hel''lo'`);
+    });
+    it("natural character set string with backslash escapes", () => {
+      testExpr(`n'hel\\'lo'`);
+    });
   });
 });

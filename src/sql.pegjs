@@ -2657,10 +2657,8 @@ literal_boolean
 
 literal_string "string"
   = literal_hex_string
-  / literal_bit_string
   / literal_hex_sequence
-  / literal_single_quoted_string
-  / literal_natural_charset_string
+  / literal_single_quoted_string_qq
 
 literal_string$mysql "string"
   = charset:charset_introducer string:(__ literal_string_without_charset) {
@@ -2753,6 +2751,14 @@ literal_hex_sequence
 
 literal_single_quoted_string
   = "'" single_quoted_char* "'" {
+    return loc({
+      type: "string",
+      text: text(),
+    });
+  }
+
+literal_single_quoted_string_qq // with repeated quote for escaping
+  = "'" ([^'] / "''")* "'" {
     return loc({
       type: "string",
       text: text(),
