@@ -2611,7 +2611,7 @@ quoted_ident$mysql
 quoted_ident$sqlite
   = name:bracket_quoted_ident { return loc(createIdentifier(name)); }
   / name:backticks_quoted_ident { return loc(createIdentifier(name)); }
-  / str:literal_double_quoted_string_qq_bs { return loc(createIdentifier(str.text)); }
+  / str:literal_double_quoted_string_qq { return loc(createIdentifier(str.text)); }
 
 backticks_quoted_ident
   = q:"`" chars:([^`] / "``")+ "`" { return text(); }
@@ -2765,6 +2765,14 @@ literal_single_quoted_string_qq_bs // with repeated quote or backslash for escap
 
 literal_single_quoted_string_qq // with repeated quote for escaping
   = "'" ([^'] / "''")* "'" {
+    return loc({
+      type: "string",
+      text: text(),
+    });
+  }
+
+literal_double_quoted_string_qq // with repeated quote for escaping
+  = "\"" ([^"] / '""')* "\"" {
     return loc({
       type: "string",
       text: text(),

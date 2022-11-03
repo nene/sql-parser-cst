@@ -43,6 +43,10 @@ describe("column", () => {
       `);
     });
 
+    it("supports repeated-quote escaping in double-quoted identifier", () => {
+      testExpr(`"some "" name"`);
+    });
+
     it("parses bracket-quoted column name", () => {
       expect(parseExpr("[some special name]")).toMatchInlineSnapshot(`
         {
@@ -53,6 +57,10 @@ describe("column", () => {
           "type": "column_ref",
         }
       `);
+    });
+
+    it("supports ]] escaping in bracket-quoted identifier", () => {
+      testExpr(`[some ]] name]`);
     });
   });
 
