@@ -1282,34 +1282,6 @@ rename_column_kw
 rename_column_kw$sqlite
   = kw:(RENAME __ COLUMN / RENAME) { return read(kw); }
 
-table_options
-  = head:table_option tail:(__ ","? __ table_option)* {
-    return "[Not implemented]";
-  }
-
-create_option_character_set
-  = kw:DEFAULT? __ t:(CHARACTER __ SET / CHARSET / COLLATE) __ s:("=")? __ v:ident_name {
-    return "[Not implemented]";
-  }
-
-table_option
-  = kw:(AUTO_INCREMENT / AVG_ROW_LENGTH / KEY_BLOCK_SIZE / MAX_ROWS / MIN_ROWS / STATS_SAMPLE_PAGES) __ s:("=")? __ v:literal_number {
-    return "[Not implemented]";
-  }
-  / create_option_character_set
-  / kw:(COMMENT / CONNECTION) __ s:("=")? __ c:literal_string {
-    return "[Not implemented]";
-  }
-  / kw:COMPRESSION __ s:("=")? __ v:("'" ("ZLIB"i / "LZ4"i / "NONE"i) "'") {
-    return "[Not implemented]";
-  }
-  / kw:ENGINE __ s:("=")? __ c:ident_name {
-    return "[Not implemented]";
-  }
-  / kw:ROW_FORMAT __ s:("=")? __ c:(DEFAULT / DYNAMIC / FIXED / COMPRESSED / REDUNDANT / COMPACT) {
-    return "[Not implemented]";
-  }
-
 /**
  * ------------------------------------------------------------------------------------ *
  *                                                                                      *
@@ -1644,6 +1616,41 @@ create_virtual_table_stmt
         module: func.type === "identifier" ? { type: "func_call", name: func } : func,
       });
     }
+
+/**
+ * ------------------------------------------------------------------------------------ *
+ *                                                                                      *
+ * Table options                                                                        *
+ *                                                                                      *
+ * ------------------------------------------------------------------------------------ *
+ */
+table_options
+  = head:table_option tail:(__ ","? __ table_option)* {
+    return "[Not implemented]";
+  }
+
+create_option_character_set
+  = kw:DEFAULT? __ t:(CHARACTER __ SET / CHARSET / COLLATE) __ s:("=")? __ v:ident_name {
+    return "[Not implemented]";
+  }
+
+table_option
+  = kw:(AUTO_INCREMENT / AVG_ROW_LENGTH / KEY_BLOCK_SIZE / MAX_ROWS / MIN_ROWS / STATS_SAMPLE_PAGES) __ s:("=")? __ v:literal_number {
+    return "[Not implemented]";
+  }
+  / create_option_character_set
+  / kw:(COMMENT / CONNECTION) __ s:("=")? __ c:literal_string {
+    return "[Not implemented]";
+  }
+  / kw:COMPRESSION __ s:("=")? __ v:("'" ("ZLIB"i / "LZ4"i / "NONE"i) "'") {
+    return "[Not implemented]";
+  }
+  / kw:ENGINE __ s:("=")? __ c:ident_name {
+    return "[Not implemented]";
+  }
+  / kw:ROW_FORMAT __ s:("=")? __ c:(DEFAULT / DYNAMIC / FIXED / COMPRESSED / REDUNDANT / COMPACT) {
+    return "[Not implemented]";
+  }
 
 /**
  * ------------------------------------------------------------------------------------ *
