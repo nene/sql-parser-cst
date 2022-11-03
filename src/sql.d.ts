@@ -29,6 +29,7 @@ type Node =
   | ReferentialAction
   | ReferentialMatch
   | OnConflictClause
+  | TableOption
   | AlterAction
   | TriggerEvent
   | TriggerCondition
@@ -265,6 +266,7 @@ type CreateTableStmt = BaseNode & {
   columns: ParenExpr<
     ExprList<ColumnDefinition | TableConstraint | Constraint<TableConstraint>>
   >;
+  options?: ExprList<TableOption>;
 };
 
 type ColumnDefinition = BaseNode & {
@@ -450,6 +452,11 @@ type OnConflictClause = BaseNode & {
   type: "on_conflict_clause";
   onConflictKw: Keyword[]; // ON CONFLICT
   resolutionKw: Keyword; // ROLLBACK | ABORT | FAIL | IGNORE | REPLACE
+};
+
+type TableOption = BaseNode & {
+  type: "table_option";
+  name: Keyword | Keyword[];
 };
 
 // ALTER TABLE

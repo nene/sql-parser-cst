@@ -1008,7 +1008,7 @@ create_db_stmt
     }
 
 create_db_definition
-  = head:create_option_character_set tail:(__ create_option_character_set)* {
+  = head:table_option_character_set tail:(__ table_option_character_set)* {
     return "[Not implemented]";
   }
 
@@ -1127,7 +1127,7 @@ create_table_stmt
     ifKw:(__ if_not_exists)?
     table:(__ table_ref __)
     columns:create_table_definition
-    (__ table_options)? {
+    options:(__ table_options)? {
       return loc({
         type: "create_table_stmt",
         createKw,
@@ -1136,6 +1136,7 @@ create_table_stmt
         ifNotExistsKw: read(ifKw),
         table: read(table),
         columns,
+        options: read(options),
       });
     }
 
@@ -1625,20 +1626,22 @@ create_virtual_table_stmt
  * ------------------------------------------------------------------------------------ *
  */
 table_options
-  = head:table_option tail:(__ ","? __ table_option)* {
-    return "[Not implemented]";
+  = head:table_option tail:(__ "," __ table_option)* {
+    return createExprList(head, tail);
   }
 
-create_option_character_set
-  = kw:DEFAULT? __ t:(CHARACTER __ SET / CHARSET / COLLATE) __ s:("=")? __ v:ident_name {
-    return "[Not implemented]";
+table_option = never
+
+table_option$sqlite
+  = kw:(STRICT / WITHOUT __ ROWID) {
+    return loc({ type: "table_option", name: read(kw) });
   }
 
-table_option
+table_option$mysql
   = kw:(AUTO_INCREMENT / AVG_ROW_LENGTH / KEY_BLOCK_SIZE / MAX_ROWS / MIN_ROWS / STATS_SAMPLE_PAGES) __ s:("=")? __ v:literal_number {
     return "[Not implemented]";
   }
-  / create_option_character_set
+  / table_option_character_set
   / kw:(COMMENT / CONNECTION) __ s:("=")? __ c:literal_string {
     return "[Not implemented]";
   }
@@ -1649,6 +1652,11 @@ table_option
     return "[Not implemented]";
   }
   / kw:ROW_FORMAT __ s:("=")? __ c:(DEFAULT / DYNAMIC / FIXED / COMPRESSED / REDUNDANT / COMPACT) {
+    return "[Not implemented]";
+  }
+
+table_option_character_set
+  = kw:DEFAULT? __ t:(CHARACTER __ SET / CHARSET / COLLATE) __ s:("=")? __ v:ident_name {
     return "[Not implemented]";
   }
 
@@ -3104,6 +3112,7 @@ ROLLUP              = kw:"ROLLUP"i              !ident_part { return loc(createK
 ROW                 = kw:"ROW"i                 !ident_part { return loc(createKeyword(kw)); }
 ROW_FORMAT          = kw:"ROW_FORMAT"i          !ident_part { return loc(createKeyword(kw)); }
 ROW_NUMBER          = kw:"ROW_NUMBER"i          !ident_part { return loc(createKeyword(kw)); }
+ROWID               = kw:"ROWID"i               !ident_part { return loc(createKeyword(kw)); }
 ROWS                = kw:"ROWS"i                !ident_part { return loc(createKeyword(kw)); }
 SAVEPOINT           = kw:"SAVEPOINT"i           !ident_part { return loc(createKeyword(kw)); }
 SCHEMA              = kw:"SCHEMA"i              !ident_part { return loc(createKeyword(kw)); }
@@ -3134,6 +3143,7 @@ STATS_SAMPLE_PAGES  = kw:"STATS_SAMPLE_PAGES"i  !ident_part { return loc(createK
 STORAGE             = kw:"STORAGE"i             !ident_part { return loc(createKeyword(kw)); }
 STORED              = kw:"STORED"i              !ident_part { return loc(createKeyword(kw)); }
 STRAIGHT_JOIN       = kw:"STRAIGHT_JOIN"i       !ident_part { return loc(createKeyword(kw)); }
+STRICT              = kw:"STRICT"i              !ident_part { return loc(createKeyword(kw)); }
 SUM                 = kw:"SUM"i                 !ident_part { return loc(createKeyword(kw)); }
 SYSTEM_USER         = kw:"SYSTEM_USER"i         !ident_part { return loc(createKeyword(kw)); }
 TABLE               = kw:"TABLE"i               !ident_part { return loc(createKeyword(kw)); }
@@ -3178,6 +3188,7 @@ WHEN                = kw:"WHEN"i                !ident_part { return loc(createK
 WHERE               = kw:"WHERE"i               !ident_part { return loc(createKeyword(kw)); }
 WINDOW              = kw:"WINDOW"i              !ident_part { return loc(createKeyword(kw)); }
 WITH                = kw:"WITH"i                !ident_part { return loc(createKeyword(kw)); }
+WITHOUT             = kw:"WITHOUT"i             !ident_part { return loc(createKeyword(kw)); }
 WORK                = kw:"WORK"i                !ident_part { return loc(createKeyword(kw)); }
 WRITE               = kw:"WRITE"i               !ident_part { return loc(createKeyword(kw)); }
 XOR                 = kw:"XOR"i                 !ident_part { return loc(createKeyword(kw)); }

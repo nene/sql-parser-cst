@@ -101,6 +101,7 @@ const showNode = cstTransformer<string>({
       node.ifNotExistsKw,
       node.table,
       node.columns,
+      node.options,
     ]),
   column_definition: (node) =>
     show([
@@ -140,6 +141,8 @@ const showNode = cstTransformer<string>({
   constraint_engine_attribute: (node) =>
     show([node.engineAttributeKw, node.hasEq ? "=" : undefined, node.value]),
   on_conflict_clause: (node) => show([node.onConflictKw, node.resolutionKw]),
+  // options
+  table_option: (node) => show([node.name]),
 
   // ALTER TABLE statement
   alter_table_stmt: (node) =>
