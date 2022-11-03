@@ -2596,8 +2596,8 @@ column
  */
 alias_ident
   = ident
-  / s:literal_single_quoted_string { return loc(createIdentifier(s.text)); }
-  / s:literal_double_quoted_string { return loc(createIdentifier(s.text)); }
+  / s:literal_single_quoted_string_qq_bs { return loc(createIdentifier(s.text)); }
+  / s:literal_double_quoted_string_qq_bs { return loc(createIdentifier(s.text)); }
 
 ident "identifier"
   = name:ident_name !{ return __RESERVED_KEYWORDS__[name.toUpperCase()] === true; } {
@@ -2612,7 +2612,7 @@ quoted_ident$mysql
 quoted_ident$sqlite
   = name:bracket_quoted_ident { return loc(createIdentifier(name)); }
   / name:backticks_quoted_ident { return loc(createIdentifier(name)); }
-  / str:literal_double_quoted_string { return loc(createIdentifier(str.text)); }
+  / str:literal_double_quoted_string_qq_bs { return loc(createIdentifier(str.text)); }
 
 backticks_quoted_ident
   = q:"`" chars:([^`] / "``")+ "`" { return text(); }
@@ -2675,8 +2675,8 @@ literal_string_without_charset // for MySQL only
   = literal_hex_string
   / literal_bit_string
   / literal_hex_sequence
-  / literal_single_quoted_string
-  / literal_double_quoted_string
+  / literal_single_quoted_string_qq_bs
+  / literal_double_quoted_string_qq_bs
 
 charset_introducer
   = "_" cs:charset_name !ident_part { return cs; }
@@ -2749,7 +2749,7 @@ literal_hex_sequence
     });
   }
 
-literal_single_quoted_string
+literal_single_quoted_string_qq_bs // with repeated quote or backslash for escaping
   = "'" single_quoted_char* "'" {
     return loc({
       type: "string",
@@ -2765,7 +2765,7 @@ literal_single_quoted_string_qq // with repeated quote for escaping
     });
   }
 
-literal_double_quoted_string
+literal_double_quoted_string_qq_bs // with repeated quote or backslash for escaping
   = "\"" double_quoted_char* "\"" {
     return loc({
       type: "string",
@@ -2774,7 +2774,7 @@ literal_double_quoted_string
   }
 
 literal_natural_charset_string
-  = "N"i literal_single_quoted_string {
+  = "N"i literal_single_quoted_string_qq_bs {
     return loc({
       type: "string",
       text: text(),
@@ -2783,7 +2783,7 @@ literal_natural_charset_string
 
 literal_datetime
   = kw:(TIME / DATE / TIMESTAMP / DATETIME)
-    str:(__ (literal_single_quoted_string / literal_double_quoted_string)) {
+    str:(__ (literal_single_quoted_string_qq_bs / literal_double_quoted_string_qq_bs)) {
       return loc({
         type: "datetime",
         kw,
