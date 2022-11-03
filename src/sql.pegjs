@@ -1249,22 +1249,10 @@ alter_action_list
     }
 
 alter_action
-  = alter_add_constraint
-  / alter_drop_constraint
-  / alter_drop_key
-  / alter_enable_constraint
-  / alter_disable_constraint
-  / alter_add_column
+  = alter_add_column
   / alter_drop_column
-  / alter_add_index_or_key
   / alter_rename_column
   / alter_rename_table
-  / alter_algorithm
-  / alter_lock
-  / alter_change_column
-  / t:table_option {
-    return "[Not implemented]";
-  }
 
 alter_add_column
   = addKw:(ADD __ COLUMN __ / ADD __)? col:column_definition {
@@ -1282,12 +1270,6 @@ alter_drop_column
         dropKw: read(kw),
         column: col,
       })
-    }
-
-alter_add_index_or_key
-  = ADD __
-    id:table_constraint_index {
-      return "[Not implemented]";
     }
 
 alter_rename_table
@@ -1321,49 +1303,6 @@ rename_column_kw
 
 rename_column_kw$sqlite
   = kw:(RENAME __ COLUMN / RENAME) { return read(kw); }
-
-alter_algorithm
-  = ALGORITHM __ s:"="? __ val:(DEFAULT / INSTANT / INPLACE / COPY) {
-    return "[Not implemented]";
-  }
-
-alter_lock
-  = LOCK __ s:"="? __ val:(DEFAULT / NONE / SHARED / EXCLUSIVE) {
-    return "[Not implemented]";
-  }
-
-alter_change_column
-  = CHANGE __ kc:COLUMN? __ od:column_ref __ cd:column_definition __ fa:((FIRST / AFTER) __ column_ref)? {
-    return "[Not implemented]";
-  }
-
-alter_add_constraint
-  = ADD __ c:table_constraint {
-    return "[Not implemented]";
-  }
-
-alter_drop_key
-  = DROP __ PRIMARY __ KEY {
-    return "[Not implemented]";
-  }
-  / DROP __ FOREIGN __ KEY __ c:ident_name {
-    return "[Not implemented]";
-  }
-
-alter_drop_constraint
-  = DROP __ kc:CHECK __ c:ident_name {
-    return "[Not implemented]";
-  }
-
-alter_enable_constraint
-  = WITH __ CHECK __ CHECK __ CONSTRAINT __ c:ident_name {
-    return "[Not implemented]";
-  }
-
-alter_disable_constraint
-  = NOCHECK __ CONSTRAINT __ c:ident_name {
-    return "[Not implemented]";
-  }
 
 table_options
   = head:table_option tail:(__ ","? __ table_option)* {
