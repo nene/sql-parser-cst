@@ -2596,8 +2596,7 @@ column
  */
 alias_ident
   = ident
-  / s:literal_single_quoted_string_qq_bs { return loc(createIdentifier(s.text)); }
-  / s:literal_double_quoted_string_qq_bs { return loc(createIdentifier(s.text)); }
+  / s:literal_plain_string { return loc(createIdentifier(s.text)); }
 
 ident "identifier"
   = name:ident_name !{ return __RESERVED_KEYWORDS__[name.toUpperCase()] === true; } {
@@ -2658,7 +2657,7 @@ literal_boolean
 literal_string "string"
   = literal_hex_string
   / literal_hex_sequence
-  / literal_single_quoted_string_qq
+  / literal_plain_string
 
 literal_string$mysql "string"
   = charset:charset_introducer string:(__ literal_string_without_charset) {
@@ -2675,7 +2674,14 @@ literal_string_without_charset // for MySQL only
   = literal_hex_string
   / literal_bit_string
   / literal_hex_sequence
-  / literal_single_quoted_string_qq_bs
+  / literal_plain_string
+
+// The most ordinary string type, without any prefixes
+literal_plain_string
+  = literal_single_quoted_string_qq
+
+literal_plain_string$mysql
+  = literal_single_quoted_string_qq_bs
   / literal_double_quoted_string_qq_bs
 
 charset_introducer
@@ -2783,7 +2789,7 @@ literal_natural_charset_string
 
 literal_datetime
   = kw:(TIME / DATE / TIMESTAMP / DATETIME)
-    str:(__ (literal_single_quoted_string_qq_bs / literal_double_quoted_string_qq_bs)) {
+    str:(__ literal_plain_string) {
       return loc({
         type: "datetime",
         kw,

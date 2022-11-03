@@ -16,9 +16,9 @@ describe("date/time literal", () => {
       }
     `);
     testExpr(`TIME '20:15:00'`);
-    testExpr(`DATE "1995-06-01"`);
+    testExpr(`DATE '1995-06-01'`);
     testExpr(`DATEtime '1995-06-01 20:15:00'`);
-    testExpr(`timestamp "1995-06-01 20:15:00"`);
+    testExpr(`timestamp '1995-06-01 20:15:00'`);
     testExpr(`DATETIME /* com1 */ '20:15:00'`);
   });
 
