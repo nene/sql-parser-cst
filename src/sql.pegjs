@@ -2368,11 +2368,13 @@ cast_arg
 
 func_call
   = name:(func_name __) args:func_args
-    over:(__ o:over_arg)? {
+    filter:(__ filter_arg)?
+    over:(__ over_arg)? {
       return loc({
         type: "func_call",
         name: read(name),
         args,
+        ...(filter ? {filter: read(filter)} : {}),
         ...(over ? {over: read(over)} : {}),
       });
     }
@@ -2434,6 +2436,23 @@ func_1st_arg
     return loc({ type: "distinct_arg", distinctKw: kw, value: read(e) });
   }
   / expr
+
+filter_arg
+  = never
+
+filter_arg$sqlite
+  = kw:(FILTER __) e:paren_where_expr {
+    return loc({
+      type: "filter_arg",
+      filterKw: read(kw),
+      where: e,
+    });
+  }
+
+paren_where_expr
+  = "(" c1:__ e:where_clause c2:__ ")" {
+    return loc(createParenExpr(c1, e, c2));
+  }
 
 over_arg
   = kw:(OVER __) win:(window_definition_in_parens / ident) {
@@ -3026,6 +3045,7 @@ EXPANSION           = kw:"EXPANSION"i           !ident_part { return loc(createK
 EXPLAIN             = kw:"EXPLAIN"i             !ident_part { return loc(createKeyword(kw)); }
 FAIL                = kw:"FAIL"i                !ident_part { return loc(createKeyword(kw)); }
 FALSE               = kw:"FALSE"i               !ident_part { return loc(createKeyword(kw)); }
+FILTER              = kw:"FILTER"i              !ident_part { return loc(createKeyword(kw)); }
 FIRST               = kw:"FIRST"i               !ident_part { return loc(createKeyword(kw)); }
 FIRST_VALUE         = kw:"FIRST_VALUE"i         !ident_part { return loc(createKeyword(kw)); }
 FIXED               = kw:"FIXED"i               !ident_part { return loc(createKeyword(kw)); }

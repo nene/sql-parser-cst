@@ -1,4 +1,4 @@
-import { parseExpr, testExpr } from "../test_utils";
+import { dialect, parseExpr, testExpr } from "../test_utils";
 
 describe("function call", () => {
   it("supports simple function call", () => {
@@ -63,5 +63,12 @@ describe("function call", () => {
         "type": "func_call",
       }
     `);
+  });
+
+  dialect("sqlite", () => {
+    it("supports FILTER clause for aggregate functions", () => {
+      testExpr(`count(*) FILTER (WHERE job_id = 2)`);
+      testExpr(`count(*) /*c1*/ FILTER /*c2*/ (/*c3*/ WHERE /*c4*/ true /*c5*/)`);
+    });
   });
 });

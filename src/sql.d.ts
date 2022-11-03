@@ -41,6 +41,7 @@ type Node =
   | DataType
   | NamedWindow
   | WindowDefinition
+  | FilterArg
   | OverArg
   | FrameNode
   | CaseWhen
@@ -879,7 +880,14 @@ type FuncCall = BaseNode & {
   type: "func_call";
   name: Identifier;
   args?: ParenExpr<ExprList<Expr | AllColumns | DistinctArg>>;
+  filter?: FilterArg;
   over?: OverArg;
+};
+
+type FilterArg = BaseNode & {
+  type: "filter_arg";
+  filterKw: Keyword; // FILTER
+  where: ParenExpr<WhereClause>;
 };
 
 type OverArg = BaseNode & {

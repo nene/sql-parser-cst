@@ -11,6 +11,12 @@ describe("window functions", () => {
     test(`SELECT row_number() OVER (/*c*/)`);
   });
 
+  dialect("sqlite", () => {
+    it("supports FILTER combined with OVER", () => {
+      test(`SELECT row_number() FILTER (WHERE true) OVER my_win`);
+    });
+  });
+
   it("supports PARTITION BY", () => {
     test(`SELECT sum(profit) OVER (PARTITION BY product)`);
     test(

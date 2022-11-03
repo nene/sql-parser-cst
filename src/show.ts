@@ -298,10 +298,11 @@ const showNode = cstTransformer<string>({
   binary_expr: (node) => show([node.left, node.operator, node.right]),
   prefix_op_expr: (node) => show([node.operator, node.expr]),
   postfix_op_expr: (node) => show([node.expr, node.operator]),
-  func_call: (node) => show([node.name, node.args, node.over]),
+  func_call: (node) => show([node.name, node.args, node.filter, node.over]),
   distinct_arg: (node) => show([node.distinctKw, node.value]),
   cast_expr: (node) => show([node.castKw, node.args]),
   cast_arg: (node) => show([node.expr, node.asKw, node.dataType]),
+  filter_arg: (node) => show([node.filterKw, node.where]),
   over_arg: (node) => show([node.overKw, node.window]),
   between_expr: (node) =>
     show([node.left, node.betweenKw, node.begin, node.andKw, node.end]),
