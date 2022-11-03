@@ -1127,10 +1127,7 @@ create_table_stmt
     ifKw:(__ if_not_exists)?
     table:(__ table_ref __)
     columns:create_table_definition
-    __ table_options?
-    __ (IGNORE / REPLACE)?
-    __ AS?
-    __ compound_select_stmt? {
+    (__ table_options)? {
       return loc({
         type: "create_table_stmt",
         createKw,
