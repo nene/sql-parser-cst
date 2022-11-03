@@ -142,7 +142,8 @@ const showNode = cstTransformer<string>({
     show([node.engineAttributeKw, node.hasEq ? "=" : undefined, node.value]),
   on_conflict_clause: (node) => show([node.onConflictKw, node.resolutionKw]),
   // options
-  table_option: (node) => show([node.name]),
+  table_option: (node) =>
+    show([node.name, node.hasEq ? "=" : undefined, node.value]),
 
   // ALTER TABLE statement
   alter_table_stmt: (node) =>

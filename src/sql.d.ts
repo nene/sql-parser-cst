@@ -457,6 +457,8 @@ type OnConflictClause = BaseNode & {
 type TableOption = BaseNode & {
   type: "table_option";
   name: Keyword | Keyword[];
+  hasEq?: boolean; // True when "=" sign is used
+  value?: NumberLiteral | StringLiteral | Identifier | Keyword;
 };
 
 // ALTER TABLE
