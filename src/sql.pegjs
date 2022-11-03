@@ -1121,15 +1121,7 @@ drop_index_stmt$mysql
  * ------------------------------------------------------------------------------------ *
  */
 create_table_stmt
-  = a:CREATE __
-    tp:TEMPORARY? __
-    TABLE __
-    ife:if_not_exists? __
-    t:table_ref __
-    lt:create_like_table {
-      return "[Not implemented]";
-    }
-  / createKw:CREATE
+  = createKw:CREATE
     tmpKw:(__ (TEMPORARY / TEMP))?
     tableKw:(__ TABLE)
     ifKw:(__ if_not_exists)?
@@ -1152,17 +1144,6 @@ create_table_stmt
 
 if_not_exists
   = kws:(IF __ NOT __ EXISTS) { return read(kws); }
-
-create_like_table_simple
-  = LIKE __ t: table_ref_list {
-    return "[Not implemented]";
-  }
-
-create_like_table
-  = create_like_table_simple
-  / "(" __ e:create_like_table  __ ")" {
-    return "[Not implemented]";
-  }
 
 create_table_definition
   = "(" c1:__ list:create_definition_list c2:__ ")" {
