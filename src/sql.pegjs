@@ -980,10 +980,12 @@ column_value$mysql = expr / default
  * ------------------------------------------------------------------------------------ *
  */
 delete_stmt
-  = delKw:(DELETE __) fromKw:(FROM __) tbl:table_ref_or_alias
+  = withCls:(with_clause __)?
+    delKw:(DELETE __) fromKw:(FROM __) tbl:table_ref_or_alias
     where:(__ where_clause)? {
       return loc({
         type: "delete_stmt",
+        with: read(withCls),
         deleteKw: read(delKw),
         fromKw: read(fromKw),
         table: tbl,

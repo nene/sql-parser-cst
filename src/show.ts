@@ -192,7 +192,7 @@ const showNode = cstTransformer<string>({
 
   // DELETE FROM statement
   delete_stmt: (node) =>
-    show([node.deleteKw, node.fromKw, node.table, node.where]),
+    show([node.with, node.deleteKw, node.fromKw, node.table, node.where]),
 
   // CREATE VIEW statement
   create_view_stmt: (node) =>

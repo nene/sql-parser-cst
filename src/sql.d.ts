@@ -547,6 +547,7 @@ type Default = BaseNode & {
 // DELETE FROM
 type DeleteStmt = BaseNode & {
   type: "delete_stmt";
+  with?: WithClause;
   deleteKw: Keyword;
   fromKw: Keyword;
   table: TableRef | Alias<TableRef>;
