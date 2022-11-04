@@ -26,10 +26,13 @@
     "build": "yarn clean && yarn generate && tsc && yarn copy",
     "test:mysql": "jest --config test/config/mysql.json",
     "test:sqlite": "jest --config test/config/sqlite.json",
-    "test": "yarn generate && yarn test:mysql && yarn test:sqlite"
+    "test": "yarn generate && yarn test:mysql && yarn test:sqlite",
+    "perf": "yarn ts-node perf/perf-test.ts"
   },
   "devDependencies": {
+    "@types/benchmark": "^2.1.2",
     "@types/jest": "^29.1.2",
+    "benchmark": "^2.1.4",
     "dedent-js": "^1.0.1",
     "jest": "^29.1.2",
     "npm-watch": "^0.11.0",
