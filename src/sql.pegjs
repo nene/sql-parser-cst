@@ -2099,6 +2099,7 @@ type_name
   / YEAR
   / CHAR
   / VARCHAR
+  / NVARCHAR
   / TINYTEXT
   / TEXT
   / MEDIUMTEXT
@@ -3139,6 +3140,7 @@ NTILE               = kw:"NTILE"i               !ident_part { return loc(createK
 NULL                = kw:"NULL"i                !ident_part { return loc(createKeyword(kw)); }
 NULLS               = kw:"NULLS"i               !ident_part { return loc(createKeyword(kw)); }
 NUMERIC             = kw:"NUMERIC"i             !ident_part { return loc(createKeyword(kw)); }
+NVARCHAR            = kw:"NVARCHAR"i            !ident_part { return loc(createKeyword(kw)); }
 OF                  = kw:"OF"i                  !ident_part { return loc(createKeyword(kw)); }
 OFFSET              = kw:"OFFSET"i              !ident_part { return loc(createKeyword(kw)); }
 ON                  = kw:"ON"i                  !ident_part { return loc(createKeyword(kw)); }

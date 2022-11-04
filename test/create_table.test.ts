@@ -71,8 +71,10 @@ describe("create table", () => {
 
     it("string types", () => {
       testType("VARCHAR");
+      testType("NVARCHAR");
       testType("CHAR");
       testType("VARCHAR(100)");
+      testType("NVARCHAR(100)");
       testType("CHAR(15)");
       testType("CHAR /*c1*/(/*c2*/ 123 /*c3*/)");
     });
