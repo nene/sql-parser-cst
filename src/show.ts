@@ -188,6 +188,7 @@ const showNode = cstTransformer<string>({
       node.tables,
       node.setKw,
       node.assignments,
+      node.from,
       node.where,
     ]),
   column_assignment: (node) => show([node.column, "=", node.expr]),

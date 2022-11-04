@@ -37,4 +37,11 @@ describe("update", () => {
       test("WITH subsel AS (SELECT 1) /*c*/ UPDATE tbl SET col1 = 2");
     });
   });
+
+  dialect("sqlite", () => {
+    it("supports UPDATE ... FROM ...", () => {
+      test("UPDATE tbl SET col1 = 2 FROM foo JOIN bar USING (id) WHERE foo.age > 0");
+      test("UPDATE tbl SET col1 = 2 /*c1*/ FROM foo /*c2*/ WHERE true");
+    });
+  });
 });

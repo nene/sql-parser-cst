@@ -563,6 +563,7 @@ type UpdateStmt = BaseNode & {
   tables: ExprList<TableRef>;
   setKw: Keyword;
   assignments: ExprList<ColumnAssignment>;
+  from?: FromClause;
   where?: WhereClause;
 };
 

@@ -947,6 +947,7 @@ update_stmt
     tables:(table_ref_list __)
     setKw:(SET __)
     set:column_assignment_list
+    from:(__ from_clause)?
     where:(__ where_clause)? {
       return loc({
         type: "update_stmt",
@@ -955,6 +956,7 @@ update_stmt
         tables: read(tables),
         setKw: read(setKw),
         assignments: set,
+        from: read(from),
         where: read(where),
       });
     }
