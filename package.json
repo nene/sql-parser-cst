@@ -21,8 +21,9 @@
     "pretty": "prettier --write .",
     "generate": "ts-node ./generate.ts",
     "watch:generate": "npm-watch",
-    "copy": "cp -R src/keywords lib/keywords && cp -R src/dialects lib/dialects && cp src/sql.d.ts lib/sql.d.ts",
-    "build": "yarn generate && tsc && yarn copy",
+    "clean": "rm -rf lib; rm -f src/dialects/*.js",
+    "copy": "cp -R src/keywords lib/ && cp -R src/dialects lib/ && cp src/sql.d.ts lib/",
+    "build": "yarn clean && yarn generate && tsc && yarn copy",
     "test:mysql": "jest --config test/config/mysql.json",
     "test:sqlite": "jest --config test/config/sqlite.json",
     "test": "yarn generate && yarn test:mysql && yarn test:sqlite"
