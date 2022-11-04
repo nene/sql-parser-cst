@@ -515,6 +515,7 @@ type DropTableStmt = BaseNode & {
 // INSERT INTO
 type InsertStmt = BaseNode & {
   type: "insert_stmt";
+  with?: WithClause;
   insertKw: Keyword; // INSERT | REPLACE
   options: InsertOption[];
   intoKw?: Keyword;

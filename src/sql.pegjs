@@ -848,7 +848,8 @@ lock_option
  * ------------------------------------------------------------------------------------ *
  */
 insert_stmt
-  = insertKw:(INSERT / REPLACE)
+  = withCls:(with_clause __)?
+    insertKw:(INSERT / REPLACE)
     options:(__ insert_options)?
     intoKw:(__ INTO)?
     table:(__ table_ref_or_explicit_alias)
@@ -856,6 +857,7 @@ insert_stmt
     source:(__ insert_source) {
       return loc({
         type: "insert_stmt",
+        with: read(withCls),
         insertKw,
         options: read(options) || [],
         intoKw: read(intoKw),

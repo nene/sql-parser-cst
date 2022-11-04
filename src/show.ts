@@ -168,6 +168,7 @@ const showNode = cstTransformer<string>({
   // INSERT INTO statement
   insert_stmt: (node) =>
     show([
+      node.with,
       node.insertKw,
       node.options,
       node.intoKw,

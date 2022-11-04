@@ -87,6 +87,13 @@ describe("insert into", () => {
     });
   });
 
+  dialect("sqlite", () => {
+    it("supports WITH ... INSERT ...", () => {
+      test("WITH subsel AS (SELECT 1) INSERT INTO tbl VALUES (1)");
+      test("WITH subsel AS (SELECT 1) /*c*/ INSERT INTO tbl VALUES (1)");
+    });
+  });
+
   it("parses INSERT to syntax tree", () => {
     expect(parseStmt("INSERT INTO tbl (col1, col2) VALUES (1, 2), (3, 4)")).toMatchInlineSnapshot(`
       {
@@ -173,6 +180,7 @@ describe("insert into", () => {
           "type": "table_ref",
         },
         "type": "insert_stmt",
+        "with": undefined,
       }
     `);
   });
