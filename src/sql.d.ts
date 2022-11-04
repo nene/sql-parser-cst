@@ -134,9 +134,11 @@ type Clause =
   | HavingClause
   | WindowClause
   | OrderByClause
-  | PartitionByClause
+  | PartitionByClause // in window definitions
   | LimitClause
-  | ValuesClause;
+  | ValuesClause
+  | UpdateClause // in UPDATE statement
+  | SetClause; // in UPDATE statement
 
 type WithClause = BaseNode & {
   type: "with_clause";
@@ -558,13 +560,19 @@ type DeleteStmt = BaseNode & {
 // UPDATE
 type UpdateStmt = BaseNode & {
   type: "update_stmt";
-  with?: WithClause;
+  clauses: Clause[];
+};
+
+type UpdateClause = BaseNode & {
+  type: "update_clause";
   updateKw: Keyword;
   tables: ExprList<TableRef>;
+};
+
+type SetClause = BaseNode & {
+  type: "set_clause";
   setKw: Keyword;
   assignments: ExprList<ColumnAssignment>;
-  from?: FromClause;
-  where?: WhereClause;
 };
 
 type ColumnAssignment = BaseNode & {

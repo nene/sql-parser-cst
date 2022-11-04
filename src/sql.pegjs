@@ -942,24 +942,47 @@ default_values
  * ------------------------------------------------------------------------------------ *
  */
 update_stmt
-  = withCls:(with_clause __)?
-    kw:(UPDATE __)
-    tables:(table_ref_list __)
-    setKw:(SET __)
-    set:column_assignment_list
-    from:(__ from_clause)?
-    where:(__ where_clause)? {
+  = withClause:(with_clause __)?
+    updateClause:(update_clause __)
+    setClause:set_clause
+    clauses:(__ other_update_clause_list)? {
       return loc({
         type: "update_stmt",
-        with: read(withCls),
-        updateKw: read(kw),
-        tables: read(tables),
-        setKw: read(setKw),
-        assignments: set,
-        from: read(from),
-        where: read(where),
+        clauses: [
+          read(withClause),
+          read(updateClause),
+          read(setClause),
+          ...(read(clauses) || []),
+        ].filter(identity),
       });
     }
+
+update_clause
+  = kw:(UPDATE __) tables:table_ref_list {
+    return loc({
+      type: "update_clause",
+      updateKw: read(kw),
+      tables: tables,
+    });
+  }
+
+set_clause
+  = kw:(SET __) set:column_assignment_list {
+    return loc({
+      type: "set_clause",
+      setKw: read(kw),
+      assignments: set,
+    });
+  }
+
+other_update_clause_list
+  = head:other_update_clause tail:(__ other_update_clause)* {
+    return readSpaceSepList(head, tail);
+  }
+
+other_update_clause
+  = from_clause
+  / where_clause
 
 column_assignment_list
   = head:column_assignment tail:(__ "," __ column_assignment)* {

@@ -181,16 +181,9 @@ const showNode = cstTransformer<string>({
   default: (node) => show(node.kw),
 
   // UPDATE statement
-  update_stmt: (node) =>
-    show([
-      node.with,
-      node.updateKw,
-      node.tables,
-      node.setKw,
-      node.assignments,
-      node.from,
-      node.where,
-    ]),
+  update_stmt: (node) => show(node.clauses),
+  update_clause: (node) => show([node.updateKw, node.tables]),
+  set_clause: (node) => show([node.setKw, node.assignments]),
   column_assignment: (node) => show([node.column, "=", node.expr]),
 
   // DELETE FROM statement
