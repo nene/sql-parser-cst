@@ -983,6 +983,8 @@ other_update_clause_list
 other_update_clause
   = from_clause
   / where_clause
+  / order_by_clause
+  / limit_clause
 
 column_assignment_list
   = head:column_assignment tail:(__ "," __ column_assignment)* {

@@ -44,4 +44,15 @@ describe("update", () => {
       test("UPDATE tbl SET col1 = 2 /*c1*/ FROM foo /*c2*/ WHERE true");
     });
   });
+
+  dialect(["mysql", "sqlite"], () => {
+    it("supports UPDATE ... ORDER BY ...", () => {
+      test("UPDATE tbl SET col1 = 2 ORDER BY col1");
+      test("UPDATE tbl SET col1 = 2 /*c1*/ ORDER BY col1");
+    });
+    it("supports UPDATE ... LIMIT ...", () => {
+      test("UPDATE tbl SET col1 = 2 LIMIT 20");
+      test("UPDATE tbl SET col1 = 2 /*c1*/ LIMIT 20");
+    });
+  });
 });
