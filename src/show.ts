@@ -182,6 +182,7 @@ const showNode = cstTransformer<string>({
   // UPDATE statement
   update_stmt: (node) =>
     show([
+      node.with,
       node.updateKw,
       node.tables,
       node.setKw,

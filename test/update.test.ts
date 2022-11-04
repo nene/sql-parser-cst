@@ -30,4 +30,11 @@ describe("update", () => {
       test("UPDATE person SET age = DEFAULT");
     });
   });
+
+  dialect("sqlite", () => {
+    it("supports WITH ... UPDATE ...", () => {
+      test("WITH subsel AS (SELECT 1) UPDATE tbl SET col1 = 2");
+      test("WITH subsel AS (SELECT 1) /*c*/ UPDATE tbl SET col1 = 2");
+    });
+  });
 });

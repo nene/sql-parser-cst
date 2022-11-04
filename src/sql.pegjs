@@ -940,13 +940,15 @@ default_values
  * ------------------------------------------------------------------------------------ *
  */
 update_stmt
-  = kw:(UPDATE __)
+  = withCls:(with_clause __)?
+    kw:(UPDATE __)
     tables:(table_ref_list __)
     setKw:(SET __)
     set:column_assignment_list
     where:(__ where_clause)? {
       return loc({
         type: "update_stmt",
+        with: read(withCls),
         updateKw: read(kw),
         tables: read(tables),
         setKw: read(setKw),

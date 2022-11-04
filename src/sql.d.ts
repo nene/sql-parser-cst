@@ -557,6 +557,7 @@ type DeleteStmt = BaseNode & {
 // UPDATE
 type UpdateStmt = BaseNode & {
   type: "update_stmt";
+  with?: WithClause;
   updateKw: Keyword;
   tables: ExprList<TableRef>;
   setKw: Keyword;
