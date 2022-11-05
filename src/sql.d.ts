@@ -531,6 +531,7 @@ type InsertStmt = BaseNode & {
   table: TableRef | Alias<TableRef>;
   columns?: ParenExpr<ExprList<ColumnRef>>;
   source: ValuesClause | SubSelect | DefaultValues;
+  returning?: ReturningClause;
 };
 
 type InsertOption = BaseNode & {

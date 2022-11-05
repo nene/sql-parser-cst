@@ -178,6 +178,7 @@ const showNode = cstTransformer<string>({
       node.table,
       node.columns,
       node.source,
+      node.returning,
     ]),
   insert_option: (node) => show(node.kw),
   default_values: (node) => show(node.kw),

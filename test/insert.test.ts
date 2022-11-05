@@ -94,6 +94,13 @@ describe("insert into", () => {
     });
   });
 
+  dialect("sqlite", () => {
+    it("supports INSERT ... RETURNING ...", () => {
+      test("INSERT INTO tbl (col) VALUES (1) RETURNING col");
+      test("INSERT INTO tbl (col) VALUES (1) /*c1*/ RETURNING /*c2*/ *");
+    });
+  });
+
   it("parses INSERT to syntax tree", () => {
     expect(parseStmt("INSERT INTO tbl (col1, col2) VALUES (1, 2), (3, 4)")).toMatchInlineSnapshot(`
       {
@@ -128,6 +135,7 @@ describe("insert into", () => {
           "type": "keyword",
         },
         "options": [],
+        "returning": undefined,
         "source": {
           "type": "values_clause",
           "values": {

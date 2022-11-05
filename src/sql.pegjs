@@ -867,7 +867,8 @@ insert_stmt
     intoKw:(__ INTO)?
     table:(__ table_ref_or_explicit_alias)
     columns:(__ paren_plain_column_ref_list)?
-    source:(__ insert_source) {
+    source:(__ insert_source)
+    returning:(__ returning_clause)? {
       return loc({
         type: "insert_stmt",
         with: read(withCls),
@@ -877,6 +878,7 @@ insert_stmt
         table: read(table),
         columns: read(columns),
         source: read(source),
+        returning: read(returning),
       });
     }
 
