@@ -45,6 +45,14 @@ describe("update", () => {
     });
   });
 
+  dialect("sqlite", () => {
+    it("supports UPDATE ... RETURNING ...", () => {
+      test("UPDATE tbl SET col1 = 2 RETURNING col1, col2");
+      test("UPDATE tbl SET col1 = 2 RETURNING *");
+      test("UPDATE tbl SET col1 = 2 /*c1*/ RETURNING /*c2*/ *");
+    });
+  });
+
   dialect(["mysql", "sqlite"], () => {
     it("supports UPDATE ... ORDER BY ...", () => {
       test("UPDATE tbl SET col1 = 2 ORDER BY col1");

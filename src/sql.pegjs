@@ -841,6 +841,19 @@ lock_option
   / sl:(SKIP __ LOCKED) { return "[Not implemented]"; }
 
 /**
+ * { UPDATE | INSERT | DELETE } ... RETURNING
+ * --------------------------------------------------------------------------------------
+ */
+returning_clause
+  = kw:RETURNING cols:(__ select_columns) {
+    return loc({
+      type: "returning_clause",
+      returningKw: kw,
+      columns: read(cols),
+    });
+  }
+
+/**
  * ------------------------------------------------------------------------------------ *
  *                                                                                      *
  * INSERT INTO                                                                          *
@@ -983,6 +996,7 @@ other_update_clause_list
 other_update_clause
   = from_clause
   / where_clause
+  / returning_clause
   / order_by_clause
   / limit_clause
 
@@ -2941,7 +2955,6 @@ never
 ABORT               = kw:"ABORT"i               !ident_part { return loc(createKeyword(kw)); }
 ACTION              = kw:"ACTION"i              !ident_part { return loc(createKeyword(kw)); }
 ADD                 = kw:"ADD"i                 !ident_part { return loc(createKeyword(kw)); }
-ADD_DATE            = kw:"ADDDATE"i             !ident_part { return loc(createKeyword(kw)); }
 AFTER               = kw:"AFTER"i               !ident_part { return loc(createKeyword(kw)); }
 AGAINST             = kw:"AGAINST"              !ident_part { return loc(createKeyword(kw)); }
 ALGORITHM           = kw:"ALGORITHM"i           !ident_part { return loc(createKeyword(kw)); }
@@ -3181,6 +3194,7 @@ REPLACE             = kw:"REPLACE"i             !ident_part { return loc(createK
 REPLICATION         = kw:"REPLICATION"i         !ident_part { return loc(createKeyword(kw)); }
 RESTRICT            = kw:"RESTRICT"i            !ident_part { return loc(createKeyword(kw)); }
 RETURN              = kw:"RETURN"i              !ident_part { return loc(createKeyword(kw)); }
+RETURNING           = kw:"RETURNING"i           !ident_part { return loc(createKeyword(kw)); }
 RIGHT               = kw:"RIGHT"i               !ident_part { return loc(createKeyword(kw)); }
 RLIKE               = kw:"RLIKE"i               !ident_part { return loc(createKeyword(kw)); }
 ROLLBACK            = kw:"ROLLBACK"i            !ident_part { return loc(createKeyword(kw)); }

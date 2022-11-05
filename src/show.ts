@@ -92,6 +92,9 @@ const showNode = cstTransformer<string>({
   frame_unbounded: (node) => show(node.unboundedKw),
   frame_exclusion: (node) => show([node.excludeKw, node.kindKw]),
 
+  // returning clause
+  returning_clause: (node) => show([node.returningKw, node.columns]),
+
   // CREATE TABLE statement
   create_table_stmt: (node) =>
     show([

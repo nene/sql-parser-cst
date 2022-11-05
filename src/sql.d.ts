@@ -138,7 +138,8 @@ type Clause =
   | LimitClause
   | ValuesClause
   | UpdateClause // in UPDATE statement
-  | SetClause; // in UPDATE statement
+  | SetClause // in UPDATE statement
+  | ReturningClause; // in UPDATE,INSERT,DELETE
 
 type WithClause = BaseNode & {
   type: "with_clause";
@@ -255,6 +256,12 @@ type SortSpecification = BaseNode & {
   expr: Expr;
   orderKw?: Keyword; // ASC | DESC
   nullHandlingKw?: Keyword[]; // NULLS FIRST | NULLS LAST
+};
+
+type ReturningClause = BaseNode & {
+  type: "returning_clause";
+  returningKw: Keyword; // RETURNING
+  columns: ExprList<Expr | Alias<Expr>>;
 };
 
 // CREATE TABLE
