@@ -292,7 +292,7 @@ intersect_op
 
 select_stmt
   = cte:(with_clause __)?
-    select:(__ select_clause)
+    select:(select_clause / values_clause)
     otherClauses:(__ other_clause)* {
       return loc({
         type: "select_stmt",
