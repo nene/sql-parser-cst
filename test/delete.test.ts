@@ -17,4 +17,11 @@ describe("delete from", () => {
       test("WITH subsel AS (SELECT 1) /*c*/ DELETE FROM tbl");
     });
   });
+
+  dialect("sqlite", () => {
+    it("supports DELETE ... RETURNING ...", () => {
+      test("DELETE FROM tbl WHERE x > 0 RETURNING col1, col2");
+      test("DELETE FROM tbl WHERE x > 0 /*c1*/ RETURNING /*c2*/ *");
+    });
+  });
 });

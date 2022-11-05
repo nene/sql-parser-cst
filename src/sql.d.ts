@@ -563,6 +563,7 @@ type DeleteStmt = BaseNode & {
   fromKw: Keyword;
   table: TableRef | Alias<TableRef>;
   where?: WhereClause;
+  returning?: ReturningClause;
 };
 
 // UPDATE
