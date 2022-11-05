@@ -50,7 +50,7 @@ type Node =
   | RowConstructor
   | DefaultValues
   | Default
-  | InsertOption
+  | UpsertOption
   | OrAlternateAction
   | ColumnAssignment
   | Alias
@@ -528,7 +528,7 @@ type InsertStmt = BaseNode & {
   type: "insert_stmt";
   with?: WithClause;
   insertKw: Keyword; // INSERT | REPLACE
-  options: InsertOption[];
+  options: UpsertOption[];
   orAction?: OrAlternateAction;
   intoKw?: Keyword;
   table: TableRef | Alias<TableRef>;
@@ -537,9 +537,9 @@ type InsertStmt = BaseNode & {
   returning?: ReturningClause;
 };
 
-// Only in MySQL
-type InsertOption = BaseNode & {
-  type: "insert_option";
+// Only in MySQL INSERT & UPDATE clauses
+type UpsertOption = BaseNode & {
+  type: "upsert_option";
   kw: Keyword; // LOW_PRIORITY | DELAYED | HIGH_PRIORITY | IGNORE
 };
 
@@ -593,6 +593,8 @@ type UpdateStmt = BaseNode & {
 type UpdateClause = BaseNode & {
   type: "update_clause";
   updateKw: Keyword;
+  options: UpsertOption[];
+  orAction?: OrAlternateAction;
   tables: ExprList<TableRef>;
 };
 

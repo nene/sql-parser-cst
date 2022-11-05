@@ -31,6 +31,27 @@ describe("update", () => {
     });
   });
 
+  dialect("mysql", () => {
+    it("supports LOW_PRIORITY option", () => {
+      test("UPDATE LOW_PRIORITY tbl SET x=1");
+    });
+    it("supports IGNORE option", () => {
+      test("UPDATE IGNORE tbl SET x=1");
+      test("UPDATE /*c1*/ LOW_PRIORITY /*c2*/ IGNORE /*c3*/ tbl SET x=1");
+    });
+  });
+
+  dialect("sqlite", () => {
+    it("supports UPDATE OR ... options", () => {
+      test("UPDATE OR ABORT tbl SET x=1");
+      test("UPDATE OR FAIL tbl SET x=1");
+      test("UPDATE OR IGNORE tbl SET x=1");
+      test("UPDATE OR REPLACE tbl SET x=1");
+      test("UPDATE OR ROLLBACK tbl SET x=1");
+      test("UPDATE /*c1*/ OR /*c2*/ ABORT /*c3*/ tbl SET x=1");
+    });
+  });
+
   dialect("sqlite", () => {
     it("supports WITH ... UPDATE ...", () => {
       test("WITH subsel AS (SELECT 1) UPDATE tbl SET col1 = 2");

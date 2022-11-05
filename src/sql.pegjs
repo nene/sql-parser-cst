@@ -863,7 +863,7 @@ returning_clause
 insert_stmt
   = withCls:(with_clause __)?
     insertKw:(INSERT / REPLACE)
-    options:(__ insert_options)?
+    options:(__ upsert_options)?
     orAction:(__ or_alternate_action)?
     intoKw:(__ INTO)?
     table:(__ table_ref_or_explicit_alias)
@@ -884,17 +884,17 @@ insert_stmt
       });
     }
 
-insert_options
-  = head:insert_opt tail:(__ insert_opt)* {
+upsert_options
+  = head:upsert_opt tail:(__ upsert_opt)* {
     return readSpaceSepList(head, tail);
   }
 
-insert_opt
+upsert_opt
   = never
 
-insert_opt$mysql
+upsert_opt$mysql
   = kw:(LOW_PRIORITY / DELAYED / HIGH_PRIORITY / IGNORE) {
-    return loc({ type: "insert_option", kw });
+    return loc({ type: "upsert_option", kw });
   }
 
 or_alternate_action
@@ -903,7 +903,7 @@ or_alternate_action
 or_alternate_action$sqlite
   = or:(OR __) act:(ABORT / FAIL / IGNORE / REPLACE / ROLLBACK) {
     return loc({
-      type: "alternate_action",
+      type: "or_alternate_action",
       orKw: read(or),
       actionKw: read(act)
     });
@@ -996,13 +996,18 @@ update_stmt
     }
 
 update_clause
-  = kw:(UPDATE __) tables:table_ref_list {
-    return loc({
-      type: "update_clause",
-      updateKw: read(kw),
-      tables: tables,
-    });
-  }
+  = kw:(UPDATE __)
+    options:(upsert_options __)?
+    orAction:(or_alternate_action __)?
+    tables:table_ref_list {
+      return loc({
+        type: "update_clause",
+        updateKw: read(kw),
+        options: read(options) || [],
+        orAction: read(orAction),
+        tables: tables,
+      });
+    }
 
 set_clause
   = kw:(SET __) set:column_assignment_list {

@@ -182,14 +182,15 @@ const showNode = cstTransformer<string>({
       node.source,
       node.returning,
     ]),
-  insert_option: (node) => show(node.kw),
+  upsert_option: (node) => show(node.kw),
   or_alternate_action: (node) => show([node.orKw, node.actionKw]),
   default_values: (node) => show(node.kw),
   default: (node) => show(node.kw),
 
   // UPDATE statement
   update_stmt: (node) => show(node.clauses),
-  update_clause: (node) => show([node.updateKw, node.tables]),
+  update_clause: (node) =>
+    show([node.updateKw, node.options, node.orAction, node.tables]),
   set_clause: (node) => show([node.setKw, node.assignments]),
   column_assignment: (node) => show([node.column, "=", node.expr]),
 
