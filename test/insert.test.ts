@@ -62,6 +62,12 @@ describe("insert into", () => {
   });
 
   dialect("mysql", () => {
+    it("supports inserting row constructor", () => {
+      test("INSERT INTO tbl VALUES ROW(1, DEFAULT), ROW(2, DEFAULT)");
+    });
+  });
+
+  dialect("mysql", () => {
     it("supports priority options", () => {
       test("INSERT LOW_PRIORITY INTO tbl VALUES (1)");
       test("INSERT DELAYED INTO tbl VALUES (1)");

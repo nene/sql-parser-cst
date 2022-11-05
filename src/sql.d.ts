@@ -47,6 +47,7 @@ type Node =
   | FrameNode
   | CaseWhen
   | CaseElse
+  | RowConstructor
   | DefaultValues
   | Default
   | InsertOption
@@ -542,7 +543,14 @@ type InsertOption = BaseNode & {
 type ValuesClause = BaseNode & {
   type: "values_clause";
   valuesKw: Keyword; // VALUES | VALUE
-  values: ExprList<ParenExpr<ExprList<Expr | Default>>>;
+  values: ExprList<ParenExpr<ExprList<Expr | Default>> | RowConstructor>;
+};
+
+// only in MySQL
+type RowConstructor = BaseNode & {
+  type: "row_constructor";
+  rowKw: Keyword; // ROW
+  row: ParenExpr<ExprList<Expr | Default>>;
 };
 
 type DefaultValues = BaseNode & {

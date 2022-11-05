@@ -81,6 +81,7 @@ const showNode = cstTransformer<string>({
   },
   // VALUES
   values_clause: (node) => show([node.valuesKw, node.values]),
+  row_constructor: (node) => show([node.rowKw, node.row]),
 
   // Window frame
   frame_clause: (node) => show([node.unitKw, node.extent, node.exclusion]),

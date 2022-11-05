@@ -930,6 +930,19 @@ values_row
   = paren_expr_list
 
 values_row$mysql
+  = paren_expr_list_with_default
+  / row_constructor
+
+row_constructor
+  = kw:(ROW __) row:paren_expr_list_with_default {
+    return loc({
+      type: "row_constructor",
+      rowKw: read(kw),
+      row,
+    });
+  }
+
+paren_expr_list_with_default
   = "(" c1:__ list:expr_list_with_default c2:__ ")" {
     return loc(createParenExpr(c1, list, c2));
   }
