@@ -864,6 +864,7 @@ insert_stmt
   = withCls:(with_clause __)?
     insertKw:(INSERT / REPLACE)
     options:(__ insert_options)?
+    orAction:(__ or_alternate_action)?
     intoKw:(__ INTO)?
     table:(__ table_ref_or_explicit_alias)
     columns:(__ paren_plain_column_ref_list)?
@@ -874,6 +875,7 @@ insert_stmt
         with: read(withCls),
         insertKw,
         options: read(options) || [],
+        orAction: read(orAction),
         intoKw: read(intoKw),
         table: read(table),
         columns: read(columns),
@@ -894,9 +896,17 @@ insert_opt$mysql
   = kw:(LOW_PRIORITY / DELAYED / HIGH_PRIORITY / IGNORE) {
     return loc({ type: "insert_option", kw });
   }
-insert_opt$sqlite
-  = kws:(OR __ (ABORT / FAIL / IGNORE / REPLACE / ROLLBACK)) {
-    return loc({ type: "insert_option", kw: read(kws) });
+
+or_alternate_action
+  = never
+
+or_alternate_action$sqlite
+  = or:(OR __) act:(ABORT / FAIL / IGNORE / REPLACE / ROLLBACK) {
+    return loc({
+      type: "alternate_action",
+      orKw: read(or),
+      actionKw: read(act)
+    });
   }
 
 table_ref_or_explicit_alias

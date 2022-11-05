@@ -175,6 +175,7 @@ const showNode = cstTransformer<string>({
       node.with,
       node.insertKw,
       node.options,
+      node.orAction,
       node.intoKw,
       node.table,
       node.columns,
@@ -182,6 +183,7 @@ const showNode = cstTransformer<string>({
       node.returning,
     ]),
   insert_option: (node) => show(node.kw),
+  or_alternate_action: (node) => show([node.orKw, node.actionKw]),
   default_values: (node) => show(node.kw),
   default: (node) => show(node.kw),
 

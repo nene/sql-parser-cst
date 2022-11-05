@@ -51,6 +51,7 @@ type Node =
   | DefaultValues
   | Default
   | InsertOption
+  | OrAlternateAction
   | ColumnAssignment
   | Alias
   | PragmaAssignment
@@ -528,6 +529,7 @@ type InsertStmt = BaseNode & {
   with?: WithClause;
   insertKw: Keyword; // INSERT | REPLACE
   options: InsertOption[];
+  orAction?: OrAlternateAction;
   intoKw?: Keyword;
   table: TableRef | Alias<TableRef>;
   columns?: ParenExpr<ExprList<ColumnRef>>;
@@ -535,9 +537,17 @@ type InsertStmt = BaseNode & {
   returning?: ReturningClause;
 };
 
+// Only in MySQL
 type InsertOption = BaseNode & {
   type: "insert_option";
-  kw: Keyword | Keyword[];
+  kw: Keyword; // LOW_PRIORITY | DELAYED | HIGH_PRIORITY | IGNORE
+};
+
+// Only in SQLite
+type OrAlternateAction = BaseNode & {
+  type: "or_alternate_action";
+  orKw: Keyword; // OR
+  actionKw: Keyword; // ABORT | FAIL | IGNORE | REPLACE | ROLLBACK
 };
 
 type ValuesClause = BaseNode & {

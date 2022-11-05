@@ -141,6 +141,7 @@ describe("insert into", () => {
           "type": "keyword",
         },
         "options": [],
+        "orAction": undefined,
         "returning": undefined,
         "source": {
           "type": "values_clause",
