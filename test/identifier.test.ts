@@ -1,4 +1,4 @@
-import { dialect, parseExpr, parseStmt, testExpr, test } from "./test_utils";
+import { dialect, parseExpr, parseStmt, testExpr, test, parseFrom } from "./test_utils";
 
 describe("identifier", () => {
   describe("column name", () => {
@@ -123,23 +123,6 @@ describe("identifier", () => {
   });
 
   describe("table name", () => {
-    function parseFrom(fromExpr: string) {
-      const stmt = parseStmt(`SELECT col FROM ${fromExpr}`);
-      if (stmt.type !== "select_stmt") {
-        throw new Error(`Expected select_stmt, instead got ${stmt.type}`);
-      }
-      const fromClause = stmt.clauses[1];
-      if (fromClause.type !== "from_clause") {
-        throw new Error(`Expected from_clause, instead got ${fromClause.type}`);
-      }
-      if (fromClause.tables.length !== 1) {
-        throw new Error(
-          `Expected one table expression in from clause, instead got ${fromClause.tables.length}`
-        );
-      }
-      return fromClause.tables[0];
-    }
-
     it("supports simple table names", () => {
       test("SELECT col FROM my_tbl");
     });

@@ -154,4 +154,21 @@ function addPrecedenceParens<T extends Expr | SubSelect>(
   }
 }
 
+export function parseFrom(fromExpr: string) {
+  const stmt = parseStmt(`SELECT col FROM ${fromExpr}`);
+  if (stmt.type !== "select_stmt") {
+    throw new Error(`Expected select_stmt, instead got ${stmt.type}`);
+  }
+  const fromClause = stmt.clauses[1];
+  if (fromClause.type !== "from_clause") {
+    throw new Error(`Expected from_clause, instead got ${fromClause.type}`);
+  }
+  if (fromClause.tables.length !== 1) {
+    throw new Error(
+      `Expected one table expression in from clause, instead got ${fromClause.tables.length}`
+    );
+  }
+  return fromClause.tables[0];
+}
+
 export { show };
