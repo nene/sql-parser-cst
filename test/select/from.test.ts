@@ -7,26 +7,6 @@ describe("select FROM", () => {
     test("SELECT /*c1*/ col /*c2*/ FROM /*c3*/ tbl");
   });
 
-  it("parses qualified table names", () => {
-    test("SELECT col FROM db.tbl");
-    test("SELECT col FROM db /*c1*/./*c2*/ tbl");
-  });
-
-  dialect(["mysql", "sqlite"], () => {
-    it("parses backtick-quoted qualified table name", () => {
-      test("SELECT col FROM `my db`.`my tbl`");
-    });
-  });
-
-  dialect("sqlite", () => {
-    it("parses double-quoted qualified table name", () => {
-      test(`SELECT col FROM "my db"."my tbl"`);
-    });
-    it("parses bracket-quoted qualified table name", () => {
-      test("SELECT col FROM [my db].[my tbl]");
-    });
-  });
-
   it("parses table alias", () => {
     test("SELECT t.col FROM my_db.my_long_table_name AS t");
     test("SELECT t.col FROM my_db.my_long_table_name t");
