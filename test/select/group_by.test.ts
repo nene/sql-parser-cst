@@ -1,4 +1,4 @@
-import { testClause } from "./test_utils";
+import { testClause } from "../test_utils";
 
 describe("select GROUP BY", () => {
   it("parses group by with single expression", () => {

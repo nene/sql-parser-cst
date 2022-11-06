@@ -1,4 +1,4 @@
-import { dialect, parseStmt, test } from "./test_utils";
+import { dialect, parseStmt, test } from "../test_utils";
 
 describe("select", () => {
   it("parses simple SELECT", () => {

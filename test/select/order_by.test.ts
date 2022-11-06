@@ -1,4 +1,4 @@
-import { dialect, testClause } from "./test_utils";
+import { dialect, testClause } from "../test_utils";
 
 describe("select ORDER BY", () => {
   it("supports ORDER BY clause", () => {

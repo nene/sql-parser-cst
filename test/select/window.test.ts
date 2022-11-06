@@ -1,4 +1,4 @@
-import { testClause } from "./test_utils";
+import { testClause } from "../test_utils";
 
 describe("select WINDOW", () => {
   it("supports named window definition", () => {

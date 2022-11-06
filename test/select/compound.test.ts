@@ -1,4 +1,4 @@
-import { showCompoundPrecedence, test } from "./test_utils";
+import { showCompoundPrecedence, test } from "../test_utils";
 
 describe("compound select", () => {
   it("parses UNION [ALL|DISTINCT]", () => {
