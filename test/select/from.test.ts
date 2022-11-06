@@ -41,4 +41,16 @@ describe("select FROM", () => {
   it("supports joined tables in parenthesis", () => {
     test("SELECT t.col FROM (tbl1 JOIN tbl2) AS t");
   });
+
+  describe("table functions", () => {
+    it("supports table-valued functions", () => {
+      test("SELECT * FROM generate_series(5, 10)");
+    });
+    it("supports schema-scoped table-valued functions", () => {
+      test("SELECT * FROM my_schema.my_func(5, 10)");
+    });
+    it("supports combining table-functions with joins", () => {
+      test("SELECT * FROM func1(5, 10) JOIN func2(8)");
+    });
+  });
 });

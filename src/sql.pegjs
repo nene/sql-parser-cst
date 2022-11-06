@@ -470,7 +470,10 @@ join_expr
   }
 
 table_or_subquery
-  = table_ref_or_alias
+  = t:table_func_call alias:(__ alias)? {
+    return loc(createAlias(t, alias));
+  }
+  / table_ref_or_alias
   / t:paren_expr_join alias:(__ alias)? {
     return loc(createAlias(t, alias));
   }
@@ -2265,6 +2268,7 @@ primary_standard
   / paren_expr_select
   / cast_expr
   / func_call
+  / table_func_call
   / case_expr
   / exists_expr
   / column_ref
@@ -2329,6 +2333,15 @@ func_call
       return loc({
         type: "func_call",
         name,
+      });
+    }
+
+table_func_call
+  = name:(table_ref __) args:func_args {
+      return loc({
+        type: "func_call",
+        name: read(name),
+        args,
       });
     }
 

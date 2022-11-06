@@ -90,6 +90,7 @@ type Expr =
   | PrefixOpExpr
   | PostfixOpExpr
   | FuncCall
+  | TableFuncCall
   | CastExpr
   | BetweenExpr
   | CaseExpr
@@ -242,6 +243,7 @@ type JoinExpr = BaseNode & {
 
 type TableOrSubquery =
   | TableRef
+  | TableFuncCall
   | ParenExpr<SubSelect | TableOrSubquery | JoinExpr>
   | Alias<TableOrSubquery>;
 
@@ -936,6 +938,12 @@ type FuncCall = BaseNode & {
   args?: ParenExpr<ExprList<Expr | AllColumns | DistinctArg>>;
   filter?: FilterArg;
   over?: OverArg;
+};
+
+type TableFuncCall = BaseNode & {
+  type: "table_func_call";
+  name: TableRef;
+  args: ParenExpr<ExprList<Expr>>;
 };
 
 type FilterArg = BaseNode & {
