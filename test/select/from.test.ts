@@ -42,8 +42,7 @@ describe("select FROM", () => {
 
   it("parses subselect in parenthesis", () => {
     test("SELECT t.col FROM (SELECT x FROM tbl) AS t");
-    // TODO: support comment before closing paren ")"
-    test("SELECT t.col FROM (/*c1*/ SELECT x FROM tbl) /*c3*/ AS /*c4*/ t");
+    test("SELECT t.col FROM (/*c1*/ SELECT x FROM tbl /*c2*/) /*c3*/ AS /*c4*/ t");
   });
 
   it("parses comma-joins", () => {
