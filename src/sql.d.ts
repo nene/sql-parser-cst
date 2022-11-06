@@ -601,7 +601,7 @@ type UpdateClause = BaseNode & {
   updateKw: Keyword;
   options: UpsertOption[];
   orAction?: OrAlternateAction;
-  tables: ExprList<TableRef>;
+  tables: ExprList<TableRef | Alias<TableRef>>;
 };
 
 type SetClause = BaseNode & {

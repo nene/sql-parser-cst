@@ -11,6 +11,12 @@ describe("delete from", () => {
     test("DELETE /*c1*/ FROM /*c2*/ tbl /*c3*/ WHERE /*c4*/ true");
   });
 
+  it("supports aliased table name", () => {
+    test("DELETE FROM tbl AS t");
+    test("DELETE FROM tbl t");
+    test("DELETE FROM tbl /*c1*/ AS /*c2*/ t");
+  });
+
   dialect("sqlite", () => {
     it("supports WITH ... DELETE FROM ..", () => {
       test("WITH subsel AS (SELECT 1) DELETE FROM tbl");

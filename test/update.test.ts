@@ -25,6 +25,12 @@ describe("update", () => {
     test("UPDATE items /*c1*/,/*c2*/ month SET items.price = month.price");
   });
 
+  it("supports aliased table names", () => {
+    test("UPDATE items AS i SET price = 0");
+    test("UPDATE items i SET price = 0");
+    test("UPDATE items /*c1*/ AS /*c2*/ i SET price = 0");
+  });
+
   dialect("mysql", () => {
     it("supports setting explicit default values", () => {
       test("UPDATE person SET age = DEFAULT");

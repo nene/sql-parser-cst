@@ -925,7 +925,7 @@ update_clause
   = kw:(UPDATE __)
     options:(upsert_options __)?
     orAction:(or_alternate_action __)?
-    tables:table_ref_list {
+    tables:table_ref_or_alias_list {
       return loc({
         type: "update_clause",
         updateKw: read(kw),
@@ -934,6 +934,11 @@ update_clause
         tables: tables,
       });
     }
+
+table_ref_or_alias_list
+  = head:table_ref_or_alias tail:(__ "," __ table_ref_or_alias)* {
+    return loc(createExprList(head, tail));
+  }
 
 set_clause
   = kw:(SET __) set:column_assignment_list {
