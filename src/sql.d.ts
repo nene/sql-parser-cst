@@ -169,7 +169,7 @@ type SelectClause = BaseNode & {
 type FromClause = BaseNode & {
   type: "from_clause";
   fromKw: Keyword;
-  tables: (JoinTable | Join)[];
+  expr: JoinTable | Join;
 };
 
 type WhereClause = BaseNode & {
@@ -234,8 +234,9 @@ type LimitClause = BaseNode & {
 
 type Join = BaseNode & {
   type: "join";
+  left: Join | JoinTable;
   operator: Keyword[] | ",";
-  table: JoinTable;
+  right: JoinTable;
   specification?: JoinOnSpecification | JoinUsingSpecification;
 };
 

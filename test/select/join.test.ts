@@ -1,4 +1,5 @@
-import { dialect, test } from "../test_utils";
+import { Join } from "../../src/sql";
+import { dialect, parseFrom, test, show, preserveAll } from "../test_utils";
 
 describe("join", () => {
   it("supports comma-joins", () => {
@@ -9,6 +10,12 @@ describe("join", () => {
   it("supports plain JOIN", () => {
     test("SELECT c FROM t1 JOIN t2");
     test("SELECT c FROM t1 /*c1*/ JOIN /*c2*/ t2");
+  });
+
+  it("treats chain of joins as left-associative operators", () => {
+    const join = parseFrom("foo JOIN bar JOIN baz", preserveAll) as Join;
+    expect(show(join.left).trim()).toBe(`foo JOIN bar`);
+    expect(show(join.right).trim()).toBe(`baz`);
   });
 
   it("supports NATURAL JOIN", () => {

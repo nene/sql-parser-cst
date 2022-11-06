@@ -75,6 +75,36 @@ describe("location", () => {
                 "type": "select_clause",
               },
               {
+                "expr": {
+                  "alias": {
+                    "range": [
+                      26,
+                      27,
+                    ],
+                    "text": "t",
+                    "type": "identifier",
+                  },
+                  "expr": {
+                    "range": [
+                      22,
+                      25,
+                    ],
+                    "table": {
+                      "range": [
+                        22,
+                        25,
+                      ],
+                      "text": "tbl",
+                      "type": "identifier",
+                    },
+                    "type": "table_ref",
+                  },
+                  "range": [
+                    22,
+                    27,
+                  ],
+                  "type": "alias",
+                },
                 "fromKw": {
                   "range": [
                     17,
@@ -86,38 +116,6 @@ describe("location", () => {
                 "range": [
                   17,
                   27,
-                ],
-                "tables": [
-                  {
-                    "alias": {
-                      "range": [
-                        26,
-                        27,
-                      ],
-                      "text": "t",
-                      "type": "identifier",
-                    },
-                    "expr": {
-                      "range": [
-                        22,
-                        25,
-                      ],
-                      "table": {
-                        "range": [
-                          22,
-                          25,
-                        ],
-                        "text": "tbl",
-                        "type": "identifier",
-                      },
-                      "type": "table_ref",
-                    },
-                    "range": [
-                      22,
-                      27,
-                    ],
-                    "type": "alias",
-                  },
                 ],
                 "type": "from_clause",
               },

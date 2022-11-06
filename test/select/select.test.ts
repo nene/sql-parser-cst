@@ -89,23 +89,21 @@ describe("select", () => {
               "type": "select_clause",
             },
             {
+              "expr": {
+                "schema": {
+                  "text": "db",
+                  "type": "identifier",
+                },
+                "table": {
+                  "text": "tbl",
+                  "type": "identifier",
+                },
+                "type": "table_ref",
+              },
               "fromKw": {
                 "text": "FROM",
                 "type": "keyword",
               },
-              "tables": [
-                {
-                  "schema": {
-                    "text": "db",
-                    "type": "identifier",
-                  },
-                  "table": {
-                    "text": "tbl",
-                    "type": "identifier",
-                  },
-                  "type": "table_ref",
-                },
-              ],
               "type": "from_clause",
             },
           ],

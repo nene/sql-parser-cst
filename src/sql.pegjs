@@ -89,6 +89,32 @@
     };
   }
 
+  const deriveJoinLoc = (join) => {
+    if (!options.includeRange) {
+      return join;
+    }
+    const start = join.left.range[0];
+    const end = (join.spec || join.right).range[1];
+    return { ...join, range: [start, end] };
+  }
+
+  function createJoinExprChain(head, tail) {
+    return tail.reduce(
+      (left, [c1, op, c2, right, spec]) => deriveJoinLoc(createJoinExpr(left, c1, op, c2, right, spec)),
+      head
+    );
+  }
+
+  function createJoinExpr(left, c1, op, c2, right, spec) {
+    return {
+      type: "join",
+      left: trailing(left, c1),
+      operator: op,
+      right: leading(right, c2),
+      specification: read(spec),
+    };
+  }
+
   function createPrefixOpExpr(op, expr) {
     return {
       type: "prefix_op_expr",
@@ -430,39 +456,17 @@ implicit_alias
  * --------------------------------------------------------------------------------------
  */
 from_clause
-  = kw:(FROM __) tables:table_join_list {
+  = kw:(FROM __) expr:join_expr {
     return loc({
       type: "from_clause",
       fromKw: read(kw),
-      tables,
+      expr,
     });
   }
 
-table_join_list
-  = head:table_or_subquery tail:_table_join* {
-    return [head, ...tail];
-  }
-
-_table_join
-  = join:(__ table_join) {
-    return read(join);
-  }
-
-table_join
-  = "," table:(__ table_or_subquery) {
-    return loc({
-      type: "join",
-      operator: ",",
-      table: read(table),
-    });
-  }
-  / op:join_op t:(__ table_or_subquery) spec:(__ join_specification)? {
-    return loc({
-      type: "join",
-      operator: op,
-      table: read(t),
-      specification: read(spec),
-    });
+join_expr
+  = head:table_or_subquery tail:(__ (join_op / ",") __ table_or_subquery (__ join_specification)?)* {
+    return createJoinExprChain(head, tail);
   }
 
 table_or_subquery

@@ -82,10 +82,7 @@ const layoutNode = cstTransformer<Layout>({
     ),
   ],
   // FROM
-  from_clause: (node) => [
-    line(layout(node.fromKw)),
-    indent(layout(node.tables)),
-  ],
+  from_clause: (node) => [line(layout(node.fromKw)), indent(layout(node.expr))],
 
   // Expressions
   binary_expr: ({ left, operator, right }) => layout([left, operator, right]),
