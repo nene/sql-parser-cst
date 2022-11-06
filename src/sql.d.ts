@@ -15,7 +15,7 @@ type Node =
   | Clause
   | Expr
   | Keyword
-  | Join
+  | JoinExpr
   | JoinOnSpecification
   | JoinUsingSpecification
   | SortSpecification
@@ -169,7 +169,7 @@ type SelectClause = BaseNode & {
 type FromClause = BaseNode & {
   type: "from_clause";
   fromKw: Keyword;
-  expr: JoinTable | Join;
+  expr: JoinTable | JoinExpr;
 };
 
 type WhereClause = BaseNode & {
@@ -232,9 +232,9 @@ type LimitClause = BaseNode & {
   offset?: Expr;
 };
 
-type Join = BaseNode & {
-  type: "join";
-  left: Join | JoinTable;
+type JoinExpr = BaseNode & {
+  type: "join_expr";
+  left: JoinExpr | JoinTable;
   operator: Keyword[] | ",";
   right: JoinTable;
   specification?: JoinOnSpecification | JoinUsingSpecification;

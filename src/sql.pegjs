@@ -107,7 +107,7 @@
 
   function createJoinExpr(left, c1, op, c2, right, spec) {
     return {
-      type: "join",
+      type: "join_expr",
       left: trailing(left, c1),
       operator: op,
       right: leading(right, c2),

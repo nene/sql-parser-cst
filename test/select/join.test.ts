@@ -1,4 +1,4 @@
-import { Join } from "../../src/sql";
+import { JoinExpr } from "../../src/sql";
 import { dialect, parseFrom, test, show, preserveAll } from "../test_utils";
 
 describe("join", () => {
@@ -13,7 +13,7 @@ describe("join", () => {
   });
 
   it("treats chain of joins as left-associative operators", () => {
-    const join = parseFrom("foo JOIN bar JOIN baz", preserveAll) as Join;
+    const join = parseFrom("foo JOIN bar JOIN baz", preserveAll) as JoinExpr;
     expect(show(join.left).trim()).toBe(`foo JOIN bar`);
     expect(show(join.right).trim()).toBe(`baz`);
   });
