@@ -252,7 +252,6 @@ statement$sqlite
 
 statement$mysql
   = statement_standard
-  / create_db_stmt
   / empty_stmt
 
 empty_stmt
@@ -439,40 +438,6 @@ from_clause
     });
   }
 
-table_to_list
-  = head:table_to_item tail:(__ "," __ table_to_item)* {
-    return "[Not implemented]";
-  }
-
-table_to_item
-  = head:table_ref __ TO __ tail: (table_ref) {
-    return "[Not implemented]";
-  }
-
-index_type
-  = USING __
-  t:(BTREE / HASH) {
-    return "[Not implemented]";
-  }
-
-index_options
-  = head:index_option tail:(__ index_option)* {
-    return "[Not implemented]";
-  }
-
-index_option
-  = k:KEY_BLOCK_SIZE __ e:("=")? __ kbs:literal_number {
-    return "[Not implemented]";
-  }
-  / index_type
-  / WITH __ PARSER __ pn:ident_name {
-    return "[Not implemented]";
-  }
-  / k:(VISIBLE / INVISIBLE) {
-    return "[Not implemented]";
-  }
-  / constraint_comment
-
 table_join_list
   = head:table_base tail:_table_join* {
     return [head, ...tail];
@@ -500,20 +465,10 @@ table_join
     });
   }
 
-//NOTE that, the table assigned to `var` shouldn't write in `table_join`
 table_base
-  = DUAL {
-    return "[Not implemented]";
-  }
-  / table_ref_or_alias
+  = table_ref_or_alias
   / t:table_in_parens alias:(__ alias)? {
     return loc(createAlias(t, alias));
-  }
-  / stmt:values_clause __ alias:alias? {
-    return "[Not implemented]";
-  }
-  / "(" __ stmt:values_clause __ ")" __ alias:alias? {
-    return "[Not implemented]";
   }
   / t:paren_expr_select alias:(__ alias)? {
     return loc(createAlias(t, alias));
@@ -1032,21 +987,6 @@ delete_stmt
         where: read(where),
         returning: read(returning),
       });
-    }
-
-/**
- * ------------------------------------------------------------------------------------ *
- *                                                                                      *
- * CREATE SCHEMA                                                                        *
- *                                                                                      *
- * ------------------------------------------------------------------------------------ *
- */
-create_db_stmt
-  = a:CREATE __
-    k:(DATABASE / SCHEMA) __
-    ife:if_not_exists? __
-    t:ident_name {
-      return "[Not implemented]";
     }
 
 /**
@@ -1920,9 +1860,7 @@ table_constraint_type$mysql
 
 table_constraint_primary_key
   = kws:(PRIMARY __ KEY __)
-    t:(index_type __)?
     columns:paren_column_ref_list
-    opts:(__ index_options)?
     confl:(__ on_conflict_clause)? {
       return loc({
         type: "constraint_primary_key",
@@ -1943,10 +1881,7 @@ column_constraint_primary_key
 
 table_constraint_unique
   = kws:(unique_key __)
-    i:(ident __)?
-    t:(index_type __)?
     columns:paren_column_ref_list
-    id:(__ index_options)?
     confl:(__ on_conflict_clause)? {
       return loc({
         type: "constraint_unique",
