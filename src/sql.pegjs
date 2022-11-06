@@ -348,9 +348,7 @@ other_clause
   / having_clause
   / order_by_clause
   / limit_clause
-  / locking_read
   / window_clause
-  / into_clause
 
 /**
  * SELECT .. columns
@@ -426,15 +424,6 @@ explicit_alias
 implicit_alias
   = id:alias_ident {
     return { alias: id };
-  }
-
-/**
- * SELECT .. INTO
- * --------------------------------------------------------------------------------------
- */
-into_clause
-  = INTO __ k:(OUTFILE / DUMPFILE)? __ f:(literal_string / ident) {
-    return "[Not implemented]";
   }
 
 /**
@@ -814,31 +803,6 @@ frame_exclusion
 
 frame_exclusion_kind
   = kws:(CURRENT __ ROW / NO __ OTHERS / GROUP / TIES) { return read(kws); }
-
-/**
- * SELECT .. FOR UPDATE
- * SELECT .. LOCK IN SHARE MODE
- * --------------------------------------------------------------------------------------
- */
-locking_read
-  = t:(for_update / lock_in_share_mode) __ lo:lock_option? {
-    return "[Not implemented]";
-  }
-
-for_update
-  = fu:(FOR __ UPDATE) {
-    return "[Not implemented]";
-  }
-
-lock_in_share_mode
-  = m:(LOCK __ IN __ SHARE __ MODE) {
-    return "[Not implemented]";
-  }
-
-lock_option
-  = w:(WAIT __ literal_number) { return "[Not implemented]"; }
-  / nw:NOWAIT
-  / sl:(SKIP __ LOCKED) { return "[Not implemented]"; }
 
 /**
  * { UPDATE | INSERT | DELETE } ... RETURNING
