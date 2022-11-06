@@ -20,6 +20,15 @@ describe("select FROM", () => {
     test("SELECT t.col FROM (/*c1*/ db.tbl /*c2*/) /*c3*/ AS /*c4*/ t");
   });
 
+  it("supports aliased table name in parenthesis", () => {
+    test("SELECT t.col FROM (db.tbl AS t)");
+    test("SELECT t.col FROM (db.tbl t)");
+  });
+
+  it("supports multi-nested table name in parenthesis", () => {
+    test("SELECT t.col FROM (((tbl) AS t) AS t1) AS t2");
+  });
+
   it("supports subselect in parenthesis", () => {
     test("SELECT t.col FROM (SELECT x FROM tbl) AS t");
     test("SELECT t.col FROM (/*c1*/ SELECT x FROM tbl /*c2*/) /*c3*/ AS /*c4*/ t");

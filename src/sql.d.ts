@@ -169,7 +169,7 @@ type SelectClause = BaseNode & {
 type FromClause = BaseNode & {
   type: "from_clause";
   fromKw: Keyword;
-  tables: (JoinTable | Alias<JoinTable> | Join)[];
+  tables: (JoinTable | Join)[];
 };
 
 type WhereClause = BaseNode & {
@@ -235,11 +235,11 @@ type LimitClause = BaseNode & {
 type Join = BaseNode & {
   type: "join";
   operator: Keyword[] | ",";
-  table: JoinTable | Alias<JoinTable>;
+  table: JoinTable;
   specification?: JoinOnSpecification | JoinUsingSpecification;
 };
 
-type JoinTable = TableRef | ParenExpr<TableRef | SubSelect>;
+type JoinTable = TableRef | ParenExpr<SubSelect | JoinTable> | Alias<JoinTable>;
 
 type JoinOnSpecification = BaseNode & {
   type: "join_on_specification";
@@ -886,7 +886,7 @@ type FrameExclusion = BaseNode & {
 
 // other...
 
-interface Alias<T = Expr> extends BaseNode {
+interface Alias<T = Node> extends BaseNode {
   type: "alias";
   expr: T;
   asKw?: Keyword;

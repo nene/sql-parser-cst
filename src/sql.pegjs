@@ -480,7 +480,7 @@ table_ref_or_alias
   }
 
 table_in_parens
-  = "(" c1:__ t:table_ref c2:__ ")" {
+  = "(" c1:__ t:table_or_subquery c2:__ ")" {
     return loc(createParenExpr(c1, t, c2));
   }
 
