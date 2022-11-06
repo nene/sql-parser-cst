@@ -16,6 +16,13 @@ describe("create table", () => {
     });
   });
 
+  dialect("sqlite", () => {
+    it("supports columns without type", () => {
+      test("CREATE TEMP TABLE foo (id, name)");
+      test("CREATE TEMP TABLE foo (id NOT NULL)");
+    });
+  });
+
   it("parses CREATE TABLE with multiple column definitions", () => {
     test("CREATE TABLE foo (id INT, age SMALLINT)");
     test(

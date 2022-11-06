@@ -306,7 +306,7 @@ type CreateTableStmt = BaseNode & {
 type ColumnDefinition = BaseNode & {
   type: "column_definition";
   name: ColumnRef;
-  dataType: DataType;
+  dataType?: DataType;
   constraints: (ColumnConstraint | Constraint<ColumnConstraint>)[];
 };
 

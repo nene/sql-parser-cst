@@ -1169,12 +1169,12 @@ create_definition
 
 column_definition
   = name:(column_ref __)
-    type:data_type
+    type:data_type?
     constraints:(__ column_constraint_list)? {
       return loc({
         type: "column_definition",
         name: read(name),
-        dataType: type,
+        dataType: read(type),
         constraints: read(constraints) || [],
       });
     }
