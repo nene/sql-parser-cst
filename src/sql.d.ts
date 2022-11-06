@@ -54,6 +54,8 @@ type Node =
   | OrAlternateAction
   | ColumnAssignment
   | Alias
+  | IndexedTableRef
+  | NotIndexedTableRef
   | PragmaAssignment
   | PragmaFuncCall;
 
@@ -244,8 +246,23 @@ type JoinExpr = BaseNode & {
 type TableOrSubquery =
   | TableRef
   | TableFuncCall
+  | IndexedTableRef
+  | NotIndexedTableRef
   | ParenExpr<SubSelect | TableOrSubquery | JoinExpr>
   | Alias<TableOrSubquery>;
+
+// SQLite only
+type IndexedTableRef = BaseNode & {
+  type: "indexed_table_ref";
+  table: TableRef | Alias<TableRef>;
+  indexedByKw: Keyword[]; // INDEXED BY
+  index: Identifier;
+};
+type NotIndexedTableRef = BaseNode & {
+  type: "not_indexed_table_ref";
+  table: TableRef | Alias<TableRef>;
+  notIndexedKw: Keyword[]; // NOT INDEXED
+};
 
 type JoinOnSpecification = BaseNode & {
   type: "join_on_specification";

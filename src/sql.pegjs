@@ -482,9 +482,30 @@ table_or_subquery
   }
 
 table_ref_or_alias
+  = table_ref_or_alias_standard
+
+table_ref_or_alias_standard
   = t:table_ref alias:(__ alias)? {
     return loc(createAlias(t, alias));
   }
+
+table_ref_or_alias$sqlite
+  = table:(table_ref_or_alias_standard __) kw:(INDEXED __ BY) id:(__ ident) {
+    return loc({
+      type: "indexed_table_ref",
+      table: read(table),
+      indexedByKw: read(kw),
+      index: read(id),
+    });
+  }
+  / table:(table_ref_or_alias_standard __) kw:(NOT __ INDEXED) {
+    return loc({
+      type: "not_indexed_table_ref",
+      table: read(table),
+      notIndexedKw: read(kw),
+    });
+  }
+  / table_ref_or_alias_standard
 
 paren_expr_join
   = "(" c1:__ t:join_expr c2:__ ")" {
@@ -3043,6 +3064,7 @@ IGNORE              = kw:"IGNORE"i              !ident_part { return loc(createK
 IMMEDIATE           = kw:"IMMEDIATE"i           !ident_part { return loc(createKeyword(kw)); }
 IN                  = kw:"IN"i                  !ident_part { return loc(createKeyword(kw)); }
 INDEX               = kw:"INDEX"i               !ident_part { return loc(createKeyword(kw)); }
+INDEXED             = kw:"INDEXED"              !ident_part { return loc(createKeyword(kw)); }
 INITIALLY           = kw:"INITIALLY"i           !ident_part { return loc(createKeyword(kw)); }
 INNER               = kw:"INNER"i               !ident_part { return loc(createKeyword(kw)); }
 INPLACE             = kw:"INPLACE"i             !ident_part { return loc(createKeyword(kw)); }

@@ -31,6 +31,13 @@ describe("update", () => {
     test("UPDATE items /*c1*/ AS /*c2*/ i SET price = 0");
   });
 
+  dialect("sqlite", () => {
+    it("supports INDEXED BY & NOT INDEXED modifiers on table name", () => {
+      test("UPDATE my_table INDEXED BY my_idx SET x=1");
+      test("UPDATE my_table NOT INDEXED SET x=1");
+    });
+  });
+
   dialect("mysql", () => {
     it("supports setting explicit default values", () => {
       test("UPDATE person SET age = DEFAULT");

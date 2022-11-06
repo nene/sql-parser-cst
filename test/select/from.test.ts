@@ -1,4 +1,4 @@
-import { test } from "../test_utils";
+import { dialect, test } from "../test_utils";
 
 describe("select FROM", () => {
   it("supports basic syntax", () => {
@@ -51,6 +51,20 @@ describe("select FROM", () => {
     });
     it("supports combining table-functions with joins", () => {
       test("SELECT * FROM func1(5, 10) JOIN func2(8)");
+    });
+  });
+
+  dialect("sqlite", () => {
+    it("supports INDEXED BY modifier on referenced tables", () => {
+      test("SELECT * FROM my_table INDEXED BY my_idx");
+      test("SELECT * FROM schm.my_table AS t1 INDEXED BY my_idx");
+      test("SELECT * FROM my_table /*c1*/ INDEXED /*c2*/ BY /*c3*/ my_idx");
+    });
+
+    it("supports NOT INDEXED modifier on referenced tables", () => {
+      test("SELECT * FROM my_table NOT INDEXED");
+      test("SELECT * FROM schm.my_table AS t1 NOT INDEXED");
+      test("SELECT * FROM my_table /*c1*/ NOT /*c2*/ INDEXED");
     });
   });
 });

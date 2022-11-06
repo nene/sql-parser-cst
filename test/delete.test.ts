@@ -18,6 +18,13 @@ describe("delete from", () => {
   });
 
   dialect("sqlite", () => {
+    it("supports INDEXED BY & NOT INDEXED modifiers on table name", () => {
+      test("DELETE FROM my_table INDEXED BY my_idx");
+      test("DELETE FROM my_table NOT INDEXED");
+    });
+  });
+
+  dialect("sqlite", () => {
     it("supports WITH ... DELETE FROM ..", () => {
       test("WITH subsel AS (SELECT 1) DELETE FROM tbl");
       test("WITH subsel AS (SELECT 1) /*c*/ DELETE FROM tbl");
