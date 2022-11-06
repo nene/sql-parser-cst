@@ -34,11 +34,11 @@ describe("select FROM", () => {
     test("SELECT t.col FROM (/*c1*/ SELECT x FROM tbl /*c2*/) /*c3*/ AS /*c4*/ t");
   });
 
-  // it("supports comma-joined tables in parenthesis", () => {
-  //   test("SELECT t.col FROM (tbl1, tbl2) AS t");
-  // });
+  it("supports comma-joined tables in parenthesis", () => {
+    test("SELECT t.col FROM (tbl1, tbl2) AS t");
+  });
 
-  // it("supports joined tables in parenthesis", () => {
-  //   test("SELECT t.col FROM (tbl1 JOIN tbl2) AS t");
-  // });
+  it("supports joined tables in parenthesis", () => {
+    test("SELECT t.col FROM (tbl1 JOIN tbl2) AS t");
+  });
 });

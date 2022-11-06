@@ -240,7 +240,10 @@ type JoinExpr = BaseNode & {
   specification?: JoinOnSpecification | JoinUsingSpecification;
 };
 
-type JoinTable = TableRef | ParenExpr<SubSelect | JoinTable> | Alias<JoinTable>;
+type JoinTable =
+  | TableRef
+  | ParenExpr<SubSelect | JoinTable | JoinExpr>
+  | Alias<JoinTable>;
 
 type JoinOnSpecification = BaseNode & {
   type: "join_on_specification";

@@ -471,7 +471,7 @@ join_expr
 
 table_or_subquery
   = table_ref_or_alias
-  / t:table_in_parens alias:(__ alias)? {
+  / t:paren_expr_join alias:(__ alias)? {
     return loc(createAlias(t, alias));
   }
   / t:paren_expr_select alias:(__ alias)? {
@@ -483,8 +483,8 @@ table_ref_or_alias
     return loc(createAlias(t, alias));
   }
 
-table_in_parens
-  = "(" c1:__ t:table_or_subquery c2:__ ")" {
+paren_expr_join
+  = "(" c1:__ t:join_expr c2:__ ")" {
     return loc(createParenExpr(c1, t, c2));
   }
 
