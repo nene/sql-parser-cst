@@ -439,7 +439,7 @@ from_clause
   }
 
 table_join_list
-  = head:table_base tail:_table_join* {
+  = head:table_or_subquery tail:_table_join* {
     return [head, ...tail];
   }
 
@@ -449,14 +449,14 @@ _table_join
   }
 
 table_join
-  = "," table:(__ table_base) {
+  = "," table:(__ table_or_subquery) {
     return loc({
       type: "join",
       operator: ",",
       table: read(table),
     });
   }
-  / op:join_op t:(__ table_base) spec:(__ join_specification)? {
+  / op:join_op t:(__ table_or_subquery) spec:(__ join_specification)? {
     return loc({
       type: "join",
       operator: op,
@@ -465,7 +465,7 @@ table_join
     });
   }
 
-table_base
+table_or_subquery
   = table_ref_or_alias
   / t:table_in_parens alias:(__ alias)? {
     return loc(createAlias(t, alias));
