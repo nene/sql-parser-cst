@@ -1,4 +1,4 @@
-import { dialect, show, parse, preserveAll, test } from "./test_utils";
+import { dialect, show, parse, preserveAll, test } from "../test_utils";
 
 describe("alter table", () => {
   function testAlter(alter: string) {

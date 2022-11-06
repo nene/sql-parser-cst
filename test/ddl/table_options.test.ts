@@ -1,4 +1,4 @@
-import { dialect, parse, preserveAll, show } from "./test_utils";
+import { dialect, parse, preserveAll, show } from "../test_utils";
 
 describe("table options", () => {
   function testOpts(options: string) {

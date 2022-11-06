@@ -1,4 +1,4 @@
-import { dialect, parse, preserveAll, show, test } from "./test_utils";
+import { dialect, parse, preserveAll, show, test } from "../test_utils";
 
 describe("create table", () => {
   it("parses simple CREATE TABLE statement", () => {
