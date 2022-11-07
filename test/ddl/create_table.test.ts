@@ -29,4 +29,20 @@ describe("create table", () => {
       "CREATE TABLE foo /*c1*/ (/*c2*/ id /*c3*/ INT /*c4*/, /*c5*/ age /*c6*/ SMALLINT /*c7*/)"
     );
   });
+
+  describe("CREATE TABLE AS", () => {
+    it("supports CREATE TABLE ... AS select", () => {
+      test("CREATE TABLE foo AS SELECT 1");
+    });
+
+    it("supports CREATE TABLE ... AS (select)", () => {
+      test("CREATE TABLE foo AS (SELECT 1)");
+    });
+
+    dialect("mysql", () => {
+      it("supports CREATE TABLE ...(defs) AS select", () => {
+        test("CREATE TABLE foo (id INT) AS SELECT 1");
+      });
+    });
+  });
 });

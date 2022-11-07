@@ -1135,9 +1135,11 @@ create_table_stmt
     tmpKw:(__ (TEMPORARY / TEMP))?
     tableKw:(__ TABLE)
     ifKw:(__ if_not_exists)?
-    table:(__ table_ref __)
-    columns:create_table_definition
-    options:(__ table_options)? {
+    table:(__ table_ref)
+    columns:(__ create_table_definition)?
+    options:(__ table_options)?
+    asExpr:_create_as_select?
+    {
       return loc({
         type: "create_table_stmt",
         createKw,
@@ -1145,10 +1147,15 @@ create_table_stmt
         tableKw: read(tableKw),
         ifNotExistsKw: read(ifKw),
         table: read(table),
-        columns,
+        columns: read(columns),
         options: read(options),
+        ...(asExpr ? asExpr : {}),
       });
     }
+
+_create_as_select = asKw:(__ AS) expr:(__ sub_select) {
+  return { asKw: read(asKw), expr: read(expr) };
+}
 
 if_not_exists
   = kws:(IF __ NOT __ EXISTS) { return read(kws); }

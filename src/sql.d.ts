@@ -298,10 +298,12 @@ type CreateTableStmt = BaseNode & {
   temporaryKw?: Keyword;
   ifNotExistsKw?: Keyword[];
   table: TableRef;
-  columns: ParenExpr<
+  columns?: ParenExpr<
     ExprList<ColumnDefinition | TableConstraint | Constraint<TableConstraint>>
   >;
   options?: ExprList<TableOption>;
+  asKw?: Keyword;
+  expr?: SubSelect;
 };
 
 type ColumnDefinition = BaseNode & {
