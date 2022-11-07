@@ -104,22 +104,33 @@ describe("insert into", () => {
     describe("upsert clause", () => {
       it("supports ON CONFLICT DO NOTHING", () => {
         test("INSERT INTO tbl VALUES (1) ON CONFLICT DO NOTHING");
+        test("INSERT INTO tbl VALUES (1) /*c1*/ ON /*c2*/ CONFLICT /*c3*/ DO /*c4*/ NOTHING");
       });
 
       it("supports ON CONFLICT DO UPDATE SET col=expr", () => {
         test("INSERT INTO tbl VALUES (1) ON CONFLICT DO UPDATE SET col1=1, col2=2");
+        test(
+          "INSERT INTO tbl VALUES (1) ON CONFLICT /*c1*/ DO /*c2*/ UPDATE /*c3*/ SET /*c4*/ col1=1 /*c5*/,/*c6*/ col2=2"
+        );
       });
 
       it("supports ON CONFLICT DO UPDATE SET col=expr WHERE", () => {
         test("INSERT INTO tbl VALUES (1) ON CONFLICT DO UPDATE SET col1=1 WHERE x>0");
+        test("INSERT INTO tbl VALUES (1) ON CONFLICT DO UPDATE SET col1=1 /*c1*/ WHERE /*c2*/ x>0");
       });
 
       it("supports ON CONFLICT (column)", () => {
         test("INSERT INTO tbl VALUES (1) ON CONFLICT (col1, col2) DO NOTHING");
+        test(
+          "INSERT INTO tbl VALUES (1) ON CONFLICT /*c1*/(/*c2*/ col1, col2 /*c3*/)/*c4*/ DO NOTHING"
+        );
       });
 
       it("supports ON CONFLICT (column) WHERE expr", () => {
         test("INSERT INTO tbl VALUES (1) ON CONFLICT (col1) WHERE x=0 DO NOTHING");
+        test(
+          "INSERT INTO tbl VALUES (1) ON CONFLICT (col1) /*c1*/ WHERE /*c2*/ x=0 /*c3*/ DO NOTHING"
+        );
       });
 
       it("supports ON CONFLICT (expr)", () => {
