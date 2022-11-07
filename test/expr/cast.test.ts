@@ -18,10 +18,12 @@ describe("type cast", () => {
               "type": "keyword",
             },
             "dataType": {
-              "nameKw": {
-                "text": "INT",
-                "type": "keyword",
-              },
+              "nameKw": [
+                {
+                  "text": "INT",
+                  "type": "keyword",
+                },
+              ],
               "type": "data_type",
             },
             "expr": {
