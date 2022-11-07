@@ -8,10 +8,12 @@ with the goal of being able to re-create the exact original source code.
 
 For now it supports the following SQL dialects:
 
-- **SQLite** - supports all SQLite statements (but some parts of syntax are still unsupported).
+- **SQLite** - full support.
 - **MySQL** - basic support for the most common SQL statements.
 
-**Note:** This is pre-alpha quality software in early development stages.
+**Note:** This software is still in very active development.
+The syntax tree structure is constantly evolving and changing
+even between patch versions.
 
 ## Usage
 
