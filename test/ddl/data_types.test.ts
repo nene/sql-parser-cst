@@ -19,7 +19,9 @@ describe("data types", () => {
     testType("DEC");
     testType("DEC(3)");
     testType("DEC(3, 4)");
+  });
 
+  it("integer types", () => {
     testType("INT");
     testType("INT(5)");
     testType("INTEGER");
@@ -30,6 +32,9 @@ describe("data types", () => {
     testType("SMALLINT(5)");
     testType("BIGINT");
     testType("BIGINT(10)");
+  });
+
+  it("real types", () => {
     testType("FLOAT");
     testType("FLOAT(10)");
     testType("FLOAT(10, 5)");
@@ -39,9 +44,6 @@ describe("data types", () => {
     testType("REAL");
     testType("REAL(10)");
     testType("REAL(10, 5)");
-    testType("BIT");
-    testType("BIT(5)");
-
     testType("DOUBLE PRECISION(10, 5)");
     testType("DOUBLE PRECISION /*c1*/(/*c2*/ 10 /*c3*/, /*c4*/ 5 /*c5*/)");
   });
@@ -82,6 +84,8 @@ describe("data types", () => {
   });
 
   it("binary types", () => {
+    testType("BIT");
+    testType("BIT(5)");
     testType("BINARY");
     testType("VARBINARY");
     testType("BINARY(100)");
