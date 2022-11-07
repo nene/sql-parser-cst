@@ -129,7 +129,17 @@ type SubSelect = SelectStmt | CompoundSelectStmt | ParenExpr<SubSelect>;
 
 type SelectStmt = BaseNode & {
   type: "select_stmt";
-  clauses: Clause[];
+  clauses: (
+    | WithClause
+    | SelectClause
+    | FromClause
+    | WhereClause
+    | GroupByClause
+    | HavingClause
+    | WindowClause
+    | OrderByClause
+    | LimitClause
+  )[];
 };
 
 type Clause =
@@ -627,7 +637,16 @@ type DeleteStmt = BaseNode & {
 // UPDATE
 type UpdateStmt = BaseNode & {
   type: "update_stmt";
-  clauses: Clause[];
+  clauses: (
+    | WithClause
+    | UpdateClause
+    | SetClause
+    | WhereClause
+    | FromClause
+    | OrderByClause
+    | LimitClause
+    | ReturningClause
+  )[];
 };
 
 type UpdateClause = BaseNode & {
