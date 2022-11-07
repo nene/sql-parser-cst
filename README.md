@@ -49,7 +49,7 @@ For example, given the following SQL:
 /* My query */
 SELECT ("first_name" || ' jr.') as fname
 -- use important table
-FROM persons
+FROM persons;
 ```
 
 An AST-parser might parse this to the following abstract syntax tree:
@@ -80,52 +80,62 @@ Note that the above AST is missing the following information:
 - case of keywords (e.g. whether `AS` or `as` was written)
 - whether an identifier was quoted or not (and with what kind of quotes)
 - whether an expression is wrapped in additional (unnecessary) parenthesis.
+- whether the statement ends with a semicolon.
 
 In contrast, this CST parser produces the following concrete syntax tree,
 which preserves all of this information:
 
+<!-- prettier-ignore -->
 ```json
 {
-  "type": "select_stmt",
-  "clauses": [
+  "type": "program",
+  "statements": [
     {
-      "type": "select_clause",
-      "selectKw": { "type": "keyword", "text": "SELECT" },
-      "columns": [
+      "type": "select_stmt",
+      "clauses": [
         {
-          "type": "alias",
+          "type": "select_clause",
+          "selectKw": { "type": "keyword", "text": "SELECT" },
+          "options": [],
+          "columns": {
+            "type": "expr_list",
+            "items": [
+              {
+                "type": "alias",
+                "expr": {
+                  "type": "paren_expr",
+                  "expr": {
+                    "type": "binary_expr",
+                    "left": {
+                      "type": "column_ref",
+                      "column": { "type": "identifier", "text": "\"first_name\"" }
+                    },
+                    "operator": "||",
+                    "right": { "type": "string", "text": "' jr.'" }
+                  }
+                },
+                "asKw": { "type": "keyword", "text": "as" },
+                "alias": { "type": "identifier", "text": "fname" }
+              }
+            ]
+          }
+        },
+        {
+          "type": "from_clause",
+          "fromKw": { "type": "keyword", "text": "FROM" },
           "expr": {
-            "type": "paren_expr",
-            "expr": {
-              "type": "binary_expr",
-              "left": {
-                "type": "column_ref",
-                "column": { "type": "identifier", "text": "\"first_name\"" }
-              },
-              "operator": "||",
-              "right": { "type": "string", "text": "' jr.'" }
-            }
+            "type": "table_ref",
+            "table": { "type": "identifier", "text": "persons" }
           },
-          "asKw": { "type": "keyword", "text": "as" },
-          "alias": { "type": "identifier", "text": "fname" }
+          "leading": [
+            { "type": "newline", "text": "\n" },
+            { "type": "line_comment", "text": "-- use important table" },
+            { "type": "newline", "text": "\n" }
+          ]
         }
       ]
     },
-    {
-      "type": "from_clause",
-      "fromKw": { "type": "keyword", "text": "FROM" },
-      "tables": [
-        {
-          "type": "table_ref",
-          "table": { "type": "keyword", "text": "persons" }
-        }
-      ],
-      "leading": [
-        { "type": "newline", "text": "\n" },
-        { "type": "line_comment", "text": "-- use important table" },
-        { "type": "newline", "text": "\n" }
-      ]
-    }
+    { "type": "empty_stmt" }
   ],
   "leading": [
     { "type": "block_comment", "text": "/* My query */" },
@@ -139,6 +149,8 @@ Note the following conventions:
 - All keywords are preserved in `type: keyword` nodes, which are usually
   stored in fields named like `someNameKw`.
 - Parenthesis is represented by separate `type: paren_expr` node.
+- Comma-separated lists are represented by separate `type: expr_list` node.
+- Trailing semicolon is represented by `type: empty_stmt` node in the end.
 - The original source code representation of strings, identifiers, keywords, etc
   is preserved in `text` fields.
 - Each node can have `leading` and `trailing` fields,
