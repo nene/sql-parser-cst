@@ -1129,7 +1129,7 @@ create_index_stmt
     name:(table_ref __)
     onKw:(ON __)
     table:(table_ref __)
-    columns:paren_column_ref_list
+    columns:paren_sort_specification_list
     where:(__ where_clause)? {
       return loc({
         type: "create_index_stmt",

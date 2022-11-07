@@ -727,7 +727,7 @@ type CreateIndexStmt = BaseNode & {
   name: TableRef;
   onKw: Keyword; // ON
   table: TableRef;
-  columns: ParenExpr<ExprList<ColumnRef>>;
+  columns: ParenExpr<ExprList<SortSpecification>>;
   where?: WhereClause;
 };
 

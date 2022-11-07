@@ -31,6 +31,15 @@ describe("index", () => {
         test("CREATE INDEX idx ON tbl (col) /*c1*/ WHERE /*c2*/ x > 10");
       });
     });
+
+    dialect("sqlite", () => {
+      it("supports ASC/DESC in columns list", () => {
+        test("CREATE INDEX my_idx ON tbl (id ASC, name DESC)");
+      });
+      it("supports COLLATE in columns list", () => {
+        test("CREATE INDEX my_idx ON tbl (name COLLATE utf8)");
+      });
+    });
   });
 
   describe("DROP INDEX", () => {
