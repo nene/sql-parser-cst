@@ -634,6 +634,11 @@ order_by_clause
     });
   }
 
+paren_sort_specification_list
+  = "(" c1:__ expr:sort_specification_list c2:__ ")" {
+    return loc(createParenExpr(c1, expr, c2));
+  }
+
 sort_specification_list
   = head:sort_specification tail:(__ "," __ sort_specification)* {
     return loc(createExprList(head, tail));
@@ -945,11 +950,6 @@ upsert_clause$sqlite
       doKw,
       action: read(action),
     });
-  }
-
-paren_sort_specification_list
-  = "(" c1:__ expr:sort_specification_list c2:__ ")" {
-    return loc(createParenExpr(c1, expr, c2));
   }
 
 upsert_action
