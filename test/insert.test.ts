@@ -122,13 +122,13 @@ describe("insert into", () => {
         test("INSERT INTO tbl VALUES (1) ON CONFLICT (col1) WHERE x=0 DO NOTHING");
       });
 
-      // it("supports ON CONFLICT (expr)", () => {
-      //   test("INSERT INTO tbl VALUES (1) ON CONFLICT (col1 COLLATE utf8) DO NOTHING");
-      // });
+      it("supports ON CONFLICT (expr)", () => {
+        test("INSERT INTO tbl VALUES (1) ON CONFLICT (col1 COLLATE utf8) DO NOTHING");
+      });
 
-      // it("supports ON CONFLICT (column ASC/DESC)", () => {
-      //   test("INSERT INTO tbl VALUES (1) ON CONFLICT (col1 ASC, col2 DESC) DO NOTHING");
-      // });
+      it("supports ON CONFLICT (column ASC/DESC)", () => {
+        test("INSERT INTO tbl VALUES (1) ON CONFLICT (col1 ASC, col2 DESC) DO NOTHING");
+      });
 
       it("supports multiple upsert clauses", () => {
         test(

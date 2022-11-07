@@ -935,7 +935,7 @@ upsert_clause
   = never
 
 upsert_clause$sqlite
-  = kw:(ON __ CONFLICT __) columns:(paren_column_ref_list __)? where:(where_clause __)?
+  = kw:(ON __ CONFLICT __) columns:(paren_sort_specification_list __)? where:(where_clause __)?
     doKw:DO action:(__ upsert_action) {
     return loc({
       type: "upsert_clause",
@@ -945,6 +945,11 @@ upsert_clause$sqlite
       doKw,
       action: read(action),
     });
+  }
+
+paren_sort_specification_list
+  = "(" c1:__ expr:sort_specification_list c2:__ ")" {
+    return loc(createParenExpr(c1, expr, c2));
   }
 
 upsert_action
