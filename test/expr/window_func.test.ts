@@ -195,15 +195,11 @@ describe("window functions", () => {
                 "specifications": {
                   "items": [
                     {
-                      "expr": {
-                        "column": {
-                          "text": "price",
-                          "type": "identifier",
-                        },
-                        "type": "column_ref",
+                      "column": {
+                        "text": "price",
+                        "type": "identifier",
                       },
-                      "orderKw": undefined,
-                      "type": "sort_specification",
+                      "type": "column_ref",
                     },
                   ],
                   "type": "expr_list",

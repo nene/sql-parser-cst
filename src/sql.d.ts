@@ -233,7 +233,7 @@ type WindowDefinition = BaseNode & {
 type OrderByClause = BaseNode & {
   type: "order_by_clause";
   orderByKw: Keyword[];
-  specifications: ExprList<SortSpecification>;
+  specifications: ExprList<SortSpecification | ColumnRef>;
   withRollupKw?: Keyword[]; // WITH ROLLUP
 };
 
@@ -386,7 +386,7 @@ type ColumnConstraint =
 type ConstraintPrimaryKey = BaseNode & {
   type: "constraint_primary_key";
   primaryKeyKw: Keyword[];
-  columns?: ParenExpr<ExprList<SortSpecification>>;
+  columns?: ParenExpr<ExprList<SortSpecification | ColumnRef>>;
   onConflict?: OnConflictClause;
 };
 
@@ -631,7 +631,7 @@ type Default = BaseNode & {
 type UpsertClause = BaseNode & {
   type: "upsert_clause";
   onConflictKw: Keyword[]; // ON CONFLICT
-  columns?: ParenExpr<ExprList<SortSpecification>>;
+  columns?: ParenExpr<ExprList<SortSpecification | ColumnRef>>;
   where?: WhereClause;
   doKw: Keyword; // DO
   action: UpsertActionNothing | UpsertActionUpdate;
@@ -727,7 +727,7 @@ type CreateIndexStmt = BaseNode & {
   name: TableRef;
   onKw: Keyword; // ON
   table: TableRef;
-  columns: ParenExpr<ExprList<SortSpecification>>;
+  columns: ParenExpr<ExprList<SortSpecification | ColumnRef>>;
   where?: WhereClause;
 };
 

@@ -655,6 +655,11 @@ sort_specification
 
 sort_specification$sqlite
   = e:expr orderKw:(__ (DESC / ASC))? nullsKw:(__ NULLS __ (FIRST / LAST))? {
+    // don't create full sort_specification node when dealing with just a column_ref
+    if (!orderKw && !nullsKw && e.type === "column_ref") {
+      return e;
+    }
+
     return loc({
       type: "sort_specification",
       expr: read(e),
