@@ -2175,6 +2175,9 @@ type_name
 
 type_name$sqlite
   = head:sqlite_type_name_part tail:(__ sqlite_type_name_part)* {
+    if (tail.length === 0) {
+      return head;
+    }
     return readSpaceSepList(head, tail);
   }
 
