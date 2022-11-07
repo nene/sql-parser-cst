@@ -20,6 +20,7 @@ type Node =
   | JoinUsingSpecification
   | SortSpecification
   | ColumnDefinition
+  | CreateTableAs
   | Constraint<ColumnConstraint | TableConstraint>
   | ColumnConstraint
   | TableConstraint
@@ -302,8 +303,13 @@ type CreateTableStmt = BaseNode & {
     ExprList<ColumnDefinition | TableConstraint | Constraint<TableConstraint>>
   >;
   options?: ExprList<TableOption>;
-  asKw?: Keyword;
-  expr?: SubSelect;
+  as?: CreateTableAs;
+};
+
+type CreateTableAs = BaseNode & {
+  type: "create_table_as";
+  asKw: Keyword; // AS
+  expr: SubSelect;
 };
 
 type ColumnDefinition = BaseNode & {

@@ -1138,7 +1138,7 @@ create_table_stmt
     table:(__ table_ref)
     columns:(__ create_table_definition)?
     options:(__ table_options)?
-    asExpr:_create_as_select?
+    as:(__ create_table_as)?
     {
       return loc({
         type: "create_table_stmt",
@@ -1149,12 +1149,16 @@ create_table_stmt
         table: read(table),
         columns: read(columns),
         options: read(options),
-        ...(asExpr ? asExpr : {}),
+        as: read(as),
       });
     }
 
-_create_as_select = asKw:(__ AS) expr:(__ sub_select) {
-  return { asKw: read(asKw), expr: read(expr) };
+create_table_as = asKw:AS expr:(__ sub_select) {
+  return {
+    type: "create_table_as",
+    asKw,
+    expr: read(expr),
+  };
 }
 
 if_not_exists

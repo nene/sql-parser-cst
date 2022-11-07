@@ -107,9 +107,9 @@ const showNode = cstTransformer<string>({
       node.table,
       node.columns,
       node.options,
-      node.asKw,
-      node.expr,
+      node.as,
     ]),
+  create_table_as: (node) => show([node.asKw, node.expr]),
   column_definition: (node) =>
     show([
       node.name,
