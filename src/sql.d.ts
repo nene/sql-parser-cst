@@ -386,7 +386,7 @@ type ColumnConstraint =
 type ConstraintPrimaryKey = BaseNode & {
   type: "constraint_primary_key";
   primaryKeyKw: Keyword[];
-  columns?: ParenExpr<ExprList<ColumnRef>>;
+  columns?: ParenExpr<ExprList<SortSpecification>>;
   onConflict?: OnConflictClause;
 };
 
@@ -631,7 +631,7 @@ type Default = BaseNode & {
 type UpsertClause = BaseNode & {
   type: "upsert_clause";
   onConflictKw: Keyword[]; // ON CONFLICT
-  columns?: ParenExpr<ExprList<ColumnRef>>;
+  columns?: ParenExpr<ExprList<SortSpecification>>;
   where?: WhereClause;
   doKw: Keyword; // DO
   action: UpsertActionNothing | UpsertActionUpdate;

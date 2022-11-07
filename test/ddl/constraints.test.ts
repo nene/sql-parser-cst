@@ -177,6 +177,15 @@ describe("constraints", () => {
       testTblConst("PRIMARY /*c3*/ KEY /*c4*/ ( /*c5*/ id /*c6*/,/*c7*/ name /*c8*/ )");
     });
 
+    dialect("sqlite", () => {
+      it("supports ASC/DESC in primary key columns", () => {
+        testTblConst("PRIMARY KEY (id ASC, name DESC)");
+      });
+      it("supports COLLATE in primary key columns", () => {
+        testTblConst("PRIMARY KEY (name COLLATE utf8)");
+      });
+    });
+
     it("UNIQUE", () => {
       testTblConst("UNIQUE (id)");
       testTblConst("UNIQUE KEY (id, name)");

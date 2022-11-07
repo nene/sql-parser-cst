@@ -1953,7 +1953,7 @@ table_constraint_type$mysql
 
 table_constraint_primary_key
   = kws:(PRIMARY __ KEY __)
-    columns:paren_column_ref_list
+    columns:paren_sort_specification_list
     confl:(__ on_conflict_clause)? {
       return loc({
         type: "constraint_primary_key",
