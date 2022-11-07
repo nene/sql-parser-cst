@@ -988,7 +988,7 @@ column_assignment_list
     }
 
 column_assignment
-  = col:(column_ref __) "=" expr:(__ column_value) {
+  = col:((column_ref / paren_column_ref_list) __) "=" expr:(__ column_value) {
     return loc({
       type: "column_assignment",
       column: read(col),
@@ -2307,6 +2307,7 @@ primary_standard
   = literal
   / paren_expr
   / paren_expr_select
+  / paren_expr_list
   / cast_expr
   / func_call
   / table_func_call

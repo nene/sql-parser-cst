@@ -66,6 +66,12 @@ describe("update", () => {
   });
 
   dialect("sqlite", () => {
+    it("supports assigning list of values to list of columns", () => {
+      test("UPDATE tbl SET (id, name) = (1, 'John')");
+    });
+  });
+
+  dialect("sqlite", () => {
     it("supports WITH ... UPDATE ...", () => {
       test("WITH subsel AS (SELECT 1) UPDATE tbl SET col1 = 2");
       test("WITH subsel AS (SELECT 1) /*c*/ UPDATE tbl SET col1 = 2");

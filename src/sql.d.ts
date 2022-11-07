@@ -638,7 +638,7 @@ type SetClause = BaseNode & {
 
 type ColumnAssignment = BaseNode & {
   type: "column_assignment";
-  column: ColumnRef;
+  column: ColumnRef | ParenExpr<ExprList<ColumnRef>>;
   expr: Expr | Default;
 };
 
