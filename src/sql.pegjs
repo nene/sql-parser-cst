@@ -2130,7 +2130,6 @@ type_name
   = BOOLEAN
   / BOOL
   / BLOB
-  / CLOB
   / TINYBLOB
   / MEDIUMBLOB
   / LONGBLOB
@@ -2154,8 +2153,6 @@ type_name
   / DECIMAL
   / DEC
   / INT
-  / INT2
-  / INT8
   / INTEGER
   / SMALLINT
   / TINYINT
@@ -2171,7 +2168,16 @@ type_name
   / JSON
   / ENUM
   / SET
-  / ANY
+
+type_name$sqlite
+  = head:sqlite_type_name_part tail:(__ sqlite_type_name_part)* {
+    return readSpaceSepList(head, tail);
+  }
+
+sqlite_type_name_part
+  = name:ident_name !{ return __RESERVED_KEYWORDS__[name.toUpperCase()] === true; } {
+    return loc(createKeyword(name));
+  }
 
 /**
  * Expressions
@@ -3034,7 +3040,6 @@ ALTER               = kw:"ALTER"i               !ident_part { return loc(createK
 ALWAYS              = kw:"ALWAYS"i              !ident_part { return loc(createKeyword(kw)); }
 ANALYZE             = kw:"ANALYZE"i             !ident_part { return loc(createKeyword(kw)); }
 AND                 = kw:"AND"i                 !ident_part { return loc(createKeyword(kw)); }
-ANY                 = kw:"ANY"i                 !ident_part { return loc(createKeyword(kw)); }
 AS                  = kw:"AS"i                  !ident_part { return loc(createKeyword(kw)); }
 ASC                 = kw:"ASC"i                 !ident_part { return loc(createKeyword(kw)); }
 ATTACH              = kw:"ATTACH"i              !ident_part { return loc(createKeyword(kw)); }
@@ -3065,7 +3070,6 @@ CHARACTER           = kw:"CHARACTER"i           !ident_part { return loc(createK
 CHARSET             = kw:"CHARSET"i             !ident_part { return loc(createKeyword(kw)); }
 CHECK               = kw:"CHECK"i               !ident_part { return loc(createKeyword(kw)); }
 CHECKSUM            = kw:"CHECKSUM"i            !ident_part { return loc(createKeyword(kw)); }
-CLOB                = kw:"CLOB"i                !ident_part { return loc(createKeyword(kw)); }
 COLLATE             = kw:"COLLATE"i             !ident_part { return loc(createKeyword(kw)); }
 COLLATION           = kw:"COLLATION"i           !ident_part { return loc(createKeyword(kw)); }
 COLUMN              = kw:"COLUMN"i              !ident_part { return loc(createKeyword(kw)); }
@@ -3173,8 +3177,6 @@ INSERT_METHOD       = kw:"INSERT_METHOD"i       !ident_part { return loc(createK
 INSTANT             = kw:"INSTANT"i             !ident_part { return loc(createKeyword(kw)); }
 INSTEAD             = kw:"INSTEAD"i             !ident_part { return loc(createKeyword(kw)); }
 INT                 = kw:"INT"i                 !ident_part { return loc(createKeyword(kw)); }
-INT2                = kw:"INT2"i                !ident_part { return loc(createKeyword(kw)); }
-INT8                = kw:"INT8"i                !ident_part { return loc(createKeyword(kw)); }
 INTEGER             = kw:"INTEGER"i             !ident_part { return loc(createKeyword(kw)); }
 INTERSECT           = kw:"INTERSECT"i           !ident_part { return loc(createKeyword(kw)); }
 INTERVAL            = kw:"INTERVAL"i            !ident_part { return loc(createKeyword(kw)); }
