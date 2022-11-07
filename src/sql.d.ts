@@ -94,6 +94,7 @@ type Expr =
   | FuncCall
   | TableFuncCall
   | CastExpr
+  | RaiseExpr
   | BetweenExpr
   | CaseExpr
   | IntervalExpr
@@ -992,6 +993,12 @@ type CastArg = BaseNode & {
   expr: Expr;
   asKw: Keyword;
   dataType: DataType;
+};
+
+type RaiseExpr = BaseNode & {
+  type: "raise_expr";
+  raiseKw: Keyword; // RAISE
+  args: ParenExpr<ExprList<Keyword | StringLiteral>>;
 };
 
 type BetweenExpr = BaseNode & {

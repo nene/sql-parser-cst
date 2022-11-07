@@ -319,6 +319,7 @@ const showNode = cstTransformer<string>({
   distinct_arg: (node) => show([node.distinctKw, node.value]),
   cast_expr: (node) => show([node.castKw, node.args]),
   cast_arg: (node) => show([node.expr, node.asKw, node.dataType]),
+  raise_expr: (node) => show([node.raiseKw, node.args]),
   filter_arg: (node) => show([node.filterKw, node.where]),
   over_arg: (node) => show([node.overKw, node.window]),
   between_expr: (node) =>

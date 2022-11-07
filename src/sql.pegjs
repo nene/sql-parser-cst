@@ -2288,6 +2288,10 @@ primary$mysql
   = primary_standard
   / interval_expr
 
+primary$sqlite
+  = raise_expr
+  / primary_standard
+
 primary_standard
   = literal
   / paren_expr
@@ -2341,6 +2345,25 @@ cast_arg
       asKw: kw,
       dataType: read(t),
     });
+  }
+
+raise_expr
+  = kw:RAISE args:(__ raise_args_in_parens) {
+    return loc({
+      type: "raise_expr",
+      raiseKw: kw,
+      args: read(args),
+    });
+  }
+
+raise_args_in_parens
+  = "(" c1:__ arg:raise_args c2:__ ")" {
+    return loc(createParenExpr(c1, arg, c2));
+  }
+
+raise_args
+  = head:(IGNORE / ROLLBACK / ABORT / FAIL) tail:(__ "," __ literal_string)* {
+    return loc(createExprList(head, tail));
   }
 
 func_call
@@ -3154,6 +3177,7 @@ PRECISION           = kw:"PRECISION"i           !ident_part { return loc(createK
 PRIMARY             = kw:"PRIMARY"i             !ident_part { return loc(createKeyword(kw)); }
 QUARTER             = kw:"QUARTER"i             !ident_part { return loc(createKeyword(kw)); }
 QUERY               = kw:"QUERY"i               !ident_part { return loc(createKeyword(kw)); }
+RAISE               = kw:"RAISE"i               !ident_part { return loc(createKeyword(kw)); }
 RANGE               = kw:"RANGE"i               !ident_part { return loc(createKeyword(kw)); }
 RANK                = kw:"RANK"i                !ident_part { return loc(createKeyword(kw)); }
 READ                = kw:"READ"i                !ident_part { return loc(createKeyword(kw)); }
