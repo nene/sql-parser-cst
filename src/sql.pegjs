@@ -645,16 +645,7 @@ sort_specification_list
   }
 
 sort_specification
-  = e:expr orderKw:(__ (DESC / ASC))? {
-    return loc({
-      type: "sort_specification",
-      expr: e,
-      orderKw: read(orderKw),
-    });
-  }
-
-sort_specification$sqlite
-  = e:expr orderKw:(__ (DESC / ASC))? nullsKw:(__ NULLS __ (FIRST / LAST))? {
+  = e:expr orderKw:(__ (DESC / ASC))? nullsKw:(__ sort_specification_nulls)? {
     // don't create full sort_specification node when dealing with just a column_ref
     if (!orderKw && !nullsKw && e.type === "column_ref") {
       return e;
@@ -667,6 +658,15 @@ sort_specification$sqlite
       ...(nullsKw ? {nullHandlingKw: read(nullsKw)} : {}),
     });
   }
+
+sort_specification_nulls
+  = never
+
+sort_specification_nulls$sqlite
+  = kws:(NULLS __ (FIRST / LAST)) {
+    return read(kws);
+  }
+
 
 /**
  * SELECT .. LIMIT
