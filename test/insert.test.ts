@@ -101,6 +101,44 @@ describe("insert into", () => {
   });
 
   dialect("sqlite", () => {
+    describe("upsert clause", () => {
+      it("supports ON CONFLICT DO NOTHING", () => {
+        test("INSERT INTO tbl VALUES (1) ON CONFLICT DO NOTHING");
+      });
+
+      it("supports ON CONFLICT DO UPDATE SET col=expr", () => {
+        test("INSERT INTO tbl VALUES (1) ON CONFLICT DO UPDATE SET col1=1, col2=2");
+      });
+
+      it("supports ON CONFLICT DO UPDATE SET col=expr WHERE", () => {
+        test("INSERT INTO tbl VALUES (1) ON CONFLICT DO UPDATE SET col1=1 WHERE x>0");
+      });
+
+      it("supports ON CONFLICT (column)", () => {
+        test("INSERT INTO tbl VALUES (1) ON CONFLICT (col1, col2) DO NOTHING");
+      });
+
+      it("supports ON CONFLICT (column) WHERE expr", () => {
+        test("INSERT INTO tbl VALUES (1) ON CONFLICT (col1) WHERE x=0 DO NOTHING");
+      });
+
+      // it("supports ON CONFLICT (expr)", () => {
+      //   test("INSERT INTO tbl VALUES (1) ON CONFLICT (col1 COLLATE utf8) DO NOTHING");
+      // });
+
+      // it("supports ON CONFLICT (column ASC/DESC)", () => {
+      //   test("INSERT INTO tbl VALUES (1) ON CONFLICT (col1 ASC, col2 DESC) DO NOTHING");
+      // });
+
+      it("supports multiple upsert clauses", () => {
+        test(
+          "INSERT INTO tbl VALUES (1) ON CONFLICT (col1) DO NOTHING ON CONFLICT (col2) DO UPDATE SET col2=0"
+        );
+      });
+    });
+  });
+
+  dialect("sqlite", () => {
     it("supports INSERT ... RETURNING ...", () => {
       test("INSERT INTO tbl (col) VALUES (1) RETURNING col");
       test("INSERT INTO tbl (col) VALUES (1) /*c1*/ RETURNING /*c2*/ *");

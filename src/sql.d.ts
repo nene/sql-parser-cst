@@ -54,6 +54,8 @@ type Node =
   | UpsertOption
   | OrAlternateAction
   | ColumnAssignment
+  | UpsertActionNothing
+  | UpsertActionUpdate
   | Alias
   | IndexedTableRef
   | NotIndexedTableRef
@@ -157,6 +159,7 @@ type Clause =
   | ValuesClause
   | UpdateClause // in UPDATE statement
   | SetClause // in UPDATE statement
+  | UpsertClause // in INSERT statement
   | ReturningClause; // in UPDATE,INSERT,DELETE
 
 type WithClause = BaseNode & {
@@ -573,6 +576,7 @@ type InsertStmt = BaseNode & {
     | WithClause
     | InsertClause
     | (ValuesClause | SubSelect | DefaultValues)
+    | UpsertClause
     | ReturningClause
   )[];
 };
@@ -621,6 +625,28 @@ type DefaultValues = BaseNode & {
 type Default = BaseNode & {
   type: "default";
   kw: Keyword[]; // DEFAULT
+};
+
+// only in SQLite
+type UpsertClause = BaseNode & {
+  type: "upsert_clause";
+  onConflictKw: Keyword[]; // ON CONFLICT
+  columns?: ParenExpr<ExprList<ColumnRef>>;
+  where?: WhereClause;
+  doKw: Keyword; // DO
+  action: UpsertActionNothing | UpsertActionUpdate;
+};
+
+type UpsertActionNothing = BaseNode & {
+  type: "upsert_action_nothing";
+  nothingKw: Keyword; // NOTHING
+};
+
+type UpsertActionUpdate = BaseNode & {
+  type: "upsert_action_update";
+  updateKw: Keyword; // UPDATE
+  set: SetClause;
+  where?: WhereClause;
 };
 
 // DELETE FROM

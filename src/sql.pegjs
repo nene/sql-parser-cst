@@ -811,6 +811,7 @@ insert_stmt
   = withCls:(with_clause __)?
     insertCls:insert_clause
     source:(__ insert_source)
+    upsert:(__ upsert_clause)*
     returning:(__ returning_clause)? {
       return loc({
         type: "insert_stmt",
@@ -818,6 +819,7 @@ insert_stmt
           read(withCls),
           insertCls,
           read(source),
+          ...upsert.map(read),
           read(returning),
         ].filter(identity),
       });
@@ -928,6 +930,38 @@ default_values
   = kws:(DEFAULT __ VALUES) {
       return loc({ type: "default_values", kw: read(kws) });
     }
+
+upsert_clause
+  = never
+
+upsert_clause$sqlite
+  = kw:(ON __ CONFLICT __) columns:(paren_column_ref_list __)? where:(where_clause __)?
+    doKw:DO action:(__ upsert_action) {
+    return loc({
+      type: "upsert_clause",
+      onConflictKw: read(kw),
+      columns: read(columns),
+      where: read(where),
+      doKw,
+      action: read(action),
+    });
+  }
+
+upsert_action
+  = kw:NOTHING {
+    return loc({
+      type: "upsert_action_nothing",
+      nothingKw: kw,
+    });
+  }
+  / kw:UPDATE set:(__ set_clause) where:(__ where_clause)? {
+    return loc({
+      type: "upsert_action_update",
+      updateKw: kw,
+      set: read(set),
+      where: read(where),
+    });
+  }
 
 /**
  * ------------------------------------------------------------------------------------ *
@@ -3057,6 +3091,7 @@ DISK                = kw:"DISK"i                !ident_part { return loc(createK
 DISTINCT            = kw:"DISTINCT"i            !ident_part { return loc(createKeyword(kw)); }
 DISTINCTROW         = kw:"DISTINCTROW"i         !ident_part { return loc(createKeyword(kw)); }
 DIV                 = kw:"DIV"i                 !ident_part { return loc(createKeyword(kw)); }
+DO                  = kw:"DO"i                  !ident_part { return loc(createKeyword(kw)); }
 DOUBLE              = kw:"DOUBLE"i              !ident_part { return loc(createKeyword(kw)); }
 DROP                = kw:"DROP"i                !ident_part { return loc(createKeyword(kw)); }
 DUAL                = kw:"DUAL"i                !ident_part { return loc(createKeyword(kw)); }
@@ -3166,6 +3201,7 @@ NO                  = kw:"NO"i                  !ident_part { return loc(createK
 NOCHECK             = kw:"NOCHECK"i             !ident_part { return loc(createKeyword(kw)); }
 NONE                = kw:"NONE"i                !ident_part { return loc(createKeyword(kw)); }
 NOT                 = kw:"NOT"i                 !ident_part { return loc(createKeyword(kw)); }
+NOTHING             = kw:"NOTHING"i             !ident_part { return loc(createKeyword(kw)); }
 NOTNULL             = kw:"NOTNULL"              !ident_part { return loc(createKeyword(kw)); }
 NOWAIT              = kw:"NOWAIT"i              !ident_part { return loc(createKeyword(kw)); }
 NTH_VALUE           = kw:"NTH_VALUE"i           !ident_part { return loc(createKeyword(kw)); }

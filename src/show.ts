@@ -187,6 +187,10 @@ const showNode = cstTransformer<string>({
   or_alternate_action: (node) => show([node.orKw, node.actionKw]),
   default_values: (node) => show(node.kw),
   default: (node) => show(node.kw),
+  upsert_clause: (node) =>
+    show([node.onConflictKw, node.columns, node.where, node.doKw, node.action]),
+  upsert_action_nothing: (node) => show(node.nothingKw),
+  upsert_action_update: (node) => show([node.updateKw, node.set, node.where]),
 
   // UPDATE statement
   update_stmt: (node) => show(node.clauses),
