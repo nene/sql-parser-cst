@@ -1,4 +1,4 @@
-import { parse, preserveAll, show } from "../test_utils";
+import { dialect, parse, preserveAll, show } from "../test_utils";
 
 describe("data types", () => {
   function testType(type: string) {
@@ -30,8 +30,12 @@ describe("data types", () => {
     testType("TINYINT(5)");
     testType("SMALLINT");
     testType("SMALLINT(5)");
+    testType("MEDIUMINT");
+    testType("MEDIUMINT(5)");
     testType("BIGINT");
     testType("BIGINT(10)");
+    testType("INT2");
+    testType("INT8");
   });
 
   it("real types", () => {
@@ -50,20 +54,25 @@ describe("data types", () => {
 
   it("string types", () => {
     testType("VARCHAR");
-    testType("NVARCHAR");
-    testType("CHAR");
     testType("VARCHAR(100)");
+    testType("NVARCHAR");
     testType("NVARCHAR(100)");
+    testType("CHAR");
     testType("CHAR(15)");
-    testType("CHAR /*c1*/(/*c2*/ 123 /*c3*/)");
-  });
-
-  it("text types", () => {
+    testType("NCHAR");
+    testType("NCHAR(15)");
     testType("TEXT");
     testType("TEXT(100)");
     testType("TINYTEXT");
     testType("MEDIUMTEXT");
     testType("LONGTEXT");
+    testType("VARYING CHARACTER");
+    testType("VARYING CHARACTER(100)");
+    testType("NATIVE CHARACTER");
+    testType("NATIVE CHARACTER(100)");
+    testType("CLOB");
+    testType("CLOB(100)");
+    testType("CHAR /*c1*/(/*c2*/ 123 /*c3*/)");
   });
 
   it("JSON type", () => {
@@ -107,5 +116,11 @@ describe("data types", () => {
   it("ENUM and SET types", () => {
     testType("ENUM('foo', 'bar', 'baz')");
     testType("SET('foo', 'bar', 'baz')");
+  });
+
+  dialect("sqlite", () => {
+    it("ANY type", () => {
+      testType("ANY");
+    });
   });
 });
