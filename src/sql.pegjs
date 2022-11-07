@@ -2622,7 +2622,11 @@ exists_expr
  * ------------------------------------------------------------------------------------ *
  */
 parameter
-  = "?" { return loc({ type: "parameter", text: text() }); }
+  = "?" digits { return loc({ type: "parameter", text: text() }); }
+  / "?" { return loc({ type: "parameter", text: text() }); }
+  / ":" ident_name { return loc({ type: "parameter", text: text() }); }
+  / "$" ident_name { return loc({ type: "parameter", text: text() }); }
+  / "@" ident_name { return loc({ type: "parameter", text: text() }); }
 
 /**
  * ------------------------------------------------------------------------------------ *
