@@ -49,8 +49,8 @@ export function dialect(lang: DialectName | DialectName[], block: () => void) {
   }
 }
 
-export function test(sql: string) {
-  expect(show(parse(sql, preserveAll))).toBe(sql);
+export function test(sql: string, options?: ParserOptions) {
+  expect(show(parse(sql, options || preserveAll))).toBe(sql);
 }
 
 export function testExpr(expr: string) {

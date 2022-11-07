@@ -233,6 +233,10 @@
       items: readCommaSepList(head, tail),
     };
   }
+
+  const hasParamType = (name) => {
+    return options.paramTypes?.includes(name);
+  }
 }
 
 start
@@ -2622,11 +2626,15 @@ exists_expr
  * ------------------------------------------------------------------------------------ *
  */
 parameter
-  = "?" digits { return loc({ type: "parameter", text: text() }); }
-  / "?" { return loc({ type: "parameter", text: text() }); }
-  / ":" ident_name { return loc({ type: "parameter", text: text() }); }
-  / "$" ident_name { return loc({ type: "parameter", text: text() }); }
-  / "@" ident_name { return loc({ type: "parameter", text: text() }); }
+  = (
+      "?" digits     &{ return hasParamType("?nr"); }
+    / "?"            &{ return hasParamType("?"); }
+    / ":" ident_name &{ return hasParamType(":name"); }
+    / "$" ident_name &{ return hasParamType("$name"); }
+    / "@" ident_name &{ return hasParamType("@name"); }
+  ) {
+    return loc({ type: "parameter", text: text() });
+  }
 
 /**
  * ------------------------------------------------------------------------------------ *

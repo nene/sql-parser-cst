@@ -1160,11 +1160,14 @@ type Parameter = BaseNode & {
   text: string;
 };
 
+type ParamType = "?" | "?nr" | ":name" | "$name" | "@name";
+
 export type ParserOptions = {
   preserveComments?: boolean;
   preserveNewlines?: boolean;
   preserveSpaces?: boolean;
   includeRange?: boolean;
+  paramTypes?: ParamType[];
 };
 
 export function parse(str: string, options?: ParserOptions): Program;
