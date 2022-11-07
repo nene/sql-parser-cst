@@ -2382,6 +2382,7 @@ primary_standard
   / case_expr
   / exists_expr
   / column_ref
+  / parameter
 
 paren_expr
   = "(" c1:__ expr:expr c2:__ ")" {
@@ -2612,6 +2613,16 @@ exists_expr
   = kw:EXISTS expr:(__ paren_expr_select) {
     return loc(createPrefixOpExpr(kw, read(expr)));
   }
+
+/**
+ * ------------------------------------------------------------------------------------ *
+ *                                                                                      *
+ * Bound parameters                                                                     *
+ *                                                                                      *
+ * ------------------------------------------------------------------------------------ *
+ */
+parameter
+  = "?" { return loc({ type: "parameter", text: text() }); }
 
 /**
  * ------------------------------------------------------------------------------------ *

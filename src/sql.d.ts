@@ -105,7 +105,8 @@ type Expr =
   | Literal
   | ColumnRef
   | TableRef
-  | Identifier;
+  | Identifier
+  | Parameter;
 
 type Literal =
   | StringLiteral
@@ -1151,6 +1152,11 @@ type Identifier = BaseNode & {
 
 type Keyword = BaseNode & {
   type: "keyword";
+  text: string;
+};
+
+type Parameter = BaseNode & {
+  type: "parameter";
   text: string;
 };
 

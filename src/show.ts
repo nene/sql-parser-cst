@@ -354,6 +354,7 @@ const showNode = cstTransformer<string>({
   number: (node) => node.text,
   boolean: (node) => node.text,
   null: (node) => node.text,
+  parameter: (node) => node.text,
 
   // Cast to FullTransformMap, so TypeScript ensures all node types are covered
 } as FullTransformMap<string>);
