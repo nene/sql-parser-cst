@@ -143,6 +143,7 @@ type Clause =
   | OrderByClause
   | PartitionByClause // in window definitions
   | LimitClause
+  | InsertClause
   | ValuesClause
   | UpdateClause // in UPDATE statement
   | SetClause // in UPDATE statement
@@ -558,15 +559,22 @@ type DropTableStmt = BaseNode & {
 // INSERT INTO
 type InsertStmt = BaseNode & {
   type: "insert_stmt";
-  with?: WithClause;
+  clauses: (
+    | WithClause
+    | InsertClause
+    | (ValuesClause | SubSelect | DefaultValues)
+    | ReturningClause
+  )[];
+};
+
+type InsertClause = BaseNode & {
+  type: "insert_clause";
   insertKw: Keyword; // INSERT | REPLACE
   options: UpsertOption[];
   orAction?: OrAlternateAction;
-  intoKw?: Keyword;
+  intoKw?: Keyword; // INTO
   table: TableRef | Alias<TableRef>;
   columns?: ParenExpr<ExprList<ColumnRef>>;
-  source: ValuesClause | SubSelect | DefaultValues;
-  returning?: ReturningClause;
 };
 
 // Only in MySQL INSERT & UPDATE clauses

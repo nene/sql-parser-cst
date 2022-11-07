@@ -173,17 +173,15 @@ const showNode = cstTransformer<string>({
     ]),
 
   // INSERT INTO statement
-  insert_stmt: (node) =>
+  insert_stmt: (node) => show(node.clauses),
+  insert_clause: (node) =>
     show([
-      node.with,
       node.insertKw,
       node.options,
       node.orAction,
       node.intoKw,
       node.table,
       node.columns,
-      node.source,
-      node.returning,
     ]),
   upsert_option: (node) => show(node.kw),
   or_alternate_action: (node) => show([node.orKw, node.actionKw]),

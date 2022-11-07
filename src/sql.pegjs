@@ -809,25 +809,35 @@ returning_clause
  */
 insert_stmt
   = withCls:(with_clause __)?
-    insertKw:(INSERT / REPLACE)
-    options:(__ upsert_options)?
-    orAction:(__ or_alternate_action)?
-    intoKw:(__ INTO)?
-    table:(__ table_ref_or_explicit_alias)
-    columns:(__ paren_plain_column_ref_list)?
+    insertCls:insert_clause
     source:(__ insert_source)
     returning:(__ returning_clause)? {
       return loc({
         type: "insert_stmt",
-        with: read(withCls),
+        clauses: [
+          read(withCls),
+          insertCls,
+          read(source),
+          read(returning),
+        ].filter(identity),
+      });
+    }
+
+insert_clause
+  = insertKw:(INSERT / REPLACE)
+    options:(__ upsert_options)?
+    orAction:(__ or_alternate_action)?
+    intoKw:(__ INTO)?
+    table:(__ table_ref_or_explicit_alias)
+    columns:(__ paren_plain_column_ref_list)? {
+      return loc({
+        type: "insert_clause",
         insertKw,
         options: read(options) || [],
         orAction: read(orAction),
         intoKw: read(intoKw),
         table: read(table),
         columns: read(columns),
-        source: read(source),
-        returning: read(returning),
       });
     }
 
