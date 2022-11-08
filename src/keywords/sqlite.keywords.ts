@@ -1,6 +1,6 @@
 // All keywords listed in:
 // https://www.sqlite.org/lang_keywords.html
-const __RESERVED_KEYWORDS__ = {
+export const __RESERVED_KEYWORDS__: Record<string, boolean> = {
   ABORT: true,
   ACTION: true,
   ADD: true,
@@ -149,5 +149,3 @@ const __RESERVED_KEYWORDS__ = {
   WITH: true,
   WITHOUT: true,
 };
-
-module.exports = __RESERVED_KEYWORDS__;

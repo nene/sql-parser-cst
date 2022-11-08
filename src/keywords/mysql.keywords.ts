@@ -1,6 +1,6 @@
 // All keywords marked as reserved (R) from:
 // https://dev.mysql.com/doc/refman/8.0/en/keywords.html
-const __RESERVED_KEYWORDS__ = {
+export const __RESERVED_KEYWORDS__: Record<string, boolean> = {
   ACCESSIBLE: true,
   ADD: true,
   ALL: true,
@@ -264,5 +264,3 @@ const __RESERVED_KEYWORDS__ = {
   YEAR_MONTH: true,
   ZEROFILL: true,
 };
-
-module.exports = __RESERVED_KEYWORDS__;
