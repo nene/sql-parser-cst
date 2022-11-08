@@ -2196,7 +2196,7 @@ type_name$sqlite
   }
 
 sqlite_type_name_part
-  = name:ident_name !{ return __RESERVED_KEYWORDS__[name.toUpperCase()] === true; } {
+  = name:ident_name !{ return __RESERVED_KEYWORDS__[(name as string).toUpperCase()] === true; } {
     return loc(createKeyword(name));
   }
 
@@ -2747,7 +2747,7 @@ alias_ident
   / s:literal_plain_string { return loc(createIdentifier(s.text)); }
 
 ident "identifier"
-  = name:ident_name !{ return __RESERVED_KEYWORDS__[name.toUpperCase()] === true; } {
+  = name:ident_name !{ return __RESERVED_KEYWORDS__[(name as string).toUpperCase()] === true; } {
     return loc(createIdentifier(name));
   }
   / quoted_ident

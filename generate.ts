@@ -1,4 +1,5 @@
 import peggy from "peggy";
+import tspegjs from "ts-pegjs";
 import fs from "fs";
 import path from "path";
 
@@ -42,14 +43,9 @@ const pickSqlDialect: peggy.Plugin = {
           "Expected to have some code in ast.code, but found nothing :("
         );
       }
-      // Find the location of "use strict" declaration.
-      // We'll insert our code right after that.
-      const useStrictIndex = ast.code.children.indexOf(
-        '"use strict";\n' as any
-      );
       const dialect = (options as any).pickSqlDialect;
-      const importStmt = `const __RESERVED_KEYWORDS__ = require("../keywords/${dialect}.keywords.js");\n`;
-      ast.code.children.splice(useStrictIndex + 1, 0, importStmt as any);
+      const importStmt = `import { __RESERVED_KEYWORDS__ } from "../keywords/${dialect}.keywords";\n`;
+      ast.code = (importStmt + ast.code) as any;
     });
   },
 };
@@ -77,14 +73,14 @@ const source = fs.readFileSync(
 dialects.forEach((dialect) => {
   console.log(`Generating parser for: ${dialect}`);
   const parser = peggy.generate(source, {
-    plugins: [pickSqlDialect],
+    plugins: [tspegjs, pickSqlDialect],
     pickSqlDialect: dialect,
     output: "source",
     format: "commonjs",
   } as peggy.SourceBuildOptions<"source">);
 
   fs.writeFileSync(
-    path.resolve(__dirname, `./src/dialects/${dialect}.js`),
+    path.resolve(__dirname, `./src/dialects/${dialect}.ts`),
     parser
   );
 });
