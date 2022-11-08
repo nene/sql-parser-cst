@@ -1,23 +1,37 @@
 {
+  interface IRange {
+    source: string;
+    start: number;
+    end: number;
+  };
+
+  function range(): IRange {
+    return {
+      source: peg$source,
+      start: peg$savedPos,
+      end: peg$currPos
+    };
+  }
+
   /** Identity function */
-  const identity = (x) => x;
+  const identity = (x: any) => x;
 
   /** Last item in array */
-  const last = (arr) => arr[arr.length-1];
+  const last = (arr: any) => arr[arr.length-1];
 
   /** Creates new array with first item replaced by value */
-  const setFirst = ([oldFirst, ...rest], value) => {
+  const setFirst = ([oldFirst, ...rest]: any, value: any) => {
     return [value, ...rest];
   };
 
   /** Creates new array with last item replaced by value */
-  const setLast = (array, value) => {
+  const setLast = (array: any, value: any) => {
     const rest = array.slice(0, -1);
     return [...rest, value];
   };
 
   /** Attaches optional leading whitespace to AST node, or to array of AST nodes (to the first in array) */
-  const leading = (node, ws) => {
+  const leading = (node: any, ws: any): any => {
     if (node instanceof Array) {
       // Add leading whitespace to first item in array
       return setFirst(node, leading(node[0], ws));
@@ -35,7 +49,7 @@
   };
 
   /** Attaches optional trailing whitespace to AST node, or to array of AST nodes (to the last in array) */
-  const trailing = (node, ws) => {
+  const trailing = (node: any, ws: any): any => {
     if (node instanceof Array) {
       // Add trailing whitespace to last item in array
       return setLast(node, trailing(last(node), ws));
@@ -53,19 +67,19 @@
   };
 
   // Shorthand for attaching both trailing or leading whitespace
-  const surrounding = (leadingWs, node, trailingWs) =>
+  const surrounding = (leadingWs: any, node: any, trailingWs: any) =>
     trailing(leading(node, leadingWs), trailingWs);
 
-  const loc = (node) => {
-    if (!options.includeRange) {
+  const loc = (node: any) => {
+    if (!options?.includeRange) {
       return node;
     }
     const {start, end} = range();
     return { ...node, range: [start, end] };
   };
 
-  const deriveLoc = (binExpr) => {
-    if (!options.includeRange) {
+  const deriveLoc = (binExpr: any) => {
+    if (!options?.includeRange) {
       return binExpr;
     }
     const start = binExpr.left.range[0];
@@ -73,14 +87,14 @@
     return { ...binExpr, range: [start, end] };
   }
 
-  function createBinaryExprChain(head, tail, type = "binary_expr") {
+  function createBinaryExprChain(head: any, tail: any, type: any = "binary_expr") {
     return tail.reduce(
-      (left, [c1, op, c2, right]) => deriveLoc(createBinaryExpr(left, c1, op, c2, right, type)),
+      (left: any, [c1, op, c2, right]: any[]) => deriveLoc(createBinaryExpr(left, c1, op, c2, right, type)),
       head
     );
   }
 
-  function createBinaryExpr(left, c1, op, c2, right, type = "binary_expr") {
+  function createBinaryExpr(left: any, c1: any, op: any, c2: any, right: any, type: any = "binary_expr") {
     return {
       type,
       operator: op,
@@ -89,8 +103,8 @@
     };
   }
 
-  const deriveJoinLoc = (join) => {
-    if (!options.includeRange) {
+  const deriveJoinLoc = (join: any) => {
+    if (!options?.includeRange) {
       return join;
     }
     const start = join.left.range[0];
@@ -98,14 +112,14 @@
     return { ...join, range: [start, end] };
   }
 
-  function createJoinExprChain(head, tail) {
+  function createJoinExprChain(head: any, tail: any) {
     return tail.reduce(
-      (left, [c1, op, c2, right, spec]) => deriveJoinLoc(createJoinExpr(left, c1, op, c2, right, spec)),
+      (left: any, [c1, op, c2, right, spec]: any[]) => deriveJoinLoc(createJoinExpr(left, c1, op, c2, right, spec)),
       head
     );
   }
 
-  function createJoinExpr(left, c1, op, c2, right, spec) {
+  function createJoinExpr(left: any, c1: any, op: any, c2: any, right: any, spec: any) {
     return {
       type: "join_expr",
       left: trailing(left, c1),
@@ -115,7 +129,7 @@
     };
   }
 
-  function createPrefixOpExpr(op, expr) {
+  function createPrefixOpExpr(op: any, expr: any) {
     return {
       type: "prefix_op_expr",
       operator: op,
@@ -123,7 +137,7 @@
     };
   }
 
-  function createPostfixOpExpr(op, expr) {
+  function createPostfixOpExpr(op: any, expr: any) {
     return {
       type: "postfix_op_expr",
       expr: expr,
@@ -131,9 +145,9 @@
     };
   }
 
-  const createKeyword = (text) => ({ type: "keyword", text });
+  const createKeyword = (text: any) => ({ type: "keyword", text });
 
-  const whitespaceType = {
+  const whitespaceType: Record<string, boolean> = {
     "space": true,
     "newline": true,
     "line_comment": true,
@@ -141,14 +155,14 @@
   };
 
   // True when dealing with whitespace array (as returned by __ rule)
-  const isWhitespace = (item) => {
+  const isWhitespace = (item: any) => {
     if (!(item instanceof Array)) {
       return false;
     }
     if (item.length === 0) {
       return true;
     }
-    return Boolean(whitespaceType[item[0].type]);
+    return Boolean(whitespaceType[item[0].type as string]);
   }
 
   /**
@@ -158,7 +172,7 @@
    * @param {(Node | Whitespace)[] | Node | null} items
    * @return {Node[] | Node | undefined}
    */
-  const read = (items) => {
+  const read = (items: any) => {
     if (!items) {
       return undefined; // convert null to undefined
     }
@@ -167,7 +181,7 @@
     }
 
     // associate leading/trailing whitespace with nodes
-    const nodes = [];
+    const nodes: any[] = [];
     let leadingWhitespace = undefined;
     for (const it of items) {
       if (isWhitespace(it)) {
@@ -188,7 +202,7 @@
     return nodes.length > 1 ? nodes : nodes[0];
   };
 
-  const readCommaSepList = (head, tail) => {
+  const readCommaSepList = (head: any, tail: any) => {
     const items = [head];
     for (const [c1, comma, c2, expr] of tail) {
       const lastIdx = items.length - 1;
@@ -198,7 +212,7 @@
     return items;
   };
 
-  const readSpaceSepList = (head, tail) => {
+  const readSpaceSepList = (head: any, tail: any) => {
     const items = [head];
     for (const [c, expr] of tail) {
       items.push(leading(expr, c));
@@ -206,9 +220,9 @@
     return items;
   };
 
-  const createIdentifier = (text) => ({ type: "identifier", text });
+  const createIdentifier = (text: any) => ({ type: "identifier", text });
 
-  const createAlias = (expr, _alias) => {
+  const createAlias = (expr: any, _alias: any) => {
     if (!_alias) {
       return expr;
     }
@@ -220,22 +234,22 @@
     };
   }
 
-  const createParenExpr = (c1, expr, c2) => {
+  const createParenExpr = (c1: any, expr: any, c2: any) => {
     return {
       type: "paren_expr",
       expr: surrounding(c1, expr, c2),
     };
   }
 
-  const createExprList = (head, tail) => {
+  const createExprList = (head: any, tail: any) => {
     return {
       type: "expr_list",
       items: readCommaSepList(head, tail),
     };
   }
 
-  const hasParamType = (name) => {
-    return options.paramTypes?.includes(name);
+  const hasParamType = (name: any) => {
+    return options?.paramTypes?.includes(name);
   }
 }
 
@@ -2999,10 +3013,10 @@ hexDigit
 // Optional whitespace (or comments)
 __ "whitespace"
   = xs:(space / newline / comment)* {
-    return xs.filter((ws) => (
-      (options.preserveComments && (ws.type === "line_comment" || ws.type === "block_comment")) ||
-      (options.preserveNewlines && ws.type === "newline") ||
-      (options.preserveSpaces && ws.type === "space")
+    return xs.filter((ws: any) => (
+      (options?.preserveComments && (ws.type === "line_comment" || ws.type === "block_comment")) ||
+      (options?.preserveNewlines && ws.type === "newline") ||
+      (options?.preserveSpaces && ws.type === "space")
     ));
   }
 
