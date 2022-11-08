@@ -1,4 +1,4 @@
-import { Node, ParserOptions, Program } from "./sql";
+import { Node, Program } from "./sql";
 export { parse as mysql } from "./dialects/mysql";
 export { parse as sqlite } from "./dialects/sqlite";
 import { show as showSql } from "./show";
@@ -6,11 +6,19 @@ export { format } from "./format/format";
 export * from "./cstVisitor";
 export * from "./cstTransformer";
 
+type ParamType = "?" | "?nr" | ":name" | "$name" | "@name";
+
+export type ParserOptions = {
+  preserveComments?: boolean;
+  preserveNewlines?: boolean;
+  preserveSpaces?: boolean;
+  includeRange?: boolean;
+  paramTypes?: ParamType[];
+};
+
 export type DialectFn = (str: string, options: ParserOptions) => Program;
 
 export type DialectOption = { dialect: DialectFn };
-
-export { ParserOptions };
 
 export function parse(
   sql: string,

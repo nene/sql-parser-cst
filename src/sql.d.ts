@@ -9,7 +9,7 @@ type Whitespace = {
   text: string;
 };
 
-type Node =
+export type Node =
   | Program
   | Statement
   | Clause
@@ -1159,15 +1159,3 @@ type Parameter = BaseNode & {
   type: "parameter";
   text: string;
 };
-
-type ParamType = "?" | "?nr" | ":name" | "$name" | "@name";
-
-export type ParserOptions = {
-  preserveComments?: boolean;
-  preserveNewlines?: boolean;
-  preserveSpaces?: boolean;
-  includeRange?: boolean;
-  paramTypes?: ParamType[];
-};
-
-export function parse(str: string, options?: ParserOptions): Program;
