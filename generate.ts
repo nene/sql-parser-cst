@@ -35,18 +35,6 @@ const pickSqlDialect: peggy.Plugin = {
         }
       });
     });
-
-    config.passes.generate.push((ast) => {
-      // code should always be present in code-generation pass
-      if (!ast.code) {
-        throw new Error(
-          "Expected to have some code in ast.code, but found nothing :("
-        );
-      }
-      const dialect = (options as any).pickSqlDialect;
-      const importStmt = `import { __RESERVED_KEYWORDS__ } from "../keywords/${dialect}.keywords";\n`;
-      ast.code = (importStmt + ast.code) as any;
-    });
   },
 };
 
@@ -77,6 +65,9 @@ dialects.forEach((dialect) => {
     pickSqlDialect: dialect,
     output: "source",
     format: "commonjs",
+    tspegjs: {
+      customHeader: `import { __RESERVED_KEYWORDS__ } from "../keywords/${dialect}.keywords";`,
+    },
   } as peggy.SourceBuildOptions<"source">);
 
   fs.writeFileSync(
