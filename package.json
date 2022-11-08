@@ -21,7 +21,7 @@
     "pretty": "prettier --write .",
     "generate": "ts-node ./generate.ts",
     "watch:generate": "npm-watch",
-    "clean": "rm -rf lib; rm -rf src/dialects; mkdir src/dialects",
+    "clean": "rm -rf lib; rm -rf src/dialects/*.ts",
     "copy": "cp src/sql.d.ts lib/",
     "build": "yarn clean && yarn generate && tsc && yarn copy",
     "test:mysql": "jest --config test/config/mysql.json",
