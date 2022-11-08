@@ -1,13 +1,13 @@
-type BaseNode = {
+export interface BaseNode {
   leading?: Whitespace[];
   trailing?: Whitespace[];
   range?: [number, number];
-};
+}
 
-type Whitespace = {
+export interface Whitespace {
   type: "block_comment" | "line_comment" | "newline" | "space";
   text: string;
-};
+}
 
 export type Node =
   | Program
@@ -62,12 +62,12 @@ export type Node =
   | PragmaAssignment
   | PragmaFuncCall;
 
-type Program = BaseNode & {
+export interface Program extends BaseNode {
   type: "program";
   statements: Statement[];
-};
+}
 
-type Statement =
+export type Statement =
   | EmptyStmt
   | CompoundSelectStmt
   | SelectStmt
@@ -88,7 +88,7 @@ type Statement =
   | TransactionStmt
   | SqliteStmt;
 
-type Expr =
+export type Expr =
   | ExprList
   | ParenExpr
   | BinaryExpr
@@ -108,29 +108,29 @@ type Expr =
   | Identifier
   | Parameter;
 
-type Literal =
+export type Literal =
   | StringLiteral
   | NumberLiteral
   | BooleanLiteral
   | NullLiteral
   | DateTimeLiteral;
 
-type EmptyStmt = BaseNode & {
+export interface EmptyStmt extends BaseNode {
   type: "empty_stmt";
   foo: number;
-};
+}
 
 // SELECT
-type CompoundSelectStmt = BaseNode & {
+export interface CompoundSelectStmt extends BaseNode {
   type: "compound_select_stmt";
   left: SubSelect;
   operator: Keyword | Keyword[]; // { UNION | EXCEPT | INTERSECT } [ALL | DISTINCT]
   right: SubSelect;
-};
+}
 
-type SubSelect = SelectStmt | CompoundSelectStmt | ParenExpr<SubSelect>;
+export type SubSelect = SelectStmt | CompoundSelectStmt | ParenExpr<SubSelect>;
 
-type SelectStmt = BaseNode & {
+export interface SelectStmt extends BaseNode {
   type: "select_stmt";
   clauses: (
     | WithClause
@@ -143,9 +143,9 @@ type SelectStmt = BaseNode & {
     | OrderByClause
     | LimitClause
   )[];
-};
+}
 
-type Clause =
+export type Clause =
   | WithClause
   | SelectClause
   | FromClause
@@ -163,104 +163,104 @@ type Clause =
   | UpsertClause // in INSERT statement
   | ReturningClause; // in UPDATE,INSERT,DELETE
 
-type WithClause = BaseNode & {
+export interface WithClause extends BaseNode {
   type: "with_clause";
   withKw: Keyword;
   recursiveKw?: Keyword;
   tables: ExprList<CommonTableExpression>;
-};
+}
 
-type CommonTableExpression = BaseNode & {
+export interface CommonTableExpression extends BaseNode {
   type: "common_table_expression";
   table: Identifier;
   columns?: ParenExpr<ExprList<ColumnRef>>;
   asKw: Keyword;
   optionKw?: Keyword[];
   expr: Expr;
-};
+}
 
-type SelectClause = BaseNode & {
+export interface SelectClause extends BaseNode {
   type: "select_clause";
   selectKw: Keyword;
   options: Keyword[];
   columns: ExprList<Expr | Alias<Expr>>;
-};
+}
 
-type FromClause = BaseNode & {
+export interface FromClause extends BaseNode {
   type: "from_clause";
   fromKw: Keyword;
   expr: TableOrSubquery | JoinExpr;
-};
+}
 
-type WhereClause = BaseNode & {
+export interface WhereClause extends BaseNode {
   type: "where_clause";
   whereKw: Keyword;
   expr: Expr;
-};
+}
 
-type GroupByClause = BaseNode & {
+export interface GroupByClause extends BaseNode {
   type: "group_by_clause";
   groupByKw: Keyword[];
   columns: ExprList<Expr>;
-};
+}
 
-type HavingClause = BaseNode & {
+export interface HavingClause extends BaseNode {
   type: "having_clause";
   havingKw: Keyword;
   expr: Expr;
-};
+}
 
-type WindowClause = BaseNode & {
+export interface WindowClause extends BaseNode {
   type: "window_clause";
   windowKw: Keyword;
   namedWindows: NamedWindow[];
-};
+}
 
-type NamedWindow = BaseNode & {
+export interface NamedWindow extends BaseNode {
   type: "named_window";
   name: Identifier;
   asKw: Keyword;
   window: ParenExpr<WindowDefinition>;
-};
+}
 
-type WindowDefinition = BaseNode & {
+export interface WindowDefinition extends BaseNode {
   type: "window_definition";
   baseWindowName?: Identifier;
   partitionBy?: PartitionByClause;
   orderBy?: OrderByClause;
   frame?: FrameClause;
-};
+}
 
-type OrderByClause = BaseNode & {
+export interface OrderByClause extends BaseNode {
   type: "order_by_clause";
   orderByKw: Keyword[];
   specifications: ExprList<SortSpecification | ColumnRef>;
   withRollupKw?: Keyword[]; // WITH ROLLUP
-};
+}
 
-type PartitionByClause = BaseNode & {
+export interface PartitionByClause extends BaseNode {
   type: "partition_by_clause";
   partitionByKw: Keyword[];
   specifications: ExprList<Expr>;
-};
+}
 
-type LimitClause = BaseNode & {
+export interface LimitClause extends BaseNode {
   type: "limit_clause";
   limitKw: Keyword;
   count: Expr;
   offsetKw?: Keyword;
   offset?: Expr;
-};
+}
 
-type JoinExpr = BaseNode & {
+export interface JoinExpr extends BaseNode {
   type: "join_expr";
   left: JoinExpr | TableOrSubquery;
   operator: Keyword[] | ",";
   right: TableOrSubquery;
   specification?: JoinOnSpecification | JoinUsingSpecification;
-};
+}
 
-type TableOrSubquery =
+export type TableOrSubquery =
   | TableRef
   | TableFuncCall
   | IndexedTableRef
@@ -269,45 +269,45 @@ type TableOrSubquery =
   | Alias<TableOrSubquery>;
 
 // SQLite only
-type IndexedTableRef = BaseNode & {
+export interface IndexedTableRef extends BaseNode {
   type: "indexed_table_ref";
   table: TableRef | Alias<TableRef>;
   indexedByKw: Keyword[]; // INDEXED BY
   index: Identifier;
-};
-type NotIndexedTableRef = BaseNode & {
+}
+export interface NotIndexedTableRef extends BaseNode {
   type: "not_indexed_table_ref";
   table: TableRef | Alias<TableRef>;
   notIndexedKw: Keyword[]; // NOT INDEXED
-};
+}
 
-type JoinOnSpecification = BaseNode & {
+export interface JoinOnSpecification extends BaseNode {
   type: "join_on_specification";
   onKw: Keyword;
   expr: Expr;
-};
+}
 
-type JoinUsingSpecification = BaseNode & {
+export interface JoinUsingSpecification extends BaseNode {
   type: "join_using_specification";
   usingKw: Keyword;
   expr: ParenExpr<ExprList<ColumnRef>>;
-};
+}
 
-type SortSpecification = BaseNode & {
+export interface SortSpecification extends BaseNode {
   type: "sort_specification";
   expr: Expr;
   orderKw?: Keyword; // ASC | DESC
   nullHandlingKw?: Keyword[]; // NULLS FIRST | NULLS LAST
-};
+}
 
-type ReturningClause = BaseNode & {
+export interface ReturningClause extends BaseNode {
   type: "returning_clause";
   returningKw: Keyword; // RETURNING
   columns: ExprList<Expr | Alias<Expr>>;
-};
+}
 
 // CREATE TABLE
-type CreateTableStmt = BaseNode & {
+export interface CreateTableStmt extends BaseNode {
   type: "create_table_stmt";
   createKw: Keyword;
   tableKw: Keyword;
@@ -319,54 +319,54 @@ type CreateTableStmt = BaseNode & {
   >;
   options?: ExprList<TableOption>;
   as?: CreateTableAs;
-};
+}
 
-type CreateTableAs = BaseNode & {
+export interface CreateTableAs extends BaseNode {
   type: "create_table_as";
   asKw: Keyword; // AS
   expr: SubSelect;
-};
+}
 
-type ColumnDefinition = BaseNode & {
+export interface ColumnDefinition extends BaseNode {
   type: "column_definition";
   name: ColumnRef;
   dataType?: DataType;
   constraints: (ColumnConstraint | Constraint<ColumnConstraint>)[];
-};
+}
 
-type DataType = BaseNode & {
+export interface DataType extends BaseNode {
   type: "data_type";
   nameKw: Keyword | Keyword[];
   params?: ParenExpr<ExprList<Literal>>;
-};
+}
 
-type Constraint<T> = BaseNode & {
+export interface Constraint<T> extends BaseNode {
   type: "constraint";
   name?: ConstraintName;
   constraint: T;
   deferrable?: ConstraintDeferrable;
-};
+}
 
-type ConstraintName = BaseNode & {
+export interface ConstraintName extends BaseNode {
   type: "constraint_name";
   constraintKw: Keyword;
   name?: Identifier;
-};
+}
 
-type ConstraintDeferrable = BaseNode & {
+export interface ConstraintDeferrable extends BaseNode {
   type: "constraint_deferrable";
   deferrableKw: Keyword | Keyword[]; // DEFERRABLE | NOT DEFERRABLE
   initiallyKw?: Keyword[]; // INITIALLY IMMEDIATE | INITIALLY DEFERRED
-};
+}
 
-type TableConstraint =
+export type TableConstraint =
   | ConstraintPrimaryKey
   | ConstraintForeignKey
   | ConstraintUnique
   | ConstraintCheck
   | ConstraintIndex;
 
-type ColumnConstraint =
+export type ColumnConstraint =
   | ConstraintNull
   | ConstraintNotNull
   | ConstraintDefault
@@ -384,183 +384,183 @@ type ColumnConstraint =
   | ConstraintStorage
   | ConstraintEngineAttribute;
 
-type ConstraintPrimaryKey = BaseNode & {
+export interface ConstraintPrimaryKey extends BaseNode {
   type: "constraint_primary_key";
   primaryKeyKw: Keyword[];
   columns?: ParenExpr<ExprList<SortSpecification | ColumnRef>>;
   onConflict?: OnConflictClause;
-};
+}
 
-type ConstraintForeignKey = BaseNode & {
+export interface ConstraintForeignKey extends BaseNode {
   type: "constraint_foreign_key";
   foreignKeyKw: Keyword[];
   columns: ParenExpr<ExprList<ColumnRef>>;
   references: ReferencesSpecification;
-};
+}
 
-type ReferencesSpecification = BaseNode & {
+export interface ReferencesSpecification extends BaseNode {
   type: "references_specification";
   referencesKw: Keyword;
   table: TableRef;
   columns?: ParenExpr<ExprList<ColumnRef>>;
   options: (ReferentialAction | ReferentialMatch)[];
-};
+}
 
-type ReferentialAction = BaseNode & {
+export interface ReferentialAction extends BaseNode {
   type: "referential_action";
   onKw: Keyword; // ON
   eventKw: Keyword; // DELETE | UPDATE
   actionKw: Keyword | Keyword[]; // RESTRICT | CASCADE | SET NULL | NO ACTION | SET DEFAULT
-};
+}
 
-type ReferentialMatch = BaseNode & {
+export interface ReferentialMatch extends BaseNode {
   type: "referential_match";
   matchKw: Keyword;
   typeKw: Keyword; // FULL | PARTIAL | SIMPLE
-};
+}
 
-type ConstraintUnique = BaseNode & {
+export interface ConstraintUnique extends BaseNode {
   type: "constraint_unique";
   uniqueKw: Keyword | Keyword[];
   columns?: ParenExpr<ExprList<ColumnRef>>;
   onConflict?: OnConflictClause;
-};
+}
 
-type ConstraintCheck = BaseNode & {
+export interface ConstraintCheck extends BaseNode {
   type: "constraint_check";
   checkKw: Keyword;
   expr: ParenExpr<Expr>;
   onConflict?: OnConflictClause;
-};
+}
 
-type ConstraintIndex = BaseNode & {
+export interface ConstraintIndex extends BaseNode {
   type: "constraint_index";
   indexTypeKw?: Keyword; // FULLTEXT | SPATIAL
   indexKw: Keyword; // INDEX | KEY
   columns?: ParenExpr<ExprList<ColumnRef>>;
-};
+}
 
-type ConstraintNull = BaseNode & {
+export interface ConstraintNull extends BaseNode {
   type: "constraint_null";
   nullKw: Keyword;
-};
+}
 
-type ConstraintNotNull = BaseNode & {
+export interface ConstraintNotNull extends BaseNode {
   type: "constraint_not_null";
   notNullKw: Keyword[];
   onConflict?: OnConflictClause;
-};
+}
 
-type ConstraintDefault = BaseNode & {
+export interface ConstraintDefault extends BaseNode {
   type: "constraint_default";
   defaultKw: Keyword;
   expr: Expr;
-};
+}
 
-type ConstraintAutoIncrement = BaseNode & {
+export interface ConstraintAutoIncrement extends BaseNode {
   type: "constraint_auto_increment";
   autoIncrementKw: Keyword;
-};
+}
 
-type ConstraintComment = BaseNode & {
+export interface ConstraintComment extends BaseNode {
   type: "constraint_comment";
   commentKw: Keyword;
   value: StringLiteral;
-};
+}
 
-type ConstraintGenerated = BaseNode & {
+export interface ConstraintGenerated extends BaseNode {
   type: "constraint_generated";
   generatedKw?: Keyword[]; // GENERATED ALWAYS
   asKw: Keyword[]; // AS
   expr: ParenExpr<Expr>;
   storageKw?: Keyword; // STORED | VIRTUAL
-};
+}
 
-type ConstraintCollate = BaseNode & {
+export interface ConstraintCollate extends BaseNode {
   type: "constraint_collate";
   collateKw: Keyword; // COLLATE
   collation: Identifier;
-};
+}
 
-type ConstraintVisible = BaseNode & {
+export interface ConstraintVisible extends BaseNode {
   type: "constraint_visible";
   visibleKw: Keyword; // VISIBLE | INVISIBLE
-};
+}
 
-type ConstraintColumnFormat = BaseNode & {
+export interface ConstraintColumnFormat extends BaseNode {
   type: "constraint_column_format";
   columnFormatKw: Keyword; // COLUMN_FORMAT
   formatKw: Keyword; // FIXED | DYNAMIC | DEFAULT
-};
+}
 
-type ConstraintStorage = BaseNode & {
+export interface ConstraintStorage extends BaseNode {
   type: "constraint_storage";
   storageKw: Keyword; // STORAGE
   typeKw: Keyword; // DISK | MEMORY
-};
+}
 
-type ConstraintEngineAttribute = BaseNode & {
+export interface ConstraintEngineAttribute extends BaseNode {
   type: "constraint_engine_attribute";
   engineAttributeKw: Keyword; // ENGINE_ATTRIBUTE | SECONDARY_ENGINE_ATTRIBUTE
   hasEq: boolean; // True when "=" sign is used
   value: StringLiteral;
-};
+}
 
-type OnConflictClause = BaseNode & {
+export interface OnConflictClause extends BaseNode {
   type: "on_conflict_clause";
   onConflictKw: Keyword[]; // ON CONFLICT
   resolutionKw: Keyword; // ROLLBACK | ABORT | FAIL | IGNORE | REPLACE
-};
+}
 
-type TableOption = BaseNode & {
+export interface TableOption extends BaseNode {
   type: "table_option";
   name: Keyword | Keyword[];
   hasEq?: boolean; // True when "=" sign is used
   value?: NumberLiteral | StringLiteral | Identifier | Keyword;
-};
+}
 
 // ALTER TABLE
-type AlterTableStmt = BaseNode & {
+export interface AlterTableStmt extends BaseNode {
   type: "alter_table_stmt";
   alterTableKw: Keyword[];
   table: TableRef;
   actions: ExprList<AlterAction>;
-};
+}
 
-type AlterAction =
+export type AlterAction =
   | AlterRenameTable
   | AlterRenameColumn
   | AlterAddColumn
   | AlterDropColumn;
 
-type AlterRenameTable = BaseNode & {
+export interface AlterRenameTable extends BaseNode {
   type: "alter_rename_table";
   renameKw: Keyword | Keyword[]; // RENAME | RENAME TO | RENAME AS
   newName: TableRef;
-};
+}
 
-type AlterRenameColumn = BaseNode & {
+export interface AlterRenameColumn extends BaseNode {
   type: "alter_rename_column";
   renameKw: Keyword | Keyword[]; // RENAME | RENAME COLUMN
   oldName: ColumnRef;
   toKw: Keyword; // TO | AS
   newName: ColumnRef;
-};
+}
 
-type AlterAddColumn = BaseNode & {
+export interface AlterAddColumn extends BaseNode {
   type: "alter_add_column";
   addKw: Keyword | Keyword[]; // ADD | ADD COLUMN
   column: ColumnDefinition;
-};
+}
 
-type AlterDropColumn = BaseNode & {
+export interface AlterDropColumn extends BaseNode {
   type: "alter_drop_column";
   dropKw: Keyword | Keyword[]; // DROP | DROP COLUMN
   column: ColumnRef;
-};
+}
 
 // DROP TABLE
-type DropTableStmt = BaseNode & {
+export interface DropTableStmt extends BaseNode {
   type: "drop_table_stmt";
   dropKw: Keyword;
   temporaryKw?: Keyword;
@@ -568,10 +568,10 @@ type DropTableStmt = BaseNode & {
   ifExistsKw?: Keyword[];
   tables: ExprList<TableRef>;
   behaviorKw?: Keyword; // CASCADE | RESTRICT
-};
+}
 
 // INSERT INTO
-type InsertStmt = BaseNode & {
+export interface InsertStmt extends BaseNode {
   type: "insert_stmt";
   clauses: (
     | WithClause
@@ -580,9 +580,9 @@ type InsertStmt = BaseNode & {
     | UpsertClause
     | ReturningClause
   )[];
-};
+}
 
-type InsertClause = BaseNode & {
+export interface InsertClause extends BaseNode {
   type: "insert_clause";
   insertKw: Keyword; // INSERT | REPLACE
   options: UpsertOption[];
@@ -590,68 +590,68 @@ type InsertClause = BaseNode & {
   intoKw?: Keyword; // INTO
   table: TableRef | Alias<TableRef>;
   columns?: ParenExpr<ExprList<ColumnRef>>;
-};
+}
 
 // Only in MySQL INSERT & UPDATE clauses
-type UpsertOption = BaseNode & {
+export interface UpsertOption extends BaseNode {
   type: "upsert_option";
   kw: Keyword; // LOW_PRIORITY | DELAYED | HIGH_PRIORITY | IGNORE
-};
+}
 
 // Only in SQLite
-type OrAlternateAction = BaseNode & {
+export interface OrAlternateAction extends BaseNode {
   type: "or_alternate_action";
   orKw: Keyword; // OR
   actionKw: Keyword; // ABORT | FAIL | IGNORE | REPLACE | ROLLBACK
-};
+}
 
-type ValuesClause = BaseNode & {
+export interface ValuesClause extends BaseNode {
   type: "values_clause";
   valuesKw: Keyword; // VALUES | VALUE
   values: ExprList<ParenExpr<ExprList<Expr | Default>> | RowConstructor>;
-};
+}
 
 // only in MySQL
-type RowConstructor = BaseNode & {
+export interface RowConstructor extends BaseNode {
   type: "row_constructor";
   rowKw: Keyword; // ROW
   row: ParenExpr<ExprList<Expr | Default>>;
-};
+}
 
-type DefaultValues = BaseNode & {
+export interface DefaultValues extends BaseNode {
   type: "default_values";
   kw: Keyword[]; // DEFAULT VALUES
-};
+}
 
-type Default = BaseNode & {
+export interface Default extends BaseNode {
   type: "default";
   kw: Keyword[]; // DEFAULT
-};
+}
 
 // only in SQLite
-type UpsertClause = BaseNode & {
+export interface UpsertClause extends BaseNode {
   type: "upsert_clause";
   onConflictKw: Keyword[]; // ON CONFLICT
   columns?: ParenExpr<ExprList<SortSpecification | ColumnRef>>;
   where?: WhereClause;
   doKw: Keyword; // DO
   action: UpsertActionNothing | UpsertActionUpdate;
-};
+}
 
-type UpsertActionNothing = BaseNode & {
+export interface UpsertActionNothing extends BaseNode {
   type: "upsert_action_nothing";
   nothingKw: Keyword; // NOTHING
-};
+}
 
-type UpsertActionUpdate = BaseNode & {
+export interface UpsertActionUpdate extends BaseNode {
   type: "upsert_action_update";
   updateKw: Keyword; // UPDATE
   set: SetClause;
   where?: WhereClause;
-};
+}
 
 // DELETE FROM
-type DeleteStmt = BaseNode & {
+export interface DeleteStmt extends BaseNode {
   type: "delete_stmt";
   with?: WithClause;
   deleteKw: Keyword;
@@ -659,10 +659,10 @@ type DeleteStmt = BaseNode & {
   table: TableRef | Alias<TableRef>;
   where?: WhereClause;
   returning?: ReturningClause;
-};
+}
 
 // UPDATE
-type UpdateStmt = BaseNode & {
+export interface UpdateStmt extends BaseNode {
   type: "update_stmt";
   clauses: (
     | WithClause
@@ -674,30 +674,30 @@ type UpdateStmt = BaseNode & {
     | LimitClause
     | ReturningClause
   )[];
-};
+}
 
-type UpdateClause = BaseNode & {
+export interface UpdateClause extends BaseNode {
   type: "update_clause";
   updateKw: Keyword;
   options: UpsertOption[];
   orAction?: OrAlternateAction;
   tables: ExprList<TableRef | Alias<TableRef>>;
-};
+}
 
-type SetClause = BaseNode & {
+export interface SetClause extends BaseNode {
   type: "set_clause";
   setKw: Keyword;
   assignments: ExprList<ColumnAssignment>;
-};
+}
 
-type ColumnAssignment = BaseNode & {
+export interface ColumnAssignment extends BaseNode {
   type: "column_assignment";
   column: ColumnRef | ParenExpr<ExprList<ColumnRef>>;
   expr: Expr | Default;
-};
+}
 
 // CREATE VIEW
-type CreateViewStmt = BaseNode & {
+export interface CreateViewStmt extends BaseNode {
   type: "create_view_stmt";
   createKw: Keyword;
   temporaryKw?: Keyword;
@@ -707,19 +707,19 @@ type CreateViewStmt = BaseNode & {
   columns?: ParenExpr<ExprList<ColumnRef>>;
   asKw: Keyword;
   expr: SubSelect;
-};
+}
 
 // DROP VIEW
-type DropViewStmt = BaseNode & {
+export interface DropViewStmt extends BaseNode {
   type: "drop_view_stmt";
   dropViewKw: Keyword[];
   ifExistsKw?: Keyword[];
   views: ExprList<TableRef>;
   behaviorKw?: Keyword; // CASCADE | RESTRICT
-};
+}
 
 // CREATE INDEX
-type CreateIndexStmt = BaseNode & {
+export interface CreateIndexStmt extends BaseNode {
   type: "create_index_stmt";
   createKw: Keyword; // CREATE
   indexTypeKw?: Keyword; // UNIQUE | FULLTEXT | SPATIAL
@@ -730,20 +730,20 @@ type CreateIndexStmt = BaseNode & {
   table: TableRef;
   columns: ParenExpr<ExprList<SortSpecification | ColumnRef>>;
   where?: WhereClause;
-};
+}
 
 // DROP INDEX
-type DropIndexStmt = BaseNode & {
+export interface DropIndexStmt extends BaseNode {
   type: "drop_index_stmt";
   dropIndexKw: Keyword[]; // DROP INDEX
   ifExistsKw?: Keyword[]; // IF EXISTS
   indexes: ExprList<TableRef>;
   onKw?: Keyword; // ON
   table?: TableRef;
-};
+}
 
 // CREATE TRIGGER
-type CreateTriggerStmt = BaseNode & {
+export interface CreateTriggerStmt extends BaseNode {
   type: "create_trigger_stmt";
   createKw: Keyword; // CREATE
   temporaryKw?: Keyword; // TEMPORARY | TEMP
@@ -756,104 +756,104 @@ type CreateTriggerStmt = BaseNode & {
   forEachRowKw?: Keyword[]; // FOR EACH ROW
   condition?: TriggerCondition;
   body: TriggerBody;
-};
+}
 
-type TriggerEvent = BaseNode & {
+export interface TriggerEvent extends BaseNode {
   type: "trigger_event";
   timeKw?: Keyword | Keyword[]; // BEFORE | AFTER | INSTEAD OF
   eventKw: Keyword; // INSERT | DELETE | UPDATE
   ofKw?: Keyword; // OF
   columns?: ExprList<ColumnRef>;
-};
+}
 
-type TriggerCondition = BaseNode & {
+export interface TriggerCondition extends BaseNode {
   type: "trigger_condition";
   whenKw?: Keyword; // WHEN
   expr: Expr;
-};
+}
 
-type TriggerBody = BaseNode & {
+export interface TriggerBody extends BaseNode {
   type: "trigger_body";
   beginKw: Keyword; // BEGIN
   statements: Statement[];
   endKw: Keyword; // END
-};
+}
 
 // DROP TRIGGER
-type DropTriggerStmt = BaseNode & {
+export interface DropTriggerStmt extends BaseNode {
   type: "drop_trigger_stmt";
   dropTriggerKw: Keyword[]; // DROP TRIGGER
   ifExistsKw?: Keyword[]; // IF EXISTS
   trigger: TableRef;
-};
+}
 
 // ANALYZE
-type AnalyzeStmt = BaseNode & {
+export interface AnalyzeStmt extends BaseNode {
   type: "analyze_stmt";
   analyzeKw: Keyword; // ANALYZE
   tableKw?: Keyword; // TABLE
   tables: ExprList<TableRef>;
-};
+}
 
 // EXPLAIN
-type ExplainStmt = BaseNode & {
+export interface ExplainStmt extends BaseNode {
   type: "explain_stmt";
   explainKw: Keyword; // EXPLAIN | DESCRIBE | DESC
   analyzeKw?: Keyword; // ANALYZE
   queryPlanKw?: Keyword[]; // QUERY PLAN
   statement: Statement;
-};
+}
 
 // Transactions
-type TransactionStmt =
+export type TransactionStmt =
   | StartTransactionStmt
   | CommitTransactionStmt
   | RollbackTransactionStmt
   | SavepointStmt
   | ReleaseSavepointStmt;
 
-type StartTransactionStmt = BaseNode & {
+export interface StartTransactionStmt extends BaseNode {
   type: "start_transaction_stmt";
   startKw: Keyword; // START | BEGIN
   behaviorKw?: Keyword; // DEFERRED | IMMEDIATE | EXCLUSIVE
   transactionKw?: Keyword; // TRANSACTION | WORK
-};
+}
 
-type CommitTransactionStmt = BaseNode & {
+export interface CommitTransactionStmt extends BaseNode {
   type: "commit_transaction_stmt";
   commitKw: Keyword; // COMMIT | END
   transactionKw?: Keyword; // TRANSACTION | WORK
-};
+}
 
-type RollbackTransactionStmt = BaseNode & {
+export interface RollbackTransactionStmt extends BaseNode {
   type: "rollback_transaction_stmt";
   rollbackKw: Keyword; // ROLLBACK
   transactionKw?: Keyword; // TRANSACTION | WORK
   savepoint?: RollbackToSavepoint;
-};
+}
 
-type RollbackToSavepoint = BaseNode & {
+export interface RollbackToSavepoint extends BaseNode {
   type: "rollback_to_savepoint";
   toKw: Keyword; // TO
   savepointKw?: Keyword; // SAVEPOINT
   savepoint: Identifier;
-};
+}
 
-type SavepointStmt = BaseNode & {
+export interface SavepointStmt extends BaseNode {
   type: "savepoint_stmt";
   savepointKw: Keyword; // SAVEPOINT
   savepoint: Identifier;
-};
+}
 
-type ReleaseSavepointStmt = BaseNode & {
+export interface ReleaseSavepointStmt extends BaseNode {
   type: "release_savepoint_stmt";
   releaseKw: Keyword; // RELEASE
   savepointKw?: Keyword; // SAVEPOINT
   savepoint: Identifier;
-};
+}
 
 // SQLite-specific statements
-type SqliteStmt =
+export type SqliteStmt =
   | AttachDatabaseStmt
   | DetachDatabaseStmt
   | VacuumStmt
@@ -861,301 +861,301 @@ type SqliteStmt =
   | PragmaStmt
   | CreateVirtualTableStmt;
 
-type AttachDatabaseStmt = BaseNode & {
+export interface AttachDatabaseStmt extends BaseNode {
   type: "attach_database_stmt";
   attachKw: Keyword; // ATTACH
   databaseKw?: Keyword; // DATABASE
   file: Expr;
   asKw: Keyword; // AS
   schema: Identifier;
-};
+}
 
-type DetachDatabaseStmt = BaseNode & {
+export interface DetachDatabaseStmt extends BaseNode {
   type: "detach_database_stmt";
   detachKw: Keyword; // DETACH
   databaseKw?: Keyword; // DATABASE
   schema: Identifier;
-};
+}
 
-type VacuumStmt = BaseNode & {
+export interface VacuumStmt extends BaseNode {
   type: "vacuum_stmt";
   vacuumKw: Keyword; // VACUUM
   schema?: Identifier;
   intoKw?: Keyword; // INTO
   file?: StringLiteral;
-};
+}
 
-type ReindexStmt = BaseNode & {
+export interface ReindexStmt extends BaseNode {
   type: "reindex_stmt";
   reindexKw: Keyword; // REINDEX
   table?: TableRef;
-};
+}
 
-type PragmaStmt = BaseNode & {
+export interface PragmaStmt extends BaseNode {
   type: "pragma_stmt";
   pragmaKw: Keyword; // PRAGMA
   pragma: TableRef | PragmaAssignment | PragmaFuncCall;
-};
+}
 
-type PragmaAssignment = BaseNode & {
+export interface PragmaAssignment extends BaseNode {
   type: "pragma_assignment";
   name: TableRef;
   value: Literal | Keyword;
-};
+}
 
-type PragmaFuncCall = BaseNode & {
+export interface PragmaFuncCall extends BaseNode {
   type: "pragma_func_call";
   name: TableRef;
   args: ParenExpr<Literal | Keyword>;
-};
+}
 
-type CreateVirtualTableStmt = BaseNode & {
+export interface CreateVirtualTableStmt extends BaseNode {
   type: "create_virtual_table_stmt";
   createVirtualTableKw: Keyword[]; // CREATE VIRTUAL TABLE
   ifNotExistsKw?: Keyword[]; // IF NOT EXISTS
   table: TableRef;
   usingKw: Keyword; // USING
   module: FuncCall;
-};
+}
 
 // Window frame
-type FrameNode =
+export type FrameNode =
   | FrameClause
   | FrameBetween
   | FrameBound
   | FrameUnbounded
   | FrameExclusion;
 
-type FrameClause = BaseNode & {
+export interface FrameClause extends BaseNode {
   type: "frame_clause";
   unitKw: Keyword; // ROWS | RANGE | GROUPS
   extent: FrameBetween | FrameBound;
   exclusion?: FrameExclusion;
-};
+}
 
-type FrameBetween = BaseNode & {
+export interface FrameBetween extends BaseNode {
   type: "frame_between";
   betweenKw: Keyword;
   begin: FrameBound;
   andKw: Keyword;
   end: FrameBound;
-};
+}
 
-type FrameBound =
+export type FrameBound =
   | FrameBoundCurrentRow
   | FrameBoundPreceding
   | FrameBoundFollowing;
 
-type FrameBoundCurrentRow = BaseNode & {
+export interface FrameBoundCurrentRow extends BaseNode {
   type: "frame_bound_current_row";
   currentRowKw: Keyword[];
-};
-type FrameBoundPreceding = BaseNode & {
+}
+export interface FrameBoundPreceding extends BaseNode {
   type: "frame_bound_preceding";
   expr: Literal | FrameUnbounded;
   precedingKw: Keyword;
-};
-type FrameBoundFollowing = BaseNode & {
+}
+export interface FrameBoundFollowing extends BaseNode {
   type: "frame_bound_following";
   expr: Literal | FrameUnbounded;
   followingKw: Keyword;
-};
-type FrameUnbounded = BaseNode & {
+}
+export interface FrameUnbounded extends BaseNode {
   type: "frame_unbounded";
   unboundedKw: Keyword;
-};
-type FrameExclusion = BaseNode & {
+}
+export interface FrameExclusion extends BaseNode {
   type: "frame_exclusion";
   excludeKw: Keyword;
   kindKw: Keyword | Keyword[]; // CURRENT ROW | GROUPS | TIES | NO OTHERS
-};
+}
 
 // other...
 
-interface Alias<T = Node> extends BaseNode {
+export interface Alias<T = Node> extends BaseNode {
   type: "alias";
   expr: T;
   asKw?: Keyword;
   alias: Identifier;
 }
 
-type AllColumns = BaseNode & {
+export interface AllColumns extends BaseNode {
   type: "all_columns";
-};
+}
 
-interface ExprList<T = Node> extends BaseNode {
+export interface ExprList<T = Node> extends BaseNode {
   type: "expr_list";
   items: T[];
 }
 
-interface ParenExpr<T = Node> extends BaseNode {
+export interface ParenExpr<T = Node> extends BaseNode {
   type: "paren_expr";
   expr: T;
 }
 
-type BinaryExpr = BaseNode & {
+export interface BinaryExpr extends BaseNode {
   type: "binary_expr";
   left: Expr;
   operator: string | Keyword | Keyword[];
   right: Expr;
-};
+}
 
-type PrefixOpExpr = BaseNode & {
+export interface PrefixOpExpr extends BaseNode {
   type: "prefix_op_expr";
   operator: string | Keyword[];
   expr: Expr;
-};
+}
 
-type PostfixOpExpr = BaseNode & {
+export interface PostfixOpExpr extends BaseNode {
   type: "postfix_op_expr";
   operator: string | Keyword[];
   expr: Expr;
-};
+}
 
-type FuncCall = BaseNode & {
+export interface FuncCall extends BaseNode {
   type: "func_call";
   name: Identifier;
   args?: ParenExpr<ExprList<Expr | AllColumns | DistinctArg>>;
   filter?: FilterArg;
   over?: OverArg;
-};
+}
 
-type TableFuncCall = BaseNode & {
+export interface TableFuncCall extends BaseNode {
   type: "table_func_call";
   name: TableRef;
   args: ParenExpr<ExprList<Expr>>;
-};
+}
 
-type FilterArg = BaseNode & {
+export interface FilterArg extends BaseNode {
   type: "filter_arg";
   filterKw: Keyword; // FILTER
   where: ParenExpr<WhereClause>;
-};
+}
 
-type OverArg = BaseNode & {
+export interface OverArg extends BaseNode {
   type: "over_arg";
   overKw: Keyword;
   window: ParenExpr<WindowDefinition> | Identifier;
-};
+}
 
-type DistinctArg = BaseNode & {
+export interface DistinctArg extends BaseNode {
   type: "distinct_arg";
   distinctKw: Keyword;
   value: Expr;
-};
+}
 
-type CastExpr = BaseNode & {
+export interface CastExpr extends BaseNode {
   type: "cast_expr";
   castKw: Keyword;
   args: ParenExpr<CastArg>;
-};
+}
 
-type CastArg = BaseNode & {
+export interface CastArg extends BaseNode {
   type: "cast_arg";
   expr: Expr;
   asKw: Keyword;
   dataType: DataType;
-};
+}
 
-type RaiseExpr = BaseNode & {
+export interface RaiseExpr extends BaseNode {
   type: "raise_expr";
   raiseKw: Keyword; // RAISE
   args: ParenExpr<ExprList<Keyword | StringLiteral>>;
-};
+}
 
-type BetweenExpr = BaseNode & {
+export interface BetweenExpr extends BaseNode {
   type: "between_expr";
   left: Expr;
   betweenKw: Keyword[];
   begin: Expr;
   andKw: Keyword;
   end: Expr;
-};
+}
 
-type CaseExpr = BaseNode & {
+export interface CaseExpr extends BaseNode {
   type: "case_expr";
   expr?: Expr;
   caseKw: Keyword;
   endKw: Keyword;
   clauses: (CaseWhen | CaseElse)[];
-};
+}
 
-type CaseWhen = BaseNode & {
+export interface CaseWhen extends BaseNode {
   type: "case_when";
   whenKw: Keyword;
   condition: Expr;
   thenKw: Keyword;
   result: Expr;
-};
+}
 
-type CaseElse = BaseNode & {
+export interface CaseElse extends BaseNode {
   type: "case_else";
   elseKw: Keyword;
   result: Expr;
-};
+}
 
-type IntervalExpr = BaseNode & {
+export interface IntervalExpr extends BaseNode {
   type: "interval_expr";
   intervalKw: Keyword;
   expr: Expr;
   unitKw: Keyword;
-};
+}
 
-type StringWithCharset = BaseNode & {
+export interface StringWithCharset extends BaseNode {
   type: "string_with_charset";
   charset: string;
   string: StringLiteral;
-};
+}
 
-type StringLiteral = BaseNode & {
+export interface StringLiteral extends BaseNode {
   type: "string";
   text: string;
-};
+}
 
-type NumberLiteral = BaseNode & {
+export interface NumberLiteral extends BaseNode {
   type: "number";
   text: string;
-};
+}
 
-type BooleanLiteral = BaseNode & {
+export interface BooleanLiteral extends BaseNode {
   type: "boolean";
   text: string;
-};
+}
 
-type NullLiteral = BaseNode & {
+export interface NullLiteral extends BaseNode {
   type: "null";
   text: string;
-};
+}
 
-type DateTimeLiteral = BaseNode & {
+export interface DateTimeLiteral extends BaseNode {
   type: "datetime";
   kw: Keyword;
   string: StringLiteral;
-};
+}
 
-type ColumnRef = BaseNode & {
+export interface ColumnRef extends BaseNode {
   type: "column_ref";
   table?: Identifier;
   column: Identifier | AllColumns;
-};
+}
 
-type TableRef = BaseNode & {
+export interface TableRef extends BaseNode {
   type: "table_ref";
   schema?: Identifier;
   table: Identifier;
-};
+}
 
-type Identifier = BaseNode & {
+export interface Identifier extends BaseNode {
   type: "identifier";
   text: string;
-};
+}
 
-type Keyword = BaseNode & {
+export interface Keyword extends BaseNode {
   type: "keyword";
   text: string;
-};
+}
 
-type Parameter = BaseNode & {
+export interface Parameter extends BaseNode {
   type: "parameter";
   text: string;
-};
+}
