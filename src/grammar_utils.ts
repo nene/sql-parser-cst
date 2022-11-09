@@ -1,13 +1,13 @@
-let getRange: Function;
+let getRange: () => [number, number];
 
 /** Injects function to access source location range data */
-export const setRangeFunction = (fn: Function) => {
+export const setRangeFunction = (fn: () => [number, number]) => {
   getRange = fn;
 };
 
 let getOptions: Function;
 
-/** Injects function to options object */
+/** Injects function to access options object */
 export const setOptionsFunction = (fn: Function) => {
   getOptions = fn;
 };
@@ -277,6 +277,5 @@ export const loc = (node: any) => {
   if (!getOptions()?.includeRange) {
     return node;
   }
-  const { start, end } = getRange();
-  return { ...node, range: [start, end] };
+  return { ...node, range: getRange() };
 };

@@ -3,11 +3,7 @@
   // These are atomatically added during code-generation.
   // See /generate.ts for details.
 
-  setRangeFunction(() => ({
-    source: peg$source,
-    start: peg$savedPos,
-    end: peg$currPos
-  }));
+  setRangeFunction(() => [peg$savedPos, peg$currPos]);
 
   setOptionsFunction(() => options);
 }
