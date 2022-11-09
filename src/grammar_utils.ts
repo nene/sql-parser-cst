@@ -293,20 +293,26 @@ export const read = (items: any) => {
   return nodes.length > 1 ? nodes : nodes[0];
 };
 
-export const readCommaSepList = (head: any, tail: any) => {
+export const readCommaSepList = <T extends Node>(
+  head: T,
+  tail: [Whitespace[], string, Whitespace[], T][]
+): T[] => {
   const items = [head];
   for (const [c1, comma, c2, expr] of tail) {
     const lastIdx = items.length - 1;
-    items[lastIdx] = trailing(items[lastIdx], c1);
-    items.push(leading(expr, c2));
+    items[lastIdx] = trailing(items[lastIdx], c1) as T;
+    items.push(leading(expr, c2) as T);
   }
   return items;
 };
 
-export const readSpaceSepList = (head: any, tail: any) => {
+export const readSpaceSepList = <T extends Node>(
+  head: T,
+  tail: [Whitespace[], T][]
+): T[] => {
   const items = [head];
   for (const [c, expr] of tail) {
-    items.push(leading(expr, c));
+    items.push(leading(expr, c) as T);
   }
   return items;
 };
@@ -347,7 +353,10 @@ export const createParenExpr = (
   };
 };
 
-export const createExprList = (head: any, tail: any): ExprList => {
+export const createExprList = <T extends Node>(
+  head: T,
+  tail: [Whitespace[], string, Whitespace[], T][]
+): ExprList<T> => {
   return {
     type: "expr_list",
     items: readCommaSepList(head, tail),
