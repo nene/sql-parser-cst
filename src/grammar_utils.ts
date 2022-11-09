@@ -19,7 +19,6 @@ import {
 } from "./sql";
 import { leading, surrounding, trailing } from "./utils/whitespace";
 import { read } from "./utils/read";
-import { getOptions, getRange } from "./utils/parserState";
 
 /** Identity function */
 export const identity = <T>(x: T): T => x;
@@ -223,11 +222,4 @@ export const createExprList = <T extends Node>(
     type: "expr_list",
     items: readCommaSepList(head, tail),
   };
-};
-
-export const loc = (node: Node): Node => {
-  if (!getOptions().includeRange) {
-    return node;
-  }
-  return { ...node, range: getRange() };
 };

@@ -31,7 +31,6 @@ const parser = peggy.generate(source, {
         createAlias,
         createParenExpr,
         createExprList,
-        loc,
       } from "./grammar_utils";
       import {
         trailing,
@@ -47,6 +46,7 @@ const parser = peggy.generate(source, {
         isEnabledWhitespace,
       } from "./utils/parserState";
       import { isReservedKeyword } from "./utils/keywords";
+      import { loc } from "./utils/loc";
     `,
   },
 } as peggy.SourceBuildOptions<"source">);
