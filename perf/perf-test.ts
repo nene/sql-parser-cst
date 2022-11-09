@@ -1,7 +1,7 @@
 import fs from "fs";
 import path from "path";
 import benchmark from "benchmark";
-import { parse, sqlite, mysql } from "../lib/parser";
+import { parse } from "../lib/parser";
 
 // Using test data from Chinook database
 // https://github.com/lerocha/chinook-database
@@ -19,10 +19,10 @@ const testData = {
 
 const suite = new benchmark.Suite();
 suite.add("sqlite", () => {
-  parse(testData.sqlite, { dialect: sqlite });
+  parse(testData.sqlite, { dialect: "sqlite" });
 });
 suite.add("mysql", () => {
-  parse(testData.mysql, { dialect: mysql });
+  parse(testData.mysql, { dialect: "mysql" });
 });
 suite.on("cycle", (event: benchmark.Event) => {
   console.log(String(event.target));
