@@ -1,4 +1,4 @@
-import { DialectName } from "./DialectName";
+import { DialectName } from "./ParserOptions";
 import { __RESERVED_KEYWORDS__ as mysqlKeywords } from "./keywords/mysql.keywords";
 import { __RESERVED_KEYWORDS__ as sqliteKeywords } from "./keywords/sqlite.keywords";
 

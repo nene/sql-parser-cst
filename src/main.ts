@@ -1,23 +1,12 @@
 import { Node, Program } from "./sql";
 import { parse as parseSql } from "./parser";
 import { show as showSql } from "./show";
-import { DialectName } from "./DialectName";
+import { DialectName, ParserOptions } from "./ParserOptions";
 export { format } from "./format/format";
 export * from "./cstVisitor";
 export * from "./cstTransformer";
 
-export { DialectName };
-
-type ParamType = "?" | "?nr" | ":name" | "$name" | "@name";
-
-export type ParserOptions = {
-  dialect: DialectName;
-  preserveComments?: boolean;
-  preserveNewlines?: boolean;
-  preserveSpaces?: boolean;
-  includeRange?: boolean;
-  paramTypes?: ParamType[];
-};
+export { DialectName, ParserOptions };
 
 export function parse(sql: string, options: ParserOptions): Program {
   return parseSql(sql, options);
