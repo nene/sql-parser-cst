@@ -9,12 +9,15 @@ import {
   ExprList,
   Identifier,
   JoinExpr,
+  JoinOnSpecification,
+  JoinUsingSpecification,
   Keyword,
   Node,
   ParenExpr,
   PostfixOpExpr,
   PrefixOpExpr,
   SubSelect,
+  TableOrSubquery,
   Whitespace,
 } from "./sql";
 
@@ -102,9 +105,12 @@ const deriveLoc = <T extends { left: Node; right: Node }>(binExpr: T): T => {
   return { ...binExpr, range: [start, end] };
 };
 
-export function createBinaryExprChain(head: any, tail: any) {
+export function createBinaryExprChain(
+  head: Expr,
+  tail: [Whitespace[], string | Keyword | Keyword[], Whitespace[], Expr][]
+): Expr {
   return tail.reduce(
-    (left: any, [c1, op, c2, right]: any[]) =>
+    (left, [c1, op, c2, right]) =>
       deriveLoc(createBinaryExpr(left, c1, op, c2, right)),
     head
   );
@@ -125,9 +131,12 @@ export function createBinaryExpr(
   };
 }
 
-export function createCompoundSelectStmtChain(head: any, tail: any) {
+export function createCompoundSelectStmtChain(
+  head: SubSelect,
+  tail: [Whitespace[], string | Keyword | Keyword[], Whitespace[], SubSelect][]
+): SubSelect {
   return tail.reduce(
-    (left: any, [c1, op, c2, right]: any[]) =>
+    (left, [c1, op, c2, right]) =>
       deriveLoc(createCompoundSelectStmt(left, c1, op, c2, right)),
     head
   );
@@ -148,7 +157,7 @@ export function createCompoundSelectStmt(
   };
 }
 
-const deriveJoinLoc = (join: JoinExpr) => {
+const deriveJoinLoc = (join: JoinExpr): JoinExpr => {
   if (!join.left.range) {
     return join;
   }
@@ -157,21 +166,30 @@ const deriveJoinLoc = (join: JoinExpr) => {
   return { ...join, range: [start, end] };
 };
 
-export function createJoinExprChain(head: any, tail: any) {
+export function createJoinExprChain(
+  head: JoinExpr | TableOrSubquery,
+  tail: [
+    Whitespace[],
+    Keyword[],
+    Whitespace[],
+    JoinExpr | TableOrSubquery,
+    JoinOnSpecification | JoinUsingSpecification | null
+  ][]
+) {
   return tail.reduce(
-    (left: any, [c1, op, c2, right, spec]: any[]) =>
+    (left, [c1, op, c2, right, spec]) =>
       deriveJoinLoc(createJoinExpr(left, c1, op, c2, right, spec)),
     head
   );
 }
 
 function createJoinExpr(
-  left: any,
-  c1: any,
-  op: any,
-  c2: any,
-  right: any,
-  spec: any
+  left: JoinExpr | TableOrSubquery,
+  c1: Whitespace[],
+  op: Keyword[],
+  c2: Whitespace[],
+  right: JoinExpr | TableOrSubquery,
+  spec: JoinOnSpecification | JoinUsingSpecification | null
 ): JoinExpr {
   return {
     type: "join_expr",
