@@ -6,10 +6,6 @@
   }));
 
   setOptionsFunction(() => options);
-
-  const isReservedKeyword = (name: string) => {
-    return __RESERVED_KEYWORDS__[name.toUpperCase()];
-  };
 }
 
 start

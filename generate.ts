@@ -91,6 +91,10 @@ dialects.forEach((dialect) => {
           setOptionsFunction,
           loc,
         } from "../grammar_utils";
+
+        const isReservedKeyword = (name: string) => {
+          return __RESERVED_KEYWORDS__[name.toUpperCase()];
+        };
       `,
     },
   } as peggy.SourceBuildOptions<"source">);
