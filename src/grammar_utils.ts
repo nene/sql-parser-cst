@@ -1,6 +1,20 @@
 import { DialectName, ParamType, ParserOptions } from "./ParserOptions";
 import { __RESERVED_KEYWORDS__ as mysqlKeywords } from "./keywords/mysql.keywords";
 import { __RESERVED_KEYWORDS__ as sqliteKeywords } from "./keywords/sqlite.keywords";
+import {
+  Alias,
+  BinaryExpr,
+  Expr,
+  ExprList,
+  Identifier,
+  JoinExpr,
+  Keyword,
+  Node,
+  ParenExpr,
+  PostfixOpExpr,
+  PrefixOpExpr,
+  Whitespace,
+} from "./sql";
 
 let getRange: () => [number, number];
 
@@ -77,8 +91,8 @@ export const trailing = (node: any, ws: any): any => {
 export const surrounding = (leadingWs: any, node: any, trailingWs: any) =>
   trailing(leading(node, leadingWs), trailingWs);
 
-const deriveLoc = (binExpr: any) => {
-  if (!binExpr.left.range) {
+const deriveLoc = (binExpr: BinaryExpr): BinaryExpr => {
+  if (!binExpr.left.range || !binExpr.right.range) {
     return binExpr;
   }
   const start = binExpr.left.range[0];
@@ -114,12 +128,12 @@ export function createBinaryExpr(
   };
 }
 
-const deriveJoinLoc = (join: any) => {
+const deriveJoinLoc = (join: JoinExpr) => {
   if (!join.left.range) {
     return join;
   }
   const start = join.left.range[0];
-  const end = (join.spec || join.right).range[1];
+  const end = (join.specification || join.right)?.range?.[1] as number;
   return { ...join, range: [start, end] };
 };
 
@@ -138,7 +152,7 @@ function createJoinExpr(
   c2: any,
   right: any,
   spec: any
-) {
+): JoinExpr {
   return {
     type: "join_expr",
     left: trailing(left, c1),
@@ -148,7 +162,10 @@ function createJoinExpr(
   };
 }
 
-export function createPrefixOpExpr(op: any, expr: any) {
+export function createPrefixOpExpr(
+  op: string | Keyword[],
+  expr: Expr
+): PrefixOpExpr {
   return {
     type: "prefix_op_expr",
     operator: op,
@@ -156,7 +173,10 @@ export function createPrefixOpExpr(op: any, expr: any) {
   };
 }
 
-export function createPostfixOpExpr(op: any, expr: any) {
+export function createPostfixOpExpr(
+  op: string | Keyword[],
+  expr: Expr
+): PostfixOpExpr {
   return {
     type: "postfix_op_expr",
     expr: expr,
@@ -164,7 +184,10 @@ export function createPostfixOpExpr(op: any, expr: any) {
   };
 }
 
-export const createKeyword = (text: any) => ({ type: "keyword", text });
+export const createKeyword = (text: string): Keyword => ({
+  type: "keyword",
+  text,
+});
 
 const whitespaceType: Record<string, boolean> = {
   space: true,
@@ -239,9 +262,20 @@ export const readSpaceSepList = (head: any, tail: any) => {
   return items;
 };
 
-export const createIdentifier = (text: any) => ({ type: "identifier", text });
+export const createIdentifier = (text: string): Identifier => ({
+  type: "identifier",
+  text,
+});
 
-export const createAlias = (expr: any, _alias: any) => {
+interface PartialAlias {
+  asKw?: Keyword;
+  alias: Identifier;
+}
+
+export const createAlias = <T = Node>(
+  expr: T,
+  _alias: [Whitespace[], PartialAlias] | null
+): Alias<T> | T => {
   if (!_alias) {
     return expr;
   }
@@ -253,14 +287,14 @@ export const createAlias = (expr: any, _alias: any) => {
   };
 };
 
-export const createParenExpr = (c1: any, expr: any, c2: any) => {
+export const createParenExpr = (c1: any, expr: any, c2: any): ParenExpr => {
   return {
     type: "paren_expr",
     expr: surrounding(c1, expr, c2),
   };
 };
 
-export const createExprList = (head: any, tail: any) => {
+export const createExprList = (head: any, tail: any): ExprList => {
   return {
     type: "expr_list",
     items: readCommaSepList(head, tail),
@@ -271,13 +305,13 @@ export const hasParamType = (name: ParamType) => {
   return getOptions().paramTypes?.includes(name);
 };
 
-export const isEnabledWhitespace = (ws: any) =>
+export const isEnabledWhitespace = (ws: Whitespace) =>
   (getOptions().preserveComments &&
     (ws.type === "line_comment" || ws.type === "block_comment")) ||
   (getOptions().preserveNewlines && ws.type === "newline") ||
   (getOptions().preserveSpaces && ws.type === "space");
 
-export const loc = (node: any) => {
+export const loc = (node: Node): Node => {
   if (!getOptions().includeRange) {
     return node;
   }
