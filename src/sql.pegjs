@@ -1,4 +1,8 @@
 {
+  // All helper functions used in this file come from /src/grammar_utils.ts
+  // These are atomatically added during code-generation.
+  // See /generate.ts for details.
+
   setRangeFunction(() => ({
     source: peg$source,
     start: peg$savedPos,
