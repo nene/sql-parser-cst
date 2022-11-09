@@ -336,7 +336,11 @@ export const createAlias = <T extends Node>(
   };
 };
 
-export const createParenExpr = (c1: any, expr: any, c2: any): ParenExpr => {
+export const createParenExpr = (
+  c1: Whitespace[],
+  expr: Expr,
+  c2: Whitespace[]
+): ParenExpr => {
   return {
     type: "paren_expr",
     expr: surrounding(c1, expr, c2) as Expr,
