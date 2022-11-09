@@ -67,7 +67,6 @@ dialects.forEach((dialect) => {
     format: "commonjs",
     tspegjs: {
       customHeader: `
-        import { __RESERVED_KEYWORDS__ } from "../keywords/${dialect}.keywords";
         import {
           setRangeFunction,
           setOptionsFunction,
@@ -90,13 +89,10 @@ dialects.forEach((dialect) => {
           hasParamType,
           isEnabledWhitespace,
           loc,
+          isReservedKeyword,
           isSqlite,
           isMysql,
         } from "../grammar_utils";
-
-        const isReservedKeyword = (name: string) => {
-          return __RESERVED_KEYWORDS__[name.toUpperCase()];
-        };
       `,
     },
   } as peggy.SourceBuildOptions<"source">);

@@ -1,3 +1,6 @@
+import { __RESERVED_KEYWORDS__ as mysqlKeywords } from "./keywords/mysql.keywords";
+import { __RESERVED_KEYWORDS__ as sqliteKeywords } from "./keywords/sqlite.keywords";
+
 let getRange: () => [number, number];
 
 /** Injects function to access source location range data */
@@ -280,5 +283,16 @@ export const loc = (node: any) => {
   return { ...node, range: getRange() };
 };
 
-export const isSqlite = () => getOptions()?.lang === "sqlite";
-export const isMysql = () => getOptions()?.lang === "mysql";
+const keywordMap = {
+  mysql: mysqlKeywords,
+  sqlite: sqliteKeywords,
+};
+
+export const isReservedKeyword = (name: string) => {
+  return keywordMap[getLang()][name.toUpperCase()];
+};
+
+const getLang = (): "mysql" | "sqlite" => getOptions()?.lang;
+
+export const isSqlite = () => getLang() === "sqlite";
+export const isMysql = () => getLang() === "mysql";
