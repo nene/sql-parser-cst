@@ -41,9 +41,9 @@ const parser = peggy.generate(source, {
         isReservedKeyword,
         isSqlite,
         isMysql,
-      } from "../grammar_utils";
+      } from "./grammar_utils";
     `,
   },
 } as peggy.SourceBuildOptions<"source">);
 
-fs.writeFileSync(path.resolve(__dirname, `./src/dialects/sql.ts`), parser);
+fs.writeFileSync(path.resolve(__dirname, `./src/generated_parser.ts`), parser);
