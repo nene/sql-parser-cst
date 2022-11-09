@@ -1,4 +1,4 @@
-import { DialectName } from "./ParserOptions";
+import { DialectName, ParserOptions } from "./ParserOptions";
 import { __RESERVED_KEYWORDS__ as mysqlKeywords } from "./keywords/mysql.keywords";
 import { __RESERVED_KEYWORDS__ as sqliteKeywords } from "./keywords/sqlite.keywords";
 
@@ -9,11 +9,11 @@ export const setRangeFunction = (fn: () => [number, number]) => {
   getRange = fn;
 };
 
-let getOptions: Function;
+let getOptions: () => ParserOptions;
 
 /** Injects function to access options object */
 export const setOptionsFunction = (fn: Function) => {
-  getOptions = fn;
+  getOptions = fn as () => ParserOptions;
 };
 
 /** Identity function */
@@ -268,17 +268,17 @@ export const createExprList = (head: any, tail: any) => {
 };
 
 export const hasParamType = (name: any) => {
-  return getOptions()?.paramTypes?.includes(name);
+  return getOptions().paramTypes?.includes(name);
 };
 
 export const isEnabledWhitespace = (ws: any) =>
-  (getOptions()?.preserveComments &&
+  (getOptions().preserveComments &&
     (ws.type === "line_comment" || ws.type === "block_comment")) ||
-  (getOptions()?.preserveNewlines && ws.type === "newline") ||
-  (getOptions()?.preserveSpaces && ws.type === "space");
+  (getOptions().preserveNewlines && ws.type === "newline") ||
+  (getOptions().preserveSpaces && ws.type === "space");
 
 export const loc = (node: any) => {
-  if (!getOptions()?.includeRange) {
+  if (!getOptions().includeRange) {
     return node;
   }
   return { ...node, range: getRange() };
@@ -293,7 +293,7 @@ export const isReservedKeyword = (name: string) => {
   return keywordMap[getDialect()][name.toUpperCase()];
 };
 
-const getDialect = (): DialectName => getOptions()?.dialect;
+const getDialect = (): DialectName => getOptions().dialect;
 
 export const isSqlite = () => getDialect() === "sqlite";
 export const isMysql = () => getDialect() === "mysql";
