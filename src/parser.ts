@@ -1,10 +1,11 @@
 import { Node, Program } from "./sql";
-export { parse as mysql } from "./dialects/mysql";
-export { parse as sqlite } from "./dialects/sqlite";
+import { parse as parseSql } from "./dialects/sql";
 import { show as showSql } from "./show";
 export { format } from "./format/format";
 export * from "./cstVisitor";
 export * from "./cstTransformer";
+
+export type DialectName = "sqlite" | "mysql";
 
 type ParamType = "?" | "?nr" | ":name" | "$name" | "@name";
 
@@ -16,15 +17,13 @@ export type ParserOptions = {
   paramTypes?: ParamType[];
 };
 
-export type DialectFn = (str: string, options: ParserOptions) => Program;
-
-export type DialectOption = { dialect: DialectFn; lang: string };
+export type DialectOption = { lang: DialectName };
 
 export function parse(
   sql: string,
   options: ParserOptions & DialectOption
 ): Program {
-  return options.dialect(sql, options);
+  return parseSql(sql, options);
 }
 
 /**

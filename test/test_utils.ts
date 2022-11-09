@@ -8,16 +8,11 @@ import {
   Whitespace,
 } from "../src/sql";
 import {
+  DialectName,
   parse as parseSql,
   ParserOptions,
   show,
-  mysql,
-  sqlite,
 } from "../src/parser";
-
-const dialectMap = { mysql, sqlite };
-
-type DialectName = keyof typeof dialectMap;
 
 declare var __SQL_DIALECT__: DialectName;
 
@@ -29,7 +24,6 @@ export const preserveAll: ParserOptions = {
 
 export function parse(sql: string, options: ParserOptions = {}): Program {
   return parseSql(sql, {
-    dialect: dialectMap[__SQL_DIALECT__],
     lang: __SQL_DIALECT__,
     ...options,
   });
