@@ -18,10 +18,10 @@ even between patch versions.
 ## Usage
 
 ```ts
-import { parse, show, sqlite, cstVisitor } from "sql-parser-cst";
+import { parse, show, cstVisitor } from "sql-parser-cst";
 
 const cst = parse("select * from my_table", {
-  dialect: sqlite,
+  dialect: "sqlite",
   // These are optional:
   preserveSpaces: true, // Adds spaces/tabs
   preserveNewlines: true, // Adds newlines
@@ -161,8 +161,7 @@ Note the following conventions:
 
 ## Development
 
-`yarn generate` will generate parser for each supported dialect.
-You can also target a specific dialect, like `yarn generate sqlite`.
+`yarn generate` will generate parser.
 
 The testsuite contains two kinds of tests:
 
