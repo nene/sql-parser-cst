@@ -13,18 +13,18 @@ export const setOptionsFunction = (fn: Function) => {
 };
 
 /** Identity function */
-export const identity = (x: any) => x;
+export const identity = <T>(x: T): T => x;
 
 /** Last item in array */
-const last = (arr: any) => arr[arr.length - 1];
+const last = <T>(arr: T[]): T => arr[arr.length - 1];
 
 /** Creates new array with first item replaced by value */
-const setFirst = ([oldFirst, ...rest]: any, value: any) => {
+const setFirst = <T>([_oldFirst, ...rest]: T[], value: T): T[] => {
   return [value, ...rest];
 };
 
 /** Creates new array with last item replaced by value */
-const setLast = (array: any, value: any) => {
+const setLast = <T>(array: T[], value: T): T[] => {
   const rest = array.slice(0, -1);
   return [...rest, value];
 };
