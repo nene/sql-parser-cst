@@ -20,8 +20,6 @@ const parser = peggy.generate(source, {
         setRangeFunction,
         setOptionsFunction,
         identity,
-        trailing,
-        surrounding,
         createBinaryExprChain,
         createBinaryExpr,
         createCompoundSelectStmtChain,
@@ -43,6 +41,10 @@ const parser = peggy.generate(source, {
         isSqlite,
         isMysql,
       } from "./grammar_utils";
+      import {
+        trailing,
+        surrounding,
+      } from "./utils/whitespace";
     `,
   },
 } as peggy.SourceBuildOptions<"source">);
