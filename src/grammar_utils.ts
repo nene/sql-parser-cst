@@ -4,6 +4,7 @@ import { __RESERVED_KEYWORDS__ as sqliteKeywords } from "./keywords/sqlite.keywo
 import {
   Alias,
   BinaryExpr,
+  CompoundSelectStmt,
   Expr,
   ExprList,
   Identifier,
@@ -13,6 +14,7 @@ import {
   ParenExpr,
   PostfixOpExpr,
   PrefixOpExpr,
+  SubSelect,
   Whitespace,
 } from "./sql";
 
@@ -91,7 +93,7 @@ export const trailing = (node: any, ws: any): any => {
 export const surrounding = (leadingWs: any, node: any, trailingWs: any) =>
   trailing(leading(node, leadingWs), trailingWs);
 
-const deriveLoc = (binExpr: BinaryExpr): BinaryExpr => {
+const deriveLoc = <T extends { left: Node; right: Node }>(binExpr: T): T => {
   if (!binExpr.left.range || !binExpr.right.range) {
     return binExpr;
   }
@@ -103,26 +105,44 @@ const deriveLoc = (binExpr: BinaryExpr): BinaryExpr => {
 export function createBinaryExprChain(
   head: any,
   tail: any,
-  type: any = "binary_expr"
+  type: "binary_expr" | "compound_select_stmt" = "binary_expr"
 ) {
   return tail.reduce(
     (left: any, [c1, op, c2, right]: any[]) =>
-      deriveLoc(createBinaryExpr(left, c1, op, c2, right, type)),
+      deriveLoc(
+        type === "binary_expr"
+          ? createBinaryExpr(left, c1, op, c2, right)
+          : createCompoundSelectStmt(left, c1, op, c2, right)
+      ),
     head
   );
 }
 
 export function createBinaryExpr(
-  left: any,
-  c1: any,
-  op: any,
-  c2: any,
-  right: any,
-  type: any = "binary_expr"
-) {
+  left: Expr,
+  c1: Whitespace[],
+  op: string | Keyword | Keyword[],
+  c2: Whitespace[],
+  right: Expr
+): BinaryExpr {
   return {
-    type,
+    type: "binary_expr",
     operator: op,
+    left: trailing(left, c1),
+    right: leading(right, c2),
+  };
+}
+
+export function createCompoundSelectStmt(
+  left: SubSelect,
+  c1: Whitespace[],
+  op: string | Keyword | Keyword[],
+  c2: Whitespace[],
+  right: SubSelect
+): CompoundSelectStmt {
+  return {
+    type: "compound_select_stmt",
+    operator: op as Keyword | Keyword[],
     left: trailing(left, c1),
     right: leading(right, c2),
   };
