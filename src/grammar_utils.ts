@@ -197,14 +197,16 @@ const whitespaceType: Record<string, boolean> = {
 };
 
 // True when dealing with whitespace array (as returned by __ rule)
-const isWhitespace = (item: any) => {
+const isWhitespace = (
+  item: Node[] | Whitespace[] | Node
+): item is Whitespace[] => {
   if (!(item instanceof Array)) {
     return false;
   }
   if (item.length === 0) {
     return true;
   }
-  return Boolean(whitespaceType[item[0].type as string]);
+  return Boolean(whitespaceType[item[0].type]);
 };
 
 /**
