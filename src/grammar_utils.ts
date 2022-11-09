@@ -1,4 +1,4 @@
-import { DialectName, ParserOptions } from "./ParserOptions";
+import { DialectName, ParamType, ParserOptions } from "./ParserOptions";
 import { __RESERVED_KEYWORDS__ as mysqlKeywords } from "./keywords/mysql.keywords";
 import { __RESERVED_KEYWORDS__ as sqliteKeywords } from "./keywords/sqlite.keywords";
 
@@ -267,7 +267,7 @@ export const createExprList = (head: any, tail: any) => {
   };
 };
 
-export const hasParamType = (name: any) => {
+export const hasParamType = (name: ParamType) => {
   return getOptions().paramTypes?.includes(name);
 };
 
