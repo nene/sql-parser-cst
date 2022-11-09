@@ -24,6 +24,7 @@ const parser = peggy.generate(source, {
         surrounding,
         createBinaryExprChain,
         createBinaryExpr,
+        createCompoundSelectStmtChain,
         createJoinExprChain,
         createPrefixOpExpr,
         createPostfixOpExpr,

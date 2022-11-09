@@ -102,18 +102,10 @@ const deriveLoc = <T extends { left: Node; right: Node }>(binExpr: T): T => {
   return { ...binExpr, range: [start, end] };
 };
 
-export function createBinaryExprChain(
-  head: any,
-  tail: any,
-  type: "binary_expr" | "compound_select_stmt" = "binary_expr"
-) {
+export function createBinaryExprChain(head: any, tail: any) {
   return tail.reduce(
     (left: any, [c1, op, c2, right]: any[]) =>
-      deriveLoc(
-        type === "binary_expr"
-          ? createBinaryExpr(left, c1, op, c2, right)
-          : createCompoundSelectStmt(left, c1, op, c2, right)
-      ),
+      deriveLoc(createBinaryExpr(left, c1, op, c2, right)),
     head
   );
 }
@@ -131,6 +123,14 @@ export function createBinaryExpr(
     left: trailing(left, c1),
     right: leading(right, c2),
   };
+}
+
+export function createCompoundSelectStmtChain(head: any, tail: any) {
+  return tail.reduce(
+    (left: any, [c1, op, c2, right]: any[]) =>
+      deriveLoc(createCompoundSelectStmt(left, c1, op, c2, right)),
+    head
+  );
 }
 
 export function createCompoundSelectStmt(

@@ -60,7 +60,7 @@ empty_stmt
  */
 compound_select_stmt
   = head:intersect_select_stmt tail:(__ compound_op __ intersect_select_stmt)* {
-    return createBinaryExprChain(head, tail, "compound_select_stmt");
+    return createCompoundSelectStmtChain(head, tail);
   }
 
 compound_op
@@ -70,7 +70,7 @@ compound_op
 
 intersect_select_stmt
   = head:sub_select tail:(__ intersect_op __ sub_select)* {
-    return createBinaryExprChain(head, tail, "compound_select_stmt");
+    return createCompoundSelectStmtChain(head, tail);
   }
 
 sub_select
