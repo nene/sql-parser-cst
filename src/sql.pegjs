@@ -160,11 +160,10 @@ select_clause
 select_option
   = ALL
   / DISTINCT
+  / kw:select_option_mysql &mysql { return kw; }
 
-select_option$mysql
-  = ALL
-  / DISTINCT
-  / DISTINCTROW
+select_option_mysql
+  = DISTINCTROW
   / HIGH_PRIORITY
   / STRAIGHT_JOIN
   / SQL_CALC_FOUND_ROWS
@@ -248,15 +247,7 @@ table_or_subquery
   }
 
 table_ref_or_alias
-  = table_ref_or_alias_standard
-
-table_ref_or_alias_standard
-  = t:table_ref alias:(__ alias)? {
-    return loc(createAlias(t, alias));
-  }
-
-table_ref_or_alias$sqlite
-  = table:(table_ref_or_alias_standard __) kw:(INDEXED __ BY) id:(__ ident) {
+  = table:(table_ref_or_alias_standard __) kw:(INDEXED __ BY) id:(__ ident) &sqlite {
     return loc({
       type: "indexed_table_ref",
       table: read(table),
@@ -264,7 +255,7 @@ table_ref_or_alias$sqlite
       index: read(id),
     });
   }
-  / table:(table_ref_or_alias_standard __) kw:(NOT __ INDEXED) {
+  / table:(table_ref_or_alias_standard __) kw:(NOT __ INDEXED) &sqlite {
     return loc({
       type: "not_indexed_table_ref",
       table: read(table),
@@ -272,6 +263,11 @@ table_ref_or_alias$sqlite
     });
   }
   / table_ref_or_alias_standard
+
+table_ref_or_alias_standard
+  = t:table_ref alias:(__ alias)? {
+    return loc(createAlias(t, alias));
+  }
 
 paren_expr_join
   = "(" c1:__ t:join_expr c2:__ ")" {
@@ -282,12 +278,7 @@ join_op
   = natural_join
   / cross_join
   / join_type
-
-join_op$mysql
-  = natural_join
-  / cross_join
-  / join_type
-  / STRAIGHT_JOIN
+  / kw:STRAIGHT_JOIN &mysql { return kw; }
 
 natural_join
   = kw:(NATURAL __) jt:join_type {
@@ -299,19 +290,16 @@ cross_join
 
 join_type
   = kws:(
-      (LEFT / RIGHT / FULL) __ OUTER __ JOIN
-    / (LEFT / RIGHT / FULL) __ JOIN
+      (left_right_full_kw) __ OUTER __ JOIN
+    / (left_right_full_kw) __ JOIN
     / INNER __ JOIN
     / JOIN
   ) { return read(kws); }
 
-join_type$mysql
-  = kws:(
-      (LEFT / RIGHT) __ OUTER __ JOIN
-    / (LEFT / RIGHT) __ JOIN
-    / INNER __ JOIN
-    / JOIN
-  ) { return read(kws); }
+left_right_full_kw
+  = LEFT
+  / RIGHT
+  / kw:FULL &sqlite { return kw; }
 
 join_specification
   = using_clause / on_clause
@@ -426,10 +414,7 @@ sort_specification
   }
 
 sort_specification_nulls
-  = never
-
-sort_specification_nulls$sqlite
-  = kws:(NULLS __ (FIRST / LAST)) {
+  = kws:(NULLS __ (FIRST / LAST)) &sqlite {
     return read(kws);
   }
 
@@ -519,10 +504,9 @@ frame_clause
     }
 
 frame_unit
-  = ROWS / RANGE
-
-frame_unit$sqlite
-  = ROWS / RANGE / GROUPS
+  = ROWS
+  / RANGE
+  / kw:GROUPS &sqlite { return kw; }
 
 frame_between
   = bKw:BETWEEN begin:(__ frame_bound __) andKw:AND end:(__ frame_bound) {
@@ -625,18 +609,12 @@ upsert_options
   }
 
 upsert_opt
-  = never
-
-upsert_opt$mysql
-  = kw:(LOW_PRIORITY / DELAYED / HIGH_PRIORITY / IGNORE) {
+  = kw:(LOW_PRIORITY / DELAYED / HIGH_PRIORITY / IGNORE) &mysql {
     return loc({ type: "upsert_option", kw });
   }
 
 or_alternate_action
-  = never
-
-or_alternate_action$sqlite
-  = or:(OR __) act:(ABORT / FAIL / IGNORE / REPLACE / ROLLBACK) {
+  = or:(OR __) act:(ABORT / FAIL / IGNORE / REPLACE / ROLLBACK) &sqlite {
     return loc({
       type: "or_alternate_action",
       orKw: read(or),
@@ -663,8 +641,9 @@ values_clause
     });
   }
 
-values_kw = VALUES
-values_kw$mysql = VALUES / VALUE
+values_kw
+  = VALUES
+  / kw:VALUE &mysql { return kw; }
 
 values_list
   = head:values_row tail:(__ "," __ values_row)* {
@@ -672,11 +651,8 @@ values_list
   }
 
 values_row
-  = paren_expr_list
-
-values_row$mysql
-  = paren_expr_list_with_default
-  / row_constructor
+  = list:paren_expr_list &sqlite { return list; }
+  / list:(paren_expr_list_with_default / row_constructor) &mysql { return list; }
 
 row_constructor
   = kw:(ROW __) row:paren_expr_list_with_default {
@@ -708,11 +684,9 @@ default_values
     }
 
 upsert_clause
-  = never
-
-upsert_clause$sqlite
   = kw:(ON __ CONFLICT __) columns:(paren_sort_specification_list __)? where:(where_clause __)?
-    doKw:DO action:(__ upsert_action) {
+    doKw:DO action:(__ upsert_action)
+    &sqlite {
     return loc({
       type: "upsert_clause",
       onConflictKw: read(kw),
@@ -816,8 +790,9 @@ column_assignment
     });
   }
 
-column_value = expr
-column_value$mysql = expr / default
+column_value
+  = expr
+  / x:default &mysql { return x; }
 
 /**
  * ------------------------------------------------------------------------------------ *
@@ -1103,9 +1078,8 @@ alter_rename_table
 
 rename_table_kw
   = kw:(RENAME __ TO) { return read(kw); }
-
-rename_table_kw$mysql
-  = kw:(RENAME __ (TO / AS) / RENAME) { return read(kw); }
+  / kw:(RENAME __ AS) &mysql { return read(kw); }
+  / kw:RENAME &mysql { return kw; }
 
 alter_rename_column
   = kw:(rename_column_kw __) oldName:(column_ref __) toKw:((TO / AS) __) newName:column_ref {
@@ -1120,9 +1094,7 @@ alter_rename_column
 
 rename_column_kw
   = kw:(RENAME __ COLUMN) { return read(kw); }
-
-rename_column_kw$sqlite
-  = kw:(RENAME __ COLUMN / RENAME) { return read(kw); }
+  / kw:RENAME &sqlite { return kw; }
 
 /**
  * ------------------------------------------------------------------------------------ *
@@ -1252,8 +1224,10 @@ explain_stmt
     });
   }
 
-explain_kw = EXPLAIN
-explain_kw$mysql = EXPLAIN / DESCRIBE / DESC
+explain_kw
+  = EXPLAIN
+  / kw:DESCRIBE &mysql { return kw; }
+  / kw:DESC &mysql { return kw; }
 
 /**
  * ------------------------------------------------------------------------------------ *
@@ -1270,9 +1244,7 @@ transaction_stmt
   / release_savepoint_stmt
 
 start_transaction_stmt
-  = never
-start_transaction_stmt$sqlite
-  = kw:BEGIN bKw:(__ (DEFERRED / IMMEDIATE / EXCLUSIVE))? tKw:(__ TRANSACTION)? {
+  = kw:BEGIN bKw:(__ (DEFERRED / IMMEDIATE / EXCLUSIVE))? tKw:(__ TRANSACTION)? &sqlite {
     return loc({
       type: "start_transaction_stmt",
       startKw: kw,
@@ -1280,15 +1252,14 @@ start_transaction_stmt$sqlite
       transactionKw: read(tKw),
     });
   }
-start_transaction_stmt$mysql
-  = kw:BEGIN tKw:(__ WORK)? {
+  / kw:BEGIN tKw:(__ WORK)? &mysql {
     return loc({
       type: "start_transaction_stmt",
       startKw: kw,
       transactionKw: read(tKw),
     });
   }
-  / kw:START tKw:(__ TRANSACTION) {
+  / kw:START tKw:(__ TRANSACTION) &mysql {
     return loc({
       type: "start_transaction_stmt",
       startKw: kw,
@@ -1305,8 +1276,9 @@ commit_transaction_stmt
     });
   }
 
-commit_kw = COMMIT
-commit_kw$sqlite = COMMIT / END
+commit_kw
+  = COMMIT
+  / kw:END &sqlite { return kw; }
 
 rollback_transaction_stmt
   = kw:ROLLBACK tKw:(__ transaction_kw)? sp:(__ rollback_to_savepoint)? {
@@ -1328,8 +1300,9 @@ rollback_to_savepoint
     });
   }
 
-transaction_kw = TRANSACTION
-transaction_kw$mysql = WORK
+transaction_kw
+  = kw:TRANSACTION &sqlite { return kw; }
+  / kw:WORK &mysql { return kw; }
 
 savepoint_stmt
   = spKw:(SAVEPOINT __) id:ident {
@@ -1471,14 +1444,16 @@ table_options
     return createExprList(head, tail);
   }
 
-table_option = never
+table_option
+  = opt:table_option_sqlite &sqlite { return opt; }
+  / opt:table_option_mysql &mysql { return opt; }
 
-table_option$sqlite
+table_option_sqlite
   = kw:(STRICT / WITHOUT __ ROWID) {
     return loc({ type: "table_option", name: read(kw) });
   }
 
-table_option$mysql
+table_option_mysql
   = kw:(mysql_table_opt_name __) "=" v:(__ mysql_table_opt_value) {
     return loc({
       type: "table_option",
@@ -1599,9 +1574,6 @@ initially_immediate_or_deferred
   = kws:(INITIALLY __ (IMMEDIATE / DEFERRED)) { return read(kws); }
 
 column_constraint_type
-  = column_constraint_type_standard
-
-column_constraint_type_standard
   = constraint_not_null
   / constraint_null
   / constraint_default
@@ -1611,10 +1583,10 @@ column_constraint_type_standard
   / constraint_check
   / constraint_collate
   / constraint_generated
+  / con:column_constraint_type_mysql &mysql { return con; }
 
-column_constraint_type$mysql
-  = column_constraint_type_standard
-  / column_constraint_index
+column_constraint_type_mysql
+  = column_constraint_index
   / constraint_auto_increment
   / constraint_comment
   / constraint_visible
@@ -1710,17 +1682,11 @@ constraint_generated
     }
 
 table_constraint_type
-  = table_constraint_type_standard
-
-table_constraint_type_standard
   = table_constraint_primary_key
   / table_constraint_unique
   / constraint_foreign_key
   / constraint_check
-
-table_constraint_type$mysql
-  = table_constraint_type_standard
-  / table_constraint_index
+  / con:table_constraint_index &mysql { return con; }
 
 table_constraint_primary_key
   = kws:(PRIMARY __ KEY __)
@@ -1893,6 +1859,10 @@ literal_list
   }
 
 type_name
+  = t:type_name_mysql &mysql { return t; }
+  / t:type_name_sqlite &sqlite { return t; }
+
+type_name_mysql
   = BOOLEAN
   / BOOL
   / BLOB
@@ -1935,7 +1905,7 @@ type_name
   / ENUM
   / SET
 
-type_name$sqlite
+type_name_sqlite
   = head:sqlite_type_name_part tail:(__ sqlite_type_name_part)* {
     if (tail.length === 0) {
       return head;
@@ -1978,24 +1948,24 @@ or_expr
     return createBinaryExprChain(head, tail);
   }
 
-or_op = OR
-or_op$mysql = OR / "||"
+or_op
+  = OR
+  / op:"||" & mysql { return op; }
 
 xor_expr
-  = and_expr
-
-xor_expr$mysql
-  = head:and_expr tail:(__ XOR __ and_expr)* {
+  = &mysql head:and_expr tail:(__ XOR __ and_expr)* {
     return createBinaryExprChain(head, tail);
   }
+  / and_expr
 
 and_expr
   = head:not_expr tail:(__ and_op __ not_expr)* {
     return createBinaryExprChain(head, tail);
   }
 
-and_op = AND
-and_op$mysql = AND / "&&"
+and_op
+  = AND
+  / op:"&&" &mysql { return op; }
 
 not_expr
   = comparison_expr
@@ -2029,33 +1999,32 @@ comparison_expr
   / bitwise_or_expr
 
 comparison_op
-  = comparison_op_standard
-
-comparison_op_standard
-  = ">=" / ">" / "<=" / "<>" / "<" / "=" / "!=" / is_op / regexp_op
-
-comparison_op$mysql
-  = "<=>" / comparison_op_standard
-
-comparison_op$sqlite
-  = "==" / comparison_op_standard
+  = op:"<=>" &mysql { return op; }
+  / op:"==" &sqlite { return op; }
+  / ">="
+  / ">"
+  / "<="
+  / "<>"
+  / "<"
+  / "="
+  / "!="
+  / is_op
+  / regexp_op
 
 is_op
-  = kws:(IS __ NOT / IS) { return read(kws); }
-
-is_op$sqlite
-  = kws:(
-      IS __ NOT __ DISTINCT __ FROM
-    / IS __ DISTINCT __ FROM
-    / IS __ NOT
-    / IS) { return read(kws); }
+  = kws:(IS __ NOT __ DISTINCT __ FROM) &sqlite { return read(kws); }
+  / kws:(IS __ DISTINCT __ FROM) &sqlite { return read(kws); }
+  / kws:(IS __ NOT) { return read(kws); }
+  / kws:(IS) { return read(kws); }
 
 regexp_op
   = op:(NOT __ regexp_op_kw / regexp_op_kw) { return read(op); }
 
-regexp_op_kw = REGEXP
-regexp_op_kw$mysql = REGEXP / RLIKE
-regexp_op_kw$sqlite = REGEXP / GLOB / MATCH
+regexp_op_kw
+  = REGEXP
+  / kw:RLIKE &mysql { return kw; }
+  / kw:GLOB &sqlite { return kw; }
+  / kw:MATCH &sqlite { return kw; }
 
 escape_expr
   = left:bitwise_or_expr c1:__ op:ESCAPE c2:__ right:literal_string {
@@ -2066,9 +2035,8 @@ escape_expr
 between_op
   = kws:(NOT __ BETWEEN / BETWEEN) { return read(kws); }
 
-unary_null_op = never
-unary_null_op$sqlite
-  = kws:(NOT __ NULL / NOTNULL / ISNULL) { return read(kws); }
+unary_null_op
+  = kws:(NOT __ NULL / NOTNULL / ISNULL) &sqlite { return read(kws); }
 
 bitwise_or_expr
   = head:bitwise_and_expr tail:(__ "|"  __ bitwise_and_expr)* {
@@ -2112,8 +2080,10 @@ concat_or_json_expr
       return createBinaryExprChain(head, tail);
     }
 
-concat_or_json_op = "||" / "->>" / "->"
-concat_or_json_op$mysql = "->>" / "->"
+concat_or_json_op
+  = op:"||" &sqlite { return op; }
+  / "->>"
+  / "->"
 
 collate_expr
   = left:negation_expr c1:__ op:COLLATE c2:__ right:ident {
@@ -2130,27 +2100,18 @@ negation_expr
 negation_operator = "-" / "~" / "!"
 
 primary
-  = primary_standard
-
-primary$mysql
-  = primary_standard
-  / interval_expr
-
-primary$sqlite
-  = raise_expr
-  / primary_standard
-
-primary_standard
   = literal
   / paren_expr
   / paren_expr_select
   / paren_expr_list
   / cast_expr
+  / e:raise_expr &sqlite { return e; }
   / func_call
   / table_func_call
   / case_expr
   / exists_expr
   / column_ref
+  / e:interval_expr &mysql { return e; }
   / parameter
 
 paren_expr
@@ -2246,10 +2207,7 @@ table_func_call
 
 func_name
   = ident
-
-func_name$mysql
-  = ident
-  / kw:mysql_window_func_keyword {
+  / kw:mysql_window_func_keyword &mysql {
     return loc({ type: "identifier", text: kw.text })
   }
 
@@ -2297,10 +2255,7 @@ func_1st_arg
   / expr
 
 filter_arg
-  = never
-
-filter_arg$sqlite
-  = kw:(FILTER __) e:paren_where_expr {
+  = kw:(FILTER __) e:paren_where_expr &sqlite {
     return loc({
       type: "filter_arg",
       filterKw: read(kw),
@@ -2501,13 +2456,9 @@ ident "identifier"
   / quoted_ident
 
 quoted_ident
-  = name:backticks_quoted_ident { return loc(createIdentifier(name)); }
-quoted_ident$mysql
-  = name:backticks_quoted_ident { return loc(createIdentifier(name)); }
-quoted_ident$sqlite
-  = name:bracket_quoted_ident { return loc(createIdentifier(name)); }
-  / name:backticks_quoted_ident { return loc(createIdentifier(name)); }
-  / str:literal_double_quoted_string_qq { return loc(createIdentifier(str.text)); }
+  = name:bracket_quoted_ident &sqlite { return loc(createIdentifier(name)); }
+  / name:backticks_quoted_ident (&sqlite / &mysql) { return loc(createIdentifier(name)); }
+  / str:literal_double_quoted_string_qq &sqlite { return loc(createIdentifier(str.text)); }
 
 backticks_quoted_ident
   = q:"`" chars:([^`] / "``")+ "`" { return text(); }
@@ -2551,10 +2502,19 @@ literal_boolean
   }
 
 literal_string "string"
-  = literal_hex_string
-  / literal_plain_string
+  = &mysql s:literal_string_mysql { return s; }
+  / &sqlite s:literal_string_sqlite { return s; }
 
-literal_string$mysql "string"
+literal_string_sqlite
+  = literal_plain_string
+  / literal_hex_string
+
+literal_string_mysql
+  = literal_string_with_charset
+  / literal_string_without_charset
+  / literal_natural_charset_string
+
+literal_string_with_charset // for MySQL only
   = charset:charset_introducer string:(__ literal_string_without_charset) {
     return loc({
       type: "string_with_charset",
@@ -2562,8 +2522,6 @@ literal_string$mysql "string"
       string: read(string),
     });
   }
-  / literal_string_without_charset
-  / literal_natural_charset_string
 
 literal_string_without_charset // for MySQL only
   = literal_hex_string
@@ -2573,11 +2531,9 @@ literal_string_without_charset // for MySQL only
 
 // The most ordinary string type, without any prefixes
 literal_plain_string
-  = literal_single_quoted_string_qq
-
-literal_plain_string$mysql
-  = literal_single_quoted_string_qq_bs
-  / literal_double_quoted_string_qq_bs
+  = s:literal_single_quoted_string_qq &sqlite { return s; }
+  / s:literal_single_quoted_string_qq_bs &mysql { return s; }
+  / s:literal_double_quoted_string_qq_bs &mysql { return s; }
 
 charset_introducer
   = "_" cs:charset_name !ident_part { return cs; }
@@ -2722,9 +2678,7 @@ line_terminator
 
 literal_number "number"
   = literal_decimal_number
-
-literal_number$sqlite "number"
-  = literal_decimal_number / literal_hex_number
+  / n:literal_hex_number &sqlite { return n; }
 
 literal_hex_number
   = "0x" [0-9A-Fa-f]+ {
