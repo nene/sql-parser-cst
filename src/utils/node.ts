@@ -16,12 +16,14 @@ import {
   SubSelect,
   TableOrSubquery,
   Whitespace,
-} from "./sql";
-import { leading, surrounding, trailing } from "./utils/whitespace";
-import { read } from "./utils/read";
+} from "../sql";
+import { leading, surrounding, trailing } from "./whitespace";
+import { read } from "./read";
+import { readCommaSepList } from "./list";
 
-/** Identity function */
-export const identity = <T>(x: T): T => x;
+//
+// Helper functions for creating various types of Node objects
+//
 
 const deriveLoc = <T extends { left: Node; right: Node }>(binExpr: T): T => {
   if (!binExpr.left.range || !binExpr.right.range) {
@@ -153,30 +155,6 @@ export const createKeyword = (text: string): Keyword => ({
   type: "keyword",
   text,
 });
-
-export const readCommaSepList = <T extends Node>(
-  head: T,
-  tail: [Whitespace[], string, Whitespace[], T][]
-): T[] => {
-  const items = [head];
-  for (const [c1, comma, c2, expr] of tail) {
-    const lastIdx = items.length - 1;
-    items[lastIdx] = trailing(items[lastIdx], c1) as T;
-    items.push(leading(expr, c2) as T);
-  }
-  return items;
-};
-
-export const readSpaceSepList = <T extends Node>(
-  head: T,
-  tail: [Whitespace[], T][]
-): T[] => {
-  const items = [head];
-  for (const [c, expr] of tail) {
-    items.push(leading(expr, c) as T);
-  }
-  return items;
-};
 
 export const createIdentifier = (text: string): Identifier => ({
   type: "identifier",

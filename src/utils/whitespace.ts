@@ -1,4 +1,5 @@
 import { Node, Whitespace } from "../sql";
+import { last } from "./generic";
 
 /** Attaches optional leading whitespace to AST node, or to array of AST nodes (to the first in array) */
 export const leading = (
@@ -52,9 +53,6 @@ export const surrounding = (
   node: Node | Node[],
   trailingWs: Whitespace[]
 ) => trailing(leading(node, leadingWs), trailingWs);
-
-// Last item in array
-const last = <T>(arr: T[]): T => arr[arr.length - 1];
 
 // Creates new array with first item replaced by value
 const setFirst = <T>([_oldFirst, ...rest]: T[], value: T): T[] => {

@@ -16,8 +16,12 @@ const parser = peggy.generate(source, {
   format: "commonjs",
   tspegjs: {
     customHeader: `
+      import { identity } from "./utils/generic";
       import {
-        identity,
+        readCommaSepList,
+        readSpaceSepList,
+      } from "./utils/list";
+      import {
         createBinaryExprChain,
         createBinaryExpr,
         createCompoundSelectStmtChain,
@@ -25,13 +29,11 @@ const parser = peggy.generate(source, {
         createPrefixOpExpr,
         createPostfixOpExpr,
         createKeyword,
-        readCommaSepList,
-        readSpaceSepList,
         createIdentifier,
         createAlias,
         createParenExpr,
         createExprList,
-      } from "./grammar_utils";
+      } from "./utils/node";
       import {
         trailing,
         surrounding,

@@ -1,5 +1,5 @@
 {
-  // All helper functions used in this file come from /src/grammar_utils.ts
+  // All helper functions used in this file come from /src/utils/
   // These are atomatically added during code-generation.
   // See /generate.ts for details.
 
