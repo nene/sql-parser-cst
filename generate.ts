@@ -66,7 +66,29 @@ dialects.forEach((dialect) => {
     output: "source",
     format: "commonjs",
     tspegjs: {
-      customHeader: `import { __RESERVED_KEYWORDS__ } from "../keywords/${dialect}.keywords";`,
+      customHeader: `
+        import { __RESERVED_KEYWORDS__ } from "../keywords/${dialect}.keywords";
+        import {
+          identity,
+          trailing,
+          surrounding,
+          createBinaryExprChain,
+          createBinaryExpr,
+          createJoinExprChain,
+          createPrefixOpExpr,
+          createPostfixOpExpr,
+          createKeyword,
+          read,
+          readCommaSepList,
+          readSpaceSepList,
+          createIdentifier,
+          createAlias,
+          createParenExpr,
+          createExprList,
+          hasParamType,
+          filterEnabledWhitespace,
+        } from "../grammar_utils";
+      `,
     },
   } as peggy.SourceBuildOptions<"source">);
 
