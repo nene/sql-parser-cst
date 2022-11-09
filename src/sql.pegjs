@@ -2399,11 +2399,11 @@ exists_expr
  */
 parameter
   = (
-      "?" digits     &{ return hasParamType("?nr", options); }
-    / "?"            &{ return hasParamType("?", options); }
-    / ":" ident_name &{ return hasParamType(":name", options); }
-    / "$" ident_name &{ return hasParamType("$name", options); }
-    / "@" ident_name &{ return hasParamType("@name", options); }
+      "?" digits     &{ return hasParamType("?nr"); }
+    / "?"            &{ return hasParamType("?"); }
+    / ":" ident_name &{ return hasParamType(":name"); }
+    / "$" ident_name &{ return hasParamType("$name"); }
+    / "@" ident_name &{ return hasParamType("@name"); }
   ) {
     return loc({ type: "parameter", text: text() });
   }

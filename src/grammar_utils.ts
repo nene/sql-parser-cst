@@ -263,8 +263,8 @@ export const createExprList = (head: any, tail: any) => {
   };
 };
 
-export const hasParamType = (name: any, options: any) => {
-  return options?.paramTypes?.includes(name);
+export const hasParamType = (name: any) => {
+  return getOptions()?.paramTypes?.includes(name);
 };
 
 export const isEnabledWhitespace = (ws: any) =>
