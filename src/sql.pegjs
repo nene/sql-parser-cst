@@ -906,13 +906,13 @@ drop_index_stmt
 
 drop_index_stmt$mysql
   = kws:(DROP __ INDEX __)
-    index:(table_ref __)
+    indexes:(table_ref_list __)
     onKw:(ON __)
     table:table_ref {
       return loc({
         type: "drop_index_stmt",
         dropIndexKw: read(kws),
-        indexes: [read(index)],
+        indexes: read(indexes),
         onKw: read(onKw),
         table,
       });
