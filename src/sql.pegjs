@@ -893,7 +893,8 @@ create_index_stmt
 
 // DROP INDEX
 drop_index_stmt
-  = kws:(DROP __ INDEX __)
+  = &sqlite
+    kws:(DROP __ INDEX __)
     ifKw:(if_exists __)?
     indexes:table_ref_list {
       return loc({
@@ -903,9 +904,8 @@ drop_index_stmt
         indexes: read(indexes)
       });
     }
-
-drop_index_stmt$mysql
-  = kws:(DROP __ INDEX __)
+  / &mysql
+    kws:(DROP __ INDEX __)
     indexes:(table_ref_list __)
     onKw:(ON __)
     table:table_ref {
