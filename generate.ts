@@ -17,8 +17,6 @@ const parser = peggy.generate(source, {
   tspegjs: {
     customHeader: `
       import {
-        setRangeFunction,
-        setOptionsFunction,
         identity,
         createBinaryExprChain,
         createBinaryExpr,
@@ -33,18 +31,22 @@ const parser = peggy.generate(source, {
         createAlias,
         createParenExpr,
         createExprList,
-        hasParamType,
-        isEnabledWhitespace,
         loc,
         isReservedKeyword,
-        isSqlite,
-        isMysql,
       } from "./grammar_utils";
       import {
         trailing,
         surrounding,
       } from "./utils/whitespace";
       import { read } from "./utils/read";
+      import {
+        setRangeFunction,
+        setOptionsFunction,
+        isMysql,
+        isSqlite,
+        hasParamType,
+        isEnabledWhitespace,
+      } from "./utils/parserState";
     `,
   },
 } as peggy.SourceBuildOptions<"source">);
