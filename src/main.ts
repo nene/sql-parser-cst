@@ -1,5 +1,5 @@
 import { Node, Program } from "./sql";
-import { parse as parseSql } from "./generated_parser";
+import { parse as parseSql } from "./parser";
 import { show as showSql } from "./show";
 export { format } from "./format/format";
 export * from "./cstVisitor";

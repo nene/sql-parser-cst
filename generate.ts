@@ -4,7 +4,7 @@ import fs from "fs";
 import path from "path";
 
 const source = fs.readFileSync(
-  path.resolve(__dirname, "./src/sql.pegjs"),
+  path.resolve(__dirname, "./src/parser.pegjs"),
   "utf-8"
 );
 
@@ -46,4 +46,4 @@ const parser = peggy.generate(source, {
   },
 } as peggy.SourceBuildOptions<"source">);
 
-fs.writeFileSync(path.resolve(__dirname, `./src/generated_parser.ts`), parser);
+fs.writeFileSync(path.resolve(__dirname, `./src/parser.ts`), parser);
