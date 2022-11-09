@@ -279,3 +279,6 @@ export const loc = (node: any) => {
   }
   return { ...node, range: getRange() };
 };
+
+export const isSqlite = () => getOptions()?.lang === "sqlite";
+export const isMysql = () => getOptions()?.lang === "mysql";

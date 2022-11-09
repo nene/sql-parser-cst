@@ -43,14 +43,7 @@ statement_standard
   / analyze_stmt
   / explain_stmt
   / transaction_stmt
-
-statement$sqlite
-  = statement_standard
-  / sqlite_stmt
-  / empty_stmt
-
-statement$mysql
-  = statement_standard
+  / x:sqlite_stmt &sqlite { return x; }
   / empty_stmt
 
 empty_stmt
@@ -2818,6 +2811,10 @@ end_of_file
 // (though still attempts to consume some input, so Peggy won't give us a warning)
 never
   = . &{ return false };
+
+// SQL Dialect assertion rules
+sqlite = &{ return isSqlite(); }
+mysql = &{ return isMysql(); }
 
 // All keywords (sorted alphabetically)
 ABORT               = kw:"ABORT"i               !ident_part { return loc(createKeyword(kw)); }

@@ -30,6 +30,7 @@ export const preserveAll: ParserOptions = {
 export function parse(sql: string, options: ParserOptions = {}): Program {
   return parseSql(sql, {
     dialect: dialectMap[__SQL_DIALECT__],
+    lang: __SQL_DIALECT__,
     ...options,
   });
 }

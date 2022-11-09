@@ -90,6 +90,8 @@ dialects.forEach((dialect) => {
           hasParamType,
           isEnabledWhitespace,
           loc,
+          isSqlite,
+          isMysql,
         } from "../grammar_utils";
 
         const isReservedKeyword = (name: string) => {

@@ -18,7 +18,7 @@ export type ParserOptions = {
 
 export type DialectFn = (str: string, options: ParserOptions) => Program;
 
-export type DialectOption = { dialect: DialectFn };
+export type DialectOption = { dialect: DialectFn; lang: string };
 
 export function parse(
   sql: string,
