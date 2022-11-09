@@ -53,10 +53,13 @@ const setLast = <T>(array: T[], value: T): T[] => {
 };
 
 /** Attaches optional leading whitespace to AST node, or to array of AST nodes (to the first in array) */
-export const leading = (node: any, ws: any): any => {
+export const leading = (
+  node: Node | Node[],
+  ws: Whitespace[]
+): Node | Node[] => {
   if (node instanceof Array) {
     // Add leading whitespace to first item in array
-    return setFirst(node, leading(node[0], ws));
+    return setFirst(node, leading(node[0], ws) as Node);
   }
   if (typeof node !== "object") {
     throw new Error(
@@ -73,10 +76,13 @@ export const leading = (node: any, ws: any): any => {
 };
 
 /** Attaches optional trailing whitespace to AST node, or to array of AST nodes (to the last in array) */
-export const trailing = (node: any, ws: any): any => {
+export const trailing = (
+  node: Node | Node[],
+  ws: Whitespace[]
+): Node | Node[] => {
   if (node instanceof Array) {
     // Add trailing whitespace to last item in array
-    return setLast(node, trailing(last(node), ws));
+    return setLast(node, trailing(last(node), ws) as Node);
   }
   if (typeof node !== "object") {
     throw new Error(
@@ -93,8 +99,11 @@ export const trailing = (node: any, ws: any): any => {
 };
 
 // Shorthand for attaching both trailing or leading whitespace
-export const surrounding = (leadingWs: any, node: any, trailingWs: any) =>
-  trailing(leading(node, leadingWs), trailingWs);
+export const surrounding = (
+  leadingWs: Whitespace[],
+  node: Node | Node[],
+  trailingWs: Whitespace[]
+) => trailing(leading(node, leadingWs), trailingWs);
 
 const deriveLoc = <T extends { left: Node; right: Node }>(binExpr: T): T => {
   if (!binExpr.left.range || !binExpr.right.range) {
@@ -126,8 +135,8 @@ export function createBinaryExpr(
   return {
     type: "binary_expr",
     operator: op,
-    left: trailing(left, c1),
-    right: leading(right, c2),
+    left: trailing(left, c1) as Expr,
+    right: leading(right, c2) as Expr,
   };
 }
 
@@ -152,8 +161,8 @@ export function createCompoundSelectStmt(
   return {
     type: "compound_select_stmt",
     operator: op as Keyword | Keyword[],
-    left: trailing(left, c1),
-    right: leading(right, c2),
+    left: trailing(left, c1) as SubSelect,
+    right: leading(right, c2) as SubSelect,
   };
 }
 
@@ -172,7 +181,7 @@ export function createJoinExprChain(
     Whitespace[],
     Keyword[],
     Whitespace[],
-    JoinExpr | TableOrSubquery,
+    TableOrSubquery,
     JoinOnSpecification | JoinUsingSpecification | null
   ][]
 ) {
@@ -188,14 +197,14 @@ function createJoinExpr(
   c1: Whitespace[],
   op: Keyword[],
   c2: Whitespace[],
-  right: JoinExpr | TableOrSubquery,
+  right: TableOrSubquery,
   spec: JoinOnSpecification | JoinUsingSpecification | null
 ): JoinExpr {
   return {
     type: "join_expr",
-    left: trailing(left, c1),
+    left: trailing(left, c1) as JoinExpr | TableOrSubquery,
     operator: op,
-    right: leading(right, c2),
+    right: leading(right, c2) as TableOrSubquery,
     specification: read(spec),
   };
 }
@@ -312,7 +321,7 @@ interface PartialAlias {
   alias: Identifier;
 }
 
-export const createAlias = <T = Node>(
+export const createAlias = <T extends Node>(
   expr: T,
   _alias: [Whitespace[], PartialAlias] | null
 ): Alias<T> | T => {
@@ -322,7 +331,7 @@ export const createAlias = <T = Node>(
   const [c, partialAlias] = _alias;
   return {
     type: "alias",
-    expr: trailing(expr, c),
+    expr: trailing(expr, c) as T,
     ...partialAlias,
   };
 };
@@ -330,7 +339,7 @@ export const createAlias = <T = Node>(
 export const createParenExpr = (c1: any, expr: any, c2: any): ParenExpr => {
   return {
     type: "paren_expr",
-    expr: surrounding(c1, expr, c2),
+    expr: surrounding(c1, expr, c2) as Expr,
   };
 };
 
