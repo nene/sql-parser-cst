@@ -17,7 +17,7 @@ export type ParserOptions = {
   paramTypes?: ParamType[];
 };
 
-export type DialectOption = { lang: DialectName };
+export type DialectOption = { dialect: DialectName };
 
 export function parse(
   sql: string,

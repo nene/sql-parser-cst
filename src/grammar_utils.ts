@@ -289,10 +289,10 @@ const keywordMap = {
 };
 
 export const isReservedKeyword = (name: string) => {
-  return keywordMap[getLang()][name.toUpperCase()];
+  return keywordMap[getDialect()][name.toUpperCase()];
 };
 
-const getLang = (): "mysql" | "sqlite" => getOptions()?.lang;
+const getDialect = (): "mysql" | "sqlite" => getOptions()?.dialect;
 
-export const isSqlite = () => getLang() === "sqlite";
-export const isMysql = () => getLang() === "mysql";
+export const isSqlite = () => getDialect() === "sqlite";
+export const isMysql = () => getDialect() === "mysql";
