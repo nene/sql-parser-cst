@@ -79,7 +79,7 @@
   };
 
   const deriveLoc = (binExpr: any) => {
-    if (!options?.includeRange) {
+    if (!binExpr.left.range) {
       return binExpr;
     }
     const start = binExpr.left.range[0];
@@ -104,7 +104,7 @@
   }
 
   const deriveJoinLoc = (join: any) => {
-    if (!options?.includeRange) {
+    if (!join.left.range) {
       return join;
     }
     const start = join.left.range[0];
@@ -248,15 +248,19 @@
     };
   }
 
-  const hasParamType = (name: any) => {
+  const hasParamType = (name: any, options: any) => {
     return options?.paramTypes?.includes(name);
   }
 
-  const isEnabledWhitespace = (ws: any) => (
+  const isEnabledWhitespace = (ws: any, options: any) => (
     (options?.preserveComments && (ws.type === "line_comment" || ws.type === "block_comment")) ||
     (options?.preserveNewlines && ws.type === "newline") ||
     (options?.preserveSpaces && ws.type === "space")
   );
+
+  const filterEnabledWhitespace = (items: any, options: any) => {
+    return items.filter((ws: any) => isEnabledWhitespace(ws, options));
+  };
 
   const isReservedKeyword = (name: string) => {
     return __RESERVED_KEYWORDS__[name.toUpperCase()];
@@ -2654,11 +2658,11 @@ exists_expr
  */
 parameter
   = (
-      "?" digits     &{ return hasParamType("?nr"); }
-    / "?"            &{ return hasParamType("?"); }
-    / ":" ident_name &{ return hasParamType(":name"); }
-    / "$" ident_name &{ return hasParamType("$name"); }
-    / "@" ident_name &{ return hasParamType("@name"); }
+      "?" digits     &{ return hasParamType("?nr", options); }
+    / "?"            &{ return hasParamType("?", options); }
+    / ":" ident_name &{ return hasParamType(":name", options); }
+    / "$" ident_name &{ return hasParamType("$name", options); }
+    / "@" ident_name &{ return hasParamType("@name", options); }
   ) {
     return loc({ type: "parameter", text: text() });
   }
@@ -3023,7 +3027,7 @@ hexDigit
 // Optional whitespace (or comments)
 __ "whitespace"
   = xs:(space / newline / comment)* {
-    return xs.filter(isEnabledWhitespace);
+    return filterEnabledWhitespace(xs, options);
   }
 
 // Comments
