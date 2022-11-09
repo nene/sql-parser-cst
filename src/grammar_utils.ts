@@ -1,6 +1,3 @@
-import { DialectName } from "./ParserOptions";
-import { __RESERVED_KEYWORDS__ as mysqlKeywords } from "./keywords/mysql.keywords";
-import { __RESERVED_KEYWORDS__ as sqliteKeywords } from "./keywords/sqlite.keywords";
 import {
   Alias,
   BinaryExpr,
@@ -22,7 +19,7 @@ import {
 } from "./sql";
 import { leading, surrounding, trailing } from "./utils/whitespace";
 import { read } from "./utils/read";
-import { getDialect, getOptions, getRange } from "./utils/parserState";
+import { getOptions, getRange } from "./utils/parserState";
 
 /** Identity function */
 export const identity = <T>(x: T): T => x;
@@ -233,13 +230,4 @@ export const loc = (node: Node): Node => {
     return node;
   }
   return { ...node, range: getRange() };
-};
-
-const keywordMap: Record<DialectName, Record<string, boolean>> = {
-  mysql: mysqlKeywords,
-  sqlite: sqliteKeywords,
-};
-
-export const isReservedKeyword = (name: string) => {
-  return keywordMap[getDialect()][name.toUpperCase()];
 };
