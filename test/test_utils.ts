@@ -16,20 +16,26 @@ import {
 
 declare var __SQL_DIALECT__: DialectName;
 
-export const preserveAll: ParserOptions = {
+export const preserveAll: Partial<ParserOptions> = {
   preserveComments: true,
   preserveNewlines: true,
   preserveSpaces: true,
 };
 
-export function parse(sql: string, options: ParserOptions = {}): Program {
+export function parse(
+  sql: string,
+  options: Partial<ParserOptions> = {}
+): Program {
   return parseSql(sql, {
     dialect: __SQL_DIALECT__,
     ...options,
   });
 }
 
-export function parseStmt(sql: string, options: ParserOptions = {}): Statement {
+export function parseStmt(
+  sql: string,
+  options: Partial<ParserOptions> = {}
+): Statement {
   const { statements } = parse(sql, options);
   if (statements.length !== 1) {
     throw new Error(`Expected one statement, instead got ${statements.length}`);
@@ -44,7 +50,7 @@ export function dialect(lang: DialectName | DialectName[], block: () => void) {
   }
 }
 
-export function test(sql: string, options?: ParserOptions) {
+export function test(sql: string, options?: Partial<ParserOptions>) {
   expect(show(parse(sql, options || preserveAll))).toBe(sql);
 }
 
@@ -52,7 +58,10 @@ export function testExpr(expr: string) {
   expect(show(parse(`SELECT ${expr}`, preserveAll))).toBe(`SELECT ${expr}`);
 }
 
-export function parseExpr(expr: string, options?: ParserOptions): Expr {
+export function parseExpr(
+  expr: string,
+  options?: Partial<ParserOptions>
+): Expr {
   const stmt = parseStmt(`SELECT ${expr}`, options);
   if (stmt.type !== "select_stmt") {
     throw new Error(`Expected select_stmt, instead got ${stmt.type}`);
@@ -149,7 +158,10 @@ function addPrecedenceParens<T extends Expr | SubSelect>(
   }
 }
 
-export function parseFrom(fromExpr: string, options: ParserOptions = {}) {
+export function parseFrom(
+  fromExpr: string,
+  options: Partial<ParserOptions> = {}
+) {
   const stmt = parseStmt(`SELECT col FROM ${fromExpr}`, options);
   if (stmt.type !== "select_stmt") {
     throw new Error(`Expected select_stmt, instead got ${stmt.type}`);

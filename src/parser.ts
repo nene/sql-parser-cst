@@ -10,6 +10,7 @@ export type DialectName = "sqlite" | "mysql";
 type ParamType = "?" | "?nr" | ":name" | "$name" | "@name";
 
 export type ParserOptions = {
+  dialect: DialectName;
   preserveComments?: boolean;
   preserveNewlines?: boolean;
   preserveSpaces?: boolean;
@@ -17,12 +18,7 @@ export type ParserOptions = {
   paramTypes?: ParamType[];
 };
 
-export type DialectOption = { dialect: DialectName };
-
-export function parse(
-  sql: string,
-  options: ParserOptions & DialectOption
-): Program {
+export function parse(sql: string, options: ParserOptions): Program {
   return parseSql(sql, options);
 }
 
