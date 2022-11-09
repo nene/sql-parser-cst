@@ -1,6 +1,6 @@
 import { Whitespace, Node } from "./sql";
 import { cstTransformer, FullTransformMap } from "./cstTransformer";
-import { isDefined } from "./util";
+import { isDefined } from "./utils/generic";
 
 type NodeArray = (Node | NodeArray | string | undefined)[];
 

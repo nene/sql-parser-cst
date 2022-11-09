@@ -1,4 +1,4 @@
-import { isString } from "../util";
+import { isString } from "../utils/generic";
 import { Line, isLine, Layout } from "./layout";
 
 export function unroll(item: Layout): Layout {
