@@ -1,4 +1,4 @@
-import { format } from "../../src/parser";
+import { format } from "../../src/main";
 import { parse } from "../test_utils";
 import dedent from "dedent-js";
 

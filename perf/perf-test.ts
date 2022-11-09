@@ -1,7 +1,7 @@
 import fs from "fs";
 import path from "path";
 import benchmark from "benchmark";
-import { parse } from "../lib/parser";
+import { parse } from "../lib/main";
 
 // Using test data from Chinook database
 // https://github.com/lerocha/chinook-database

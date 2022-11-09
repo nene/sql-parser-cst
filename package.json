@@ -3,8 +3,8 @@
   "description": "Parses SQL into Concrete Syntax Tree (CST)",
   "license": "GPL-2.0-or-later",
   "version": "0.4.0",
-  "main": "lib/parser.js",
-  "types": "lib/parser.d.ts",
+  "main": "lib/main.js",
+  "types": "lib/main.d.ts",
   "repository": {
     "type": "git",
     "url": "https://github.com/nene/sql-parser-cst"

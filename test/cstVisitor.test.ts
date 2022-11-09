@@ -1,4 +1,4 @@
-import { cstVisitor } from "../src/parser";
+import { cstVisitor } from "../src/main";
 import { parse, preserveAll, show } from "./test_utils";
 
 describe("cstVisitor", () => {

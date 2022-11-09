@@ -12,7 +12,7 @@ import {
   parse as parseSql,
   ParserOptions,
   show,
-} from "../src/parser";
+} from "../src/main";
 
 declare var __SQL_DIALECT__: DialectName;
 
