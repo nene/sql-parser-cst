@@ -1,11 +1,12 @@
 import { Node, Program } from "./sql";
 import { parse as parseSql } from "./parser";
 import { show as showSql } from "./show";
+import { DialectName } from "./DialectName";
 export { format } from "./format/format";
 export * from "./cstVisitor";
 export * from "./cstTransformer";
 
-export type DialectName = "sqlite" | "mysql";
+export { DialectName };
 
 type ParamType = "?" | "?nr" | ":name" | "$name" | "@name";
 
