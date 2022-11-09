@@ -251,6 +251,12 @@
   const hasParamType = (name: any) => {
     return options?.paramTypes?.includes(name);
   }
+
+  const isEnabledWhitespace = (ws: any) => (
+    (options?.preserveComments && (ws.type === "line_comment" || ws.type === "block_comment")) ||
+    (options?.preserveNewlines && ws.type === "newline") ||
+    (options?.preserveSpaces && ws.type === "space")
+  );
 }
 
 start
@@ -3013,11 +3019,7 @@ hexDigit
 // Optional whitespace (or comments)
 __ "whitespace"
   = xs:(space / newline / comment)* {
-    return xs.filter((ws: any) => (
-      (options?.preserveComments && (ws.type === "line_comment" || ws.type === "block_comment")) ||
-      (options?.preserveNewlines && ws.type === "newline") ||
-      (options?.preserveSpaces && ws.type === "space")
-    ));
+    return xs.filter(isEnabledWhitespace);
   }
 
 // Comments
