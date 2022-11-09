@@ -27,7 +27,6 @@ const parser = peggy.generate(source, {
         createPrefixOpExpr,
         createPostfixOpExpr,
         createKeyword,
-        read,
         readCommaSepList,
         readSpaceSepList,
         createIdentifier,
@@ -45,6 +44,7 @@ const parser = peggy.generate(source, {
         trailing,
         surrounding,
       } from "./utils/whitespace";
+      import { read } from "./utils/read";
     `,
   },
 } as peggy.SourceBuildOptions<"source">);
