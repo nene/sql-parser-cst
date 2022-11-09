@@ -117,7 +117,6 @@ export type Literal =
 
 export interface EmptyStmt extends BaseNode {
   type: "empty_stmt";
-  foo: number;
 }
 
 // SELECT
