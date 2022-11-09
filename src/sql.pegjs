@@ -160,7 +160,7 @@ select_clause
 select_option
   = ALL
   / DISTINCT
-  / kw:select_option_mysql &mysql { return kw; }
+  / &mysql kw:select_option_mysql { return kw; }
 
 select_option_mysql
   = DISTINCTROW
@@ -247,7 +247,7 @@ table_or_subquery
   }
 
 table_ref_or_alias
-  = table:(table_ref_or_alias_standard __) kw:(INDEXED __ BY) id:(__ ident) &sqlite {
+  = &sqlite table:(table_ref_or_alias_standard __) kw:(INDEXED __ BY) id:(__ ident) {
     return loc({
       type: "indexed_table_ref",
       table: read(table),
@@ -255,7 +255,7 @@ table_ref_or_alias
       index: read(id),
     });
   }
-  / table:(table_ref_or_alias_standard __) kw:(NOT __ INDEXED) &sqlite {
+  / &sqlite table:(table_ref_or_alias_standard __) kw:(NOT __ INDEXED) {
     return loc({
       type: "not_indexed_table_ref",
       table: read(table),
@@ -651,8 +651,8 @@ values_list
   }
 
 values_row
-  = list:paren_expr_list &sqlite { return list; }
-  / list:(paren_expr_list_with_default / row_constructor) &mysql { return list; }
+  = &sqlite list:paren_expr_list { return list; }
+  / &mysql list:(paren_expr_list_with_default / row_constructor) { return list; }
 
 row_constructor
   = kw:(ROW __) row:paren_expr_list_with_default {
@@ -684,9 +684,9 @@ default_values
     }
 
 upsert_clause
-  = kw:(ON __ CONFLICT __) columns:(paren_sort_specification_list __)? where:(where_clause __)?
-    doKw:DO action:(__ upsert_action)
-    &sqlite {
+  = &sqlite
+    kw:(ON __ CONFLICT __) columns:(paren_sort_specification_list __)? where:(where_clause __)?
+    doKw:DO action:(__ upsert_action) {
     return loc({
       type: "upsert_clause",
       onConflictKw: read(kw),
@@ -1244,7 +1244,7 @@ transaction_stmt
   / release_savepoint_stmt
 
 start_transaction_stmt
-  = kw:BEGIN bKw:(__ (DEFERRED / IMMEDIATE / EXCLUSIVE))? tKw:(__ TRANSACTION)? &sqlite {
+  = &sqlite kw:BEGIN bKw:(__ (DEFERRED / IMMEDIATE / EXCLUSIVE))? tKw:(__ TRANSACTION)? {
     return loc({
       type: "start_transaction_stmt",
       startKw: kw,
@@ -1252,14 +1252,14 @@ start_transaction_stmt
       transactionKw: read(tKw),
     });
   }
-  / kw:BEGIN tKw:(__ WORK)? &mysql {
+  / &mysql kw:BEGIN tKw:(__ WORK)? {
     return loc({
       type: "start_transaction_stmt",
       startKw: kw,
       transactionKw: read(tKw),
     });
   }
-  / kw:START tKw:(__ TRANSACTION) &mysql {
+  / &mysql kw:START tKw:(__ TRANSACTION) {
     return loc({
       type: "start_transaction_stmt",
       startKw: kw,
@@ -1445,8 +1445,8 @@ table_options
   }
 
 table_option
-  = opt:table_option_sqlite &sqlite { return opt; }
-  / opt:table_option_mysql &mysql { return opt; }
+  = &sqlite opt:table_option_sqlite { return opt; }
+  / &mysql opt:table_option_mysql { return opt; }
 
 table_option_sqlite
   = kw:(STRICT / WITHOUT __ ROWID) {
@@ -1583,7 +1583,7 @@ column_constraint_type
   / constraint_check
   / constraint_collate
   / constraint_generated
-  / con:column_constraint_type_mysql &mysql { return con; }
+  / &mysql con:column_constraint_type_mysql { return con; }
 
 column_constraint_type_mysql
   = column_constraint_index
@@ -1686,7 +1686,7 @@ table_constraint_type
   / table_constraint_unique
   / constraint_foreign_key
   / constraint_check
-  / con:table_constraint_index &mysql { return con; }
+  / &mysql con:table_constraint_index { return con; }
 
 table_constraint_primary_key
   = kws:(PRIMARY __ KEY __)
@@ -1859,8 +1859,8 @@ literal_list
   }
 
 type_name
-  = t:type_name_mysql &mysql { return t; }
-  / t:type_name_sqlite &sqlite { return t; }
+  = &mysql t:type_name_mysql { return t; }
+  / &sqlite t:type_name_sqlite { return t; }
 
 type_name_mysql
   = BOOLEAN
@@ -2105,13 +2105,13 @@ primary
   / paren_expr_select
   / paren_expr_list
   / cast_expr
-  / e:raise_expr &sqlite { return e; }
+  / &sqlite e:raise_expr { return e; }
   / func_call
   / table_func_call
   / case_expr
   / exists_expr
   / column_ref
-  / e:interval_expr &mysql { return e; }
+  / &mysql  e:interval_expr { return e; }
   / parameter
 
 paren_expr
@@ -2207,7 +2207,7 @@ table_func_call
 
 func_name
   = ident
-  / kw:mysql_window_func_keyword &mysql {
+  / &mysql kw:mysql_window_func_keyword {
     return loc({ type: "identifier", text: kw.text })
   }
 
@@ -2456,9 +2456,9 @@ ident "identifier"
   / quoted_ident
 
 quoted_ident
-  = name:bracket_quoted_ident &sqlite { return loc(createIdentifier(name)); }
-  / name:backticks_quoted_ident (&sqlite / &mysql) { return loc(createIdentifier(name)); }
-  / str:literal_double_quoted_string_qq &sqlite { return loc(createIdentifier(str.text)); }
+  = &sqlite name:bracket_quoted_ident { return loc(createIdentifier(name)); }
+  / (&sqlite / &mysql) name:backticks_quoted_ident { return loc(createIdentifier(name)); }
+  / &sqlite str:literal_double_quoted_string_qq { return loc(createIdentifier(str.text)); }
 
 backticks_quoted_ident
   = q:"`" chars:([^`] / "``")+ "`" { return text(); }
@@ -2531,9 +2531,9 @@ literal_string_without_charset // for MySQL only
 
 // The most ordinary string type, without any prefixes
 literal_plain_string
-  = s:literal_single_quoted_string_qq &sqlite { return s; }
-  / s:literal_single_quoted_string_qq_bs &mysql { return s; }
-  / s:literal_double_quoted_string_qq_bs &mysql { return s; }
+  = &sqlite s:literal_single_quoted_string_qq { return s; }
+  / &mysql s:literal_single_quoted_string_qq_bs { return s; }
+  / &mysql s:literal_double_quoted_string_qq_bs { return s; }
 
 charset_introducer
   = "_" cs:charset_name !ident_part { return cs; }
