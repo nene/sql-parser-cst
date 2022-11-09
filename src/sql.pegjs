@@ -2768,7 +2768,7 @@ hexDigit
 // Optional whitespace (or comments)
 __ "whitespace"
   = xs:(space / newline / comment)* {
-    return filterEnabledWhitespace(xs, options);
+    return xs.filter(isEnabledWhitespace);
   }
 
 // Comments

@@ -1,3 +1,17 @@
+let getRange: Function;
+
+/** Injects function to access source location range data */
+export const setRangeFunction = (fn: Function) => {
+  getRange = fn;
+};
+
+let getOptions: Function;
+
+/** Injects function to options object */
+export const setOptionsFunction = (fn: Function) => {
+  getOptions = fn;
+};
+
 /** Identity function */
 export const identity = (x: any) => x;
 
@@ -253,27 +267,11 @@ export const hasParamType = (name: any, options: any) => {
   return options?.paramTypes?.includes(name);
 };
 
-const isEnabledWhitespace = (ws: any, options: any) =>
-  (options?.preserveComments &&
+export const isEnabledWhitespace = (ws: any) =>
+  (getOptions()?.preserveComments &&
     (ws.type === "line_comment" || ws.type === "block_comment")) ||
-  (options?.preserveNewlines && ws.type === "newline") ||
-  (options?.preserveSpaces && ws.type === "space");
-
-export const filterEnabledWhitespace = (items: any, options: any) => {
-  return items.filter((ws: any) => isEnabledWhitespace(ws, options));
-};
-
-let getRange: Function;
-
-export const setRangeFunction = (fn: Function) => {
-  getRange = fn;
-};
-
-let getOptions: Function;
-
-export const setOptionsFunction = (fn: Function) => {
-  getOptions = fn;
-};
+  (getOptions()?.preserveNewlines && ws.type === "newline") ||
+  (getOptions()?.preserveSpaces && ws.type === "space");
 
 export const loc = (node: any) => {
   if (!getOptions()?.includeRange) {

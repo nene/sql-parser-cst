@@ -69,6 +69,8 @@ dialects.forEach((dialect) => {
       customHeader: `
         import { __RESERVED_KEYWORDS__ } from "../keywords/${dialect}.keywords";
         import {
+          setRangeFunction,
+          setOptionsFunction,
           identity,
           trailing,
           surrounding,
@@ -86,9 +88,7 @@ dialects.forEach((dialect) => {
           createParenExpr,
           createExprList,
           hasParamType,
-          filterEnabledWhitespace,
-          setRangeFunction,
-          setOptionsFunction,
+          isEnabledWhitespace,
           loc,
         } from "../grammar_utils";
 
