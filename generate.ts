@@ -87,6 +87,9 @@ dialects.forEach((dialect) => {
           createExprList,
           hasParamType,
           filterEnabledWhitespace,
+          setRangeFunction,
+          setOptionsFunction,
+          loc,
         } from "../grammar_utils";
       `,
     },

@@ -1,25 +1,11 @@
 {
-  interface IRange {
-    source: string;
-    start: number;
-    end: number;
-  };
+  setRangeFunction(() => ({
+    source: peg$source,
+    start: peg$savedPos,
+    end: peg$currPos
+  }));
 
-  function range(): IRange {
-    return {
-      source: peg$source,
-      start: peg$savedPos,
-      end: peg$currPos
-    };
-  }
-
-  const loc = (node: any) => {
-    if (!options?.includeRange) {
-      return node;
-    }
-    const {start, end} = range();
-    return { ...node, range: [start, end] };
-  };
+  setOptionsFunction(() => options);
 
   const isReservedKeyword = (name: string) => {
     return __RESERVED_KEYWORDS__[name.toUpperCase()];

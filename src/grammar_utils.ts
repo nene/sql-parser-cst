@@ -262,3 +262,23 @@ const isEnabledWhitespace = (ws: any, options: any) =>
 export const filterEnabledWhitespace = (items: any, options: any) => {
   return items.filter((ws: any) => isEnabledWhitespace(ws, options));
 };
+
+let getRange: Function;
+
+export const setRangeFunction = (fn: Function) => {
+  getRange = fn;
+};
+
+let getOptions: Function;
+
+export const setOptionsFunction = (fn: Function) => {
+  getOptions = fn;
+};
+
+export const loc = (node: any) => {
+  if (!getOptions()?.includeRange) {
+    return node;
+  }
+  const { start, end } = getRange();
+  return { ...node, range: [start, end] };
+};
