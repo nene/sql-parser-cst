@@ -2,7 +2,7 @@
   "name": "sql-parser-cst",
   "description": "Parses SQL into Concrete Syntax Tree (CST)",
   "license": "GPL-2.0-or-later",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "main": "lib/parser.js",
   "types": "lib/parser.d.ts",
   "repository": {
