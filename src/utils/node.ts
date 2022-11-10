@@ -104,7 +104,7 @@ export function createJoinExprChain(
   head: JoinExpr | TableOrSubquery,
   tail: [
     Whitespace[],
-    Keyword[],
+    JoinExpr["operator"],
     Whitespace[],
     TableOrSubquery,
     JoinOnSpecification | JoinUsingSpecification | null
@@ -120,7 +120,7 @@ export function createJoinExprChain(
 function createJoinExpr(
   left: JoinExpr | TableOrSubquery,
   c1: Whitespace[],
-  op: Keyword[],
+  op: JoinExpr["operator"],
   c2: Whitespace[],
   right: TableOrSubquery,
   spec: JoinOnSpecification | JoinUsingSpecification | null

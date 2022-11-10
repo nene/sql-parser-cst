@@ -270,10 +270,23 @@ export interface LimitClause extends BaseNode {
 export interface JoinExpr extends BaseNode {
   type: "join_expr";
   left: JoinExpr | TableOrSubquery;
-  operator: Keyword[] | ",";
+  operator: JoinOp | ",";
   right: TableOrSubquery;
   specification?: JoinOnSpecification | JoinUsingSpecification;
 }
+
+type JoinOp =
+  | Keyword<
+      | "NATURAL"
+      | "LEFT"
+      | "RIGHT"
+      | "FULL"
+      | "OUTER"
+      | "INNER"
+      | "CROSS"
+      | "JOIN"
+    >[]
+  | Keyword<"JOIN" | "STRAIGHT_JOIN">;
 
 export type TableOrSubquery =
   | TableRef
