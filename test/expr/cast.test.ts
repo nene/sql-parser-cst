@@ -14,11 +14,13 @@ describe("type cast", () => {
         "args": {
           "expr": {
             "asKw": {
+              "name": "AS",
               "text": "AS",
               "type": "keyword",
             },
             "dataType": {
               "nameKw": {
+                "name": "INT",
                 "text": "INT",
                 "type": "keyword",
               },
@@ -33,6 +35,7 @@ describe("type cast", () => {
           "type": "paren_expr",
         },
         "castKw": {
+          "name": "CAST",
           "text": "CAST",
           "type": "keyword",
         },

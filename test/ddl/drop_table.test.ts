@@ -40,11 +40,13 @@ describe("drop table", () => {
       {
         "behaviorKw": undefined,
         "dropKw": {
+          "name": "DROP",
           "text": "DROP",
           "type": "keyword",
         },
         "ifExistsKw": undefined,
         "tableKw": {
+          "name": "TABLE",
           "text": "TABLE",
           "type": "keyword",
         },

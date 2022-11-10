@@ -5,6 +5,7 @@ describe("date/time literal", () => {
     expect(parseExpr(`TIME '10:05:58'`)).toMatchInlineSnapshot(`
       {
         "kw": {
+          "name": "TIME",
           "text": "TIME",
           "type": "keyword",
         },

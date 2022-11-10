@@ -30,6 +30,7 @@ describe("EXISTS expression", () => {
                   },
                   "options": [],
                   "selectKw": {
+                    "name": "SELECT",
                     "text": "SELECT",
                     "type": "keyword",
                   },
@@ -41,12 +42,14 @@ describe("EXISTS expression", () => {
             "type": "paren_expr",
           },
           "operator": {
+            "name": "EXISTS",
             "text": "EXISTS",
             "type": "keyword",
           },
           "type": "prefix_op_expr",
         },
         "operator": {
+          "name": "NOT",
           "text": "NOT",
           "type": "keyword",
         },

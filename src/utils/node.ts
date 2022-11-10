@@ -154,6 +154,7 @@ export function createPostfixOpExpr(
 export const createKeyword = (text: string): Keyword => ({
   type: "keyword",
   text,
+  name: text.toUpperCase(),
 });
 
 export const createIdentifier = (text: string): Identifier => ({

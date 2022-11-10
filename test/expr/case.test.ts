@@ -42,6 +42,7 @@ describe("CASE expression", () => {
     ).toMatchInlineSnapshot(`
       {
         "caseKw": {
+          "name": "CASE",
           "text": "CASE",
           "type": "keyword",
         },
@@ -67,17 +68,20 @@ describe("CASE expression", () => {
               "type": "string",
             },
             "thenKw": {
+              "name": "THEN",
               "text": "THEN",
               "type": "keyword",
             },
             "type": "case_when",
             "whenKw": {
+              "name": "WHEN",
               "text": "WHEN",
               "type": "keyword",
             },
           },
           {
             "elseKw": {
+              "name": "ELSE",
               "text": "ELSE",
               "type": "keyword",
             },
@@ -89,6 +93,7 @@ describe("CASE expression", () => {
           },
         ],
         "endKw": {
+          "name": "END",
           "text": "END",
           "type": "keyword",
         },

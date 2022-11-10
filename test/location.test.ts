@@ -65,6 +65,7 @@ describe("location", () => {
                   16,
                 ],
                 "selectKw": {
+                  "name": "SELECT",
                   "range": [
                     0,
                     6,
@@ -106,6 +107,7 @@ describe("location", () => {
                   "type": "alias",
                 },
                 "fromKw": {
+                  "name": "FROM",
                   "range": [
                     17,
                     21,

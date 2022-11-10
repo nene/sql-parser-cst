@@ -184,10 +184,12 @@ describe("insert into", () => {
               "type": "paren_expr",
             },
             "insertKw": {
+              "name": "INSERT",
               "text": "INSERT",
               "type": "keyword",
             },
             "intoKw": {
+              "name": "INTO",
               "text": "INTO",
               "type": "keyword",
             },
@@ -242,6 +244,7 @@ describe("insert into", () => {
               "type": "expr_list",
             },
             "valuesKw": {
+              "name": "VALUES",
               "text": "VALUES",
               "type": "keyword",
             },

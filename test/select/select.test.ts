@@ -83,6 +83,7 @@ describe("select", () => {
               },
               "options": [],
               "selectKw": {
+                "name": "SELECT",
                 "text": "SELECT",
                 "type": "keyword",
               },
@@ -101,6 +102,7 @@ describe("select", () => {
                 "type": "table_ref",
               },
               "fromKw": {
+                "name": "FROM",
                 "text": "FROM",
                 "type": "keyword",
               },
@@ -125,6 +127,7 @@ describe("select", () => {
                       "type": "identifier",
                     },
                     "asKw": {
+                      "name": "AS",
                       "text": "AS",
                       "type": "keyword",
                     },
@@ -139,6 +142,7 @@ describe("select", () => {
               },
               "options": [],
               "selectKw": {
+                "name": "SELECT",
                 "text": "SELECT",
                 "type": "keyword",
               },
@@ -176,6 +180,7 @@ describe("select", () => {
               },
               "options": [],
               "selectKw": {
+                "name": "SELECT",
                 "text": "SELECT",
                 "type": "keyword",
               },

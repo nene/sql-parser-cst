@@ -111,6 +111,7 @@ describe("window functions", () => {
         },
         "over": {
           "overKw": {
+            "name": "OVER",
             "text": "OVER",
             "type": "keyword",
           },
@@ -124,15 +125,18 @@ describe("window functions", () => {
               "frame": {
                 "exclusion": {
                   "excludeKw": {
+                    "name": "EXCLUDE",
                     "text": "EXCLUDE",
                     "type": "keyword",
                   },
                   "kindKw": [
                     {
+                      "name": "CURRENT",
                       "text": "CURRENT",
                       "type": "keyword",
                     },
                     {
+                      "name": "ROW",
                       "text": "ROW",
                       "type": "keyword",
                     },
@@ -141,6 +145,7 @@ describe("window functions", () => {
                 },
                 "extent": {
                   "andKw": {
+                    "name": "AND",
                     "text": "AND",
                     "type": "keyword",
                   },
@@ -148,17 +153,20 @@ describe("window functions", () => {
                     "expr": {
                       "type": "frame_unbounded",
                       "unboundedKw": {
+                        "name": "UNBOUNDED",
                         "text": "UNBOUNDED",
                         "type": "keyword",
                       },
                     },
                     "precedingKw": {
+                      "name": "PRECEDING",
                       "text": "PRECEDING",
                       "type": "keyword",
                     },
                     "type": "frame_bound_preceding",
                   },
                   "betweenKw": {
+                    "name": "BETWEEN",
                     "text": "BETWEEN",
                     "type": "keyword",
                   },
@@ -168,6 +176,7 @@ describe("window functions", () => {
                       "type": "number",
                     },
                     "followingKw": {
+                      "name": "FOLLOWING",
                       "text": "FOLLOWING",
                       "type": "keyword",
                     },
@@ -177,6 +186,7 @@ describe("window functions", () => {
                 },
                 "type": "frame_clause",
                 "unitKw": {
+                  "name": "ROWS",
                   "text": "ROWS",
                   "type": "keyword",
                 },
@@ -184,10 +194,12 @@ describe("window functions", () => {
               "orderBy": {
                 "orderByKw": [
                   {
+                    "name": "ORDER",
                     "text": "ORDER",
                     "type": "keyword",
                   },
                   {
+                    "name": "BY",
                     "text": "BY",
                     "type": "keyword",
                   },
@@ -210,10 +222,12 @@ describe("window functions", () => {
               "partitionBy": {
                 "partitionByKw": [
                   {
+                    "name": "PARTITION",
                     "text": "PARTITION",
                     "type": "keyword",
                   },
                   {
+                    "name": "BY",
                     "text": "BY",
                     "type": "keyword",
                   },

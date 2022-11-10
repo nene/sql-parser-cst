@@ -1152,6 +1152,7 @@ export interface Identifier extends BaseNode {
 export interface Keyword extends BaseNode {
   type: "keyword";
   text: string;
+  name: string;
 }
 
 export interface Parameter extends BaseNode {

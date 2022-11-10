@@ -41,10 +41,12 @@ describe("comparison operators", () => {
       expect((parseExpr(`x IS NOT NULL`) as BinaryExpr).operator).toMatchInlineSnapshot(`
         [
           {
+            "name": "IS",
             "text": "IS",
             "type": "keyword",
           },
           {
+            "name": "NOT",
             "text": "NOT",
             "type": "keyword",
           },
@@ -73,10 +75,12 @@ describe("comparison operators", () => {
           },
           "operator": [
             {
+              "name": "NOT",
               "text": "NOT",
               "type": "keyword",
             },
             {
+              "name": "NULL",
               "text": "NULL",
               "type": "keyword",
             },
@@ -118,6 +122,7 @@ describe("comparison operators", () => {
       expect(parseExpr(`age BETWEEN 7 AND 20`)).toMatchInlineSnapshot(`
         {
           "andKw": {
+            "name": "AND",
             "text": "AND",
             "type": "keyword",
           },
@@ -126,6 +131,7 @@ describe("comparison operators", () => {
             "type": "number",
           },
           "betweenKw": {
+            "name": "BETWEEN",
             "text": "BETWEEN",
             "type": "keyword",
           },

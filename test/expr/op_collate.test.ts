@@ -17,6 +17,7 @@ describe("COLLATE operator", () => {
           "type": "column_ref",
         },
         "operator": {
+          "name": "COLLATE",
           "text": "COLLATE",
           "type": "keyword",
         },

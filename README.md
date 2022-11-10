@@ -95,7 +95,7 @@ which preserves all of this information:
       "clauses": [
         {
           "type": "select_clause",
-          "selectKw": { "type": "keyword", "text": "SELECT" },
+          "selectKw": { "type": "keyword", "text": "SELECT", "name": "SELECT" },
           "options": [],
           "columns": {
             "type": "expr_list",
@@ -114,7 +114,7 @@ which preserves all of this information:
                     "right": { "type": "string", "text": "' jr.'" }
                   }
                 },
-                "asKw": { "type": "keyword", "text": "as" },
+                "asKw": { "type": "keyword", "text": "as", "name": "AS" },
                 "alias": { "type": "identifier", "text": "fname" }
               }
             ]
@@ -122,7 +122,7 @@ which preserves all of this information:
         },
         {
           "type": "from_clause",
-          "fromKw": { "type": "keyword", "text": "FROM" },
+          "fromKw": { "type": "keyword", "text": "FROM", "name": "FROM" },
           "expr": {
             "type": "table_ref",
             "table": { "type": "identifier", "text": "persons" }

@@ -23,11 +23,13 @@ describe("temporal intervals", () => {
             "type": "number",
           },
           "intervalKw": {
+            "name": "INTERVAL",
             "text": "INTERVAL",
             "type": "keyword",
           },
           "type": "interval_expr",
           "unitKw": {
+            "name": "DAY",
             "text": "DAY",
             "type": "keyword",
           },
