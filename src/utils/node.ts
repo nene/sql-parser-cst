@@ -62,7 +62,12 @@ export function createBinaryExpr(
 
 export function createCompoundSelectStmtChain(
   head: SubSelect,
-  tail: [Whitespace[], string | Keyword | Keyword[], Whitespace[], SubSelect][]
+  tail: [
+    Whitespace[],
+    CompoundSelectStmt["operator"],
+    Whitespace[],
+    SubSelect
+  ][]
 ): SubSelect {
   return tail.reduce(
     (left, [c1, op, c2, right]) =>
@@ -74,13 +79,13 @@ export function createCompoundSelectStmtChain(
 export function createCompoundSelectStmt(
   left: SubSelect,
   c1: Whitespace[],
-  op: string | Keyword | Keyword[],
+  op: CompoundSelectStmt["operator"],
   c2: Whitespace[],
   right: SubSelect
 ): CompoundSelectStmt {
   return {
     type: "compound_select_stmt",
-    operator: op as Keyword | Keyword[],
+    operator: op,
     left: trailing(left, c1) as SubSelect,
     right: leading(right, c2) as SubSelect,
   };

@@ -123,7 +123,9 @@ export interface EmptyStmt extends BaseNode {
 export interface CompoundSelectStmt extends BaseNode {
   type: "compound_select_stmt";
   left: SubSelect;
-  operator: Keyword | Keyword[]; // { UNION | EXCEPT | INTERSECT } [ALL | DISTINCT]
+  operator:
+    | Keyword<"UNION" | "EXCEPT" | "INTERSECT">
+    | [Keyword<"UNION" | "EXCEPT" | "INTERSECT">, Keyword<"ALL" | "DISTINCT">];
   right: SubSelect;
 }
 
