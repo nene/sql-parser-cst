@@ -6,8 +6,6 @@ import {
   ExprList,
   Identifier,
   JoinExpr,
-  JoinOnSpecification,
-  JoinUsingSpecification,
   Keyword,
   Node,
   ParenExpr,
@@ -35,8 +33,13 @@ const deriveLoc = <T extends { left: Node; right: Node }>(binExpr: T): T => {
 };
 
 export function createBinaryExprChain(
-  head: Expr,
-  tail: [Whitespace[], string | Keyword | Keyword[], Whitespace[], Expr][]
+  head: BinaryExpr["left"],
+  tail: [
+    Whitespace[],
+    BinaryExpr["operator"],
+    Whitespace[],
+    BinaryExpr["right"]
+  ][]
 ): Expr {
   return tail.reduce(
     (left, [c1, op, c2, right]) =>
@@ -46,27 +49,27 @@ export function createBinaryExprChain(
 }
 
 export function createBinaryExpr(
-  left: Expr,
+  left: BinaryExpr["left"],
   c1: Whitespace[],
-  op: string | Keyword | Keyword[],
+  op: BinaryExpr["operator"],
   c2: Whitespace[],
-  right: Expr
+  right: BinaryExpr["right"]
 ): BinaryExpr {
   return {
     type: "binary_expr",
     operator: op,
-    left: trailing(left, c1) as Expr,
-    right: leading(right, c2) as Expr,
+    left: trailing(left, c1) as BinaryExpr["left"],
+    right: leading(right, c2) as BinaryExpr["right"],
   };
 }
 
 export function createCompoundSelectStmtChain(
-  head: SubSelect,
+  head: CompoundSelectStmt["left"],
   tail: [
     Whitespace[],
     CompoundSelectStmt["operator"],
     Whitespace[],
-    SubSelect
+    CompoundSelectStmt["right"]
   ][]
 ): SubSelect {
   return tail.reduce(
@@ -77,17 +80,17 @@ export function createCompoundSelectStmtChain(
 }
 
 export function createCompoundSelectStmt(
-  left: SubSelect,
+  left: CompoundSelectStmt["left"],
   c1: Whitespace[],
   op: CompoundSelectStmt["operator"],
   c2: Whitespace[],
-  right: SubSelect
+  right: CompoundSelectStmt["right"]
 ): CompoundSelectStmt {
   return {
     type: "compound_select_stmt",
     operator: op,
-    left: trailing(left, c1) as SubSelect,
-    right: leading(right, c2) as SubSelect,
+    left: trailing(left, c1) as CompoundSelectStmt["left"],
+    right: leading(right, c2) as CompoundSelectStmt["right"],
   };
 }
 
@@ -101,13 +104,13 @@ const deriveJoinLoc = (join: JoinExpr): JoinExpr => {
 };
 
 export function createJoinExprChain(
-  head: JoinExpr | TableOrSubquery,
+  head: JoinExpr["left"],
   tail: [
     Whitespace[],
     JoinExpr["operator"],
     Whitespace[],
-    TableOrSubquery,
-    JoinOnSpecification | JoinUsingSpecification | null
+    JoinExpr["right"],
+    JoinExpr["specification"] | null
   ][]
 ) {
   return tail.reduce(
@@ -118,24 +121,24 @@ export function createJoinExprChain(
 }
 
 function createJoinExpr(
-  left: JoinExpr | TableOrSubquery,
+  left: JoinExpr["left"],
   c1: Whitespace[],
   op: JoinExpr["operator"],
   c2: Whitespace[],
-  right: TableOrSubquery,
-  spec: JoinOnSpecification | JoinUsingSpecification | null
+  right: JoinExpr["right"],
+  spec: JoinExpr["specification"] | null
 ): JoinExpr {
   return {
     type: "join_expr",
-    left: trailing(left, c1) as JoinExpr | TableOrSubquery,
+    left: trailing(left, c1) as JoinExpr["left"],
     operator: op,
-    right: leading(right, c2) as TableOrSubquery,
+    right: leading(right, c2) as JoinExpr["right"],
     specification: read(spec),
   };
 }
 
 export function createPrefixOpExpr(
-  op: string | Keyword[],
+  op: PrefixOpExpr["operator"],
   expr: Expr
 ): PrefixOpExpr {
   return {
@@ -146,7 +149,7 @@ export function createPrefixOpExpr(
 }
 
 export function createPostfixOpExpr(
-  op: string | Keyword[],
+  op: PostfixOpExpr["operator"],
   expr: Expr
 ): PostfixOpExpr {
   return {
