@@ -1085,7 +1085,9 @@ export interface CastArg extends BaseNode {
 export interface RaiseExpr extends BaseNode {
   type: "raise_expr";
   raiseKw: Keyword<"RAISE">;
-  args: ParenExpr<ExprList<Keyword | StringLiteral>>;
+  args: ParenExpr<
+    ExprList<Keyword<"IGNORE" | "ROLLBACK" | "ABORT" | "FAIL"> | StringLiteral>
+  >;
 }
 
 export interface BetweenExpr extends BaseNode {
