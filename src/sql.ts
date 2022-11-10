@@ -176,14 +176,28 @@ export interface CommonTableExpression extends BaseNode {
   table: Identifier;
   columns?: ParenExpr<ExprList<ColumnRef>>;
   asKw: Keyword<"AS">;
-  optionKw?: Keyword[];
+  optionKw?:
+    | Keyword<"MATERIALIZED">
+    | [Keyword<"NOT">, Keyword<"MATERIALIZED">];
   expr: Expr;
 }
 
 export interface SelectClause extends BaseNode {
   type: "select_clause";
   selectKw: Keyword<"SELECT">;
-  options: Keyword[];
+  options: Keyword<
+    | "ALL"
+    | "DISTINCT"
+    | "DISTINCTROW"
+    | "HIGH_PRIORITY"
+    | "STRAIGHT_JOIN"
+    | "SQL_CALC_FOUND_ROWS"
+    | "SQL_CACHE"
+    | "SQL_NO_CACHE"
+    | "SQL_BIG_RESULT"
+    | "SQL_SMALL_RESULT"
+    | "SQL_BUFFER_RESULT"
+  >[];
   columns: ExprList<Expr | Alias<Expr>>;
 }
 
