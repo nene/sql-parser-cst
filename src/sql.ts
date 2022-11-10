@@ -532,10 +532,61 @@ export interface OnConflictClause extends BaseNode {
 
 export interface TableOption extends BaseNode {
   type: "table_option";
-  name: Keyword | Keyword[];
+  name: TableOptionNameSqlite | TableOptionNameMysql;
   hasEq?: boolean; // True when "=" sign is used
-  value?: NumberLiteral | StringLiteral | Identifier | Keyword;
+  value?: TableOptionValueMysql;
 }
+
+type TableOptionNameSqlite =
+  | Keyword<"STRICT">
+  | [Keyword<"WITHOUT">, Keyword<"ROWID">];
+
+type TableOptionNameMysql =
+  | [Keyword<"START">, Keyword<"TRANSACTION">]
+  | Keyword<"AUTOEXTEND_SIZE">
+  | Keyword<"AUTO_INCREMENT">
+  | Keyword<"AVG_ROW_LENGTH">
+  | [Keyword<"DEFAULT">, Keyword<"CHARACTER">, Keyword<"SET">]
+  | [Keyword<"CHARACTER">, Keyword<"SET">]
+  | Keyword<"CHECKSUM">
+  | [Keyword<"DEFAULT">, Keyword<"COLLATE">]
+  | Keyword<"COLLATE">
+  | Keyword<"COMMENT">
+  | Keyword<"COMPRESSION">
+  | Keyword<"CONNECTION">
+  | [Keyword<"DATA">, Keyword<"DIRECTORY">]
+  | [Keyword<"INDEX">, Keyword<"DIRECTORY">]
+  | Keyword<"DELAY_KEY_WRITE">
+  | Keyword<"ENCRYPTION">
+  | Keyword<"ENGINE">
+  | Keyword<"ENGINE_ATTRIBUTE">
+  | Keyword<"INSERT_METHOD">
+  | Keyword<"KEY_BLOCK_SIZE">
+  | Keyword<"MAX_ROWS">
+  | Keyword<"MIN_ROWS">
+  | Keyword<"PACK_KEYS">
+  | Keyword<"PASSWORD">
+  | Keyword<"ROW_FORMAT">
+  | Keyword<"SECONDARY_ENGINE_ATTRIBUTE">
+  | Keyword<"STATS_AUTO_RECALC">
+  | Keyword<"STATS_PERSISTENT">
+  | Keyword<"STATS_SAMPLE_PAGES">;
+
+type TableOptionValueMysql =
+  | NumberLiteral
+  | StringLiteral
+  | Identifier
+  | Keyword<
+      | "DEFAULT"
+      | "DYNAMIC"
+      | "FIXED"
+      | "COMPRESSED"
+      | "REDUNDANT"
+      | "COMPACT"
+      | "NO"
+      | "FIRST"
+      | "LAST"
+    >;
 
 // ALTER TABLE
 export interface AlterTableStmt extends BaseNode {
