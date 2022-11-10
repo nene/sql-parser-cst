@@ -163,7 +163,7 @@ export const createIdentifier = (text: string): Identifier => ({
 });
 
 interface PartialAlias {
-  asKw?: Keyword;
+  asKw?: Keyword<"AS">;
   alias: Identifier;
 }
 
