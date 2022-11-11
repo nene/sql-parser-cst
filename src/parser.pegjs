@@ -24,9 +24,6 @@ multiple_stmt
   }
 
 statement
-  = statement_standard
-
-statement_standard
   = dml_statement
   / create_view_stmt
   / drop_view_stmt
