@@ -34,7 +34,7 @@ describe("function call", () => {
                 "type": "number",
               },
             ],
-            "type": "expr_list",
+            "type": "list_expr",
           },
           "type": "paren_expr",
         },

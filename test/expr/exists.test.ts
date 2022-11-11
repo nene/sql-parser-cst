@@ -26,7 +26,7 @@ describe("EXISTS expression", () => {
                         "type": "number",
                       },
                     ],
-                    "type": "expr_list",
+                    "type": "list_expr",
                   },
                   "options": [],
                   "selectKw": {

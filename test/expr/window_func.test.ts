@@ -101,7 +101,7 @@ describe("window functions", () => {
         "args": {
           "expr": {
             "items": [],
-            "type": "expr_list",
+            "type": "list_expr",
           },
           "type": "paren_expr",
         },
@@ -214,7 +214,7 @@ describe("window functions", () => {
                       "type": "column_ref",
                     },
                   ],
-                  "type": "expr_list",
+                  "type": "list_expr",
                 },
                 "type": "order_by_clause",
                 "withRollupKw": undefined,
@@ -242,7 +242,7 @@ describe("window functions", () => {
                       "type": "column_ref",
                     },
                   ],
-                  "type": "expr_list",
+                  "type": "list_expr",
                 },
                 "type": "partition_by_clause",
               },

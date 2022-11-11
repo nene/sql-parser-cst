@@ -109,7 +109,7 @@ with_clause
 
 common_table_expression_list
   = head:common_table_expression tail:(__ "," __ common_table_expression)* {
-    return loc(createExprList(head, tail));
+    return loc(createListExpr(head, tail));
   }
 
 common_table_expression
@@ -175,7 +175,7 @@ select_option_mysql
 
 select_columns
   = head:column_list_item tail:(__ "," __ column_list_item)* {
-      return loc(createExprList(head, tail));
+      return loc(createListExpr(head, tail));
     }
 
 column_list_item
@@ -340,7 +340,7 @@ where_clause
  * --------------------------------------------------------------------------------------
  */
 group_by_clause
-  = kws:(GROUP __ BY __) list:expr_list {
+  = kws:(GROUP __ BY __) list:list_expr {
     return loc({
       type: "group_by_clause",
       groupByKw: read(kws),
@@ -366,7 +366,7 @@ having_clause
  * --------------------------------------------------------------------------------------
  */
 partition_by_clause
-  = kws:(PARTITION __ BY __) list:expr_list {
+  = kws:(PARTITION __ BY __) list:list_expr {
     return loc({
       type: "partition_by_clause",
       partitionByKw: read(kws),
@@ -395,7 +395,7 @@ paren_sort_specification_list
 
 sort_specification_list
   = head:sort_specification tail:(__ "," __ sort_specification)* {
-    return loc(createExprList(head, tail));
+    return loc(createListExpr(head, tail));
   }
 
 sort_specification
@@ -647,15 +647,15 @@ values_kw
 
 values_list
   = head:values_row tail:(__ "," __ values_row)* {
-    return loc(createExprList(head, tail));
+    return loc(createListExpr(head, tail));
   }
 
 values_row
-  = &sqlite list:paren_expr_list { return list; }
-  / &mysql list:(paren_expr_list_with_default / row_constructor) { return list; }
+  = &sqlite list:paren_list_expr { return list; }
+  / &mysql list:(paren_list_expr_with_default / row_constructor) { return list; }
 
 row_constructor
-  = kw:(ROW __) row:paren_expr_list_with_default {
+  = kw:(ROW __) row:paren_list_expr_with_default {
     return loc({
       type: "row_constructor",
       rowKw: read(kw),
@@ -663,14 +663,14 @@ row_constructor
     });
   }
 
-paren_expr_list_with_default
-  = "(" c1:__ list:expr_list_with_default c2:__ ")" {
+paren_list_expr_with_default
+  = "(" c1:__ list:list_expr_with_default c2:__ ")" {
     return loc(createParenExpr(c1, list, c2));
   }
 
-expr_list_with_default
+list_expr_with_default
   = head:(expr / default) tail:(__ "," __ (expr / default))* {
-    return loc(createExprList(head, tail));
+    return loc(createListExpr(head, tail));
   }
 
 default
@@ -752,7 +752,7 @@ update_clause
 
 table_ref_or_alias_list
   = head:table_ref_or_alias tail:(__ "," __ table_ref_or_alias)* {
-    return loc(createExprList(head, tail));
+    return loc(createListExpr(head, tail));
   }
 
 set_clause
@@ -778,7 +778,7 @@ other_update_clause
 
 column_assignment_list
   = head:column_assignment tail:(__ "," __ column_assignment)* {
-      return loc(createExprList(head, tail));
+      return loc(createListExpr(head, tail));
     }
 
 column_assignment
@@ -966,7 +966,7 @@ create_table_definition
 
 create_definition_list
   = head:create_definition tail:(__ "," __ create_definition)* {
-    return loc(createExprList(head, tail));
+    return loc(createListExpr(head, tail));
   }
 
 create_definition
@@ -1040,7 +1040,7 @@ alter_table_stmt
 
 alter_action_list
   = head:alter_action tail:(__ "," __ alter_action)* {
-      return loc(createExprList(head, tail));
+      return loc(createListExpr(head, tail));
     }
 
 alter_action
@@ -1441,7 +1441,7 @@ create_virtual_table_stmt
  */
 table_options
   = head:table_option tail:(__ "," __ table_option)* {
-    return createExprList(head, tail);
+    return createListExpr(head, tail);
   }
 
 table_option
@@ -1855,7 +1855,7 @@ type_params
 
 literal_list
   = head:literal tail:(__ "," __ literal)* {
-    return loc(createExprList(head, tail));
+    return loc(createListExpr(head, tail));
   }
 
 type_name
@@ -1977,7 +1977,7 @@ comparison_expr
   = head:bitwise_or_expr tail:(__ comparison_op __ bitwise_or_expr)+ {
     return createBinaryExprChain(head, tail);
   }
-  / left:bitwise_or_expr c1:__ op:(NOT __ IN / IN) c2:__ right:(paren_expr_list / bitwise_or_expr) {
+  / left:bitwise_or_expr c1:__ op:(NOT __ IN / IN) c2:__ right:(paren_list_expr / bitwise_or_expr) {
     return loc(createBinaryExpr(left, c1, read(op), c2, right))
   }
   / left:bitwise_or_expr c1:__ op:(NOT __ LIKE / LIKE) c2:__ right:escape_expr {
@@ -2103,7 +2103,7 @@ primary
   = literal
   / paren_expr
   / paren_expr_select
-  / paren_expr_list
+  / paren_list_expr
   / cast_expr
   / &sqlite e:raise_expr { return e; }
   / func_call
@@ -2124,14 +2124,14 @@ paren_expr_select
     return loc(createParenExpr(c1, stmt, c2));
   }
 
-paren_expr_list
-  = "("  c2:__ list:expr_list c3:__ ")" {
+paren_list_expr
+  = "("  c2:__ list:list_expr c3:__ ")" {
     return loc(createParenExpr(c2, list, c3));
   }
 
-expr_list
+list_expr
   = head:expr tail:(__ "," __ expr)* {
-    return loc(createExprList(head, tail));
+    return loc(createListExpr(head, tail));
   }
 
 cast_expr
@@ -2174,7 +2174,7 @@ raise_args_in_parens
 
 raise_args
   = head:(IGNORE / ROLLBACK / ABORT / FAIL) tail:(__ "," __ literal_string)* {
-    return loc(createExprList(head, tail));
+    return loc(createListExpr(head, tail));
   }
 
 func_call
@@ -2237,13 +2237,13 @@ func_args
 
 func_args_list
   = head:func_1st_arg tail:(__ "," __ expr)* {
-    return loc(createExprList(head, tail));
+    return loc(createListExpr(head, tail));
   }
   / &. {
     // even when no parameters are present, we want to create an empty args object,
     // so we can attach optional comments to it,
     // allowing us to represent comments inside empty arguments list
-    return loc({ type: "expr_list", items: [] });
+    return loc({ type: "list_expr", items: [] });
   }
 
 // For aggregate functions, first argument can be "*"
@@ -2365,7 +2365,7 @@ parameter
  */
 table_ref_list
   = head:table_ref tail:(__ "," __ table_ref)* {
-    return loc(createExprList(head, tail));
+    return loc(createListExpr(head, tail));
   }
 
 table_ref
@@ -2397,7 +2397,7 @@ paren_column_ref_list
 
 column_ref_list
   = head:column_ref tail:(__ "," __ column_ref)* {
-    return loc(createExprList(head, tail));
+    return loc(createListExpr(head, tail));
   }
 
 paren_plain_column_ref_list
@@ -2407,7 +2407,7 @@ paren_plain_column_ref_list
 
 plain_column_ref_list
   = head:plain_column_ref tail:(__ "," __ plain_column_ref)* {
-    return loc(createExprList(head, tail));
+    return loc(createListExpr(head, tail));
   }
 
 column_ref

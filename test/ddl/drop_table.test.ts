@@ -60,7 +60,7 @@ describe("drop table", () => {
               "type": "table_ref",
             },
           ],
-          "type": "expr_list",
+          "type": "list_expr",
         },
         "temporaryKw": undefined,
         "type": "drop_table_stmt",

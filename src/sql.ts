@@ -89,7 +89,7 @@ export type Statement =
   | SqliteStmt;
 
 export type Expr =
-  | ExprList
+  | ListExpr
   | ParenExpr
   | BinaryExpr
   | PrefixOpExpr
@@ -168,13 +168,13 @@ export interface WithClause extends BaseNode {
   type: "with_clause";
   withKw: Keyword<"WITH">;
   recursiveKw?: Keyword<"RECURSIVE">;
-  tables: ExprList<CommonTableExpression>;
+  tables: ListExpr<CommonTableExpression>;
 }
 
 export interface CommonTableExpression extends BaseNode {
   type: "common_table_expression";
   table: Identifier;
-  columns?: ParenExpr<ExprList<ColumnRef>>;
+  columns?: ParenExpr<ListExpr<ColumnRef>>;
   asKw: Keyword<"AS">;
   optionKw?:
     | Keyword<"MATERIALIZED">
@@ -198,7 +198,7 @@ export interface SelectClause extends BaseNode {
     | "SQL_SMALL_RESULT"
     | "SQL_BUFFER_RESULT"
   >[];
-  columns: ExprList<Expr | Alias<Expr>>;
+  columns: ListExpr<Expr | Alias<Expr>>;
 }
 
 export interface FromClause extends BaseNode {
@@ -216,7 +216,7 @@ export interface WhereClause extends BaseNode {
 export interface GroupByClause extends BaseNode {
   type: "group_by_clause";
   groupByKw: [Keyword<"GROUP">, Keyword<"BY">];
-  columns: ExprList<Expr>;
+  columns: ListExpr<Expr>;
 }
 
 export interface HavingClause extends BaseNode {
@@ -249,14 +249,14 @@ export interface WindowDefinition extends BaseNode {
 export interface OrderByClause extends BaseNode {
   type: "order_by_clause";
   orderByKw: [Keyword<"ORDER">, Keyword<"BY">];
-  specifications: ExprList<SortSpecification | ColumnRef>;
+  specifications: ListExpr<SortSpecification | ColumnRef>;
   withRollupKw?: [Keyword<"WITH">, Keyword<"ROLLUP">];
 }
 
 export interface PartitionByClause extends BaseNode {
   type: "partition_by_clause";
   partitionByKw: [Keyword<"PARTITION">, Keyword<"BY">];
-  specifications: ExprList<Expr>;
+  specifications: ListExpr<Expr>;
 }
 
 export interface LimitClause extends BaseNode {
@@ -318,7 +318,7 @@ export interface JoinOnSpecification extends BaseNode {
 export interface JoinUsingSpecification extends BaseNode {
   type: "join_using_specification";
   usingKw: Keyword<"USING">;
-  expr: ParenExpr<ExprList<ColumnRef>>;
+  expr: ParenExpr<ListExpr<ColumnRef>>;
 }
 
 export interface SortSpecification extends BaseNode {
@@ -331,7 +331,7 @@ export interface SortSpecification extends BaseNode {
 export interface ReturningClause extends BaseNode {
   type: "returning_clause";
   returningKw: Keyword<"RETURNING">;
-  columns: ExprList<Expr | Alias<Expr>>;
+  columns: ListExpr<Expr | Alias<Expr>>;
 }
 
 // CREATE TABLE
@@ -343,9 +343,9 @@ export interface CreateTableStmt extends BaseNode {
   ifNotExistsKw?: [Keyword<"IF">, Keyword<"NOT">, Keyword<"EXISTS">];
   table: TableRef;
   columns?: ParenExpr<
-    ExprList<ColumnDefinition | TableConstraint | Constraint<TableConstraint>>
+    ListExpr<ColumnDefinition | TableConstraint | Constraint<TableConstraint>>
   >;
-  options?: ExprList<TableOption>;
+  options?: ListExpr<TableOption>;
   as?: CreateTableAs;
 }
 
@@ -365,7 +365,7 @@ export interface ColumnDefinition extends BaseNode {
 export interface DataType extends BaseNode {
   type: "data_type";
   nameKw: Keyword | Keyword[];
-  params?: ParenExpr<ExprList<Literal>>;
+  params?: ParenExpr<ListExpr<Literal>>;
 }
 
 export interface Constraint<T> extends BaseNode {
@@ -415,14 +415,14 @@ export type ColumnConstraint =
 export interface ConstraintPrimaryKey extends BaseNode {
   type: "constraint_primary_key";
   primaryKeyKw: [Keyword<"PRIMARY">, Keyword<"KEY">];
-  columns?: ParenExpr<ExprList<SortSpecification | ColumnRef>>;
+  columns?: ParenExpr<ListExpr<SortSpecification | ColumnRef>>;
   onConflict?: OnConflictClause;
 }
 
 export interface ConstraintForeignKey extends BaseNode {
   type: "constraint_foreign_key";
   foreignKeyKw: [Keyword<"FOREIGN">, Keyword<"KEY">];
-  columns: ParenExpr<ExprList<ColumnRef>>;
+  columns: ParenExpr<ListExpr<ColumnRef>>;
   references: ReferencesSpecification;
 }
 
@@ -430,7 +430,7 @@ export interface ReferencesSpecification extends BaseNode {
   type: "references_specification";
   referencesKw: Keyword<"REFERENCES">;
   table: TableRef;
-  columns?: ParenExpr<ExprList<ColumnRef>>;
+  columns?: ParenExpr<ListExpr<ColumnRef>>;
   options: (ReferentialAction | ReferentialMatch)[];
 }
 
@@ -453,7 +453,7 @@ export interface ReferentialMatch extends BaseNode {
 export interface ConstraintUnique extends BaseNode {
   type: "constraint_unique";
   uniqueKw: Keyword<"UNIQUE"> | [Keyword<"UNIQUE">, Keyword<"KEY" | "INDEX">];
-  columns?: ParenExpr<ExprList<ColumnRef>>;
+  columns?: ParenExpr<ListExpr<ColumnRef>>;
   onConflict?: OnConflictClause;
 }
 
@@ -468,7 +468,7 @@ export interface ConstraintIndex extends BaseNode {
   type: "constraint_index";
   indexTypeKw?: Keyword<"FULLTEXT" | "SPATIAL">;
   indexKw: Keyword<"INDEX" | "KEY">;
-  columns?: ParenExpr<ExprList<ColumnRef>>;
+  columns?: ParenExpr<ListExpr<ColumnRef>>;
 }
 
 export interface ConstraintNull extends BaseNode {
@@ -606,7 +606,7 @@ export interface AlterTableStmt extends BaseNode {
   type: "alter_table_stmt";
   alterTableKw: [Keyword<"ALTER">, Keyword<"TABLE">];
   table: TableRef;
-  actions: ExprList<AlterAction>;
+  actions: ListExpr<AlterAction>;
 }
 
 export type AlterAction =
@@ -648,7 +648,7 @@ export interface DropTableStmt extends BaseNode {
   temporaryKw?: Keyword<"TEMP" | "TEMPORARY">;
   tableKw: Keyword<"TABLE">;
   ifExistsKw?: [Keyword<"IF">, Keyword<"EXISTS">];
-  tables: ExprList<TableRef>;
+  tables: ListExpr<TableRef>;
   behaviorKw?: Keyword<"CASCADE" | "RESTRICT">;
 }
 
@@ -671,7 +671,7 @@ export interface InsertClause extends BaseNode {
   orAction?: OrAlternateAction;
   intoKw?: Keyword<"INTO">;
   table: TableRef | Alias<TableRef>;
-  columns?: ParenExpr<ExprList<ColumnRef>>;
+  columns?: ParenExpr<ListExpr<ColumnRef>>;
 }
 
 // Only in MySQL INSERT & UPDATE clauses
@@ -690,14 +690,14 @@ export interface OrAlternateAction extends BaseNode {
 export interface ValuesClause extends BaseNode {
   type: "values_clause";
   valuesKw: Keyword<"VALUES" | "VALUE">;
-  values: ExprList<ParenExpr<ExprList<Expr | Default>> | RowConstructor>;
+  values: ListExpr<ParenExpr<ListExpr<Expr | Default>> | RowConstructor>;
 }
 
 // only in MySQL
 export interface RowConstructor extends BaseNode {
   type: "row_constructor";
   rowKw: Keyword<"ROW">;
-  row: ParenExpr<ExprList<Expr | Default>>;
+  row: ParenExpr<ListExpr<Expr | Default>>;
 }
 
 export interface DefaultValues extends BaseNode {
@@ -714,7 +714,7 @@ export interface Default extends BaseNode {
 export interface UpsertClause extends BaseNode {
   type: "upsert_clause";
   onConflictKw: [Keyword<"ON">, Keyword<"CONFLICT">];
-  columns?: ParenExpr<ExprList<SortSpecification | ColumnRef>>;
+  columns?: ParenExpr<ListExpr<SortSpecification | ColumnRef>>;
   where?: WhereClause;
   doKw: Keyword<"DOR">;
   action: UpsertActionNothing | UpsertActionUpdate;
@@ -763,18 +763,18 @@ export interface UpdateClause extends BaseNode {
   updateKw: Keyword<"UPDATE">;
   options: UpsertOption[];
   orAction?: OrAlternateAction;
-  tables: ExprList<TableRef | Alias<TableRef>>;
+  tables: ListExpr<TableRef | Alias<TableRef>>;
 }
 
 export interface SetClause extends BaseNode {
   type: "set_clause";
   setKw: Keyword<"SET">;
-  assignments: ExprList<ColumnAssignment>;
+  assignments: ListExpr<ColumnAssignment>;
 }
 
 export interface ColumnAssignment extends BaseNode {
   type: "column_assignment";
-  column: ColumnRef | ParenExpr<ExprList<ColumnRef>>;
+  column: ColumnRef | ParenExpr<ListExpr<ColumnRef>>;
   expr: Expr | Default;
 }
 
@@ -786,7 +786,7 @@ export interface CreateViewStmt extends BaseNode {
   viewKw: Keyword<"VIEW">;
   ifNotExistsKw?: [Keyword<"IF">, Keyword<"NOT">, Keyword<"EXISTS">];
   name: TableRef;
-  columns?: ParenExpr<ExprList<ColumnRef>>;
+  columns?: ParenExpr<ListExpr<ColumnRef>>;
   asKw: Keyword<"AS">;
   expr: SubSelect;
 }
@@ -796,7 +796,7 @@ export interface DropViewStmt extends BaseNode {
   type: "drop_view_stmt";
   dropViewKw: [Keyword<"DROP">, Keyword<"VIEW">];
   ifExistsKw?: [Keyword<"IF">, Keyword<"EXISTS">];
-  views: ExprList<TableRef>;
+  views: ListExpr<TableRef>;
   behaviorKw?: Keyword<"CASCADE" | "RESTRICT">;
 }
 
@@ -810,7 +810,7 @@ export interface CreateIndexStmt extends BaseNode {
   name: TableRef;
   onKw: Keyword<"ON">;
   table: TableRef;
-  columns: ParenExpr<ExprList<SortSpecification | ColumnRef>>;
+  columns: ParenExpr<ListExpr<SortSpecification | ColumnRef>>;
   where?: WhereClause;
 }
 
@@ -819,7 +819,7 @@ export interface DropIndexStmt extends BaseNode {
   type: "drop_index_stmt";
   dropIndexKw: [Keyword<"DROP">, Keyword<"INDEX">];
   ifExistsKw?: [Keyword<"IF">, Keyword<"EXISTS">];
-  indexes: ExprList<TableRef>;
+  indexes: ListExpr<TableRef>;
   onKw?: Keyword<"ON">;
   table?: TableRef;
 }
@@ -845,7 +845,7 @@ export interface TriggerEvent extends BaseNode {
   timeKw?: Keyword<"BEFORE" | "AFTER"> | [Keyword<"INSTEAD">, Keyword<"OF">];
   eventKw: Keyword<"INSERT" | "DELETE" | "UPDATE">;
   ofKw?: Keyword<"OF">;
-  columns?: ExprList<ColumnRef>;
+  columns?: ListExpr<ColumnRef>;
 }
 
 export interface TriggerCondition extends BaseNode {
@@ -874,7 +874,7 @@ export interface AnalyzeStmt extends BaseNode {
   type: "analyze_stmt";
   analyzeKw: Keyword<"ANALYZE">;
   tableKw?: Keyword<"TABLE">;
-  tables: ExprList<TableRef>;
+  tables: ListExpr<TableRef>;
 }
 
 // EXPLAIN
@@ -1072,8 +1072,8 @@ export interface AllColumns extends BaseNode {
   type: "all_columns";
 }
 
-export interface ExprList<T = Node> extends BaseNode {
-  type: "expr_list";
+export interface ListExpr<T = Node> extends BaseNode {
+  type: "list_expr";
   items: T[];
 }
 
@@ -1104,7 +1104,7 @@ export interface PostfixOpExpr extends BaseNode {
 export interface FuncCall extends BaseNode {
   type: "func_call";
   name: Identifier;
-  args?: ParenExpr<ExprList<Expr | AllColumns | DistinctArg>>;
+  args?: ParenExpr<ListExpr<Expr | AllColumns | DistinctArg>>;
   filter?: FilterArg;
   over?: OverArg;
 }
@@ -1112,7 +1112,7 @@ export interface FuncCall extends BaseNode {
 export interface TableFuncCall extends BaseNode {
   type: "table_func_call";
   name: TableRef;
-  args: ParenExpr<ExprList<Expr>>;
+  args: ParenExpr<ListExpr<Expr>>;
 }
 
 export interface FilterArg extends BaseNode {
@@ -1150,7 +1150,7 @@ export interface RaiseExpr extends BaseNode {
   type: "raise_expr";
   raiseKw: Keyword<"RAISE">;
   args: ParenExpr<
-    ExprList<Keyword<"IGNORE" | "ROLLBACK" | "ABORT" | "FAIL"> | StringLiteral>
+    ListExpr<Keyword<"IGNORE" | "ROLLBACK" | "ABORT" | "FAIL"> | StringLiteral>
   >;
 }
 

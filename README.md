@@ -98,7 +98,7 @@ which preserves all of this information:
           "selectKw": { "type": "keyword", "text": "SELECT", "name": "SELECT" },
           "options": [],
           "columns": {
-            "type": "expr_list",
+            "type": "list_expr",
             "items": [
               {
                 "type": "alias",
@@ -149,7 +149,7 @@ Note the following conventions:
 - All keywords are preserved in `type: keyword` nodes, which are usually
   stored in fields named like `someNameKw`.
 - Parenthesis is represented by separate `type: paren_expr` node.
-- Comma-separated lists are represented by separate `type: expr_list` node.
+- Comma-separated lists are represented by separate `type: list_expr` node.
 - Trailing semicolon is represented by `type: empty_stmt` node in the end.
 - The original source code representation of strings, identifiers, keywords, etc
   is preserved in `text` fields.

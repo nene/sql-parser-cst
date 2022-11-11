@@ -3,7 +3,7 @@ import {
   BinaryExpr,
   CompoundSelectStmt,
   Expr,
-  ExprList,
+  ListExpr,
   Identifier,
   JoinExpr,
   Keyword,
@@ -200,12 +200,12 @@ export const createParenExpr = (
   };
 };
 
-export const createExprList = <T extends Node>(
+export const createListExpr = <T extends Node>(
   head: T,
   tail: [Whitespace[], string, Whitespace[], T][]
-): ExprList<T> => {
+): ListExpr<T> => {
   return {
-    type: "expr_list",
+    type: "list_expr",
     items: readCommaSepList(head, tail),
   };
 };

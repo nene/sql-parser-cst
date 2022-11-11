@@ -32,7 +32,7 @@ const parser = peggy.generate(source, {
         createIdentifier,
         createAlias,
         createParenExpr,
-        createExprList,
+        createListExpr,
       } from "./utils/node";
       import {
         trailing,

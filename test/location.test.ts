@@ -57,7 +57,7 @@ describe("location", () => {
                     7,
                     16,
                   ],
-                  "type": "expr_list",
+                  "type": "list_expr",
                 },
                 "options": [],
                 "range": [

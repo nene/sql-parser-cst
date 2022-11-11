@@ -79,7 +79,7 @@ describe("select", () => {
                     "type": "number",
                   },
                 ],
-                "type": "expr_list",
+                "type": "list_expr",
               },
               "options": [],
               "selectKw": {
@@ -138,7 +138,7 @@ describe("select", () => {
                     "type": "alias",
                   },
                 ],
-                "type": "expr_list",
+                "type": "list_expr",
               },
               "options": [],
               "selectKw": {
@@ -176,7 +176,7 @@ describe("select", () => {
                     "type": "alias",
                   },
                 ],
-                "type": "expr_list",
+                "type": "list_expr",
               },
               "options": [],
               "selectKw": {

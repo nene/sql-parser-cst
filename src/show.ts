@@ -313,7 +313,7 @@ const showNode = cstTransformer<string>({
     ]),
 
   // Expressions
-  expr_list: (node) => show(node.items, ","),
+  list_expr: (node) => show(node.items, ","),
   paren_expr: (node) => "(" + show(node.expr) + ")",
   binary_expr: (node) => show([node.left, node.operator, node.right]),
   prefix_op_expr: (node) => show([node.operator, node.expr]),
