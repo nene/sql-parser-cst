@@ -13,22 +13,23 @@ export * from "./Select";
 export * from "./Alias";
 export * from "./View";
 export * from "./Index";
+export * from "./DropTable";
+export * from "./Delete";
+export * from "./Analyze";
+export * from "./Explain";
 import { Alias } from "./Alias";
 import { AlterAction, AlterTableStmt } from "./AlterTable";
+import { AnalyzeStmt } from "./Analyze";
 import { AllColumns, BaseNode, Keyword } from "./Base";
 import { AllConstraintNodes } from "./Constraint";
 import { AllCreateTableNodes, CreateTableStmt } from "./CreateTable";
-import { AllExprNodes, ListExpr, TableRef } from "./Expr";
+import { DeleteStmt } from "./Delete";
+import { DropTableStmt } from "./DropTable";
+import { ExplainStmt } from "./Explain";
+import { AllExprNodes } from "./Expr";
 import { CreateIndexStmt, DropIndexStmt } from "./Index";
 import { AllInsertNodes, InsertStmt } from "./Insert";
-import {
-  AllSelectNodes,
-  CompoundSelectStmt,
-  ReturningClause,
-  SelectStmt,
-  WhereClause,
-  WithClause,
-} from "./Select";
+import { AllSelectNodes, CompoundSelectStmt, SelectStmt } from "./Select";
 import { AllSqliteNodes, SqliteStmt } from "./Sqlite";
 import { AllTransactionNodes, TransactionStmt } from "./Transaction";
 import { AllTriggerNodes, CreateTriggerStmt, DropTriggerStmt } from "./Trigger";
@@ -82,43 +83,4 @@ export type Statement =
 
 export interface EmptyStmt extends BaseNode {
   type: "empty_stmt";
-}
-
-// DROP TABLE
-export interface DropTableStmt extends BaseNode {
-  type: "drop_table_stmt";
-  dropKw: Keyword<"DROP">;
-  temporaryKw?: Keyword<"TEMP" | "TEMPORARY">;
-  tableKw: Keyword<"TABLE">;
-  ifExistsKw?: [Keyword<"IF">, Keyword<"EXISTS">];
-  tables: ListExpr<TableRef>;
-  behaviorKw?: Keyword<"CASCADE" | "RESTRICT">;
-}
-
-// DELETE FROM
-export interface DeleteStmt extends BaseNode {
-  type: "delete_stmt";
-  with?: WithClause;
-  deleteKw: Keyword<"DELETE">;
-  fromKw: Keyword<"FROM">;
-  table: TableRef | Alias<TableRef>;
-  where?: WhereClause;
-  returning?: ReturningClause;
-}
-
-// ANALYZE
-export interface AnalyzeStmt extends BaseNode {
-  type: "analyze_stmt";
-  analyzeKw: Keyword<"ANALYZE">;
-  tableKw?: Keyword<"TABLE">;
-  tables: ListExpr<TableRef>;
-}
-
-// EXPLAIN
-export interface ExplainStmt extends BaseNode {
-  type: "explain_stmt";
-  explainKw: Keyword<"EXPLAIN" | "DESCRIBE" | "DESC">;
-  analyzeKw?: Keyword<"ANALYZE">;
-  queryPlanKw?: [Keyword<"QUERY">, Keyword<"PLAN">];
-  statement: Statement;
 }
