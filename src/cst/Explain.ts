@@ -1,5 +1,5 @@
 import { BaseNode, Keyword } from "./Base";
-import { Statement } from "./Node";
+import { Statement } from "./Statement";
 
 // EXPLAIN
 export interface ExplainStmt extends BaseNode {

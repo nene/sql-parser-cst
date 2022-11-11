@@ -17,24 +17,20 @@ export * from "./DropTable";
 export * from "./Delete";
 export * from "./Analyze";
 export * from "./Explain";
+export * from "./Statement";
 import { Alias } from "./Alias";
-import { AlterAction, AlterTableStmt } from "./AlterTable";
-import { AnalyzeStmt } from "./Analyze";
+import { AlterAction } from "./AlterTable";
 import { AllColumns, BaseNode, Keyword } from "./Base";
 import { AllConstraintNodes } from "./Constraint";
-import { AllCreateTableNodes, CreateTableStmt } from "./CreateTable";
-import { DeleteStmt } from "./Delete";
-import { DropTableStmt } from "./DropTable";
-import { ExplainStmt } from "./Explain";
+import { AllCreateTableNodes } from "./CreateTable";
 import { AllExprNodes } from "./Expr";
-import { CreateIndexStmt, DropIndexStmt } from "./Index";
-import { AllInsertNodes, InsertStmt } from "./Insert";
-import { AllSelectNodes, CompoundSelectStmt, SelectStmt } from "./Select";
-import { AllSqliteNodes, SqliteStmt } from "./Sqlite";
-import { AllTransactionNodes, TransactionStmt } from "./Transaction";
-import { AllTriggerNodes, CreateTriggerStmt, DropTriggerStmt } from "./Trigger";
-import { AllUpdateNodes, UpdateStmt } from "./Update";
-import { CreateViewStmt, DropViewStmt } from "./View";
+import { AllInsertNodes } from "./Insert";
+import { AllSelectNodes } from "./Select";
+import { AllSqliteNodes } from "./Sqlite";
+import { Statement } from "./Statement";
+import { AllTransactionNodes } from "./Transaction";
+import { AllTriggerNodes } from "./Trigger";
+import { AllUpdateNodes } from "./Update";
 import { AllFrameNodes } from "./WindowFrame";
 
 export type Node =
@@ -58,29 +54,4 @@ export type Node =
 export interface Program extends BaseNode {
   type: "program";
   statements: Statement[];
-}
-
-export type Statement =
-  | EmptyStmt
-  | CompoundSelectStmt
-  | SelectStmt
-  | CreateTableStmt
-  | AlterTableStmt
-  | DropTableStmt
-  | InsertStmt
-  | DeleteStmt
-  | UpdateStmt
-  | CreateViewStmt
-  | DropViewStmt
-  | CreateIndexStmt
-  | DropIndexStmt
-  | CreateTriggerStmt
-  | DropTriggerStmt
-  | AnalyzeStmt
-  | ExplainStmt
-  | TransactionStmt
-  | SqliteStmt;
-
-export interface EmptyStmt extends BaseNode {
-  type: "empty_stmt";
 }
