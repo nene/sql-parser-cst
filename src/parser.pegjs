@@ -27,10 +27,7 @@ statement
   = statement_standard
 
 statement_standard
-  = compound_select_stmt
-  / insert_stmt
-  / update_stmt
-  / delete_stmt
+  = dml_statement
   / create_view_stmt
   / drop_view_stmt
   / create_index_stmt
@@ -45,6 +42,12 @@ statement_standard
   / transaction_stmt
   / x:sqlite_stmt &sqlite { return x; }
   / empty_stmt
+
+dml_statement
+  = compound_select_stmt
+  / insert_stmt
+  / update_stmt
+  / delete_stmt
 
 empty_stmt
   = c:__ {
@@ -1172,7 +1175,7 @@ trigger_body
   }
 
 trigger_body_statement
-  = st:(statement __) ";" {
+  = st:(dml_statement __) ";" {
     return read(st);
   }
 

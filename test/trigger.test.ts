@@ -18,6 +18,12 @@ describe("trigger", () => {
       );
     });
 
+    // This is to make sure we don't detect END as a separate statement.
+    // As in SQLite "END" can be a statement on its own.
+    it("supports semicolon after END", () => {
+      test(`CREATE TRIGGER my_trig DELETE ON my_tbl BEGIN SELECT 1; END;`);
+    });
+
     dialect("sqlite", () => {
       it("supports TEMPORARY trigger", () => {
         test("CREATE TEMPORARY TRIGGER my_trig DELETE ON my_tbl BEGIN SELECT 1; END");
