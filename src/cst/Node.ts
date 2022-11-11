@@ -12,19 +12,20 @@ export * from "./AlterTable";
 export * from "./Select";
 export * from "./Alias";
 export * from "./View";
+export * from "./Index";
 import { Alias } from "./Alias";
 import { AlterAction, AlterTableStmt } from "./AlterTable";
 import { AllColumns, BaseNode, Keyword } from "./Base";
 import { AllConstraintNodes } from "./Constraint";
 import { AllCreateTableNodes, CreateTableStmt } from "./CreateTable";
-import { AllExprNodes, ListExpr, ParenExpr, ColumnRef, TableRef } from "./Expr";
+import { AllExprNodes, ListExpr, TableRef } from "./Expr";
+import { CreateIndexStmt, DropIndexStmt } from "./Index";
 import { AllInsertNodes, InsertStmt } from "./Insert";
 import {
   AllSelectNodes,
   CompoundSelectStmt,
   ReturningClause,
   SelectStmt,
-  SortSpecification,
   WhereClause,
   WithClause,
 } from "./Select";
@@ -103,30 +104,6 @@ export interface DeleteStmt extends BaseNode {
   table: TableRef | Alias<TableRef>;
   where?: WhereClause;
   returning?: ReturningClause;
-}
-
-// CREATE INDEX
-export interface CreateIndexStmt extends BaseNode {
-  type: "create_index_stmt";
-  createKw: Keyword<"CREATE">;
-  indexTypeKw?: Keyword<"UNIQUE" | "FULLTEXT" | "SPATIAL">;
-  indexKw: Keyword<"INDEX">;
-  ifNotExistsKw?: [Keyword<"IF">, Keyword<"NOT">, Keyword<"EXISTS">];
-  name: TableRef;
-  onKw: Keyword<"ON">;
-  table: TableRef;
-  columns: ParenExpr<ListExpr<SortSpecification | ColumnRef>>;
-  where?: WhereClause;
-}
-
-// DROP INDEX
-export interface DropIndexStmt extends BaseNode {
-  type: "drop_index_stmt";
-  dropIndexKw: [Keyword<"DROP">, Keyword<"INDEX">];
-  ifExistsKw?: [Keyword<"IF">, Keyword<"EXISTS">];
-  indexes: ListExpr<TableRef>;
-  onKw?: Keyword<"ON">;
-  table?: TableRef;
 }
 
 // ANALYZE
