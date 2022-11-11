@@ -1,6 +1,15 @@
-import { BaseNode, Whitespace } from "./BaseNode";
-
-export { BaseNode, Whitespace };
+export * from "./Base";
+export * from "./Literal";
+import {
+  AllColumns,
+  BaseNode,
+  ColumnRef,
+  Identifier,
+  Keyword,
+  Parameter,
+  TableRef,
+} from "./Base";
+import { Literal, NumberLiteral, StringLiteral } from "./Literal";
 
 export type Node =
   | Program
@@ -100,13 +109,6 @@ export type Expr =
   | TableRef
   | Identifier
   | Parameter;
-
-export type Literal =
-  | StringLiteral
-  | NumberLiteral
-  | BooleanLiteral
-  | NullLiteral
-  | DateTimeLiteral;
 
 export interface EmptyStmt extends BaseNode {
   type: "empty_stmt";
@@ -1061,10 +1063,6 @@ export interface Alias<T = Node> extends BaseNode {
   alias: Identifier;
 }
 
-export interface AllColumns extends BaseNode {
-  type: "all_columns";
-}
-
 export interface ListExpr<T = Node> extends BaseNode {
   type: "list_expr";
   items: T[];
@@ -1199,58 +1197,4 @@ export interface StringWithCharset extends BaseNode {
   type: "string_with_charset";
   charset: string;
   string: StringLiteral;
-}
-
-export interface StringLiteral extends BaseNode {
-  type: "string";
-  text: string;
-}
-
-export interface NumberLiteral extends BaseNode {
-  type: "number";
-  text: string;
-}
-
-export interface BooleanLiteral extends BaseNode {
-  type: "boolean";
-  text: string;
-}
-
-export interface NullLiteral extends BaseNode {
-  type: "null";
-  text: string;
-}
-
-export interface DateTimeLiteral extends BaseNode {
-  type: "datetime";
-  kw: Keyword<"TIME" | "DATE" | "TIMESTAMP" | "DATETIME">;
-  string: StringLiteral;
-}
-
-export interface ColumnRef extends BaseNode {
-  type: "column_ref";
-  table?: Identifier;
-  column: Identifier | AllColumns;
-}
-
-export interface TableRef extends BaseNode {
-  type: "table_ref";
-  schema?: Identifier;
-  table: Identifier;
-}
-
-export interface Identifier extends BaseNode {
-  type: "identifier";
-  text: string;
-}
-
-export interface Keyword<T extends string = string> extends BaseNode {
-  type: "keyword";
-  text: string;
-  name: T;
-}
-
-export interface Parameter extends BaseNode {
-  type: "parameter";
-  text: string;
 }
