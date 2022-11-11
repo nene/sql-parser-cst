@@ -1,6 +1,7 @@
 import { AllColumns, BaseNode, Keyword } from "./Base";
+import { DataType } from "./CreateTable";
 import { Literal, StringLiteral } from "./Literal";
-import { DataType, Node, WhereClause, WindowDefinition } from "./Node";
+import { Node, WhereClause, WindowDefinition } from "./Node";
 
 export type AllExprNodes =
   | Expr
