@@ -13,7 +13,7 @@ import {
   PrefixOpExpr,
   SubSelect,
   Whitespace,
-} from "../sql";
+} from "../cst/Node";
 import { leading, surrounding, trailing } from "./whitespace";
 import { read } from "./read";
 import { readCommaSepList } from "./list";

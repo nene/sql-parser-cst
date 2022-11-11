@@ -1,5 +1,5 @@
 import { DialectName, ParamType, ParserOptions } from "src/ParserOptions";
-import { Whitespace } from "src/sql";
+import { Whitespace } from "src/cst/Node";
 
 export let getRange: () => [number, number];
 

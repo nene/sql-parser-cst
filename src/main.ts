@@ -1,4 +1,4 @@
-import { Node, Program } from "./sql";
+import { Node, Program } from "./cst/Node";
 import { parse as parseSql } from "./parser";
 import { show as showSql } from "./show";
 import { DialectName, ParserOptions } from "./ParserOptions";

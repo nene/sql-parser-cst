@@ -1,4 +1,4 @@
-import { Node, Whitespace } from "../sql";
+import { Node, Whitespace } from "../cst/Node";
 import { last } from "./generic";
 
 /** Attaches optional leading whitespace to AST node, or to array of AST nodes (to the first in array) */

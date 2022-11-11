@@ -1,13 +1,6 @@
-export interface BaseNode {
-  leading?: Whitespace[];
-  trailing?: Whitespace[];
-  range?: [number, number];
-}
+import { BaseNode, Whitespace } from "./BaseNode";
 
-export interface Whitespace {
-  type: "block_comment" | "line_comment" | "newline" | "space";
-  text: string;
-}
+export { BaseNode, Whitespace };
 
 export type Node =
   | Program

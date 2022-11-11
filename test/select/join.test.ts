@@ -1,4 +1,4 @@
-import { JoinExpr } from "../../src/sql";
+import { JoinExpr } from "../../src/cst/Node";
 import { dialect, parseFrom, test, show, preserveAll } from "../test_utils";
 
 describe("join", () => {

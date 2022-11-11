@@ -1,4 +1,4 @@
-import { Whitespace, Node } from "./sql";
+import { Whitespace, Node } from "./cst/Node";
 import { cstTransformer, FullTransformMap } from "./cstTransformer";
 import { isDefined } from "./utils/generic";
 

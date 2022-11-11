@@ -1,4 +1,4 @@
-import { Node } from "src/sql";
+import { Node } from "src/cst/Node";
 import { getOptions, getRange } from "./parserState";
 
 /** Attaches source location data to node (if includeRange setting enabled) */

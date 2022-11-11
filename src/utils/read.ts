@@ -1,4 +1,4 @@
-import { Node, Whitespace } from "src/sql";
+import { Node, Whitespace } from "src/cst/Node";
 import { leading, trailing } from "./whitespace";
 
 /**

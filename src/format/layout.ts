@@ -1,4 +1,4 @@
-import { Node, Whitespace } from "../sql";
+import { Node, Whitespace } from "../cst/Node";
 import { cstTransformer } from "../cstTransformer";
 
 export type Layout = Line | string | Layout[];

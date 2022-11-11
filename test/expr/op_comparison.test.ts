@@ -1,4 +1,4 @@
-import { BinaryExpr } from "../../src/sql";
+import { BinaryExpr } from "../../src/cst/Node";
 import { dialect, parseExpr, testExpr } from "../test_utils";
 
 describe("comparison operators", () => {

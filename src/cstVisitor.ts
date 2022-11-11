@@ -1,4 +1,4 @@
-import { Node } from "./sql";
+import { Node } from "./cst/Node";
 
 /**
  * A map with a visitor function for each Node type, like:

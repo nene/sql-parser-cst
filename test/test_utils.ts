@@ -6,7 +6,7 @@ import {
   Statement,
   SubSelect,
   Whitespace,
-} from "../src/sql";
+} from "../src/cst/Node";
 import {
   DialectName,
   parse as parseSql,

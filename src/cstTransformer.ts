@@ -1,4 +1,4 @@
-import { Node } from "./sql";
+import { Node } from "./cst/Node";
 
 // Types are getting somewhat intimidating in this file.
 // Learned this TypeScript-Fu from here:
