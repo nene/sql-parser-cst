@@ -12,7 +12,6 @@ import {
   PostfixOpExpr,
   PrefixOpExpr,
   SubSelect,
-  TableOrSubquery,
   Whitespace,
 } from "../sql";
 import { leading, surrounding, trailing } from "./whitespace";
