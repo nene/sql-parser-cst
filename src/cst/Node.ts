@@ -11,6 +11,7 @@ export * from "./CreateTable";
 export * from "./AlterTable";
 export * from "./Select";
 export * from "./Alias";
+export * from "./View";
 import { Alias } from "./Alias";
 import { AlterAction, AlterTableStmt } from "./AlterTable";
 import { AllColumns, BaseNode, Keyword } from "./Base";
@@ -24,7 +25,6 @@ import {
   ReturningClause,
   SelectStmt,
   SortSpecification,
-  SubSelect,
   WhereClause,
   WithClause,
 } from "./Select";
@@ -32,6 +32,7 @@ import { AllSqliteNodes, SqliteStmt } from "./Sqlite";
 import { AllTransactionNodes, TransactionStmt } from "./Transaction";
 import { AllTriggerNodes, CreateTriggerStmt, DropTriggerStmt } from "./Trigger";
 import { AllUpdateNodes, UpdateStmt } from "./Update";
+import { CreateViewStmt, DropViewStmt } from "./View";
 import { AllFrameNodes } from "./WindowFrame";
 
 export type Node =
@@ -102,28 +103,6 @@ export interface DeleteStmt extends BaseNode {
   table: TableRef | Alias<TableRef>;
   where?: WhereClause;
   returning?: ReturningClause;
-}
-
-// CREATE VIEW
-export interface CreateViewStmt extends BaseNode {
-  type: "create_view_stmt";
-  createKw: Keyword<"CREATE">;
-  temporaryKw?: Keyword<"TEMP" | "TEMPORARY">;
-  viewKw: Keyword<"VIEW">;
-  ifNotExistsKw?: [Keyword<"IF">, Keyword<"NOT">, Keyword<"EXISTS">];
-  name: TableRef;
-  columns?: ParenExpr<ListExpr<ColumnRef>>;
-  asKw: Keyword<"AS">;
-  expr: SubSelect;
-}
-
-// DROP VIEW
-export interface DropViewStmt extends BaseNode {
-  type: "drop_view_stmt";
-  dropViewKw: [Keyword<"DROP">, Keyword<"VIEW">];
-  ifExistsKw?: [Keyword<"IF">, Keyword<"EXISTS">];
-  views: ListExpr<TableRef>;
-  behaviorKw?: Keyword<"CASCADE" | "RESTRICT">;
 }
 
 // CREATE INDEX
