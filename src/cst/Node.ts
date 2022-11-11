@@ -8,13 +8,11 @@ export * from "./Trigger";
 export * from "./Constraint";
 export * from "./Insert";
 export * from "./CreateTable";
+export * from "./AlterTable";
+import { AlterAction, AlterTableStmt } from "./AlterTable";
 import { AllColumns, BaseNode, Keyword } from "./Base";
 import { AllConstraintNodes } from "./Constraint";
-import {
-  AllCreateTableNodes,
-  ColumnDefinition,
-  CreateTableStmt,
-} from "./CreateTable";
+import { AllCreateTableNodes, CreateTableStmt } from "./CreateTable";
 import {
   AllExprNodes,
   Expr,
@@ -310,46 +308,6 @@ export interface ReturningClause extends BaseNode {
   type: "returning_clause";
   returningKw: Keyword<"RETURNING">;
   columns: ListExpr<Expr | Alias<Expr>>;
-}
-
-// ALTER TABLE
-export interface AlterTableStmt extends BaseNode {
-  type: "alter_table_stmt";
-  alterTableKw: [Keyword<"ALTER">, Keyword<"TABLE">];
-  table: TableRef;
-  actions: ListExpr<AlterAction>;
-}
-
-export type AlterAction =
-  | AlterRenameTable
-  | AlterRenameColumn
-  | AlterAddColumn
-  | AlterDropColumn;
-
-export interface AlterRenameTable extends BaseNode {
-  type: "alter_rename_table";
-  renameKw: Keyword<"RENAME"> | [Keyword<"RENAME">, Keyword<"TO" | "AS">];
-  newName: TableRef;
-}
-
-export interface AlterRenameColumn extends BaseNode {
-  type: "alter_rename_column";
-  renameKw: Keyword<"RENAME"> | [Keyword<"RENAME">, Keyword<"COLUMN">];
-  oldName: ColumnRef;
-  toKw: Keyword<"TO" | "AS">;
-  newName: ColumnRef;
-}
-
-export interface AlterAddColumn extends BaseNode {
-  type: "alter_add_column";
-  addKw: Keyword<"ADD"> | [Keyword<"ADD">, Keyword<"COLUMN">];
-  column: ColumnDefinition;
-}
-
-export interface AlterDropColumn extends BaseNode {
-  type: "alter_drop_column";
-  dropKw: Keyword<"DROP"> | [Keyword<"DROP">, Keyword<"COLUMN">];
-  column: ColumnRef;
 }
 
 // DROP TABLE
