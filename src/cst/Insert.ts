@@ -1,6 +1,7 @@
 import { BaseNode, Keyword } from "./Base";
 import { ColumnRef, Expr, ListExpr, ParenExpr, TableRef } from "./Expr";
-import { Alias, SetClause } from "./Node";
+import { SetClause } from "./Node";
+import { Alias } from "./Alias";
 import {
   ReturningClause,
   SortSpecification,

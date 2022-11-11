@@ -10,6 +10,8 @@ export * from "./Insert";
 export * from "./CreateTable";
 export * from "./AlterTable";
 export * from "./Select";
+export * from "./Alias";
+import { Alias } from "./Alias";
 import { AlterAction, AlterTableStmt } from "./AlterTable";
 import { AllColumns, BaseNode, Keyword } from "./Base";
 import { AllConstraintNodes } from "./Constraint";
@@ -216,13 +218,4 @@ export interface ExplainStmt extends BaseNode {
   analyzeKw?: Keyword<"ANALYZE">;
   queryPlanKw?: [Keyword<"QUERY">, Keyword<"PLAN">];
   statement: Statement;
-}
-
-// other...
-
-export interface Alias<T = Node> extends BaseNode {
-  type: "alias";
-  expr: T;
-  asKw?: Keyword<"AS">;
-  alias: Identifier;
 }

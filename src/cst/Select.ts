@@ -8,7 +8,7 @@ import {
   TableFuncCall,
   TableRef,
 } from "./Expr";
-import { Alias } from "./Node";
+import { Alias } from "./Alias";
 import { FrameClause } from "./WindowFrame";
 
 export type AllSelectNodes =
