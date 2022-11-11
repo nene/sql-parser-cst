@@ -16,28 +16,11 @@ import { AlterAction, AlterTableStmt } from "./AlterTable";
 import { AllColumns, BaseNode, Keyword } from "./Base";
 import { AllConstraintNodes } from "./Constraint";
 import { AllCreateTableNodes, CreateTableStmt } from "./CreateTable";
-import {
-  AllExprNodes,
-  Expr,
-  ListExpr,
-  ParenExpr,
-  ColumnRef,
-  Identifier,
-  TableRef,
-} from "./Expr";
-import {
-  AllInsertNodes,
-  Default,
-  InsertStmt,
-  OrAlternateAction,
-  UpsertOption,
-} from "./Insert";
+import { AllExprNodes, ListExpr, ParenExpr, ColumnRef, TableRef } from "./Expr";
+import { AllInsertNodes, InsertStmt } from "./Insert";
 import {
   AllSelectNodes,
   CompoundSelectStmt,
-  FromClause,
-  LimitClause,
-  OrderByClause,
   ReturningClause,
   SelectStmt,
   SortSpecification,
@@ -48,6 +31,7 @@ import {
 import { AllSqliteNodes, SqliteStmt } from "./Sqlite";
 import { AllTransactionNodes, TransactionStmt } from "./Transaction";
 import { AllTriggerNodes, CreateTriggerStmt, DropTriggerStmt } from "./Trigger";
+import { AllUpdateNodes, UpdateStmt } from "./Update";
 import { AllFrameNodes } from "./WindowFrame";
 
 export type Node =
@@ -64,11 +48,9 @@ export type Node =
   | AllTransactionNodes
   | AllFrameNodes
   | AllInsertNodes
-  | ColumnAssignment
+  | AllUpdateNodes
   | Alias
-  | AllSqliteNodes
-  | SetClause
-  | UpdateClause;
+  | AllSqliteNodes;
 
 export interface Program extends BaseNode {
   type: "program";
@@ -120,41 +102,6 @@ export interface DeleteStmt extends BaseNode {
   table: TableRef | Alias<TableRef>;
   where?: WhereClause;
   returning?: ReturningClause;
-}
-
-// UPDATE
-export interface UpdateStmt extends BaseNode {
-  type: "update_stmt";
-  clauses: (
-    | WithClause
-    | UpdateClause
-    | SetClause
-    | WhereClause
-    | FromClause
-    | OrderByClause
-    | LimitClause
-    | ReturningClause
-  )[];
-}
-
-export interface UpdateClause extends BaseNode {
-  type: "update_clause";
-  updateKw: Keyword<"UPDATE">;
-  options: UpsertOption[];
-  orAction?: OrAlternateAction;
-  tables: ListExpr<TableRef | Alias<TableRef>>;
-}
-
-export interface SetClause extends BaseNode {
-  type: "set_clause";
-  setKw: Keyword<"SET">;
-  assignments: ListExpr<ColumnAssignment>;
-}
-
-export interface ColumnAssignment extends BaseNode {
-  type: "column_assignment";
-  column: ColumnRef | ParenExpr<ListExpr<ColumnRef>>;
-  expr: Expr | Default;
 }
 
 // CREATE VIEW
