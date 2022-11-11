@@ -2,7 +2,7 @@ import { BaseNode, Keyword } from "./Base";
 import { ColumnConstraint, Constraint, TableConstraint } from "./Constraint";
 import { ColumnRef, Identifier, ListExpr, ParenExpr, TableRef } from "./Expr";
 import { Literal, NumberLiteral, StringLiteral } from "./Literal";
-import { SubSelect } from "./Node";
+import { SubSelect } from "./Select";
 
 export type AllCreateTableNodes =
   | CreateTableStmt

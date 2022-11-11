@@ -8,7 +8,7 @@ import {
   ParenExpr,
   TableRef,
 } from "./Expr";
-import { SortSpecification } from "./Node";
+import { SortSpecification } from "./Select";
 
 export type AllConstraintNodes =
   | Constraint<ColumnConstraint | TableConstraint>

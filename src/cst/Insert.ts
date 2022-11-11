@@ -1,14 +1,13 @@
 import { BaseNode, Keyword } from "./Base";
 import { ColumnRef, Expr, ListExpr, ParenExpr, TableRef } from "./Expr";
+import { Alias, SetClause } from "./Node";
 import {
-  Alias,
   ReturningClause,
-  SetClause,
   SortSpecification,
   SubSelect,
   WhereClause,
   WithClause,
-} from "./Node";
+} from "./Select";
 
 export type AllInsertNodes =
   | InsertStmt
