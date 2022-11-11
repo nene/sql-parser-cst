@@ -19,17 +19,17 @@ export * from "./Analyze";
 export * from "./Explain";
 export * from "./Statement";
 export * from "./Program";
+import { Program } from "./Program";
+import { Statement } from "./Statement";
+import { AllColumns, Keyword } from "./Base";
 import { Alias } from "./Alias";
 import { AlterAction } from "./AlterTable";
-import { AllColumns, BaseNode, Keyword } from "./Base";
 import { AllConstraintNodes } from "./Constraint";
 import { AllCreateTableNodes } from "./CreateTable";
 import { AllExprNodes } from "./Expr";
 import { AllInsertNodes } from "./Insert";
-import { Program } from "./Program";
 import { AllSelectNodes } from "./Select";
 import { AllSqliteNodes } from "./Sqlite";
-import { Statement } from "./Statement";
 import { AllTransactionNodes } from "./Transaction";
 import { AllTriggerNodes } from "./Trigger";
 import { AllUpdateNodes } from "./Update";
@@ -38,17 +38,17 @@ import { AllFrameNodes } from "./WindowFrame";
 export type Node =
   | Program
   | Statement
-  | AllExprNodes
   | Keyword
+  | AllColumns
+  | Alias
+  | AllExprNodes
   | AllSelectNodes
   | AllCreateTableNodes
   | AllConstraintNodes
   | AlterAction
   | AllTriggerNodes
-  | AllColumns
   | AllTransactionNodes
   | AllFrameNodes
   | AllInsertNodes
   | AllUpdateNodes
-  | Alias
   | AllSqliteNodes;

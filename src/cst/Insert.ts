@@ -1,6 +1,5 @@
 import { BaseNode, Keyword } from "./Base";
 import { ColumnRef, Expr, ListExpr, ParenExpr, TableRef } from "./Expr";
-import { SetClause } from "./Node";
 import { Alias } from "./Alias";
 import {
   ReturningClause,
@@ -9,6 +8,7 @@ import {
   WhereClause,
   WithClause,
 } from "./Select";
+import { SetClause } from "./Update";
 
 export type AllInsertNodes =
   | InsertStmt

@@ -1,6 +1,6 @@
 import { BaseNode, Keyword } from "./Base";
 import { ColumnRef, Expr, ListExpr, TableRef } from "./Expr";
-import { Statement } from "./Node";
+import { Statement } from "./Statement";
 
 export type AllTriggerNodes =
   | CreateTriggerStmt
