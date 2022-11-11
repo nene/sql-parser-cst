@@ -18,6 +18,7 @@ export * from "./Delete";
 export * from "./Analyze";
 export * from "./Explain";
 export * from "./Statement";
+export * from "./Program";
 import { Alias } from "./Alias";
 import { AlterAction } from "./AlterTable";
 import { AllColumns, BaseNode, Keyword } from "./Base";
@@ -25,6 +26,7 @@ import { AllConstraintNodes } from "./Constraint";
 import { AllCreateTableNodes } from "./CreateTable";
 import { AllExprNodes } from "./Expr";
 import { AllInsertNodes } from "./Insert";
+import { Program } from "./Program";
 import { AllSelectNodes } from "./Select";
 import { AllSqliteNodes } from "./Sqlite";
 import { Statement } from "./Statement";
@@ -50,8 +52,3 @@ export type Node =
   | AllUpdateNodes
   | Alias
   | AllSqliteNodes;
-
-export interface Program extends BaseNode {
-  type: "program";
-  statements: Statement[];
-}
