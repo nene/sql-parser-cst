@@ -1,6 +1,6 @@
 import { BaseNode, Keyword } from "./Base";
 import { ColumnRef, Expr, ListExpr, TableRef } from "./Expr";
-import { Statement } from "./Statement";
+import { Program } from "./Program";
 
 export type AllTriggerNodes =
   | CreateTriggerStmt
@@ -44,7 +44,7 @@ export interface TriggerCondition extends BaseNode {
 export interface TriggerBody extends BaseNode {
   type: "trigger_body";
   beginKw: Keyword<"BEGIN">;
-  statements: Statement[];
+  program: Program;
   endKw: Keyword<"END">;
 }
 

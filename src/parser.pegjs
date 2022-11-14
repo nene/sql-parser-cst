@@ -1162,18 +1162,22 @@ trigger_condition
   }
 
 trigger_body
-  = beginKw:BEGIN statements:(__ trigger_body_statement)+ empty:empty_stmt endKw:(__ END) {
+  = beginKw:(BEGIN __) program:trigger_program endKw:(__ END) {
     return loc({
       type: "trigger_body",
-      beginKw,
-      statements: [...statements.map(read), empty],
+      beginKw: read(beginKw),
+      program,
       endKw: read(endKw),
     });
   }
 
-trigger_body_statement
-  = st:(dml_statement __) ";" {
-    return read(st);
+// One or more DML statement, plus an empty statement in the end
+trigger_program
+  = head:dml_statement tail:(__ ";" __ (dml_statement / empty_stmt))+ {
+    return loc({
+      type: "program",
+      statements: readCommaSepList(head, tail),
+    });
   }
 
 // DROP TRIGGER
