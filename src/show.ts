@@ -268,7 +268,7 @@ const showNode = cstTransformer<string>({
     show([node.timeKw, node.eventKw, node.ofKw, node.columns]),
   trigger_condition: (node) => show([node.whenKw, node.expr]),
   trigger_body: (node) =>
-    show([node.beginKw, show(node.statements, ";"), ";", node.endKw]),
+    show([node.beginKw, show(node.statements, ";"), node.endKw]),
   // DROP TRIGGER
   drop_trigger_stmt: (node) =>
     show([node.dropTriggerKw, node.ifExistsKw, node.trigger]),

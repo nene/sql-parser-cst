@@ -1162,11 +1162,11 @@ trigger_condition
   }
 
 trigger_body
-  = beginKw:BEGIN statements:(__ trigger_body_statement)+ endKw:(__ END) {
+  = beginKw:BEGIN statements:(__ trigger_body_statement)+ empty:empty_stmt endKw:(__ END) {
     return loc({
       type: "trigger_body",
       beginKw,
-      statements: statements.map(read),
+      statements: [...statements.map(read), empty],
       endKw: read(endKw),
     });
   }
