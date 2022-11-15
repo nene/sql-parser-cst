@@ -24,6 +24,7 @@ describe("EXISTS expression", () => {
                       {
                         "text": "1",
                         "type": "number",
+                        "value": 1,
                       },
                     ],
                     "type": "list_expr",

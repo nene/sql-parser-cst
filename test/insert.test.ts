@@ -214,10 +214,12 @@ describe("insert into", () => {
                       {
                         "text": "1",
                         "type": "number",
+                        "value": 1,
                       },
                       {
                         "text": "2",
                         "type": "number",
+                        "value": 2,
                       },
                     ],
                     "type": "list_expr",
@@ -230,10 +232,12 @@ describe("insert into", () => {
                       {
                         "text": "3",
                         "type": "number",
+                        "value": 3,
                       },
                       {
                         "text": "4",
                         "type": "number",
+                        "value": 4,
                       },
                     ],
                     "type": "list_expr",

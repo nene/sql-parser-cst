@@ -69,14 +69,17 @@ describe("select", () => {
                   {
                     "text": "1",
                     "type": "number",
+                    "value": 1,
                   },
                   {
                     "text": "2",
                     "type": "number",
+                    "value": 2,
                   },
                   {
                     "text": "3",
                     "type": "number",
+                    "value": 3,
                   },
                 ],
                 "type": "list_expr",
@@ -134,6 +137,7 @@ describe("select", () => {
                     "expr": {
                       "text": "1",
                       "type": "number",
+                      "value": 1,
                     },
                     "type": "alias",
                   },

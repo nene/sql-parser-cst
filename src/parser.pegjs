@@ -2689,6 +2689,7 @@ literal_hex_number
     return loc({
       type: "number",
       text: text(),
+      value: parseInt(text(), 16),
     });
   }
 
@@ -2697,6 +2698,7 @@ literal_decimal_number
     return loc({
       type: "number",
       text: text(),
+      value: parseFloat(text()),
     });
   }
 

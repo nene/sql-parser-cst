@@ -23,6 +23,7 @@ describe("location", () => {
                           ],
                           "text": "1",
                           "type": "number",
+                          "value": 1,
                         },
                         "operator": "+",
                         "range": [

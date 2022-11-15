@@ -7,11 +7,13 @@ describe("whitespace", () => {
         "left": {
           "text": "1",
           "type": "number",
+          "value": 1,
         },
         "operator": "+",
         "right": {
           "text": "2",
           "type": "number",
+          "value": 2,
         },
         "type": "binary_expr",
       }
@@ -24,6 +26,7 @@ describe("whitespace", () => {
         "left": {
           "text": "1",
           "type": "number",
+          "value": 1,
         },
         "operator": "+",
         "right": {
@@ -41,6 +44,7 @@ describe("whitespace", () => {
           ],
           "text": "2",
           "type": "number",
+          "value": 2,
         },
         "type": "binary_expr",
       }
@@ -63,6 +67,7 @@ describe("whitespace", () => {
             },
           ],
           "type": "number",
+          "value": 1,
         },
         "operator": "+",
         "right": {
@@ -78,6 +83,7 @@ describe("whitespace", () => {
           ],
           "text": "2",
           "type": "number",
+          "value": 2,
         },
         "type": "binary_expr",
       }
@@ -96,11 +102,13 @@ describe("whitespace", () => {
             },
           ],
           "type": "number",
+          "value": 1,
         },
         "operator": "+",
         "right": {
           "text": "2",
           "type": "number",
+          "value": 2,
         },
         "type": "binary_expr",
       }
@@ -133,6 +141,7 @@ describe("whitespace", () => {
             },
           ],
           "type": "number",
+          "value": 1,
         },
         "operator": "+",
         "right": {
@@ -158,6 +167,7 @@ describe("whitespace", () => {
           ],
           "text": "2",
           "type": "number",
+          "value": 2,
         },
         "type": "binary_expr",
       }

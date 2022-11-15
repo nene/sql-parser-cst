@@ -15,6 +15,7 @@ export interface StringLiteral extends BaseNode {
 export interface NumberLiteral extends BaseNode {
   type: "number";
   text: string;
+  value: number;
 }
 
 export interface BooleanLiteral extends BaseNode {

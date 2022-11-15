@@ -60,6 +60,7 @@ describe("CASE expression", () => {
               "right": {
                 "text": "1",
                 "type": "number",
+                "value": 1,
               },
               "type": "binary_expr",
             },

@@ -129,6 +129,7 @@ describe("comparison operators", () => {
           "begin": {
             "text": "7",
             "type": "number",
+            "value": 7,
           },
           "betweenKw": {
             "name": "BETWEEN",
@@ -138,6 +139,7 @@ describe("comparison operators", () => {
           "end": {
             "text": "20",
             "type": "number",
+            "value": 20,
           },
           "left": {
             "column": {

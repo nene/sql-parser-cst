@@ -174,6 +174,7 @@ describe("window functions", () => {
                     "expr": {
                       "text": "2",
                       "type": "number",
+                      "value": 2,
                     },
                     "followingKw": {
                       "name": "FOLLOWING",

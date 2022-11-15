@@ -29,6 +29,7 @@ describe("type cast", () => {
             "expr": {
               "text": "10",
               "type": "number",
+              "value": 10,
             },
             "type": "cast_arg",
           },
