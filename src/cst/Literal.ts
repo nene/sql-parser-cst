@@ -25,6 +25,7 @@ export interface BooleanLiteral extends BaseNode {
 export interface NullLiteral extends BaseNode {
   type: "null";
   text: string;
+  value: null;
 }
 
 export interface DateTimeLiteral extends BaseNode {

@@ -6,6 +6,7 @@ describe("null literal", () => {
       {
         "text": "null",
         "type": "null",
+        "value": null,
       }
     `);
     testExpr(`NULL`);
