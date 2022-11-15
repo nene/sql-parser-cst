@@ -20,6 +20,7 @@ export interface NumberLiteral extends BaseNode {
 export interface BooleanLiteral extends BaseNode {
   type: "boolean";
   text: string;
+  value: boolean;
 }
 
 export interface NullLiteral extends BaseNode {

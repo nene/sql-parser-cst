@@ -2499,10 +2499,10 @@ literal_null
 
 literal_boolean
   = kw:TRUE {
-    return loc({ type: "boolean", text: kw.text });
+    return loc({ type: "boolean", text: kw.text, value: true });
   }
   / kw:FALSE {
-    return loc({ type: "boolean", text: kw.text});
+    return loc({ type: "boolean", text: kw.text, value: false });
   }
 
 literal_string "string"
