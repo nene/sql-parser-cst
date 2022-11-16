@@ -2530,7 +2530,7 @@ literal_string_with_charset // for MySQL only
 literal_string_without_charset // for MySQL only
   = literal_hex_string
   / literal_bit_string
-  / nr:literal_hex_number { return {...nr, type: "string" }; }
+  / nr:literal_hex_number { return { type: "string", text: nr.text }; }
   / literal_plain_string
 
 // The most ordinary string type, without any prefixes

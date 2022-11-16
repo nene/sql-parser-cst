@@ -21,6 +21,7 @@ describe("temporal intervals", () => {
           "expr": {
             "text": "42",
             "type": "number",
+            "value": 42,
           },
           "intervalKw": {
             "name": "INTERVAL",
