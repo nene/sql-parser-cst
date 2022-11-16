@@ -44,6 +44,16 @@ describe("identifier", () => {
       it("supports repeated-quote escaping in double-quoted identifier", () => {
         testExpr(`"some "" name"`);
       });
+
+      it("parses escaped double-quote as single quote", () => {
+        expect(parseIdent(`"some "" name"`)).toMatchInlineSnapshot(`
+          {
+            "name": "some " name",
+            "text": ""some "" name"",
+            "type": "identifier",
+          }
+        `);
+      });
     });
 
     dialect(["mysql", "sqlite"], () => {
@@ -64,6 +74,16 @@ describe("identifier", () => {
       it("supports escaped quotes in identifiers", () => {
         testExpr("`some `` name`");
       });
+
+      it("parses escaped backtick-quote as single backtick", () => {
+        expect(parseIdent("`some `` name`")).toMatchInlineSnapshot(`
+          {
+            "name": "some \` name",
+            "text": "\`some \`\` name\`",
+            "type": "identifier",
+          }
+        `);
+      });
     });
 
     dialect("sqlite", () => {
@@ -83,6 +103,16 @@ describe("identifier", () => {
 
       it("supports ]] escaping in bracket-quoted identifier", () => {
         testExpr(`[some ]] name]`);
+      });
+
+      it("parses escaped bracket as single bracket", () => {
+        expect(parseIdent("[some ]] name]")).toMatchInlineSnapshot(`
+          {
+            "name": "some ] name",
+            "text": "[some ]] name]",
+            "type": "identifier",
+          }
+        `);
       });
     });
   });

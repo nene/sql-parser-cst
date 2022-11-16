@@ -2465,10 +2465,16 @@ quoted_ident
   / &sqlite str:literal_double_quoted_string_qq { return loc(createIdentifier(str.text, str.value)); }
 
 backticks_quoted_ident
-  = "`" chars:([^`] / "``")+ "`" { return loc(createIdentifier(text(), chars.join(""))); }
+  = "`" chars:([^`] / escaped_backtick)+ "`" { return loc(createIdentifier(text(), chars.join(""))); }
+
+escaped_backtick
+  = "``" { return "`"; }
 
 bracket_quoted_ident
-  = "[" chars:([^\]] / "]]")+ "]" { return loc(createIdentifier(text(), chars.join(""))); }
+  = "[" chars:([^\]] / escaped_bracket)+ "]" { return loc(createIdentifier(text(), chars.join(""))); }
+
+escaped_bracket
+  = "]]" { return "]"; }
 
 ident_name
   = ident_start ident_part* { return text(); }
@@ -2605,25 +2611,33 @@ literal_bit_string
   }
 
 literal_single_quoted_string_qq_bs // with repeated quote or backslash for escaping
-  = "'" chars:single_quoted_char* "'" {
+  = "'" chars:([^'\\] / escaped_single_quote_qq_bs)* "'" {
     return loc({
       type: "string",
       text: text(),
       value: chars.join(""),
     });
   }
+
+escaped_single_quote_qq_bs
+  = "''" { return "'"; }
+  / "\\'" { return "'"; }
+  / "\\" . { return text(); }
 
 literal_single_quoted_string_qq // with repeated quote for escaping
-  = "'" chars:([^'] / "''")* "'" {
+  = "'" chars:([^'] / escaped_single_quote_qq)* "'" {
     return loc({
       type: "string",
       text: text(),
       value: chars.join(""),
     });
   }
+
+escaped_single_quote_qq
+  = "''" { return "'"; }
 
 literal_double_quoted_string_qq // with repeated quote for escaping
-  = "\"" chars:([^"] / '""')* "\"" {
+  = "\"" chars:([^"] / escaped_double_quote_qq)* "\"" {
     return loc({
       type: "string",
       text: text(),
@@ -2631,14 +2645,22 @@ literal_double_quoted_string_qq // with repeated quote for escaping
     });
   }
 
+escaped_double_quote_qq
+  = '""' { return '"'; }
+
 literal_double_quoted_string_qq_bs // with repeated quote or backslash for escaping
-  = "\"" chars:double_quoted_char* "\"" {
+  = "\"" chars:([^"\\] / escaped_double_quote_qq_bs)* "\"" {
     return loc({
       type: "string",
       text: text(),
       value: chars.join(""),
     });
   }
+
+escaped_double_quote_qq_bs
+  = '""' { return '"'; }
+  / '\\"' { return '"'; }
+  / "\\" . { return text(); }
 
 literal_natural_charset_string
   = "N"i str:literal_single_quoted_string_qq_bs {
@@ -2658,31 +2680,6 @@ literal_datetime
         string: read(str)
       });
     }
-
-double_quoted_char
-  = [^"\\\0-\x1F\x7f]
-  / escape_char
-
-single_quoted_char
-  = [^'\\] // remove \0-\x1F\x7f pnCtrl char [^'\\\0-\x1F\x7f]
-  / escape_char
-
-escape_char
-  = "\\'"  { return "\\'";  }
-  / '\\"'  { return '\\"';  }
-  / "\\\\" { return "\\\\"; }
-  / "\\/"  { return "\\/";  }
-  / "\\b"  { return "\b"; }
-  / "\\f"  { return "\f"; }
-  / "\\n"  { return "\n"; }
-  / "\\r"  { return "\r"; }
-  / "\\t"  { return "\t"; }
-  / "\\u" h1:hexDigit h2:hexDigit h3:hexDigit h4:hexDigit {
-      return String.fromCharCode(parseInt("0x" + h1 + h2 + h3 + h4));
-    }
-  / "\\" { return "\\"; }
-  / "''" { return "''" }
-  / '""' { return '""' }
 
 line_terminator
   = [\n\r]

@@ -13,6 +13,16 @@ describe("string literal", () => {
   it("single-quoted string with repeated-quote escapes", () => {
     testExpr(`'hel''lo'`);
   });
+  it("parses single-quoted string with repeated-quote escapes", () => {
+    expect(parseExpr(`'hel''lo'`)).toMatchInlineSnapshot(`
+      {
+        "text": "'hel''lo'",
+        "type": "string",
+        "value": "hel'lo",
+      }
+    `);
+  });
+
   dialect("mysql", () => {
     it("single-quoted string with backslash escapes", () => {
       testExpr(`'hel\\'lo'`);
@@ -32,8 +42,26 @@ describe("string literal", () => {
     it("double-quoted string with repeated-quote escapes", () => {
       testExpr(`"hel""lo"`);
     });
+    it("parses double-quoted string with repeated-quote escapes", () => {
+      expect(parseExpr(`"hel""lo"`)).toMatchInlineSnapshot(`
+        {
+          "text": ""hel""lo"",
+          "type": "string",
+          "value": "hel"lo",
+        }
+      `);
+    });
     it("double-quoted string with backslash escapes", () => {
       testExpr(`"hel\\"lo"`);
+    });
+    it("parses double-quoted string with backslash escapes", () => {
+      expect(parseExpr(`"hel\\"lo"`)).toMatchInlineSnapshot(`
+        {
+          "text": ""hel\\"lo"",
+          "type": "string",
+          "value": "hel"lo",
+        }
+      `);
     });
   });
 
