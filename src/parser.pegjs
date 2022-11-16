@@ -2664,7 +2664,7 @@ literal_blob
   / &mysql n:literal_hex_number_blob { return n; }
 
 literal_hex_blob
-  = "X"i "'" chars:hexDigit* "'" {
+  = "X"i "'" chars:hex_digit* "'" {
     return loc({
       type: "blob",
       text: text(),
@@ -2686,7 +2686,7 @@ literal_number "number"
   / n:literal_hex_number &sqlite { return n; }
 
 literal_hex_number
-  = "0x" hexDigit+ {
+  = "0x" hex_digit+ {
     return loc({
       type: "number",
       text: text(),
@@ -2696,7 +2696,7 @@ literal_hex_number
 
 // The exact same syntax as above, but treated as blob
 literal_hex_number_blob
-  = "0x" chars:hexDigit+ {
+  = "0x" chars:hex_digit+ {
     return loc({
       type: "blob",
       text: text(),
@@ -2726,7 +2726,7 @@ exp
 digits
   = [0-9]+ { return text(); }
 
-hexDigit
+hex_digit
   = [0-9a-fA-F]
 
 // Optional whitespace (or comments)
