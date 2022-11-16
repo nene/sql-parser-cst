@@ -1,7 +1,7 @@
 import { Node, Program } from "./cst/Node";
 import { parse as parseSql } from "./parser";
 import { show as showSql } from "./show";
-import { DialectName, ParserOptions } from "./ParserOptions";
+import { DialectName, ParserOptions, validDialectNames } from "./ParserOptions";
 export { format } from "./format/format";
 export * from "./cstVisitor";
 export * from "./cstTransformer";
@@ -9,6 +9,12 @@ export * from "./cstTransformer";
 export { DialectName, ParserOptions };
 
 export function parse(sql: string, options: ParserOptions): Program {
+  if (!options || !options.dialect) {
+    throw new Error(`No SQL dialect specified.`);
+  }
+  if (!validDialectNames[options.dialect]) {
+    throw new Error(`Unsupported dialect name: "${options.dialect}"`);
+  }
   return parseSql(sql, options);
 }
 

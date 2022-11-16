@@ -1,4 +1,9 @@
-export type DialectName = "sqlite" | "mysql";
+export const validDialectNames = {
+  sqlite: true,
+  mysql: true,
+};
+
+export type DialectName = keyof typeof validDialectNames;
 
 export type ParamType = "?" | "?nr" | ":name" | "$name" | "@name";
 
