@@ -1,38 +1,31 @@
-import { dialect, parseExpr, parseStmt, testExpr, test, parseFrom } from "./test_utils";
+import { dialect, parseExpr, testExpr, test, parseFrom } from "./test_utils";
 
 describe("identifier", () => {
-  describe("column name", () => {
-    it("supports simple column name", () => {
+  describe("identifier", () => {
+    it("supports simple identifiers", () => {
       testExpr("foo");
       testExpr("foo123");
       testExpr("_96");
     });
 
-    it("supports qualified column name", () => {
-      testExpr("foo.bar");
-      testExpr("foo /*c1*/./*c2*/ bar");
-    });
-
-    it("allows for keywords as qualified column names", () => {
-      testExpr("foo.insert");
-    });
-
-    dialect(["mysql", "sqlite"], () => {
-      it("supports backtick-quoted column name", () => {
-        testExpr("`some special name`");
-      });
-
-      it("supports backtick-quoted table and column name", () => {
-        testExpr("`my foo`.`my bar`");
-      });
-
-      it("supports escaped quotes in column name", () => {
-        testExpr("`some `` name`");
-      });
+    it("allows identifier name to start with number", () => {
+      expect(parseExpr("18foo")).toMatchInlineSnapshot(`
+        {
+          "column": {
+            "text": "18foo",
+            "type": "identifier",
+          },
+          "type": "column_ref",
+        }
+      `);
     });
 
     dialect("sqlite", () => {
-      it("parses double-quoted column name", () => {
+      it("supports double-quoted identifiers", () => {
+        testExpr(`"some special name"`);
+      });
+
+      it("parses double-quoted identifier", () => {
         expect(parseExpr(`"some special name"`)).toMatchInlineSnapshot(`
           {
             "column": {
@@ -47,8 +40,36 @@ describe("identifier", () => {
       it("supports repeated-quote escaping in double-quoted identifier", () => {
         testExpr(`"some "" name"`);
       });
+    });
 
-      it("parses bracket-quoted column name", () => {
+    dialect(["mysql", "sqlite"], () => {
+      it("supports backtick-quoted identifiers", () => {
+        testExpr("`some special name`");
+      });
+
+      it("parses backtick-quoted identifier", () => {
+        expect(parseExpr("`some special name`")).toMatchInlineSnapshot(`
+          {
+            "column": {
+              "text": "\`some special name\`",
+              "type": "identifier",
+            },
+            "type": "column_ref",
+          }
+        `);
+      });
+
+      it("supports escaped quotes in identifiers", () => {
+        testExpr("`some `` name`");
+      });
+    });
+
+    dialect("sqlite", () => {
+      it("supports bracket-quoted identifiers", () => {
+        testExpr("[some special name]");
+      });
+
+      it("parses bracket-quoted identifier", () => {
         expect(parseExpr("[some special name]")).toMatchInlineSnapshot(`
           {
             "column": {
@@ -62,6 +83,35 @@ describe("identifier", () => {
 
       it("supports ]] escaping in bracket-quoted identifier", () => {
         testExpr(`[some ]] name]`);
+      });
+    });
+  });
+
+  describe("column name", () => {
+    it("supports simple column name", () => {
+      testExpr("foo");
+    });
+
+    it("supports qualified column name", () => {
+      testExpr("foo.bar");
+      testExpr("foo /*c1*/./*c2*/ bar");
+    });
+
+    it("allows for keywords as qualified column names", () => {
+      testExpr("foo.insert");
+    });
+
+    dialect("sqlite", () => {
+      it("supports -uoted qualified column name", () => {
+        testExpr(`"my tbl"."my col"`);
+        testExpr("`my foo`.`my bar`");
+        testExpr(`[my tbl].[my col]`);
+      });
+    });
+
+    dialect("mysql", () => {
+      it("supports quoted qualified column name", () => {
+        testExpr("`my foo`.`my bar`");
       });
     });
 
@@ -102,18 +152,6 @@ describe("identifier", () => {
           },
           "table": {
             "text": "foo",
-            "type": "identifier",
-          },
-          "type": "column_ref",
-        }
-      `);
-    });
-
-    it("allows column name to start with number", () => {
-      expect(parseExpr("18foo")).toMatchInlineSnapshot(`
-        {
-          "column": {
-            "text": "18foo",
             "type": "identifier",
           },
           "type": "column_ref",
@@ -161,29 +199,16 @@ describe("identifier", () => {
     });
 
     dialect("sqlite", () => {
-      it("supports double-quoted table name", () => {
-        test(`SELECT col FROM "my tbl"`);
-      });
-      it("supports double-quoted qualified table name", () => {
+      it("supports quoted qualified table name", () => {
         test(`SELECT col FROM "my db"."my tbl"`);
-      });
-    });
-
-    dialect(["mysql", "sqlite"], () => {
-      it("supports backtick-quoted table name", () => {
-        test("SELECT col FROM `my tbl`");
-      });
-      it("supports backtick-quoted qualified table name", () => {
         test("SELECT col FROM `my db`.`my tbl`");
+        test("SELECT col FROM [my db].[my tbl]");
       });
     });
 
-    dialect("sqlite", () => {
-      it("supports bracket-quoted table name", () => {
-        test("SELECT col FROM [my tbl]");
-      });
-      it("supports bracket-quoted qualified table name", () => {
-        test("SELECT col FROM [my db].[my tbl]");
+    dialect("mysql", () => {
+      it("supports quoted qualified table name", () => {
+        test("SELECT col FROM `my db`.`my tbl`");
       });
     });
   });
