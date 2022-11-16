@@ -2681,9 +2681,6 @@ literal_datetime
       });
     }
 
-line_terminator
-  = [\n\r]
-
 literal_number "number"
   = literal_decimal_number
   / n:literal_hex_number &sqlite { return n; }
