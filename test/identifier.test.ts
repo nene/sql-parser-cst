@@ -2,6 +2,14 @@ import { dialect, parseExpr, testExpr, test, parseFrom } from "./test_utils";
 
 describe("identifier", () => {
   describe("identifier", () => {
+    function parseIdent(str: string) {
+      const expr = parseExpr(str);
+      if (expr.type !== "column_ref") {
+        throw new Error(`Expected type:column_ref, instead got type:${expr.type}`);
+      }
+      return expr.column;
+    }
+
     it("supports simple identifiers", () => {
       testExpr("foo");
       testExpr("foo123");
@@ -9,14 +17,11 @@ describe("identifier", () => {
     });
 
     it("allows identifier name to start with number", () => {
-      expect(parseExpr("18foo")).toMatchInlineSnapshot(`
+      expect(parseIdent("18foo")).toMatchInlineSnapshot(`
         {
-          "column": {
-            "name": "18foo",
-            "text": "18foo",
-            "type": "identifier",
-          },
-          "type": "column_ref",
+          "name": "18foo",
+          "text": "18foo",
+          "type": "identifier",
         }
       `);
     });
@@ -27,14 +32,11 @@ describe("identifier", () => {
       });
 
       it("parses double-quoted identifier", () => {
-        expect(parseExpr(`"some special name"`)).toMatchInlineSnapshot(`
+        expect(parseIdent(`"some special name"`)).toMatchInlineSnapshot(`
           {
-            "column": {
-              "name": "some special name",
-              "text": ""some special name"",
-              "type": "identifier",
-            },
-            "type": "column_ref",
+            "name": "some special name",
+            "text": ""some special name"",
+            "type": "identifier",
           }
         `);
       });
@@ -50,14 +52,11 @@ describe("identifier", () => {
       });
 
       it("parses backtick-quoted identifier", () => {
-        expect(parseExpr("`some special name`")).toMatchInlineSnapshot(`
+        expect(parseIdent("`some special name`")).toMatchInlineSnapshot(`
           {
-            "column": {
-              "name": "some special name",
-              "text": "\`some special name\`",
-              "type": "identifier",
-            },
-            "type": "column_ref",
+            "name": "some special name",
+            "text": "\`some special name\`",
+            "type": "identifier",
           }
         `);
       });
@@ -73,14 +72,11 @@ describe("identifier", () => {
       });
 
       it("parses bracket-quoted identifier", () => {
-        expect(parseExpr("[some special name]")).toMatchInlineSnapshot(`
+        expect(parseIdent("[some special name]")).toMatchInlineSnapshot(`
           {
-            "column": {
-              "name": "some special name",
-              "text": "[some special name]",
-              "type": "identifier",
-            },
-            "type": "column_ref",
+            "name": "some special name",
+            "text": "[some special name]",
+            "type": "identifier",
           }
         `);
       });
