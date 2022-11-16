@@ -108,14 +108,14 @@ which preserves all of this information:
                     "type": "binary_expr",
                     "left": {
                       "type": "column_ref",
-                      "column": { "type": "identifier", "text": "\"first_name\"" }
+                      "column": { "type": "identifier", "text": "\"first_name\"", "name": "first_name" }
                     },
                     "operator": "||",
-                    "right": { "type": "string", "text": "' jr.'" }
+                    "right": { "type": "string", "text": "' jr.'", "value": " jr." }
                   }
                 },
                 "asKw": { "type": "keyword", "text": "as", "name": "AS" },
-                "alias": { "type": "identifier", "text": "fname" }
+                "alias": { "type": "identifier", "text": "fname", "name": "fname" }
               }
             ]
           }
@@ -125,7 +125,7 @@ which preserves all of this information:
           "fromKw": { "type": "keyword", "text": "FROM", "name": "FROM" },
           "expr": {
             "type": "table_ref",
-            "table": { "type": "identifier", "text": "persons" }
+            "table": { "type": "identifier", "text": "persons", "name": "persons" }
           },
           "leading": [
             { "type": "newline", "text": "\n" },
