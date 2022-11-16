@@ -351,6 +351,7 @@ const showNode = cstTransformer<string>({
   identifier: (node) => node.text,
   string: (node) => node.text,
   number: (node) => node.text,
+  blob: (node) => node.text,
   boolean: (node) => node.text,
   null: (node) => node.text,
   parameter: (node) => node.text,

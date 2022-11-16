@@ -2494,6 +2494,7 @@ ident_part  = [A-Za-z0-9_]
 literal
   = literal_string
   / literal_number
+  / literal_blob
   / literal_boolean
   / literal_null
   / literal_datetime
@@ -2513,15 +2514,11 @@ literal_boolean
 
 literal_string "string"
   = &mysql s:literal_string_mysql { return s; }
-  / &sqlite s:literal_string_sqlite { return s; }
-
-literal_string_sqlite
-  = literal_plain_string
-  / literal_hex_string
+  / &sqlite s:literal_plain_string { return s; }
 
 literal_string_mysql
   = literal_string_with_charset
-  / literal_string_without_charset
+  / literal_plain_string
   / literal_natural_charset_string
 
 literal_string_with_charset // for MySQL only
@@ -2534,9 +2531,7 @@ literal_string_with_charset // for MySQL only
   }
 
 literal_string_without_charset // for MySQL only
-  = literal_hex_string
-  / literal_bit_string
-  / literal_hex_number_string
+  = literal_blob
   / literal_plain_string
 
 // The most ordinary string type, without any prefixes
@@ -2591,24 +2586,6 @@ charset_name
   / "ucs2"i
   / "hp8"i
   / "gbk"i
-
-literal_hex_string
-  = "X"i "'" chars:hex_char_code* "'" {
-    return loc({
-      type: "string",
-      text: text(),
-      value: chars.join("")
-    });
-  }
-
-literal_bit_string
-  = "b"i "'" chars:[01]* "'" {
-    return loc({
-      type: "string",
-      text: text(),
-      value: chars.join(""),
-    });
-  }
 
 literal_single_quoted_string_qq_bs // with repeated quote or backslash for escaping
   = "'" chars:([^'\\] / escaped_single_quote_qq_bs)* "'" {
@@ -2681,12 +2658,35 @@ literal_datetime
       });
     }
 
+literal_blob
+  = literal_hex_blob
+  / &mysql n:literal_bit_blob { return n; }
+  / &mysql n:literal_hex_number_blob { return n; }
+
+literal_hex_blob
+  = "X"i "'" chars:hexDigit* "'" {
+    return loc({
+      type: "blob",
+      text: text(),
+      value: parseHexBlob(chars.join("")),
+    });
+  }
+
+literal_bit_blob
+  = "b"i "'" chars:[01]* "'" {
+    return loc({
+      type: "blob",
+      text: text(),
+      value: parseBitBlob(chars.join("")),
+    });
+  }
+
 literal_number "number"
   = literal_decimal_number
   / n:literal_hex_number &sqlite { return n; }
 
 literal_hex_number
-  = "0x" hex_char_code+ {
+  = "0x" hexDigit+ {
     return loc({
       type: "number",
       text: text(),
@@ -2694,18 +2694,15 @@ literal_hex_number
     });
   }
 
-// The exact same syntax as above, but treated as string
-literal_hex_number_string
-  = "0x" chars:hex_char_code+ {
+// The exact same syntax as above, but treated as blob
+literal_hex_number_blob
+  = "0x" chars:hexDigit+ {
     return loc({
-      type: "string",
+      type: "blob",
       text: text(),
-      value: chars.join(""),
+      value: parseHexBlob(chars.join("")),
     });
   }
-
-hex_char_code
-  = hexDigit hexDigit { return String.fromCharCode(parseInt(text(), 16)); }
 
 literal_decimal_number
   = int frac? exp? !ident_start {

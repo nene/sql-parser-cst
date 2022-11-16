@@ -22,6 +22,10 @@ const parser = peggy.generate(source, {
         readSpaceSepList,
       } from "./utils/list";
       import {
+        parseHexBlob,
+        parseBitBlob,
+      } from "./utils/blob";
+      import {
         createBinaryExprChain,
         createBinaryExpr,
         createCompoundSelectStmtChain,

@@ -56,16 +56,4 @@ describe("number literal", () => {
       `);
     });
   });
-
-  dialect("mysql", () => {
-    it("parses 0x3132332D414243 as hex string", () => {
-      expect(parseExpr(`0x3132332D414243`)).toMatchInlineSnapshot(`
-        {
-          "text": "0x3132332D414243",
-          "type": "string",
-          "value": "123-ABC",
-        }
-      `);
-    });
-  });
 });

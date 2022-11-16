@@ -65,28 +65,6 @@ describe("string literal", () => {
     });
   });
 
-  it("hex string", () => {
-    expect(parseExpr(`x'3132332D414243'`)).toMatchInlineSnapshot(`
-      {
-        "text": "x'3132332D414243'",
-        "type": "string",
-        "value": "123-ABC",
-      }
-    `);
-  });
-
-  dialect("mysql", () => {
-    it("bit string", () => {
-      expect(parseExpr(`b'011001'`)).toMatchInlineSnapshot(`
-        {
-          "text": "b'011001'",
-          "type": "string",
-          "value": "011001",
-        }
-      `);
-    });
-  });
-
   dialect("mysql", () => {
     describe("string with charset", () => {
       it("parses single-quoted string with charset to syntax tree", () => {
@@ -112,10 +90,10 @@ describe("string literal", () => {
       it("hex literal with charset", () => {
         testExpr(`_utf8 0xAAFF11`);
       });
-      it("bit string with charset", () => {
+      it("bit literal with charset", () => {
         testExpr(`_big5 b'011001'`);
       });
-      it("hex string with charset", () => {
+      it("hex literal string with charset", () => {
         testExpr(`_utf16le X'AFC123'`);
       });
     });

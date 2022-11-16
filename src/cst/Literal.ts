@@ -3,6 +3,7 @@ import { BaseNode, Keyword } from "./Base";
 export type Literal =
   | StringLiteral
   | NumberLiteral
+  | BlobLiteral
   | BooleanLiteral
   | NullLiteral
   | DateTimeLiteral;
@@ -17,6 +18,12 @@ export interface NumberLiteral extends BaseNode {
   type: "number";
   text: string;
   value: number;
+}
+
+export interface BlobLiteral extends BaseNode {
+  type: "blob";
+  text: string;
+  value: number[];
 }
 
 export interface BooleanLiteral extends BaseNode {
