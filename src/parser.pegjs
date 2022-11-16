@@ -2536,7 +2536,7 @@ literal_string_with_charset // for MySQL only
 literal_string_without_charset // for MySQL only
   = literal_hex_string
   / literal_bit_string
-  / nr:literal_hex_number { return { type: "string", text: nr.text, value: nr.text }; } // TODO
+  / literal_hex_number_string
   / literal_plain_string
 
 // The most ordinary string type, without any prefixes
@@ -2593,7 +2593,7 @@ charset_name
   / "gbk"i
 
 literal_hex_string
-  = "X"i "'" chars:[0-9A-Fa-f]* "'" {
+  = "X"i "'" chars:hex_char_code* "'" {
     return loc({
       type: "string",
       text: text(),
@@ -2689,13 +2689,26 @@ literal_number "number"
   / n:literal_hex_number &sqlite { return n; }
 
 literal_hex_number
-  = "0x" [0-9A-Fa-f]+ {
+  = "0x" hex_char_code+ {
     return loc({
       type: "number",
       text: text(),
       value: parseInt(text(), 16),
     });
   }
+
+// The exact same syntax as above, but treated as string
+literal_hex_number_string
+  = "0x" chars:hex_char_code+ {
+    return loc({
+      type: "string",
+      text: text(),
+      value: chars.join(""),
+    });
+  }
+
+hex_char_code
+  = hexDigit hexDigit { return String.fromCharCode(parseInt(text(), 16)); }
 
 literal_decimal_number
   = int frac? exp? !ident_start {

@@ -66,11 +66,11 @@ describe("string literal", () => {
   });
 
   it("hex string", () => {
-    expect(parseExpr(`x'AFC123'`)).toMatchInlineSnapshot(`
+    expect(parseExpr(`x'3132332D414243'`)).toMatchInlineSnapshot(`
       {
-        "text": "x'AFC123'",
+        "text": "x'3132332D414243'",
         "type": "string",
-        "value": "AFC123",
+        "value": "123-ABC",
       }
     `);
   });

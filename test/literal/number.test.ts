@@ -58,12 +58,12 @@ describe("number literal", () => {
   });
 
   dialect("mysql", () => {
-    it("parses 0x12FC0a as hex string", () => {
-      expect(parseExpr(`0x12FC0a`)).toMatchInlineSnapshot(`
+    it("parses 0x3132332D414243 as hex string", () => {
+      expect(parseExpr(`0x3132332D414243`)).toMatchInlineSnapshot(`
         {
-          "text": "0x12FC0a",
+          "text": "0x3132332D414243",
           "type": "string",
-          "value": "0x12FC0a",
+          "value": "123-ABC",
         }
       `);
     });
