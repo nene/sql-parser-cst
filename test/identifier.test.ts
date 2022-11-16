@@ -12,6 +12,7 @@ describe("identifier", () => {
       expect(parseExpr("18foo")).toMatchInlineSnapshot(`
         {
           "column": {
+            "name": "18foo",
             "text": "18foo",
             "type": "identifier",
           },
@@ -29,6 +30,7 @@ describe("identifier", () => {
         expect(parseExpr(`"some special name"`)).toMatchInlineSnapshot(`
           {
             "column": {
+              "name": "some special name",
               "text": ""some special name"",
               "type": "identifier",
             },
@@ -51,6 +53,7 @@ describe("identifier", () => {
         expect(parseExpr("`some special name`")).toMatchInlineSnapshot(`
           {
             "column": {
+              "name": "some special name",
               "text": "\`some special name\`",
               "type": "identifier",
             },
@@ -73,6 +76,7 @@ describe("identifier", () => {
         expect(parseExpr("[some special name]")).toMatchInlineSnapshot(`
           {
             "column": {
+              "name": "some special name",
               "text": "[some special name]",
               "type": "identifier",
             },
@@ -135,6 +139,7 @@ describe("identifier", () => {
       expect(parseExpr("foo")).toMatchInlineSnapshot(`
         {
           "column": {
+            "name": "foo",
             "text": "foo",
             "type": "identifier",
           },
@@ -147,10 +152,12 @@ describe("identifier", () => {
       expect(parseExpr("foo.bar")).toMatchInlineSnapshot(`
         {
           "column": {
+            "name": "bar",
             "text": "bar",
             "type": "identifier",
           },
           "table": {
+            "name": "foo",
             "text": "foo",
             "type": "identifier",
           },
@@ -169,6 +176,7 @@ describe("identifier", () => {
       expect(parseFrom(`my_table`)).toMatchInlineSnapshot(`
         {
           "table": {
+            "name": "my_table",
             "text": "my_table",
             "type": "identifier",
           },
@@ -186,10 +194,12 @@ describe("identifier", () => {
       expect(parseFrom(`my_schema.my_table`)).toMatchInlineSnapshot(`
         {
           "schema": {
+            "name": "my_schema",
             "text": "my_schema",
             "type": "identifier",
           },
           "table": {
+            "name": "my_table",
             "text": "my_table",
             "type": "identifier",
           },

@@ -51,6 +51,7 @@ describe("CASE expression", () => {
             "condition": {
               "left": {
                 "column": {
+                  "name": "animal",
                   "text": "animal",
                   "type": "identifier",
                 },
@@ -67,6 +68,7 @@ describe("CASE expression", () => {
             "result": {
               "text": "'dog'",
               "type": "string",
+              "value": "dog",
             },
             "thenKw": {
               "name": "THEN",
@@ -89,6 +91,7 @@ describe("CASE expression", () => {
             "result": {
               "text": "'mouse'",
               "type": "string",
+              "value": "mouse",
             },
             "type": "case_else",
           },

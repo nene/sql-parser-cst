@@ -11,6 +11,7 @@ describe("COLLATE operator", () => {
       {
         "left": {
           "column": {
+            "name": "my_col",
             "text": "my_col",
             "type": "identifier",
           },
@@ -22,6 +23,7 @@ describe("COLLATE operator", () => {
           "type": "keyword",
         },
         "right": {
+          "name": "utf8",
           "text": "utf8",
           "type": "identifier",
         },

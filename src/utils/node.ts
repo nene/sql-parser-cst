@@ -164,9 +164,10 @@ export const createKeyword = (text: string): Keyword => ({
   name: text.toUpperCase(),
 });
 
-export const createIdentifier = (text: string): Identifier => ({
+export const createIdentifier = (text: string, name: string): Identifier => ({
   type: "identifier",
   text,
+  name,
 });
 
 interface PartialAlias {

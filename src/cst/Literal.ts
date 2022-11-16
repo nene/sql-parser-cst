@@ -10,6 +10,7 @@ export type Literal =
 export interface StringLiteral extends BaseNode {
   type: "string";
   text: string;
+  value: string;
 }
 
 export interface NumberLiteral extends BaseNode {

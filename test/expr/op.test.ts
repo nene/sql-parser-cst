@@ -21,6 +21,7 @@ describe("operators", () => {
     expect(parseExpr(`8DIV4`)).toMatchInlineSnapshot(`
       {
         "column": {
+          "name": "8DIV4",
           "text": "8DIV4",
           "type": "identifier",
         },

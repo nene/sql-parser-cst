@@ -68,6 +68,7 @@ describe("comparison operators", () => {
         {
           "expr": {
             "column": {
+              "name": "col",
               "text": "col",
               "type": "identifier",
             },
@@ -143,6 +144,7 @@ describe("comparison operators", () => {
           },
           "left": {
             "column": {
+              "name": "age",
               "text": "age",
               "type": "identifier",
             },

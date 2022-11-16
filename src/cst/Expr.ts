@@ -184,6 +184,7 @@ export interface TableRef extends BaseNode {
 export interface Identifier extends BaseNode {
   type: "identifier";
   text: string;
+  name: string;
 }
 
 export interface Parameter extends BaseNode {

@@ -106,6 +106,7 @@ describe("window functions", () => {
           "type": "paren_expr",
         },
         "name": {
+          "name": "row_number",
           "text": "row_number",
           "type": "identifier",
         },
@@ -119,6 +120,7 @@ describe("window functions", () => {
           "window": {
             "expr": {
               "baseWindowName": {
+                "name": "my_win",
                 "text": "my_win",
                 "type": "identifier",
               },
@@ -209,6 +211,7 @@ describe("window functions", () => {
                   "items": [
                     {
                       "column": {
+                        "name": "price",
                         "text": "price",
                         "type": "identifier",
                       },
@@ -237,6 +240,7 @@ describe("window functions", () => {
                   "items": [
                     {
                       "column": {
+                        "name": "product",
                         "text": "product",
                         "type": "identifier",
                       },

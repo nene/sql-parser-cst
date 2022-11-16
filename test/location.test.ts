@@ -32,6 +32,7 @@ describe("location", () => {
                         ],
                         "right": {
                           "column": {
+                            "name": "col",
                             "range": [
                               12,
                               15,
@@ -79,6 +80,7 @@ describe("location", () => {
               {
                 "expr": {
                   "alias": {
+                    "name": "t",
                     "range": [
                       26,
                       27,
@@ -92,6 +94,7 @@ describe("location", () => {
                       25,
                     ],
                     "table": {
+                      "name": "tbl",
                       "range": [
                         22,
                         25,

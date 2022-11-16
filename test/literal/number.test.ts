@@ -63,6 +63,7 @@ describe("number literal", () => {
         {
           "text": "0x12FC0a",
           "type": "string",
+          "value": "0x12FC0a",
         }
       `);
     });

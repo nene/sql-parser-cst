@@ -6,6 +6,7 @@ describe("string literal", () => {
       {
         "text": "'hello'",
         "type": "string",
+        "value": "hello",
       }
     `);
   });
@@ -24,6 +25,7 @@ describe("string literal", () => {
         {
           "text": ""hello"",
           "type": "string",
+          "value": "hello",
         }
       `);
     });
@@ -40,6 +42,7 @@ describe("string literal", () => {
       {
         "text": "x'AFC123'",
         "type": "string",
+        "value": "AFC123",
       }
     `);
   });
@@ -50,6 +53,7 @@ describe("string literal", () => {
         {
           "text": "b'011001'",
           "type": "string",
+          "value": "011001",
         }
       `);
     });
@@ -64,6 +68,7 @@ describe("string literal", () => {
             "string": {
               "text": "'hello'",
               "type": "string",
+              "value": "hello",
             },
             "type": "string_with_charset",
           }
@@ -94,6 +99,7 @@ describe("string literal", () => {
         {
           "text": "N'hello'",
           "type": "string",
+          "value": "hello",
         }
       `);
     });

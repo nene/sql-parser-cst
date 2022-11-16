@@ -54,6 +54,7 @@ describe("drop table", () => {
           "items": [
             {
               "table": {
+                "name": "my_table",
                 "text": "my_table",
                 "type": "identifier",
               },

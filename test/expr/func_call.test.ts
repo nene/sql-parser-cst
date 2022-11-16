@@ -40,6 +40,7 @@ describe("function call", () => {
           "type": "paren_expr",
         },
         "name": {
+          "name": "my_func",
           "text": "my_func",
           "type": "identifier",
         },
@@ -58,6 +59,7 @@ describe("function call", () => {
     expect(parseExpr("CURRENT_TIME")).toMatchInlineSnapshot(`
       {
         "name": {
+          "name": "CURRENT_TIME",
           "text": "CURRENT_TIME",
           "type": "identifier",
         },

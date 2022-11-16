@@ -12,6 +12,7 @@ describe("date/time literal", () => {
         "string": {
           "text": "'10:05:58'",
           "type": "string",
+          "value": "10:05:58",
         },
         "type": "datetime",
       }

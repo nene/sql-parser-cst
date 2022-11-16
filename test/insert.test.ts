@@ -166,6 +166,7 @@ describe("insert into", () => {
                 "items": [
                   {
                     "column": {
+                      "name": "col1",
                       "text": "col1",
                       "type": "identifier",
                     },
@@ -173,6 +174,7 @@ describe("insert into", () => {
                   },
                   {
                     "column": {
+                      "name": "col2",
                       "text": "col2",
                       "type": "identifier",
                     },
@@ -197,6 +199,7 @@ describe("insert into", () => {
             "orAction": undefined,
             "table": {
               "table": {
+                "name": "tbl",
                 "text": "tbl",
                 "type": "identifier",
               },

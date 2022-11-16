@@ -95,10 +95,12 @@ describe("select", () => {
             {
               "expr": {
                 "schema": {
+                  "name": "db",
                   "text": "db",
                   "type": "identifier",
                 },
                 "table": {
+                  "name": "tbl",
                   "text": "tbl",
                   "type": "identifier",
                 },
@@ -126,6 +128,7 @@ describe("select", () => {
                 "items": [
                   {
                     "alias": {
+                      "name": "foo",
                       "text": "foo",
                       "type": "identifier",
                     },
@@ -167,11 +170,13 @@ describe("select", () => {
                 "items": [
                   {
                     "alias": {
+                      "name": "foo",
                       "text": "'foo'",
                       "type": "identifier",
                     },
                     "expr": {
                       "column": {
+                        "name": "col",
                         "text": "col",
                         "type": "identifier",
                       },

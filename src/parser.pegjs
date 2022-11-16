@@ -2212,7 +2212,7 @@ table_func_call
 func_name
   = ident
   / &mysql kw:mysql_window_func_keyword {
-    return loc({ type: "identifier", text: kw.text })
+    return loc(createIdentifier(kw.text, kw.text));
   }
 
 // In MySQL, window functions are reserved keywords
@@ -2231,7 +2231,7 @@ mysql_window_func_keyword
 
 paren_less_func_name
   = kw:(CURRENT_DATE / CURRENT_TIME / CURRENT_TIMESTAMP) {
-    return loc(createIdentifier(kw.text));
+    return loc(createIdentifier(kw.text, kw.text));
   }
 
 func_args
@@ -2435,7 +2435,7 @@ plain_column_ref
 // Keywords can be used as column names when they are prefixed by table name, like tbl.update
 qualified_column
   = name:ident_name {
-    return loc(createIdentifier(name));
+    return loc(createIdentifier(name, name));
   }
   / quoted_ident
 
@@ -2451,24 +2451,24 @@ column
  */
 alias_ident
   = ident
-  / s:literal_plain_string { return loc(createIdentifier(s.text)); }
+  / s:literal_plain_string { return loc(createIdentifier(s.text, s.value)); }
 
 ident "identifier"
   = name:ident_name !{ return isReservedKeyword(name); } {
-    return loc(createIdentifier(name));
+    return loc(createIdentifier(name, name));
   }
   / quoted_ident
 
 quoted_ident
-  = &sqlite name:bracket_quoted_ident { return loc(createIdentifier(name)); }
-  / (&sqlite / &mysql) name:backticks_quoted_ident { return loc(createIdentifier(name)); }
-  / &sqlite str:literal_double_quoted_string_qq { return loc(createIdentifier(str.text)); }
+  = &sqlite ident:bracket_quoted_ident { return ident; }
+  / (&sqlite / &mysql) ident:backticks_quoted_ident { return ident; }
+  / &sqlite str:literal_double_quoted_string_qq { return loc(createIdentifier(str.text, str.value)); }
 
 backticks_quoted_ident
-  = q:"`" chars:([^`] / "``")+ "`" { return text(); }
+  = "`" chars:([^`] / "``")+ "`" { return loc(createIdentifier(text(), chars.join(""))); }
 
 bracket_quoted_ident
-  = q:"[" chars:([^\]] / "]]")+ "]" { return text(); }
+  = "[" chars:([^\]] / "]]")+ "]" { return loc(createIdentifier(text(), chars.join(""))); }
 
 ident_name
   = ident_start ident_part* { return text(); }
@@ -2530,7 +2530,7 @@ literal_string_with_charset // for MySQL only
 literal_string_without_charset // for MySQL only
   = literal_hex_string
   / literal_bit_string
-  / nr:literal_hex_number { return { type: "string", text: nr.text }; }
+  / nr:literal_hex_number { return { type: "string", text: nr.text, value: nr.text }; } // TODO
   / literal_plain_string
 
 // The most ordinary string type, without any prefixes
@@ -2587,58 +2587,65 @@ charset_name
   / "gbk"i
 
 literal_hex_string
-  = "X"i "'" [0-9A-Fa-f]* "'" {
+  = "X"i "'" chars:[0-9A-Fa-f]* "'" {
     return loc({
       type: "string",
       text: text(),
+      value: chars.join("")
     });
   }
 
 literal_bit_string
-  = "b"i "'" [01]* "'" {
+  = "b"i "'" chars:[01]* "'" {
     return loc({
       type: "string",
       text: text(),
+      value: chars.join(""),
     });
   }
 
 literal_single_quoted_string_qq_bs // with repeated quote or backslash for escaping
-  = "'" single_quoted_char* "'" {
+  = "'" chars:single_quoted_char* "'" {
     return loc({
       type: "string",
       text: text(),
+      value: chars.join(""),
     });
   }
 
 literal_single_quoted_string_qq // with repeated quote for escaping
-  = "'" ([^'] / "''")* "'" {
+  = "'" chars:([^'] / "''")* "'" {
     return loc({
       type: "string",
       text: text(),
+      value: chars.join(""),
     });
   }
 
 literal_double_quoted_string_qq // with repeated quote for escaping
-  = "\"" ([^"] / '""')* "\"" {
+  = "\"" chars:([^"] / '""')* "\"" {
     return loc({
       type: "string",
       text: text(),
+      value: chars.join(""),
     });
   }
 
 literal_double_quoted_string_qq_bs // with repeated quote or backslash for escaping
-  = "\"" double_quoted_char* "\"" {
+  = "\"" chars:double_quoted_char* "\"" {
     return loc({
       type: "string",
       text: text(),
+      value: chars.join(""),
     });
   }
 
 literal_natural_charset_string
-  = "N"i literal_single_quoted_string_qq_bs {
+  = "N"i str:literal_single_quoted_string_qq_bs {
     return loc({
       type: "string",
       text: text(),
+      value: str.value,
     });
   }
 
