@@ -1,4 +1,4 @@
-import { parseExpr, showPrecedence, testExpr } from "../test_utils";
+import { dialect, parseExpr, showPrecedence, testExpr } from "../test_utils";
 
 // General tests for operators
 describe("operators", () => {
@@ -16,17 +16,17 @@ describe("operators", () => {
     expect(showPrecedence(`5 + 2 - 1 + 3`)).toBe(`(((5 + 2) - 1) + 3)`);
   });
 
-  it("requires space around keyword operators", () => {
-    // this gets parsed as an identifier
-    expect(parseExpr(`8DIV4`)).toMatchInlineSnapshot(`
-      {
-        "column": {
-          "name": "8DIV4",
-          "text": "8DIV4",
-          "type": "identifier",
-        },
-        "type": "column_ref",
-      }
-    `);
+  dialect(["mysql", "sqlite"], () => {
+    it("requires space around keyword operators", () => {
+      // this does not get parsed as DIV expression
+      expect(parseExpr(`8DIV4`).type).toBe("column_ref");
+    });
+  });
+
+  dialect(["bigquery"], () => {
+    it("requires space around keyword operators", () => {
+      // In BigQuery identifiers can't start with number (as in above test)
+      expect(() => parseExpr(`8DIV4`)).toThrowError();
+    });
   });
 });
