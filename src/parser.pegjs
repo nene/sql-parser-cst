@@ -2461,7 +2461,7 @@ ident "identifier"
 
 quoted_ident
   = &sqlite ident:bracket_quoted_ident { return ident; }
-  / (&sqlite / &mysql) ident:backticks_quoted_ident { return ident; }
+  / (&sqlite / &mysql / &bigquery) ident:backticks_quoted_ident { return ident; }
   / &sqlite str:literal_double_quoted_string_qq { return loc(createIdentifier(str.text, str.value)); }
 
 backticks_quoted_ident
