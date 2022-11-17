@@ -83,13 +83,17 @@ intersect_op
 
 select_stmt
   = cte:(with_clause __)?
-    select:(select_clause / values_clause)
+    select:select_main_clause
     otherClauses:(__ other_clause)* {
       return loc({
         type: "select_stmt",
         clauses: [read(cte), read(select), ...otherClauses.map(read)].filter(identity),
       });
   }
+
+select_main_clause
+  = select_clause
+  / v:values_clause !bigquery { return v; }
 
 /**
  * SELECT .. WITH
