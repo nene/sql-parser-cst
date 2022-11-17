@@ -50,13 +50,13 @@ describe("string literal", () => {
     `);
   });
 
-  dialect("mysql", () => {
+  dialect(["mysql", "bigquery"], () => {
     describe("backslash-escaping inside single-quoted strings", () => {
       testMysqlBackslashEscaping("'");
     });
   });
 
-  dialect("mysql", () => {
+  dialect(["mysql", "bigquery"], () => {
     it("double-quoted string", () => {
       expect(parseExpr(`"hello"`)).toMatchInlineSnapshot(`
         {

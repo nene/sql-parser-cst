@@ -2514,7 +2514,7 @@ literal_boolean
 
 literal_string "string"
   = &mysql s:literal_string_mysql { return s; }
-  / &sqlite s:literal_plain_string { return s; }
+  / (&sqlite / &bigquery) s:literal_plain_string { return s; }
 
 literal_string_mysql
   = literal_string_with_charset
@@ -2537,8 +2537,8 @@ literal_string_without_charset // for MySQL only
 // The most ordinary string type, without any prefixes
 literal_plain_string
   = &sqlite s:literal_single_quoted_string_qq { return s; }
-  / &mysql s:literal_single_quoted_string_qq_bs { return s; }
-  / &mysql s:literal_double_quoted_string_qq_bs { return s; }
+  / (&mysql / &bigquery) s:literal_single_quoted_string_qq_bs { return s; }
+  / (&mysql / &bigquery) s:literal_double_quoted_string_qq_bs { return s; }
 
 charset_introducer
   = "_" cs:charset_name !ident_part { return cs; }
