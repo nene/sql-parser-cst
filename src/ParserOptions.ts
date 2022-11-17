@@ -1,6 +1,7 @@
 export const validDialectNames = {
   sqlite: true,
   mysql: true,
+  bigquery: true,
 };
 
 export type DialectName = keyof typeof validDialectNames;

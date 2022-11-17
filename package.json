@@ -24,9 +24,10 @@
     "watch:generate": "npm-watch",
     "clean": "rm -rf lib; rm -rf src/generated_parser.ts",
     "build": "yarn clean && yarn generate && tsc",
+    "test:bigquery": "jest --config test/config/bigquery.json",
     "test:mysql": "jest --config test/config/mysql.json",
     "test:sqlite": "jest --config test/config/sqlite.json",
-    "test": "yarn generate && yarn test:mysql && yarn test:sqlite",
+    "test": "yarn generate && yarn test:bigquery && yarn test:mysql && yarn test:sqlite",
     "perf": "yarn ts-node perf/perf-test.ts"
   },
   "devDependencies": {
