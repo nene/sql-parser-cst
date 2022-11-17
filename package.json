@@ -9,6 +9,7 @@
     "type": "git",
     "url": "https://github.com/nene/sql-parser-cst"
   },
+  "homepage": "https://github.com/nene/sql-parser-cst",
   "bugs": {
     "url": "https://github.com/nene/sql-parser-cst/issues"
   },
