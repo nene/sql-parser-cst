@@ -2785,8 +2785,9 @@ never
   = . &{ return false };
 
 // SQL Dialect assertion rules
-sqlite = &{ return isSqlite(); }
+bigquery = &{ return isBigquery(); }
 mysql = &{ return isMysql(); }
+sqlite = &{ return isSqlite(); }
 
 // All keywords (sorted alphabetically)
 ABORT               = kw:"ABORT"i               !ident_part { return loc(createKeyword(kw)); }
