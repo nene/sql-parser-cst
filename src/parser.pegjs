@@ -2160,7 +2160,7 @@ primary
   / case_expr
   / exists_expr
   / column_ref
-  / &mysql  e:interval_expr { return e; }
+  / (&mysql / &bigquery) e:interval_expr { return e; }
   / parameter
 
 paren_expr
@@ -2362,25 +2362,49 @@ case_else
   }
 
 interval_expr
-  = kw:INTERVAL e:(__ expr __) unit:interval_unit {
+  = kw:INTERVAL e:(__ expr __) unit:(interval_unit_range / interval_unit) {
     return {
       type: "interval_expr",
       intervalKw: kw,
       expr: read(e),
-      unitKw: unit,
+      unit,
     };
+  }
+
+interval_unit_range
+  = fromUnitKw:interval_unit toKw:(__ TO __) toUnitKw:interval_unit {
+    return loc({
+      type: "interval_unit_range",
+      fromUnitKw,
+      toKw: read(toKw),
+      toUnitKw,
+    });
   }
 
 interval_unit
   = YEAR
-  / QUARTER
   / MONTH
-  / WEEK
   / DAY
   / HOUR
   / MINUTE
   / SECOND
+  / x:interval_unit_mysql &mysql { return x; }
+
+interval_unit_mysql
+  = QUARTER
+  / WEEK
   / MICROSECOND
+  / SECOND_MICROSECOND
+  / MINUTE_MICROSECOND
+  / MINUTE_SECOND
+  / HOUR_MICROSECOND
+  / HOUR_SECOND
+  / HOUR_MINUTE
+  / DAY_MICROSECOND
+  / DAY_SECOND
+  / DAY_MINUTE
+  / DAY_HOUR
+  / YEAR_MONTH
 
 exists_expr
   = kw:EXISTS expr:(__ paren_expr_select) {
@@ -2835,6 +2859,7 @@ mysql = &{ return isMysql(); }
 sqlite = &{ return isSqlite(); }
 
 // All keywords (sorted alphabetically)
+
 ABORT               = kw:"ABORT"i               !ident_part { return loc(createKeyword(kw)); }
 ACTION              = kw:"ACTION"i              !ident_part { return loc(createKeyword(kw)); }
 ADD                 = kw:"ADD"i                 !ident_part { return loc(createKeyword(kw)); }
@@ -2908,6 +2933,10 @@ DATABASE            = kw:"DATABASE"i            !ident_part { return loc(createK
 DATE                = kw:"DATE"i                !ident_part { return loc(createKeyword(kw)); }
 DATETIME            = kw:"DATETIME"i            !ident_part { return loc(createKeyword(kw)); }
 DAY                 = kw:"DAY"i                 !ident_part { return loc(createKeyword(kw)); }
+DAY_HOUR            = kw:"DAY_HOUR"             !ident_part { return loc(createKeyword(kw)); }
+DAY_MICROSECOND     = kw:"DAY_MICROSECOND"      !ident_part { return loc(createKeyword(kw)); }
+DAY_MINUTE          = kw:"DAY_MINUTE"           !ident_part { return loc(createKeyword(kw)); }
+DAY_SECOND          = kw:"DAY_SECOND"           !ident_part { return loc(createKeyword(kw)); }
 DEC                 = kw:"DEC"i                 !ident_part { return loc(createKeyword(kw)); }
 DECIMAL             = kw:"DECIMAL"i             !ident_part { return loc(createKeyword(kw)); }
 DEFAULT             = kw:"DEFAULT"i             !ident_part { return loc(createKeyword(kw)); }
@@ -2976,6 +3005,9 @@ HASH                = kw:"HASH"i                !ident_part { return loc(createK
 HAVING              = kw:"HAVING"i              !ident_part { return loc(createKeyword(kw)); }
 HIGH_PRIORITY       = kw:"HIGH_PRIORITY"i       !ident_part { return loc(createKeyword(kw)); }
 HOUR                = kw:"HOUR"i                !ident_part { return loc(createKeyword(kw)); }
+HOUR_MICROSECOND    = kw:"HOUR_MICROSECOND"     !ident_part { return loc(createKeyword(kw)); }
+HOUR_MINUTE         = kw:"HOUR_MINUTE"          !ident_part { return loc(createKeyword(kw)); }
+HOUR_SECOND         = kw:"HOUR_SECOND"          !ident_part { return loc(createKeyword(kw)); }
 IF                  = kw:"IF"i                  !ident_part { return loc(createKeyword(kw)); }
 IGNORE              = kw:"IGNORE"i              !ident_part { return loc(createKeyword(kw)); }
 IMMEDIATE           = kw:"IMMEDIATE"i           !ident_part { return loc(createKeyword(kw)); }
@@ -3032,6 +3064,8 @@ MICROSECOND         = kw:"MICROSECOND"i         !ident_part { return loc(createK
 MIN                 = kw:"MIN"i                 !ident_part { return loc(createKeyword(kw)); }
 MIN_ROWS            = kw:"MIN_ROWS"i            !ident_part { return loc(createKeyword(kw)); }
 MINUTE              = kw:"MINUTE"i              !ident_part { return loc(createKeyword(kw)); }
+MINUTE_MICROSECOND  = kw:"MINUTE_MICROSECOND"   !ident_part { return loc(createKeyword(kw)); }
+MINUTE_SECOND       = kw:"MINUTE_SECOND"        !ident_part { return loc(createKeyword(kw)); }
 MOD                 = kw:"MOD"i                 !ident_part { return loc(createKeyword(kw)); }
 MODE                = kw:"MODE"i                !ident_part { return loc(createKeyword(kw)); }
 MONTH               = kw:"MONTH"i               !ident_part { return loc(createKeyword(kw)); }
@@ -3105,6 +3139,7 @@ ROWS                = kw:"ROWS"i                !ident_part { return loc(createK
 SAVEPOINT           = kw:"SAVEPOINT"i           !ident_part { return loc(createKeyword(kw)); }
 SCHEMA              = kw:"SCHEMA"i              !ident_part { return loc(createKeyword(kw)); }
 SECOND              = kw:"SECOND"i              !ident_part { return loc(createKeyword(kw)); }
+SECOND_MICROSECOND  = kw:"SECOND_MICROSECOND"   !ident_part { return loc(createKeyword(kw)); }
 SECONDARY_ENGINE_ATTRIBUTE = kw:"SECONDARY_ENGINE_ATTRIBUTE"i !ident_part { return loc(createKeyword(kw)); }
 SECURITY            = kw:"SECURITY"i            !ident_part { return loc(createKeyword(kw)); }
 SELECT              = kw:"SELECT"i              !ident_part { return loc(createKeyword(kw)); }
@@ -3186,4 +3221,5 @@ WORK                = kw:"WORK"i                !ident_part { return loc(createK
 WRITE               = kw:"WRITE"i               !ident_part { return loc(createKeyword(kw)); }
 XOR                 = kw:"XOR"i                 !ident_part { return loc(createKeyword(kw)); }
 YEAR                = kw:"YEAR"i                !ident_part { return loc(createKeyword(kw)); }
+YEAR_MONTH          = kw:"YEAR_MONTH"           !ident_part { return loc(createKeyword(kw)); }
 ZEROFILL            = kw:"ZEROFILL"i            !ident_part { return loc(createKeyword(kw)); }

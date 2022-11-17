@@ -11,7 +11,8 @@ export type AllExprNodes =
   | FilterArg
   | OverArg
   | CaseWhen
-  | CaseElse;
+  | CaseElse
+  | IntervalUnitRange;
 
 export type Expr =
   | ListExpr
@@ -150,18 +151,38 @@ export interface IntervalExpr extends BaseNode {
   type: "interval_expr";
   intervalKw: Keyword<"INTERVAL">;
   expr: Expr;
-  unitKw: Keyword<
-    | "YEAR"
-    | "QUARTER"
-    | "MONTH"
-    | "WEEK"
-    | "DAY"
-    | "HOUR"
-    | "MINUTE"
-    | "SECOND"
-    | "MICROSECOND"
-  >;
+  unit: IntervalUnitKeyword | IntervalUnitRange;
 }
+
+export interface IntervalUnitRange extends BaseNode {
+  type: "interval_unit_range";
+  fromUnitKw: IntervalUnitKeyword;
+  toKw: Keyword<"TO">;
+  toUnitKw: IntervalUnitKeyword;
+}
+
+type IntervalUnitKeyword = Keyword<
+  | "YEAR"
+  | "QUARTER"
+  | "MONTH"
+  | "WEEK"
+  | "DAY"
+  | "HOUR"
+  | "MINUTE"
+  | "SECOND"
+  | "MICROSECOND"
+  | "SECOND_MICROSECOND"
+  | "MINUTE_MICROSECOND"
+  | "MINUTE_SECOND"
+  | "HOUR_MICROSECOND"
+  | "HOUR_SECOND"
+  | "HOUR_MINUTE"
+  | "DAY_MICROSECOND"
+  | "DAY_SECOND"
+  | "DAY_MINUTE"
+  | "DAY_HOUR"
+  | "YEAR_MONTH"
+>;
 
 export interface StringWithCharset extends BaseNode {
   type: "string_with_charset";
