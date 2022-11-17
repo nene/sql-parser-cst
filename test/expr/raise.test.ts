@@ -19,7 +19,7 @@ describe("raise function", () => {
     });
   });
 
-  dialect("mysql", () => {
+  dialect(["mysql", "bigquery"], () => {
     it("supports ordinary function named RAISE()", () => {
       testExpr(`RAISE(FAIL, 'blah')`);
     });
@@ -27,9 +27,5 @@ describe("raise function", () => {
     it("parses RAISE() as ordinary function call", () => {
       expect(parseExpr(`RAISE(FAIL, 'blah')`).type).toBe("func_call");
     });
-  });
-
-  dialect("bigquery", () => {
-    it.skip("supports RAISE statement", () => {});
   });
 });
