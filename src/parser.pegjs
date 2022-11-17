@@ -2049,8 +2049,8 @@ comparison_op
   / regexp_op
 
 is_op
-  = kws:(IS __ NOT __ DISTINCT __ FROM) &sqlite { return read(kws); }
-  / kws:(IS __ DISTINCT __ FROM) &sqlite { return read(kws); }
+  = kws:(IS __ NOT __ DISTINCT __ FROM) (&sqlite / &bigquery) { return read(kws); }
+  / kws:(IS __ DISTINCT __ FROM) (&sqlite / &bigquery) { return read(kws); }
   / kws:(IS __ NOT) { return read(kws); }
   / kws:(IS) { return read(kws); }
 
@@ -2076,9 +2076,15 @@ unary_null_op
   = kws:(NOT __ NULL / NOTNULL / ISNULL) &sqlite { return read(kws); }
 
 bitwise_or_expr
-  = head:bitwise_and_expr tail:(__ "|"  __ bitwise_and_expr)* {
+  = head:bitwise_xor_expr tail:(__ "|"  __ bitwise_xor_expr)* {
     return createBinaryExprChain(head, tail);
   }
+
+bitwise_xor_expr
+  = &bigquery head:bitwise_and_expr tail:(__ "^"  __ bitwise_and_expr)* {
+    return createBinaryExprChain(head, tail);
+  }
+  / bitwise_and_expr
 
 bitwise_and_expr
   = head:bit_shift_expr tail:(__ "&"  __ bit_shift_expr)* {
@@ -2100,17 +2106,23 @@ additive_operator
   = "+" / "-"
 
 multiplicative_expr
-  = head:bitwise_xor_expr tail:(__ multiplicative_operator  __ bitwise_xor_expr)* {
+  = head:mysql_bitwise_xor_expr tail:(__ multiplicative_operator  __ mysql_bitwise_xor_expr)* {
       return createBinaryExprChain(head, tail);
     }
 
 multiplicative_operator
-  = "*" / "/" / "%" / op:DIV / op:MOD
+  = "*"
+  / "/"
+  / op:"%" (&mysql / &sqlite) { return op; }
+  / op:DIV (&mysql / &sqlite) { return op; }
+  / op:MOD (&mysql / &sqlite) { return op; }
+  / op:"||" &bigquery { return op; }
 
-bitwise_xor_expr
-  = head:concat_or_json_expr tail:(__ "^"  __ concat_or_json_expr)* {
+mysql_bitwise_xor_expr
+  = &mysql head:concat_or_json_expr tail:(__ "^"  __ concat_or_json_expr)* {
     return createBinaryExprChain(head, tail);
   }
+  / concat_or_json_expr
 
 concat_or_json_expr
   = head:collate_expr tail:(__ concat_or_json_op  __ collate_expr)* {
@@ -2119,11 +2131,11 @@ concat_or_json_expr
 
 concat_or_json_op
   = op:"||" &sqlite { return op; }
-  / "->>"
-  / "->"
+  / op:"->>" (&sqlite / &mysql) { return op; }
+  / op:"->" (&sqlite / &mysql) { return op; }
 
 collate_expr
-  = left:negation_expr c1:__ op:COLLATE c2:__ right:ident {
+  = (&mysql / &sqlite) left:negation_expr c1:__ op:COLLATE c2:__ right:ident {
     return loc(createBinaryExpr(left, c1, op, c2, right));
   }
   / negation_expr

@@ -24,13 +24,27 @@ describe("comparison operators", () => {
   });
 
   describe("IS", () => {
-    it("supports IS [NOT] operator", () => {
+    it("supports IS [NOT] NULL operator", () => {
       testExpr(`col IS NULL`);
       testExpr(`col IS NOT NULL`);
       testExpr(`c /*c1*/ IS /*c2*/ NOT /*c3*/ NULL`);
     });
 
-    dialect("sqlite", () => {
+    dialect("bigquery", () => {
+      it("supports IS [NOT] TRUE/FALSE operator", () => {
+        testExpr(`col IS TRUE`);
+        testExpr(`col IS NOT FALSE`);
+        testExpr(`c /*c1*/ IS /*c2*/ NOT /*c3*/ TRUE`);
+      });
+
+      it("supports IS [NOT] UNKNOWN operator", () => {
+        testExpr(`col IS UNKNOWN`);
+        testExpr(`col IS NOT UNKNOWN`);
+        testExpr(`c /*c1*/ IS /*c2*/ NOT /*c3*/ UNKNOWN`);
+      });
+    });
+
+    dialect(["sqlite", "bigquery"], () => {
       it("supports IS [NOT] DISTINCT FROM as alternative spelling for IS [NOT]", () => {
         testExpr(`col IS DISTINCT FROM NULL`);
         testExpr(`col /*c1*/ IS /*c2*/ NOT /*c3*/ DISTINCT /*c4*/ FROM /*c5*/ NULL`);

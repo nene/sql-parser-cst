@@ -7,15 +7,19 @@ describe("string operators", () => {
     testExpr(`'foobar' /*c1*/ NOT /*c2*/ LIKE /*c3*/ 'foo%'`);
   });
 
-  it("supports LIKE with ESCAPE", () => {
-    testExpr(`'foobar' LIKE 'percentage |%' ESCAPE '|'`);
-    testExpr(`'foobar' NOT LIKE 'foo^_bar' ESCAPE '^'`);
-    testExpr(`'foobar' LIKE 'foo' /*c1*/ ESCAPE /*c2*/ '|'`);
+  dialect(["mysql", "sqlite"], () => {
+    it("supports LIKE with ESCAPE", () => {
+      testExpr(`'foobar' LIKE 'percentage |%' ESCAPE '|'`);
+      testExpr(`'foobar' NOT LIKE 'foo^_bar' ESCAPE '^'`);
+      testExpr(`'foobar' LIKE 'foo' /*c1*/ ESCAPE /*c2*/ '|'`);
+    });
   });
 
-  it("supports [NOT] REGEXP operator", () => {
-    testExpr(`'foooo' REGEXP 'fo*'`);
-    testExpr(`'foooo' /*c0*/ NOT /*c1*/ REGEXP /*c2*/ 'fo*'`);
+  dialect(["mysql", "sqlite"], () => {
+    it("supports [NOT] REGEXP operator", () => {
+      testExpr(`'foooo' REGEXP 'fo*'`);
+      testExpr(`'foooo' /*c0*/ NOT /*c1*/ REGEXP /*c2*/ 'fo*'`);
+    });
   });
 
   dialect("sqlite", () => {
@@ -36,7 +40,7 @@ describe("string operators", () => {
     });
   });
 
-  dialect("sqlite", () => {
+  dialect(["sqlite", "bigquery"], () => {
     it("treats || as concatenation operator", () => {
       testExpr(`'hello' || ' ' || 'world'`);
       testExpr(`str1 /*c1*/ || /*c2*/ str2`);

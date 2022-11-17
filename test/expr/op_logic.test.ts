@@ -1,10 +1,12 @@
 import { dialect, showPrecedence, testExpr } from "../test_utils";
 
 describe("logic operators", () => {
-  it("parses unary ! operator", () => {
-    testExpr(`!x OR y`);
-    testExpr(`!!!false`);
-    testExpr(`!/*com*/ true`);
+  dialect(["mysql", "sqlite"], () => {
+    it("parses unary ! operator", () => {
+      testExpr(`!x OR y`);
+      testExpr(`!!!false`);
+      testExpr(`!/*com*/ true`);
+    });
   });
 
   it("parses NOT operator", () => {

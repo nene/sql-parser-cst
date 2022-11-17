@@ -10,8 +10,10 @@ describe("select ORDER BY", () => {
     testClause("/*c0*/ Order /*c1*/ By /*c2*/ age /*c3*/ ASC /*c4*/, /*c5*/ name");
   });
 
-  it("supports ORDER BY with collation", () => {
-    testClause("ORDER BY name COLLATE utf8 DESC");
+  dialect(["sqlite", "mysql"], () => {
+    it("supports ORDER BY with collation", () => {
+      testClause("ORDER BY name COLLATE utf8 DESC");
+    });
   });
 
   dialect("sqlite", () => {

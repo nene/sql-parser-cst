@@ -140,6 +140,54 @@ describe("operator precedence", () => {
   });
 
   dialect("bigquery", () => {
-    it.skip("review operator precedence", () => {});
+    // TODO: field-access & array subscript
+
+    it("negation > multiplication", () => {
+      expect(showPrecedence(`-x * y`)).toBe(`((- x) * y)`);
+      expect(showPrecedence(`x * -y`)).toBe(`(x * (- y))`);
+    });
+
+    it("concatenation and multiplication operators have same precedence", () => {
+      expect(showPrecedence(`col1 || col2 * col3 || col4`)).toBe(
+        `(((col1 || col2) * col3) || col4)`
+      );
+    });
+
+    it("multiplication > addition", () => {
+      expect(showPrecedence(`5 + 2 * 3`)).toBe(`(5 + (2 * 3))`);
+    });
+
+    it("addition > bit shift", () => {
+      expect(showPrecedence(`5 + 2 >> 3 + 1`)).toBe(`((5 + 2) >> (3 + 1))`);
+      expect(showPrecedence(`5 + 2 << 3 - 1`)).toBe(`((5 + 2) << (3 - 1))`);
+    });
+
+    it("bit shift > bitwise AND", () => {
+      expect(showPrecedence(`5 >> 2 & 3 << 1`)).toBe(`((5 >> 2) & (3 << 1))`);
+    });
+
+    it("bitwise AND > bitwise XOR", () => {
+      expect(showPrecedence(`5 & 2 ^ 3 & 1`)).toBe(`((5 & 2) ^ (3 & 1))`);
+    });
+
+    it("bitwise XOR > bitwise OR", () => {
+      expect(showPrecedence(`5 ^ 2 | 3 ^ 1`)).toBe(`((5 ^ 2) | (3 ^ 1))`);
+    });
+
+    it("bitwise OR > comparison", () => {
+      expect(showPrecedence(`5 | 2 > 3 | 1`)).toBe(`((5 | 2) > (3 | 1))`);
+    });
+
+    it("comparison > NOT", () => {
+      expect(showPrecedence(`NOT x > 1`)).toBe(`(NOT (x > 1))`);
+    });
+
+    it("NOT > AND", () => {
+      expect(showPrecedence(`NOT false AND true`)).toBe(`((NOT false) AND true)`);
+    });
+
+    it("AND > OR", () => {
+      expect(showPrecedence(`true OR false AND true`)).toBe(`(true OR (false AND true))`);
+    });
   });
 });
