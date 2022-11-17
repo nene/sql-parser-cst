@@ -2546,8 +2546,15 @@ escaped_bracket
   = "]]" { return "]"; }
 
 ident_name
-  = ident_start ident_part* { return text(); }
-  / [0-9]+ ident_start ident_part* { return text(); }
+  = &bigquery ident_name_bigquery { return text(); }
+  / ident_name_basic { return text(); }
+  / (&mysql / &sqlite) digits ident_name_basic { return text(); }
+
+ident_name_bigquery
+  = ident_name_basic ("-" (ident_name_basic / digits))*
+
+ident_name_basic
+  = ident_start ident_part*
 
 ident_start = [A-Za-z_]
 

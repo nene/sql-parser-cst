@@ -16,14 +16,38 @@ describe("identifier", () => {
       testExpr("_96");
     });
 
-    it("allows identifier name to start with number", () => {
-      expect(parseIdent("18foo")).toMatchInlineSnapshot(`
-        {
-          "name": "18foo",
-          "text": "18foo",
-          "type": "identifier",
-        }
-      `);
+    dialect(["mysql", "sqlite"], () => {
+      it("allows identifier name to start with number", () => {
+        expect(parseIdent("18foo")).toMatchInlineSnapshot(`
+          {
+            "name": "18foo",
+            "text": "18foo",
+            "type": "identifier",
+          }
+        `);
+      });
+    });
+
+    dialect("bigquery", () => {
+      it("supports dash-separated identifier names", () => {
+        expect(parseIdent("foo-bar-baz")).toMatchInlineSnapshot(`
+          {
+            "name": "foo-bar-baz",
+            "text": "foo-bar-baz",
+            "type": "identifier",
+          }
+        `);
+      });
+
+      it("supports numbers in dash-separated identifier names", () => {
+        expect(parseIdent("foo2-18-20")).toMatchInlineSnapshot(`
+          {
+            "name": "foo2-18-20",
+            "text": "foo2-18-20",
+            "type": "identifier",
+          }
+        `);
+      });
     });
 
     dialect("sqlite", () => {
