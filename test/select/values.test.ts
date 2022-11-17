@@ -26,4 +26,10 @@ describe("VALUES clause/statement", () => {
       test("VALUES ROW(1) /*c1*/ UNION /*c2*/ VALUES ROW(2)");
     });
   });
+
+  dialect("bigquery", () => {
+    it("does not support a separate VALUES statement", () => {
+      expect(() => test("VALUES (1, 2)")).toThrowError();
+    });
+  });
 });

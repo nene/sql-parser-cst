@@ -138,4 +138,8 @@ describe("operator precedence", () => {
       );
     });
   });
+
+  dialect("bigquery", () => {
+    it.skip("review operator precedence", () => {});
+  });
 });

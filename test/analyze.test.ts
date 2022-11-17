@@ -25,4 +25,10 @@ describe("analyze", () => {
       test("ANALYZE TABLE /*c1*/ tbl1 /*c2*/,/*c3*/ tbl2");
     });
   });
+
+  dialect("bigquery", () => {
+    it("does not support ANALYZE", () => {
+      expect(() => test("ANALYZE my_tbl")).toThrowError();
+    });
+  });
 });
