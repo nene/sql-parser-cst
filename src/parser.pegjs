@@ -1054,7 +1054,7 @@ alter_action
   / alter_rename_table
 
 alter_add_column
-  = addKw:(ADD __ COLUMN __ / ADD __)? col:column_definition {
+  = addKw:(ADD __ COLUMN __ / ADD __) col:column_definition {
       return loc({
         type: "alter_add_column",
         addKw: read(addKw),
