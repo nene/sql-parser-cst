@@ -2684,7 +2684,7 @@ literal_bit_blob
 
 literal_number "number"
   = literal_decimal_number
-  / n:literal_hex_number &sqlite { return n; }
+  / n:literal_hex_number (&sqlite / &bigquery) { return n; }
 
 literal_hex_number
   = "0x" hex_digit+ {
