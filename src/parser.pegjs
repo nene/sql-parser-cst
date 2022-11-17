@@ -35,7 +35,7 @@ statement
   / x:create_trigger_stmt (&mysql / &sqlite) { return x; }
   / x:drop_trigger_stmt (&mysql / &sqlite) { return x; }
   / x:analyze_stmt (&mysql / &sqlite) { return x; }
-  / explain_stmt
+  / x:explain_stmt (&mysql / &sqlite) { return x; }
   / transaction_stmt
   / x:sqlite_stmt &sqlite { return x; }
   / empty_stmt
