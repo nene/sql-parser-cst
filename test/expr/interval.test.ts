@@ -72,6 +72,7 @@ describe("temporal intervals", () => {
       testExpr(`INTERVAL '8 11:25' DAY TO MINUTE`);
       testExpr(`INTERVAL '8 11' MONTH TO DAY`);
       testExpr(`INTERVAL '3-6' YEAR TO MONTH`);
+      testExpr(`INTERVAL /*c1*/ '3-6' /*c2*/ YEAR /*c3*/ TO /*c4*/ MONTH`);
     });
 
     it("parses INTERVAL range to syntax node", () => {
