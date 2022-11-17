@@ -2588,18 +2588,13 @@ charset_name
   / "gbk"i
 
 literal_single_quoted_string_qq_bs // with repeated quote or backslash for escaping
-  = "'" chars:([^'\\] / escaped_single_quote_qq_bs)* "'" {
+  = "'" chars:([^'\\] / escaped_single_quote_qq / backslash_escape)* "'" {
     return loc({
       type: "string",
       text: text(),
       value: chars.join(""),
     });
   }
-
-escaped_single_quote_qq_bs
-  = "''" { return "'"; }
-  / "\\'" { return "'"; }
-  / "\\" . { return text(); }
 
 literal_single_quoted_string_qq // with repeated quote for escaping
   = "'" chars:([^'] / escaped_single_quote_qq)* "'" {
@@ -2626,7 +2621,7 @@ escaped_double_quote_qq
   = '""' { return '"'; }
 
 literal_double_quoted_string_qq_bs // with repeated quote or backslash for escaping
-  = "\"" chars:([^"\\] / escaped_double_quote_qq_bs)* "\"" {
+  = "\"" chars:([^"\\] / escaped_double_quote_qq / backslash_escape)* "\"" {
     return loc({
       type: "string",
       text: text(),
@@ -2634,10 +2629,16 @@ literal_double_quoted_string_qq_bs // with repeated quote or backslash for escap
     });
   }
 
-escaped_double_quote_qq_bs
-  = '""' { return '"'; }
-  / '\\"' { return '"'; }
-  / "\\" . { return text(); }
+backslash_escape
+  = "\\%" { return "\\%"; }
+  / "\\_" { return "\\_"; }
+  / "\\n" { return "\n"; }
+  / "\\r" { return "\r"; }
+  / "\\t" { return "\t"; }
+  / "\\b" { return "\b"; }
+  / "\\0" { return "\0"; }
+  / "\\Z" { return "\x1A"; /* Ctrl+Z (ASCII code 26 dec, 1A hex) */ }
+  / "\\" c:. { return c; }
 
 literal_natural_charset_string
   = "N"i str:literal_single_quoted_string_qq_bs {

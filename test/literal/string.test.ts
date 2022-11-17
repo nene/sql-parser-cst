@@ -1,5 +1,32 @@
 import { dialect, parseExpr, testExpr } from "../test_utils";
 
+function testMysqlBackslashEscaping(q: '"' | "'") {
+  // For reference, see:
+  // https://dev.mysql.com/doc/refman/8.0/en/string-literals.html#character-escape-sequences
+  [
+    { text: q + String.raw`\0` + q, value: `\0`, visible: "<NUL>" },
+    { text: q + String.raw`\'` + q, value: `'` },
+    { text: q + String.raw`\"` + q, value: `"` },
+    { text: q + String.raw`\b` + q, value: `\b`, visible: "<BACKSPACE>" },
+    { text: q + String.raw`\n` + q, value: `\n`, visible: "<NEWLINE>" },
+    { text: q + String.raw`\r` + q, value: `\r`, visible: "<CARRIAGE RETURN>" },
+    { text: q + String.raw`\t` + q, value: `\t`, visible: "<TAB>" },
+    { text: q + String.raw`\Z` + q, value: `\x1A`, visible: "<CTRL+Z>" },
+    { text: q + String.raw`\\` + q, value: `\\` },
+    { text: q + String.raw`\%` + q, value: `\\%` },
+    { text: q + String.raw`\_` + q, value: `\\_` },
+    { text: q + String.raw`\e\l\s\e` + q, value: `else` },
+  ].forEach(({ text, value, visible }) => {
+    it(`${text} evaluates to: ${visible || value}`, () => {
+      expect(parseExpr(text)).toEqual({
+        type: "string",
+        text,
+        value,
+      });
+    });
+  });
+}
+
 describe("string literal", () => {
   it("single-quoted string", () => {
     expect(parseExpr(`'hello'`)).toMatchInlineSnapshot(`
@@ -24,8 +51,8 @@ describe("string literal", () => {
   });
 
   dialect("mysql", () => {
-    it("single-quoted string with backslash escapes", () => {
-      testExpr(`'hel\\'lo'`);
+    describe("backslash-escaping inside single-quoted strings", () => {
+      testMysqlBackslashEscaping("'");
     });
   });
 
@@ -51,17 +78,9 @@ describe("string literal", () => {
         }
       `);
     });
-    it("double-quoted string with backslash escapes", () => {
-      testExpr(`"hel\\"lo"`);
-    });
-    it("parses double-quoted string with backslash escapes", () => {
-      expect(parseExpr(`"hel\\"lo"`)).toMatchInlineSnapshot(`
-        {
-          "text": ""hel\\"lo"",
-          "type": "string",
-          "value": "hel"lo",
-        }
-      `);
+
+    describe("backslash-escaping inside double-quoted strings", () => {
+      testMysqlBackslashEscaping('"');
     });
   });
 
