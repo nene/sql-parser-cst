@@ -17,8 +17,9 @@ export const setOptionsFunction = (fn: Function) => {
 
 export const getDialect = (): DialectName => getOptions().dialect;
 
-export const isSqlite = () => getDialect() === "sqlite";
+export const isBigquery = () => getDialect() === "bigquery";
 export const isMysql = () => getDialect() === "mysql";
+export const isSqlite = () => getDialect() === "sqlite";
 
 export const hasParamType = (name: ParamType) => {
   return getOptions().paramTypes?.includes(name);

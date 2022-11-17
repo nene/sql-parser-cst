@@ -65,4 +65,8 @@ describe("table options", () => {
     // TODO: TABLESPACE tablespace_name [STORAGE {DISK | MEMORY}]
     // TODO: UNION [=] (tbl_name[,tbl_name]...)
   });
+
+  dialect("bigquery", () => {
+    it.skip("CREATE TABLE options using OPTIONS()", () => {});
+  });
 });

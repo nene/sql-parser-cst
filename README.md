@@ -10,6 +10,7 @@ For now it supports the following SQL dialects:
 
 - **SQLite** - full support.
 - **MySQL** - basic support for the most common SQL statements.
+- **BigQuery** - experimental.
 
 **Note:** This software is still in very active development.
 The syntax tree structure is constantly evolving and changing

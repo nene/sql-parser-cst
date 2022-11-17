@@ -46,6 +46,7 @@ const parser = peggy.generate(source, {
       import {
         setRangeFunction,
         setOptionsFunction,
+        isBigquery,
         isMysql,
         isSqlite,
         hasParamType,

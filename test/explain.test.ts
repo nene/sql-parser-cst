@@ -1,15 +1,17 @@
 import { dialect, test } from "./test_utils";
 
 describe("explain", () => {
-  it("supports explaining of SELECT statement", () => {
-    test("EXPLAIN SELECT * FROM foo");
-    test("EXPLAIN /*c1*/ SELECT * FROM foo");
-  });
+  dialect(["sqlite", "mysql"], () => {
+    it("supports explaining of SELECT statement", () => {
+      test("EXPLAIN SELECT * FROM foo");
+      test("EXPLAIN /*c1*/ SELECT * FROM foo");
+    });
 
-  it("supports explaining of INSERT/UPDATE/DELETE statements", () => {
-    test("EXPLAIN INSERT INTO foo VALUES (1, 2, 3)");
-    test("EXPLAIN UPDATE tbl SET name = 'unknown'");
-    test("EXPLAIN DELETE FROM tbl WHERE id = 2");
+    it("supports explaining of INSERT/UPDATE/DELETE statements", () => {
+      test("EXPLAIN INSERT INTO foo VALUES (1, 2, 3)");
+      test("EXPLAIN UPDATE tbl SET name = 'unknown'");
+      test("EXPLAIN DELETE FROM tbl WHERE id = 2");
+    });
   });
 
   dialect("sqlite", () => {
@@ -28,6 +30,12 @@ describe("explain", () => {
     it("supports EXPLAIN ANALYZE", () => {
       test("EXPLAIN ANALYZE SELECT 1");
       test("DESCRIBE /*c1*/ ANALYZE /*c2*/ SELECT 1");
+    });
+  });
+
+  dialect("bigquery", () => {
+    it("does not support EXPLAIN", () => {
+      expect(() => test("EXPLAIN SELECT * FROM foo")).toThrowError();
     });
   });
 });

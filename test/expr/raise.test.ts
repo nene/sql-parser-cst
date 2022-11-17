@@ -28,4 +28,8 @@ describe("raise function", () => {
       expect(parseExpr(`RAISE(FAIL, 'blah')`).type).toBe("func_call");
     });
   });
+
+  dialect("bigquery", () => {
+    it.skip("supports RAISE statement", () => {});
+  });
 });

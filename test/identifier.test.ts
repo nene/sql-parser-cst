@@ -56,7 +56,7 @@ describe("identifier", () => {
       });
     });
 
-    dialect(["mysql", "sqlite"], () => {
+    dialect(["mysql", "sqlite", "bigquery"], () => {
       it("supports backtick-quoted identifiers", () => {
         testExpr("`some special name`");
       });
@@ -139,7 +139,7 @@ describe("identifier", () => {
       });
     });
 
-    dialect("mysql", () => {
+    dialect(["mysql", "bigquery"], () => {
       it("supports quoted qualified column name", () => {
         testExpr("`my foo`.`my bar`");
       });
@@ -152,7 +152,7 @@ describe("identifier", () => {
       expect(() => parseExpr(`foo.'bar'`)).toThrowError("Expected");
     });
 
-    dialect("mysql", () => {
+    dialect(["mysql", "bigquery"], () => {
       it("does not recognize double-quoted string as table name", () => {
         expect(() => parseExpr(`"foo".bar`)).toThrowError("Expected");
       });
@@ -242,7 +242,7 @@ describe("identifier", () => {
       });
     });
 
-    dialect("mysql", () => {
+    dialect(["mysql", "bigquery"], () => {
       it("supports quoted qualified table name", () => {
         test("SELECT col FROM `my db`.`my tbl`");
       });

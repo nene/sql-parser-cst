@@ -45,7 +45,7 @@ describe("number literal", () => {
     testExpr(`+18`);
   });
 
-  dialect("sqlite", () => {
+  dialect(["sqlite", "bigquery"], () => {
     it("parses 0x12FC0a as hex number", () => {
       expect(parseExpr(`0x12FC0a`)).toMatchInlineSnapshot(`
         {
