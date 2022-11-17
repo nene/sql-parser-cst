@@ -1,6 +1,6 @@
 // All keywords listed in:
 // https://www.sqlite.org/lang_keywords.html
-export const __RESERVED_KEYWORDS__: Record<string, boolean> = {
+export const sqliteKeywords: Record<string, boolean> = {
   ABORT: true,
   ACTION: true,
   ADD: true,

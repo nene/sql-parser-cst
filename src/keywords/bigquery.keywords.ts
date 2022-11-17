@@ -1,6 +1,6 @@
 // All keywords listed in:
 // https://cloud.google.com/bigquery/docs/reference/standard-sql/lexical#reserved_keywords
-export const __RESERVED_KEYWORDS__: Record<string, boolean> = {
+export const bigqueryKeywords: Record<string, boolean> = {
   ALL: true,
   AND: true,
   ANY: true,
