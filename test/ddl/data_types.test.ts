@@ -1,3 +1,4 @@
+import { DialectName } from "../../src/ParserOptions";
 import { dialect, parse, preserveAll, show } from "../test_utils";
 
 describe("data types", () => {
@@ -6,113 +7,155 @@ describe("data types", () => {
     expect(show(parse(sql, preserveAll))).toBe(sql);
   }
 
-  it("numeric types", () => {
-    testType("NUMERIC");
-    testType("NUMERIC(3)");
-    testType("NUMERIC(3, 4)");
-    testType("FIXED");
-    testType("FIXED(3)");
-    testType("FIXED(3, 4)");
-    testType("DECIMAL");
-    testType("DECIMAL(3)");
-    testType("DECIMAL(3, 4)");
-    testType("DEC");
-    testType("DEC(3)");
-    testType("DEC(3, 4)");
+  function testTypeWithLength(type: string) {
+    testType(type);
+    testType(`${type}(5)`);
+  }
+
+  function testTypesByDialect(
+    rules: { type: string; lang: DialectName[] }[],
+    testFn: (type: string) => void = testType
+  ) {
+    rules.forEach(({ type, lang }) => {
+      dialect(["sqlite", ...lang], () => {
+        it(`supports ${type}`, () => {
+          testFn(type);
+        });
+      });
+    });
+  }
+
+  describe("numeric types", () => {
+    testTypesByDialect(
+      [
+        { type: "NUMERIC", lang: ["mysql", "bigquery"] },
+        { type: "DECIMAL", lang: ["mysql", "bigquery"] },
+        { type: "FIXED", lang: ["mysql"] },
+        { type: "DEC", lang: ["mysql"] },
+        { type: "BIGNUMERIC", lang: ["bigquery"] },
+        { type: "BIGDECIMAL", lang: ["bigquery"] },
+      ],
+      (type) => {
+        testType(type);
+        testType(`${type}(3)`);
+        testType(`${type}(3, 4)`);
+      }
+    );
   });
 
-  it("integer types", () => {
-    testType("INT");
-    testType("INT(5)");
-    testType("INTEGER");
-    testType("INTEGER(5)");
-    testType("TINYINT");
-    testType("TINYINT(5)");
-    testType("SMALLINT");
-    testType("SMALLINT(5)");
-    testType("MEDIUMINT");
-    testType("MEDIUMINT(5)");
-    testType("BIGINT");
-    testType("BIGINT(10)");
+  describe("integer types", () => {
+    testTypesByDialect(
+      [
+        { type: "INT", lang: ["mysql", "bigquery"] },
+        { type: "INTEGER", lang: ["mysql", "bigquery"] },
+        { type: "TINYINT", lang: ["mysql", "bigquery"] },
+        { type: "SMALLINT", lang: ["mysql", "bigquery"] },
+        { type: "BIGINT", lang: ["mysql", "bigquery"] },
+        { type: "MEDIUMINT", lang: ["mysql"] },
+        { type: "INT64", lang: ["bigquery"] },
+        { type: "BYTEINT", lang: ["bigquery"] },
+      ],
+      testTypeWithLength
+    );
   });
 
-  it("real types", () => {
-    testType("FLOAT");
-    testType("FLOAT(10)");
-    testType("FLOAT(10, 5)");
-    testType("DOUBLE");
-    testType("DOUBLE(10)");
-    testType("DOUBLE(10, 5)");
-    testType("REAL");
-    testType("REAL(10)");
-    testType("REAL(10, 5)");
-    testType("DOUBLE PRECISION(10, 5)");
-    testType("DOUBLE PRECISION /*c1*/(/*c2*/ 10 /*c3*/, /*c4*/ 5 /*c5*/)");
+  describe("real types", () => {
+    testTypesByDialect([
+      { type: "FLOAT", lang: ["mysql"] },
+      { type: "DOUBLE", lang: ["mysql"] },
+      { type: "REAL", lang: ["mysql"] },
+      { type: "DOUBLE PRECISION", lang: ["mysql"] },
+      { type: "FLOAT64", lang: ["bigquery"] },
+    ]);
   });
 
-  it("string types", () => {
-    testType("VARCHAR");
-    testType("VARCHAR(100)");
-    testType("NVARCHAR");
-    testType("NVARCHAR(100)");
-    testType("CHAR");
-    testType("CHAR(15)");
-    testType("NCHAR");
-    testType("NCHAR(15)");
-    testType("TEXT");
-    testType("TEXT(100)");
-    testType("TINYTEXT");
-    testType("MEDIUMTEXT");
-    testType("LONGTEXT");
-    testType("VARYING CHARACTER");
-    testType("VARYING CHARACTER(100)");
-    testType("NATIVE CHARACTER");
-    testType("NATIVE CHARACTER(100)");
-    testType("CHAR /*c1*/(/*c2*/ 123 /*c3*/)");
+  describe("string types", () => {
+    testTypesByDialect(
+      [
+        { type: "VARCHAR", lang: ["mysql"] },
+        { type: "NVARCHAR", lang: ["mysql"] },
+        { type: "CHAR", lang: ["mysql"] },
+        { type: "NCHAR", lang: ["mysql"] },
+        { type: "TEXT", lang: ["mysql"] },
+        { type: "TINYTEXT", lang: ["mysql"] },
+        { type: "MEDIUMTEXT", lang: ["mysql"] },
+        { type: "LONGTEXT", lang: ["mysql"] },
+        { type: "VARYING CHARACTER", lang: ["mysql"] },
+        { type: "NATIVE CHARACTER", lang: ["mysql"] },
+        { type: "LONGTEXT", lang: ["mysql"] },
+        { type: "STRING", lang: ["bigquery"] },
+      ],
+      testTypeWithLength
+    );
   });
 
   it("JSON type", () => {
     testType("JSON");
   });
 
-  it("boolean type", () => {
-    testType("BOOLEAN");
-    testType("BOOL");
+  describe("boolean type", () => {
+    testTypesByDialect([
+      { type: "BOOL", lang: ["mysql", "bigquery"] },
+      { type: "BOOLEAN", lang: ["mysql"] },
+    ]);
   });
 
-  it("blob types", () => {
-    testType("BLOB");
-    testType("BLOB(255)");
-    testType("TINYBLOB");
-    testType("MEDIUMBLOB");
-    testType("LONGBLOB");
+  describe("blob types", () => {
+    testTypesByDialect(
+      [
+        { type: "BLOB", lang: ["mysql"] },
+        { type: "TINYBLOB", lang: ["mysql"] },
+        { type: "MEDIUMBLOB", lang: ["mysql"] },
+        { type: "LONGBLOB", lang: ["mysql"] },
+        { type: "BYTES", lang: ["bigquery"] },
+      ],
+      testTypeWithLength
+    );
   });
 
-  it("binary types", () => {
-    testType("BIT");
-    testType("BIT(5)");
-    testType("BINARY");
-    testType("VARBINARY");
-    testType("BINARY(100)");
-    testType("VARBINARY(200)");
+  describe("binary types", () => {
+    testTypesByDialect(
+      [
+        { type: "BIT", lang: ["mysql"] },
+        { type: "BINARY", lang: ["mysql"] },
+        { type: "VARBINARY", lang: ["mysql"] },
+      ],
+      testTypeWithLength
+    );
   });
 
-  it("date types", () => {
-    testType("DATE");
-    testType("TIME");
-    testType("DATETIME");
-    testType("TIMESTAMP");
-    testType("TIME(4)");
-    testType("DATETIME(5)");
-    testType("TIMESTAMP(6)");
-    testType("YEAR");
-    testType("YEAR(4)");
+  describe("date types", () => {
+    testTypesByDialect(
+      [
+        { type: "DATE", lang: ["mysql", "bigquery"] },
+        { type: "DATETIME", lang: ["mysql", "bigquery"] },
+        { type: "TIME", lang: ["mysql", "bigquery"] },
+        { type: "TIMESTAMP", lang: ["mysql", "bigquery"] },
+        { type: "YEAR", lang: ["mysql"] },
+      ],
+      testTypeWithLength
+    );
   });
 
   dialect("mysql", () => {
     it("ENUM and SET types", () => {
       testType("ENUM('foo', 'bar', 'baz')");
       testType("SET('foo', 'bar', 'baz')");
+    });
+  });
+
+  dialect("bigquery", () => {
+    it("ARRAY type", () => {
+      testType("ARRAY");
+    });
+    it("STRUCT type", () => {
+      testType("STRUCT");
+    });
+    it("GEOGRAPHY type", () => {
+      testType("GEOGRAPHY");
+    });
+    it("INTERVAL type", () => {
+      testType("INTERVAL");
     });
   });
 
