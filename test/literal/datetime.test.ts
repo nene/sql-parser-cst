@@ -24,7 +24,7 @@ describe("date/time literal", () => {
     testExpr(`DATETIME /* com1 */ '20:15:00'`);
   });
 
-  dialect("mysql", () => {
+  dialect(["mysql", "bigquery"], () => {
     it("datetime with double-quoted string", () => {
       testExpr(`TIME "20:15:00"`);
       testExpr(`DATE "1995-06-01"`);
