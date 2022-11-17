@@ -1248,7 +1248,7 @@ transaction_stmt
   / release_savepoint_stmt
 
 start_transaction_stmt
-  = &sqlite kw:BEGIN bKw:(__ (DEFERRED / IMMEDIATE / EXCLUSIVE))? tKw:(__ TRANSACTION)? {
+  = (&sqlite / &bigquery) kw:BEGIN bKw:(__ (DEFERRED / IMMEDIATE / EXCLUSIVE))? tKw:(__ TRANSACTION)? {
     return loc({
       type: "start_transaction_stmt",
       startKw: kw,
@@ -1305,11 +1305,11 @@ rollback_to_savepoint
   }
 
 transaction_kw
-  = kw:TRANSACTION &sqlite { return kw; }
+  = kw:TRANSACTION (&sqlite / &bigquery) { return kw; }
   / kw:WORK &mysql { return kw; }
 
 savepoint_stmt
-  = spKw:(SAVEPOINT __) id:ident {
+  = (&mysql / &sqlite) spKw:(SAVEPOINT __) id:ident {
     return loc({
       type: "savepoint_stmt",
       savepointKw: read(spKw),
@@ -1318,7 +1318,7 @@ savepoint_stmt
   }
 
 release_savepoint_stmt
-  = kw:(RELEASE __) spKw:(SAVEPOINT __)? id:ident {
+  = (&mysql / &sqlite) kw:(RELEASE __) spKw:(SAVEPOINT __)? id:ident {
     return loc({
       type: "release_savepoint_stmt",
       releaseKw: read(kw),
