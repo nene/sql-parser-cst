@@ -32,8 +32,8 @@ statement
   / create_table_stmt
   / drop_table_stmt
   / alter_table_stmt
-  / create_trigger_stmt
-  / drop_trigger_stmt
+  / x:create_trigger_stmt (&mysql / &sqlite) { return x; }
+  / x:drop_trigger_stmt (&mysql / &sqlite) { return x; }
   / analyze_stmt
   / explain_stmt
   / transaction_stmt
