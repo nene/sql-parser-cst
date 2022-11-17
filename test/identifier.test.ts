@@ -48,6 +48,21 @@ describe("identifier", () => {
           }
         `);
       });
+
+      it("does not allow repeated--dash inside identifier", () => {
+        // the --bar part is treated as a comment
+        expect(parseIdent("foo--bar")).toMatchInlineSnapshot(`
+          {
+            "name": "foo",
+            "text": "foo",
+            "type": "identifier",
+          }
+        `);
+      });
+
+      it("does not allow number as first part of identifier", () => {
+        expect(parseExpr("10-foo").type).toBe("binary_expr");
+      });
     });
 
     dialect("sqlite", () => {
