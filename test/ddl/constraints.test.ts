@@ -128,32 +128,34 @@ describe("constraints", () => {
       });
     });
 
-    it("supports CONSTRAINT keyword for column constraints", () => {
-      testColConst("CONSTRAINT NULL");
-      testColConst("CONSTRAINT NOT NULL");
-      testColConst("CONSTRAINT DEFAULT 10");
-      testColConst("CONSTRAINT PRIMARY KEY");
-      testColConst("CONSTRAINT UNIQUE");
-      testColConst("CONSTRAINT CHECK (true)");
-      testColConst("CONSTRAINT REFERENCES tbl2 (col)");
-      testColConst("CONSTRAINT COLLATE utf8");
-      testColConst("CONSTRAINT GENERATED ALWAYS AS (x + y)");
+    dialect(["mysql", "sqlite"], () => {
+      it("supports CONSTRAINT keyword for column constraints", () => {
+        testColConst("CONSTRAINT NULL");
+        testColConst("CONSTRAINT NOT NULL");
+        testColConst("CONSTRAINT DEFAULT 10");
+        testColConst("CONSTRAINT PRIMARY KEY");
+        testColConst("CONSTRAINT UNIQUE");
+        testColConst("CONSTRAINT CHECK (true)");
+        testColConst("CONSTRAINT REFERENCES tbl2 (col)");
+        testColConst("CONSTRAINT COLLATE utf8");
+        testColConst("CONSTRAINT GENERATED ALWAYS AS (x + y)");
 
-      testColConst("CONSTRAINT /*c1*/ NULL");
-    });
+        testColConst("CONSTRAINT /*c1*/ NULL");
+      });
 
-    it("supports named column constraints", () => {
-      testColConst("CONSTRAINT cname NULL");
-      testColConst("CONSTRAINT cname NOT NULL");
-      testColConst("CONSTRAINT cname DEFAULT 10");
-      testColConst("CONSTRAINT cname PRIMARY KEY");
-      testColConst("CONSTRAINT cname UNIQUE");
-      testColConst("CONSTRAINT cname CHECK (true)");
-      testColConst("CONSTRAINT cname REFERENCES tbl2 (col)");
-      testColConst("CONSTRAINT cname COLLATE utf8");
-      testColConst("CONSTRAINT cname GENERATED ALWAYS AS (x + y)");
+      it("supports named column constraints", () => {
+        testColConst("CONSTRAINT cname NULL");
+        testColConst("CONSTRAINT cname NOT NULL");
+        testColConst("CONSTRAINT cname DEFAULT 10");
+        testColConst("CONSTRAINT cname PRIMARY KEY");
+        testColConst("CONSTRAINT cname UNIQUE");
+        testColConst("CONSTRAINT cname CHECK (true)");
+        testColConst("CONSTRAINT cname REFERENCES tbl2 (col)");
+        testColConst("CONSTRAINT cname COLLATE utf8");
+        testColConst("CONSTRAINT cname GENERATED ALWAYS AS (x + y)");
 
-      testColConst("CONSTRAINT /*c1*/ cname /*c2*/ NULL");
+        testColConst("CONSTRAINT /*c1*/ cname /*c2*/ NULL");
+      });
     });
   });
 
@@ -288,20 +290,22 @@ describe("constraints", () => {
       });
     });
 
-    it("supports CONSTRAINT keyword for table constraints", () => {
-      testTblConst("CONSTRAINT PRIMARY KEY (id)");
-      testTblConst("CONSTRAINT UNIQUE KEY (id)");
-      testTblConst("CONSTRAINT CHECK (false)");
-      testTblConst("CONSTRAINT FOREIGN KEY (id) REFERENCES tbl2 (id)");
-      testTblConst("CONSTRAINT /*c1*/ CHECK (true)");
-    });
+    dialect(["mysql", "sqlite"], () => {
+      it("supports CONSTRAINT keyword for table constraints", () => {
+        testTblConst("CONSTRAINT PRIMARY KEY (id)");
+        testTblConst("CONSTRAINT UNIQUE KEY (id)");
+        testTblConst("CONSTRAINT CHECK (false)");
+        testTblConst("CONSTRAINT FOREIGN KEY (id) REFERENCES tbl2 (id)");
+        testTblConst("CONSTRAINT /*c1*/ CHECK (true)");
+      });
 
-    it("supports named table constraints", () => {
-      testTblConst("CONSTRAINT cname PRIMARY KEY (id)");
-      testTblConst("CONSTRAINT cname UNIQUE KEY (id)");
-      testTblConst("CONSTRAINT cname CHECK (false)");
-      testTblConst("CONSTRAINT cname FOREIGN KEY (id) REFERENCES tbl2 (id)");
-      testTblConst("CONSTRAINT /*c1*/ cname /*c2*/ CHECK (true)");
+      it("supports named table constraints", () => {
+        testTblConst("CONSTRAINT cname PRIMARY KEY (id)");
+        testTblConst("CONSTRAINT cname UNIQUE KEY (id)");
+        testTblConst("CONSTRAINT cname CHECK (false)");
+        testTblConst("CONSTRAINT cname FOREIGN KEY (id) REFERENCES tbl2 (id)");
+        testTblConst("CONSTRAINT /*c1*/ cname /*c2*/ CHECK (true)");
+      });
     });
   });
 });
