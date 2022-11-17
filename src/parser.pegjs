@@ -651,7 +651,7 @@ values_list
   }
 
 values_row
-  = &sqlite list:paren_list_expr { return list; }
+  = !mysql list:paren_list_expr { return list; }
   / &mysql list:(paren_list_expr_with_default / row_constructor) { return list; }
 
 row_constructor
