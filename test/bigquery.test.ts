@@ -67,18 +67,8 @@ describe("BigQuery bugs in node-sql-formatter", () => {
       `);
     });
 
-    it.skip(`window function to "current row"`, () => {
-      test(`
-        SELECT MAX(amount) OVER (ORDER BY invoice_date ASC ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW),
-        FROM invoice
-      `);
-    });
-
-    it.skip(`window function to "3 preceding"`, () => {
-      test(`
-        SELECT MAX(amount) OVER (ORDER BY invoice_date ASC ROWS BETWEEN UNBOUNDED PRECEDING AND 3 PRECEDING),
-        FROM invoice
-      `);
+    it.skip(`trailing commas"`, () => {
+      test(`SELECT foo, bar, FROM invoice`);
     });
   });
 
