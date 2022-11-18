@@ -7,7 +7,13 @@ describe("identifier", () => {
       if (expr.type !== "column_ref") {
         throw new Error(`Expected type:column_ref, instead got type:${expr.type}`);
       }
-      return expr.column;
+      const col = expr.column;
+      if (col.type !== "identifier") {
+        throw new Error(
+          `Expected type:identifier inside ColumnRef.column, instead got type:${col.type}`
+        );
+      }
+      return col;
     }
 
     it("supports simple identifiers", () => {
@@ -110,18 +116,47 @@ describe("identifier", () => {
         `);
       });
 
-      it("supports escaped quotes in identifiers", () => {
-        testExpr("`some `` name`");
+      dialect(["mysql", "sqlite"], () => {
+        it("supports repeated-quote-escaped quotes in identifiers", () => {
+          testExpr("`some `` name`");
+        });
+
+        it("parses repeated-quote-escaped backtick-quote as single backtick", () => {
+          expect(parseIdent("`some `` name`")).toMatchInlineSnapshot(`
+            {
+              "name": "some \` name",
+              "text": "\`some \`\` name\`",
+              "type": "identifier",
+            }
+          `);
+        });
       });
 
-      it("parses escaped backtick-quote as single backtick", () => {
-        expect(parseIdent("`some `` name`")).toMatchInlineSnapshot(`
-          {
-            "name": "some \` name",
-            "text": "\`some \`\` name\`",
-            "type": "identifier",
-          }
-        `);
+      dialect("bigquery", () => {
+        it("supports backslash-escaped quotes in identifiers", () => {
+          testExpr("`some \\` name`");
+        });
+
+        it("parses backslash-escaped backtick-quote as single backtick", () => {
+          expect(parseIdent("`some \\` name`")).toMatchInlineSnapshot(`
+            {
+              "name": "some \` name",
+              "text": "\`some \\\` name\`",
+              "type": "identifier",
+            }
+          `);
+        });
+
+        function parseIdentName(str: string) {
+          return parseIdent("`" + str + "`").name;
+        }
+
+        it("supports the same escapes as strings", () => {
+          expect(parseIdentName(String.raw`\\`)).toBe("\\");
+          expect(parseIdentName(String.raw`\n`)).toBe("\n");
+          expect(parseIdentName(String.raw`\r`)).toBe("\r");
+          expect(parseIdentName(String.raw`\t`)).toBe("\t");
+        });
       });
     });
 

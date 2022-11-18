@@ -2538,14 +2538,18 @@ ident "identifier"
 
 quoted_ident
   = &sqlite ident:bracket_quoted_ident { return ident; }
-  / (&sqlite / &mysql / &bigquery) ident:backticks_quoted_ident { return ident; }
+  / (&sqlite / &mysql) ident:backticks_quoted_ident_qq { return ident; }
+  / &bigquery ident:backticks_quoted_ident_bs { return ident; }
   / &sqlite str:literal_double_quoted_string_qq { return loc(createIdentifier(str.text, str.value)); }
 
-backticks_quoted_ident
-  = "`" chars:([^`] / escaped_backtick)+ "`" { return loc(createIdentifier(text(), chars.join(""))); }
+backticks_quoted_ident_qq
+  = "`" chars:([^`] / escaped_backtick_qq)+ "`" { return loc(createIdentifier(text(), chars.join(""))); }
 
-escaped_backtick
+escaped_backtick_qq
   = "``" { return "`"; }
+
+backticks_quoted_ident_bs
+  = "`" chars:([^`\\] / backslash_escape)+ "`" { return loc(createIdentifier(text(), chars.join(""))); }
 
 bracket_quoted_ident
   = "[" chars:([^\]] / escaped_bracket)+ "]" { return loc(createIdentifier(text(), chars.join(""))); }
