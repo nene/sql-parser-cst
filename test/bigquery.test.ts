@@ -10,9 +10,7 @@ describe("BigQuery bugs in node-sql-formatter", () => {
     });
 
     it.skip(`accessing array elements in a function return value`, () => {
-      test(`
-        select split('To - be - split', ' - ')[OFFSET(0)]
-      `);
+      test(`select split('To - be - split', ' - ')[OFFSET(0)]`);
     });
 
     it.skip(`unnest in a "from" clause that also involves regular tables`, () => {
@@ -52,19 +50,11 @@ describe("BigQuery bugs in node-sql-formatter", () => {
     });
 
     it.skip(`function "right"`, () => {
-      test(`
-        select
-          right(
-            'lorem ipsum',
-            2
-          )
-      `);
+      test(`select right('lorem ipsum', 2)`);
     });
 
     it.skip(`"extract(year from ...)"`, () => {
-      test(`
-        select extract(year from current_date())
-      `);
+      test(`select extract(year from current_date())`);
     });
 
     it.skip(`trailing commas"`, () => {
