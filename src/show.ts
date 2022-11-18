@@ -314,6 +314,7 @@ const showNode = cstTransformer<string>({
   // Expressions
   list_expr: (node) => show(node.items, ","),
   paren_expr: (node) => "(" + show(node.expr) + ")",
+  pair_expr: (node) => show([node.expr1, node.expr2]),
   binary_expr: (node) => show([node.left, node.operator, node.right]),
   prefix_op_expr: (node) => show([node.operator, node.expr]),
   postfix_op_expr: (node) => show([node.expr, node.operator]),
@@ -339,6 +340,7 @@ const showNode = cstTransformer<string>({
 
   // Data types
   data_type: (node) => show([node.nameKw, node.params]),
+  generic_type_params: (node) => show(["<", node.params, ">"]),
 
   // Tables & columns
   column_ref: (node) => show([node.table, node.column], "."),

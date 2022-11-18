@@ -1849,14 +1849,17 @@ on_conflict_clause
  * ------------------------------------------------------------------------------------ *
  */
 data_type
-  = kw:(type_name __) params:type_params {
+  = kw:(type_name __) params:type_length_params {
     return loc({ type: "data_type", nameKw: read(kw), params });
+  }
+  / &bigquery kw:(ARRAY / STRUCT) params:(__ generic_type_params) {
+    return loc({ type: "data_type", nameKw: read(kw), params: read(params) });
   }
   / kw:type_name {
     return loc({ type: "data_type", nameKw: kw });
   }
 
-type_params
+type_length_params
   = "(" c1:__ params:literal_list c2:__ ")" {
     return loc(createParenExpr(c1, params, c2));
   }
@@ -1865,6 +1868,25 @@ literal_list
   = head:literal tail:(__ "," __ literal)* {
     return loc(createListExpr(head, tail));
   }
+
+generic_type_params
+  = "<" list:(__ data_type_list __) ">" {
+    return loc({
+      type: "generic_type_params",
+      params: read(list),
+    });
+  }
+
+data_type_list
+  = head:name_and_type_pair tail:(__ "," __ name_and_type_pair)* {
+    return loc(createListExpr(head, tail));
+  }
+
+name_and_type_pair
+  = expr1:ident expr2:(__ data_type) {
+    return loc({ type: "pair_expr", expr1, expr2: read(expr2) });
+  }
+  / data_type
 
 type_name
   = &bigquery t:type_name_bigquery { return t; }

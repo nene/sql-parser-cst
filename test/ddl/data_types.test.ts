@@ -145,12 +145,45 @@ describe("data types", () => {
   });
 
   dialect("bigquery", () => {
-    it("ARRAY type", () => {
-      testType("ARRAY");
+    describe("ARRAY and STRUCT types", () => {
+      it("basic ARRAY type", () => {
+        testType("ARRAY");
+      });
+      it("basic STRUCT type", () => {
+        testType("STRUCT");
+      });
+
+      it("parameterized ARRAY type", () => {
+        testType("ARRAY<INT64>");
+        testType("ARRAY<BYTES(5)>");
+        testType("ARRAY /*c1*/ < /*c2*/ INT64 /*c3*/ >");
+      });
+
+      it("nested parameterized ARRAY type", () => {
+        testType("ARRAY<ARRAY<STRING>>");
+      });
+
+      it("parameterized STRUCT type (unnamed parameter)", () => {
+        testType("STRUCT<INT64>");
+        testType("STRUCT<BYTES(5)>");
+        testType("STRUCT /*c1*/ < /*c2*/ INT64 /*c3*/ >");
+      });
+
+      it("parameterized STRUCT type (named parameters)", () => {
+        testType("STRUCT<x INT64, y INT64>");
+        testType("STRUCT<name STRING(15)>");
+        testType("STRUCT /*c1*/ < /*c2*/ name /*c3*/ STRING /*c4*/ >");
+      });
+
+      it("nested parameterized STRUCT type", () => {
+        testType("STRUCT<x STRUCT<name STRING>>");
+      });
+
+      it("nested STRUCTs and ARRAYs", () => {
+        testType("ARRAY<STRUCT<x ARRAY<INT64>>>");
+      });
     });
-    it("STRUCT type", () => {
-      testType("STRUCT");
-    });
+
     it("GEOGRAPHY type", () => {
       testType("GEOGRAPHY");
     });

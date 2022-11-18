@@ -1,6 +1,13 @@
 import { BaseNode, Keyword } from "./Base";
 import { ColumnConstraint, Constraint, TableConstraint } from "./Constraint";
-import { ColumnRef, Identifier, ListExpr, ParenExpr, TableRef } from "./Expr";
+import {
+  ColumnRef,
+  Identifier,
+  ListExpr,
+  PairExpr,
+  ParenExpr,
+  TableRef,
+} from "./Expr";
 import { Literal, NumberLiteral, StringLiteral } from "./Literal";
 import { SubSelect } from "./Select";
 
@@ -9,6 +16,7 @@ export type AllCreateTableNodes =
   | CreateTableAs
   | ColumnDefinition
   | DataType
+  | GenericTypeParams
   | TableOption;
 
 // CREATE TABLE
@@ -42,7 +50,12 @@ export interface ColumnDefinition extends BaseNode {
 export interface DataType extends BaseNode {
   type: "data_type";
   nameKw: Keyword | Keyword[];
-  params?: ParenExpr<ListExpr<Literal>>;
+  params?: ParenExpr<ListExpr<Literal>> | GenericTypeParams;
+}
+
+export interface GenericTypeParams extends BaseNode {
+  type: "generic_type_params";
+  params: ListExpr<DataType | PairExpr<Identifier, DataType>>;
 }
 
 export interface TableOption extends BaseNode {

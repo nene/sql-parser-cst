@@ -12,7 +12,8 @@ export type AllExprNodes =
   | OverArg
   | CaseWhen
   | CaseElse
-  | IntervalUnitRange;
+  | IntervalUnitRange
+  | PairExpr;
 
 export type Expr =
   | ListExpr
@@ -42,6 +43,12 @@ export interface ListExpr<T = Node> extends BaseNode {
 export interface ParenExpr<T = Node> extends BaseNode {
   type: "paren_expr";
   expr: T;
+}
+
+export interface PairExpr<T1 = Node, T2 = Node> extends BaseNode {
+  type: "pair_expr";
+  expr1: T1;
+  expr2: T2;
 }
 
 export interface BinaryExpr extends BaseNode {
