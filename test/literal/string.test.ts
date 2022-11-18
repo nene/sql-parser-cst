@@ -1,6 +1,6 @@
 import { dialect, parseExpr, testExpr } from "../test_utils";
 
-function testMysqlBackslashEscaping(q: '"' | "'") {
+function testMysqlBackslashEscaping(q: '"' | "'" | '"""' | "'''") {
   // For reference, see:
   // https://dev.mysql.com/doc/refman/8.0/en/string-literals.html#character-escape-sequences
   [
@@ -81,6 +81,56 @@ describe("string literal", () => {
 
     describe("backslash-escaping inside double-quoted strings", () => {
       testMysqlBackslashEscaping('"');
+    });
+  });
+
+  dialect("bigquery", () => {
+    describe("triple-quoted string (single-quotes)", () => {
+      it("parses triple-quoted string", () => {
+        expect(parseExpr(`'''It's about time!'''`)).toMatchInlineSnapshot(`
+          {
+            "text": "'''It's about time!'''",
+            "type": "string",
+            "value": "It's about time!",
+          }
+        `);
+      });
+
+      it("handles repeated quotes inside", () => {
+        expect(parseExpr(`'''Are you ''sure'' about this?'''`)).toMatchInlineSnapshot(`
+          {
+            "text": "'''Are you ''sure'' about this?'''",
+            "type": "string",
+            "value": "Are you ''sure'' about this?",
+          }
+        `);
+      });
+
+      testMysqlBackslashEscaping("'''");
+    });
+
+    describe("triple-quoted string (double-quotes)", () => {
+      it("parses triple-quoted string", () => {
+        expect(parseExpr(`"""Are you "sure" about this?"""`)).toMatchInlineSnapshot(`
+          {
+            "text": """"Are you "sure" about this?"""",
+            "type": "string",
+            "value": "Are you "sure" about this?",
+          }
+        `);
+      });
+
+      it("handles repeated quotes inside", () => {
+        expect(parseExpr(`"""Are you ""sure"" about this?"""`)).toMatchInlineSnapshot(`
+          {
+            "text": """"Are you ""sure"" about this?"""",
+            "type": "string",
+            "value": "Are you ""sure"" about this?",
+          }
+        `);
+      });
+
+      testMysqlBackslashEscaping('"""');
     });
   });
 

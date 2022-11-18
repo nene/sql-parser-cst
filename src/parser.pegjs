@@ -2620,7 +2620,9 @@ literal_string_without_charset // for MySQL only
 
 // The most ordinary string type, without any prefixes
 literal_plain_string
-  = &sqlite s:literal_single_quoted_string_qq { return s; }
+  = &bigquery s:literal_triple_single_quoted_string { return s; }
+  / &bigquery s:literal_triple_double_quoted_string { return s; }
+  / &sqlite s:literal_single_quoted_string_qq { return s; }
   / (&mysql / &bigquery) s:literal_single_quoted_string_qq_bs { return s; }
   / (&mysql / &bigquery) s:literal_double_quoted_string_qq_bs { return s; }
 
@@ -2712,6 +2714,30 @@ literal_double_quoted_string_qq_bs // with repeated quote or backslash for escap
       value: chars.join(""),
     });
   }
+
+literal_triple_single_quoted_string
+  = "'''" chars:([^'\\] / single_quote_in_3quote / backslash_escape)* "'''" {
+    return loc({
+      type: "string",
+      text: text(),
+      value: chars.join(""),
+    });
+  }
+
+single_quote_in_3quote
+  = s:("''" / "'") !"'" { return s; }
+
+literal_triple_double_quoted_string
+  = '"""' chars:([^"\\] / double_quote_in_3quote / backslash_escape)* '"""' {
+    return loc({
+      type: "string",
+      text: text(),
+      value: chars.join(""),
+    });
+  }
+
+double_quote_in_3quote
+  = s:('""' / '"') !'"' { return s; }
 
 backslash_escape
   = "\\%" { return "\\%"; }
