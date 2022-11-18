@@ -273,6 +273,35 @@ describe("identifier", () => {
       `);
     });
 
+    dialect("bigquery", () => {
+      it("supports three-part table name: project.dataset.table", () => {
+        test("SELECT col FROM my-project.my-dataset.my-table");
+      });
+
+      it("parses three-part table name as TableRef", () => {
+        expect(parseFrom(`my-project.my-dataset.my-table`)).toMatchInlineSnapshot(`
+          {
+            "catalog": {
+              "name": "my-project",
+              "text": "my-project",
+              "type": "identifier",
+            },
+            "schema": {
+              "name": "my-dataset",
+              "text": "my-dataset",
+              "type": "identifier",
+            },
+            "table": {
+              "name": "my-table",
+              "text": "my-table",
+              "type": "identifier",
+            },
+            "type": "table_ref",
+          }
+        `);
+      });
+    });
+
     dialect("sqlite", () => {
       it("supports quoted qualified table name", () => {
         test(`SELECT col FROM "my db"."my tbl"`);

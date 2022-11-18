@@ -342,7 +342,7 @@ const showNode = cstTransformer<string>({
 
   // Tables & columns
   column_ref: (node) => show([node.table, node.column], "."),
-  table_ref: (node) => show([node.schema, node.table], "."),
+  table_ref: (node) => show([node.catalog, node.schema, node.table], "."),
   alias: (node) => show([node.expr, node.asKw, node.alias]),
   indexed_table_ref: (node) => show([node.table, node.indexedByKw, node.index]),
   not_indexed_table_ref: (node) => show([node.table, node.notIndexedKw]),

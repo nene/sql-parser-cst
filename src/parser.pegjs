@@ -2442,7 +2442,15 @@ table_ref_list
   }
 
 table_ref
-  = schema:(ident __) "." t:(__ ident) {
+  = catalog:(ident __) "." schema:(__ ident __) "." t:(__ ident) {
+    return loc({
+      type: "table_ref",
+      catalog: read(catalog),
+      schema: read(schema),
+      table: read(t),
+    });
+  }
+  / schema:(ident __) "." t:(__ ident) {
     return loc({
       type: "table_ref",
       schema: read(schema),

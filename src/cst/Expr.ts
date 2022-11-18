@@ -198,6 +198,7 @@ export interface ColumnRef extends BaseNode {
 
 export interface TableRef extends BaseNode {
   type: "table_ref";
+  catalog?: Identifier;
   schema?: Identifier;
   table: Identifier;
 }
