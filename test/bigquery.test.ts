@@ -2,18 +2,6 @@ import { dialect, test } from "./test_utils";
 
 describe("BigQuery bugs in node-sql-formatter", () => {
   dialect("bigquery", () => {
-    it(`"order by" in a CTE`, () => {
-      test(`
-        with cte as (
-            select *
-            from product.organization
-            order by id
-        )
-        select *
-        from cte
-      `);
-    });
-
     it.skip(`accessing array elements`, () => {
       test(`
         select whatever[OFFSET(1)] as elt1
@@ -24,18 +12,6 @@ describe("BigQuery bugs in node-sql-formatter", () => {
     it.skip(`accessing array elements in a function return value`, () => {
       test(`
         select split('To - be - split', ' - ')[OFFSET(0)]
-      `);
-    });
-
-    it(`using an escaped keyword as identifier`, () => {
-      test("select 1 as `from`");
-    });
-
-    it(`omitting "inner" in a "join" clause`, () => {
-      test(`
-        select *
-        from organization
-        join payment on organization_id = organization.id
       `);
     });
 
@@ -54,51 +30,6 @@ describe("BigQuery bugs in node-sql-formatter", () => {
       `);
     });
 
-    it(`window definition with "order by" and "rows"`, () => {
-      test(`
-        select
-          date_week,
-          avg(nb_users) over (
-            order by date_week
-            rows between 3 preceding and current row
-        ) as nb_users_ma
-        from active_users_per_week
-      `);
-    });
-
-    it(`function "session_user"`, () => {
-      test(`
-        select session_user()
-      `);
-    });
-
-    it(`"distinct" and "case"`, () => {
-      test(`
-        select count (
-          distinct (
-            case
-              when order_purchase_timestamp between '2018-01-01' and '2018-12-31' then order_id
-            end
-          )
-        ) as nb_orders
-        from retail.orders
-      `);
-    });
-
-    it(`select "*" together with specific columns`, () => {
-      test(`
-        select row_number() over (), * from retail.orders
-      `);
-    });
-
-    it(`specify a project in a "from" clause`, () => {
-      test(`
-        select *
-        from project.retail.customers
-        limit 3
-      `);
-    });
-
     it.skip(`"qualify" clause`, () => {
       test(`
         SELECT
@@ -107,34 +38,6 @@ describe("BigQuery bugs in node-sql-formatter", () => {
         FROM Produce
         WHERE Produce.category = 'vegetable'
         QUALIFY rank <= 3
-      `);
-    });
-
-    it(`"distinct case"`, () => {
-      test(`
-        SELECT
-          COUNT(
-            DISTINCT CASE WHEN active IS TRUE THEN id END
-          ) AS nb_active
-        FROM
-          dataset.users
-      `);
-    });
-
-    it(`when a column is named with some keyword (type)`, () => {
-      test(`
-        SELECT
-          *
-        FROM
-          shop.clothes
-        WHERE
-          type = 'shoe'
-      `);
-    });
-
-    it(`when a table is named with some keyword (session)`, () => {
-      test(`
-        select * from product.session
       `);
     });
 
@@ -158,24 +61,9 @@ describe("BigQuery bugs in node-sql-formatter", () => {
       `);
     });
 
-    it(`when the select part involves an OR condition`, () => {
-      test(`
-        SELECT
-          a OR b
-        FROM
-          ds.tbl
-      `);
-    });
-
     it.skip(`"extract(year from ...)"`, () => {
       test(`
         select extract(year from current_date())
-      `);
-    });
-
-    it(`"current_date"`, () => {
-      test(`
-        select current_date
       `);
     });
 
