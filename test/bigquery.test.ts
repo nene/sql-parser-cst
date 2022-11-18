@@ -39,16 +39,6 @@ describe("BigQuery bugs in node-sql-formatter", () => {
       `);
     });
 
-    it.skip(`when a CTE is named with some keyword (table)`, () => {
-      test(`
-        with table as (
-            select *
-            from unnest(array[1, 2])
-        )
-        select * from table
-      `);
-    });
-
     it.skip(`function "right"`, () => {
       test(`select right('lorem ipsum', 2)`);
     });
