@@ -34,7 +34,7 @@ describe("BigQuery bugs in node-sql-formatter", () => {
       test(`
         SELECT
           item,
-          RAtest(NK() OVER (PARTITION BY category ORDER BY purchases DESC) as rank
+          RANK() OVER (PARTITION BY category ORDER BY purchases DESC) as rank
         FROM Produce
         WHERE Produce.category = 'vegetable'
         QUALIFY rank <= 3
