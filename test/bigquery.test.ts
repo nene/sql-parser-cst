@@ -14,14 +14,14 @@ describe("BigQuery bugs in node-sql-formatter", () => {
       `);
     });
 
-    it(`accessing array elements`, () => {
+    it.skip(`accessing array elements`, () => {
       test(`
         select whatever[OFFSET(1)] as elt1
         from sequences
       `);
     });
 
-    it(`accessing array elements in a function return value`, () => {
+    it.skip(`accessing array elements in a function return value`, () => {
       test(`
         select split('To - be - split', ' - ')[OFFSET(0)]
       `);
@@ -39,7 +39,7 @@ describe("BigQuery bugs in node-sql-formatter", () => {
       `);
     });
 
-    it(`unnest in a "from" clause that also involves regular tables`, () => {
+    it.skip(`unnest in a "from" clause that also involves regular tables`, () => {
       test(`
         select *
         from product.organization, unnest(array[1,2])
@@ -47,7 +47,7 @@ describe("BigQuery bugs in node-sql-formatter", () => {
       `);
     });
 
-    it(`"pivot" clause`, () => {
+    it.skip(`"pivot" clause`, () => {
       test(`
         select *
         from by_plan pivot (sum(cnt) for plan in ('FREE','STARTER', 'PRO'))
@@ -99,7 +99,7 @@ describe("BigQuery bugs in node-sql-formatter", () => {
       `);
     });
 
-    it(`"qualify" clause`, () => {
+    it.skip(`"qualify" clause`, () => {
       test(`
         SELECT
           item,
@@ -138,7 +138,7 @@ describe("BigQuery bugs in node-sql-formatter", () => {
       `);
     });
 
-    it(`when a CTE is named with some keyword (table)`, () => {
+    it.skip(`when a CTE is named with some keyword (table)`, () => {
       test(`
         with table as (
             select *
@@ -148,7 +148,7 @@ describe("BigQuery bugs in node-sql-formatter", () => {
       `);
     });
 
-    it(`function "right"`, () => {
+    it.skip(`function "right"`, () => {
       test(`
         select
           right(
@@ -167,7 +167,7 @@ describe("BigQuery bugs in node-sql-formatter", () => {
       `);
     });
 
-    it(`"extract(year from ...)"`, () => {
+    it.skip(`"extract(year from ...)"`, () => {
       test(`
         select extract(year from current_date())
       `);
@@ -179,14 +179,14 @@ describe("BigQuery bugs in node-sql-formatter", () => {
       `);
     });
 
-    it(`window function to "current row"`, () => {
+    it.skip(`window function to "current row"`, () => {
       test(`
         SELECT MAX(amount) OVER (ORDER BY invoice_date ASC ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW),
         FROM invoice
       `);
     });
 
-    it(`window function to "3 preceding"`, () => {
+    it.skip(`window function to "3 preceding"`, () => {
       test(`
         SELECT MAX(amount) OVER (ORDER BY invoice_date ASC ROWS BETWEEN UNBOUNDED PRECEDING AND 3 PRECEDING),
         FROM invoice
