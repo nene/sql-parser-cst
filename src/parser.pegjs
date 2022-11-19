@@ -2646,13 +2646,15 @@ literal_string_without_charset // for MySQL only
 
 // The most ordinary string type, without any prefixes
 literal_plain_string
-  = &bigquery s:literal_triple_single_quoted_string { return s; }
-  / &bigquery s:literal_triple_double_quoted_string { return s; }
-  / &bigquery s:literal_single_quoted_string_bs { return s; }
-  / &bigquery s:literal_double_quoted_string_bs { return s; }
+  = &bigquery s:(
+      literal_triple_single_quoted_string
+    / literal_triple_double_quoted_string
+    / literal_single_quoted_string_bs
+    / literal_double_quoted_string_bs) { return s; }
   / &sqlite s:literal_single_quoted_string_qq { return s; }
-  / &mysql s:literal_single_quoted_string_qq_bs { return s; }
-  / &mysql s:literal_double_quoted_string_qq_bs { return s; }
+  / &mysql s:(
+      literal_single_quoted_string_qq_bs
+    / literal_double_quoted_string_qq_bs) { return s; }
 
 charset_introducer
   = "_" cs:charset_name !ident_part { return cs; }
