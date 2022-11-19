@@ -28,58 +28,60 @@ function testMysqlBackslashEscaping(q: '"' | "'" | '"""' | "'''") {
 }
 
 describe("string literal", () => {
-  it("single-quoted string", () => {
-    expect(parseExpr(`'hello'`)).toMatchInlineSnapshot(`
-      {
-        "text": "'hello'",
-        "type": "string",
-        "value": "hello",
-      }
-    `);
-  });
-  it("single-quoted string with repeated-quote escapes", () => {
-    testExpr(`'hel''lo'`);
-  });
-  it("parses single-quoted string with repeated-quote escapes", () => {
-    expect(parseExpr(`'hel''lo'`)).toMatchInlineSnapshot(`
-      {
-        "text": "'hel''lo'",
-        "type": "string",
-        "value": "hel'lo",
-      }
-    `);
-  });
-
-  dialect(["mysql", "bigquery"], () => {
-    describe("backslash-escaping inside single-quoted strings", () => {
-      testMysqlBackslashEscaping("'");
-    });
-  });
-
-  dialect(["mysql", "bigquery"], () => {
-    it("double-quoted string", () => {
-      expect(parseExpr(`"hello"`)).toMatchInlineSnapshot(`
+  describe("single-quoted string", () => {
+    it("parses basic string", () => {
+      expect(parseExpr(`'hello'`)).toMatchInlineSnapshot(`
         {
-          "text": ""hello"",
+          "text": "'hello'",
           "type": "string",
           "value": "hello",
         }
       `);
     });
-    it("double-quoted string with repeated-quote escapes", () => {
-      testExpr(`"hel""lo"`);
+
+    it("supports repeated-quote escapes", () => {
+      testExpr(`'hel''lo'`);
     });
-    it("parses double-quoted string with repeated-quote escapes", () => {
-      expect(parseExpr(`"hel""lo"`)).toMatchInlineSnapshot(`
+    it("parses repeated-quote escapes", () => {
+      expect(parseExpr(`'hel''lo'`)).toMatchInlineSnapshot(`
         {
-          "text": ""hel""lo"",
+          "text": "'hel''lo'",
           "type": "string",
-          "value": "hel"lo",
+          "value": "hel'lo",
         }
       `);
     });
 
-    describe("backslash-escaping inside double-quoted strings", () => {
+    dialect(["mysql", "bigquery"], () => {
+      testMysqlBackslashEscaping("'");
+    });
+  });
+
+  describe("double-quoted string", () => {
+    dialect(["mysql", "bigquery"], () => {
+      it("parses simple string", () => {
+        expect(parseExpr(`"hello"`)).toMatchInlineSnapshot(`
+          {
+            "text": ""hello"",
+            "type": "string",
+            "value": "hello",
+          }
+        `);
+      });
+
+      it("supports repeated-quote escapes", () => {
+        testExpr(`"hel""lo"`);
+      });
+      it("parses repeated-quote escapes", () => {
+        expect(parseExpr(`"hel""lo"`)).toMatchInlineSnapshot(`
+          {
+            "text": ""hel""lo"",
+            "type": "string",
+            "value": "hel"lo",
+          }
+        `);
+      });
+
       testMysqlBackslashEscaping('"');
     });
   });
