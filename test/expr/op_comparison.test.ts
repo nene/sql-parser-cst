@@ -30,7 +30,7 @@ describe("comparison operators", () => {
       testExpr(`c /*c1*/ IS /*c2*/ NOT /*c3*/ NULL`);
     });
 
-    dialect("bigquery", () => {
+    dialect(["bigquery", "mysql"], () => {
       it("supports IS [NOT] TRUE/FALSE operator", () => {
         testExpr(`col IS TRUE`);
         testExpr(`col IS NOT FALSE`);
