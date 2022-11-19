@@ -39,17 +39,25 @@ describe("string literal", () => {
       `);
     });
 
-    it("supports repeated-quote escapes", () => {
-      testExpr(`'hel''lo'`);
+    dialect(["mysql", "sqlite"], () => {
+      it("supports repeated-quote escapes", () => {
+        testExpr(`'hel''lo'`);
+      });
+      it("parses repeated-quote escapes", () => {
+        expect(parseExpr(`'hel''lo'`)).toMatchInlineSnapshot(`
+          {
+            "text": "'hel''lo'",
+            "type": "string",
+            "value": "hel'lo",
+          }
+        `);
+      });
     });
-    it("parses repeated-quote escapes", () => {
-      expect(parseExpr(`'hel''lo'`)).toMatchInlineSnapshot(`
-        {
-          "text": "'hel''lo'",
-          "type": "string",
-          "value": "hel'lo",
-        }
-      `);
+
+    dialect("bigquery", () => {
+      it("does not support repeated-quote escapes", () => {
+        expect(() => parseExpr(`'hel''lo'`)).toThrowError();
+      });
     });
 
     dialect(["mysql", "bigquery"], () => {
@@ -68,7 +76,9 @@ describe("string literal", () => {
           }
         `);
       });
+    });
 
+    dialect("mysql", () => {
       it("supports repeated-quote escapes", () => {
         testExpr(`"hel""lo"`);
       });
@@ -81,7 +91,15 @@ describe("string literal", () => {
           }
         `);
       });
+    });
 
+    dialect("bigquery", () => {
+      it("does not support repeated-quote escapes", () => {
+        expect(() => parseExpr(`"hel""lo"`)).toThrowError();
+      });
+    });
+
+    dialect(["mysql", "bigquery"], () => {
       testMysqlBackslashEscaping('"');
     });
   });

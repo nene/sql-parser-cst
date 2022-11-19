@@ -2648,9 +2648,11 @@ literal_string_without_charset // for MySQL only
 literal_plain_string
   = &bigquery s:literal_triple_single_quoted_string { return s; }
   / &bigquery s:literal_triple_double_quoted_string { return s; }
+  / &bigquery s:literal_single_quoted_string_bs { return s; }
+  / &bigquery s:literal_double_quoted_string_bs { return s; }
   / &sqlite s:literal_single_quoted_string_qq { return s; }
-  / (&mysql / &bigquery) s:literal_single_quoted_string_qq_bs { return s; }
-  / (&mysql / &bigquery) s:literal_double_quoted_string_qq_bs { return s; }
+  / &mysql s:literal_single_quoted_string_qq_bs { return s; }
+  / &mysql s:literal_double_quoted_string_qq_bs { return s; }
 
 charset_introducer
   = "_" cs:charset_name !ident_part { return cs; }
@@ -2708,6 +2710,15 @@ literal_single_quoted_string_qq_bs // with repeated quote or backslash for escap
     });
   }
 
+literal_single_quoted_string_bs // with backslash for escaping
+  = "'" chars:([^'\\] / backslash_escape)* "'" {
+    return loc({
+      type: "string",
+      text: text(),
+      value: chars.join(""),
+    });
+  }
+
 literal_single_quoted_string_qq // with repeated quote for escaping
   = "'" chars:([^'] / escaped_single_quote_qq)* "'" {
     return loc({
@@ -2734,6 +2745,15 @@ escaped_double_quote_qq
 
 literal_double_quoted_string_qq_bs // with repeated quote or backslash for escaping
   = "\"" chars:([^"\\] / escaped_double_quote_qq / backslash_escape)* "\"" {
+    return loc({
+      type: "string",
+      text: text(),
+      value: chars.join(""),
+    });
+  }
+
+literal_double_quoted_string_bs // with backslash for escaping
+  = "\"" chars:([^"\\] / backslash_escape)* "\"" {
     return loc({
       type: "string",
       text: text(),
