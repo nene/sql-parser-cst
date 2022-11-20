@@ -2616,7 +2616,7 @@ literal
   / literal_boolean
   / literal_null
   / literal_datetime
-  / &bigquery x:literal_typed_array { return x; }
+  / &bigquery x:(literal_typed_array / literal_typed_struct) { return x; }
 
 literal_null
   = kw:NULL {
@@ -2937,6 +2937,15 @@ literal_array
 empty_list_expr = &. {
   return loc({ type: "list_expr", items: [] });
 }
+
+literal_typed_struct
+  = type:(struct_type __) struct:paren_list_expr {
+    return loc({
+      type: "typed_struct",
+      dataType: read(type),
+      struct,
+    });
+  }
 
 // Optional whitespace (or comments)
 __ "whitespace"

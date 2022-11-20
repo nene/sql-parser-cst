@@ -359,6 +359,7 @@ const showNode = cstTransformer<string>({
   boolean: (node) => node.text,
   null: (node) => node.text,
   parameter: (node) => node.text,
+  typed_struct: (node) => show([node.dataType, node.struct]),
   typed_array: (node) => show([node.dataType, node.array]),
   array: (node) => show(["[", node.expr, "]"]),
 
