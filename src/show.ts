@@ -337,6 +337,9 @@ const showNode = cstTransformer<string>({
   interval_expr: (node) => show([node.intervalKw, node.expr, node.unit]),
   interval_unit_range: (node) =>
     show([node.fromUnitKw, node.toKw, node.toUnitKw]),
+  typed_expr: (node) => show([node.dataType, node.expr]),
+  array_expr: (node) => show(["[", node.expr, "]"]),
+  struct_expr: (node) => show(["(", node.expr, ")"]),
 
   // Data types
   data_type: (node) => show([node.nameKw, node.params]),
@@ -359,9 +362,6 @@ const showNode = cstTransformer<string>({
   boolean: (node) => node.text,
   null: (node) => node.text,
   parameter: (node) => node.text,
-  typed_struct: (node) => show([node.dataType, node.struct]),
-  typed_array: (node) => show([node.dataType, node.array]),
-  array: (node) => show(["[", node.expr, "]"]),
 
   // Cast to FullTransformMap, so TypeScript ensures all node types are covered
 } as FullTransformMap<string>);

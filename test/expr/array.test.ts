@@ -1,6 +1,6 @@
 import { dialect, parseExpr, testExpr } from "../test_utils";
 
-describe("array literal", () => {
+describe("array", () => {
   dialect("bigquery", () => {
     it("supports empty array", () => {
       testExpr(`[]`);
@@ -25,24 +25,6 @@ describe("array literal", () => {
     it("parses typed array", () => {
       expect(parseExpr(`ARRAY<INT64>[1, 2]`)).toMatchInlineSnapshot(`
         {
-          "array": {
-            "expr": {
-              "items": [
-                {
-                  "text": "1",
-                  "type": "number",
-                  "value": 1,
-                },
-                {
-                  "text": "2",
-                  "type": "number",
-                  "value": 2,
-                },
-              ],
-              "type": "list_expr",
-            },
-            "type": "array",
-          },
           "dataType": {
             "nameKw": {
               "name": "ARRAY",
@@ -67,7 +49,25 @@ describe("array literal", () => {
             },
             "type": "data_type",
           },
-          "type": "typed_array",
+          "expr": {
+            "expr": {
+              "items": [
+                {
+                  "text": "1",
+                  "type": "number",
+                  "value": 1,
+                },
+                {
+                  "text": "2",
+                  "type": "number",
+                  "value": 2,
+                },
+              ],
+              "type": "list_expr",
+            },
+            "type": "array_expr",
+          },
+          "type": "typed_expr",
         }
       `);
     });

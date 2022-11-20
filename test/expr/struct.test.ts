@@ -1,6 +1,6 @@
-import { dialect, parseExpr, testExpr } from "../test_utils";
+import { dialect, parse, parseExpr, testExpr } from "../test_utils";
 
-describe("struct literal", () => {
+describe("struct", () => {
   dialect("bigquery", () => {
     it("supports untyped struct", () => {
       testExpr(`(25, 'foo', NULL)`);
@@ -15,6 +15,14 @@ describe("struct literal", () => {
     it("supports typed struct (with type params)", () => {
       testExpr(`STRUCT<age INT64, name STRING>(50, 'foo')`);
       testExpr(`STRUCT /*c1*/ <INT64> /*c2*/ (2)`);
+    });
+
+    it("detects (1,2) as struct_expr", () => {
+      expect(parseExpr("(1,2)").type).toBe("struct_expr");
+    });
+
+    it("detects (2) as ordinary parenthesized number", () => {
+      expect(parseExpr("(2)").type).toBe("paren_expr");
     });
 
     it("parses typed struct", () => {
@@ -52,7 +60,7 @@ describe("struct literal", () => {
             },
             "type": "data_type",
           },
-          "struct": {
+          "expr": {
             "expr": {
               "items": [
                 {
@@ -63,9 +71,9 @@ describe("struct literal", () => {
               ],
               "type": "list_expr",
             },
-            "type": "paren_expr",
+            "type": "struct_expr",
           },
-          "type": "typed_struct",
+          "type": "typed_expr",
         }
       `);
     });

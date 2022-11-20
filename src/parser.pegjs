@@ -2180,6 +2180,7 @@ negation_operator = "-" / "~" / "!"
 
 primary
   = literal
+  / &bigquery x:(typed_array_expr / typed_struct_expr) { return x; }
   / paren_expr
   / paren_expr_select
   / paren_list_expr
@@ -2605,6 +2606,66 @@ ident_part  = [A-Za-z0-9_]
 /**
  * ------------------------------------------------------------------------------------ *
  *                                                                                      *
+ * Arrays and structs                                                                   *
+ *                                                                                      *
+ * ------------------------------------------------------------------------------------ *
+ */
+typed_array_expr
+  = type:(array_type __) expr:array_expr {
+    return loc({
+      type: "typed_expr",
+      dataType: read(type),
+      expr,
+    });
+  }
+  / array_expr
+
+array_expr
+  = "[" items:(__ (list_expr / empty_list_expr) __) "]" {
+    return loc({
+      type: "array_expr",
+      expr: read(items),
+    });
+  }
+
+empty_list_expr = &. {
+  return loc({ type: "list_expr", items: [] });
+}
+
+typed_struct_expr
+  = type:(struct_type __) expr:struct_expr {
+    return loc({
+      type: "typed_expr",
+      dataType: read(type),
+      expr,
+    });
+  }
+  / untyped_struct_expr
+
+struct_expr
+  = parens:paren_list_expr {
+    return loc({
+      type: "struct_expr",
+      expr: parens.expr,
+    });
+  }
+
+untyped_struct_expr
+  = "(" expr:(__ multi_element_list_expr __) ")" {
+    return loc({
+      type: "struct_expr",
+      expr: read(expr),
+    });
+  }
+
+multi_element_list_expr
+  = head:expr n2:(__ "," __ expr) tail:(__ "," __ expr)* {
+    return loc(createListExpr(head, [n2, ...tail]));
+  }
+
+/**
+ * ------------------------------------------------------------------------------------ *
+ *                                                                                      *
  * Literals                                                                             *
  *                                                                                      *
  * ------------------------------------------------------------------------------------ *
@@ -2616,7 +2677,6 @@ literal
   / literal_boolean
   / literal_null
   / literal_datetime
-  / &bigquery x:(literal_typed_array / literal_typed_struct) { return x; }
 
 literal_null
   = kw:NULL {
@@ -2916,36 +2976,6 @@ digits
 hex_digit
   = [0-9a-fA-F]
 
-literal_typed_array
-  = type:(array_type __) array:literal_array {
-    return loc({
-      type: "typed_array",
-      dataType: read(type),
-      array,
-    });
-  }
-  / literal_array
-
-literal_array
-  = "[" items:(__ (list_expr / empty_list_expr) __) "]" {
-    return loc({
-      type: "array",
-      expr: read(items),
-    });
-  }
-
-empty_list_expr = &. {
-  return loc({ type: "list_expr", items: [] });
-}
-
-literal_typed_struct
-  = type:(struct_type __) struct:paren_list_expr {
-    return loc({
-      type: "typed_struct",
-      dataType: read(type),
-      struct,
-    });
-  }
 
 // Optional whitespace (or comments)
 __ "whitespace"

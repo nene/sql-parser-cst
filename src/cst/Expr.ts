@@ -33,7 +33,10 @@ export type Expr =
   | ColumnRef
   | TableRef
   | Identifier
-  | Parameter;
+  | Parameter
+  | TypedExpr
+  | ArrayExpr
+  | StructExpr;
 
 export interface ListExpr<T = Node> extends BaseNode {
   type: "list_expr";
@@ -219,4 +222,22 @@ export interface Identifier extends BaseNode {
 export interface Parameter extends BaseNode {
   type: "parameter";
   text: string;
+}
+
+// BigQuery
+// ------------
+export interface TypedExpr extends BaseNode {
+  type: "typed_expr";
+  dataType: DataType;
+  expr: ArrayExpr | StructExpr;
+}
+
+export interface ArrayExpr extends BaseNode {
+  type: "array_expr";
+  expr: ListExpr<Expr>;
+}
+
+export interface StructExpr extends BaseNode {
+  type: "struct_expr";
+  expr: ListExpr<Expr>;
 }
