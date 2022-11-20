@@ -16,19 +16,32 @@ function testStringEscaping(q: Quote, tests: StringTest[]) {
   });
 }
 
-const mysqlBackslashEscaping: StringTest[] = [
-  { text: String.raw`\0`, value: `\0`, visible: "<NUL>" },
+const stdBackslashEscaping: StringTest[] = [
   { text: String.raw`\'`, value: `'` },
   { text: String.raw`\"`, value: `"` },
   { text: String.raw`\b`, value: `\b`, visible: "<BACKSPACE>" },
   { text: String.raw`\n`, value: `\n`, visible: "<NEWLINE>" },
   { text: String.raw`\r`, value: `\r`, visible: "<CARRIAGE RETURN>" },
   { text: String.raw`\t`, value: `\t`, visible: "<TAB>" },
-  { text: String.raw`\Z`, value: `\x1A`, visible: "<CTRL+Z>" },
   { text: String.raw`\\`, value: `\\` },
+];
+
+const mysqlBackslashEscaping: StringTest[] = [
+  ...stdBackslashEscaping,
+  { text: String.raw`\0`, value: `\0`, visible: "<NUL>" },
+  { text: String.raw`\Z`, value: `\x1A`, visible: "<CTRL+Z>" },
   { text: String.raw`\%`, value: `\\%` },
   { text: String.raw`\_`, value: `\\_` },
   { text: String.raw`\e\l\s\e`, value: `else` },
+];
+
+const bigqueryBackslashEscaping: StringTest[] = [
+  ...stdBackslashEscaping,
+  { text: String.raw`\a`, value: `\x07`, visible: "<BELL>" },
+  { text: String.raw`\f`, value: `\f`, visible: "<FORM FEED>" },
+  { text: String.raw`\v`, value: `\v`, visible: "<VERTICAL TAB>" },
+  { text: String.raw`\?`, value: `?` },
+  { text: String.raw`\``, value: "`" },
 ];
 
 describe("string literal", () => {
@@ -64,8 +77,11 @@ describe("string literal", () => {
       });
     });
 
-    dialect(["mysql", "bigquery"], () => {
+    dialect("mysql", () => {
       testStringEscaping("'", mysqlBackslashEscaping);
+    });
+    dialect("bigquery", () => {
+      testStringEscaping("'", bigqueryBackslashEscaping);
     });
   });
 
@@ -103,8 +119,11 @@ describe("string literal", () => {
       });
     });
 
-    dialect(["mysql", "bigquery"], () => {
-      testStringEscaping("'", mysqlBackslashEscaping);
+    dialect("mysql", () => {
+      testStringEscaping('"', mysqlBackslashEscaping);
+    });
+    dialect("bigquery", () => {
+      testStringEscaping('"', bigqueryBackslashEscaping);
     });
   });
 
@@ -130,7 +149,7 @@ describe("string literal", () => {
         `);
       });
 
-      testStringEscaping("'", mysqlBackslashEscaping);
+      testStringEscaping("'", bigqueryBackslashEscaping);
     });
 
     describe("triple-quoted string (double-quotes)", () => {
@@ -154,7 +173,7 @@ describe("string literal", () => {
         `);
       });
 
-      testStringEscaping("'", mysqlBackslashEscaping);
+      testStringEscaping("'", bigqueryBackslashEscaping);
     });
   });
 

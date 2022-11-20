@@ -2788,14 +2788,17 @@ double_quote_in_3quote
   = s:('""' / '"') !'"' { return s; }
 
 backslash_escape
-  = "\\%" { return "\\%"; }
-  / "\\_" { return "\\_"; }
-  / "\\n" { return "\n"; }
+  = "\\n" { return "\n"; }
   / "\\r" { return "\r"; }
   / "\\t" { return "\t"; }
   / "\\b" { return "\b"; }
-  / "\\0" { return "\0"; }
-  / "\\Z" { return "\x1A"; /* Ctrl+Z (ASCII code 26 dec, 1A hex) */ }
+  / "\\f" &bigquery { return "\f"; }
+  / "\\v" &bigquery { return "\v"; }
+  / "\\a" &bigquery { return "\x07"; /* BELL, ASCII code 7 */ }
+  / "\\%" &mysql { return "\\%"; }
+  / "\\_" &mysql { return "\\_"; }
+  / "\\0" &mysql { return "\0"; }
+  / "\\Z" &mysql { return "\x1A"; /* Ctrl+Z (ASCII code 26 dec, 1A hex) */ }
   / "\\" c:. { return c; }
 
 literal_natural_charset_string
