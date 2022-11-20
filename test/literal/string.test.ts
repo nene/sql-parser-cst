@@ -44,6 +44,8 @@ const bigqueryBackslashEscaping: StringTest[] = [
   { text: String.raw`\``, value: "`" },
   { text: String.raw`\101\105`, value: "AE" },
   { text: String.raw`\x41\X45`, value: "AE" },
+  { text: String.raw`\u03B1\u03b2\u03B3`, value: "αβγ" },
+  { text: String.raw`\U00000041\U0001F600`, value: "A😀" },
 ];
 
 describe("string literal", () => {

@@ -2795,8 +2795,22 @@ backslash_escape
   / "\\f" &bigquery { return "\f"; }
   / "\\v" &bigquery { return "\v"; }
   / "\\a" &bigquery { return "\x07"; /* BELL, ASCII code 7 */ }
-  / "\\" d1:[0-7] d2:[0-7] d3:[0-7] &bigquery { return String.fromCharCode(parseInt(d1+d2+d3, 8)); }
-  / "\\" "x"i d1:hex_digit d2:hex_digit &bigquery { return String.fromCharCode(parseInt(d1+d2, 16)); }
+  / "\\" oct:([0-7] [0-7] [0-7]) &bigquery {
+    // 3-digit octal escape
+    return String.fromCodePoint(parseInt(oct.join(""), 8));
+  }
+  / "\\" "x"i hex:(hex_digit hex_digit) &bigquery {
+    // 2-digit unicode escape
+    return String.fromCodePoint(parseInt(hex.join(""), 16));
+  }
+  / "\\" "u" hex:(hex_digit hex_digit hex_digit hex_digit) &bigquery {
+    // 4-digit unicode escape
+    return String.fromCodePoint(parseInt(hex.join(""), 16));
+  }
+  / "\\" "U" hex:(hex_digit hex_digit hex_digit hex_digit hex_digit hex_digit hex_digit hex_digit) &bigquery {
+    // 8-digit unicode escape
+    return String.fromCodePoint(parseInt(hex.join(""), 16));
+  }
   / "\\%" &mysql { return "\\%"; }
   / "\\_" &mysql { return "\\_"; }
   / "\\0" &mysql { return "\0"; }
