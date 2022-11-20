@@ -2209,6 +2209,16 @@ paren_list_expr
     return loc(createParenExpr(c2, list, c3));
   }
 
+empty_list_expr
+  = &. {
+    return loc({ type: "list_expr", items: [] });
+  }
+
+multi_element_list_expr
+  = head:expr n2:(__ "," __ expr) tail:(__ "," __ expr)* {
+    return loc(createListExpr(head, [n2, ...tail]));
+  }
+
 list_expr
   = head:expr tail:(__ "," __ expr)* {
     return loc(createListExpr(head, tail));
@@ -2628,10 +2638,6 @@ array_expr
     });
   }
 
-empty_list_expr = &. {
-  return loc({ type: "list_expr", items: [] });
-}
-
 typed_struct_expr
   = type:(struct_type __) expr:struct_expr {
     return loc({
@@ -2656,11 +2662,6 @@ untyped_struct_expr
       type: "struct_expr",
       expr: read(expr),
     });
-  }
-
-multi_element_list_expr
-  = head:expr n2:(__ "," __ expr) tail:(__ "," __ expr)* {
-    return loc(createListExpr(head, [n2, ...tail]));
   }
 
 /**
