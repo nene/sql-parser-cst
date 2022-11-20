@@ -73,9 +73,14 @@ describe("array literal", () => {
     });
   });
 
-  dialect(["mysql", "sqlite"], () => {
+  dialect("mysql", () => {
     it("does not support arrays", () => {
       expect(() => parseExpr("[1, 2, 3]")).toThrowError();
+    });
+  });
+  dialect("sqlite", () => {
+    it("does not support arrays", () => {
+      expect(parseExpr("[1, 2, 3]").type).toBe("column_ref");
     });
   });
 });
