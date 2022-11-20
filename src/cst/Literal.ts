@@ -1,4 +1,6 @@
 import { BaseNode, Keyword } from "./Base";
+import { DataType } from "./CreateTable";
+import { Expr, ListExpr } from "./Expr";
 
 export type Literal =
   | StringLiteral
@@ -6,7 +8,9 @@ export type Literal =
   | BlobLiteral
   | BooleanLiteral
   | NullLiteral
-  | DateTimeLiteral;
+  | DateTimeLiteral
+  | TypedArrayLiteral
+  | ArrayLiteral;
 
 export interface StringLiteral extends BaseNode {
   type: "string";
@@ -42,4 +46,15 @@ export interface DateTimeLiteral extends BaseNode {
   type: "datetime";
   kw: Keyword<"TIME" | "DATE" | "TIMESTAMP" | "DATETIME">;
   string: StringLiteral;
+}
+
+export interface TypedArrayLiteral extends BaseNode {
+  type: "typed_array";
+  dataType: DataType;
+  array: ArrayLiteral;
+}
+
+export interface ArrayLiteral extends BaseNode {
+  type: "array";
+  expr: ListExpr<Expr>;
 }

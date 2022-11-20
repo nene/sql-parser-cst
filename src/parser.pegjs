@@ -1852,8 +1852,8 @@ data_type
   = kw:(type_name __) params:type_length_params {
     return loc({ type: "data_type", nameKw: read(kw), params });
   }
-  / &bigquery kw:(ARRAY / STRUCT) params:(__ generic_type_params) {
-    return loc({ type: "data_type", nameKw: read(kw), params: read(params) });
+  / &bigquery type:(array_type / struct_type) {
+    return type;
   }
   / kw:type_name {
     return loc({ type: "data_type", nameKw: kw });
@@ -1867,6 +1867,16 @@ type_length_params
 literal_list
   = head:literal tail:(__ "," __ literal)* {
     return loc(createListExpr(head, tail));
+  }
+
+array_type
+  = kw:ARRAY params:(__ generic_type_params)? {
+    return loc({ type: "data_type", nameKw: read(kw), params: read(params) });
+  }
+
+struct_type
+  = kw:STRUCT params:(__ generic_type_params)? {
+    return loc({ type: "data_type", nameKw: read(kw), params: read(params) });
   }
 
 generic_type_params
@@ -1894,9 +1904,7 @@ type_name
   / &sqlite t:type_name_sqlite { return t; }
 
 type_name_bigquery
-  = ARRAY
-  / STRUCT
-  / BOOL
+  = BOOL
   / BYTES
   / GEOGRAPHY
   / INTERVAL
@@ -2608,6 +2616,7 @@ literal
   / literal_boolean
   / literal_null
   / literal_datetime
+  / &bigquery x:literal_typed_array { return x; }
 
 literal_null
   = kw:NULL {
@@ -2906,6 +2915,28 @@ digits
 
 hex_digit
   = [0-9a-fA-F]
+
+literal_typed_array
+  = type:(array_type __) array:literal_array {
+    return loc({
+      type: "typed_array",
+      dataType: read(type),
+      array,
+    });
+  }
+  / literal_array
+
+literal_array
+  = "[" items:(__ (list_expr / empty_list_expr) __) "]" {
+    return loc({
+      type: "array",
+      expr: read(items),
+    });
+  }
+
+empty_list_expr = &. {
+  return loc({ type: "list_expr", items: [] });
+}
 
 // Optional whitespace (or comments)
 __ "whitespace"
