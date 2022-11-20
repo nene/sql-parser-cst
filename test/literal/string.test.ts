@@ -1,31 +1,35 @@
 import { dialect, parseExpr, testExpr } from "../test_utils";
 
-function testMysqlBackslashEscaping(q: '"' | "'" | '"""' | "'''") {
-  // For reference, see:
-  // https://dev.mysql.com/doc/refman/8.0/en/string-literals.html#character-escape-sequences
-  [
-    { text: q + String.raw`\0` + q, value: `\0`, visible: "<NUL>" },
-    { text: q + String.raw`\'` + q, value: `'` },
-    { text: q + String.raw`\"` + q, value: `"` },
-    { text: q + String.raw`\b` + q, value: `\b`, visible: "<BACKSPACE>" },
-    { text: q + String.raw`\n` + q, value: `\n`, visible: "<NEWLINE>" },
-    { text: q + String.raw`\r` + q, value: `\r`, visible: "<CARRIAGE RETURN>" },
-    { text: q + String.raw`\t` + q, value: `\t`, visible: "<TAB>" },
-    { text: q + String.raw`\Z` + q, value: `\x1A`, visible: "<CTRL+Z>" },
-    { text: q + String.raw`\\` + q, value: `\\` },
-    { text: q + String.raw`\%` + q, value: `\\%` },
-    { text: q + String.raw`\_` + q, value: `\\_` },
-    { text: q + String.raw`\e\l\s\e` + q, value: `else` },
-  ].forEach(({ text, value, visible }) => {
-    it(`${text} evaluates to: ${visible || value}`, () => {
-      expect(parseExpr(text)).toEqual({
+type StringTest = { text: string; value: string; visible?: string };
+type Quote = '"' | "'" | '"""' | "'''";
+
+function testStringEscaping(q: Quote, tests: StringTest[]) {
+  tests.forEach(({ text, value, visible }) => {
+    const quotedText = q + text + q;
+    it(`${quotedText} evaluates to: ${visible || value}`, () => {
+      expect(parseExpr(quotedText)).toEqual({
         type: "string",
-        text,
+        text: quotedText,
         value,
       });
     });
   });
 }
+
+const mysqlBackslashEscaping: StringTest[] = [
+  { text: String.raw`\0`, value: `\0`, visible: "<NUL>" },
+  { text: String.raw`\'`, value: `'` },
+  { text: String.raw`\"`, value: `"` },
+  { text: String.raw`\b`, value: `\b`, visible: "<BACKSPACE>" },
+  { text: String.raw`\n`, value: `\n`, visible: "<NEWLINE>" },
+  { text: String.raw`\r`, value: `\r`, visible: "<CARRIAGE RETURN>" },
+  { text: String.raw`\t`, value: `\t`, visible: "<TAB>" },
+  { text: String.raw`\Z`, value: `\x1A`, visible: "<CTRL+Z>" },
+  { text: String.raw`\\`, value: `\\` },
+  { text: String.raw`\%`, value: `\\%` },
+  { text: String.raw`\_`, value: `\\_` },
+  { text: String.raw`\e\l\s\e`, value: `else` },
+];
 
 describe("string literal", () => {
   describe("single-quoted string", () => {
@@ -61,7 +65,7 @@ describe("string literal", () => {
     });
 
     dialect(["mysql", "bigquery"], () => {
-      testMysqlBackslashEscaping("'");
+      testStringEscaping("'", mysqlBackslashEscaping);
     });
   });
 
@@ -100,7 +104,7 @@ describe("string literal", () => {
     });
 
     dialect(["mysql", "bigquery"], () => {
-      testMysqlBackslashEscaping('"');
+      testStringEscaping("'", mysqlBackslashEscaping);
     });
   });
 
@@ -126,7 +130,7 @@ describe("string literal", () => {
         `);
       });
 
-      testMysqlBackslashEscaping("'''");
+      testStringEscaping("'", mysqlBackslashEscaping);
     });
 
     describe("triple-quoted string (double-quotes)", () => {
@@ -150,7 +154,7 @@ describe("string literal", () => {
         `);
       });
 
-      testMysqlBackslashEscaping('"""');
+      testStringEscaping("'", mysqlBackslashEscaping);
     });
   });
 
