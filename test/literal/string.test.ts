@@ -42,6 +42,7 @@ const bigqueryBackslashEscaping: StringTest[] = [
   { text: String.raw`\v`, value: `\v`, visible: "<VERTICAL TAB>" },
   { text: String.raw`\?`, value: `?` },
   { text: String.raw`\``, value: "`" },
+  { text: String.raw`\101\105`, value: "AE" },
   { text: String.raw`\x41\X45`, value: "AE" },
 ];
 

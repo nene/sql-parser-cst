@@ -2795,6 +2795,7 @@ backslash_escape
   / "\\f" &bigquery { return "\f"; }
   / "\\v" &bigquery { return "\v"; }
   / "\\a" &bigquery { return "\x07"; /* BELL, ASCII code 7 */ }
+  / "\\" d1:[0-7] d2:[0-7] d3:[0-7] &bigquery { return String.fromCharCode(parseInt(d1+d2+d3, 8)); }
   / "\\" "x"i d1:hex_digit d2:hex_digit &bigquery { return String.fromCharCode(parseInt(d1+d2, 16)); }
   / "\\%" &mysql { return "\\%"; }
   / "\\_" &mysql { return "\\_"; }
