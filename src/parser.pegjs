@@ -2300,6 +2300,9 @@ func_name
   / &mysql kw:mysql_window_func_keyword {
     return loc(createIdentifier(kw.text, kw.text));
   }
+  / &bigquery kw:bigquery_func_keyword {
+    return loc(createIdentifier(kw.text, kw.text));
+  }
 
 // In MySQL, window functions are reserved keywords
 mysql_window_func_keyword
@@ -2314,6 +2317,10 @@ mysql_window_func_keyword
   / PERCENT_RANK
   / RANK
   / ROW_NUMBER
+
+bigquery_func_keyword
+  = LEFT
+  / RIGHT
 
 paren_less_func_name
   = kw:(CURRENT_DATE / CURRENT_TIME / CURRENT_TIMESTAMP) {

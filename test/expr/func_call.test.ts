@@ -74,4 +74,11 @@ describe("function call", () => {
       testExpr(`count(*) /*c1*/ FILTER /*c2*/ (/*c3*/ WHERE /*c4*/ true /*c5*/)`);
     });
   });
+
+  dialect("bigquery", () => {
+    it("supports functions with reserved keywords as names", () => {
+      testExpr(`LEFT('hello', 3)`);
+      testExpr(`RIGHT('hello', 3)`);
+    });
+  });
 });

@@ -39,10 +39,6 @@ describe("BigQuery bugs in node-sql-formatter", () => {
       `);
     });
 
-    it.skip(`function "right"`, () => {
-      test(`select right('lorem ipsum', 2)`);
-    });
-
     it.skip(`"extract(year from ...)"`, () => {
       test(`select extract(year from current_date())`);
     });
