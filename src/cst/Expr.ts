@@ -15,7 +15,8 @@ export type AllExprNodes =
   | CaseElse
   | IntervalUnitRange
   | PairExpr
-  | WeekExpr;
+  | WeekExpr
+  | ArraySubscript;
 
 export type Expr =
   | ListExpr
@@ -33,6 +34,7 @@ export type Expr =
   | IntervalExpr
   | StringWithCharset
   | Literal
+  | MemberExpr
   | ColumnRef
   | TableRef
   | Identifier
@@ -230,6 +232,17 @@ export interface StringWithCharset extends BaseNode {
   type: "string_with_charset";
   charset: string;
   string: StringLiteral;
+}
+
+export interface MemberExpr extends BaseNode {
+  type: "member_expr";
+  object: Expr;
+  property: ArraySubscript;
+}
+
+export interface ArraySubscript extends BaseNode {
+  type: "array_subscript";
+  expr: Expr;
 }
 
 export interface ColumnRef extends BaseNode {

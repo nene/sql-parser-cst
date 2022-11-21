@@ -140,7 +140,9 @@ describe("operator precedence", () => {
   });
 
   dialect("bigquery", () => {
-    // TODO: field-access & array subscript
+    it("member_expr > negation", () => {
+      expect(showPrecedence(`-x[1]`)).toBe(`(- x[1])`);
+    });
 
     it("negation > multiplication", () => {
       expect(showPrecedence(`-x * y`)).toBe(`((- x) * y)`);

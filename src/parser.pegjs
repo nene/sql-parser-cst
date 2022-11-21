@@ -2171,12 +2171,30 @@ collate_expr
   / negation_expr
 
 negation_expr
-  = primary
+  = member_expr
   / op:negation_operator right:(__ negation_expr) {
     return loc(createPrefixOpExpr(op, read(right)));
   }
 
 negation_operator = "-" / "~" / "!"
+
+member_expr
+  = &bigquery obj:(primary __) prop:array_subscript {
+    return loc({
+      type: "member_expr",
+      object: read(obj),
+      property: prop,
+    });
+  }
+  / primary
+
+array_subscript
+  = "[" expr:(__ expr __) "]" {
+    return loc({
+      type: "array_subscript",
+      expr: read(expr),
+    });
+  }
 
 primary
   = literal
