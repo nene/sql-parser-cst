@@ -47,8 +47,8 @@ dml_statement
   / delete_stmt
 
 empty
-  = c:__ {
-    return trailing(loc({ type: "empty" }), c);
+  = (&. / end_of_file) {
+    return loc({ type: "empty" });
   }
 
 /**
