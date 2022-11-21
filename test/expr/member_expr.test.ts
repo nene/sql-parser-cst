@@ -16,6 +16,14 @@ describe("member_expr", () => {
       testExpr(`my_array[/*c1*/ OFFSET /*c2*/ (/*c3*/ 2 /*c4*/) /*c5*/]`);
     });
 
+    it("supports array subscript on array literal", () => {
+      testExpr(`[1, 2, 3, 4][2]`);
+    });
+
+    it("supports array subscript on qualified column name", () => {
+      testExpr(`my_tbl.my_col[5]`);
+    });
+
     // to ensure we don't parse it to plain function call
     it("parses array subscript specifiers", () => {
       expect(parseExpr(`my_array[OFFSET(0)]`)).toMatchInlineSnapshot(`

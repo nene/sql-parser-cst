@@ -2,17 +2,6 @@ import { dialect, test } from "./test_utils";
 
 describe("BigQuery bugs in node-sql-formatter", () => {
   dialect("bigquery", () => {
-    it.skip(`accessing array elements`, () => {
-      test(`
-        select whatever[OFFSET(1)] as elt1
-        from sequences
-      `);
-    });
-
-    it.skip(`accessing array elements in a function return value`, () => {
-      test(`select split('To - be - split', ' - ')[OFFSET(0)]`);
-    });
-
     it.skip(`unnest in a "from" clause that also involves regular tables`, () => {
       test(`
         select *
