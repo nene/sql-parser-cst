@@ -12,6 +12,11 @@ describe("struct", () => {
       testExpr(`STRUCT /*c1*/ (18)`);
     });
 
+    it("supports struct with named fields", () => {
+      testExpr(`STRUCT(25 AS age, 'John' AS name)`);
+      testExpr(`STRUCT(25 /*c1*/ AS /*c2*/ age /*c3*/,/*c4*/ 'John' /*c5*/)`);
+    });
+
     it("supports typed struct (with type params)", () => {
       testExpr(`STRUCT<age INT64, name STRING>(50, 'foo')`);
       testExpr(`STRUCT /*c1*/ <INT64> /*c2*/ (2)`);

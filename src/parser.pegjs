@@ -2649,10 +2649,10 @@ typed_struct_expr
   / untyped_struct_expr
 
 struct_expr
-  = parens:paren_list_expr {
+  = "(" expr:(__ expr_or_alias_list __) ")" {
     return loc({
       type: "struct_expr",
-      expr: parens.expr,
+      expr: read(expr),
     });
   }
 
@@ -2662,6 +2662,16 @@ untyped_struct_expr
       type: "struct_expr",
       expr: read(expr),
     });
+  }
+
+expr_or_alias_list
+  = head:expr_or_alias tail:(__ "," __ expr_or_alias)* {
+    return loc(createListExpr(head, tail))
+  }
+
+expr_or_alias
+  = e:expr alias:(__ explicit_alias)? {
+    return loc(createAlias(e, alias));
   }
 
 /**
