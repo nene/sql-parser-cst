@@ -46,10 +46,6 @@ describe("BigQuery bugs in node-sql-formatter", () => {
     it.skip(`"extract(year from ...)"`, () => {
       test(`select extract(year from current_date())`);
     });
-
-    it.skip(`trailing commas"`, () => {
-      test(`SELECT foo, bar, FROM invoice`);
-    });
   });
 
   // This is need for the non-BigQuery case, otherwise Jest will fail because of empty test suite
