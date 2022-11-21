@@ -2189,10 +2189,19 @@ member_expr
   / primary
 
 array_subscript
-  = "[" expr:(__ expr __) "]" {
+  = "[" expr:(__ (array_subscript_specifier / expr) __) "]" {
     return loc({
       type: "array_subscript",
       expr: read(expr),
+    });
+  }
+
+array_subscript_specifier
+  = kw:(OFFSET / SAFE_OFFSET / ORDINAL / SAFE_ORDINAL) args:(__ paren_expr) {
+    return loc({
+      type: "array_subscript_specifier",
+      specifierKw: kw,
+      args: read(args),
     });
   }
 
@@ -3389,6 +3398,7 @@ ON                  = kw:"ON"i                  !ident_part { return loc(createK
 OPTION              = kw:"OPTION"i              !ident_part { return loc(createKeyword(kw)); }
 OR                  = kw:"OR"i                  !ident_part { return loc(createKeyword(kw)); }
 ORDER               = kw:"ORDER"i               !ident_part { return loc(createKeyword(kw)); }
+ORDINAL             = kw:"ORDINAL"i             !ident_part { return loc(createKeyword(kw)); }
 OTHERS              = kw:"OTHERS"i              !ident_part { return loc(createKeyword(kw)); }
 OUTER               = kw:"OUTER"i               !ident_part { return loc(createKeyword(kw)); }
 OUTFILE             = kw:"OUTFILE"i             !ident_part { return loc(createKeyword(kw)); }
@@ -3435,6 +3445,8 @@ ROW_NUMBER          = kw:"ROW_NUMBER"i          !ident_part { return loc(createK
 ROWID               = kw:"ROWID"i               !ident_part { return loc(createKeyword(kw)); }
 ROWS                = kw:"ROWS"i                !ident_part { return loc(createKeyword(kw)); }
 SAFE_CAST           = kw:"SAFE_CAST"i           !ident_part { return loc(createKeyword(kw)); }
+SAFE_OFFSET         = kw:"SAFE_OFFSET"i         !ident_part { return loc(createKeyword(kw)); }
+SAFE_ORDINAL        = kw:"SAFE_ORDINAL"i        !ident_part { return loc(createKeyword(kw)); }
 SATURDAY            = kw:"SATURDAY"i            !ident_part { return loc(createKeyword(kw)); }
 SAVEPOINT           = kw:"SAVEPOINT"i           !ident_part { return loc(createKeyword(kw)); }
 SCHEMA              = kw:"SCHEMA"i              !ident_part { return loc(createKeyword(kw)); }

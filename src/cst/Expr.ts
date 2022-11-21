@@ -16,7 +16,8 @@ export type AllExprNodes =
   | IntervalUnitRange
   | PairExpr
   | WeekExpr
-  | ArraySubscript;
+  | ArraySubscript
+  | ArraySubscriptSpecifier;
 
 export type Expr =
   | ListExpr
@@ -242,7 +243,13 @@ export interface MemberExpr extends BaseNode {
 
 export interface ArraySubscript extends BaseNode {
   type: "array_subscript";
-  expr: Expr;
+  expr: Expr | ArraySubscriptSpecifier;
+}
+
+export interface ArraySubscriptSpecifier extends BaseNode {
+  type: "array_subscript_specifier";
+  specifierKw: Keyword<"OFFSET" | "SAFE_OFFSET" | "ORDINAL" | "SAFE_ORDINAL">;
+  args: ParenExpr<Expr>;
 }
 
 export interface ColumnRef extends BaseNode {
