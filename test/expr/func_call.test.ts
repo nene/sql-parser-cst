@@ -80,5 +80,9 @@ describe("function call", () => {
       testExpr(`LEFT('hello', 3)`);
       testExpr(`RIGHT('hello', 3)`);
     });
+
+    it("supports ARRAY function", () => {
+      testExpr(`ARRAY(SELECT * FROM tbl)`);
+    });
   });
 });

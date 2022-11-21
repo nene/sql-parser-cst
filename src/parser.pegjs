@@ -2321,6 +2321,7 @@ mysql_window_func_keyword
 bigquery_func_keyword
   = LEFT
   / RIGHT
+  / ARRAY
 
 paren_less_func_name
   = kw:(CURRENT_DATE / CURRENT_TIME / CURRENT_TIMESTAMP) {
@@ -2350,6 +2351,7 @@ func_1st_arg
     return loc({ type: "distinct_arg", distinctKw: kw, value: read(e) });
   }
   / expr
+  / compound_select_stmt
 
 filter_arg
   = kw:(FILTER __) e:paren_where_expr &sqlite {

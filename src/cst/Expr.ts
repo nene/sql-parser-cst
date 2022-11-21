@@ -2,7 +2,7 @@ import { AllColumns, BaseNode, Keyword } from "./Base";
 import { DataType } from "./CreateTable";
 import { Literal, StringLiteral } from "./Literal";
 import { Node } from "./Node";
-import { WhereClause, WindowDefinition } from "./Select";
+import { SubSelect, WhereClause, WindowDefinition } from "./Select";
 
 export type AllExprNodes =
   | Expr
@@ -76,7 +76,7 @@ export interface PostfixOpExpr extends BaseNode {
 export interface FuncCall extends BaseNode {
   type: "func_call";
   name: Identifier;
-  args?: ParenExpr<ListExpr<Expr | AllColumns | DistinctArg>>;
+  args?: ParenExpr<ListExpr<Expr | AllColumns | DistinctArg | SubSelect>>;
   filter?: FilterArg;
   over?: OverArg;
 }
