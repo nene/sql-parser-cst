@@ -58,6 +58,13 @@ describe("select", () => {
     test("SELECT tbl /*c1*/./*c2*/ *");
   });
 
+  dialect("bigquery", () => {
+    it("supports trailing commas in SELECT clause", () => {
+      test("SELECT foo, bar, FROM tbl");
+      test("SELECT foo /*c1*/, /*c2*/ FROM tbl");
+    });
+  });
+
   describe("syntax tree", () => {
     it("parses SELECT with multiple columns", () => {
       expect(parseStmt("SELECT 1, 2, 3 FROM db.tbl")).toMatchInlineSnapshot(`

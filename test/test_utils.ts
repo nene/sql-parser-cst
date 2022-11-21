@@ -76,8 +76,8 @@ export function parseExpr(
     );
   }
   const result = clause.columns.items[0];
-  if (result.type === "alias") {
-    throw new Error(`Expected expression, instead got alias`);
+  if (result.type === "alias" || result.type === "empty") {
+    throw new Error(`Expected expression, instead got ${result.type}`);
   }
   return result;
 }

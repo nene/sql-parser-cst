@@ -1,4 +1,4 @@
-import { BaseNode, Keyword } from "./Base";
+import { BaseNode, Empty, Keyword } from "./Base";
 import {
   ColumnRef,
   Expr,
@@ -96,7 +96,7 @@ export interface SelectClause extends BaseNode {
     | "SQL_SMALL_RESULT"
     | "SQL_BUFFER_RESULT"
   >[];
-  columns: ListExpr<Expr | Alias<Expr>>;
+  columns: ListExpr<Expr | Alias<Expr> | Empty>;
 }
 
 export interface FromClause extends BaseNode {

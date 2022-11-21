@@ -178,8 +178,8 @@ select_option_mysql
   / SQL_BUFFER_RESULT
 
 select_columns
-  = head:column_list_item tail:(__ "," __ column_list_item)* {
-      return loc(createListExpr(head, tail));
+  = head:column_list_item tail:(__ "," __ column_list_item)* trailing:(__ "," __ empty)? {
+      return loc(createListExpr(head, trailing ? [...tail, trailing] : tail));
     }
 
 column_list_item
