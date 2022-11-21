@@ -2287,10 +2287,10 @@ extract_expr_parens
   }
 
 extract_from
-  = unitKw:extract_unit fromKw:(__ FROM __) expr:expr {
+  = unit:extract_unit fromKw:(__ FROM __) expr:expr {
     return loc({
       type: "extract_from",
-      unitKw,
+      unit,
       fromKw: read(fromKw),
       expr,
     });
@@ -2309,7 +2309,6 @@ extract_unit_bigquery
   / DAYOFWEEK
   / DAY
   / DAYOFYEAR
-  / WEEK
   / ISOWEEK
   / MONTH
   / QUARTER
@@ -2317,6 +2316,31 @@ extract_unit_bigquery
   / ISOYEAR
   / DATE
   / TIME
+  / week_expr
+  / WEEK
+
+week_expr
+  = kw:(WEEK __) args:week_expr_parens {
+    return loc({
+      type: "week_expr",
+      weekKw: read(kw),
+      args,
+    });
+  }
+
+week_expr_parens
+  = "(" c1:__ unit:weekday_unit c2:__ ")" {
+    return loc(createParenExpr(c1, unit, c2));
+  }
+
+weekday_unit
+  = SUNDAY
+  / MONDAY
+  / TUESDAY
+  / WEDNESDAY
+  / THURSDAY
+  / FRIDAY
+  / SATURDAY
 
 func_call
   = name:(func_name __) args:func_args
@@ -3108,7 +3132,6 @@ mysql = &{ return isMysql(); }
 sqlite = &{ return isSqlite(); }
 
 // All keywords (sorted alphabetically)
-
 ABORT               = kw:"ABORT"i               !ident_part { return loc(createKeyword(kw)); }
 ACTION              = kw:"ACTION"i              !ident_part { return loc(createKeyword(kw)); }
 ADD                 = kw:"ADD"i                 !ident_part { return loc(createKeyword(kw)); }
@@ -3241,6 +3264,7 @@ FLOAT64             = kw:"FLOAT64"i             !ident_part { return loc(createK
 FOLLOWING           = kw:"FOLLOWING"i           !ident_part { return loc(createKeyword(kw)); }
 FOR                 = kw:"FOR"i                 !ident_part { return loc(createKeyword(kw)); }
 FOREIGN             = kw:"FOREIGN"i             !ident_part { return loc(createKeyword(kw)); }
+FRIDAY              = kw:"FRIDAY"i              !ident_part { return loc(createKeyword(kw)); }
 FROM                = kw:"FROM"i                !ident_part { return loc(createKeyword(kw)); }
 FULL                = kw:"FULL"i                !ident_part { return loc(createKeyword(kw)); }
 FULLTEXT            = kw:"FULLTEXT"i            !ident_part { return loc(createKeyword(kw)); }
@@ -3323,6 +3347,7 @@ MINUTE_MICROSECOND  = kw:"MINUTE_MICROSECOND"   !ident_part { return loc(createK
 MINUTE_SECOND       = kw:"MINUTE_SECOND"        !ident_part { return loc(createKeyword(kw)); }
 MOD                 = kw:"MOD"i                 !ident_part { return loc(createKeyword(kw)); }
 MODE                = kw:"MODE"i                !ident_part { return loc(createKeyword(kw)); }
+MONDAY              = kw:"MONDAY"i              !ident_part { return loc(createKeyword(kw)); }
 MONTH               = kw:"MONTH"i               !ident_part { return loc(createKeyword(kw)); }
 NATIVE              = kw:"NATIVE"i              !ident_part { return loc(createKeyword(kw)); }
 NATURAL             = kw:"NATURAL"i             !ident_part { return loc(createKeyword(kw)); }
@@ -3392,6 +3417,7 @@ ROW_NUMBER          = kw:"ROW_NUMBER"i          !ident_part { return loc(createK
 ROWID               = kw:"ROWID"i               !ident_part { return loc(createKeyword(kw)); }
 ROWS                = kw:"ROWS"i                !ident_part { return loc(createKeyword(kw)); }
 SAFE_CAST           = kw:"SAFE_CAST"i           !ident_part { return loc(createKeyword(kw)); }
+SATURDAY            = kw:"SATURDAY"i            !ident_part { return loc(createKeyword(kw)); }
 SAVEPOINT           = kw:"SAVEPOINT"i           !ident_part { return loc(createKeyword(kw)); }
 SCHEMA              = kw:"SCHEMA"i              !ident_part { return loc(createKeyword(kw)); }
 SECOND              = kw:"SECOND"i              !ident_part { return loc(createKeyword(kw)); }
@@ -3428,6 +3454,7 @@ STRICT              = kw:"STRICT"i              !ident_part { return loc(createK
 STRING              = kw:"STRING"i              !ident_part { return loc(createKeyword(kw)); }
 STRUCT              = kw:"STRUCT"i              !ident_part { return loc(createKeyword(kw)); }
 SUM                 = kw:"SUM"i                 !ident_part { return loc(createKeyword(kw)); }
+SUNDAY              = kw:"SUNDAY"i              !ident_part { return loc(createKeyword(kw)); }
 SYSTEM_USER         = kw:"SYSTEM_USER"i         !ident_part { return loc(createKeyword(kw)); }
 TABLE               = kw:"TABLE"i               !ident_part { return loc(createKeyword(kw)); }
 TABLES              = kw:"TABLES"i              !ident_part { return loc(createKeyword(kw)); }
@@ -3436,6 +3463,7 @@ TEMPORARY           = kw:"TEMPORARY"i           !ident_part { return loc(createK
 TEMPTABLE           = kw:"TEMPTABLE"i           !ident_part { return loc(createKeyword(kw)); }
 TEXT                = kw:"TEXT"i                !ident_part { return loc(createKeyword(kw)); }
 THEN                = kw:"THEN"i                !ident_part { return loc(createKeyword(kw)); }
+THURSDAY            = kw:"THURSDAY"i            !ident_part { return loc(createKeyword(kw)); }
 TIES                = kw:"TIES"i                !ident_part { return loc(createKeyword(kw)); }
 TIME                = kw:"TIME"i                !ident_part { return loc(createKeyword(kw)); }
 TIMESTAMP           = kw:"TIMESTAMP"i           !ident_part { return loc(createKeyword(kw)); }
@@ -3447,6 +3475,7 @@ TRANSACTION         = kw:"TRANSACTION"i         !ident_part { return loc(createK
 TRIGGER             = kw:"TRIGGER"i             !ident_part { return loc(createKeyword(kw)); }
 TRUE                = kw:"TRUE"i                !ident_part { return loc(createKeyword(kw)); }
 TRUNCATE            = kw:"TRUNCATE"i            !ident_part { return loc(createKeyword(kw)); }
+TUESDAY             = kw:"TUESDAY"i             !ident_part { return loc(createKeyword(kw)); }
 UNBOUNDED           = kw:"UNBOUNDED"i           !ident_part { return loc(createKeyword(kw)); }
 UNDEFINED           = kw:"UNDEFINED"i           !ident_part { return loc(createKeyword(kw)); }
 UNION               = kw:"UNION"i               !ident_part { return loc(createKeyword(kw)); }
@@ -3467,6 +3496,7 @@ VIEW                = kw:"VIEW"i                !ident_part { return loc(createK
 VIRTUAL             = kw:"VIRTUAL"i             !ident_part { return loc(createKeyword(kw)); }
 VISIBLE             = kw:"VISIBLE"i             !ident_part { return loc(createKeyword(kw)); }
 WAIT                = kw:"WAIT"i                !ident_part { return loc(createKeyword(kw)); }
+WEDNESDAY           = kw:"WEDNESDAY"i           !ident_part { return loc(createKeyword(kw)); }
 WEEK                = kw:"WEEK"i                !ident_part { return loc(createKeyword(kw)); }
 WHEN                = kw:"WHEN"i                !ident_part { return loc(createKeyword(kw)); }
 WHERE               = kw:"WHERE"i               !ident_part { return loc(createKeyword(kw)); }

@@ -14,7 +14,8 @@ export type AllExprNodes =
   | CaseWhen
   | CaseElse
   | IntervalUnitRange
-  | PairExpr;
+  | PairExpr
+  | WeekExpr;
 
 export type Expr =
   | ListExpr
@@ -136,9 +137,25 @@ export interface ExtractExpr extends BaseNode {
 
 export interface ExtractFrom extends BaseNode {
   type: "extract_from";
-  unitKw: IntervalUnitKeyword;
+  unit: IntervalUnitKeyword | WeekExpr;
   fromKw: Keyword<"FROM">;
   expr: Expr;
+}
+
+export interface WeekExpr extends BaseNode {
+  type: "week_expr";
+  weekKw: Keyword<"WEEK">;
+  args: ParenExpr<
+    Keyword<
+      | "SUNDAY"
+      | "MONDAY"
+      | "TUESDAY"
+      | "WEDNESDAY"
+      | "THURSDAY"
+      | "FRIDAY"
+      | "SATURDAY"
+    >
+  >;
 }
 
 export interface BetweenExpr extends BaseNode {

@@ -34,6 +34,16 @@ describe("extract()", () => {
         "DATE",
         "TIME",
       ]);
+
+      it("supports extracting WEEK with weekday parameter", () => {
+        testExpr(`extract(WEEK(MONDAY) from my_col)`);
+        testExpr(`extract(WEEK(TUESDAY) from my_col)`);
+        testExpr(`extract(WEEK(WEDNESDAY) from my_col)`);
+        testExpr(`extract(WEEK(THURSDAY) from my_col)`);
+        testExpr(`extract(WEEK(FRIDAY) from my_col)`);
+        testExpr(`extract(WEEK(SATURDAY) from my_col)`);
+        testExpr(`extract(WEEK /*c1*/ ( /*c2*/ SUNDAY /*c3*/) /*c4*/ from my_col)`);
+      });
     });
 
     dialect("mysql", () => {
@@ -80,7 +90,7 @@ describe("extract()", () => {
                 "type": "keyword",
               },
               "type": "extract_from",
-              "unitKw": {
+              "unit": {
                 "name": "SECOND",
                 "text": "SECOND",
                 "type": "keyword",
