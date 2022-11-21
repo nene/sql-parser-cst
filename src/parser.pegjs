@@ -2186,6 +2186,7 @@ primary
   / paren_list_expr
   / cast_expr
   / &sqlite e:raise_expr { return e; }
+  / (&mysql / &bigquery) e:extract_expr { return e; }
   / func_call
   / table_func_call
   / case_expr
@@ -2270,6 +2271,52 @@ raise_args
   = head:(IGNORE / ROLLBACK / ABORT / FAIL) tail:(__ "," __ literal_string)* {
     return loc(createListExpr(head, tail));
   }
+
+extract_expr
+  = kw:(EXTRACT __) args:extract_expr_parens {
+    return loc({
+      type: "extract_expr",
+      extractKw: read(kw),
+      args,
+    });
+  }
+
+extract_expr_parens
+  = "(" c1:__ e:extract_from c2:__ ")" {
+    return loc(createParenExpr(c1, e, c2));
+  }
+
+extract_from
+  = unitKw:extract_unit fromKw:(__ FROM __) expr:expr {
+    return loc({
+      type: "extract_from",
+      unitKw,
+      fromKw: read(fromKw),
+      expr,
+    });
+  }
+
+extract_unit
+  = &mysql x:interval_unit { return x; }
+  / &bigquery x:extract_unit_bigquery { return x; }
+
+extract_unit_bigquery
+  = MICROSECOND
+  / MILLISECOND
+  / SECOND
+  / MINUTE
+  / HOUR
+  / DAYOFWEEK
+  / DAY
+  / DAYOFYEAR
+  / WEEK
+  / ISOWEEK
+  / MONTH
+  / QUARTER
+  / YEAR
+  / ISOYEAR
+  / DATE
+  / TIME
 
 func_call
   = name:(func_name __) args:func_args
@@ -3139,6 +3186,8 @@ DAY_HOUR            = kw:"DAY_HOUR"             !ident_part { return loc(createK
 DAY_MICROSECOND     = kw:"DAY_MICROSECOND"      !ident_part { return loc(createKeyword(kw)); }
 DAY_MINUTE          = kw:"DAY_MINUTE"           !ident_part { return loc(createKeyword(kw)); }
 DAY_SECOND          = kw:"DAY_SECOND"           !ident_part { return loc(createKeyword(kw)); }
+DAYOFWEEK           = kw:"DAYOFWEEK"i           !ident_part { return loc(createKeyword(kw)); }
+DAYOFYEAR           = kw:"DAYOFYEAR"i           !ident_part { return loc(createKeyword(kw)); }
 DEC                 = kw:"DEC"i                 !ident_part { return loc(createKeyword(kw)); }
 DECIMAL             = kw:"DECIMAL"i             !ident_part { return loc(createKeyword(kw)); }
 DEFAULT             = kw:"DEFAULT"i             !ident_part { return loc(createKeyword(kw)); }
@@ -3180,6 +3229,7 @@ EXCLUSIVE           = kw:"EXCLUSIVE"i           !ident_part { return loc(createK
 EXISTS              = kw:"EXISTS"i              !ident_part { return loc(createKeyword(kw)); }
 EXPANSION           = kw:"EXPANSION"i           !ident_part { return loc(createKeyword(kw)); }
 EXPLAIN             = kw:"EXPLAIN"i             !ident_part { return loc(createKeyword(kw)); }
+EXTRACT             = kw:"EXTRACT"i             !ident_part { return loc(createKeyword(kw)); }
 FAIL                = kw:"FAIL"i                !ident_part { return loc(createKeyword(kw)); }
 FALSE               = kw:"FALSE"i               !ident_part { return loc(createKeyword(kw)); }
 FILTER              = kw:"FILTER"i              !ident_part { return loc(createKeyword(kw)); }
@@ -3233,6 +3283,8 @@ INVISIBLE           = kw:"INVISIBLE"i           !ident_part { return loc(createK
 INVOKER             = kw:"INVOKER"i             !ident_part { return loc(createKeyword(kw)); }
 IS                  = kw:"IS"i                  !ident_part { return loc(createKeyword(kw)); }
 ISNULL              = kw:"ISNULL"               !ident_part { return loc(createKeyword(kw)); }
+ISOWEEK             = kw:"ISOWEEK"i             !ident_part { return loc(createKeyword(kw)); }
+ISOYEAR             = kw:"ISOYEAR"i             !ident_part { return loc(createKeyword(kw)); }
 JOIN                = kw:"JOIN"i                !ident_part { return loc(createKeyword(kw)); }
 JSON                = kw:"JSON"i                !ident_part { return loc(createKeyword(kw)); }
 KEY                 = kw:"KEY"i                 !ident_part { return loc(createKeyword(kw)); }
@@ -3263,6 +3315,7 @@ MEDIUMTEXT          = kw:"MEDIUMTEXT"i          !ident_part { return loc(createK
 MEMORY              = kw:"MEMORY"i              !ident_part { return loc(createKeyword(kw)); }
 MERGE               = kw:"MERGE"i               !ident_part { return loc(createKeyword(kw)); }
 MICROSECOND         = kw:"MICROSECOND"i         !ident_part { return loc(createKeyword(kw)); }
+MILLISECOND         = kw:"MILLISECOND"i         !ident_part { return loc(createKeyword(kw)); }
 MIN                 = kw:"MIN"i                 !ident_part { return loc(createKeyword(kw)); }
 MIN_ROWS            = kw:"MIN_ROWS"i            !ident_part { return loc(createKeyword(kw)); }
 MINUTE              = kw:"MINUTE"i              !ident_part { return loc(createKeyword(kw)); }

@@ -8,6 +8,7 @@ export type AllExprNodes =
   | Expr
   | DistinctArg
   | CastArg
+  | ExtractFrom
   | FilterArg
   | OverArg
   | CaseWhen
@@ -25,6 +26,7 @@ export type Expr =
   | TableFuncCall
   | CastExpr
   | RaiseExpr
+  | ExtractExpr
   | BetweenExpr
   | CaseExpr
   | IntervalExpr
@@ -124,6 +126,19 @@ export interface RaiseExpr extends BaseNode {
   args: ParenExpr<
     ListExpr<Keyword<"IGNORE" | "ROLLBACK" | "ABORT" | "FAIL"> | StringLiteral>
   >;
+}
+
+export interface ExtractExpr extends BaseNode {
+  type: "extract_expr";
+  extractKw: Keyword<"EXTRACT">;
+  args: ParenExpr<ExtractFrom>;
+}
+
+export interface ExtractFrom extends BaseNode {
+  type: "extract_from";
+  unitKw: IntervalUnitKeyword;
+  fromKw: Keyword<"FROM">;
+  expr: Expr;
 }
 
 export interface BetweenExpr extends BaseNode {

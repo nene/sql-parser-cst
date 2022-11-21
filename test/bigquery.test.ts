@@ -38,10 +38,6 @@ describe("BigQuery bugs in node-sql-formatter", () => {
         QUALIFY rank <= 3
       `);
     });
-
-    it.skip(`"extract(year from ...)"`, () => {
-      test(`select extract(year from current_date())`);
-    });
   });
 
   // This is need for the non-BigQuery case, otherwise Jest will fail because of empty test suite
