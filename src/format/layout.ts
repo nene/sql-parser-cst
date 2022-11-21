@@ -66,7 +66,7 @@ function joinLayoutArray(array: Layout[], separator = " "): Layout[] {
 
 const layoutNode = cstTransformer<Layout>({
   program: (node) => node.statements.map(layout),
-  empty_stmt: () => "",
+  empty: () => "",
 
   // SELECT statement
   select_stmt: (node) => node.clauses.map(layout),

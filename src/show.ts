@@ -38,7 +38,7 @@ const showWhitespaceItem = (ws: Whitespace): string => ws.text;
 
 const showNode = cstTransformer<string>({
   program: (node) => show(node.statements, ";"),
-  empty_stmt: () => "",
+  empty: () => "",
 
   // SELECT statement
   compound_select_stmt: (node) => show([node.left, node.operator, node.right]),

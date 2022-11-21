@@ -1,6 +1,6 @@
 import { AlterTableStmt } from "./AlterTable";
 import { AnalyzeStmt } from "./Analyze";
-import { BaseNode } from "./Base";
+import { Empty } from "./Base";
 import { CreateTableStmt } from "./CreateTable";
 import { DeleteStmt } from "./Delete";
 import { DropTableStmt } from "./DropTable";
@@ -15,7 +15,7 @@ import { UpdateStmt } from "./Update";
 import { CreateViewStmt, DropViewStmt } from "./View";
 
 export type Statement =
-  | EmptyStmt
+  | Empty
   | CompoundSelectStmt
   | SelectStmt
   | CreateTableStmt
@@ -34,7 +34,3 @@ export type Statement =
   | ExplainStmt
   | TransactionStmt
   | SqliteStmt;
-
-export interface EmptyStmt extends BaseNode {
-  type: "empty_stmt";
-}

@@ -38,7 +38,7 @@ statement
   / x:explain_stmt (&mysql / &sqlite) { return x; }
   / transaction_stmt
   / x:sqlite_stmt &sqlite { return x; }
-  / empty_stmt
+  / empty
 
 dml_statement
   = compound_select_stmt
@@ -46,9 +46,9 @@ dml_statement
   / update_stmt
   / delete_stmt
 
-empty_stmt
+empty
   = c:__ {
-    return trailing(loc({ type: "empty_stmt" }), c);
+    return trailing(loc({ type: "empty" }), c);
   }
 
 /**
@@ -1177,7 +1177,7 @@ trigger_body
 
 // One or more DML statement, plus an empty statement in the end
 trigger_program
-  = head:dml_statement tail:(__ ";" __ (dml_statement / empty_stmt))+ {
+  = head:dml_statement tail:(__ ";" __ (dml_statement / empty))+ {
     return loc({
       type: "program",
       statements: readCommaSepList(head, tail),

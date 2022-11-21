@@ -18,3 +18,7 @@ export interface Keyword<T extends string = string> extends BaseNode {
 export interface AllColumns extends BaseNode {
   type: "all_columns";
 }
+
+export interface Empty extends BaseNode {
+  type: "empty";
+}
