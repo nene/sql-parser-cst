@@ -1,10 +1,16 @@
-import { parseExpr, testExpr } from "../test_utils";
+import { dialect, parseExpr, testExpr } from "../test_utils";
 
 describe("type cast", () => {
   it("supports cast() function", () => {
     testExpr(`CAST(x AS INT)`);
     testExpr(`CAST(2 / 8 AS DECIMAL(3, 2))`);
     testExpr(`CAST /*c1*/ ( /*c2*/ x /*c3*/ AS /*c4*/ INT /*c5*/)`);
+  });
+
+  dialect("bigquery", () => {
+    it("supports SAFE_CAST", () => {
+      testExpr(`SAFE_CAST(x AS INT)`);
+    });
   });
 
   // To make sure we don't parse it as normal function call

@@ -107,7 +107,7 @@ export interface DistinctArg extends BaseNode {
 
 export interface CastExpr extends BaseNode {
   type: "cast_expr";
-  castKw: Keyword<"CAST">;
+  castKw: Keyword<"CAST" | "SAFE_CAST">;
   args: ParenExpr<CastArg>;
 }
 

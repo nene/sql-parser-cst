@@ -2225,13 +2225,17 @@ list_expr
   }
 
 cast_expr
-  = kw:CAST args:(__ cast_args_in_parens)  {
+  = kw:cast_kw args:(__ cast_args_in_parens)  {
     return loc({
       type: "cast_expr",
       castKw: kw,
       args: read(args),
     });
   }
+
+cast_kw
+  = CAST
+  / kw:SAFE_CAST &bigquery { return kw; }
 
 cast_args_in_parens
   = "(" c1:__ arg:cast_arg c2:__ ")" {
@@ -3334,6 +3338,7 @@ ROW_FORMAT          = kw:"ROW_FORMAT"i          !ident_part { return loc(createK
 ROW_NUMBER          = kw:"ROW_NUMBER"i          !ident_part { return loc(createKeyword(kw)); }
 ROWID               = kw:"ROWID"i               !ident_part { return loc(createKeyword(kw)); }
 ROWS                = kw:"ROWS"i                !ident_part { return loc(createKeyword(kw)); }
+SAFE_CAST           = kw:"SAFE_CAST"i           !ident_part { return loc(createKeyword(kw)); }
 SAVEPOINT           = kw:"SAVEPOINT"i           !ident_part { return loc(createKeyword(kw)); }
 SCHEMA              = kw:"SCHEMA"i              !ident_part { return loc(createKeyword(kw)); }
 SECOND              = kw:"SECOND"i              !ident_part { return loc(createKeyword(kw)); }
