@@ -1,4 +1,4 @@
-import { parse } from "./test_utils";
+import { dialect, parse, parseExpr } from "./test_utils";
 
 describe("location", () => {
   it("includeRange:true adds location data to nodes", () => {
@@ -136,5 +136,74 @@ describe("location", () => {
         "type": "program",
       }
     `);
+  });
+
+  dialect("bigquery", () => {
+    it("includeRange:true adds location data to member_expr nodes", () => {
+      expect(parseExpr("my_arr[1][2]", { includeRange: true })).toMatchInlineSnapshot(`
+        {
+          "object": {
+            "object": {
+              "column": {
+                "name": "my_arr",
+                "range": [
+                  7,
+                  13,
+                ],
+                "text": "my_arr",
+                "type": "identifier",
+              },
+              "range": [
+                7,
+                13,
+              ],
+              "type": "column_ref",
+            },
+            "property": {
+              "expr": {
+                "range": [
+                  14,
+                  15,
+                ],
+                "text": "1",
+                "type": "number",
+                "value": 1,
+              },
+              "range": [
+                13,
+                16,
+              ],
+              "type": "array_subscript",
+            },
+            "range": [
+              7,
+              16,
+            ],
+            "type": "member_expr",
+          },
+          "property": {
+            "expr": {
+              "range": [
+                17,
+                18,
+              ],
+              "text": "2",
+              "type": "number",
+              "value": 2,
+            },
+            "range": [
+              16,
+              19,
+            ],
+            "type": "array_subscript",
+          },
+          "range": [
+            7,
+            19,
+          ],
+          "type": "member_expr",
+        }
+      `);
+    });
   });
 });

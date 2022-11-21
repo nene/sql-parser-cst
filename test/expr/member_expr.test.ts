@@ -24,6 +24,10 @@ describe("member_expr", () => {
       testExpr(`my_tbl.my_col[5]`);
     });
 
+    it("supports nested array subscript", () => {
+      testExpr(`my_arr[5][12]`);
+    });
+
     // to ensure we don't parse it to plain function call
     it("parses array subscript specifiers", () => {
       expect(parseExpr(`my_array[OFFSET(0)]`)).toMatchInlineSnapshot(`

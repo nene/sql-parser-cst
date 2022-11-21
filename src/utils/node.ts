@@ -13,6 +13,7 @@ import {
   PrefixOpExpr,
   SubSelect,
   Whitespace,
+  MemberExpr,
 } from "../cst/Node";
 import { leading, surrounding, trailing } from "./whitespace";
 import { read } from "./read";
@@ -135,6 +136,37 @@ function createJoinExpr(
     specification: read(spec),
   };
 }
+
+export function createMemberExprChain(
+  head: MemberExpr["object"],
+  tail: [Whitespace[], MemberExpr["property"]][]
+): Expr {
+  return tail.reduce(
+    (obj, [c1, prop]) => deriveMemberExprLoc(createMemberExpr(obj, c1, prop)),
+    head
+  );
+}
+
+function createMemberExpr(
+  obj: MemberExpr["object"],
+  c1: Whitespace[],
+  prop: MemberExpr["property"]
+): MemberExpr {
+  return {
+    type: "member_expr",
+    object: obj,
+    property: leading(prop, c1) as MemberExpr["property"],
+  };
+}
+
+const deriveMemberExprLoc = (expr: MemberExpr): MemberExpr => {
+  if (!expr.object.range || !expr.property.range) {
+    return expr;
+  }
+  const start = expr.object.range[0];
+  const end = expr.property.range[1];
+  return { ...expr, range: [start, end] };
+};
 
 export function createPrefixOpExpr(
   op: PrefixOpExpr["operator"],

@@ -2179,12 +2179,8 @@ negation_expr
 negation_operator = "-" / "~" / "!"
 
 member_expr
-  = &bigquery obj:(primary __) prop:array_subscript {
-    return loc({
-      type: "member_expr",
-      object: read(obj),
-      property: prop,
-    });
+  = &bigquery obj:primary props:(__ array_subscript)+ {
+    return createMemberExprChain(obj, props);
   }
   / primary
 
