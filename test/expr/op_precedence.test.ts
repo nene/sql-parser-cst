@@ -3,6 +3,10 @@ import { dialect, showPrecedence } from "../test_utils";
 describe("operator precedence", () => {
   // starting with highest precedence and going towards lowest
   dialect("sqlite", () => {
+    it("member_expr > negation", () => {
+      expect(showPrecedence(`-tbl.col`)).toBe(`(- tbl.col)`);
+    });
+
     it("negation > COLLATE", () => {
       expect(showPrecedence(`-x COLLATE rtrim`)).toBe(`((- x) COLLATE rtrim)`);
     });
@@ -62,6 +66,10 @@ describe("operator precedence", () => {
   });
 
   dialect("mysql", () => {
+    it("member_expr > negation", () => {
+      expect(showPrecedence(`-tbl.col`)).toBe(`(- tbl.col)`);
+    });
+
     it("negation > multiplication", () => {
       expect(showPrecedence(`-x * y`)).toBe(`((- x) * y)`);
       expect(showPrecedence(`x * -y`)).toBe(`(x * (- y))`);
@@ -142,6 +150,7 @@ describe("operator precedence", () => {
   dialect("bigquery", () => {
     it("member_expr > negation", () => {
       expect(showPrecedence(`-x[1]`)).toBe(`(- x[1])`);
+      expect(showPrecedence(`-tbl.col`)).toBe(`(- tbl.col)`);
     });
 
     it("negation > multiplication", () => {
