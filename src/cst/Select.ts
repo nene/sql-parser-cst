@@ -30,6 +30,7 @@ export type AllSelectNodes =
   | JoinExpr
   | IndexedTableRef
   | NotIndexedTableRef
+  | UnnestExpr
   | JoinOnSpecification
   | JoinUsingSpecification
   | SortSpecification
@@ -193,6 +194,7 @@ export type TableOrSubquery =
   | IndexedTableRef
   | NotIndexedTableRef
   | ParenExpr<SubSelect | TableOrSubquery | JoinExpr>
+  | UnnestExpr
   | Alias<TableOrSubquery>;
 
 // SQLite only
@@ -206,6 +208,13 @@ export interface NotIndexedTableRef extends BaseNode {
   type: "not_indexed_table_ref";
   table: TableRef | Alias<TableRef>;
   notIndexedKw: [Keyword<"NOT">, Keyword<"INDEXED">];
+}
+
+// BigQuery only
+export interface UnnestExpr extends BaseNode {
+  type: "unnest_expr";
+  unnestKw: Keyword<"UNNEST">;
+  expr: ParenExpr<Expr>;
 }
 
 export interface JoinOnSpecification extends BaseNode {

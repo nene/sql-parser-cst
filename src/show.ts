@@ -361,6 +361,7 @@ const showNode = cstTransformer<string>({
   alias: (node) => show([node.expr, node.asKw, node.alias]),
   indexed_table_ref: (node) => show([node.table, node.indexedByKw, node.index]),
   not_indexed_table_ref: (node) => show([node.table, node.notIndexedKw]),
+  unnest_expr: (node) => show([node.unnestKw, node.expr]),
   all_columns: () => "*",
 
   // Basic language elements

@@ -67,4 +67,25 @@ describe("select FROM", () => {
       test("SELECT * FROM my_table /*c1*/ NOT /*c2*/ INDEXED");
     });
   });
+
+  dialect("bigquery", () => {
+    describe("UNNEST operator", () => {
+      it("supports UNNEST of array literal", () => {
+        test("SELECT * FROM UNNEST([1,2,3])");
+        test("SELECT * FROM UNNEST(ARRAY[1,2,3])");
+      });
+
+      it("supports UNNEST of array path", () => {
+        test("SELECT * FROM UNNEST(my_tbl.array_col)");
+      });
+
+      it("supports UNNEST with alias", () => {
+        test("SELECT * FROM UNNEST(tbl.foo) AS blah");
+      });
+
+      it("supports UNNEST comma-joined with other tables", () => {
+        test("SELECT * FROM tbl1, UNNEST(tbl.foo), tbl2");
+      });
+    });
+  });
 });

@@ -237,7 +237,10 @@ join_expr
   }
 
 table_or_subquery
-  = t:table_func_call alias:(__ alias)? {
+  = t:unnest_expr alias:(__ alias)? {
+    return loc(createAlias(t, alias));
+  }
+  / t:table_func_call alias:(__ alias)? {
     return loc(createAlias(t, alias));
   }
   / table_ref_or_alias
@@ -321,6 +324,15 @@ on_clause
       type: "join_on_specification",
       onKw: kw,
       expr: read(expr),
+    });
+  }
+
+unnest_expr
+  = &bigquery kw:(UNNEST __) expr:paren_expr {
+    return loc({
+      type: "unnest_expr",
+      unnestKw: read(kw),
+      expr,
     });
   }
 
@@ -3507,6 +3519,7 @@ UNION               = kw:"UNION"i               !ident_part { return loc(createK
 UNIQUE              = kw:"UNIQUE"i              !ident_part { return loc(createKeyword(kw)); }
 UNKNOWN             = kw:"UNKNOWN"i             !ident_part { return loc(createKeyword(kw)); }
 UNLOCK              = kw:"UNLOCK"i              !ident_part { return loc(createKeyword(kw)); }
+UNNEST              = kw:"UNNEST"i              !ident_part { return loc(createKeyword(kw)); }
 UNSIGNED            = kw:"UNSIGNED"i            !ident_part { return loc(createKeyword(kw)); }
 UPDATE              = kw:"UPDATE"i              !ident_part { return loc(createKeyword(kw)); }
 USE                 = kw:"USE"i                 !ident_part { return loc(createKeyword(kw)); }
