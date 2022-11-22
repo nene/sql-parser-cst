@@ -19,7 +19,7 @@ describe("operators", () => {
   dialect(["mysql", "sqlite"], () => {
     it("requires space around keyword operators", () => {
       // this does not get parsed as DIV expression
-      expect(parseExpr(`8DIV4`).type).toBe("column_ref");
+      expect(parseExpr(`8DIV4`).type).toBe("identifier");
     });
   });
 

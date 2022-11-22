@@ -1,13 +1,6 @@
 import { BaseNode, Keyword } from "./Base";
 import { StringLiteral } from "./Literal";
-import {
-  ColumnRef,
-  Expr,
-  Identifier,
-  ListExpr,
-  ParenExpr,
-  TableRef,
-} from "./Expr";
+import { Expr, Identifier, ListExpr, ParenExpr, TableRef } from "./Expr";
 import { SortSpecification } from "./Select";
 
 export type AllConstraintNodes =
@@ -68,14 +61,14 @@ export type ColumnConstraint =
 export interface ConstraintPrimaryKey extends BaseNode {
   type: "constraint_primary_key";
   primaryKeyKw: [Keyword<"PRIMARY">, Keyword<"KEY">];
-  columns?: ParenExpr<ListExpr<SortSpecification | ColumnRef>>;
+  columns?: ParenExpr<ListExpr<SortSpecification | Identifier>>;
   onConflict?: OnConflictClause;
 }
 
 export interface ConstraintForeignKey extends BaseNode {
   type: "constraint_foreign_key";
   foreignKeyKw: [Keyword<"FOREIGN">, Keyword<"KEY">];
-  columns: ParenExpr<ListExpr<ColumnRef>>;
+  columns: ParenExpr<ListExpr<Identifier>>;
   references: ReferencesSpecification;
 }
 
@@ -83,7 +76,7 @@ export interface ReferencesSpecification extends BaseNode {
   type: "references_specification";
   referencesKw: Keyword<"REFERENCES">;
   table: TableRef;
-  columns?: ParenExpr<ListExpr<ColumnRef>>;
+  columns?: ParenExpr<ListExpr<Identifier>>;
   options: (ReferentialAction | ReferentialMatch)[];
 }
 
@@ -106,7 +99,7 @@ export interface ReferentialMatch extends BaseNode {
 export interface ConstraintUnique extends BaseNode {
   type: "constraint_unique";
   uniqueKw: Keyword<"UNIQUE"> | [Keyword<"UNIQUE">, Keyword<"KEY" | "INDEX">];
-  columns?: ParenExpr<ListExpr<ColumnRef>>;
+  columns?: ParenExpr<ListExpr<Identifier>>;
   onConflict?: OnConflictClause;
 }
 
@@ -121,7 +114,7 @@ export interface ConstraintIndex extends BaseNode {
   type: "constraint_index";
   indexTypeKw?: Keyword<"FULLTEXT" | "SPATIAL">;
   indexKw: Keyword<"INDEX" | "KEY">;
-  columns?: ParenExpr<ListExpr<ColumnRef>>;
+  columns?: ParenExpr<ListExpr<Identifier>>;
 }
 
 export interface ConstraintNull extends BaseNode {

@@ -31,20 +31,13 @@ describe("location", () => {
                           15,
                         ],
                         "right": {
-                          "column": {
-                            "name": "col",
-                            "range": [
-                              12,
-                              15,
-                            ],
-                            "text": "col",
-                            "type": "identifier",
-                          },
+                          "name": "col",
                           "range": [
                             12,
                             15,
                           ],
-                          "type": "column_ref",
+                          "text": "col",
+                          "type": "identifier",
                         },
                         "type": "binary_expr",
                       },
@@ -144,20 +137,13 @@ describe("location", () => {
         {
           "object": {
             "object": {
-              "column": {
-                "name": "my_arr",
-                "range": [
-                  7,
-                  13,
-                ],
-                "text": "my_arr",
-                "type": "identifier",
-              },
+              "name": "my_arr",
               "range": [
                 7,
                 13,
               ],
-              "type": "column_ref",
+              "text": "my_arr",
+              "type": "identifier",
             },
             "property": {
               "expr": {

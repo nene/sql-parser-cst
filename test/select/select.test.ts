@@ -182,12 +182,9 @@ describe("select", () => {
                       "type": "identifier",
                     },
                     "expr": {
-                      "column": {
-                        "name": "col",
-                        "text": "col",
-                        "type": "identifier",
-                      },
-                      "type": "column_ref",
+                      "name": "col",
+                      "text": "col",
+                      "type": "identifier",
                     },
                     "type": "alias",
                   },

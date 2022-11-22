@@ -1,5 +1,5 @@
 import { BaseNode, Keyword } from "./Base";
-import { ColumnRef, Expr, ListExpr, ParenExpr, TableRef } from "./Expr";
+import { Expr, Identifier, ListExpr, ParenExpr, TableRef } from "./Expr";
 import { Alias } from "./Alias";
 import {
   ReturningClause,
@@ -42,7 +42,7 @@ export interface InsertClause extends BaseNode {
   orAction?: OrAlternateAction;
   intoKw?: Keyword<"INTO">;
   table: TableRef | Alias<TableRef>;
-  columns?: ParenExpr<ListExpr<ColumnRef>>;
+  columns?: ParenExpr<ListExpr<Identifier>>;
 }
 
 // Only in MySQL INSERT & UPDATE clauses
@@ -85,7 +85,7 @@ export interface Default extends BaseNode {
 export interface UpsertClause extends BaseNode {
   type: "upsert_clause";
   onConflictKw: [Keyword<"ON">, Keyword<"CONFLICT">];
-  columns?: ParenExpr<ListExpr<SortSpecification | ColumnRef>>;
+  columns?: ParenExpr<ListExpr<SortSpecification | Identifier>>;
   where?: WhereClause;
   doKw: Keyword<"DOR">;
   action: UpsertActionNothing | UpsertActionUpdate;

@@ -2,24 +2,17 @@ import { cstVisitor } from "../src/main";
 import { parse, preserveAll, show } from "./test_utils";
 
 describe("cstVisitor", () => {
-  it("allows visiting all table and column names", () => {
+  it("allows visiting all table names", () => {
     const tables: string[] = [];
-    const columns: string[] = [];
 
     const visit = cstVisitor({
       table_ref: (tbl) => {
         tables.push(tbl.table.text);
       },
-      column_ref: (col) => {
-        if (col.column.type === "identifier") {
-          columns.push(col.column.text);
-        }
-      },
     });
     visit(parse("SELECT name, job_name FROM employees NATURAL LEFT JOIN jobs"));
 
     expect(tables).toEqual(["employees", "jobs"]);
-    expect(columns).toEqual(["name", "job_name"]);
   });
 
   it("allows mutating all keywords", () => {

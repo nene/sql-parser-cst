@@ -33,12 +33,9 @@ describe("member_expr", () => {
       expect(parseExpr(`my_array[OFFSET(0)]`)).toMatchInlineSnapshot(`
         {
           "object": {
-            "column": {
-              "name": "my_array",
-              "text": "my_array",
-              "type": "identifier",
-            },
-            "type": "column_ref",
+            "name": "my_array",
+            "text": "my_array",
+            "type": "identifier",
           },
           "property": {
             "expr": {

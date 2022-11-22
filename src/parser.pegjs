@@ -184,16 +184,13 @@ select_columns
 
 column_list_item
   = star:star {
-    return loc({
-      type: "column_ref",
-      column: star,
-    });
+    return star;
   }
   / table:(ident __) "." star:(__ star) {
     return loc({
-      type: "column_ref",
-      table: read(table),
-      column: read(star),
+      type: "member_expr",
+      object: read(table),
+      property: read(star),
     });
   }
   / expr:expr alias:(__ alias)? {
@@ -404,8 +401,8 @@ sort_specification_list
 
 sort_specification
   = e:expr orderKw:(__ (DESC / ASC))? nullsKw:(__ sort_specification_nulls)? {
-    // don't create full sort_specification node when dealing with just a column_ref
-    if (!orderKw && !nullsKw && e.type === "column_ref") {
+    // don't create full sort_specification node when dealing with just a column name
+    if (!orderKw && !nullsKw && e.type === "identifier") {
       return e;
     }
 
@@ -2625,27 +2622,19 @@ paren_plain_column_ref_list
   }
 
 plain_column_ref_list
-  = head:plain_column_ref tail:(__ "," __ plain_column_ref)* {
+  = head:column tail:(__ "," __ column)* {
     return loc(createListExpr(head, tail));
   }
 
 column_ref
   = tbl:(ident __) "." col:(__ qualified_column) {
     return loc({
-      type: "column_ref",
-      table: read(tbl),
-      column: read(col),
+      type: "member_expr",
+      object: read(tbl),
+      property: read(col),
     });
   }
-  / plain_column_ref
-
-plain_column_ref
-  = col:column {
-    return loc({
-      type: "column_ref",
-      column: col,
-    });
-  }
+  / column
 
 // Keywords can be used as column names when they are prefixed by table name, like tbl.update
 qualified_column

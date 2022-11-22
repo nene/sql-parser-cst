@@ -349,10 +349,13 @@ const showNode = cstTransformer<string>({
   generic_type_params: (node) => show(["<", node.params, ">"]),
 
   // Tables & columns
-  member_expr: (node) => show([node.object, node.property]),
+  member_expr: (node) =>
+    show(
+      [node.object, node.property],
+      node.property.type === "array_subscript" ? "" : "."
+    ),
   array_subscript: (node) => show(["[", node.expr, "]"]),
   array_subscript_specifier: (node) => show([node.specifierKw, node.args]),
-  column_ref: (node) => show([node.table, node.column], "."),
   table_ref: (node) => show([node.catalog, node.schema, node.table], "."),
   alias: (node) => show([node.expr, node.asKw, node.alias]),
   indexed_table_ref: (node) => show([node.table, node.indexedByKw, node.index]),

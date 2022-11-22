@@ -36,7 +36,6 @@ export type Expr =
   | StringWithCharset
   | Literal
   | MemberExpr
-  | ColumnRef
   | TableRef
   | Identifier
   | Parameter
@@ -238,7 +237,7 @@ export interface StringWithCharset extends BaseNode {
 export interface MemberExpr extends BaseNode {
   type: "member_expr";
   object: Expr;
-  property: ArraySubscript;
+  property: ArraySubscript | Identifier | AllColumns;
 }
 
 export interface ArraySubscript extends BaseNode {
@@ -250,12 +249,6 @@ export interface ArraySubscriptSpecifier extends BaseNode {
   type: "array_subscript_specifier";
   specifierKw: Keyword<"OFFSET" | "SAFE_OFFSET" | "ORDINAL" | "SAFE_ORDINAL">;
   args: ParenExpr<Expr>;
-}
-
-export interface ColumnRef extends BaseNode {
-  type: "column_ref";
-  table?: Identifier;
-  column: Identifier | AllColumns;
 }
 
 export interface TableRef extends BaseNode {

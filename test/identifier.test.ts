@@ -4,16 +4,10 @@ describe("identifier", () => {
   describe("identifier", () => {
     function parseIdent(str: string) {
       const expr = parseExpr(str);
-      if (expr.type !== "column_ref") {
-        throw new Error(`Expected type:column_ref, instead got type:${expr.type}`);
+      if (expr.type !== "identifier") {
+        throw new Error(`Expected type:identifier, instead got type:${expr.type}`);
       }
-      const col = expr.column;
-      if (col.type !== "identifier") {
-        throw new Error(
-          `Expected type:identifier inside ColumnRef.column, instead got type:${col.type}`
-        );
-      }
-      return col;
+      return expr;
     }
 
     it("supports simple identifiers", () => {
@@ -206,7 +200,7 @@ describe("identifier", () => {
     });
 
     dialect("sqlite", () => {
-      it("supports -uoted qualified column name", () => {
+      it("supports quoted qualified column name", () => {
         testExpr(`"my tbl"."my col"`);
         testExpr("`my foo`.`my bar`");
         testExpr(`[my tbl].[my col]`);
@@ -235,33 +229,30 @@ describe("identifier", () => {
       });
     });
 
-    it("parses column name as ColumnRef node", () => {
+    it("parses column name as Identifier node", () => {
       expect(parseExpr("foo")).toMatchInlineSnapshot(`
         {
-          "column": {
-            "name": "foo",
-            "text": "foo",
-            "type": "identifier",
-          },
-          "type": "column_ref",
+          "name": "foo",
+          "text": "foo",
+          "type": "identifier",
         }
       `);
     });
 
-    it("parses qualified column name as ColumnRef node", () => {
+    it("parses qualified column name as MemberExpr node", () => {
       expect(parseExpr("foo.bar")).toMatchInlineSnapshot(`
         {
-          "column": {
-            "name": "bar",
-            "text": "bar",
-            "type": "identifier",
-          },
-          "table": {
+          "object": {
             "name": "foo",
             "text": "foo",
             "type": "identifier",
           },
-          "type": "column_ref",
+          "property": {
+            "name": "bar",
+            "text": "bar",
+            "type": "identifier",
+          },
+          "type": "member_expr",
         }
       `);
     });

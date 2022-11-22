@@ -210,12 +210,9 @@ describe("window functions", () => {
                 "specifications": {
                   "items": [
                     {
-                      "column": {
-                        "name": "price",
-                        "text": "price",
-                        "type": "identifier",
-                      },
-                      "type": "column_ref",
+                      "name": "price",
+                      "text": "price",
+                      "type": "identifier",
                     },
                   ],
                   "type": "list_expr",
@@ -239,12 +236,9 @@ describe("window functions", () => {
                 "specifications": {
                   "items": [
                     {
-                      "column": {
-                        "name": "product",
-                        "text": "product",
-                        "type": "identifier",
-                      },
-                      "type": "column_ref",
+                      "name": "product",
+                      "text": "product",
+                      "type": "identifier",
                     },
                   ],
                   "type": "list_expr",

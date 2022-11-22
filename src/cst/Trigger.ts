@@ -1,5 +1,5 @@
 import { BaseNode, Keyword } from "./Base";
-import { ColumnRef, Expr, ListExpr, TableRef } from "./Expr";
+import { Expr, Identifier, ListExpr, TableRef } from "./Expr";
 import { Program } from "./Program";
 
 export type AllTriggerNodes =
@@ -32,7 +32,7 @@ export interface TriggerEvent extends BaseNode {
   timeKw?: Keyword<"BEFORE" | "AFTER"> | [Keyword<"INSTEAD">, Keyword<"OF">];
   eventKw: Keyword<"INSERT" | "DELETE" | "UPDATE">;
   ofKw?: Keyword<"OF">;
-  columns?: ListExpr<ColumnRef>;
+  columns?: ListExpr<Identifier>;
 }
 
 export interface TriggerCondition extends BaseNode {

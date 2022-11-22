@@ -11,12 +11,9 @@ describe("COLLATE operator", () => {
       expect(parseExpr("my_col COLLATE utf8")).toMatchInlineSnapshot(`
         {
           "left": {
-            "column": {
-              "name": "my_col",
-              "text": "my_col",
-              "type": "identifier",
-            },
-            "type": "column_ref",
+            "name": "my_col",
+            "text": "my_col",
+            "type": "identifier",
           },
           "operator": {
             "name": "COLLATE",

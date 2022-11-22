@@ -50,12 +50,9 @@ describe("CASE expression", () => {
           {
             "condition": {
               "left": {
-                "column": {
-                  "name": "animal",
-                  "text": "animal",
-                  "type": "identifier",
-                },
-                "type": "column_ref",
+                "name": "animal",
+                "text": "animal",
+                "type": "identifier",
               },
               "operator": "=",
               "right": {

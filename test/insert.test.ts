@@ -165,20 +165,14 @@ describe("insert into", () => {
               "expr": {
                 "items": [
                   {
-                    "column": {
-                      "name": "col1",
-                      "text": "col1",
-                      "type": "identifier",
-                    },
-                    "type": "column_ref",
+                    "name": "col1",
+                    "text": "col1",
+                    "type": "identifier",
                   },
                   {
-                    "column": {
-                      "name": "col2",
-                      "text": "col2",
-                      "type": "identifier",
-                    },
-                    "type": "column_ref",
+                    "name": "col2",
+                    "text": "col2",
+                    "type": "identifier",
                   },
                 ],
                 "type": "list_expr",

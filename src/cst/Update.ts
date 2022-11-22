@@ -1,6 +1,13 @@
 import { Alias } from "./Alias";
 import { BaseNode, Keyword } from "./Base";
-import { ColumnRef, Expr, ListExpr, ParenExpr, TableRef } from "./Expr";
+import {
+  Expr,
+  Identifier,
+  ListExpr,
+  MemberExpr,
+  ParenExpr,
+  TableRef,
+} from "./Expr";
 import { Default, OrAlternateAction, UpsertOption } from "./Insert";
 import {
   FromClause,
@@ -48,6 +55,6 @@ export interface SetClause extends BaseNode {
 
 export interface ColumnAssignment extends BaseNode {
   type: "column_assignment";
-  column: ColumnRef | ParenExpr<ListExpr<ColumnRef>>;
+  column: Identifier | MemberExpr | ParenExpr<ListExpr<Identifier>>;
   expr: Expr | Default;
 }

@@ -1,5 +1,5 @@
 import { BaseNode, Keyword } from "./Base";
-import { ColumnRef, ListExpr, ParenExpr, TableRef } from "./Expr";
+import { Identifier, ListExpr, ParenExpr, TableRef } from "./Expr";
 import { SortSpecification, WhereClause } from "./Select";
 
 // CREATE INDEX
@@ -12,7 +12,7 @@ export interface CreateIndexStmt extends BaseNode {
   name: TableRef;
   onKw: Keyword<"ON">;
   table: TableRef;
-  columns: ParenExpr<ListExpr<SortSpecification | ColumnRef>>;
+  columns: ParenExpr<ListExpr<SortSpecification | Identifier>>;
   where?: WhereClause;
 }
 

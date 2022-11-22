@@ -1,5 +1,5 @@
 import { BaseNode, Keyword } from "./Base";
-import { ColumnRef, ListExpr, ParenExpr, TableRef } from "./Expr";
+import { Identifier, ListExpr, ParenExpr, TableRef } from "./Expr";
 import { SubSelect } from "./Select";
 
 // CREATE VIEW
@@ -10,7 +10,7 @@ export interface CreateViewStmt extends BaseNode {
   viewKw: Keyword<"VIEW">;
   ifNotExistsKw?: [Keyword<"IF">, Keyword<"NOT">, Keyword<"EXISTS">];
   name: TableRef;
-  columns?: ParenExpr<ListExpr<ColumnRef>>;
+  columns?: ParenExpr<ListExpr<Identifier>>;
   asKw: Keyword<"AS">;
   expr: SubSelect;
 }

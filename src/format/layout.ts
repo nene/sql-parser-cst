@@ -88,10 +88,10 @@ const layoutNode = cstTransformer<Layout>({
   binary_expr: ({ left, operator, right }) => layout([left, operator, right]),
 
   // Tables & columns
-  column_ref: (node) =>
-    node.table
-      ? [layout(node.table), ".", layout(node.column)]
-      : layout(node.column),
+  member_expr: (node) =>
+    node.property.type === "array_subscript"
+      ? layout([node.object, node.property])
+      : [layout(node.object), ".", layout(node.property)],
   table_ref: (node) =>
     node.schema
       ? [layout(node.schema), ".", layout(node.table)]

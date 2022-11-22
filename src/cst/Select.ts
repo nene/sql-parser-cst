@@ -1,6 +1,5 @@
 import { BaseNode, Empty, Keyword } from "./Base";
 import {
-  ColumnRef,
   Expr,
   Identifier,
   ListExpr,
@@ -72,7 +71,7 @@ export interface WithClause extends BaseNode {
 export interface CommonTableExpression extends BaseNode {
   type: "common_table_expression";
   table: Identifier;
-  columns?: ParenExpr<ListExpr<ColumnRef>>;
+  columns?: ParenExpr<ListExpr<Identifier>>;
   asKw: Keyword<"AS">;
   optionKw?:
     | Keyword<"MATERIALIZED">
@@ -147,7 +146,7 @@ export interface WindowDefinition extends BaseNode {
 export interface OrderByClause extends BaseNode {
   type: "order_by_clause";
   orderByKw: [Keyword<"ORDER">, Keyword<"BY">];
-  specifications: ListExpr<SortSpecification | ColumnRef>;
+  specifications: ListExpr<SortSpecification | Identifier>;
   withRollupKw?: [Keyword<"WITH">, Keyword<"ROLLUP">];
 }
 
@@ -216,7 +215,7 @@ export interface JoinOnSpecification extends BaseNode {
 export interface JoinUsingSpecification extends BaseNode {
   type: "join_using_specification";
   usingKw: Keyword<"USING">;
-  expr: ParenExpr<ListExpr<ColumnRef>>;
+  expr: ParenExpr<ListExpr<Identifier>>;
 }
 
 export interface SortSpecification extends BaseNode {

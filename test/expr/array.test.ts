@@ -80,7 +80,7 @@ describe("array", () => {
   });
   dialect("sqlite", () => {
     it("does not support arrays", () => {
-      expect(parseExpr("[1, 2, 3]").type).toBe("column_ref");
+      expect(parseExpr("[1, 2, 3]").type).toBe("identifier");
     });
   });
 });

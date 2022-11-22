@@ -81,12 +81,9 @@ describe("comparison operators", () => {
       expect(parseExpr("col NOT NULL")).toMatchInlineSnapshot(`
         {
           "expr": {
-            "column": {
-              "name": "col",
-              "text": "col",
-              "type": "identifier",
-            },
-            "type": "column_ref",
+            "name": "col",
+            "text": "col",
+            "type": "identifier",
           },
           "operator": [
             {
@@ -157,12 +154,9 @@ describe("comparison operators", () => {
             "value": 20,
           },
           "left": {
-            "column": {
-              "name": "age",
-              "text": "age",
-              "type": "identifier",
-            },
-            "type": "column_ref",
+            "name": "age",
+            "text": "age",
+            "type": "identifier",
           },
           "type": "between_expr",
         }

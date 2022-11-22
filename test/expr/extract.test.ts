@@ -77,12 +77,9 @@ describe("extract()", () => {
           "args": {
             "expr": {
               "expr": {
-                "column": {
-                  "name": "col1",
-                  "text": "col1",
-                  "type": "identifier",
-                },
-                "type": "column_ref",
+                "name": "col1",
+                "text": "col1",
+                "type": "identifier",
               },
               "fromKw": {
                 "name": "FROM",
