@@ -786,7 +786,7 @@ column_assignment_list
     }
 
 column_assignment
-  = col:((column_ref / paren_column_ref_list) __) "=" expr:(__ column_value) {
+  = col:((column_ref / paren_plain_column_ref_list) __) "=" expr:(__ column_value) {
     return loc({
       type: "column_assignment",
       column: read(col),
@@ -1719,7 +1719,7 @@ column_constraint_primary_key
 
 table_constraint_unique
   = kws:(unique_key __)
-    columns:paren_column_ref_list
+    columns:paren_plain_column_ref_list
     confl:(__ on_conflict_clause)? {
       return loc({
         type: "constraint_unique",
@@ -1758,7 +1758,7 @@ constraint_check
 constraint_foreign_key
   = kws:(FOREIGN __ KEY __)
     i:(ident __)?
-    columns:paren_column_ref_list
+    columns:paren_plain_column_ref_list
     ref:(__ references_specification) {
       return loc({
         type: "constraint_foreign_key",
@@ -1771,7 +1771,7 @@ constraint_foreign_key
 references_specification
   = kw:(REFERENCES __)
     table:table_ref
-    columns:(__ paren_column_ref_list)?
+    columns:(__ paren_plain_column_ref_list)?
     options:(__ (referential_action / referential_match))* {
       return loc({
         type: "references_specification",
@@ -1806,7 +1806,7 @@ reference_action_type
 
 table_constraint_index
   = kw:((INDEX / KEY) __)
-    columns:paren_column_ref_list {
+    columns:paren_plain_column_ref_list {
       return loc({
         type: "constraint_index",
         indexKw: read(kw),
@@ -1815,7 +1815,7 @@ table_constraint_index
     }
   / typeKw:((FULLTEXT / SPATIAL) __)
     kw:((INDEX / KEY) __ )?
-    columns:paren_column_ref_list {
+    columns:paren_plain_column_ref_list {
       return loc({
         type: "constraint_index",
         indexTypeKw: read(typeKw),
@@ -2619,16 +2619,6 @@ table_ref
  *                                                                                      *
  * ------------------------------------------------------------------------------------ *
  */
-paren_column_ref_list
-  = "(" c1:__ cols:column_ref_list c2:__ ")" {
-    return loc(createParenExpr(c1, cols, c2));
-  }
-
-column_ref_list
-  = head:column_ref tail:(__ "," __ column_ref)* {
-    return loc(createListExpr(head, tail));
-  }
-
 paren_plain_column_ref_list
   = "(" c1:__ cols:plain_column_ref_list c2:__ ")" {
     return loc(createParenExpr(c1, cols, c2));
