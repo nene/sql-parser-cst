@@ -9,8 +9,8 @@ with the goal of being able to re-create the exact original source code.
 For now it supports the following SQL dialects:
 
 - **SQLite** - full support.
-- **MySQL** - basic support for the most common SQL statements.
-- **BigQuery** - experimental.
+- **BigQuery** - experimental (see [#2](https://github.com/nene/sql-parser-cst/issues/2) for list of unsupported syntax).
+- **MySQL** - experimental (see [#5](https://github.com/nene/sql-parser-cst/issues/5) for list of unsupported syntax).
 
 **Note:** This software is still in very active development.
 The syntax tree structure is constantly evolving and changing
