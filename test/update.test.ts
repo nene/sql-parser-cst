@@ -20,9 +20,11 @@ describe("update", () => {
     test("UPDATE tbl SET flag = col=1 OR col=2");
   });
 
-  it("supports updating multiple tables", () => {
-    test("UPDATE items, month SET items.price = month.price");
-    test("UPDATE items /*c1*/,/*c2*/ month SET items.price = month.price");
+  dialect("mysql", () => {
+    it("supports updating multiple tables", () => {
+      test("UPDATE items, month SET items.price = month.price");
+      test("UPDATE items /*c1*/,/*c2*/ month SET items.price = month.price");
+    });
   });
 
   it("supports aliased table names", () => {
