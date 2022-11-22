@@ -14,6 +14,32 @@ describe("member_expr", () => {
     testExpr("foo().baz");
   });
 
+  it("allows member_expr on a string", () => {
+    testExpr(`'foo'.bar`);
+  });
+
+  it("allows for keywords as field/column names", () => {
+    testExpr("foo.insert");
+  });
+
+  dialect("sqlite", () => {
+    it("supports quoted field name", () => {
+      testExpr(`"my tbl"."my col"`);
+      testExpr("`my foo`.`my bar`");
+      testExpr(`[my tbl].[my col]`);
+    });
+  });
+
+  dialect(["mysql", "bigquery"], () => {
+    it("supports quoted field name", () => {
+      testExpr("`my foo`.`my bar`");
+    });
+  });
+
+  it("does not allow string as field name", () => {
+    expect(() => parseExpr(`foo.'bar'`)).toThrowError();
+  });
+
   it("parses nested member expression", () => {
     expect(parseExpr(`foo.bar.baz`)).toMatchInlineSnapshot(`
       {
