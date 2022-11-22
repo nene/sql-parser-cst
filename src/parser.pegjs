@@ -783,7 +783,7 @@ column_assignment_list
     }
 
 column_assignment
-  = col:((column_ref / paren_column_list) __) "=" expr:(__ column_value) {
+  = col:((optionally_qualified_column / paren_column_list) __) "=" expr:(__ column_value) {
     return loc({
       type: "column_assignment",
       column: read(col),
@@ -2176,7 +2176,7 @@ negation_expr
 negation_operator = "-" / "~" / "!"
 
 member_expr
-  = &bigquery obj:primary props:(__ array_subscript)+ {
+  = obj:primary props:(__ "." __ qualified_column / __ array_subscript &bigquery)+ {
     return createMemberExprChain(obj, props);
   }
   / primary
@@ -2211,7 +2211,7 @@ primary
   / table_func_call
   / case_expr
   / exists_expr
-  / column_ref
+  / ident
   / (&mysql / &bigquery) e:interval_expr { return e; }
   / parameter
 
@@ -2626,7 +2626,7 @@ column_list
     return loc(createListExpr(head, tail));
   }
 
-column_ref
+optionally_qualified_column
   = tbl:(ident __) "." col:(__ qualified_column) {
     return loc({
       type: "member_expr",

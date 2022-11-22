@@ -137,26 +137,50 @@ function createJoinExpr(
   };
 }
 
+type ArrayMemberExprTailPart = [Whitespace[], MemberExpr["property"]];
+type ObjectMemberExprTailPart = [
+  Whitespace[],
+  ".",
+  Whitespace[],
+  MemberExpr["property"]
+];
+type MemberExprTailPart = ArrayMemberExprTailPart | ObjectMemberExprTailPart;
+
+function isObjectMemberExprTailPart(
+  part: MemberExprTailPart
+): part is ObjectMemberExprTailPart {
+  return part[1] === ".";
+}
+
 export function createMemberExprChain(
   head: MemberExpr["object"],
-  tail: [Whitespace[], MemberExpr["property"]][]
+  tail: MemberExprTailPart[]
 ): Expr {
   return tail.reduce(
-    (obj, [c1, prop]) => deriveMemberExprLoc(createMemberExpr(obj, c1, prop)),
+    (obj, tailPart) => deriveMemberExprLoc(createMemberExpr(obj, tailPart)),
     head
   );
 }
 
 function createMemberExpr(
   obj: MemberExpr["object"],
-  c1: Whitespace[],
-  prop: MemberExpr["property"]
+  tailPart: MemberExprTailPart
 ): MemberExpr {
-  return {
-    type: "member_expr",
-    object: obj,
-    property: leading(prop, c1) as MemberExpr["property"],
-  };
+  if (isObjectMemberExprTailPart(tailPart)) {
+    const [c1, _, c2, prop] = tailPart;
+    return {
+      type: "member_expr",
+      object: trailing(obj, c1) as MemberExpr["object"],
+      property: leading(prop, c2) as MemberExpr["property"],
+    };
+  } else {
+    const [c1, prop] = tailPart;
+    return {
+      type: "member_expr",
+      object: obj,
+      property: leading(prop, c1) as MemberExpr["property"],
+    };
+  }
 }
 
 const deriveMemberExprLoc = (expr: MemberExpr): MemberExpr => {

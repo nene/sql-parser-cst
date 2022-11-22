@@ -214,7 +214,11 @@ describe("identifier", () => {
     });
 
     it("does not recognize single-quoted string as table name", () => {
-      expect(() => parseExpr(`'foo'.bar`)).toThrowError("Expected");
+      const expr = parseExpr(`'foo'.bar`);
+      if (expr.type !== "member_expr") {
+        throw new Error(`Expected member_expr, instead got ${expr.type}`);
+      }
+      expect(expr.object.type).toBe("string");
     });
     it("does not recognize single-quoted string as column name", () => {
       expect(() => parseExpr(`foo.'bar'`)).toThrowError("Expected");
@@ -222,7 +226,11 @@ describe("identifier", () => {
 
     dialect(["mysql", "bigquery"], () => {
       it("does not recognize double-quoted string as table name", () => {
-        expect(() => parseExpr(`"foo".bar`)).toThrowError("Expected");
+        const expr = parseExpr(`"foo".bar`);
+        if (expr.type !== "member_expr") {
+          throw new Error(`Expected member_expr, instead got ${expr.type}`);
+        }
+        expect(expr.object.type).toBe("string");
       });
       it("does not recognize double-quoted string as column name", () => {
         expect(() => parseExpr(`foo."bar"`)).toThrowError("Expected");

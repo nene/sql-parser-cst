@@ -1,6 +1,45 @@
 import { dialect, parseExpr, testExpr } from "../test_utils";
 
 describe("member_expr", () => {
+  it("supports simple member_expr (e.g. qualified column name)", () => {
+    testExpr("foo.bar");
+    testExpr("foo /*c1*/./*c2*/ bar");
+  });
+
+  it("supports nested member_expr (e.g. traversing JSON object)", () => {
+    testExpr("foo.bar.baz");
+  });
+
+  it("supports member_expr on function call", () => {
+    testExpr("foo().baz");
+  });
+
+  it("parses nested member expression", () => {
+    expect(parseExpr(`foo.bar.baz`)).toMatchInlineSnapshot(`
+      {
+        "object": {
+          "object": {
+            "name": "foo",
+            "text": "foo",
+            "type": "identifier",
+          },
+          "property": {
+            "name": "bar",
+            "text": "bar",
+            "type": "identifier",
+          },
+          "type": "member_expr",
+        },
+        "property": {
+          "name": "baz",
+          "text": "baz",
+          "type": "identifier",
+        },
+        "type": "member_expr",
+      }
+    `);
+  });
+
   dialect("bigquery", () => {
     it("supports simple array subscript", () => {
       testExpr(`my_array[0]`);
@@ -26,6 +65,10 @@ describe("member_expr", () => {
 
     it("supports nested array subscript", () => {
       testExpr(`my_arr[5][12]`);
+    });
+
+    it("supports mixed array and fieldname chain", () => {
+      testExpr(`obj.items[5].vehicles[12]`);
     });
 
     // to ensure we don't parse it to plain function call
