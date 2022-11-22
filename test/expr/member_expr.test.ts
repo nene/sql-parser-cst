@@ -97,6 +97,10 @@ describe("member_expr", () => {
       testExpr(`obj.items[5].vehicles[12]`);
     });
 
+    it("supports indexing with a string (e.g. in JSON object traversal)", () => {
+      testExpr(`my_arr['field']`);
+    });
+
     // to ensure we don't parse it to plain function call
     it("parses array subscript specifiers", () => {
       expect(parseExpr(`my_array[OFFSET(0)]`)).toMatchInlineSnapshot(`
