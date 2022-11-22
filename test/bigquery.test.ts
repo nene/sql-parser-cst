@@ -2,14 +2,6 @@ import { dialect, test } from "./test_utils";
 
 describe("BigQuery bugs in node-sql-formatter", () => {
   dialect("bigquery", () => {
-    it.skip(`unnest in a "from" clause that also involves regular tables`, () => {
-      test(`
-        select *
-        from product.organization, unnest(array[1,2])
-        limit 10
-      `);
-    });
-
     it.skip(`"pivot" clause`, () => {
       test(`
         select *
