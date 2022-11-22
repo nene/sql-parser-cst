@@ -144,6 +144,7 @@ other_clause
   / order_by_clause
   / limit_clause
   / window_clause
+  / &bigquery x:qualify_clause { return x; }
 
 /**
  * SELECT .. columns
@@ -547,6 +548,19 @@ frame_exclusion
 
 frame_exclusion_kind
   = kws:(CURRENT __ ROW / NO __ OTHERS / GROUP / TIES) { return read(kws); }
+
+/**
+ * SELECT .. QUALIFY
+ * --------------------------------------------------------------------------------------
+ */
+qualify_clause
+  = kw:QUALIFY expr:(__ expr) {
+    return loc({
+      type: "qualify_clause",
+      qualifyKw: kw,
+      expr: read(expr),
+    });
+  }
 
 /**
  * { UPDATE | INSERT | DELETE } ... RETURNING
@@ -3396,6 +3410,7 @@ PRAGMA              = kw:"PRAGMA"i              !ident_part { return loc(createK
 PRECEDING           = kw:"PRECEDING"i           !ident_part { return loc(createKeyword(kw)); }
 PRECISION           = kw:"PRECISION"i           !ident_part { return loc(createKeyword(kw)); }
 PRIMARY             = kw:"PRIMARY"i             !ident_part { return loc(createKeyword(kw)); }
+QUALIFY             = kw:"QUALIFY"i             !ident_part { return loc(createKeyword(kw)); }
 QUARTER             = kw:"QUARTER"i             !ident_part { return loc(createKeyword(kw)); }
 QUERY               = kw:"QUERY"i               !ident_part { return loc(createKeyword(kw)); }
 RAISE               = kw:"RAISE"i               !ident_part { return loc(createKeyword(kw)); }

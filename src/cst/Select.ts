@@ -21,6 +21,7 @@ export type AllSelectNodes =
   | GroupByClause
   | HavingClause
   | WindowClause
+  | QualifyClause
   | NamedWindow
   | WindowDefinition
   | OrderByClause
@@ -56,6 +57,7 @@ export interface SelectStmt extends BaseNode {
     | GroupByClause
     | HavingClause
     | WindowClause
+    | QualifyClause
     | OrderByClause
     | LimitClause
   )[];
@@ -223,6 +225,12 @@ export interface SortSpecification extends BaseNode {
   expr: Expr;
   orderKw?: Keyword<"ASC" | "DESC">;
   nullHandlingKw?: [Keyword<"NULLS">, Keyword<"FIRST" | "LAST">];
+}
+
+export interface QualifyClause extends BaseNode {
+  type: "qualify_clause";
+  qualifyKw: Keyword<"QUALIFY">;
+  expr: Expr;
 }
 
 export interface ReturningClause extends BaseNode {
