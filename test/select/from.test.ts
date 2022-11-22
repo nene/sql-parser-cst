@@ -73,6 +73,7 @@ describe("select FROM", () => {
       it("supports UNNEST of array literal", () => {
         test("SELECT * FROM UNNEST([1,2,3])");
         test("SELECT * FROM UNNEST(ARRAY[1,2,3])");
+        test("SELECT * FROM UNNEST /*c1*/ (/*c2*/ [1] /*c3*/)");
       });
 
       it("supports UNNEST of array path", () => {
