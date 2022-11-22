@@ -27,4 +27,26 @@ describe("cstVisitor", () => {
 
     expect(show(cst)).toEqual("SELECT * FROM jobs WHERE salary > 1000");
   });
+
+  it("allows injecting AS keywords to aliases", () => {
+    const makeAliasesExplicit = cstVisitor({
+      alias: (node) => {
+        if (!node.asKw) {
+          node.asKw = {
+            type: "keyword",
+            name: "AS",
+            text: "AS",
+            trailing: [{ type: "space", text: " " }],
+          };
+        }
+      },
+    });
+
+    const cst = parse("SELECT t.firstname fname, t.lastname lname FROM my_table t", preserveAll);
+    makeAliasesExplicit(cst);
+
+    expect(show(cst)).toEqual(
+      "SELECT t.firstname AS fname, t.lastname AS lname FROM my_table AS t"
+    );
+  });
 });
