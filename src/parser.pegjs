@@ -118,7 +118,7 @@ common_table_expression_list
 
 common_table_expression
   = table:ident
-    columns:(__ paren_plain_column_ref_list)?
+    columns:(__ paren_column_list)?
     asKw:(__ AS)
     opt:(__ cte_option)?
     select:(__ paren_expr_select) {
@@ -306,7 +306,7 @@ join_specification
   = using_clause / on_clause
 
 using_clause
-  = kw:USING expr:(__ paren_plain_column_ref_list) {
+  = kw:USING expr:(__ paren_column_list) {
     return loc({
       type: "join_using_specification",
       usingKw: kw,
@@ -592,7 +592,7 @@ insert_clause
     orAction:(__ or_alternate_action)?
     intoKw:(__ INTO)?
     table:(__ table_ref_or_explicit_alias)
-    columns:(__ paren_plain_column_ref_list)? {
+    columns:(__ paren_column_list)? {
       return loc({
         type: "insert_clause",
         insertKw,
@@ -783,7 +783,7 @@ column_assignment_list
     }
 
 column_assignment
-  = col:((column_ref / paren_plain_column_ref_list) __) "=" expr:(__ column_value) {
+  = col:((column_ref / paren_column_list) __) "=" expr:(__ column_value) {
     return loc({
       type: "column_assignment",
       column: read(col),
@@ -831,7 +831,7 @@ create_view_stmt
     viewKw:(__ VIEW)
     ifKw:(__ if_not_exists)?
     name:(__ table_ref)
-    cols:(__ paren_plain_column_ref_list)?
+    cols:(__ paren_column_list)?
     asKw:(__ AS)
     select:(__ compound_select_stmt) {
       return loc({
@@ -1134,7 +1134,7 @@ create_trigger_stmt
     }
 
 trigger_event
-  = timeKw:(trigger_time_kw __)? eventKw:(UPDATE __) ofKw:(OF __) cols:plain_column_ref_list {
+  = timeKw:(trigger_time_kw __)? eventKw:(UPDATE __) ofKw:(OF __) cols:column_list {
       return loc({
         type: "trigger_event",
         timeKw: read(timeKw),
@@ -1716,7 +1716,7 @@ column_constraint_primary_key
 
 table_constraint_unique
   = kws:(unique_key __)
-    columns:paren_plain_column_ref_list
+    columns:paren_column_list
     confl:(__ on_conflict_clause)? {
       return loc({
         type: "constraint_unique",
@@ -1755,7 +1755,7 @@ constraint_check
 constraint_foreign_key
   = kws:(FOREIGN __ KEY __)
     i:(ident __)?
-    columns:paren_plain_column_ref_list
+    columns:paren_column_list
     ref:(__ references_specification) {
       return loc({
         type: "constraint_foreign_key",
@@ -1768,7 +1768,7 @@ constraint_foreign_key
 references_specification
   = kw:(REFERENCES __)
     table:table_ref
-    columns:(__ paren_plain_column_ref_list)?
+    columns:(__ paren_column_list)?
     options:(__ (referential_action / referential_match))* {
       return loc({
         type: "references_specification",
@@ -1803,7 +1803,7 @@ reference_action_type
 
 table_constraint_index
   = kw:((INDEX / KEY) __)
-    columns:paren_plain_column_ref_list {
+    columns:paren_column_list {
       return loc({
         type: "constraint_index",
         indexKw: read(kw),
@@ -1812,7 +1812,7 @@ table_constraint_index
     }
   / typeKw:((FULLTEXT / SPATIAL) __)
     kw:((INDEX / KEY) __ )?
-    columns:paren_plain_column_ref_list {
+    columns:paren_column_list {
       return loc({
         type: "constraint_index",
         indexTypeKw: read(typeKw),
@@ -2616,12 +2616,12 @@ table_ref
  *                                                                                      *
  * ------------------------------------------------------------------------------------ *
  */
-paren_plain_column_ref_list
-  = "(" c1:__ cols:plain_column_ref_list c2:__ ")" {
+paren_column_list
+  = "(" c1:__ cols:column_list c2:__ ")" {
     return loc(createParenExpr(c1, cols, c2));
   }
 
-plain_column_ref_list
+column_list
   = head:column tail:(__ "," __ column)* {
     return loc(createListExpr(head, tail));
   }
