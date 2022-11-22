@@ -42,6 +42,31 @@ describe("comparison operators", () => {
         testExpr(`col IS NOT UNKNOWN`);
         testExpr(`c /*c1*/ IS /*c2*/ NOT /*c3*/ UNKNOWN`);
       });
+
+      it("parses UNKNOWN in IS UNKNOWN as keyword, not as identifier", () => {
+        expect(parseExpr("col IS UNKNOWN")).toMatchInlineSnapshot(`
+          {
+            "expr": {
+              "name": "col",
+              "text": "col",
+              "type": "identifier",
+            },
+            "operator": [
+              {
+                "name": "IS",
+                "text": "IS",
+                "type": "keyword",
+              },
+              {
+                "name": "UNKNOWN",
+                "text": "UNKNOWN",
+                "type": "keyword",
+              },
+            ],
+            "type": "postfix_op_expr",
+          }
+        `);
+      });
     });
 
     dialect(["sqlite", "bigquery"], () => {

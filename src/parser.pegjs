@@ -2038,7 +2038,10 @@ not_expr
   }
 
 comparison_expr
-  = head:bitwise_or_expr tail:(__ comparison_op __ bitwise_or_expr)+ {
+  = expr:(bitwise_or_expr __) op:unary_comparison_op {
+    return loc(createPostfixOpExpr(op, read(expr)));
+  }
+  / head:bitwise_or_expr tail:(__ comparison_op __ bitwise_or_expr)+ {
     return createBinaryExprChain(head, tail);
   }
   / left:bitwise_or_expr c1:__ op:(NOT __ IN / IN) c2:__ right:(paren_list_expr / bitwise_or_expr) {
@@ -2057,10 +2060,15 @@ comparison_expr
       end: read(end),
     });
   }
-  / expr:(bitwise_or_expr __) op:unary_null_op {
-    return loc(createPostfixOpExpr(op, read(expr)));
-  }
   / bitwise_or_expr
+
+unary_comparison_op
+  = kws:(NOT __ NULL / NOTNULL / ISNULL) &sqlite {
+    return read(kws);
+  }
+  / kws:(IS __ UNKNOWN / IS __ NOT __ UNKNOWN) (&mysql / &bigquery) {
+    return read(kws);
+  }
 
 comparison_op
   = op:"<=>" &mysql { return op; }
@@ -2098,9 +2106,6 @@ escape_expr
 
 between_op
   = kws:(NOT __ BETWEEN / BETWEEN) { return read(kws); }
-
-unary_null_op
-  = kws:(NOT __ NULL / NOTNULL / ISNULL) &sqlite { return read(kws); }
 
 bitwise_or_expr
   = head:bitwise_xor_expr tail:(__ "|"  __ bitwise_xor_expr)* {
@@ -3485,6 +3490,7 @@ UNBOUNDED           = kw:"UNBOUNDED"i           !ident_part { return loc(createK
 UNDEFINED           = kw:"UNDEFINED"i           !ident_part { return loc(createKeyword(kw)); }
 UNION               = kw:"UNION"i               !ident_part { return loc(createKeyword(kw)); }
 UNIQUE              = kw:"UNIQUE"i              !ident_part { return loc(createKeyword(kw)); }
+UNKNOWN             = kw:"UNKNOWN"i             !ident_part { return loc(createKeyword(kw)); }
 UNLOCK              = kw:"UNLOCK"i              !ident_part { return loc(createKeyword(kw)); }
 UNSIGNED            = kw:"UNSIGNED"i            !ident_part { return loc(createKeyword(kw)); }
 UPDATE              = kw:"UPDATE"i              !ident_part { return loc(createKeyword(kw)); }
