@@ -1,13 +1,6 @@
 import { BaseNode, Keyword } from "./Base";
 import { ColumnConstraint, Constraint, TableConstraint } from "./Constraint";
-import {
-  ColumnRef,
-  Identifier,
-  ListExpr,
-  PairExpr,
-  ParenExpr,
-  TableRef,
-} from "./Expr";
+import { Identifier, ListExpr, PairExpr, ParenExpr, TableRef } from "./Expr";
 import { Literal, NumberLiteral, StringLiteral } from "./Literal";
 import { SubSelect } from "./Select";
 
@@ -42,7 +35,7 @@ export interface CreateTableAs extends BaseNode {
 
 export interface ColumnDefinition extends BaseNode {
   type: "column_definition";
-  name: ColumnRef;
+  name: Identifier;
   dataType?: DataType;
   constraints: (ColumnConstraint | Constraint<ColumnConstraint>)[];
 }

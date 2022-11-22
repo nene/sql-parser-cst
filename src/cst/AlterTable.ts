@@ -1,6 +1,6 @@
 import { BaseNode, Keyword } from "./Base";
 import { ColumnDefinition } from "./CreateTable";
-import { ColumnRef, ListExpr, TableRef } from "./Expr";
+import { Identifier, ListExpr, TableRef } from "./Expr";
 
 // ALTER TABLE
 export interface AlterTableStmt extends BaseNode {
@@ -25,9 +25,9 @@ export interface AlterRenameTable extends BaseNode {
 export interface AlterRenameColumn extends BaseNode {
   type: "alter_rename_column";
   renameKw: Keyword<"RENAME"> | [Keyword<"RENAME">, Keyword<"COLUMN">];
-  oldName: ColumnRef;
+  oldName: Identifier;
   toKw: Keyword<"TO" | "AS">;
-  newName: ColumnRef;
+  newName: Identifier;
 }
 
 export interface AlterAddColumn extends BaseNode {
@@ -39,5 +39,5 @@ export interface AlterAddColumn extends BaseNode {
 export interface AlterDropColumn extends BaseNode {
   type: "alter_drop_column";
   dropKw: Keyword<"DROP"> | [Keyword<"DROP">, Keyword<"COLUMN">];
-  column: ColumnRef;
+  column: Identifier;
 }

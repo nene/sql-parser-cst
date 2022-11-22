@@ -978,7 +978,7 @@ create_definition
   / column_definition
 
 column_definition
-  = name:(column_ref __)
+  = name:(ident __)
     type:data_type?
     constraints:(__ column_constraint_list)? {
       return loc({
@@ -1063,7 +1063,7 @@ alter_add_column
     }
 
 alter_drop_column
-  = kw:(DROP __ COLUMN __ / DROP __) col:column_ref {
+  = kw:(DROP __ COLUMN __ / DROP __) col:ident {
       return loc({
         type: "alter_drop_column",
         dropKw: read(kw),
@@ -1086,7 +1086,7 @@ rename_table_kw
   / kw:RENAME &mysql { return kw; }
 
 alter_rename_column
-  = kw:(rename_column_kw __) oldName:(column_ref __) toKw:((TO / AS) __) newName:column_ref {
+  = kw:(rename_column_kw __) oldName:(ident __) toKw:((TO / AS) __) newName:ident {
     return loc({
       type: "alter_rename_column",
       renameKw: read(kw),
