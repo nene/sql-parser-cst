@@ -18,9 +18,11 @@ describe("join", () => {
     expect(show(join.right).trim()).toBe(`baz`);
   });
 
-  it("supports NATURAL JOIN", () => {
-    test("SELECT c FROM t1 NATURAL JOIN t2");
-    test("SELECT c FROM t1 /*c1*/ NATURAL /*c2*/ JOIN /*c3*/ t2");
+  dialect(["sqlite", "mysql"], () => {
+    it("supports NATURAL JOIN", () => {
+      test("SELECT c FROM t1 NATURAL JOIN t2");
+      test("SELECT c FROM t1 /*c1*/ NATURAL /*c2*/ JOIN /*c3*/ t2");
+    });
   });
 
   it("supports LEFT [OUTER] JOIN", () => {
@@ -30,10 +32,12 @@ describe("join", () => {
     test("SELECT c FROM t1 /*c1*/ LEFT /*c2*/ OUTER /*c3*/ JOIN /*c4*/ t2");
   });
 
-  it("supports NATURAL LEFT [OUTER] JOIN", () => {
-    test("SELECT c FROM t1 NATURAL LEFT JOIN t2");
-    test("SELECT c FROM t1 NATURAL LEFT OUTER JOIN t2");
-    test("SELECT c FROM t1 /*c1*/ NATURAL /*c2*/ LEFT /*c3*/ JOIN /*c4*/ t2");
+  dialect(["sqlite", "mysql"], () => {
+    it("supports NATURAL LEFT [OUTER] JOIN", () => {
+      test("SELECT c FROM t1 NATURAL LEFT JOIN t2");
+      test("SELECT c FROM t1 NATURAL LEFT OUTER JOIN t2");
+      test("SELECT c FROM t1 /*c1*/ NATURAL /*c2*/ LEFT /*c3*/ JOIN /*c4*/ t2");
+    });
   });
 
   it("supports RIGHT [OUTER] JOIN", () => {
@@ -43,10 +47,12 @@ describe("join", () => {
     test("SELECT c FROM t1 /*c1*/ RIGHT /*c2*/ OUTER /*c3*/ JOIN /*c4*/ t2");
   });
 
-  it("supports NATURAL RIGHT [OUTER] JOIN", () => {
-    test("SELECT c FROM t1 NATURAL RIGHT JOIN t2");
-    test("SELECT c FROM t1 NATURAL RIGHT OUTER JOIN t2");
-    test("SELECT c FROM t1 /*c1*/ NATURAL /*c2*/ RIGHT /*c3*/ JOIN /*c4*/ t2");
+  dialect(["sqlite", "mysql"], () => {
+    it("supports NATURAL RIGHT [OUTER] JOIN", () => {
+      test("SELECT c FROM t1 NATURAL RIGHT JOIN t2");
+      test("SELECT c FROM t1 NATURAL RIGHT OUTER JOIN t2");
+      test("SELECT c FROM t1 /*c1*/ NATURAL /*c2*/ RIGHT /*c3*/ JOIN /*c4*/ t2");
+    });
   });
 
   it("supports INNER JOIN", () => {
@@ -54,9 +60,11 @@ describe("join", () => {
     test("SELECT c FROM t1 /*c1*/ INNER /*c2*/ JOIN /*c3*/ t2");
   });
 
-  it("supports NATURAL INNER JOIN", () => {
-    test("SELECT c FROM t1 NATURAL INNER JOIN t2");
-    test("SELECT c FROM t1 /*c1*/ NATURAL /*c2*/ INNER /*c3*/ JOIN /*c4*/ t2");
+  dialect(["sqlite", "mysql"], () => {
+    it("supports NATURAL INNER JOIN", () => {
+      test("SELECT c FROM t1 NATURAL INNER JOIN t2");
+      test("SELECT c FROM t1 /*c1*/ NATURAL /*c2*/ INNER /*c3*/ JOIN /*c4*/ t2");
+    });
   });
 
   it("supports CROSS JOIN", () => {
@@ -64,14 +72,16 @@ describe("join", () => {
     test("SELECT c FROM t1 /*c1*/ CROSS /*c2*/ JOIN /*c3*/ t2");
   });
 
-  dialect("sqlite", () => {
+  dialect(["sqlite", "bigquery"], () => {
     it("supports FULL [OUTER] JOIN", () => {
       test("SELECT c FROM t1 FULL JOIN t2");
       test("SELECT c FROM t1 FULL OUTER JOIN t2");
       test("SELECT c FROM t1 /*c1*/ FULL /*c2*/ JOIN /*c3*/ t2");
       test("SELECT c FROM t1 /*c1*/ FULL /*c2*/ OUTER /*c3*/ JOIN /*c4*/ t2");
     });
+  });
 
+  dialect("sqlite", () => {
     it("supports NATURAL FULL [OUTER] JOIN", () => {
       test("SELECT c FROM t1 NATURAL FULL JOIN t2");
       test("SELECT c FROM t1 NATURAL FULL OUTER JOIN t2");

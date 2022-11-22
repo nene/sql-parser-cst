@@ -283,7 +283,7 @@ join_op
   / kw:STRAIGHT_JOIN &mysql { return kw; }
 
 natural_join
-  = kw:(NATURAL __) jt:join_type {
+  = kw:(NATURAL __) jt:join_type (&mysql / &sqlite) {
     return [read(kw), ...(jt instanceof Array ? jt : [jt])];
   }
 
@@ -301,7 +301,7 @@ join_type
 left_right_full_kw
   = LEFT
   / RIGHT
-  / kw:FULL &sqlite { return kw; }
+  / kw:FULL (&sqlite / &bigquery) { return kw; }
 
 join_specification
   = using_clause / on_clause
