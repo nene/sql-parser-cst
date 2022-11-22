@@ -10,7 +10,7 @@ describe("cstVisitor", () => {
         tables.push(tbl.table.text);
       },
     });
-    visit(parse("SELECT name, job_name FROM employees NATURAL LEFT JOIN jobs"));
+    visit(parse("SELECT name, job_name FROM employees JOIN jobs"));
 
     expect(tables).toEqual(["employees", "jobs"]);
   });
