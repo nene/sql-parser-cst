@@ -1137,7 +1137,7 @@ create_trigger_stmt
     }
 
 trigger_event
-  = timeKw:(trigger_time_kw __)? eventKw:(UPDATE __) ofKw:(OF __) cols:column_ref_list {
+  = timeKw:(trigger_time_kw __)? eventKw:(UPDATE __) ofKw:(OF __) cols:plain_column_ref_list {
       return loc({
         type: "trigger_event",
         timeKw: read(timeKw),
