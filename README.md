@@ -107,10 +107,7 @@ which preserves all of this information:
                   "type": "paren_expr",
                   "expr": {
                     "type": "binary_expr",
-                    "left": {
-                      "type": "column_ref",
-                      "column": { "type": "identifier", "text": "\"first_name\"", "name": "first_name" }
-                    },
+                    "left": { "type": "identifier", "text": "\"first_name\"", "name": "first_name" },
                     "operator": "||",
                     "right": { "type": "string", "text": "' jr.'", "value": " jr." }
                   }
