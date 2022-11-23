@@ -34,6 +34,8 @@ export type AllSelectNodes =
   | UnnestExpr
   | PivotExpr
   | PivotForIn
+  | UnpivotExpr
+  | UnpivotForIn
   | JoinOnSpecification
   | JoinUsingSpecification
   | SortSpecification
@@ -170,7 +172,7 @@ export interface LimitClause extends BaseNode {
   offset?: Expr;
 }
 
-type JoinExprLeft = JoinExpr | PivotExpr | TableOrSubquery;
+type JoinExprLeft = JoinExpr | PivotExpr | UnpivotExpr | TableOrSubquery;
 
 export interface JoinExpr extends BaseNode {
   type: "join_expr";
@@ -234,6 +236,31 @@ export interface PivotForIn extends BaseNode {
   inputColumn: Identifier;
   inKw: Keyword<"IN">;
   pivotColumns: ParenExpr<ListExpr<Expr | Alias<Expr>>>;
+}
+export interface UnpivotExpr extends BaseNode {
+  type: "unpivot_expr";
+  left: JoinExprLeft;
+  unpivotKw: Keyword<"UNPIVOT">;
+  nullHandlingKw?: [Keyword<"INCLUDE" | "EXCLUDE">, Keyword<"NULLS">];
+  args: ParenExpr<UnpivotForIn>;
+}
+export interface UnpivotForIn extends BaseNode {
+  type: "unpivot_for_in";
+  valuesColumn:
+    | Identifier // for single-column unpivot
+    | ParenExpr<ListExpr<Identifier>>; // for multi-column unpivot
+  forKw: Keyword<"FOR">;
+  nameColumn: Identifier;
+  inKw: Keyword<"IN">;
+  unpivotColumns:
+    | ParenExpr<ListExpr<Identifier | Alias<Expr>>> // for single-column unpivot
+    // for multi-column unpivot
+    | ParenExpr<
+        ListExpr<
+          | ParenExpr<ListExpr<Identifier>>
+          | Alias<ParenExpr<ListExpr<Identifier>>>
+        >
+      >;
 }
 
 export interface JoinOnSpecification extends BaseNode {

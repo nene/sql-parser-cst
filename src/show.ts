@@ -64,6 +64,16 @@ const showNode = cstTransformer<string>({
       node.inKw,
       node.pivotColumns,
     ]),
+  unpivot_expr: (node) =>
+    show([node.left, node.unpivotKw, node.nullHandlingKw, node.args]),
+  unpivot_for_in: (node) =>
+    show([
+      node.valuesColumn,
+      node.forKw,
+      node.nameColumn,
+      node.inKw,
+      node.unpivotColumns,
+    ]),
   sort_specification: (node) =>
     show([node.expr, node.orderKw, node.nullHandlingKw]),
   // WHERE .. GROUP BY .. HAVING .. QUALIFY ... ORDER BY .. PARTITION BY
