@@ -7,7 +7,8 @@ export type Literal =
   | BooleanLiteral
   | NullLiteral
   | DateTimeLiteral
-  | JsonLiteral;
+  | JsonLiteral
+  | NumericLiteral;
 
 export interface StringLiteral extends BaseNode {
   type: "string";
@@ -48,5 +49,11 @@ export interface DateTimeLiteral extends BaseNode {
 export interface JsonLiteral extends BaseNode {
   type: "json";
   jsonKw: Keyword<"JSON">;
+  string: StringLiteral;
+}
+
+export interface NumericLiteral extends BaseNode {
+  type: "numeric";
+  numericKw: Keyword<"NUMERIC" | "BIGNUMERIC">;
   string: StringLiteral;
 }

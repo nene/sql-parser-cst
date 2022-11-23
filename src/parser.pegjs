@@ -2872,6 +2872,7 @@ literal
   / literal_null
   / literal_datetime
   / literal_json
+  / literal_numeric
 
 literal_null
   = kw:NULL {
@@ -3105,6 +3106,15 @@ literal_json
     return loc({
       type: "json",
       jsonKw: kw,
+      string: read(str),
+    });
+  }
+
+literal_numeric
+  = &bigquery kw:(NUMERIC / BIGNUMERIC) str:(__ literal_plain_string) {
+    return loc({
+      type: "numeric",
+      numericKw: kw,
       string: read(str),
     });
   }
