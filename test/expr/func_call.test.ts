@@ -49,10 +49,33 @@ describe("function call", () => {
     `);
   });
 
-  it("supports special functions without parenthesis", () => {
-    testExpr("CURRENT_TIME");
-    testExpr("CURRENT_DATE");
-    testExpr("CURRENT_TIMESTAMP");
+  describe("paren-less functions", () => {
+    function testIsFunction(str: string) {
+      expect(parseExpr(str)).toEqual({
+        type: "func_call",
+        name: { type: "identifier", name: str, text: str },
+      });
+    }
+
+    it("supports standard special functions without parenthesis", () => {
+      testIsFunction("CURRENT_TIME");
+      testIsFunction("CURRENT_DATE");
+      testIsFunction("CURRENT_TIMESTAMP");
+    });
+
+    dialect("bigquery", () => {
+      it("supports additional special functions without parenthesis", () => {
+        testIsFunction("CURRENT_DATETIME");
+      });
+    });
+
+    dialect("mysql", () => {
+      it("supports additional special functions without parenthesis", () => {
+        testIsFunction("CURRENT_USER");
+        testIsFunction("LOCALTIME");
+        testIsFunction("LOCALTIMESTAMP");
+      });
+    });
   });
 
   it("parses special paren-less function to func_call node", () => {

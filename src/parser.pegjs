@@ -2504,9 +2504,21 @@ bigquery_func_keyword
   / ARRAY
 
 paren_less_func_name
-  = kw:(CURRENT_DATE / CURRENT_TIME / CURRENT_TIMESTAMP) {
+  = kw:(
+      CURRENT_DATE
+    / CURRENT_TIME
+    / CURRENT_TIMESTAMP
+    / paren_less_func_name_bigquery
+    / paren_less_func_name_mysql
+  ) {
     return loc(createIdentifier(kw.text, kw.text));
   }
+
+paren_less_func_name_bigquery
+  = kw:CURRENT_DATETIME &bigquery { return kw; }
+
+paren_less_func_name_mysql
+  = kw:(LOCALTIME / LOCALTIMESTAMP / CURRENT_USER) &mysql { return kw; }
 
 func_args
   = "(" c1:__ args:func_args_list c2:__ ")" {
@@ -3284,6 +3296,7 @@ CROSS               = kw:"CROSS"i               !ident_part { return loc(createK
 CUME_DIST           = kw:"CUME_DIST"i           !ident_part { return loc(createKeyword(kw)); }
 CURRENT             = kw:"CURRENT"i             !ident_part { return loc(createKeyword(kw)); }
 CURRENT_DATE        = kw:"CURRENT_DATE"i        !ident_part { return loc(createKeyword(kw)); }
+CURRENT_DATETIME    = kw:"CURRENT_DATETIME"i    !ident_part { return loc(createKeyword(kw)); }
 CURRENT_TIME        = kw:"CURRENT_TIME"i        !ident_part { return loc(createKeyword(kw)); }
 CURRENT_TIMESTAMP   = kw:"CURRENT_TIMESTAMP"i   !ident_part { return loc(createKeyword(kw)); }
 CURRENT_USER        = kw:"CURRENT_USER"i        !ident_part { return loc(createKeyword(kw)); }
@@ -3409,6 +3422,8 @@ LEFT                = kw:"LEFT"i                !ident_part { return loc(createK
 LIKE                = kw:"LIKE"i                !ident_part { return loc(createKeyword(kw)); }
 LIMIT               = kw:"LIMIT"i               !ident_part { return loc(createKeyword(kw)); }
 LOCAL               = kw:"LOCAL"i               !ident_part { return loc(createKeyword(kw)); }
+LOCALTIME           = kw:"LOCALTIME"i           !ident_part { return loc(createKeyword(kw)); }
+LOCALTIMESTAMP      = kw:"LOCALTIMESTAMP"i      !ident_part { return loc(createKeyword(kw)); }
 LOCK                = kw:"LOCK"i                !ident_part { return loc(createKeyword(kw)); }
 LOCKED              = kw:"LOCKED"i              !ident_part { return loc(createKeyword(kw)); }
 LOGS                = kw:"LOGS"i                !ident_part { return loc(createKeyword(kw)); }
