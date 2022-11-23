@@ -14,9 +14,9 @@ import {
   SubSelect,
   Whitespace,
   MemberExpr,
+  PivotExpr,
 } from "../cst/Node";
 import { leading, surrounding, trailing } from "./whitespace";
-import { read } from "./read";
 import { readCommaSepList } from "./list";
 
 //
@@ -103,6 +103,15 @@ const deriveJoinLoc = (join: JoinExpr): JoinExpr => {
   return { ...join, range: [start, end] };
 };
 
+const derivePivotLoc = (pivot: PivotExpr): PivotExpr => {
+  if (!pivot.left.range || !pivot.args.range) {
+    return pivot;
+  }
+  const start = pivot.left.range[0];
+  const end = pivot.args.range[1];
+  return { ...pivot, range: [start, end] };
+};
+
 interface JoinExprRight {
   type: "join_expr_right";
   operator: JoinExpr["operator"];
@@ -110,12 +119,21 @@ interface JoinExprRight {
   specification: JoinExpr["specification"];
 }
 
+interface PivotExprRight {
+  type: "pivot_expr_right";
+  pivotKw: PivotExpr["pivotKw"];
+  args: PivotExpr["args"];
+}
+
 export function createJoinExprChain(
   head: JoinExpr["left"],
-  tail: [Whitespace[], JoinExprRight][]
+  tail: [Whitespace[], JoinExprRight | PivotExprRight][]
 ) {
   return tail.reduce(
-    (left, [c1, right]) => deriveJoinLoc(createJoinExpr(left, c1, right)),
+    (left, [c1, right]) =>
+      right.type === "join_expr_right"
+        ? deriveJoinLoc(createJoinExpr(left, c1, right))
+        : derivePivotLoc(createPivotExpr(left, c1, right)),
     head
   );
 }
@@ -131,6 +149,19 @@ function createJoinExpr(
     operator: right.operator,
     right: right.right,
     specification: right.specification,
+  };
+}
+
+function createPivotExpr(
+  left: PivotExpr["left"],
+  c1: Whitespace[],
+  right: PivotExprRight
+): PivotExpr {
+  return {
+    type: "pivot_expr",
+    left: trailing(left, c1) as PivotExpr["left"],
+    pivotKw: right.pivotKw,
+    args: right.args,
   };
 }
 

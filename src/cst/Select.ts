@@ -1,6 +1,7 @@
 import { BaseNode, Empty, Keyword } from "./Base";
 import {
   Expr,
+  FuncCall,
   Identifier,
   ListExpr,
   ParenExpr,
@@ -31,6 +32,8 @@ export type AllSelectNodes =
   | IndexedTableRef
   | NotIndexedTableRef
   | UnnestExpr
+  | PivotExpr
+  | PivotForIn
   | JoinOnSpecification
   | JoinUsingSpecification
   | SortSpecification
@@ -104,7 +107,7 @@ export interface SelectClause extends BaseNode {
 export interface FromClause extends BaseNode {
   type: "from_clause";
   fromKw: Keyword<"FROM">;
-  expr: TableOrSubquery | JoinExpr;
+  expr: JoinExprLeft;
 }
 
 export interface WhereClause extends BaseNode {
@@ -167,9 +170,11 @@ export interface LimitClause extends BaseNode {
   offset?: Expr;
 }
 
+type JoinExprLeft = JoinExpr | PivotExpr | TableOrSubquery;
+
 export interface JoinExpr extends BaseNode {
   type: "join_expr";
-  left: JoinExpr | TableOrSubquery;
+  left: JoinExprLeft;
   operator: JoinOp | ",";
   right: TableOrSubquery;
   specification?: JoinOnSpecification | JoinUsingSpecification;
@@ -193,7 +198,7 @@ export type TableOrSubquery =
   | TableFuncCall
   | IndexedTableRef
   | NotIndexedTableRef
-  | ParenExpr<SubSelect | TableOrSubquery | JoinExpr>
+  | ParenExpr<SubSelect | JoinExprLeft>
   | UnnestExpr
   | Alias<TableOrSubquery>;
 
@@ -215,6 +220,20 @@ export interface UnnestExpr extends BaseNode {
   type: "unnest_expr";
   unnestKw: Keyword<"UNNEST">;
   expr: ParenExpr<Expr>;
+}
+export interface PivotExpr extends BaseNode {
+  type: "pivot_expr";
+  left: JoinExprLeft;
+  pivotKw: Keyword<"PIVOT">;
+  args: ParenExpr<PivotForIn>;
+}
+export interface PivotForIn extends BaseNode {
+  type: "pivot_for_in";
+  aggregations: ListExpr<FuncCall | Alias<FuncCall>>;
+  forKw: Keyword<"FOR">;
+  inputColumn: Identifier;
+  inKw: Keyword<"IN">;
+  pivotColumns: ParenExpr<ListExpr<Expr | Alias<Expr>>>;
 }
 
 export interface JoinOnSpecification extends BaseNode {

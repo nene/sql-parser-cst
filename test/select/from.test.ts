@@ -88,5 +88,58 @@ describe("select FROM", () => {
         test("SELECT * FROM tbl1, UNNEST(tbl.foo), tbl2");
       });
     });
+
+    describe("PIVOT operator", () => {
+      it("supports simple PIVOT", () => {
+        test("SELECT * FROM my_table PIVOT(sum(sales) FOR quarter IN ('Q1', 'Q2'))");
+        test(`
+          SELECT * FROM my_table /*c0*/
+          PIVOT /*c1*/ (/*c2*/
+            sum(sales) /*c3*/
+            FOR /*c4*/ quarter /*c5*/
+            IN /*c6*/
+            (/*c7*/ 'Q1', 'Q2' /*c8*/)
+          /*c9*/)
+        `);
+      });
+
+      it("supports aliases in pivot columns list", () => {
+        // TODO: implicit aliases
+        test("SELECT * FROM my_table PIVOT(count(*) FOR quarter IN ('Q1' AS q1, 'Q2' AS q2))");
+        test(`
+          SELECT * FROM my_table
+          PIVOT(
+            count(*) FOR quarter IN
+            ('Q1' /*c1*/ AS /*c2*/ q1, 'Q2' /*c3*/ AS /*c4*/ q2)
+          )
+        `);
+      });
+
+      it("supports multiple aggregations", () => {
+        test("SELECT * FROM my_table PIVOT(sum(sales), count(*) FOR quarter IN ('Q1'))");
+      });
+
+      it("supports aggregations with aliases", () => {
+        test(
+          "SELECT * FROM my_table PIVOT(sum(sales) AS total_sales, count(*) total_cnt FOR quarter IN ('Q1'))"
+        );
+        test(`
+          SELECT * FROM my_table
+          PIVOT(
+            sum(sales) /*c1*/ AS /*c2*/ total_sales /*c3*/,
+            /*c4*/ count(*) /*c5*/ total_cnt /*c6*/
+            FOR quarter IN ('Q1')
+          )
+        `);
+      });
+
+      it("supports PIVOT over subquery", () => {
+        test("SELECT * FROM (SELECT * FROM foo) PIVOT(count(*) FOR col1 IN ('Q1'))");
+      });
+
+      it("supports PIVOT between joins", () => {
+        test("SELECT * FROM foo JOIN bar PIVOT(count(*) FOR col1 IN ('Q1')) JOIN zap");
+      });
+    });
   });
 });

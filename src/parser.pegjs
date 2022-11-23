@@ -213,8 +213,10 @@ explicit_alias
     };
   }
 
+// For now, don't allow PIVOT and UNPIVOT as implicit alias names.
+// In reality bigquery does allow it.
 implicit_alias
-  = id:alias_ident {
+  = id:alias_ident &{ return isBigquery() ? !["PIVOT", "UNPIVOT"].includes(id.name.toUpperCase()) : true; } {
     return { alias: id };
   }
 
@@ -232,7 +234,7 @@ from_clause
   }
 
 join_expr
-  = head:table_or_subquery tail:(__ join_expr_right)* {
+  = head:table_or_subquery tail:(__ (join_expr_right / pivot_expr_right))* {
     return createJoinExprChain(head, tail);
   }
 
@@ -244,6 +246,47 @@ join_expr_right
       right: read(right),
       specification: read(spec),
     };
+  }
+
+pivot_expr_right
+  = &bigquery kw:(PIVOT __) args:pivot_for_in_parens {
+    return {
+      type: "pivot_expr_right",
+      pivotKw: read(kw),
+      args,
+    };
+  }
+
+pivot_for_in_parens
+  = "(" c1:__ forIn:pivot_for_in c2:__ ")" {
+    return loc(createParenExpr(c1, forIn, c2));
+  }
+
+pivot_for_in
+  = fns:(func_call_or_alias_list __) forKw:(FOR __) col:(column __) inKw:(IN __) pCols:expr_or_alias_list_parens {
+    return loc({
+      type: "pivot_for_in",
+      aggregations: read(fns),
+      forKw: read(forKw),
+      inputColumn: read(col),
+      inKw: read(inKw),
+      pivotColumns: pCols,
+    });
+  }
+
+func_call_or_alias_list
+  = head:func_call_or_alias tail:(__ "," __ func_call_or_alias)* {
+    return loc(createListExpr(head, tail));
+  }
+
+func_call_or_alias
+  = fn:func_call alias:(__ alias)? {
+    return loc(createAlias(fn, alias));
+  }
+
+expr_or_alias_list_parens
+  = "(" c1:__ list:expr_or_alias_list c2:__ ")" {
+    return loc(createParenExpr(c1, list, c2));
   }
 
 table_or_subquery
@@ -3418,6 +3461,7 @@ PASSWORD            = kw:"PASSWORD"i            !ident_part { return loc(createK
 PERCENT_RANK        = kw:"PERCENT_RANK"i        !ident_part { return loc(createKeyword(kw)); }
 PERSIST             = kw:"PERSIST"i             !ident_part { return loc(createKeyword(kw)); }
 PERSIST_ONLY        = kw:"PERSIST_ONLY"i        !ident_part { return loc(createKeyword(kw)); }
+PIVOT               = kw:"PIVOT"i               !ident_part { return loc(createKeyword(kw)); }
 PLAN                = kw:"PLAN"i                !ident_part { return loc(createKeyword(kw)); }
 PRAGMA              = kw:"PRAGMA"i              !ident_part { return loc(createKeyword(kw)); }
 PRECEDING           = kw:"PRECEDING"i           !ident_part { return loc(createKeyword(kw)); }

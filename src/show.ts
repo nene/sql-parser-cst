@@ -55,6 +55,15 @@ const showNode = cstTransformer<string>({
     show([node.left, node.operator, node.right, node.specification]),
   join_on_specification: (node) => show([node.onKw, node.expr]),
   join_using_specification: (node) => show([node.usingKw, node.expr]),
+  pivot_expr: (node) => show([node.left, node.pivotKw, node.args]),
+  pivot_for_in: (node) =>
+    show([
+      node.aggregations,
+      node.forKw,
+      node.inputColumn,
+      node.inKw,
+      node.pivotColumns,
+    ]),
   sort_specification: (node) =>
     show([node.expr, node.orderKw, node.nullHandlingKw]),
   // WHERE .. GROUP BY .. HAVING .. QUALIFY ... ORDER BY .. PARTITION BY
