@@ -1,4 +1,4 @@
-import { dialect, parseExpr, test, testExpr } from "../test_utils";
+import { dialect, parseExpr, testExpr } from "../test_utils";
 
 describe("function call", () => {
   it("supports simple function call", () => {
@@ -108,12 +108,8 @@ describe("function call", () => {
       testExpr(`ARRAY(SELECT * FROM tbl)`);
     });
 
-    it("supports hmm...", () => {
-      test(`
-      SELECT
-        foo(bar(baz(zap())))
-      FROM
-        transactions`);
+    it("supports COLLATE function", () => {
+      testExpr(`COLLATE('abc', 'und:ci')`);
     });
   });
 });

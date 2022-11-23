@@ -2502,6 +2502,7 @@ bigquery_func_keyword
   = LEFT
   / RIGHT
   / ARRAY
+  / COLLATE
 
 paren_less_func_name
   = kw:(
