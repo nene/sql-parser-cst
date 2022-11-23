@@ -12,11 +12,25 @@ function getTestData(dialect: string) {
   );
 }
 
-const testData = {
-  sqlite: getTestData("sqlite"),
-  mysql: getTestData("mysql"),
-  bigquery: getTestData("bigquery"),
-};
+function createTestData(variant: string) {
+  if (variant === "func") {
+    return {
+      sqlite: "SELECT foo(bar(baz()))",
+      mysql: "SELECT foo(bar(baz()))",
+      bigquery: "SELECT foo(bar(baz()))",
+    };
+  } else if (variant === "big") {
+    return {
+      sqlite: getTestData("sqlite"),
+      mysql: getTestData("mysql"),
+      bigquery: getTestData("bigquery"),
+    };
+  } else {
+    throw new Error(`Unknown test data variant: ${variant}`);
+  }
+}
+
+const testData = createTestData(process.argv[2]);
 
 const suite = new benchmark.Suite();
 suite.add("sqlite", () => {
