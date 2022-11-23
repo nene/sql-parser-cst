@@ -104,13 +104,12 @@ describe("select FROM", () => {
       });
 
       it("supports aliases in pivot columns list", () => {
-        // TODO: implicit aliases
-        test("SELECT * FROM my_table PIVOT(count(*) FOR quarter IN ('Q1' AS q1, 'Q2' AS q2))");
+        test("SELECT * FROM my_table PIVOT(count(*) FOR quarter IN ('Q1' AS q1, 'Q2' q2))");
         test(`
           SELECT * FROM my_table
           PIVOT(
             count(*) FOR quarter IN
-            ('Q1' /*c1*/ AS /*c2*/ q1, 'Q2' /*c3*/ AS /*c4*/ q2)
+            ('Q1' /*c1*/ AS /*c2*/ q1, 'Q2' /*c3*/ q2)
           )
         `);
       });

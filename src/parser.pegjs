@@ -289,6 +289,16 @@ expr_or_alias_list_parens
     return loc(createParenExpr(c1, list, c2));
   }
 
+expr_or_alias_list
+  = head:expr_or_alias tail:(__ "," __ expr_or_alias)* {
+    return loc(createListExpr(head, tail))
+  }
+
+expr_or_alias
+  = e:expr alias:(__ alias)? {
+    return loc(createAlias(e, alias));
+  }
+
 table_or_subquery
   = t:(unnest_expr / table_func_call / paren_expr_join / paren_expr_select) alias:(__ alias)? {
     return loc(createAlias(t, alias));
@@ -2810,7 +2820,7 @@ typed_struct_expr
   / untyped_struct_expr
 
 struct_expr
-  = "(" expr:(__ expr_or_alias_list __) ")" {
+  = "(" expr:(__ expr_or_explicit_alias_list __) ")" {
     return loc({
       type: "struct_expr",
       expr: read(expr),
@@ -2825,12 +2835,12 @@ untyped_struct_expr
     });
   }
 
-expr_or_alias_list
-  = head:expr_or_alias tail:(__ "," __ expr_or_alias)* {
+expr_or_explicit_alias_list
+  = head:expr_or_explicit_alias tail:(__ "," __ expr_or_explicit_alias)* {
     return loc(createListExpr(head, tail))
   }
 
-expr_or_alias
+expr_or_explicit_alias
   = e:expr alias:(__ explicit_alias)? {
     return loc(createAlias(e, alias));
   }
