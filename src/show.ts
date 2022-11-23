@@ -341,8 +341,6 @@ const showNode = cstTransformer<string>({
   over_arg: (node) => show([node.overKw, node.window]),
   between_expr: (node) =>
     show([node.left, node.betweenKw, node.begin, node.andKw, node.end]),
-  datetime: (node) => show([node.kw, node.string]),
-  string_with_charset: (node) => "_" + node.charset + show(node.string),
   case_expr: (node) => show([node.caseKw, node.expr, node.clauses, node.endKw]),
   case_when: (node) =>
     show([node.whenKw, node.condition, node.thenKw, node.result]),
@@ -372,6 +370,11 @@ const showNode = cstTransformer<string>({
   not_indexed_table_ref: (node) => show([node.table, node.notIndexedKw]),
   unnest_expr: (node) => show([node.unnestKw, node.expr]),
   all_columns: () => "*",
+
+  // special literals
+  string_with_charset: (node) => "_" + node.charset + show(node.string),
+  datetime: (node) => show([node.kw, node.string]),
+  json: (node) => show([node.jsonKw, node.string]),
 
   // Basic language elements
   keyword: (node) => node.text,

@@ -6,7 +6,8 @@ export type Literal =
   | BlobLiteral
   | BooleanLiteral
   | NullLiteral
-  | DateTimeLiteral;
+  | DateTimeLiteral
+  | JsonLiteral;
 
 export interface StringLiteral extends BaseNode {
   type: "string";
@@ -41,5 +42,11 @@ export interface NullLiteral extends BaseNode {
 export interface DateTimeLiteral extends BaseNode {
   type: "datetime";
   kw: Keyword<"TIME" | "DATE" | "TIMESTAMP" | "DATETIME">;
+  string: StringLiteral;
+}
+
+export interface JsonLiteral extends BaseNode {
+  type: "json";
+  jsonKw: Keyword<"JSON">;
   string: StringLiteral;
 }

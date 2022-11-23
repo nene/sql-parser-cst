@@ -2871,6 +2871,7 @@ literal
   / literal_boolean
   / literal_null
   / literal_datetime
+  / literal_json
 
 literal_null
   = kw:NULL {
@@ -3098,6 +3099,15 @@ literal_datetime
         string: read(str)
       });
     }
+
+literal_json
+  = &bigquery kw:JSON str:(__ literal_plain_string) {
+    return loc({
+      type: "json",
+      jsonKw: kw,
+      string: read(str),
+    });
+  }
 
 literal_blob
   = literal_hex_blob
