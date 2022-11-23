@@ -103,19 +103,19 @@ const deriveJoinLoc = (join: JoinExpr): JoinExpr => {
   return { ...join, range: [start, end] };
 };
 
+interface JoinExprRight {
+  type: "join_expr_right";
+  operator: JoinExpr["operator"];
+  right: JoinExpr["right"];
+  specification: JoinExpr["specification"];
+}
+
 export function createJoinExprChain(
   head: JoinExpr["left"],
-  tail: [
-    Whitespace[],
-    JoinExpr["operator"],
-    Whitespace[],
-    JoinExpr["right"],
-    JoinExpr["specification"] | null
-  ][]
+  tail: [Whitespace[], JoinExprRight][]
 ) {
   return tail.reduce(
-    (left, [c1, op, c2, right, spec]) =>
-      deriveJoinLoc(createJoinExpr(left, c1, op, c2, right, spec)),
+    (left, [c1, right]) => deriveJoinLoc(createJoinExpr(left, c1, right)),
     head
   );
 }
@@ -123,17 +123,14 @@ export function createJoinExprChain(
 function createJoinExpr(
   left: JoinExpr["left"],
   c1: Whitespace[],
-  op: JoinExpr["operator"],
-  c2: Whitespace[],
-  right: JoinExpr["right"],
-  spec: JoinExpr["specification"] | null
+  right: JoinExprRight
 ): JoinExpr {
   return {
     type: "join_expr",
     left: trailing(left, c1) as JoinExpr["left"],
-    operator: op,
-    right: leading(right, c2) as JoinExpr["right"],
-    specification: read(spec),
+    operator: right.operator,
+    right: right.right,
+    specification: right.specification,
   };
 }
 

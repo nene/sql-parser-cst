@@ -232,8 +232,18 @@ from_clause
   }
 
 join_expr
-  = head:table_or_subquery tail:(__ (join_op / ",") __ table_or_subquery (__ join_specification)?)* {
+  = head:table_or_subquery tail:(__ join_expr_right)* {
     return createJoinExprChain(head, tail);
+  }
+
+join_expr_right
+  = op:(join_op / ",") right:(__ table_or_subquery) spec:(__ join_specification)? {
+    return {
+      type: "join_expr_right",
+      operator: op,
+      right: read(right),
+      specification: read(spec),
+    };
   }
 
 table_or_subquery
