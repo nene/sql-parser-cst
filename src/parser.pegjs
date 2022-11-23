@@ -237,19 +237,10 @@ join_expr
   }
 
 table_or_subquery
-  = t:unnest_expr alias:(__ alias)? {
-    return loc(createAlias(t, alias));
-  }
-  / t:table_func_call alias:(__ alias)? {
+  = t:(unnest_expr / table_func_call / paren_expr_join / paren_expr_select) alias:(__ alias)? {
     return loc(createAlias(t, alias));
   }
   / table_ref_or_alias
-  / t:paren_expr_join alias:(__ alias)? {
-    return loc(createAlias(t, alias));
-  }
-  / t:paren_expr_select alias:(__ alias)? {
-    return loc(createAlias(t, alias));
-  }
 
 table_ref_or_alias
   = &sqlite table:(table_ref_or_alias_standard __) kw:(INDEXED __ BY) id:(__ ident) {
