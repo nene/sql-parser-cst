@@ -15,6 +15,7 @@ function getTestData(dialect: string) {
 const testData = {
   sqlite: getTestData("sqlite"),
   mysql: getTestData("mysql"),
+  bigquery: getTestData("bigquery"),
 };
 
 const suite = new benchmark.Suite();
@@ -23,6 +24,9 @@ suite.add("sqlite", () => {
 });
 suite.add("mysql", () => {
   parse(testData.mysql, { dialect: "mysql" });
+});
+suite.add("bigquery", () => {
+  parse(testData.bigquery, { dialect: "bigquery" });
 });
 suite.on("cycle", (event: benchmark.Event) => {
   console.log(String(event.target));
