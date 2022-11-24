@@ -11,6 +11,12 @@ describe("type cast", () => {
     it("supports SAFE_CAST", () => {
       testExpr(`SAFE_CAST(x AS INT)`);
     });
+
+    it("supports CAST with FORMAT", () => {
+      testExpr(`CAST('86-11-08' AS DATE FORMAT 'YY-MM-DD')`);
+      testExpr(`CAST(1024 AS STRING FORMAT get_fmt(4))`);
+      testExpr(`CAST(8 AS STRING /*c1*/ FORMAT /*c2*/ '$99' /*c3*/)`);
+    });
   });
 
   // To make sure we don't parse it as normal function call
@@ -37,6 +43,7 @@ describe("type cast", () => {
               "type": "number",
               "value": 10,
             },
+            "format": undefined,
             "type": "cast_arg",
           },
           "type": "paren_expr",

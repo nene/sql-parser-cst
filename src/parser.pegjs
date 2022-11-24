@@ -2491,12 +2491,22 @@ cast_args_in_parens
   }
 
 cast_arg
-  = e:(expr __) kw:AS t:(__ data_type) {
+  = e:(expr __) kw:AS t:(__ data_type) f:(__ cast_format)? {
     return loc({
       type: "cast_arg",
       expr: read(e),
       asKw: kw,
       dataType: read(t),
+      format: read(f),
+    });
+  }
+
+cast_format
+  = &bigquery kw:(FORMAT __) e:expr {
+    return loc({
+      type: "cast_format",
+      formatKw: read(kw),
+      string: e,
     });
   }
 
@@ -3527,6 +3537,7 @@ FLOAT64             = kw:"FLOAT64"i             !ident_part { return loc(createK
 FOLLOWING           = kw:"FOLLOWING"i           !ident_part { return loc(createKeyword(kw)); }
 FOR                 = kw:"FOR"i                 !ident_part { return loc(createKeyword(kw)); }
 FOREIGN             = kw:"FOREIGN"i             !ident_part { return loc(createKeyword(kw)); }
+FORMAT              = kw:"FORMAT"i              !ident_part { return loc(createKeyword(kw)); }
 FRIDAY              = kw:"FRIDAY"i              !ident_part { return loc(createKeyword(kw)); }
 FROM                = kw:"FROM"i                !ident_part { return loc(createKeyword(kw)); }
 FULL                = kw:"FULL"i                !ident_part { return loc(createKeyword(kw)); }

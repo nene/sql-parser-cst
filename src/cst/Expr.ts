@@ -8,6 +8,7 @@ export type AllExprNodes =
   | Expr
   | DistinctArg
   | CastArg
+  | CastFormat
   | ExtractFrom
   | FilterArg
   | OverArg
@@ -121,6 +122,13 @@ export interface CastArg extends BaseNode {
   expr: Expr;
   asKw: Keyword<"AS">;
   dataType: DataType;
+  format?: CastFormat;
+}
+
+export interface CastFormat extends BaseNode {
+  type: "cast_format";
+  formatKw: Keyword<"FORMAT">;
+  string: Expr;
 }
 
 export interface RaiseExpr extends BaseNode {
