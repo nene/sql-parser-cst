@@ -234,9 +234,10 @@ from_clause
   }
 
 join_expr
-  = head:table_or_subquery tail:(__ (join_expr_right / pivot_expr_right / unpivot_expr_right))* {
-    return createJoinExprChain(head, tail);
-  }
+  = head:table_or_subquery
+    tail:(__ (join_expr_right / pivot_expr_right / unpivot_expr_right / tablesample_expr_right))* {
+      return createJoinExprChain(head, tail);
+    }
 
 join_expr_right
   = op:(join_op / ",") right:(__ table_or_subquery) spec:(__ join_specification)? {
@@ -331,7 +332,7 @@ on_clause
   }
 
 //
-// BigQuery-specific FROM-clause syntax: UNNEST / PIVIT / UNPIVOT
+// BigQuery-specific FROM-clause syntax: UNNEST / PIVIT / UNPIVOT / TABLESAMPLE
 //
 
 // UNNEST .......................................................
@@ -456,6 +457,30 @@ paren_column_list_or_alias_list
 paren_column_list_or_alias
   = list:paren_column_list alias:(__ alias)? {
     return loc(createAlias(list, alias));
+  }
+
+// TABLESAMPLE ........................................................
+tablesample_expr_right
+  = &bigquery kw:(TABLESAMPLE __ SYSTEM __) args:tablesample_percent_paren {
+    return {
+      type: "tablesample_expr_right",
+      tablesampleKw: read(kw),
+      args,
+    };
+  }
+
+tablesample_percent_paren
+  = "(" c1:__ perc:tablesample_percent c2:__ ")" {
+    return loc(createParenExpr(c1, perc, c2));
+  }
+
+tablesample_percent
+  = p:(literal / parameter) kw:(__ PERCENT) {
+    return loc({
+      type: "tablesample_percent",
+      percent: p,
+      percentKw: read(kw),
+    });
   }
 
 /**
@@ -3573,6 +3598,7 @@ PARSER              = kw:"PARSER"i              !ident_part { return loc(createK
 PARTIAL             = kw:"PARTIAL"i             !ident_part { return loc(createKeyword(kw)); }
 PARTITION           = kw:"PARTITION"i           !ident_part { return loc(createKeyword(kw)); }
 PASSWORD            = kw:"PASSWORD"i            !ident_part { return loc(createKeyword(kw)); }
+PERCENT             = kw:"PERCENT"i             !ident_part { return loc(createKeyword(kw)); }
 PERCENT_RANK        = kw:"PERCENT_RANK"i        !ident_part { return loc(createKeyword(kw)); }
 PERSIST             = kw:"PERSIST"i             !ident_part { return loc(createKeyword(kw)); }
 PERSIST_ONLY        = kw:"PERSIST_ONLY"i        !ident_part { return loc(createKeyword(kw)); }
@@ -3652,9 +3678,11 @@ STRING              = kw:"STRING"i              !ident_part { return loc(createK
 STRUCT              = kw:"STRUCT"i              !ident_part { return loc(createKeyword(kw)); }
 SUM                 = kw:"SUM"i                 !ident_part { return loc(createKeyword(kw)); }
 SUNDAY              = kw:"SUNDAY"i              !ident_part { return loc(createKeyword(kw)); }
+SYSTEM              = kw:"SYSTEM"i              !ident_part { return loc(createKeyword(kw)); }
 SYSTEM_USER         = kw:"SYSTEM_USER"i         !ident_part { return loc(createKeyword(kw)); }
 TABLE               = kw:"TABLE"i               !ident_part { return loc(createKeyword(kw)); }
 TABLES              = kw:"TABLES"i              !ident_part { return loc(createKeyword(kw)); }
+TABLESAMPLE         = kw:"TABLESAMPLE"i         !ident_part { return loc(createKeyword(kw)); }
 TEMP                = kw:"TEMP"i                !ident_part { return loc(createKeyword(kw)); }
 TEMPORARY           = kw:"TEMPORARY"i           !ident_part { return loc(createKeyword(kw)); }
 TEMPTABLE           = kw:"TEMPTABLE"i           !ident_part { return loc(createKeyword(kw)); }

@@ -74,6 +74,8 @@ const showNode = cstTransformer<string>({
       node.inKw,
       node.unpivotColumns,
     ]),
+  tablesample_expr: (node) => show([node.left, node.tablesampleKw, node.args]),
+  tablesample_percent: (node) => show([node.percent, node.percentKw]),
   sort_specification: (node) =>
     show([node.expr, node.orderKw, node.nullHandlingKw]),
   // WHERE .. GROUP BY .. HAVING .. QUALIFY ... ORDER BY .. PARTITION BY

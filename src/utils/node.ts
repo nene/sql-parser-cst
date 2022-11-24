@@ -16,6 +16,7 @@ import {
   MemberExpr,
   PivotExpr,
   UnpivotExpr,
+  TablesampleExpr,
 } from "../cst/Node";
 import { leading, surrounding, trailing } from "./whitespace";
 import { readCommaSepList } from "./list";
@@ -104,9 +105,9 @@ const deriveJoinLoc = (join: JoinExpr): JoinExpr => {
   return { ...join, range: [start, end] };
 };
 
-const derivePivotLoc = (
-  pivot: PivotExpr | UnpivotExpr
-): PivotExpr | UnpivotExpr => {
+const derivePivotlikeLoc = <T extends { left: Node; args: Node }>(
+  pivot: T
+): T => {
   if (!pivot.left.range || !pivot.args.range) {
     return pivot;
   }
@@ -135,18 +136,29 @@ interface UnpivotExprRight {
   args: UnpivotExpr["args"];
 }
 
+interface TablesampleExprRight {
+  type: "tablesample_expr_right";
+  tablesampleKw: TablesampleExpr["tablesampleKw"];
+  args: TablesampleExpr["args"];
+}
+
 export function createJoinExprChain(
   head: JoinExpr["left"],
-  tail: [Whitespace[], JoinExprRight | PivotExprRight | UnpivotExprRight][]
+  tail: [
+    Whitespace[],
+    JoinExprRight | PivotExprRight | UnpivotExprRight | TablesampleExprRight
+  ][]
 ) {
   return tail.reduce((left, [c1, right]) => {
     switch (right.type) {
       case "join_expr_right":
         return deriveJoinLoc(createJoinExpr(left, c1, right));
       case "pivot_expr_right":
-        return derivePivotLoc(createPivotExpr(left, c1, right));
+        return derivePivotlikeLoc(createPivotExpr(left, c1, right));
       case "unpivot_expr_right":
-        return derivePivotLoc(createUnpivotExpr(left, c1, right));
+        return derivePivotlikeLoc(createUnpivotExpr(left, c1, right));
+      case "tablesample_expr_right":
+        return derivePivotlikeLoc(createTablesampleExpr(left, c1, right));
     }
   }, head);
 }
@@ -188,6 +200,19 @@ function createUnpivotExpr(
     left: trailing(left, c1) as UnpivotExpr["left"],
     unpivotKw: right.unpivotKw,
     nullHandlingKw: right.nullHandlingKw,
+    args: right.args,
+  };
+}
+
+function createTablesampleExpr(
+  left: TablesampleExpr["left"],
+  c1: Whitespace[],
+  right: TablesampleExprRight
+): TablesampleExpr {
+  return {
+    type: "tablesample_expr",
+    left: trailing(left, c1) as TablesampleExpr["left"],
+    tablesampleKw: right.tablesampleKw,
     args: right.args,
   };
 }

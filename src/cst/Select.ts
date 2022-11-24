@@ -36,6 +36,8 @@ export type AllSelectNodes =
   | PivotForIn
   | UnpivotExpr
   | UnpivotForIn
+  | TablesampleExpr
+  | TablesamplePercent
   | JoinOnSpecification
   | JoinUsingSpecification
   | SortSpecification
@@ -172,7 +174,12 @@ export interface LimitClause extends BaseNode {
   offset?: Expr;
 }
 
-type TableExpr = JoinExpr | PivotExpr | UnpivotExpr | TableOrSubquery;
+type TableExpr =
+  | JoinExpr
+  | PivotExpr
+  | UnpivotExpr
+  | TablesampleExpr
+  | TableOrSubquery;
 
 export interface JoinExpr extends BaseNode {
   type: "join_expr";
@@ -261,6 +268,17 @@ export interface UnpivotForIn extends BaseNode {
           | Alias<ParenExpr<ListExpr<Identifier>>>
         >
       >;
+}
+export interface TablesampleExpr extends BaseNode {
+  type: "tablesample_expr";
+  left: TableExpr;
+  tablesampleKw: [Keyword<"TABLESAMPLE">, Keyword<"SYSTEM">];
+  args: ParenExpr<TablesamplePercent>;
+}
+export interface TablesamplePercent extends BaseNode {
+  type: "tablesample_percent";
+  percent: Expr;
+  percentKw: Keyword<"PERCENT">;
 }
 
 export interface JoinOnSpecification extends BaseNode {

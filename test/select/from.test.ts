@@ -211,5 +211,18 @@ describe("select FROM", () => {
         test("SELECT * FROM foo JOIN bar UNPIVOT(sales FOR col1 IN (Q1)) JOIN zap");
       });
     });
+
+    describe("TABLESAMPLE operator", () => {
+      it("supports TABLESAMPLE", () => {
+        test("SELECT * FROM my_table TABLESAMPLE SYSTEM (10 PERCENT)");
+        test(
+          "SELECT * FROM my_table TABLESAMPLE /*c0*/ SYSTEM /*c1*/ (/*c*/ 25 /*c*/ PERCENT /*c*/)"
+        );
+      });
+
+      it("supports TABLESAMPLE inside JOIN", () => {
+        test("SELECT * FROM tbl1 TABLESAMPLE SYSTEM (1 percent) JOIN tbl2");
+      });
+    });
   });
 });
