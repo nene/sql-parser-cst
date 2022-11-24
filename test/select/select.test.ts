@@ -63,6 +63,21 @@ describe("select", () => {
       test("SELECT foo, bar, FROM tbl");
       test("SELECT foo /*c1*/, /*c2*/ FROM tbl");
     });
+
+    it("supports SELECT AS STRUCT", () => {
+      test("SELECT AS STRUCT 1 a, 2 b");
+      test("SELECT /*c1*/ AS /*c2*/ STRUCT /*c3*/ 1 a, 2 b");
+    });
+
+    it("supports SELECT AS VALUE", () => {
+      test("SELECT AS VALUE STRUCT(1 AS a, 2 AS b)");
+      test("SELECT /*c1*/ AS /*c2*/ VALUE /*c3*/ STRUCT(1 AS a, 2 AS b)");
+    });
+
+    it("supports SELECT {ALL | DISTINCT} AS {STRUCT | VALUE}", () => {
+      test("SELECT ALL AS STRUCT 1 a, 2 b");
+      test("SELECT DISTINCT AS VALUE STRUCT(1 AS a, 2 AS b)");
+    });
   });
 
   describe("syntax tree", () => {
@@ -71,6 +86,7 @@ describe("select", () => {
         {
           "clauses": [
             {
+              "asStructOrValueKw": undefined,
               "columns": {
                 "items": [
                   {
@@ -131,6 +147,7 @@ describe("select", () => {
         {
           "clauses": [
             {
+              "asStructOrValueKw": undefined,
               "columns": {
                 "items": [
                   {
@@ -173,6 +190,7 @@ describe("select", () => {
         {
           "clauses": [
             {
+              "asStructOrValueKw": undefined,
               "columns": {
                 "items": [
                   {

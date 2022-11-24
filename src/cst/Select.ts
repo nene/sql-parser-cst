@@ -106,6 +106,7 @@ export interface SelectClause extends BaseNode {
     | "SQL_SMALL_RESULT"
     | "SQL_BUFFER_RESULT"
   >[];
+  asStructOrValueKw?: [Keyword<"AS">, Keyword<"STRUCT" | "VALUE">];
   columns: ListExpr<Expr | Alias<Expr> | Empty>;
 }
 

@@ -12,6 +12,7 @@ describe("location", () => {
           {
             "clauses": [
               {
+                "asStructOrValueKw": undefined,
                 "columns": {
                   "items": [
                     {

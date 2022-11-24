@@ -153,11 +153,13 @@ other_clause
 select_clause
   = selectKw:SELECT
     options:(__ select_option)*
+    asKw:(__ AS __ (STRUCT / VALUE))?
     columns:(__ select_columns) {
       return loc({
         type: "select_clause",
         selectKw,
         options: options.map(read),
+        asStructOrValueKw: read(asKw),
         columns: read(columns),
       });
     }
