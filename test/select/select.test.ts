@@ -82,6 +82,7 @@ describe("select", () => {
     describe("EXCEPT()", () => {
       it("supports SELECT * EXCEPT()", () => {
         test("SELECT * EXCEPT (col1, col2)");
+        test("SELECT /*c0*/ * /*c1*/ EXCEPT /*c2*/ (/*c3*/ col1 /*c4*/,/*c5*/ col2 /*c6*/)");
       });
 
       it("supports SELECT tbl.* EXCEPT()", () => {
@@ -96,6 +97,11 @@ describe("select", () => {
     describe("REPLACE()", () => {
       it("supports SELECT * REPLACE()", () => {
         test("SELECT * REPLACE ('hello' AS col1, 10+5 col2)");
+        test(`
+          SELECT /*c0*/ * /*c1*/ REPLACE /*c2*/ (
+            /*c3*/ 'hello' /*c4*/ AS /*c5*/ col1 /*c6*/,
+            /*c7*/ 18 /*c8*/ col2 /*c9*/
+          )`);
       });
 
       it("supports SELECT tbl.* REPLACE()", () => {
