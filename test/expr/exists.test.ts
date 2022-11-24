@@ -30,6 +30,7 @@ describe("EXISTS expression", () => {
                     ],
                     "type": "list_expr",
                   },
+                  "distinctKw": undefined,
                   "options": [],
                   "selectKw": {
                     "name": "SELECT",

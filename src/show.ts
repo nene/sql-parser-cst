@@ -49,7 +49,13 @@ const showNode = cstTransformer<string>({
     show([node.table, node.columns, node.asKw, node.optionKw, node.expr]),
   // SELECT
   select_clause: (node) =>
-    show([node.selectKw, node.options, node.asStructOrValueKw, node.columns]),
+    show([
+      node.selectKw,
+      node.distinctKw,
+      node.options,
+      node.asStructOrValueKw,
+      node.columns,
+    ]),
   // FROM
   from_clause: (node) => show([node.fromKw, node.expr]),
   join_expr: (node) =>

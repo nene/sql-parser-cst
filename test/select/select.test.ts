@@ -107,6 +107,7 @@ describe("select", () => {
                 ],
                 "type": "list_expr",
               },
+              "distinctKw": undefined,
               "options": [],
               "selectKw": {
                 "name": "SELECT",
@@ -171,6 +172,7 @@ describe("select", () => {
                 ],
                 "type": "list_expr",
               },
+              "distinctKw": undefined,
               "options": [],
               "selectKw": {
                 "name": "SELECT",
@@ -209,6 +211,7 @@ describe("select", () => {
                 ],
                 "type": "list_expr",
               },
+              "distinctKw": undefined,
               "options": [],
               "selectKw": {
                 "name": "SELECT",

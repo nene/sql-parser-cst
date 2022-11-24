@@ -152,33 +152,37 @@ other_clause
  */
 select_clause
   = selectKw:SELECT
+    distinctKw:(__ distinct_kw)?
     options:(__ select_option)*
     asKw:(__ AS __ (STRUCT / VALUE))?
     columns:(__ select_columns) {
       return loc({
         type: "select_clause",
         selectKw,
+        distinctKw: read(distinctKw),
         options: options.map(read),
         asStructOrValueKw: read(asKw),
         columns: read(columns),
       });
     }
 
-select_option
+distinct_kw
   = ALL
   / DISTINCT
-  / &mysql kw:select_option_mysql { return kw; }
+  / &mysql kw:DISTINCTROW { return kw; }
 
-select_option_mysql
-  = DISTINCTROW
-  / HIGH_PRIORITY
+select_option
+  = &mysql kw:(
+    HIGH_PRIORITY
   / STRAIGHT_JOIN
   / SQL_CALC_FOUND_ROWS
   / SQL_CACHE
   / SQL_NO_CACHE
   / SQL_BIG_RESULT
   / SQL_SMALL_RESULT
-  / SQL_BUFFER_RESULT
+  / SQL_BUFFER_RESULT) {
+    return kw;
+  }
 
 select_columns
   = head:column_list_item tail:(__ "," __ column_list_item)* trailing:(__ "," __ empty)? {

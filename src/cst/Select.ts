@@ -93,10 +93,8 @@ export interface CommonTableExpression extends BaseNode {
 export interface SelectClause extends BaseNode {
   type: "select_clause";
   selectKw: Keyword<"SELECT">;
+  distinctKw?: Keyword<"ALL" | "DISTINCT" | "DISTINCTROW">;
   options: Keyword<
-    | "ALL"
-    | "DISTINCT"
-    | "DISTINCTROW"
     | "HIGH_PRIORITY"
     | "STRAIGHT_JOIN"
     | "SQL_CALC_FOUND_ROWS"
