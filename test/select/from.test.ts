@@ -96,6 +96,25 @@ describe("select FROM", () => {
         test("SELECT * FROM UNNEST(tbl.foo) AS blah");
       });
 
+      it("supports UNNEST .. WITH OFFSET", () => {
+        test("SELECT * FROM UNNEST([1,2,3]) WITH OFFSET");
+      });
+
+      it("supports UNNEST+alias .. WITH OFFSET", () => {
+        test("SELECT * FROM UNNEST([1,2,3]) AS my_numbers WITH OFFSET");
+        test("SELECT * FROM UNNEST([1,2,3]) my_numbers WITH OFFSET");
+      });
+
+      it("supports UNNEST .. WITH OFFSET+alias", () => {
+        test("SELECT * FROM UNNEST([1,2,3]) WITH OFFSET AS my_numbers");
+        test("SELECT * FROM UNNEST([1,2,3]) WITH OFFSET my_numbers");
+        test(`
+          SELECT * FROM
+            UNNEST([1,2,3]) /*c1*/ AS /*c2*/ my_nums /*c3*/
+            WITH /*c4*/ OFFSET /*c5*/ AS /*c6*/ my_numbers
+        `);
+      });
+
       it("supports UNNEST comma-joined with other tables", () => {
         test("SELECT * FROM tbl1, UNNEST(tbl.foo), tbl2");
       });

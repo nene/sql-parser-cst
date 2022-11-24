@@ -31,6 +31,7 @@ export type AllSelectNodes =
   | JoinExpr
   | IndexedTableRef
   | NotIndexedTableRef
+  | UnnestWithOffsetExpr
   | UnnestExpr
   | PivotExpr
   | PivotForIn
@@ -208,6 +209,7 @@ export type TableOrSubquery =
   | IndexedTableRef
   | NotIndexedTableRef
   | ParenExpr<SubSelect | TableExpr>
+  | UnnestWithOffsetExpr
   | UnnestExpr
   | Alias<TableOrSubquery>;
 
@@ -225,6 +227,11 @@ export interface NotIndexedTableRef extends BaseNode {
 }
 
 // BigQuery only
+export interface UnnestWithOffsetExpr extends BaseNode {
+  type: "unnest_with_offset_expr";
+  unnest: UnnestExpr | Alias<UnnestExpr>;
+  withOffsetKw: [Keyword<"WITH">, Keyword<"OFFSET">];
+}
 export interface UnnestExpr extends BaseNode {
   type: "unnest_expr";
   unnestKw: Keyword<"UNNEST">;

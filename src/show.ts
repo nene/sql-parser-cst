@@ -381,6 +381,7 @@ const showNode = cstTransformer<string>({
   indexed_table_ref: (node) => show([node.table, node.indexedByKw, node.index]),
   not_indexed_table_ref: (node) => show([node.table, node.notIndexedKw]),
   unnest_expr: (node) => show([node.unnestKw, node.expr]),
+  unnest_with_offset_expr: (node) => show([node.unnest, node.withOffsetKw]),
   all_columns: () => "*",
 
   // special literals

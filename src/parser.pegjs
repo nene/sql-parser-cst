@@ -250,7 +250,7 @@ join_expr_right
   }
 
 table_or_subquery
-  = t:(unnest_expr / table_func_call / paren_expr_join / paren_expr_select) alias:(__ alias)? {
+  = t:(unnest_with_offset_expr / table_func_call / paren_expr_join / paren_expr_select) alias:(__ alias)? {
     return loc(createAlias(t, alias));
   }
   / table_ref_or_alias
@@ -332,12 +332,27 @@ on_clause
   }
 
 //
-// BigQuery-specific FROM-clause syntax: UNNEST / PIVIT / UNPIVOT / TABLESAMPLE
+// BigQuery-specific FROM-clause syntax: UNNEST / PIVOT / UNPIVOT / TABLESAMPLE
 //
 
 // UNNEST .......................................................
+unnest_with_offset_expr
+  = &bigquery unnest:unnest_expr_or_alias kw:(__ WITH __ OFFSET) {
+    return loc({
+      type: "unnest_with_offset_expr",
+      unnest,
+      withOffsetKw: read(kw),
+    });
+  }
+  / unnest_expr
+
+unnest_expr_or_alias
+  = e:unnest_expr alias:(__ alias)? {
+    return loc(createAlias(e, alias));
+  }
+
 unnest_expr
-  = &bigquery kw:(UNNEST __) expr:paren_expr {
+  = kw:(UNNEST __) expr:paren_expr {
     return loc({
       type: "unnest_expr",
       unnestKw: read(kw),
