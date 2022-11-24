@@ -76,7 +76,11 @@ export function parseExpr(
     );
   }
   const result = clause.columns.items[0];
-  if (result.type === "alias" || result.type === "empty") {
+  if (
+    result.type === "alias" ||
+    result.type === "empty" ||
+    result.type === "all_columns"
+  ) {
     throw new Error(`Expected expression, instead got ${result.type}`);
   }
   return result;
