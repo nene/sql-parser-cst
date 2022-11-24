@@ -198,6 +198,14 @@ column_list_item
       columns,
     });
   }
+  / expr:star_or_qualified_star kw:(__ REPLACE __) columns:expr_or_alias_list_parens {
+    return loc({
+      type: "replace_columns",
+      expr,
+      replaceKw: read(kw),
+      columns,
+    });
+  }
   / star_or_qualified_star
   / expr:expr alias:(__ alias)? {
     return loc(createAlias(expr, alias));

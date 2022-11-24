@@ -19,6 +19,7 @@ export type AllSelectNodes =
   | CommonTableExpression
   | SelectClause
   | ExceptColumns
+  | ReplaceColumns
   | FromClause
   | WhereClause
   | GroupByClause
@@ -107,7 +108,9 @@ export interface SelectClause extends BaseNode {
     | "SQL_BUFFER_RESULT"
   >[];
   asStructOrValueKw?: [Keyword<"AS">, Keyword<"STRUCT" | "VALUE">];
-  columns: ListExpr<AllColumns | ExceptColumns | Expr | Alias<Expr> | Empty>;
+  columns: ListExpr<
+    AllColumns | ExceptColumns | ReplaceColumns | Expr | Alias<Expr> | Empty
+  >;
 }
 
 export interface ExceptColumns extends BaseNode {
@@ -115,6 +118,13 @@ export interface ExceptColumns extends BaseNode {
   expr: MemberExpr | AllColumns;
   exceptKw: Keyword<"EXCEPT">;
   columns: ParenExpr<ListExpr<Identifier>>;
+}
+
+export interface ReplaceColumns extends BaseNode {
+  type: "replace_columns";
+  expr: MemberExpr | AllColumns;
+  replaceKw: Keyword<"REPLACE">;
+  columns: ParenExpr<ListExpr<Alias<Expr>>>;
 }
 
 export interface FromClause extends BaseNode {

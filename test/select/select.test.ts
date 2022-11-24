@@ -92,6 +92,20 @@ describe("select", () => {
         test("SELECT tbl1.* EXCEPT (col1), tbl2.* EXCEPT (col2)");
       });
     });
+
+    describe("REPLACE()", () => {
+      it("supports SELECT * REPLACE()", () => {
+        test("SELECT * REPLACE ('hello' AS col1, 10+5 col2)");
+      });
+
+      it("supports SELECT tbl.* REPLACE()", () => {
+        test("SELECT tbl.* REPLACE (15 AS col1)");
+      });
+
+      it("supports SELECT tbl.* REPLACE() with multiple tables", () => {
+        test("SELECT tbl1.* REPLACE (8 AS col1), tbl2.* REPLACE (7 AS col2)");
+      });
+    });
   });
 
   describe("syntax tree", () => {

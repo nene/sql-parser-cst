@@ -43,7 +43,6 @@ const showNode = cstTransformer<string>({
   // SELECT statement
   compound_select_stmt: (node) => show([node.left, node.operator, node.right]),
   select_stmt: (node) => show(node.clauses),
-  except_columns: (node) => show([node.expr, node.exceptKw, node.columns]),
   // WITH
   with_clause: (node) => show([node.withKw, node.recursiveKw, node.tables]),
   common_table_expression: (node) =>
@@ -57,6 +56,8 @@ const showNode = cstTransformer<string>({
       node.asStructOrValueKw,
       node.columns,
     ]),
+  except_columns: (node) => show([node.expr, node.exceptKw, node.columns]),
+  replace_columns: (node) => show([node.expr, node.replaceKw, node.columns]),
   // FROM
   from_clause: (node) => show([node.fromKw, node.expr]),
   join_expr: (node) =>

@@ -80,7 +80,8 @@ export function parseExpr(
     result.type === "alias" ||
     result.type === "empty" ||
     result.type === "all_columns" ||
-    result.type === "except_columns"
+    result.type === "except_columns" ||
+    result.type === "replace_columns"
   ) {
     throw new Error(`Expected expression, instead got ${result.type}`);
   }
