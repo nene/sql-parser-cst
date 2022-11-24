@@ -190,6 +190,20 @@ select_columns
     }
 
 column_list_item
+  = expr:star_or_qualified_star kw:(__ EXCEPT __) columns:paren_column_list {
+    return loc({
+      type: "except_columns",
+      expr,
+      exceptKw: read(kw),
+      columns,
+    });
+  }
+  / star_or_qualified_star
+  / expr:expr alias:(__ alias)? {
+    return loc(createAlias(expr, alias));
+  }
+
+star_or_qualified_star
   = star:star {
     return star;
   }
@@ -199,9 +213,6 @@ column_list_item
       object: read(table),
       property: read(star),
     });
-  }
-  / expr:expr alias:(__ alias)? {
-    return loc(createAlias(expr, alias));
   }
 
 star

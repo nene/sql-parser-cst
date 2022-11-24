@@ -78,6 +78,20 @@ describe("select", () => {
       test("SELECT ALL AS STRUCT 1 a, 2 b");
       test("SELECT DISTINCT AS VALUE STRUCT(1 AS a, 2 AS b)");
     });
+
+    describe("EXCEPT()", () => {
+      it("supports SELECT * EXCEPT()", () => {
+        test("SELECT * EXCEPT (col1, col2)");
+      });
+
+      it("supports SELECT tbl.* EXCEPT()", () => {
+        test("SELECT tbl.* EXCEPT (col1, col2)");
+      });
+
+      it("supports SELECT tbl.* EXCEPT() with multiple tables", () => {
+        test("SELECT tbl1.* EXCEPT (col1), tbl2.* EXCEPT (col2)");
+      });
+    });
   });
 
   describe("syntax tree", () => {

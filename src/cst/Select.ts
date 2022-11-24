@@ -4,6 +4,7 @@ import {
   FuncCall,
   Identifier,
   ListExpr,
+  MemberExpr,
   ParenExpr,
   TableFuncCall,
   TableRef,
@@ -17,6 +18,7 @@ export type AllSelectNodes =
   | WithClause
   | CommonTableExpression
   | SelectClause
+  | ExceptColumns
   | FromClause
   | WhereClause
   | GroupByClause
@@ -105,7 +107,14 @@ export interface SelectClause extends BaseNode {
     | "SQL_BUFFER_RESULT"
   >[];
   asStructOrValueKw?: [Keyword<"AS">, Keyword<"STRUCT" | "VALUE">];
-  columns: ListExpr<AllColumns | Expr | Alias<Expr> | Empty>;
+  columns: ListExpr<AllColumns | ExceptColumns | Expr | Alias<Expr> | Empty>;
+}
+
+export interface ExceptColumns extends BaseNode {
+  type: "except_columns";
+  expr: MemberExpr | AllColumns;
+  exceptKw: Keyword<"EXCEPT">;
+  columns: ParenExpr<ListExpr<Identifier>>;
 }
 
 export interface FromClause extends BaseNode {
