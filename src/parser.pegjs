@@ -248,118 +248,6 @@ join_expr_right
     };
   }
 
-pivot_expr_right
-  = &bigquery kw:(PIVOT __) args:pivot_for_in_parens {
-    return {
-      type: "pivot_expr_right",
-      pivotKw: read(kw),
-      args,
-    };
-  }
-
-pivot_for_in_parens
-  = "(" c1:__ forIn:pivot_for_in c2:__ ")" {
-    return loc(createParenExpr(c1, forIn, c2));
-  }
-
-pivot_for_in
-  = fns:(func_call_or_alias_list __) forKw:(FOR __) col:(column __) inKw:(IN __) pCols:expr_or_alias_list_parens {
-    return loc({
-      type: "pivot_for_in",
-      aggregations: read(fns),
-      forKw: read(forKw),
-      inputColumn: read(col),
-      inKw: read(inKw),
-      pivotColumns: pCols,
-    });
-  }
-
-func_call_or_alias_list
-  = head:func_call_or_alias tail:(__ "," __ func_call_or_alias)* {
-    return loc(createListExpr(head, tail));
-  }
-
-func_call_or_alias
-  = fn:func_call alias:(__ alias)? {
-    return loc(createAlias(fn, alias));
-  }
-
-expr_or_alias_list_parens
-  = "(" c1:__ list:expr_or_alias_list c2:__ ")" {
-    return loc(createParenExpr(c1, list, c2));
-  }
-
-expr_or_alias_list
-  = head:expr_or_alias tail:(__ "," __ expr_or_alias)* {
-    return loc(createListExpr(head, tail))
-  }
-
-expr_or_alias
-  = e:expr alias:(__ alias)? {
-    return loc(createAlias(e, alias));
-  }
-
-unpivot_expr_right
-  = &bigquery kw:(UNPIVOT __)
-    nulls:((INCLUDE / EXCLUDE) __ NULLS __)?
-    args:unpivot_for_in_parens {
-      return {
-        type: "unpivot_expr_right",
-        unpivotKw: read(kw),
-        nullHandlingKw: read(nulls),
-        args,
-      };
-    }
-
-unpivot_for_in_parens
-  = "(" c1:__ forIn:unpivot_for_in c2:__ ")" {
-    return loc(createParenExpr(c1, forIn, c2));
-  }
-
-unpivot_for_in
-  = vCol:((column / paren_column_list) __)
-    forKw:(FOR __) nCol:(column __) inKw:(IN __)
-    upCols:(paren_column_or_alias_list / paren_paren_column_list_or_alias_list) {
-      return loc({
-        type: "unpivot_for_in",
-        valuesColumn: read(vCol),
-        forKw: read(forKw),
-        nameColumn: read(nCol),
-        inKw: read(inKw),
-        unpivotColumns: upCols,
-      });
-    }
-
-paren_column_or_alias_list
-  = "(" c1:__ list:column_or_alias_list c2:__ ")" {
-    return loc(createParenExpr(c1, list, c2));
-  }
-
-column_or_alias_list
-  = head:column_or_alias tail:(__ "," __ column_or_alias)* {
-    return loc(createListExpr(head, tail));
-  }
-
-column_or_alias
-  = col:column alias:(__ alias)? {
-    return loc(createAlias(col, alias));
-  }
-
-paren_paren_column_list_or_alias_list
-  = "(" c1:__ list:paren_column_list_or_alias_list c2:__ ")" {
-    return loc(createParenExpr(c1, list, c2));
-  }
-
-paren_column_list_or_alias_list
-  = head:paren_column_list_or_alias tail:(__ "," __ paren_column_list_or_alias)* {
-    return loc(createListExpr(head, tail));
-  }
-
-paren_column_list_or_alias
-  = list:paren_column_list alias:(__ alias)? {
-    return loc(createAlias(list, alias));
-  }
-
 table_or_subquery
   = t:(unnest_expr / table_func_call / paren_expr_join / paren_expr_select) alias:(__ alias)? {
     return loc(createAlias(t, alias));
@@ -442,6 +330,11 @@ on_clause
     });
   }
 
+//
+// BigQuery-specific FROM-clause syntax: UNNEST / PIVIT / UNPIVOT
+//
+
+// UNNEST .......................................................
 unnest_expr
   = &bigquery kw:(UNNEST __) expr:paren_expr {
     return loc({
@@ -449,6 +342,120 @@ unnest_expr
       unnestKw: read(kw),
       expr,
     });
+  }
+
+// PIVOT ........................................................
+pivot_expr_right
+  = &bigquery kw:(PIVOT __) args:pivot_for_in_parens {
+    return {
+      type: "pivot_expr_right",
+      pivotKw: read(kw),
+      args,
+    };
+  }
+
+pivot_for_in_parens
+  = "(" c1:__ forIn:pivot_for_in c2:__ ")" {
+    return loc(createParenExpr(c1, forIn, c2));
+  }
+
+pivot_for_in
+  = fns:(func_call_or_alias_list __) forKw:(FOR __) col:(column __) inKw:(IN __) pCols:expr_or_alias_list_parens {
+    return loc({
+      type: "pivot_for_in",
+      aggregations: read(fns),
+      forKw: read(forKw),
+      inputColumn: read(col),
+      inKw: read(inKw),
+      pivotColumns: pCols,
+    });
+  }
+
+func_call_or_alias_list
+  = head:func_call_or_alias tail:(__ "," __ func_call_or_alias)* {
+    return loc(createListExpr(head, tail));
+  }
+
+func_call_or_alias
+  = fn:func_call alias:(__ alias)? {
+    return loc(createAlias(fn, alias));
+  }
+
+expr_or_alias_list_parens
+  = "(" c1:__ list:expr_or_alias_list c2:__ ")" {
+    return loc(createParenExpr(c1, list, c2));
+  }
+
+expr_or_alias_list
+  = head:expr_or_alias tail:(__ "," __ expr_or_alias)* {
+    return loc(createListExpr(head, tail))
+  }
+
+expr_or_alias
+  = e:expr alias:(__ alias)? {
+    return loc(createAlias(e, alias));
+  }
+
+// UNPIVOT ......................................................
+unpivot_expr_right
+  = &bigquery kw:(UNPIVOT __)
+    nulls:((INCLUDE / EXCLUDE) __ NULLS __)?
+    args:unpivot_for_in_parens {
+      return {
+        type: "unpivot_expr_right",
+        unpivotKw: read(kw),
+        nullHandlingKw: read(nulls),
+        args,
+      };
+    }
+
+unpivot_for_in_parens
+  = "(" c1:__ forIn:unpivot_for_in c2:__ ")" {
+    return loc(createParenExpr(c1, forIn, c2));
+  }
+
+unpivot_for_in
+  = vCol:((column / paren_column_list) __)
+    forKw:(FOR __) nCol:(column __) inKw:(IN __)
+    upCols:(paren_column_or_alias_list / paren_paren_column_list_or_alias_list) {
+      return loc({
+        type: "unpivot_for_in",
+        valuesColumn: read(vCol),
+        forKw: read(forKw),
+        nameColumn: read(nCol),
+        inKw: read(inKw),
+        unpivotColumns: upCols,
+      });
+    }
+
+paren_column_or_alias_list
+  = "(" c1:__ list:column_or_alias_list c2:__ ")" {
+    return loc(createParenExpr(c1, list, c2));
+  }
+
+column_or_alias_list
+  = head:column_or_alias tail:(__ "," __ column_or_alias)* {
+    return loc(createListExpr(head, tail));
+  }
+
+column_or_alias
+  = col:column alias:(__ alias)? {
+    return loc(createAlias(col, alias));
+  }
+
+paren_paren_column_list_or_alias_list
+  = "(" c1:__ list:paren_column_list_or_alias_list c2:__ ")" {
+    return loc(createParenExpr(c1, list, c2));
+  }
+
+paren_column_list_or_alias_list
+  = head:paren_column_list_or_alias tail:(__ "," __ paren_column_list_or_alias)* {
+    return loc(createListExpr(head, tail));
+  }
+
+paren_column_list_or_alias
+  = list:paren_column_list alias:(__ alias)? {
+    return loc(createAlias(list, alias));
   }
 
 /**
