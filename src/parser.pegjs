@@ -234,7 +234,7 @@ from_clause
   }
 
 join_expr
-  = head:table_or_subquery tail:(__ (join_expr_right / pivot_expr_right))* {
+  = head:table_or_subquery tail:(__ (join_expr_right / pivot_expr_right / unpivot_expr_right))* {
     return createJoinExprChain(head, tail);
   }
 
@@ -297,6 +297,67 @@ expr_or_alias_list
 expr_or_alias
   = e:expr alias:(__ alias)? {
     return loc(createAlias(e, alias));
+  }
+
+unpivot_expr_right
+  = &bigquery kw:(UNPIVOT __)
+    nulls:((INCLUDE / EXCLUDE) __ NULLS __)?
+    args:unpivot_for_in_parens {
+      return {
+        type: "unpivot_expr_right",
+        unpivotKw: read(kw),
+        nullHandlingKw: read(nulls),
+        args,
+      };
+    }
+
+unpivot_for_in_parens
+  = "(" c1:__ forIn:unpivot_for_in c2:__ ")" {
+    return loc(createParenExpr(c1, forIn, c2));
+  }
+
+unpivot_for_in
+  = vCol:((column / paren_column_list) __)
+    forKw:(FOR __) nCol:(column __) inKw:(IN __)
+    upCols:(paren_column_or_alias_list / paren_paren_column_list_or_alias_list) {
+      return loc({
+        type: "unpivot_for_in",
+        valuesColumn: read(vCol),
+        forKw: read(forKw),
+        nameColumn: read(nCol),
+        inKw: read(inKw),
+        unpivotColumns: upCols,
+      });
+    }
+
+paren_column_or_alias_list
+  = "(" c1:__ list:column_or_alias_list c2:__ ")" {
+    return loc(createParenExpr(c1, list, c2));
+  }
+
+column_or_alias_list
+  = head:column_or_alias tail:(__ "," __ column_or_alias)* {
+    return loc(createListExpr(head, tail));
+  }
+
+column_or_alias
+  = col:column alias:(__ alias)? {
+    return loc(createAlias(col, alias));
+  }
+
+paren_paren_column_list_or_alias_list
+  = "(" c1:__ list:paren_column_list_or_alias_list c2:__ ")" {
+    return loc(createParenExpr(c1, list, c2));
+  }
+
+paren_column_list_or_alias_list
+  = head:paren_column_list_or_alias tail:(__ "," __ paren_column_list_or_alias)* {
+    return loc(createListExpr(head, tail));
+  }
+
+paren_column_list_or_alias
+  = list:paren_column_list alias:(__ alias)? {
+    return loc(createAlias(list, alias));
   }
 
 table_or_subquery
@@ -3409,6 +3470,7 @@ IF                  = kw:"IF"i                  !ident_part { return loc(createK
 IGNORE              = kw:"IGNORE"i              !ident_part { return loc(createKeyword(kw)); }
 IMMEDIATE           = kw:"IMMEDIATE"i           !ident_part { return loc(createKeyword(kw)); }
 IN                  = kw:"IN"i                  !ident_part { return loc(createKeyword(kw)); }
+INCLUDE             = kw:"INCLUDE"i             !ident_part { return loc(createKeyword(kw)); }
 INDEX               = kw:"INDEX"i               !ident_part { return loc(createKeyword(kw)); }
 INDEXED             = kw:"INDEXED"              !ident_part { return loc(createKeyword(kw)); }
 INITIALLY           = kw:"INITIALLY"i           !ident_part { return loc(createKeyword(kw)); }
@@ -3611,6 +3673,7 @@ UNIQUE              = kw:"UNIQUE"i              !ident_part { return loc(createK
 UNKNOWN             = kw:"UNKNOWN"i             !ident_part { return loc(createKeyword(kw)); }
 UNLOCK              = kw:"UNLOCK"i              !ident_part { return loc(createKeyword(kw)); }
 UNNEST              = kw:"UNNEST"i              !ident_part { return loc(createKeyword(kw)); }
+UNPIVOT             = kw:"UNPIVOT"              !ident_part { return loc(createKeyword(kw)); }
 UNSIGNED            = kw:"UNSIGNED"i            !ident_part { return loc(createKeyword(kw)); }
 UPDATE              = kw:"UPDATE"i              !ident_part { return loc(createKeyword(kw)); }
 USE                 = kw:"USE"i                 !ident_part { return loc(createKeyword(kw)); }

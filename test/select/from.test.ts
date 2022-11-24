@@ -152,5 +152,64 @@ describe("select FROM", () => {
         test("SELECT * FROM foo JOIN bar PIVOT(count(*) FOR col1 IN ('Q1')) JOIN zap");
       });
     });
+
+    describe("UNPIVOT operator", () => {
+      it("supports single-column UNPIVOT", () => {
+        test("SELECT * FROM my_table UNPIVOT(sales FOR quarter IN (Q1, Q2))");
+        test(`
+          SELECT * FROM my_table /*c0*/
+          UNPIVOT /*c1*/ (/*c2*/
+            sales /*c3*/
+            FOR /*c4*/ quarter /*c5*/
+            IN /*c6*/
+            (/*c7*/ Q1, Q2 /*c8*/)
+          /*c9*/)
+        `);
+      });
+
+      it("supports aliases in single-column unpivot columns list", () => {
+        test("SELECT * FROM my_table UNPIVOT(sales FOR quarter IN (Qrtr1 AS q1, Qrtr2 q2))");
+        test(`
+          SELECT * FROM my_table
+          UNPIVOT(
+            sales FOR quarter IN
+            (Qrtr1 /*c1*/ AS /*c2*/ q1, Qrtr2 /*c3*/ q2)
+          )
+        `);
+      });
+
+      it("supports multi-column UNPIVOT aggregations", () => {
+        test(
+          "SELECT * FROM my_table UNPIVOT((first_half, second_half) FOR quarter IN ((Q1, Q2), (Q3, Q4)))"
+        );
+      });
+
+      it("supports multi-column unpivot with aliases", () => {
+        test(
+          "SELECT * FROM my_table UNPIVOT((first_half, second_half) FOR quarter IN ((Q1, Q2) as sem1, (Q3, Q4) sem2))"
+        );
+        test(`
+          SELECT * FROM my_table
+          UNPIVOT(
+            (/*c1*/ first_half /*c2*/,/*c3*/ second_half /*c4*/) /*c5*/
+            FOR quarter IN /*c6*/ (
+              /*c7*/ (/*cc*/ Q1, Q2 /*dd*/) /*c8*/ AS /*c9*/ sem1 /*c10*/,
+              /*c11*/ ( Q3 /*cc*/,/*dd*/ Q4 ) /*c12*/ sem2 /*c13*/
+            )/*c14*/
+          )
+        `);
+      });
+
+      it("supports unpivot with null handling modifiers", () => {
+        test("SELECT * FROM my_table UNPIVOT INCLUDE NULLS (sales FOR quarter IN (Q1, Q2))");
+        test(
+          "SELECT * FROM my_table UNPIVOT /*c1*/ EXCLUDE /*c2*/ NULLS /*c3*/ (sales FOR quarter IN (Q1, Q2))"
+        );
+      });
+
+      it("supports UNPIVOT between joins", () => {
+        test("SELECT * FROM foo JOIN bar UNPIVOT(sales FOR col1 IN (Q1)) JOIN zap");
+      });
+    });
   });
 });

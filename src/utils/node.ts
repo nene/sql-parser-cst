@@ -15,6 +15,7 @@ import {
   Whitespace,
   MemberExpr,
   PivotExpr,
+  UnpivotExpr,
 } from "../cst/Node";
 import { leading, surrounding, trailing } from "./whitespace";
 import { readCommaSepList } from "./list";
@@ -103,7 +104,9 @@ const deriveJoinLoc = (join: JoinExpr): JoinExpr => {
   return { ...join, range: [start, end] };
 };
 
-const derivePivotLoc = (pivot: PivotExpr): PivotExpr => {
+const derivePivotLoc = (
+  pivot: PivotExpr | UnpivotExpr
+): PivotExpr | UnpivotExpr => {
   if (!pivot.left.range || !pivot.args.range) {
     return pivot;
   }
@@ -125,17 +128,27 @@ interface PivotExprRight {
   args: PivotExpr["args"];
 }
 
+interface UnpivotExprRight {
+  type: "unpivot_expr_right";
+  unpivotKw: UnpivotExpr["unpivotKw"];
+  nullHandlingKw: UnpivotExpr["nullHandlingKw"];
+  args: UnpivotExpr["args"];
+}
+
 export function createJoinExprChain(
   head: JoinExpr["left"],
-  tail: [Whitespace[], JoinExprRight | PivotExprRight][]
+  tail: [Whitespace[], JoinExprRight | PivotExprRight | UnpivotExprRight][]
 ) {
-  return tail.reduce(
-    (left, [c1, right]) =>
-      right.type === "join_expr_right"
-        ? deriveJoinLoc(createJoinExpr(left, c1, right))
-        : derivePivotLoc(createPivotExpr(left, c1, right)),
-    head
-  );
+  return tail.reduce((left, [c1, right]) => {
+    switch (right.type) {
+      case "join_expr_right":
+        return deriveJoinLoc(createJoinExpr(left, c1, right));
+      case "pivot_expr_right":
+        return derivePivotLoc(createPivotExpr(left, c1, right));
+      case "unpivot_expr_right":
+        return derivePivotLoc(createUnpivotExpr(left, c1, right));
+    }
+  }, head);
 }
 
 function createJoinExpr(
@@ -161,6 +174,20 @@ function createPivotExpr(
     type: "pivot_expr",
     left: trailing(left, c1) as PivotExpr["left"],
     pivotKw: right.pivotKw,
+    args: right.args,
+  };
+}
+
+function createUnpivotExpr(
+  left: UnpivotExpr["left"],
+  c1: Whitespace[],
+  right: UnpivotExprRight
+): UnpivotExpr {
+  return {
+    type: "unpivot_expr",
+    left: trailing(left, c1) as UnpivotExpr["left"],
+    unpivotKw: right.unpivotKw,
+    nullHandlingKw: right.nullHandlingKw,
     args: right.args,
   };
 }
