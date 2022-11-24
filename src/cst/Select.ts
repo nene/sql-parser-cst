@@ -109,7 +109,7 @@ export interface SelectClause extends BaseNode {
 export interface FromClause extends BaseNode {
   type: "from_clause";
   fromKw: Keyword<"FROM">;
-  expr: JoinExprLeft;
+  expr: TableExpr;
 }
 
 export interface WhereClause extends BaseNode {
@@ -172,11 +172,11 @@ export interface LimitClause extends BaseNode {
   offset?: Expr;
 }
 
-type JoinExprLeft = JoinExpr | PivotExpr | UnpivotExpr | TableOrSubquery;
+type TableExpr = JoinExpr | PivotExpr | UnpivotExpr | TableOrSubquery;
 
 export interface JoinExpr extends BaseNode {
   type: "join_expr";
-  left: JoinExprLeft;
+  left: TableExpr;
   operator: JoinOp | ",";
   right: TableOrSubquery;
   specification?: JoinOnSpecification | JoinUsingSpecification;
@@ -200,7 +200,7 @@ export type TableOrSubquery =
   | TableFuncCall
   | IndexedTableRef
   | NotIndexedTableRef
-  | ParenExpr<SubSelect | JoinExprLeft>
+  | ParenExpr<SubSelect | TableExpr>
   | UnnestExpr
   | Alias<TableOrSubquery>;
 
@@ -225,7 +225,7 @@ export interface UnnestExpr extends BaseNode {
 }
 export interface PivotExpr extends BaseNode {
   type: "pivot_expr";
-  left: JoinExprLeft;
+  left: TableExpr;
   pivotKw: Keyword<"PIVOT">;
   args: ParenExpr<PivotForIn>;
 }
@@ -239,7 +239,7 @@ export interface PivotForIn extends BaseNode {
 }
 export interface UnpivotExpr extends BaseNode {
   type: "unpivot_expr";
-  left: JoinExprLeft;
+  left: TableExpr;
   unpivotKw: Keyword<"UNPIVOT">;
   nullHandlingKw?: [Keyword<"INCLUDE" | "EXCLUDE">, Keyword<"NULLS">];
   args: ParenExpr<UnpivotForIn>;
