@@ -541,11 +541,20 @@ where_clause
  * --------------------------------------------------------------------------------------
  */
 group_by_clause
-  = kws:(GROUP __ BY __) list:list_expr {
+  = kws:(GROUP __ BY __) list:(group_by_rollup / list_expr) {
     return loc({
       type: "group_by_clause",
       groupByKw: read(kws),
       columns: list,
+    });
+  }
+
+group_by_rollup
+  = &bigquery kw:(ROLLUP __) cols:paren_list_expr {
+    return loc({
+      type: "group_by_rollup",
+      rollupKw: read(kw),
+      columns: cols,
     });
   }
 

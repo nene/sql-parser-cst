@@ -23,6 +23,7 @@ export type AllSelectNodes =
   | FromClause
   | WhereClause
   | GroupByClause
+  | GroupByRollup
   | HavingClause
   | WindowClause
   | QualifyClause
@@ -142,7 +143,13 @@ export interface WhereClause extends BaseNode {
 export interface GroupByClause extends BaseNode {
   type: "group_by_clause";
   groupByKw: [Keyword<"GROUP">, Keyword<"BY">];
-  columns: ListExpr<Expr>;
+  columns: ListExpr<Expr> | GroupByRollup;
+}
+
+export interface GroupByRollup extends BaseNode {
+  type: "group_by_rollup";
+  rollupKw: Keyword<"ROLLUP">;
+  columns: ParenExpr<ListExpr<Expr>>;
 }
 
 export interface HavingClause extends BaseNode {
