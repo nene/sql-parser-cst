@@ -2679,7 +2679,7 @@ func_args
   }
 
 func_args_list
-  = head:func_1st_arg tail:(__ "," __ expr)* {
+  = head:func_1st_arg tail:(__ "," __ func_arg)* {
     return loc(createListExpr(head, tail));
   }
   / &. {
@@ -2695,8 +2695,22 @@ func_1st_arg
   / kw:DISTINCT e:(__ expr) {
     return loc({ type: "distinct_arg", distinctKw: kw, value: read(e) });
   }
+  / named_arg
   / expr
   / compound_select_stmt
+
+func_arg
+  = named_arg
+  / expr
+
+named_arg
+  = name:(ident __) "=>" value:(__ expr) &bigquery {
+    return loc({
+      type: "named_arg",
+      name: read(name),
+      value: read(value),
+    });
+  }
 
 filter_arg
   = kw:(FILTER __) e:paren_where_expr &sqlite {

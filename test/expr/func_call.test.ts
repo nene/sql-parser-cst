@@ -112,4 +112,14 @@ describe("function call", () => {
       testExpr(`COLLATE('abc', 'und:ci')`);
     });
   });
+
+  dialect("bigquery", () => {
+    it("supports named function arguments", () => {
+      testExpr(`my_func(arg1 => 'foo', arg2 => 'bar')`);
+    });
+
+    it("supports mix of named and positional function arguments", () => {
+      testExpr(`SEARCH('foo', 'f', analyzer => 'NO_OP_ANALYZER')`);
+    });
+  });
 });
