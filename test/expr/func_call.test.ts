@@ -39,6 +39,7 @@ describe("function call", () => {
               "type": "list_expr",
             },
             "distinctKw": undefined,
+            "nullHandlingKw": undefined,
             "type": "func_args",
           },
           "type": "paren_expr",
@@ -124,6 +125,13 @@ describe("function call", () => {
 
     it("supports mix of named and positional function arguments", () => {
       testExpr(`SEARCH('foo', 'f', analyzer => 'NO_OP_ANALYZER')`);
+    });
+  });
+
+  dialect("bigquery", () => {
+    it("supports INGORE|RESPECT NULLS", () => {
+      testExpr(`my_func(arg1, arg2 IGNORE NULLS)`);
+      testExpr(`my_func(arg1, arg2 /*c1*/ RESPECT /*c2*/ NULLS /*c3*/)`);
     });
   });
 });

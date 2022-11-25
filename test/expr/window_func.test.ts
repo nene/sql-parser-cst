@@ -105,6 +105,7 @@ describe("window functions", () => {
               "type": "list_expr",
             },
             "distinctKw": undefined,
+            "nullHandlingKw": undefined,
             "type": "func_args",
           },
           "type": "paren_expr",

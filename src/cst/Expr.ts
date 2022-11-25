@@ -98,6 +98,7 @@ export interface FuncArgs extends BaseNode {
   type: "func_args";
   distinctKw?: Keyword<"DISTINCT">;
   args: ListExpr<Expr | AllColumns | SubSelect | NamedArg>;
+  nullHandlingKw?: [Keyword<"IGNORE" | "RESPECT">, Keyword<"NULLS">];
 }
 
 export interface FilterArg extends BaseNode {

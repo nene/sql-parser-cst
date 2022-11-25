@@ -2679,11 +2679,13 @@ paren_func_args
   }
 
 func_args
-  = distinctKw:(DISTINCT __)? args:func_args_list {
+  = distinctKw:(DISTINCT __)? args:func_args_list
+    nulls:(__ (IGNORE / RESPECT) __ NULLS)? {
     return loc({
       type: "func_args",
       distinctKw: read(distinctKw),
       args,
+      nullHandlingKw: read(nulls),
     });
   }
 
@@ -3705,6 +3707,7 @@ RELEASE             = kw:"RELEASE"i             !ident_part { return loc(createK
 RENAME              = kw:"RENAME"i              !ident_part { return loc(createKeyword(kw)); }
 REPLACE             = kw:"REPLACE"i             !ident_part { return loc(createKeyword(kw)); }
 REPLICATION         = kw:"REPLICATION"i         !ident_part { return loc(createKeyword(kw)); }
+RESPECT             = kw:"RESPECT"i             !ident_part { return loc(createKeyword(kw)); }
 RESTRICT            = kw:"RESTRICT"i            !ident_part { return loc(createKeyword(kw)); }
 RETURN              = kw:"RETURN"i              !ident_part { return loc(createKeyword(kw)); }
 RETURNING           = kw:"RETURNING"i           !ident_part { return loc(createKeyword(kw)); }
