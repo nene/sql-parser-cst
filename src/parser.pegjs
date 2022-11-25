@@ -3094,7 +3094,8 @@ literal_plain_string
       literal_triple_single_quoted_string
     / literal_triple_double_quoted_string
     / literal_single_quoted_string_bs
-    / literal_double_quoted_string_bs) { return s; }
+    / literal_double_quoted_string_bs
+    / literal_raw_string) { return s; }
   / &sqlite s:literal_single_quoted_string_qq { return s; }
   / &mysql s:(
       literal_single_quoted_string_qq_bs
@@ -3269,6 +3270,21 @@ literal_natural_charset_string
       value: str.value,
     });
   }
+
+literal_raw_string
+  = "R"i value:literal_raw_string_value {
+    return loc({
+      type: "string",
+      text: text(),
+      value,
+    });
+  }
+
+literal_raw_string_value
+  = "'''" cs:([^'] / single_quote_in_3quote)* "'''" { return cs.join(""); }
+  / '"""' cs:([^""] / double_quote_in_3quote)* '"""' { return cs.join(""); }
+  / "'" cs:[^']* "'" { return cs.join(""); }
+  / '"' cs:[^"]* '"' { return cs.join(""); }
 
 literal_datetime
   = kw:(TIME / DATE / TIMESTAMP / DATETIME)

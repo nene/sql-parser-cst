@@ -179,6 +179,30 @@ describe("string literal", () => {
 
       testStringEscaping("'", bigqueryBackslashEscaping);
     });
+
+    describe("raw strings", () => {
+      it("supports R prefix for all quote types", () => {
+        testExpr(`r'hello'`);
+        testExpr(`R'''hello'''`);
+        testExpr(`R"hello"`);
+        testExpr(`r"""hello"""`);
+      });
+
+      it("allows no escaping inside raw strings", () => {
+        expect(parseExpr(String.raw`r'no\nescapes'`)).toMatchInlineSnapshot(`
+          {
+            "text": "r'no\\nescapes'",
+            "type": "string",
+            "value": "no\\nescapes",
+          }
+        `);
+      });
+
+      it("allows for quotes inside triple-quoted raw strings", () => {
+        testExpr(`r"""for "your" eyes only"""`);
+        testExpr(`r'''it's'''`);
+      });
+    });
   });
 
   dialect("mysql", () => {
