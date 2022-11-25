@@ -21,3 +21,10 @@ export const parseBitBlob = (data: string): number[] => {
   const allMatches = data.match(/.{1,8}/g) || [];
   return allMatches.map((m) => parseInt(m, 2));
 };
+
+/**
+ * Converts array of chars to decimal array
+ */
+export const parseAsciiBlob = (data: string[]): number[] => {
+  return data.flatMap((c) => c.split("")).map((c) => c.charCodeAt(0));
+};

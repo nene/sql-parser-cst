@@ -98,4 +98,69 @@ describe("blob literal", () => {
       });
     });
   });
+
+  dialect("bigquery", () => {
+    describe("raw byte strings", () => {
+      it("supports raw byte strings", () => {
+        testExpr(`rb'hello'`);
+        testExpr(`Rb'''hello'''`);
+        testExpr(`BR"hello"`);
+        testExpr(`Br"""hello"""`);
+      });
+
+      it("parses raw byte string as blob", () => {
+        expect(parseExpr(`rb'abc'`)).toMatchInlineSnapshot(`
+          {
+            "text": "rb'abc'",
+            "type": "blob",
+            "value": [
+              97,
+              98,
+              99,
+            ],
+          }
+        `);
+      });
+
+      it("correctly parses byte values of repeated quotes inside triple-quoted strings", () => {
+        expect(parseExpr(`rb'''a''c'''`)).toMatchInlineSnapshot(`
+          {
+            "text": "rb'''a''c'''",
+            "type": "blob",
+            "value": [
+              97,
+              39,
+              39,
+              99,
+            ],
+          }
+        `);
+        expect(parseExpr(`BR"""a""c"""`)).toMatchInlineSnapshot(`
+          {
+            "text": "BR"""a""c"""",
+            "type": "blob",
+            "value": [
+              97,
+              34,
+              34,
+              99,
+            ],
+          }
+        `);
+      });
+
+      it("correctly parses byte value of backslash", () => {
+        expect(parseExpr(String.raw`BR"\n"`)).toMatchInlineSnapshot(`
+          {
+            "text": "BR"\\n"",
+            "type": "blob",
+            "value": [
+              92,
+              110,
+            ],
+          }
+        `);
+      });
+    });
+  });
 });

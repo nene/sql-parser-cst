@@ -24,6 +24,7 @@ const parser = peggy.generate(source, {
       import {
         parseHexBlob,
         parseBitBlob,
+        parseAsciiBlob,
       } from "./utils/blob";
       import {
         createBinaryExprChain,

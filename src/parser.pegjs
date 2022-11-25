@@ -3272,19 +3272,28 @@ literal_natural_charset_string
   }
 
 literal_raw_string
-  = "R"i value:literal_raw_string_value {
+  = "R"i cs:literal_raw_string_chars {
     return loc({
       type: "string",
       text: text(),
-      value,
+      value: cs.join(""),
     });
   }
 
-literal_raw_string_value
-  = "'''" cs:([^'] / single_quote_in_3quote)* "'''" { return cs.join(""); }
-  / '"""' cs:([^""] / double_quote_in_3quote)* '"""' { return cs.join(""); }
-  / "'" cs:[^']* "'" { return cs.join(""); }
-  / '"' cs:[^"]* '"' { return cs.join(""); }
+literal_raw_byte_string
+  = ("RB"i / "BR"i) cs:literal_raw_string_chars {
+    return loc({
+      type: "blob",
+      text: text(),
+      value: parseAsciiBlob(cs),
+    });
+  }
+
+literal_raw_string_chars
+  = "'''" cs:([^'] / single_quote_in_3quote)* "'''" { return cs; }
+  / '"""' cs:([^"] / double_quote_in_3quote)* '"""' { return cs; }
+  / "'" cs:[^']* "'" { return cs; }
+  / '"' cs:[^"]* '"' { return cs; }
 
 literal_datetime
   = kw:(TIME / DATE / TIMESTAMP / DATETIME)
@@ -3318,6 +3327,7 @@ literal_blob
   = literal_hex_blob
   / &mysql n:literal_bit_blob { return n; }
   / &mysql n:literal_hex_number_blob { return n; }
+  / &bigquery n:literal_raw_byte_string { return n; }
 
 literal_hex_blob
   = "X"i "'" chars:hex_digit* "'" {
