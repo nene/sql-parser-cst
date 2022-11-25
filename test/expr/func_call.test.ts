@@ -39,7 +39,9 @@ describe("function call", () => {
               "type": "list_expr",
             },
             "distinctKw": undefined,
+            "limit": undefined,
             "nullHandlingKw": undefined,
+            "orderBy": undefined,
             "type": "func_args",
           },
           "type": "paren_expr",
@@ -132,6 +134,27 @@ describe("function call", () => {
     it("supports INGORE|RESPECT NULLS", () => {
       testExpr(`my_func(arg1, arg2 IGNORE NULLS)`);
       testExpr(`my_func(arg1, arg2 /*c1*/ RESPECT /*c2*/ NULLS /*c3*/)`);
+    });
+
+    it("supports ORDER BY clause", () => {
+      testExpr(`my_func(arg1, arg2 ORDER BY foo, bar DESC)`);
+    });
+
+    it("supports LIMIT clause", () => {
+      testExpr(`my_func(arg1, arg2 LIMIT 10)`);
+    });
+
+    it("supports combination of DISTINCT, NULLS, ORDER BY, LIMIT", () => {
+      testExpr(`my_func(DISTINCT arg1, arg2 IGNORE NULLS ORDER BY foo LIMIT 10)`);
+      testExpr(`
+        my_func(
+          DISTINCT arg1, arg2
+          /*c1*/ IGNORE NULLS
+          /*c2*/ ORDER BY foo
+          /*c3*/ LIMIT 10
+          /*c4*/
+        )
+      `);
     });
   });
 });

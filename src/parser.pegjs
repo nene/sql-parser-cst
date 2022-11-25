@@ -2680,12 +2680,16 @@ paren_func_args
 
 func_args
   = distinctKw:(DISTINCT __)? args:func_args_list
-    nulls:(__ (IGNORE / RESPECT) __ NULLS)? {
+    nulls:(__ (IGNORE / RESPECT) __ NULLS)?
+    orderBy:(__ order_by_clause)?
+    limit:(__ limit_clause)? {
     return loc({
       type: "func_args",
       distinctKw: read(distinctKw),
       args,
       nullHandlingKw: read(nulls),
+      orderBy: read(orderBy),
+      limit: read(limit),
     });
   }
 

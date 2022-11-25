@@ -2,7 +2,13 @@ import { AllColumns, BaseNode, Keyword } from "./Base";
 import { DataType } from "./CreateTable";
 import { Literal, StringLiteral } from "./Literal";
 import { Node } from "./Node";
-import { SubSelect, WhereClause, WindowDefinition } from "./Select";
+import {
+  LimitClause,
+  OrderByClause,
+  SubSelect,
+  WhereClause,
+  WindowDefinition,
+} from "./Select";
 
 export type AllExprNodes =
   | Expr
@@ -99,6 +105,8 @@ export interface FuncArgs extends BaseNode {
   distinctKw?: Keyword<"DISTINCT">;
   args: ListExpr<Expr | AllColumns | SubSelect | NamedArg>;
   nullHandlingKw?: [Keyword<"IGNORE" | "RESPECT">, Keyword<"NULLS">];
+  orderBy?: OrderByClause;
+  limit?: LimitClause;
 }
 
 export interface FilterArg extends BaseNode {
