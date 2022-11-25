@@ -1,4 +1,4 @@
-import { dialect, parseStmt, test } from "./test_utils";
+import { dialect, parseStmt, test } from "../test_utils";
 
 describe("insert into", () => {
   it("supports INSERT INTO with values", () => {

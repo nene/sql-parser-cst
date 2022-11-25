@@ -1,4 +1,4 @@
-import { dialect, test } from "./test_utils";
+import { dialect, test } from "../test_utils";
 
 describe("delete from", () => {
   it("supports DELETE FROM without WHERE", () => {

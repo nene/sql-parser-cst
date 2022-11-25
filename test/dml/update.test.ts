@@ -1,4 +1,4 @@
-import { dialect, test } from "./test_utils";
+import { dialect, test } from "../test_utils";
 
 describe("update", () => {
   it("supports UPDATE .. SET without where", () => {
