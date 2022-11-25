@@ -874,7 +874,8 @@ values_list
   }
 
 values_row
-  = !mysql list:paren_list_expr { return list; }
+  = &sqlite list:paren_list_expr { return list; }
+  / &bigquery list:paren_list_expr_with_default { return list; }
   / &mysql list:(paren_list_expr_with_default / row_constructor) { return list; }
 
 row_constructor

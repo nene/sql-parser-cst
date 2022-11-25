@@ -13,10 +13,12 @@ describe("insert into", () => {
     });
   });
 
-  dialect("mysql", () => {
+  dialect(["mysql", "bigquery"], () => {
     it("supports INSERT without INTO", () => {
       test("INSERT tbl VALUES (1, 2, 3)");
     });
+  });
+  dialect("mysql", () => {
     it("supports REPLACE without INTO", () => {
       test("REPLACE tbl VALUES (1, 2, 3)");
     });
@@ -28,8 +30,10 @@ describe("insert into", () => {
     });
   });
 
-  it("supports INSERT with aliased table", () => {
-    test("INSERT INTO tbl AS t VALUES (1, 2, 3)");
+  dialect("sqlite", () => {
+    it("supports INSERT with aliased table", () => {
+      test("INSERT INTO tbl AS t VALUES (1, 2, 3)");
+    });
   });
 
   it("supports INSERT INTO with columns and values", () => {
@@ -50,12 +54,14 @@ describe("insert into", () => {
     test("INSERT INTO tbl /*c1*/ SELECT 1");
   });
 
-  it("supports insert of default values", () => {
-    test("INSERT INTO tbl DEFAULT VALUES");
-    test("INSERT INTO tbl /*c1*/ DEFAULT /*c2*/ VALUES");
+  dialect(["mysql", "sqlite"], () => {
+    it("supports insert of default values", () => {
+      test("INSERT INTO tbl DEFAULT VALUES");
+      test("INSERT INTO tbl /*c1*/ DEFAULT /*c2*/ VALUES");
+    });
   });
 
-  dialect("mysql", () => {
+  dialect(["mysql", "bigquery"], () => {
     it("supports explicit default values for columns", () => {
       test("INSERT INTO tbl VALUES (1, DEFAULT, 3)");
     });
