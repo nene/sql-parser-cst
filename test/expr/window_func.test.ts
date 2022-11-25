@@ -100,8 +100,12 @@ describe("window functions", () => {
       {
         "args": {
           "expr": {
-            "items": [],
-            "type": "list_expr",
+            "args": {
+              "items": [],
+              "type": "list_expr",
+            },
+            "distinctKw": undefined,
+            "type": "func_args",
           },
           "type": "paren_expr",
         },

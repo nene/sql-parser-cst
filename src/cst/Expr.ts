@@ -6,7 +6,7 @@ import { SubSelect, WhereClause, WindowDefinition } from "./Select";
 
 export type AllExprNodes =
   | Expr
-  | DistinctArg
+  | FuncArgs
   | NamedArg
   | CastArg
   | CastFormat
@@ -83,9 +83,7 @@ export interface PostfixOpExpr extends BaseNode {
 export interface FuncCall extends BaseNode {
   type: "func_call";
   name: Identifier;
-  args?: ParenExpr<
-    ListExpr<Expr | AllColumns | DistinctArg | SubSelect | NamedArg>
-  >;
+  args?: ParenExpr<FuncArgs>;
   filter?: FilterArg;
   over?: OverArg;
 }
@@ -94,6 +92,12 @@ export interface TableFuncCall extends BaseNode {
   type: "table_func_call";
   name: TableRef;
   args: ParenExpr<ListExpr<Expr>>;
+}
+
+export interface FuncArgs extends BaseNode {
+  type: "func_args";
+  distinctKw?: Keyword<"DISTINCT">;
+  args: ListExpr<Expr | AllColumns | SubSelect | NamedArg>;
 }
 
 export interface FilterArg extends BaseNode {
@@ -111,12 +115,6 @@ export interface OverArg extends BaseNode {
 export interface NamedArg extends BaseNode {
   type: "named_arg";
   name: Identifier;
-  value: Expr;
-}
-
-export interface DistinctArg extends BaseNode {
-  type: "distinct_arg";
-  distinctKw: Keyword<"DISTINCT">;
   value: Expr;
 }
 

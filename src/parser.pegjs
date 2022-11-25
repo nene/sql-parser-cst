@@ -2600,7 +2600,7 @@ weekday_unit
   / SATURDAY
 
 func_call
-  = name:(func_name __) args:func_args
+  = name:(func_name __) args:paren_func_args
     filter:(__ filter_arg)?
     over:(__ over_arg)? {
       return loc({
@@ -2619,7 +2619,7 @@ func_call
     }
 
 table_func_call
-  = name:(table_ref __) args:func_args {
+  = name:(table_ref __) args:paren_func_args {
       return loc({
         type: "func_call",
         name: read(name),
@@ -2673,9 +2673,18 @@ paren_less_func_name_bigquery
 paren_less_func_name_mysql
   = kw:(LOCALTIME / LOCALTIMESTAMP / CURRENT_USER) &mysql { return kw; }
 
-func_args
-  = "(" c1:__ args:func_args_list c2:__ ")" {
+paren_func_args
+  = "(" c1:__ args:func_args c2:__ ")" {
     return loc(createParenExpr(c1, args, c2));
+  }
+
+func_args
+  = distinctKw:(DISTINCT __)? args:func_args_list {
+    return loc({
+      type: "func_args",
+      distinctKw: read(distinctKw),
+      args,
+    });
   }
 
 func_args_list
@@ -2692,9 +2701,6 @@ func_args_list
 // For aggregate functions, first argument can be "*"
 func_1st_arg
   = star
-  / kw:DISTINCT e:(__ expr) {
-    return loc({ type: "distinct_arg", distinctKw: kw, value: read(e) });
-  }
   / named_arg
   / expr
   / compound_select_stmt

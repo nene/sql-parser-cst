@@ -28,14 +28,18 @@ describe("function call", () => {
       {
         "args": {
           "expr": {
-            "items": [
-              {
-                "text": "1",
-                "type": "number",
-                "value": 1,
-              },
-            ],
-            "type": "list_expr",
+            "args": {
+              "items": [
+                {
+                  "text": "1",
+                  "type": "number",
+                  "value": 1,
+                },
+              ],
+              "type": "list_expr",
+            },
+            "distinctKw": undefined,
+            "type": "func_args",
           },
           "type": "paren_expr",
         },
