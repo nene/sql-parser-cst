@@ -3295,6 +3295,19 @@ literal_raw_string_chars
   / "'" cs:[^']* "'" { return cs; }
   / '"' cs:[^"]* '"' { return cs; }
 
+literal_byte_string
+  = "B"i str:(
+      literal_triple_double_quoted_string
+    / literal_triple_single_quoted_string
+    / literal_double_quoted_string_bs
+    / literal_single_quoted_string_bs) {
+      return loc({
+        type: "blob",
+        text: text(),
+        value: parseAsciiBlob(str.value.split("")),
+      });
+    }
+
 literal_datetime
   = kw:(TIME / DATE / TIMESTAMP / DATETIME)
     str:(__ literal_plain_string) {
@@ -3328,6 +3341,7 @@ literal_blob
   / &mysql n:literal_bit_blob { return n; }
   / &mysql n:literal_hex_number_blob { return n; }
   / &bigquery n:literal_raw_byte_string { return n; }
+  / &bigquery n:literal_byte_string { return n; }
 
 literal_hex_blob
   = "X"i "'" chars:hex_digit* "'" {

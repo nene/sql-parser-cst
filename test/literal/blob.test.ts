@@ -100,6 +100,68 @@ describe("blob literal", () => {
   });
 
   dialect("bigquery", () => {
+    describe("byte strings", () => {
+      it("supports byte strings", () => {
+        testExpr(`b'hello'`);
+        testExpr(`b'''hello'''`);
+        testExpr(`B"hello"`);
+        testExpr(`B"""hello"""`);
+      });
+
+      it("parses byte string as blob", () => {
+        expect(parseExpr(`b'abc'`)).toMatchInlineSnapshot(`
+          {
+            "text": "b'abc'",
+            "type": "blob",
+            "value": [
+              97,
+              98,
+              99,
+            ],
+          }
+        `);
+      });
+
+      it("correctly parses byte values of repeated quotes inside triple-quoted strings", () => {
+        expect(parseExpr(`b'''a''c'''`)).toMatchInlineSnapshot(`
+          {
+            "text": "b'''a''c'''",
+            "type": "blob",
+            "value": [
+              97,
+              39,
+              39,
+              99,
+            ],
+          }
+        `);
+        expect(parseExpr(`B"""a""c"""`)).toMatchInlineSnapshot(`
+          {
+            "text": "B"""a""c"""",
+            "type": "blob",
+            "value": [
+              97,
+              34,
+              34,
+              99,
+            ],
+          }
+        `);
+      });
+
+      it("correctly parses byte values of backslash escapes", () => {
+        expect(parseExpr(String.raw`B"\n"`)).toMatchInlineSnapshot(`
+          {
+            "text": "B"\\n"",
+            "type": "blob",
+            "value": [
+              10,
+            ],
+          }
+        `);
+      });
+    });
+
     describe("raw byte strings", () => {
       it("supports raw byte strings", () => {
         testExpr(`rb'hello'`);
