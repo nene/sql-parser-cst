@@ -100,6 +100,12 @@ describe("function call", () => {
     `);
   });
 
+  dialect("bigquery", () => {
+    it("supports SAFE. prefix for function calls", () => {
+      testExpr(`SAFE.SUBSTR('foo', 0, -2)`);
+    });
+  });
+
   dialect("sqlite", () => {
     it("supports FILTER clause for aggregate functions", () => {
       testExpr(`count(*) FILTER (WHERE job_id = 2)`);
