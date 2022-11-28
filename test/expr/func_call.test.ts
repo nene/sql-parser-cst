@@ -100,9 +100,19 @@ describe("function call", () => {
     `);
   });
 
-  dialect("bigquery", () => {
-    it("supports SAFE. prefix for function calls", () => {
-      testExpr(`SAFE.SUBSTR('foo', 0, -2)`);
+  describe("namespaced functions", () => {
+    it("supports calling user-defined functions", () => {
+      testExpr(`my_dataset.multiply_by_three(5)`);
+    });
+
+    it("supports calling namespaced functions", () => {
+      testExpr(`NET.IP_FROM_STRING(addr_str)`);
+    });
+
+    dialect("bigquery", () => {
+      it("supports SAFE. prefix for function calls", () => {
+        testExpr(`SAFE.SUBSTR('foo', 0, -2)`);
+      });
     });
   });
 
