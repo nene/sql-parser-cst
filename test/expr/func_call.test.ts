@@ -46,11 +46,13 @@ describe("function call", () => {
           },
           "type": "paren_expr",
         },
+        "filter": undefined,
         "name": {
           "name": "my_func",
           "text": "my_func",
           "type": "identifier",
         },
+        "over": undefined,
         "type": "func_call",
       }
     `);

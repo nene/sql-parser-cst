@@ -2396,22 +2396,28 @@ collate_expr
   / negation_expr
 
 negation_expr
-  = maybe_func_call
+  = member_expr_or_func_call
   / op:negation_operator right:(__ negation_expr) {
     return loc(createPrefixOpExpr(op, read(right)));
   }
 
 negation_operator = "-" / "~" / "!"
 
-maybe_func_call
-  = func_call
-  / member_expr
-
-member_expr
-  = obj:primary props:(__ "." __ qualified_column / __ array_subscript &bigquery)+ {
+member_expr_or_func_call
+  = obj:primary props:(__ "." __ qualified_column / __ array_subscript &bigquery / __ func_call_right)+ {
     return createMemberExprChain(obj, props);
   }
+  / name:func_name_kw fnRight:(__ func_call_right) {
+    return loc(createFuncCall(name, fnRight));
+  }
+  / paren_less_func_call
   / primary
+
+// Plain member_expr node chain, without function calls and array subscripts
+member_expr
+  = obj:ident props:(__ "." __ qualified_column)+ {
+    return createMemberExprChain(obj, props);
+  }
 
 array_subscript
   = "[" expr:(__ (array_subscript_specifier / expr) __) "]" {
@@ -2603,26 +2609,23 @@ weekday_unit
   / SATURDAY
 
 func_call
-  = name:(func_name __) args:paren_func_args
-    filter:(__ filter_arg)?
-    over:(__ over_arg)? {
-      return loc({
-        type: "func_call",
-        name: read(name),
-        args,
-        ...(filter ? {filter: read(filter)} : {}),
-        ...(over ? {over: read(over)} : {}),
-      });
-    }
-  / name:paren_less_func_name {
-      return loc({
-        type: "func_call",
-        name,
-      });
-    }
+  = name:func_name fnRight:(__ func_call_right) {
+    return loc(createFuncCall(name, fnRight));
+  }
+  / paren_less_func_call
+
+func_call_right
+  = args:paren_func_args filter:(__ filter_arg)? over:(__ over_arg)? {
+    return {
+      type: "func_call_right",
+      args,
+      filter: read(filter),
+      over: read(over),
+    };
+  }
 
 func_name
-  = name:(member_expr / func_name_kw)
+  = name:(member_expr / ident / func_name_kw)
     &{ return name.type === "member_expr" || name.type === "identifier"; } {
       return name;
     }
@@ -2654,6 +2657,14 @@ bigquery_func_keyword
   / RIGHT
   / ARRAY
   / COLLATE
+
+paren_less_func_call
+  = name:paren_less_func_name {
+    return loc({
+      type: "func_call",
+      name,
+    });
+  }
 
 paren_less_func_name
   = kw:(

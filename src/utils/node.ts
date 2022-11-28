@@ -17,6 +17,7 @@ import {
   PivotExpr,
   UnpivotExpr,
   TablesampleExpr,
+  FuncCall,
 } from "../cst/Node";
 import { leading, surrounding, trailing } from "./whitespace";
 import { readCommaSepList } from "./list";
@@ -217,6 +218,14 @@ function createTablesampleExpr(
   };
 }
 
+interface FuncCallRight {
+  type: "func_call_right";
+  args: FuncCall["args"];
+  filter: FuncCall["filter"];
+  over: FuncCall["over"];
+}
+type FuncCallTailPart = [Whitespace[], FuncCallRight];
+
 type ArrayMemberExprTailPart = [Whitespace[], MemberExpr["property"]];
 type ObjectMemberExprTailPart = [
   Whitespace[],
@@ -227,19 +236,30 @@ type ObjectMemberExprTailPart = [
 type MemberExprTailPart = ArrayMemberExprTailPart | ObjectMemberExprTailPart;
 
 function isObjectMemberExprTailPart(
-  part: MemberExprTailPart
+  part: MemberExprTailPart | FuncCallTailPart
 ): part is ObjectMemberExprTailPart {
   return part[1] === ".";
 }
 
+function isFuncCallMemberExprTailPart(
+  part: MemberExprTailPart | FuncCallTailPart
+): part is FuncCallTailPart {
+  return typeof part[1] === "object" && part[1].type === "func_call_right";
+}
+
 export function createMemberExprChain(
   head: MemberExpr["object"],
-  tail: MemberExprTailPart[]
+  tail: (MemberExprTailPart | FuncCallTailPart)[]
 ): Expr {
-  return tail.reduce(
-    (obj, tailPart) => deriveMemberExprLoc(createMemberExpr(obj, tailPart)),
-    head
-  );
+  return tail.reduce((obj, tailPart) => {
+    if (isFuncCallMemberExprTailPart(tailPart)) {
+      return deriveFuncCallLoc(
+        createFuncCall(obj as FuncCall["name"], tailPart)
+      );
+    } else {
+      return deriveMemberExprLoc(createMemberExpr(obj, tailPart));
+    }
+  }, head);
 }
 
 function createMemberExpr(
@@ -263,6 +283,19 @@ function createMemberExpr(
   }
 }
 
+export function createFuncCall(
+  name: FuncCall["name"],
+  [c1, fn]: FuncCallTailPart
+): FuncCall {
+  return {
+    type: "func_call",
+    name: trailing(name, c1) as FuncCall["name"],
+    args: fn.args,
+    filter: fn.filter,
+    over: fn.over,
+  };
+}
+
 const deriveMemberExprLoc = (expr: MemberExpr): MemberExpr => {
   if (!expr.object.range || !expr.property.range) {
     return expr;
@@ -270,6 +303,19 @@ const deriveMemberExprLoc = (expr: MemberExpr): MemberExpr => {
   const start = expr.object.range[0];
   const end = expr.property.range[1];
   return { ...expr, range: [start, end] };
+};
+
+const deriveFuncCallLoc = (fn: FuncCall): FuncCall => {
+  const right = fn.over || fn.filter || fn.args;
+  if (!right) {
+    throw new Error("Unexpected argument-less function call.");
+  }
+  if (!fn.name.range || !right.range) {
+    return fn;
+  }
+  const start = fn.name.range[0];
+  const end = right.range[1];
+  return { ...fn, range: [start, end] };
 };
 
 export function createPrefixOpExpr(

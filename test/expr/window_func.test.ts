@@ -112,6 +112,7 @@ describe("window functions", () => {
           },
           "type": "paren_expr",
         },
+        "filter": undefined,
         "name": {
           "name": "row_number",
           "text": "row_number",
