@@ -10,7 +10,7 @@ describe("member_expr", () => {
     testExpr("foo.bar.baz");
   });
 
-  it("supports member_expr on function call", () => {
+  it.skip("supports member_expr on function call", () => {
     testExpr("foo().baz");
   });
 

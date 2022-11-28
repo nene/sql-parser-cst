@@ -275,7 +275,7 @@ join_expr_right
   }
 
 table_or_subquery
-  = t:(unnest_with_offset_expr / table_func_call / paren_expr_join / paren_expr_select) alias:(__ alias)? {
+  = t:(unnest_with_offset_expr / func_call / paren_expr_join / paren_expr_select) alias:(__ alias)? {
     return loc(createAlias(t, alias));
   }
   / table_ref_or_alias
@@ -2396,12 +2396,16 @@ collate_expr
   / negation_expr
 
 negation_expr
-  = member_expr
+  = maybe_func_call
   / op:negation_operator right:(__ negation_expr) {
     return loc(createPrefixOpExpr(op, read(right)));
   }
 
 negation_operator = "-" / "~" / "!"
+
+maybe_func_call
+  = func_call
+  / member_expr
 
 member_expr
   = obj:primary props:(__ "." __ qualified_column / __ array_subscript &bigquery)+ {
@@ -2435,8 +2439,6 @@ primary
   / cast_expr
   / &sqlite e:raise_expr { return e; }
   / (&mysql / &bigquery) e:extract_expr { return e; }
-  / func_call
-  / table_func_call
   / case_expr
   / exists_expr
   / ident
@@ -2619,18 +2621,14 @@ func_call
       });
     }
 
-table_func_call
-  = name:(table_ref __) args:paren_func_args {
-      return loc({
-        type: "func_call",
-        name: read(name),
-        args,
-      });
+func_name
+  = name:(member_expr / func_name_kw)
+    &{ return name.type === "member_expr" || name.type === "identifier"; } {
+      return name;
     }
 
-func_name
-  = ident
-  / &mysql kw:mysql_window_func_keyword {
+func_name_kw
+  = &mysql kw:mysql_window_func_keyword {
     return loc(createIdentifier(kw.text, kw.text));
   }
   / &bigquery kw:bigquery_func_keyword {

@@ -6,7 +6,6 @@ import {
   ListExpr,
   MemberExpr,
   ParenExpr,
-  TableFuncCall,
   TableRef,
 } from "./Expr";
 import { Alias } from "./Alias";
@@ -230,7 +229,7 @@ type JoinOp =
 
 export type TableOrSubquery =
   | TableRef
-  | TableFuncCall
+  | FuncCall
   | IndexedTableRef
   | NotIndexedTableRef
   | ParenExpr<SubSelect | TableExpr>

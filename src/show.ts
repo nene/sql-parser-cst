@@ -351,7 +351,6 @@ const showNode = cstTransformer<string>({
   prefix_op_expr: (node) => show([node.operator, node.expr]),
   postfix_op_expr: (node) => show([node.expr, node.operator]),
   func_call: (node) => show([node.name, node.args, node.filter, node.over]),
-  table_func_call: (node) => show([node.name, node.args]),
   func_args: (node) =>
     show([
       node.distinctKw,

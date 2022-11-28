@@ -34,7 +34,6 @@ export type Expr =
   | PrefixOpExpr
   | PostfixOpExpr
   | FuncCall
-  | TableFuncCall
   | CastExpr
   | RaiseExpr
   | ExtractExpr
@@ -88,16 +87,10 @@ export interface PostfixOpExpr extends BaseNode {
 
 export interface FuncCall extends BaseNode {
   type: "func_call";
-  name: Identifier;
+  name: Identifier | MemberExpr;
   args?: ParenExpr<FuncArgs>;
   filter?: FilterArg;
   over?: OverArg;
-}
-
-export interface TableFuncCall extends BaseNode {
-  type: "table_func_call";
-  name: TableRef;
-  args: ParenExpr<ListExpr<Expr>>;
 }
 
 export interface FuncArgs extends BaseNode {
