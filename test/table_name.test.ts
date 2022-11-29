@@ -1,4 +1,4 @@
-import { dialect, test, parseFrom } from "./test_utils";
+import { dialect, test, parseFrom, parseExpr } from "./test_utils";
 
 describe("table names", () => {
   it("supports simple table names", () => {
@@ -81,6 +81,80 @@ describe("table names", () => {
   dialect(["mysql", "bigquery"], () => {
     it("supports quoted qualified table name", () => {
       test("SELECT col FROM `my db`.`my tbl`");
+    });
+  });
+
+  dialect("bigquery", () => {
+    describe("quoted table paths", () => {
+      it("supports quoted table path", () => {
+        test("SELECT * FROM `project.dataset.table`");
+        test("SELECT * FROM `my project.some dataset.my table`");
+      });
+
+      it("parses table path elements out of quoted table path", () => {
+        expect(parseExpr("`project.dataset.table`")).toMatchInlineSnapshot(`
+          {
+            "expr": {
+              "object": {
+                "object": {
+                  "name": "project",
+                  "text": "project",
+                  "type": "identifier",
+                },
+                "property": {
+                  "name": "dataset",
+                  "text": "dataset",
+                  "type": "identifier",
+                },
+                "type": "member_expr",
+              },
+              "property": {
+                "name": "table",
+                "text": "table",
+                "type": "identifier",
+              },
+              "type": "member_expr",
+            },
+            "type": "bigquery_quoted_member_expr",
+          }
+        `);
+      });
+
+      it("supports partially quoted table path", () => {
+        test("SELECT * FROM project.`dataset.table`");
+        test("SELECT * FROM `project`.`dataset.table`");
+        test("SELECT * FROM `project.dataset`.`table`");
+        test("SELECT * FROM `project.dataset`.table");
+      });
+
+      it("parses partially quoted table path elements", () => {
+        expect(parseExpr("`my project`.`my dataset.my table`")).toMatchInlineSnapshot(`
+          {
+            "object": {
+              "name": "my project",
+              "text": "\`my project\`",
+              "type": "identifier",
+            },
+            "property": {
+              "expr": {
+                "object": {
+                  "name": "my dataset",
+                  "text": "my dataset",
+                  "type": "identifier",
+                },
+                "property": {
+                  "name": "my table",
+                  "text": "my table",
+                  "type": "identifier",
+                },
+                "type": "member_expr",
+              },
+              "type": "bigquery_quoted_member_expr",
+            },
+            "type": "member_expr",
+          }
+        `);
+      });
     });
   });
 });

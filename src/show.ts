@@ -392,6 +392,7 @@ const showNode = cstTransformer<string>({
       [node.object, node.property],
       node.property.type === "array_subscript" ? "" : "."
     ),
+  bigquery_quoted_member_expr: (node) => show(["`", node.expr, "`"]),
   array_subscript: (node) => show(["[", node.expr, "]"]),
   array_subscript_specifier: (node) => show([node.specifierKw, node.args]),
   alias: (node) => show([node.expr, node.asKw, node.alias]),

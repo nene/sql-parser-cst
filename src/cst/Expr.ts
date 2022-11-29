@@ -43,6 +43,7 @@ export type Expr =
   | StringWithCharset
   | Literal
   | MemberExpr
+  | BigQueryQuotedMemberExpr
   | Identifier
   | Parameter
   | TypedExpr
@@ -256,8 +257,15 @@ export interface MemberExpr extends BaseNode {
   property: ArraySubscript | Identifier | AllColumns;
 }
 
+// Represents BigQuery-specific quated table path expressions like:
+// `my project.dataset.my table`
+export interface BigQueryQuotedMemberExpr extends BaseNode {
+  type: "bigquery_quoted_member_expr";
+  expr: MemberExpr;
+}
+
 // Type alias to use in places where MemberExpr or Identifier should refer to a table
-export type Table = MemberExpr | Identifier;
+export type Table = MemberExpr | Identifier | BigQueryQuotedMemberExpr;
 
 export interface ArraySubscript extends BaseNode {
   type: "array_subscript";

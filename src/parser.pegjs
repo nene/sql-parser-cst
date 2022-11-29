@@ -2929,7 +2929,7 @@ ident "identifier"
 quoted_ident
   = &sqlite ident:bracket_quoted_ident { return ident; }
   / (&sqlite / &mysql) ident:backticks_quoted_ident_qq { return ident; }
-  / &bigquery ident:backticks_quoted_ident_bs { return ident; }
+  / &bigquery ident:(bigquery_quoted_member_expr / backticks_quoted_ident_bs) { return ident; }
   / &sqlite str:literal_double_quoted_string_qq { return loc(createIdentifier(str.text, str.value)); }
 
 backticks_quoted_ident_qq
@@ -2940,6 +2940,25 @@ escaped_backtick_qq
 
 backticks_quoted_ident_bs
   = "`" chars:([^`\\] / backslash_escape)+ "`" { return loc(createIdentifier(text(), chars.join(""))); }
+
+bigquery_quoted_member_expr
+  = "`" e:quoted_member_expr "`" { return loc({ type: "bigquery_quoted_member_expr", expr: e }); }
+
+quoted_member_expr
+  = head:quoted_member_expr_ident tail:(no_whitespace "." no_whitespace quoted_member_expr_ident)+ {
+    return createMemberExprChain(head, tail);
+  }
+
+quoted_member_expr_ident
+  = [^.`]+ {
+    return loc(createIdentifier(text(), text()));
+  }
+
+// utility to empty result of __ rule
+no_whitespace
+  = &{ return true } {
+    return [];
+  }
 
 bracket_quoted_ident
   = "[" chars:([^\]] / escaped_bracket)+ "]" { return loc(createIdentifier(text(), chars.join(""))); }
