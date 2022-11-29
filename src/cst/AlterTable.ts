@@ -1,12 +1,12 @@
 import { BaseNode, Keyword } from "./Base";
 import { ColumnDefinition } from "./CreateTable";
-import { Identifier, ListExpr, TableRef } from "./Expr";
+import { Identifier, ListExpr, Table } from "./Expr";
 
 // ALTER TABLE
 export interface AlterTableStmt extends BaseNode {
   type: "alter_table_stmt";
   alterTableKw: [Keyword<"ALTER">, Keyword<"TABLE">];
-  table: TableRef;
+  table: Table;
   actions: ListExpr<AlterAction>;
 }
 
@@ -19,7 +19,7 @@ export type AlterAction =
 export interface AlterRenameTable extends BaseNode {
   type: "alter_rename_table";
   renameKw: Keyword<"RENAME"> | [Keyword<"RENAME">, Keyword<"TO" | "AS">];
-  newName: TableRef;
+  newName: Table;
 }
 
 export interface AlterRenameColumn extends BaseNode {

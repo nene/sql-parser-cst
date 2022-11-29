@@ -6,7 +6,7 @@ import {
   ListExpr,
   MemberExpr,
   ParenExpr,
-  TableRef,
+  Table,
 } from "./Expr";
 import { Alias } from "./Alias";
 import { FrameClause } from "./WindowFrame";
@@ -228,7 +228,7 @@ type JoinOp =
   | Keyword<"JOIN" | "STRAIGHT_JOIN">;
 
 export type TableOrSubquery =
-  | TableRef
+  | Table
   | FuncCall
   | IndexedTable
   | NotIndexedTable
@@ -240,13 +240,13 @@ export type TableOrSubquery =
 // SQLite only
 export interface IndexedTable extends BaseNode {
   type: "indexed_table";
-  table: TableRef | Alias<TableRef>;
+  table: Table | Alias<Table>;
   indexedByKw: [Keyword<"INDEXED">, Keyword<"BY">];
   index: Identifier;
 }
 export interface NotIndexedTable extends BaseNode {
   type: "not_indexed_table";
-  table: TableRef | Alias<TableRef>;
+  table: Table | Alias<Table>;
   notIndexedKw: [Keyword<"NOT">, Keyword<"INDEXED">];
 }
 

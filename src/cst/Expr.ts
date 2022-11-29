@@ -257,7 +257,7 @@ export interface MemberExpr extends BaseNode {
 }
 
 // Type alias to use in places where MemberExpr or Identifier should refer to a table
-export type TableRef = MemberExpr | Identifier;
+export type Table = MemberExpr | Identifier;
 
 export interface ArraySubscript extends BaseNode {
   type: "array_subscript";

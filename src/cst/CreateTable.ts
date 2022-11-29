@@ -1,6 +1,6 @@
 import { BaseNode, Keyword } from "./Base";
 import { ColumnConstraint, Constraint, TableConstraint } from "./Constraint";
-import { Identifier, ListExpr, PairExpr, ParenExpr, TableRef } from "./Expr";
+import { Identifier, ListExpr, PairExpr, ParenExpr, Table } from "./Expr";
 import { Literal, NumberLiteral, StringLiteral } from "./Literal";
 import { SubSelect } from "./Select";
 
@@ -19,7 +19,7 @@ export interface CreateTableStmt extends BaseNode {
   tableKw: Keyword<"TABLE">;
   temporaryKw?: Keyword<"TEMP" | "TEMPORARY">;
   ifNotExistsKw?: [Keyword<"IF">, Keyword<"NOT">, Keyword<"EXISTS">];
-  table: TableRef;
+  table: Table;
   columns?: ParenExpr<
     ListExpr<ColumnDefinition | TableConstraint | Constraint<TableConstraint>>
   >;
