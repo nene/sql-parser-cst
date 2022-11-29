@@ -1,19 +1,16 @@
 import { dialect, test, parseFrom } from "./test_utils";
 
-describe("table_ref", () => {
+describe("table names", () => {
   it("supports simple table names", () => {
     test("SELECT col FROM my_tbl");
   });
 
-  it("parses simple table name as TableRef", () => {
+  it("parses simple table name as MemberExpr", () => {
     expect(parseFrom(`my_table`)).toMatchInlineSnapshot(`
       {
-        "table": {
-          "name": "my_table",
-          "text": "my_table",
-          "type": "identifier",
-        },
-        "type": "table_ref",
+        "name": "my_table",
+        "text": "my_table",
+        "type": "identifier",
       }
     `);
   });
@@ -23,20 +20,20 @@ describe("table_ref", () => {
     test("SELECT col FROM schm /*c1*/./*c2*/ tbl");
   });
 
-  it("parses qualified table name as TableRef", () => {
+  it("parses qualified table name as MemberExpr", () => {
     expect(parseFrom(`my_schema.my_table`)).toMatchInlineSnapshot(`
       {
-        "schema": {
+        "object": {
           "name": "my_schema",
           "text": "my_schema",
           "type": "identifier",
         },
-        "table": {
+        "property": {
           "name": "my_table",
           "text": "my_table",
           "type": "identifier",
         },
-        "type": "table_ref",
+        "type": "member_expr",
       }
     `);
   });
@@ -46,25 +43,28 @@ describe("table_ref", () => {
       test("SELECT col FROM my-project.my-dataset.my-table");
     });
 
-    it("parses three-part table name as TableRef", () => {
+    it("parses three-part table name as MemberExpr", () => {
       expect(parseFrom(`my-project.my-dataset.my-table`)).toMatchInlineSnapshot(`
         {
-          "catalog": {
-            "name": "my-project",
-            "text": "my-project",
-            "type": "identifier",
+          "object": {
+            "object": {
+              "name": "my-project",
+              "text": "my-project",
+              "type": "identifier",
+            },
+            "property": {
+              "name": "my-dataset",
+              "text": "my-dataset",
+              "type": "identifier",
+            },
+            "type": "member_expr",
           },
-          "schema": {
-            "name": "my-dataset",
-            "text": "my-dataset",
-            "type": "identifier",
-          },
-          "table": {
+          "property": {
             "name": "my-table",
             "text": "my-table",
             "type": "identifier",
           },
-          "type": "table_ref",
+          "type": "member_expr",
         }
       `);
     });

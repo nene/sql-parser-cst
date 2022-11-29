@@ -2415,7 +2415,7 @@ member_expr_or_func_call
 
 // Plain member_expr node chain, without function calls and array subscripts
 member_expr
-  = obj:ident props:(__ "." __ qualified_column)+ {
+  = obj:ident props:(__ "." __ qualified_column)* {
     return createMemberExprChain(obj, props);
   }
 
@@ -2625,10 +2625,7 @@ func_call_right
   }
 
 func_name
-  = name:(member_expr / ident / func_name_kw)
-    &{ return name.type === "member_expr" || name.type === "identifier"; } {
-      return name;
-    }
+  = member_expr / ident / func_name_kw
 
 func_name_kw
   = &mysql kw:mysql_window_func_keyword {
@@ -2873,27 +2870,7 @@ table_ref_list
   }
 
 table_ref
-  = catalog:(ident __) "." schema:(__ ident __) "." t:(__ ident) {
-    return loc({
-      type: "table_ref",
-      catalog: read(catalog),
-      schema: read(schema),
-      table: read(t),
-    });
-  }
-  / schema:(ident __) "." t:(__ ident) {
-    return loc({
-      type: "table_ref",
-      schema: read(schema),
-      table: read(t),
-    });
-  }
-  / t:ident {
-    return loc({
-      type: "table_ref",
-      table: t,
-    });
-  }
+  = member_expr
 
 /**
  * ------------------------------------------------------------------------------------ *

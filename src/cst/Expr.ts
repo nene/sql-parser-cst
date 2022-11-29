@@ -43,7 +43,6 @@ export type Expr =
   | StringWithCharset
   | Literal
   | MemberExpr
-  | TableRef
   | Identifier
   | Parameter
   | TypedExpr
@@ -257,6 +256,9 @@ export interface MemberExpr extends BaseNode {
   property: ArraySubscript | Identifier | AllColumns;
 }
 
+// Type alias to use in places where MemberExpr or Identifier should refer to a table
+export type TableRef = MemberExpr | Identifier;
+
 export interface ArraySubscript extends BaseNode {
   type: "array_subscript";
   expr: Expr | ArraySubscriptSpecifier;
@@ -266,13 +268,6 @@ export interface ArraySubscriptSpecifier extends BaseNode {
   type: "array_subscript_specifier";
   specifierKw: Keyword<"OFFSET" | "SAFE_OFFSET" | "ORDINAL" | "SAFE_ORDINAL">;
   args: ParenExpr<Expr>;
-}
-
-export interface TableRef extends BaseNode {
-  type: "table_ref";
-  catalog?: Identifier;
-  schema?: Identifier;
-  table: Identifier;
 }
 
 export interface Identifier extends BaseNode {

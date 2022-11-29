@@ -198,12 +198,9 @@ describe("insert into", () => {
             "options": [],
             "orAction": undefined,
             "table": {
-              "table": {
-                "name": "tbl",
-                "text": "tbl",
-                "type": "identifier",
-              },
-              "type": "table_ref",
+              "name": "tbl",
+              "text": "tbl",
+              "type": "identifier",
             },
             "type": "insert_clause",
           },

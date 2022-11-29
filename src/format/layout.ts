@@ -92,10 +92,6 @@ const layoutNode = cstTransformer<Layout>({
     node.property.type === "array_subscript"
       ? layout([node.object, node.property])
       : [layout(node.object), ".", layout(node.property)],
-  table_ref: (node) =>
-    node.schema
-      ? [layout(node.schema), ".", layout(node.table)]
-      : layout(node.table),
   alias: (node) =>
     node.asKw
       ? layout([node.expr, node.asKw, node.alias])

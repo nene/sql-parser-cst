@@ -84,20 +84,13 @@ describe("location", () => {
                     "type": "identifier",
                   },
                   "expr": {
+                    "name": "tbl",
                     "range": [
                       22,
                       25,
                     ],
-                    "table": {
-                      "name": "tbl",
-                      "range": [
-                        22,
-                        25,
-                      ],
-                      "text": "tbl",
-                      "type": "identifier",
-                    },
-                    "type": "table_ref",
+                    "text": "tbl",
+                    "type": "identifier",
                   },
                   "range": [
                     22,

@@ -2,17 +2,17 @@ import { cstVisitor } from "../src/main";
 import { parse, preserveAll, show } from "./test_utils";
 
 describe("cstVisitor", () => {
-  it("allows visiting all table names", () => {
+  it("allows visiting all identifiers", () => {
     const tables: string[] = [];
 
     const visit = cstVisitor({
-      table_ref: (tbl) => {
-        tables.push(tbl.table.text);
+      identifier: (id) => {
+        tables.push(id.name);
       },
     });
     visit(parse("SELECT name, job_name FROM employees JOIN jobs"));
 
-    expect(tables).toEqual(["employees", "jobs"]);
+    expect(tables).toEqual(["name", "job_name", "employees", "jobs"]);
   });
 
   it("allows mutating all keywords", () => {

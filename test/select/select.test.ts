@@ -152,17 +152,17 @@ describe("select", () => {
             },
             {
               "expr": {
-                "schema": {
+                "object": {
                   "name": "db",
                   "text": "db",
                   "type": "identifier",
                 },
-                "table": {
+                "property": {
                   "name": "tbl",
                   "text": "tbl",
                   "type": "identifier",
                 },
-                "type": "table_ref",
+                "type": "member_expr",
               },
               "fromKw": {
                 "name": "FROM",
