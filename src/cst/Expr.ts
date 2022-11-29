@@ -1,4 +1,4 @@
-import { AllColumns, BaseNode, Keyword } from "./Base";
+import { AllColumns, BaseNode, Empty, Keyword } from "./Base";
 import { DataType } from "./CreateTable";
 import { Literal, StringLiteral } from "./Literal";
 import { Node } from "./Node";
@@ -254,7 +254,7 @@ export interface StringWithCharset extends BaseNode {
 export interface MemberExpr extends BaseNode {
   type: "member_expr";
   object: Expr;
-  property: ArraySubscript | Identifier | AllColumns;
+  property: ArraySubscript | Identifier | AllColumns | Empty;
 }
 
 // Represents BigQuery-specific quated table path expressions like:

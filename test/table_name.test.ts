@@ -155,6 +155,43 @@ describe("table names", () => {
           }
         `);
       });
+
+      it("supports repeated dots in quoted table path", () => {
+        test("SELECT * FROM `project..dataset...table`");
+      });
+
+      it("parses repeated dots in quoted table path", () => {
+        expect(parseExpr("`dataset...table`")).toMatchInlineSnapshot(`
+          {
+            "expr": {
+              "object": {
+                "object": {
+                  "object": {
+                    "name": "dataset",
+                    "text": "dataset",
+                    "type": "identifier",
+                  },
+                  "property": {
+                    "type": "empty",
+                  },
+                  "type": "member_expr",
+                },
+                "property": {
+                  "type": "empty",
+                },
+                "type": "member_expr",
+              },
+              "property": {
+                "name": "table",
+                "text": "table",
+                "type": "identifier",
+              },
+              "type": "member_expr",
+            },
+            "type": "bigquery_quoted_member_expr",
+          }
+        `);
+      });
     });
   });
 });

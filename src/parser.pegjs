@@ -2945,7 +2945,7 @@ bigquery_quoted_member_expr
   = "`" e:quoted_member_expr "`" { return loc({ type: "bigquery_quoted_member_expr", expr: e }); }
 
 quoted_member_expr
-  = head:quoted_member_expr_ident tail:(no_whitespace "." no_whitespace quoted_member_expr_ident)+ {
+  = head:quoted_member_expr_ident tail:(no_whitespace "." no_whitespace (quoted_member_expr_ident / empty))+ {
     return createMemberExprChain(head, tail);
   }
 
