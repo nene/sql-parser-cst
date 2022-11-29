@@ -278,10 +278,10 @@ table_or_subquery
   = t:(unnest_with_offset_expr / func_call / paren_expr_join / paren_expr_select) alias:(__ alias)? {
     return loc(createAlias(t, alias));
   }
-  / table_ref_or_alias
+  / table_or_alias
 
-table_ref_or_alias
-  = &sqlite table:(table_ref_or_alias_standard __) kw:(INDEXED __ BY) id:(__ ident) {
+table_or_alias
+  = &sqlite table:(table_or_alias_standard __) kw:(INDEXED __ BY) id:(__ ident) {
     return loc({
       type: "indexed_table",
       table: read(table),
@@ -289,17 +289,17 @@ table_ref_or_alias
       index: read(id),
     });
   }
-  / &sqlite table:(table_ref_or_alias_standard __) kw:(NOT __ INDEXED) {
+  / &sqlite table:(table_or_alias_standard __) kw:(NOT __ INDEXED) {
     return loc({
       type: "not_indexed_table",
       table: read(table),
       notIndexedKw: read(kw),
     });
   }
-  / table_ref_or_alias_standard
+  / table_or_alias_standard
 
-table_ref_or_alias_standard
-  = t:table_ref alias:(__ alias)? {
+table_or_alias_standard
+  = t:table alias:(__ alias)? {
     return loc(createAlias(t, alias));
   }
 
@@ -813,7 +813,7 @@ insert_clause
     options:(__ upsert_options)?
     orAction:(__ or_alternate_action)?
     intoKw:(__ INTO)?
-    table:(__ table_ref_or_explicit_alias)
+    table:(__ table_or_explicit_alias)
     columns:(__ paren_column_list)? {
       return loc({
         type: "insert_clause",
@@ -845,8 +845,8 @@ or_alternate_action
     });
   }
 
-table_ref_or_explicit_alias
-  = t:table_ref alias:(__ explicit_alias)? {
+table_or_explicit_alias
+  = t:table alias:(__ explicit_alias)? {
     return loc(createAlias(t, alias));
   }
 
@@ -964,7 +964,7 @@ update_clause
   = kw:(UPDATE __)
     options:(upsert_options __)?
     orAction:(or_alternate_action __)?
-    tables:table_ref_or_alias_list {
+    tables:table_or_alias_list {
       return loc({
         type: "update_clause",
         updateKw: read(kw),
@@ -974,8 +974,8 @@ update_clause
       });
     }
 
-table_ref_or_alias_list
-  = head:table_ref_or_alias tail:(__ "," __ table_ref_or_alias)* {
+table_or_alias_list
+  = head:table_or_alias tail:(__ "," __ table_or_alias)* {
     return loc(createListExpr(head, tail));
   }
 
@@ -1027,7 +1027,7 @@ column_value
  */
 delete_stmt
   = withCls:(with_clause __)?
-    delKw:(DELETE __) fromKw:(FROM __) tbl:table_ref_or_alias
+    delKw:(DELETE __) fromKw:(FROM __) tbl:table_or_alias
     where:(__ where_clause)?
     returning:(__ returning_clause)? {
       return loc({
@@ -1053,7 +1053,7 @@ create_view_stmt
     tmpKw:(__ (TEMP / TEMPORARY))?
     viewKw:(__ VIEW)
     ifKw:(__ if_not_exists)?
-    name:(__ table_ref)
+    name:(__ table)
     cols:(__ paren_column_list)?
     asKw:(__ AS)
     select:(__ compound_select_stmt) {
@@ -1073,7 +1073,7 @@ create_view_stmt
 drop_view_stmt
   = kws:(DROP __ VIEW)
     ifKw:(__ if_exists)?
-    views:(__ table_ref_list)
+    views:(__ table_list)
     behaviorKw:(__ (CASCADE / RESTRICT))? {
       return loc({
         type: "drop_view_stmt",
@@ -1096,9 +1096,9 @@ create_index_stmt
     typeKw:((UNIQUE / FULLTEXT / SPATIAL) __)?
     indexKw:(INDEX __)
     ifKw:(if_not_exists __)?
-    name:(table_ref __)
+    name:(table __)
     onKw:(ON __)
-    table:(table_ref __)
+    table:(table __)
     columns:paren_sort_specification_list
     where:(__ where_clause)? {
       return loc({
@@ -1120,7 +1120,7 @@ drop_index_stmt
   = &sqlite
     kws:(DROP __ INDEX __)
     ifKw:(if_exists __)?
-    indexes:table_ref_list {
+    indexes:table_list {
       return loc({
         type: "drop_index_stmt",
         dropIndexKw: read(kws),
@@ -1130,9 +1130,9 @@ drop_index_stmt
     }
   / &mysql
     kws:(DROP __ INDEX __)
-    indexes:(table_ref_list __)
+    indexes:(table_list __)
     onKw:(ON __)
-    table:table_ref {
+    table:table {
       return loc({
         type: "drop_index_stmt",
         dropIndexKw: read(kws),
@@ -1154,7 +1154,7 @@ create_table_stmt
     tmpKw:(__ (TEMPORARY / TEMP))?
     tableKw:(__ TABLE)
     ifKw:(__ if_not_exists)?
-    table:(__ table_ref)
+    table:(__ table)
     columns:(__ create_table_definition)?
     options:(__ table_options)?
     as:(__ create_table_as)?
@@ -1226,7 +1226,7 @@ drop_table_stmt
     temporaryKw:(TEMPORARY __)?
     tableKw:(TABLE __)
     ifExistsKw:(if_exists __)?
-    tables:table_ref_list
+    tables:table_list
     behaviorKw:(__ (CASCADE / RESTRICT))?
     {
       return loc({
@@ -1252,7 +1252,7 @@ if_exists
  */
 alter_table_stmt
   = kw:(ALTER __ TABLE __)
-    t:(table_ref __)
+    t:(table __)
     actions:alter_action_list {
       return loc({
         type: "alter_table_stmt",
@@ -1292,7 +1292,7 @@ alter_drop_column
     }
 
 alter_rename_table
-  = kw:(rename_table_kw __) t:table_ref {
+  = kw:(rename_table_kw __) t:table {
     return loc({
       type: "alter_rename_table",
       renameKw: read(kw),
@@ -1332,10 +1332,10 @@ create_trigger_stmt
     tmpKw:((TEMPORARY / TEMP) __)?
     trigKw:(TRIGGER __)
     ifKw:(if_not_exists __)?
-    name:(table_ref __)
+    name:(table __)
     event:(trigger_event __)
     onKw:(ON __)
-    table:(table_ref __)
+    table:(table __)
     eachKw:(FOR __ EACH __ ROW __)?
     when:(trigger_condition __)?
     body:trigger_body
@@ -1408,7 +1408,7 @@ trigger_program
 drop_trigger_stmt
   = kw:(DROP __ TRIGGER __)
     ifKw:(if_exists __)?
-    trigger:table_ref {
+    trigger:table {
       return loc({
         type: "drop_trigger_stmt",
         dropTriggerKw: read(kw),
@@ -1425,7 +1425,7 @@ drop_trigger_stmt
  * ------------------------------------------------------------------------------------ *
  */
 analyze_stmt
-  = kw:ANALYZE tKw:(__ TABLE)? tables:(__ table_ref_list)? {
+  = kw:ANALYZE tKw:(__ TABLE)? tables:(__ table_list)? {
     return loc({
       type: "analyze_stmt",
       analyzeKw: kw,
@@ -1607,12 +1607,12 @@ vacuum_stmt
   }
 
 reindex_stmt
-  = kw:REINDEX table:(__ table_ref)? {
+  = kw:REINDEX table:(__ table)? {
     return loc({ type: "reindex_stmt", reindexKw: kw, table: read(table) });
   }
 
 pragma_stmt
-  = kw:(PRAGMA __) pragma:(pragma_assignment / pragma_func_call / table_ref) {
+  = kw:(PRAGMA __) pragma:(pragma_assignment / pragma_func_call / table) {
     return loc({
       type: "pragma_stmt",
       pragmaKw: read(kw),
@@ -1621,7 +1621,7 @@ pragma_stmt
   }
 
 pragma_assignment
-  = name:(table_ref __) "=" value:(__ pragma_value) {
+  = name:(table __) "=" value:(__ pragma_value) {
     return loc({
       type: "pragma_assignment",
       name: read(name),
@@ -1630,7 +1630,7 @@ pragma_assignment
   }
 
 pragma_func_call
-  = name:(__ table_ref) args:(__ pragma_func_call_args) {
+  = name:(__ table) args:(__ pragma_func_call_args) {
     return loc({
       type: "pragma_func_call",
       name: read(name),
@@ -1648,7 +1648,7 @@ pragma_value
   / literal
 
 create_virtual_table_stmt
-  = kw:(CREATE __ VIRTUAL __ TABLE __) ifKw:(if_not_exists __)? table:(table_ref __)
+  = kw:(CREATE __ VIRTUAL __ TABLE __) ifKw:(if_not_exists __)? table:(table __)
     usingKw:(USING __) func:(func_call / ident) {
       return loc({
         type: "create_virtual_table_stmt",
@@ -1990,7 +1990,7 @@ constraint_foreign_key
 
 references_specification
   = kw:(REFERENCES __)
-    table:table_ref
+    table:table
     columns:(__ paren_column_list)?
     options:(__ (referential_action / referential_match))* {
       return loc({
@@ -2864,12 +2864,12 @@ parameter
  *                                                                                      *
  * ------------------------------------------------------------------------------------ *
  */
-table_ref_list
-  = head:table_ref tail:(__ "," __ table_ref)* {
+table_list
+  = head:table tail:(__ "," __ table)* {
     return loc(createListExpr(head, tail));
   }
 
-table_ref
+table
   = member_expr
 
 /**
