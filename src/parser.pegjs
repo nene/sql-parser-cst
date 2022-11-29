@@ -362,17 +362,17 @@ on_clause
 
 // UNNEST .......................................................
 unnest_with_offset_expr
-  = &bigquery unnest:unnest_expr_or_alias kw:(__ WITH __ OFFSET) {
+  = &bigquery unnest:implicit_explicit_unnest_expr_or_alias kw:(__ WITH __ OFFSET) {
     return loc({
       type: "unnest_with_offset_expr",
       unnest,
       withOffsetKw: read(kw),
     });
   }
-  / unnest_expr
+  / &bigquery e:unnest_expr { return e; }
 
-unnest_expr_or_alias
-  = e:unnest_expr alias:(__ alias)? {
+implicit_explicit_unnest_expr_or_alias
+  = e:(unnest_expr / member_expr) alias:(__ alias)? {
     return loc(createAlias(e, alias));
   }
 

@@ -126,6 +126,12 @@ describe("select FROM", () => {
       it("supports implicit unnest", () => {
         test("SELECT * FROM kind_of.really.long.expression.here.that.evaluates.to.table");
       });
+
+      it("supports implicit unnest WITH OFFSET", () => {
+        test("SELECT * FROM foo.bar.baz WITH OFFSET");
+        test("SELECT * FROM foo.bar.baz AS b WITH OFFSET");
+        test("SELECT * FROM foo.bar.baz AS b WITH OFFSET AS x");
+      });
     });
 
     describe("PIVOT operator", () => {
