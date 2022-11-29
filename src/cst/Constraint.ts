@@ -1,6 +1,6 @@
 import { BaseNode, Keyword } from "./Base";
 import { StringLiteral } from "./Literal";
-import { Expr, Identifier, ListExpr, ParenExpr, TableRef } from "./Expr";
+import { Expr, Identifier, ListExpr, ParenExpr, Table } from "./Expr";
 import { SortSpecification } from "./Select";
 
 export type AllConstraintNodes =
@@ -75,7 +75,7 @@ export interface ConstraintForeignKey extends BaseNode {
 export interface ReferencesSpecification extends BaseNode {
   type: "references_specification";
   referencesKw: Keyword<"REFERENCES">;
-  table: TableRef;
+  table: Table;
   columns?: ParenExpr<ListExpr<Identifier>>;
   options: (ReferentialAction | ReferentialMatch)[];
 }

@@ -1,5 +1,5 @@
 import { BaseNode, Keyword } from "./Base";
-import { Expr, FuncCall, Identifier, ParenExpr, TableRef } from "./Expr";
+import { Expr, FuncCall, Identifier, ParenExpr, Table } from "./Expr";
 import { Literal, StringLiteral } from "./Literal";
 
 export type AllSqliteNodes = SqliteStmt | PragmaAssignment | PragmaFuncCall;
@@ -40,24 +40,24 @@ export interface VacuumStmt extends BaseNode {
 export interface ReindexStmt extends BaseNode {
   type: "reindex_stmt";
   reindexKw: Keyword<"REINDEX">;
-  table?: TableRef;
+  table?: Table;
 }
 
 export interface PragmaStmt extends BaseNode {
   type: "pragma_stmt";
   pragmaKw: Keyword<"PRAGMA">;
-  pragma: TableRef | PragmaAssignment | PragmaFuncCall;
+  pragma: Table | PragmaAssignment | PragmaFuncCall;
 }
 
 export interface PragmaAssignment extends BaseNode {
   type: "pragma_assignment";
-  name: TableRef;
+  name: Table;
   value: Literal | Keyword;
 }
 
 export interface PragmaFuncCall extends BaseNode {
   type: "pragma_func_call";
-  name: TableRef;
+  name: Table;
   args: ParenExpr<Literal | Keyword>;
 }
 
@@ -69,7 +69,7 @@ export interface CreateVirtualTableStmt extends BaseNode {
     Keyword<"TABLE">
   ];
   ifNotExistsKw?: [Keyword<"IF">, Keyword<"NOT">, Keyword<"EXISTS">];
-  table: TableRef;
+  table: Table;
   usingKw: Keyword<"USING">;
   module: FuncCall;
 }

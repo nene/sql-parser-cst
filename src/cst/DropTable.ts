@@ -1,5 +1,5 @@
 import { BaseNode, Keyword } from "./Base";
-import { ListExpr, TableRef } from "./Expr";
+import { ListExpr, Table } from "./Expr";
 
 // DROP TABLE
 export interface DropTableStmt extends BaseNode {
@@ -8,6 +8,6 @@ export interface DropTableStmt extends BaseNode {
   temporaryKw?: Keyword<"TEMP" | "TEMPORARY">;
   tableKw: Keyword<"TABLE">;
   ifExistsKw?: [Keyword<"IF">, Keyword<"EXISTS">];
-  tables: ListExpr<TableRef>;
+  tables: ListExpr<Table>;
   behaviorKw?: Keyword<"CASCADE" | "RESTRICT">;
 }

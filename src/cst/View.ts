@@ -1,5 +1,5 @@
 import { BaseNode, Keyword } from "./Base";
-import { Identifier, ListExpr, ParenExpr, TableRef } from "./Expr";
+import { Identifier, ListExpr, ParenExpr, Table } from "./Expr";
 import { SubSelect } from "./Select";
 
 // CREATE VIEW
@@ -9,7 +9,7 @@ export interface CreateViewStmt extends BaseNode {
   temporaryKw?: Keyword<"TEMP" | "TEMPORARY">;
   viewKw: Keyword<"VIEW">;
   ifNotExistsKw?: [Keyword<"IF">, Keyword<"NOT">, Keyword<"EXISTS">];
-  name: TableRef;
+  name: Table;
   columns?: ParenExpr<ListExpr<Identifier>>;
   asKw: Keyword<"AS">;
   expr: SubSelect;
@@ -20,6 +20,6 @@ export interface DropViewStmt extends BaseNode {
   type: "drop_view_stmt";
   dropViewKw: [Keyword<"DROP">, Keyword<"VIEW">];
   ifExistsKw?: [Keyword<"IF">, Keyword<"EXISTS">];
-  views: ListExpr<TableRef>;
+  views: ListExpr<Table>;
   behaviorKw?: Keyword<"CASCADE" | "RESTRICT">;
 }
