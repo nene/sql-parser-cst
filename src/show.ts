@@ -242,6 +242,9 @@ const showNode = cstTransformer<string>({
       node.returning,
     ]),
 
+  // TRUNCATE TABLE statement
+  truncate_stmt: (node) => show([node.truncateTableKw, node.table]),
+
   // CREATE VIEW statement
   create_view_stmt: (node) =>
     show([

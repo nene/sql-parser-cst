@@ -11,6 +11,7 @@ import { CompoundSelectStmt, SelectStmt } from "./Select";
 import { SqliteStmt } from "./Sqlite";
 import { TransactionStmt } from "./Transaction";
 import { CreateTriggerStmt, DropTriggerStmt } from "./Trigger";
+import { TruncateStmt } from "./Truncate";
 import { UpdateStmt } from "./Update";
 import { CreateViewStmt, DropViewStmt } from "./View";
 
@@ -23,6 +24,7 @@ export type Statement =
   | DropTableStmt
   | InsertStmt
   | DeleteStmt
+  | TruncateStmt
   | UpdateStmt
   | CreateViewStmt
   | DropViewStmt

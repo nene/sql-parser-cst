@@ -45,6 +45,7 @@ dml_statement
   / insert_stmt
   / update_stmt
   / delete_stmt
+  / x:truncate_stmt &bigquery { return x; }
 
 empty
   = (&. / end_of_file) {
@@ -1040,6 +1041,22 @@ delete_stmt
         returning: read(returning),
       });
     }
+
+/**
+ * ------------------------------------------------------------------------------------ *
+ *                                                                                      *
+ * TRUNCATE TABLE                                                                       *
+ *                                                                                      *
+ * ------------------------------------------------------------------------------------ *
+ */
+truncate_stmt
+  = kws:(TRUNCATE __ TABLE __) tbl:table {
+    return loc({
+      type: "truncate_stmt",
+      truncateTableKw: read(kws),
+      table: tbl,
+    });
+  }
 
 /**
  * ------------------------------------------------------------------------------------ *
