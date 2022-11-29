@@ -123,10 +123,7 @@ which preserves all of this information:
         {
           "type": "from_clause",
           "fromKw": { "type": "keyword", "text": "FROM", "name": "FROM" },
-          "expr": {
-            "type": "table_ref",
-            "table": { "type": "identifier", "text": "persons", "name": "persons" }
-          },
+          "expr": { "type": "identifier", "text": "persons", "name": "persons" },
           "leading": [
             { "type": "newline", "text": "\n" },
             { "type": "line_comment", "text": "-- use important table" },
