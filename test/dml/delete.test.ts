@@ -11,6 +11,12 @@ describe("delete from", () => {
     test("DELETE /*c1*/ FROM /*c2*/ tbl /*c3*/ WHERE /*c4*/ true");
   });
 
+  dialect("bigquery", () => {
+    it("supports DELETE without FROM", () => {
+      test("DELETE tbl WHERE x > 0");
+    });
+  });
+
   it("supports aliased table name", () => {
     test("DELETE FROM tbl AS t");
     test("DELETE FROM tbl t");

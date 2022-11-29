@@ -1027,7 +1027,7 @@ column_value
  */
 delete_stmt
   = withCls:(with_clause __)?
-    delKw:(DELETE __) fromKw:(FROM __) tbl:table_or_alias
+    delKw:(DELETE __) fromKw:(FROM __)? tbl:table_or_alias
     where:(__ where_clause)?
     returning:(__ returning_clause)? {
       return loc({
