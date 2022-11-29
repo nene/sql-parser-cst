@@ -253,7 +253,11 @@ export interface NotIndexedTable extends BaseNode {
 // BigQuery only
 export interface UnnestWithOffsetExpr extends BaseNode {
   type: "unnest_with_offset_expr";
-  unnest: UnnestExpr | Alias<UnnestExpr>;
+  unnest:
+    | UnnestExpr
+    | MemberExpr
+    | Identifier
+    | Alias<UnnestExpr | MemberExpr | Identifier>;
   withOffsetKw: [Keyword<"WITH">, Keyword<"OFFSET">];
 }
 export interface UnnestExpr extends BaseNode {
