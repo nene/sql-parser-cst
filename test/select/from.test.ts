@@ -92,6 +92,10 @@ describe("select FROM", () => {
         test("SELECT * FROM UNNEST(my_tbl.array_col)");
       });
 
+      it("supports UNNEST of long array path", () => {
+        test("SELECT * FROM UNNEST(my_tbl.some.long.path.to.array)");
+      });
+
       it("supports UNNEST with alias", () => {
         test("SELECT * FROM UNNEST(tbl.foo) AS blah");
       });
@@ -117,6 +121,10 @@ describe("select FROM", () => {
 
       it("supports UNNEST comma-joined with other tables", () => {
         test("SELECT * FROM tbl1, UNNEST(tbl.foo), tbl2");
+      });
+
+      it("supports implicit unnest", () => {
+        test("SELECT * FROM kind_of.really.long.expression.here.that.evaluates.to.table");
       });
     });
 
