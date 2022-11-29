@@ -283,7 +283,7 @@ table_or_subquery
 table_ref_or_alias
   = &sqlite table:(table_ref_or_alias_standard __) kw:(INDEXED __ BY) id:(__ ident) {
     return loc({
-      type: "indexed_table_ref",
+      type: "indexed_table",
       table: read(table),
       indexedByKw: read(kw),
       index: read(id),
@@ -291,7 +291,7 @@ table_ref_or_alias
   }
   / &sqlite table:(table_ref_or_alias_standard __) kw:(NOT __ INDEXED) {
     return loc({
-      type: "not_indexed_table_ref",
+      type: "not_indexed_table",
       table: read(table),
       notIndexedKw: read(kw),
     });

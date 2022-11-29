@@ -32,8 +32,8 @@ export type AllSelectNodes =
   | PartitionByClause
   | LimitClause
   | JoinExpr
-  | IndexedTableRef
-  | NotIndexedTableRef
+  | IndexedTable
+  | NotIndexedTable
   | UnnestWithOffsetExpr
   | UnnestExpr
   | PivotExpr
@@ -230,22 +230,22 @@ type JoinOp =
 export type TableOrSubquery =
   | TableRef
   | FuncCall
-  | IndexedTableRef
-  | NotIndexedTableRef
+  | IndexedTable
+  | NotIndexedTable
   | ParenExpr<SubSelect | TableExpr>
   | UnnestWithOffsetExpr
   | UnnestExpr
   | Alias<TableOrSubquery>;
 
 // SQLite only
-export interface IndexedTableRef extends BaseNode {
-  type: "indexed_table_ref";
+export interface IndexedTable extends BaseNode {
+  type: "indexed_table";
   table: TableRef | Alias<TableRef>;
   indexedByKw: [Keyword<"INDEXED">, Keyword<"BY">];
   index: Identifier;
 }
-export interface NotIndexedTableRef extends BaseNode {
-  type: "not_indexed_table_ref";
+export interface NotIndexedTable extends BaseNode {
+  type: "not_indexed_table";
   table: TableRef | Alias<TableRef>;
   notIndexedKw: [Keyword<"NOT">, Keyword<"INDEXED">];
 }
