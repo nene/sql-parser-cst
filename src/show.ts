@@ -200,6 +200,10 @@ const showNode = cstTransformer<string>({
     show([node.addKw, node.ifNotExistsKw, node.column]),
   alter_drop_column: (node) =>
     show([node.dropKw, node.ifExistsKw, node.column]),
+  alter_alter_column: (node) =>
+    show([node.alterKw, node.ifExistsKw, node.column, node.action]),
+  alter_column_set_default: (node) => show([node.setDefaultKw, node.expr]),
+  alter_column_drop_default: (node) => show([node.dropDefaultKw]),
 
   // DROP TABLE statement
   drop_table_stmt: (node) =>
