@@ -54,12 +54,6 @@ describe("alter table", () => {
       });
     });
 
-    dialect("mysql", () => {
-      it("supports RENAME COLUMN col1 AS col2", () => {
-        testAlter("RENAME COLUMN col1 AS col2");
-      });
-    });
-
     dialect("bigquery", () => {
       it("supports RENAME COLUMN IF EXISTS", () => {
         testAlter("RENAME COLUMN IF EXISTS col1 TO col2");
