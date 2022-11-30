@@ -67,6 +67,12 @@ describe("alter table", () => {
         testAlter("ADD col1 INT");
       });
     });
+
+    dialect("bigquery", () => {
+      it("supports ADD COLUMN IF NOT EXISTS", () => {
+        testAlter("ADD COLUMN IF NOT EXISTS col1 INT");
+      });
+    });
   });
 
   describe("drop column", () => {

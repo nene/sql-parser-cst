@@ -34,6 +34,7 @@ export interface AlterRenameColumn extends BaseNode {
 export interface AlterAddColumn extends BaseNode {
   type: "alter_add_column";
   addKw: Keyword<"ADD"> | [Keyword<"ADD">, Keyword<"COLUMN">];
+  ifNotExistsKw?: [Keyword<"IF">, Keyword<"NOT">, Keyword<"EXISTS">];
   column: ColumnDefinition;
 }
 
