@@ -1378,6 +1378,7 @@ alter_action
   / alter_table_drop_column
   / alter_table_rename_column
   / alter_table_rename_table
+  / x:alter_table_alter_column (&mysql / &bigquery) { return x; }
 
 alter_table_add_column
   = addKw:(ADD __ COLUMN __ / ADD __) ifKw:(if_not_exists __)? col:column_definition {
@@ -1428,6 +1429,35 @@ alter_table_rename_column
 rename_column_kw
   = kw:(RENAME __ COLUMN) { return read(kw); }
   / kw:RENAME &sqlite { return kw; }
+
+alter_table_alter_column
+  = alterKw:(alter_column_kw __) ifKw:(if_exists __)? column:(column __) action:alter_column_action {
+    return loc({
+      type: "alter_table_alter_column",
+      alterKw: read(alterKw),
+      ifExistsKw: read(ifKw),
+      column: read(column),
+      action,
+    });
+  }
+
+alter_column_kw
+  = kw:(ALTER __ COLUMN) { return read(kw); }
+  / kw:ALTER &sqlite { return kw; }
+
+alter_column_action
+  = alter_column_set_default
+  / alter_column_drop_default
+
+alter_column_set_default
+  = kw:(SET __ DEFAULT __) expr:expr {
+    return loc({ type: "alter_column_set_default", setDefaultKw: read(kw), expr });
+  }
+
+alter_column_drop_default
+  = kw:(DROP __ DEFAULT) {
+    return loc({ type: "alter_column_drop_default", dropDefaultKw: read(kw) });
+  }
 
 /**
  * ------------------------------------------------------------------------------------ *

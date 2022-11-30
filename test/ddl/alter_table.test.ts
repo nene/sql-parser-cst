@@ -101,4 +101,25 @@ describe("alter table", () => {
       });
     });
   });
+
+  describe("alter column", () => {
+    dialect(["bigquery", "mysql"], () => {
+      it("supports SET DEFAULT", () => {
+        testAlter("ALTER COLUMN foo SET DEFAULT 125");
+        testAlter("ALTER /*c1*/ COLUMN /*c2*/ foo /*c3*/ SET /*c4*/ DEFAULT /*c5*/ 125");
+      });
+
+      it("supports DROP DEFAULT", () => {
+        testAlter("ALTER COLUMN foo DROP DEFAULT");
+        testAlter("ALTER /*c1*/ COLUMN /*c2*/ foo /*c3*/ DROP /*c4*/ DEFAULT");
+      });
+    });
+
+    dialect("bigquery", () => {
+      it("supports ALTER COLUMN IF EXISTS", () => {
+        testAlter("ALTER COLUMN IF EXISTS col1 DROP DEFAULT");
+        testAlter("ALTER COLUMN /*c1*/ IF /*c2*/ EXISTS /*c3*/ col1 DROP DEFAULT");
+      });
+    });
+  });
 });
