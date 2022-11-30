@@ -46,6 +46,7 @@ dml_statement
   / update_stmt
   / delete_stmt
   / x:truncate_stmt &bigquery { return x; }
+  / x:merge_stmt &bigquery { return x; }
 
 empty
   = (&. / end_of_file) {
@@ -1055,6 +1056,92 @@ truncate_stmt
       type: "truncate_stmt",
       truncateTableKw: read(kws),
       table: tbl,
+    });
+  }
+
+/**
+ * ------------------------------------------------------------------------------------ *
+ *                                                                                      *
+ * MERGE                                                                                *
+ *                                                                                      *
+ * ------------------------------------------------------------------------------------ *
+ */
+merge_stmt
+  = mergeKw:(MERGE __) intoKw:(INTO __)? target:(table_or_alias __)
+    usingKw:(USING __) source:((table_or_alias / paren_expr_select_or_alias) __)
+    onKw:(ON __) condition:expr
+    clauses:(__ merge_when_clause)+ {
+      return loc({
+        type: "merge_stmt",
+        mergeKw: read(mergeKw),
+        intoKw: read(intoKw),
+        target: read(target),
+        usingKw: read(usingKw),
+        source: read(source),
+        onKw: read(onKw),
+        condition,
+        clauses: clauses.map(read),
+      });
+    }
+
+paren_expr_select_or_alias
+  = expr:paren_expr_select alias:(__ alias)? {
+    return loc(createAlias(expr, alias));
+  }
+
+merge_when_clause
+  = whenKw:(WHEN __) matchedKw:(MATCHED __ / NOT __ MATCHED __) byKw:(BY __ (TARGET / SOURCE) __)?
+    condition:(merge_when_condition __)?
+    thenKw:(THEN __) action:merge_action {
+      return loc({
+        type: "merge_when_clause",
+        whenKw: read(whenKw),
+        matchedKw: read(matchedKw),
+        byKw: read(byKw),
+        condition: read(condition),
+        thenKw: read(thenKw),
+        action,
+      });
+    }
+
+merge_when_condition
+  = kw:(AND __) e:expr {
+    return loc({
+      type: "merge_when_condition",
+      andKw: read(kw),
+      expr: e,
+    });
+  }
+
+merge_action
+  = merge_action_delete
+  / merge_action_update
+  / merge_action_insert
+
+merge_action_delete
+  = kw:DELETE {
+    return loc({
+      type: "merge_action_delete",
+      deleteKw: kw,
+    });
+  }
+
+merge_action_update
+  = updateKw:(UPDATE __) set:set_clause {
+    return loc({
+      type: "merge_action_update",
+      updateKw: read(updateKw),
+      set,
+    });
+  }
+
+merge_action_insert
+  = insertKw:(INSERT __) columns:(paren_column_list __)? values:(values_clause / ROW) {
+    return loc({
+      type: "merge_action_insert",
+      insertKw: read(insertKw),
+      columns: read(columns),
+      values,
     });
   }
 
@@ -3696,6 +3783,7 @@ LONGTEXT            = kw:"LONGTEXT"i            !ident_part { return loc(createK
 LOW_PRIORITY        = kw:"LOW_PRIORITY"i        !ident_part { return loc(createKeyword(kw)); }
 MASTER              = kw:"MASTER"i              !ident_part { return loc(createKeyword(kw)); }
 MATCH               = kw:"MATCH"i               !ident_part { return loc(createKeyword(kw)); }
+MATCHED             = kw:"MATCHED"i             !ident_part { return loc(createKeyword(kw)); }
 MATERIALIZED        = kw:"MATERIALIZED"i        !ident_part { return loc(createKeyword(kw)); }
 MAX                 = kw:"MAX"i                 !ident_part { return loc(createKeyword(kw)); }
 MAX_ROWS            = kw:"MAX_ROWS"i            !ident_part { return loc(createKeyword(kw)); }
@@ -3808,6 +3896,7 @@ SIGNED              = kw:"SIGNED"i              !ident_part { return loc(createK
 SIMPLE              = kw:"SIMPLE"i              !ident_part { return loc(createKeyword(kw)); }
 SKIP                = kw:"SKIP"i                !ident_part { return loc(createKeyword(kw)); }
 SMALLINT            = kw:"SMALLINT"i            !ident_part { return loc(createKeyword(kw)); }
+SOURCE              = kw:"SOURCE"i              !ident_part { return loc(createKeyword(kw)); }
 SPATIAL             = kw:"SPATIAL"i             !ident_part { return loc(createKeyword(kw)); }
 SQL                 = kw:"SQL"i                 !ident_part { return loc(createKeyword(kw)); }
 SQL_BIG_RESULT      = kw:"SQL_BIG_RESULT"i      !ident_part { return loc(createKeyword(kw)); }
@@ -3833,6 +3922,7 @@ SYSTEM_USER         = kw:"SYSTEM_USER"i         !ident_part { return loc(createK
 TABLE               = kw:"TABLE"i               !ident_part { return loc(createKeyword(kw)); }
 TABLES              = kw:"TABLES"i              !ident_part { return loc(createKeyword(kw)); }
 TABLESAMPLE         = kw:"TABLESAMPLE"i         !ident_part { return loc(createKeyword(kw)); }
+TARGET              = kw:"TARGET"i              !ident_part { return loc(createKeyword(kw)); }
 TEMP                = kw:"TEMP"i                !ident_part { return loc(createKeyword(kw)); }
 TEMPORARY           = kw:"TEMPORARY"i           !ident_part { return loc(createKeyword(kw)); }
 TEMPTABLE           = kw:"TEMPTABLE"i           !ident_part { return loc(createKeyword(kw)); }

@@ -34,6 +34,7 @@ import { AllTransactionNodes } from "./Transaction";
 import { AllTriggerNodes } from "./Trigger";
 import { AllUpdateNodes } from "./Update";
 import { AllFrameNodes } from "./WindowFrame";
+import { AllMergeNodes } from "./Merge";
 
 export type Node =
   | Program
@@ -51,4 +52,5 @@ export type Node =
   | AllFrameNodes
   | AllInsertNodes
   | AllUpdateNodes
+  | AllMergeNodes
   | AllSqliteNodes;

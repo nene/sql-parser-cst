@@ -7,6 +7,7 @@ import { DropTableStmt } from "./DropTable";
 import { ExplainStmt } from "./Explain";
 import { CreateIndexStmt, DropIndexStmt } from "./Index";
 import { InsertStmt } from "./Insert";
+import { MergeStmt } from "./Merge";
 import { CompoundSelectStmt, SelectStmt } from "./Select";
 import { SqliteStmt } from "./Sqlite";
 import { TransactionStmt } from "./Transaction";
@@ -26,6 +27,7 @@ export type Statement =
   | DeleteStmt
   | TruncateStmt
   | UpdateStmt
+  | MergeStmt
   | CreateViewStmt
   | DropViewStmt
   | CreateIndexStmt
