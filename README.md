@@ -11,7 +11,7 @@ with the goal of being able to re-create the exact original source code.
 For now it supports the following SQL dialects:
 
 - **SQLite** - full support.
-- **BigQuery** - 99.9% support for SELECT syntax, 100% of DML syntax, basic DDL syntax
+- **BigQuery** - full support for SELECT and DML syntax, basic DDL syntax
   (see [#2](https://github.com/nene/sql-parser-cst/issues/2)
   and [#6](https://github.com/nene/sql-parser-cst/issues/6) for implementation progress).
 - **MySQL** - experimental
