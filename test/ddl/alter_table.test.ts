@@ -11,6 +11,13 @@ describe("alter table", () => {
     test("ALTER /*c1*/ TABLE /*c2*/ my_tbl /*c3*/ RENAME TO new_name");
   });
 
+  dialect("bigquery", () => {
+    it("supports ALTER TABLE IF EXISTS", () => {
+      test("ALTER TABLE IF EXISTS my_tbl RENAME TO new_name");
+      test("ALTER TABLE /*c1*/ IF /*c2*/ EXISTS /*c3*/ my_tbl RENAME TO new_name");
+    });
+  });
+
   it("supports multiple alter actions", () => {
     test("ALTER TABLE tbl ADD COLUMN col1 INT, DROP COLUMN col2");
   });

@@ -186,7 +186,7 @@ const showNode = cstTransformer<string>({
 
   // ALTER TABLE statement
   alter_table_stmt: (node) =>
-    show([node.alterTableKw, node.table, node.actions]),
+    show([node.alterTableKw, node.ifExistsKw, node.table, node.actions]),
   alter_rename_table: (node) => show([node.renameKw, node.newName]),
   alter_rename_column: (node) =>
     show([node.renameKw, node.oldName, node.toKw, node.newName]),

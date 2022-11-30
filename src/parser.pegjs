@@ -1356,11 +1356,13 @@ if_exists
  */
 alter_table_stmt
   = kw:(ALTER __ TABLE __)
+    ifKw:(if_exists __)?
     t:(table __)
     actions:alter_action_list {
       return loc({
         type: "alter_table_stmt",
         alterTableKw: read(kw),
+        ifExistsKw: read(ifKw),
         table: read(t),
         actions,
       });
