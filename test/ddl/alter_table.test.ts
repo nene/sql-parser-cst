@@ -19,7 +19,11 @@ describe("alter table", () => {
   });
 
   it("supports multiple alter actions", () => {
-    test("ALTER TABLE tbl ADD COLUMN col1 INT, DROP COLUMN col2");
+    test(`
+      ALTER TABLE tbl
+      ADD COLUMN col1 INT,
+      DROP COLUMN col2
+    `);
   });
 
   describe("rename table", () => {
