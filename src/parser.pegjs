@@ -85,7 +85,7 @@ intersect_op
 
 select_stmt
   = cte:(with_clause __)?
-    select:select_main_clause
+    select:(select_main_clause / paren_expr_select)
     otherClauses:(__ other_clause)* {
       return loc({
         type: "select_stmt",

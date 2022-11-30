@@ -72,6 +72,7 @@ export interface SelectStmt extends BaseNode {
     | QualifyClause
     | OrderByClause
     | LimitClause
+    | ParenExpr<SelectStmt>
   )[];
 }
 

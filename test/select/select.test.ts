@@ -58,6 +58,18 @@ describe("select", () => {
     test("SELECT tbl /*c1*/./*c2*/ *");
   });
 
+  it("supports parenthesized sub-select between WITH and ORDER BY", () => {
+    test(`
+      WITH
+        tbl AS (SELECT 1 AS col)
+      (SELECT * FROM tbl)
+      ORDER BY col
+      LIMIT 1
+    `);
+
+    test(`(SELECT * FROM tbl) LIMIT 1`);
+  });
+
   dialect("bigquery", () => {
     it("supports trailing commas in SELECT clause", () => {
       test("SELECT foo, bar, FROM tbl");
