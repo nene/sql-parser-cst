@@ -12,20 +12,20 @@ export interface AlterTableStmt extends BaseNode {
 }
 
 export type AlterTableAction =
-  | AlterRenameTable
-  | AlterRenameColumn
-  | AlterAddColumn
-  | AlterDropColumn
-  | AlterAlterColumn;
+  | AlterTableRenameTable
+  | AlterTableRenameColumn
+  | AlterTableAddColumn
+  | AlterTableDropColumn
+  | AlterTableAlterColumn;
 
-export interface AlterRenameTable extends BaseNode {
-  type: "alter_rename_table";
+export interface AlterTableRenameTable extends BaseNode {
+  type: "alter_table_rename_table";
   renameKw: Keyword<"RENAME"> | [Keyword<"RENAME">, Keyword<"TO" | "AS">];
   newName: Table;
 }
 
-export interface AlterRenameColumn extends BaseNode {
-  type: "alter_rename_column";
+export interface AlterTableRenameColumn extends BaseNode {
+  type: "alter_table_rename_column";
   renameKw: Keyword<"RENAME"> | [Keyword<"RENAME">, Keyword<"COLUMN">];
   ifExistsKw?: [Keyword<"IF">, Keyword<"EXISTS">];
   oldName: Identifier;
@@ -33,22 +33,22 @@ export interface AlterRenameColumn extends BaseNode {
   newName: Identifier;
 }
 
-export interface AlterAddColumn extends BaseNode {
-  type: "alter_add_column";
+export interface AlterTableAddColumn extends BaseNode {
+  type: "alter_table_add_column";
   addKw: Keyword<"ADD"> | [Keyword<"ADD">, Keyword<"COLUMN">];
   ifNotExistsKw?: [Keyword<"IF">, Keyword<"NOT">, Keyword<"EXISTS">];
   column: ColumnDefinition;
 }
 
-export interface AlterDropColumn extends BaseNode {
-  type: "alter_drop_column";
+export interface AlterTableDropColumn extends BaseNode {
+  type: "alter_table_drop_column";
   dropKw: Keyword<"DROP"> | [Keyword<"DROP">, Keyword<"COLUMN">];
   ifExistsKw?: [Keyword<"IF">, Keyword<"EXISTS">];
   column: Identifier;
 }
 
-export interface AlterAlterColumn extends BaseNode {
-  type: "alter_alter_column";
+export interface AlterTableAlterColumn extends BaseNode {
+  type: "alter_table_alter_column";
   alterKw: Keyword<"ALTER"> | [Keyword<"ALTER">, Keyword<"COLUMN">];
   ifExistsKw?: [Keyword<"IF">, Keyword<"EXISTS">];
   column: Identifier;

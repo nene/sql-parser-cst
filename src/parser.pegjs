@@ -1374,35 +1374,35 @@ alter_action_list
     }
 
 alter_action
-  = alter_add_column
-  / alter_drop_column
-  / alter_rename_column
-  / alter_rename_table
+  = alter_table_add_column
+  / alter_table_drop_column
+  / alter_table_rename_column
+  / alter_table_rename_table
 
-alter_add_column
+alter_table_add_column
   = addKw:(ADD __ COLUMN __ / ADD __) ifKw:(if_not_exists __)? col:column_definition {
       return loc({
-        type: "alter_add_column",
+        type: "alter_table_add_column",
         addKw: read(addKw),
         ifNotExistsKw: read(ifKw),
         column: col
       });
     }
 
-alter_drop_column
+alter_table_drop_column
   = kw:(DROP __ COLUMN __ / DROP __) ifKw:(if_exists __)? col:ident {
       return loc({
-        type: "alter_drop_column",
+        type: "alter_table_drop_column",
         dropKw: read(kw),
         ifExistsKw: read(ifKw),
         column: col,
       })
     }
 
-alter_rename_table
+alter_table_rename_table
   = kw:(rename_table_kw __) t:table {
     return loc({
-      type: "alter_rename_table",
+      type: "alter_table_rename_table",
       renameKw: read(kw),
       newName: t,
     });
@@ -1413,10 +1413,10 @@ rename_table_kw
   / kw:(RENAME __ AS) &mysql { return read(kw); }
   / kw:RENAME &mysql { return kw; }
 
-alter_rename_column
+alter_table_rename_column
   = kw:(rename_column_kw __) ifKw:(if_exists __)? oldName:(ident __) toKw:(TO __) newName:ident {
     return loc({
-      type: "alter_rename_column",
+      type: "alter_table_rename_column",
       renameKw: read(kw),
       ifExistsKw: read(ifKw),
       oldName: read(oldName),
