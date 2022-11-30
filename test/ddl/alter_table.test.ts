@@ -80,5 +80,11 @@ describe("alter table", () => {
         testAlter("DROP col1");
       });
     });
+
+    dialect("bigquery", () => {
+      it("supports DROP COLUMN IF EXISTS", () => {
+        testAlter("DROP COLUMN IF EXISTS col1");
+      });
+    });
   });
 });

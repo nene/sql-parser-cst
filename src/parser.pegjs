@@ -1389,10 +1389,11 @@ alter_add_column
     }
 
 alter_drop_column
-  = kw:(DROP __ COLUMN __ / DROP __) col:ident {
+  = kw:(DROP __ COLUMN __ / DROP __) ifKw:(if_exists __)? col:ident {
       return loc({
         type: "alter_drop_column",
         dropKw: read(kw),
+        ifExistsKw: read(ifKw),
         column: col,
       })
     }

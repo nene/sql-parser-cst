@@ -40,5 +40,6 @@ export interface AlterAddColumn extends BaseNode {
 export interface AlterDropColumn extends BaseNode {
   type: "alter_drop_column";
   dropKw: Keyword<"DROP"> | [Keyword<"DROP">, Keyword<"COLUMN">];
+  ifExistsKw?: [Keyword<"IF">, Keyword<"EXISTS">];
   column: Identifier;
 }
