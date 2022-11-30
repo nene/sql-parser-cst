@@ -103,6 +103,13 @@ describe("alter table", () => {
   });
 
   describe("alter column", () => {
+    dialect("bigquery", () => {
+      it("supports ALTER COLUMN IF EXISTS", () => {
+        testAlter("ALTER COLUMN IF EXISTS col1 DROP DEFAULT");
+        testAlter("ALTER COLUMN /*c1*/ IF /*c2*/ EXISTS /*c3*/ col1 DROP DEFAULT");
+      });
+    });
+
     dialect(["bigquery", "mysql"], () => {
       it("supports SET DEFAULT", () => {
         testAlter("ALTER COLUMN foo SET DEFAULT 125");
@@ -116,9 +123,9 @@ describe("alter table", () => {
     });
 
     dialect("bigquery", () => {
-      it("supports ALTER COLUMN IF EXISTS", () => {
-        testAlter("ALTER COLUMN IF EXISTS col1 DROP DEFAULT");
-        testAlter("ALTER COLUMN /*c1*/ IF /*c2*/ EXISTS /*c3*/ col1 DROP DEFAULT");
+      it("supports DROP NOT NULL", () => {
+        testAlter("ALTER COLUMN foo DROP NOT NULL");
+        testAlter("ALTER COLUMN foo /*c1*/ DROP /*c2*/ NOT /*c3*/ NULL");
       });
     });
   });

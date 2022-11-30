@@ -55,7 +55,10 @@ export interface AlterTableAlterColumn extends BaseNode {
   action: AlterColumnAction;
 }
 
-export type AlterColumnAction = AlterColumnSetDefault | AlterColumnDropDefault;
+export type AlterColumnAction =
+  | AlterColumnSetDefault
+  | AlterColumnDropDefault
+  | AlterColumnDropNotNull;
 
 export interface AlterColumnSetDefault extends BaseNode {
   type: "alter_column_set_default";
@@ -66,4 +69,9 @@ export interface AlterColumnSetDefault extends BaseNode {
 export interface AlterColumnDropDefault extends BaseNode {
   type: "alter_column_drop_default";
   dropDefaultKw: [Keyword<"DROP">, Keyword<"DEFAULT">];
+}
+
+export interface AlterColumnDropNotNull extends BaseNode {
+  type: "alter_column_drop_not_null";
+  dropNotNullKw: [Keyword<"DROP">, Keyword<"NOT">, Keyword<"NULL">];
 }

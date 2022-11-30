@@ -1448,6 +1448,7 @@ alter_column_kw
 alter_column_action
   = alter_column_set_default
   / alter_column_drop_default
+  / x:alter_column_drop_not_null &bigquery { return x; }
 
 alter_column_set_default
   = kw:(SET __ DEFAULT __) expr:expr {
@@ -1457,6 +1458,11 @@ alter_column_set_default
 alter_column_drop_default
   = kw:(DROP __ DEFAULT) {
     return loc({ type: "alter_column_drop_default", dropDefaultKw: read(kw) });
+  }
+
+alter_column_drop_not_null
+  = kw:(DROP __ NOT __ NULL) {
+    return loc({ type: "alter_column_drop_not_null", dropNotNullKw: read(kw) });
   }
 
 /**
