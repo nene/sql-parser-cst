@@ -60,6 +60,7 @@ describe("alter table", () => {
     dialect("bigquery", () => {
       it("supports RENAME COLUMN IF EXISTS", () => {
         testAlter("RENAME COLUMN IF EXISTS col1 TO col2");
+        testAlter("RENAME COLUMN /*c1*/ IF /*c2*/ EXISTS /*c3*/ col1 TO col2");
       });
     });
   });
@@ -79,6 +80,7 @@ describe("alter table", () => {
     dialect("bigquery", () => {
       it("supports ADD COLUMN IF NOT EXISTS", () => {
         testAlter("ADD COLUMN IF NOT EXISTS col1 INT");
+        testAlter("ADD COLUMN /*c1*/ IF /*c2*/ NOT /*c3*/ EXISTS /*c4*/ col1 INT");
       });
     });
   });
@@ -98,6 +100,7 @@ describe("alter table", () => {
     dialect("bigquery", () => {
       it("supports DROP COLUMN IF EXISTS", () => {
         testAlter("DROP COLUMN IF EXISTS col1");
+        testAlter("DROP COLUMN /*c1*/ IF /*c2*/ EXISTS /*c3*/ col1");
       });
     });
   });
