@@ -11,10 +11,12 @@ with the goal of being able to re-create the exact original source code.
 For now it supports the following SQL dialects:
 
 - **SQLite** - full support.
-- **BigQuery** - nearly full support for query syntax
+- **BigQuery** - 99.9% support for SELECT syntax, 100% of DML syntax, basic DDL syntax
   (see [#2](https://github.com/nene/sql-parser-cst/issues/2)
-  and [#6](https://github.com/nene/sql-parser-cst/issues/6) for list of unsupported syntax).
-- **MySQL** - experimental (see [#5](https://github.com/nene/sql-parser-cst/issues/5) for list of unsupported syntax).
+  and [#6](https://github.com/nene/sql-parser-cst/issues/6) for implementation progress).
+- **MySQL** - experimental
+  (see [#5](https://github.com/nene/sql-parser-cst/issues/5)
+  and [#7](https://github.com/nene/sql-parser-cst/issues/7) for implementation progress).
 
 **Note:** This software is still in very active development.
 The syntax tree structure is constantly evolving and changing
