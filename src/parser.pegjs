@@ -240,10 +240,15 @@ explicit_alias
     };
   }
 
-// For now, don't allow PIVOT and UNPIVOT as implicit alias names.
-// In reality bigquery does allow it.
+// BigQuery allows PIVOT and UNPIVOT as implicit alias names.
+// But implicit alias can where PIVOT/UNPIVOT expression can appear.
+// So we check if we can treat it as pivot/unpivot_expr, and only if not,
+// will we treat it as alias.
 implicit_alias
-  = id:alias_ident &{ return isBigquery() ? !["PIVOT", "UNPIVOT"].includes(id.name.toUpperCase()) : true; } {
+  = &bigquery !(pivot_expr_right / unpivot_expr_right) id:alias_ident {
+    return { alias: id };
+  }
+  / !bigquery id:alias_ident {
     return { alias: id };
   }
 

@@ -19,9 +19,23 @@ describe("select FROM", () => {
       test("SELECT unpivot.col FROM my_db.my_long_table_name AS unpivot");
     });
 
-    it.skip("supports PIVOT & UNPIVOT as implicit table aliases", () => {
+    it("supports PIVOT & UNPIVOT as implicit table aliases", () => {
       test("SELECT pivot.col FROM my_db.my_long_table_name pivot");
       test("SELECT unpivot.col FROM my_db.my_long_table_name unpivot");
+    });
+
+    it("supports PIVOT & UNPIVOT as implicit table alias followed by UNPIVOT/PIVOT expression", () => {
+      test("SELECT * FROM tbl pivot PIVOT(sum(sales) FOR quarter IN ('Q1', 'Q2'))");
+      test("SELECT * FROM tbl unpivot UNPIVOT(sales FOR quarter IN (q1, q2))");
+    });
+  });
+  // To ensure the BigQuery PIVOT/UNPIVOT handling doesn't interfere with other dialects
+  dialect(["mysql", "sqlite"], () => {
+    it("supports PIVOT & UNPIVOT as aliases", () => {
+      test("SELECT * FROM foo.col AS pivot");
+      test("SELECT * FROM foo.col AS unpivot");
+      test("SELECT * FROM foo.col pivot");
+      test("SELECT * FROM foo.col unpivot");
     });
   });
 
