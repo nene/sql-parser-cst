@@ -31,10 +31,13 @@ describe("alter table", () => {
       testAlter("RENAME TO new_name");
       testAlter("RENAME /*c1*/ TO /*c2*/ new_name");
     });
+
     dialect("mysql", () => {
-      it("supports RENAME AS and plain RENAME", () => {
-        testAlter("RENAME new_name");
+      it("supports RENAME AS", () => {
         testAlter("RENAME AS new_name");
+      });
+      it("supports plain RENAME", () => {
+        testAlter("RENAME new_name");
       });
     });
   });
