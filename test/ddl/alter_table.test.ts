@@ -53,18 +53,28 @@ describe("alter table", () => {
   });
 
   describe("add column", () => {
-    it("ADD [COLUMN]", () => {
+    it("supports ADD COLUMN", () => {
       testAlter("ADD COLUMN col1 INT NOT NULL");
-      testAlter("ADD col1 INT");
       testAlter("ADD /*c1*/ COLUMN /*c2*/ col1 INT");
+    });
+
+    dialect(["mysql", "sqlite"], () => {
+      it("supports plain ADD", () => {
+        testAlter("ADD col1 INT");
+      });
     });
   });
 
   describe("drop column", () => {
-    it("DROP [COLUMN]", () => {
+    it("supports DROP COLUMN", () => {
       testAlter("DROP COLUMN col1");
-      testAlter("DROP col1");
       testAlter("DROP /*c1*/ COLUMN /*c2*/ col1");
+    });
+
+    dialect(["mysql", "sqlite"], () => {
+      it("supports plain DROP", () => {
+        testAlter("DROP col1");
+      });
     });
   });
 });
