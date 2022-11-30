@@ -1414,10 +1414,11 @@ rename_table_kw
   / kw:RENAME &mysql { return kw; }
 
 alter_rename_column
-  = kw:(rename_column_kw __) oldName:(ident __) toKw:((TO / AS) __) newName:ident {
+  = kw:(rename_column_kw __) ifKw:(if_exists __)? oldName:(ident __) toKw:((TO / AS) __) newName:ident {
     return loc({
       type: "alter_rename_column",
       renameKw: read(kw),
+      ifExistsKw: read(ifKw),
       oldName: read(oldName),
       toKw: read(toKw),
       newName,

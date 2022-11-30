@@ -44,14 +44,22 @@ describe("alter table", () => {
       testAlter("RENAME COLUMN col1 TO col2");
       testAlter("RENAME /*c1*/ COLUMN /*c2*/ col1 /*c3*/ TO /*c4*/ col2");
     });
+
     dialect("sqlite", () => {
       it("supports RENAME col1 TO col2", () => {
         testAlter("RENAME col1 TO col2");
       });
     });
+
     dialect("mysql", () => {
       it("supports RENAME COLUMN col1 AS col2", () => {
         testAlter("RENAME COLUMN col1 AS col2");
+      });
+    });
+
+    dialect("bigquery", () => {
+      it("supports RENAME COLUMN IF EXISTS", () => {
+        testAlter("RENAME COLUMN IF EXISTS col1 TO col2");
       });
     });
   });

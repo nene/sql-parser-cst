@@ -26,6 +26,7 @@ export interface AlterRenameTable extends BaseNode {
 export interface AlterRenameColumn extends BaseNode {
   type: "alter_rename_column";
   renameKw: Keyword<"RENAME"> | [Keyword<"RENAME">, Keyword<"COLUMN">];
+  ifExistsKw?: [Keyword<"IF">, Keyword<"EXISTS">];
   oldName: Identifier;
   toKw: Keyword<"TO" | "AS">;
   newName: Identifier;
