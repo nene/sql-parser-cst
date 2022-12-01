@@ -2481,29 +2481,37 @@ not_expr
   }
 
 comparison_expr
-  = expr:bitwise_or_expr op:(__ unary_comparison_op) {
-    return loc(createPostfixOpExpr(read(op), read(expr)));
+  = left:bitwise_or_expr rightFn:_comparison_expr_right? {
+    if (rightFn) {
+      return loc(rightFn(left));
+    } else {
+      return left;
+    }
   }
-  / head:bitwise_or_expr tail:(__ comparison_op __ bitwise_or_expr)+ {
-    return createBinaryExprChain(head, tail);
+
+_comparison_expr_right
+  = op:(__ unary_comparison_op) {
+    return (expr: any) => createPostfixOpExpr(read(op), expr);
   }
-  / left:bitwise_or_expr c1:__ op:(NOT __ IN / IN) c2:__ right:(paren_list_expr / bitwise_or_expr) {
-    return loc(createBinaryExpr(left, c1, read(op), c2, right))
+  / tail:(__ comparison_op __ bitwise_or_expr)+ {
+    return (head: any) => createBinaryExprChain(head, tail);
   }
-  / left:bitwise_or_expr c1:__ op:(NOT __ LIKE / LIKE) c2:__ right:escape_expr {
-    return loc(createBinaryExpr(left, c1, read(op), c2, right))
+  / c1:__ op:(NOT __ IN / IN) c2:__ right:(paren_list_expr / bitwise_or_expr) {
+    return (left: any) => createBinaryExpr(left, c1, read(op), c2, right);
   }
-  / left:bitwise_or_expr betweenKw:(__ between_op) begin:(__ bitwise_or_expr) andKw:(__ AND) end:(__ bitwise_or_expr) {
-    return loc({
+  / c1:__ op:(NOT __ LIKE / LIKE) c2:__ right:escape_expr {
+    return (left: any) => createBinaryExpr(left, c1, read(op), c2, right);
+  }
+  / betweenKw:(__ between_op) begin:(__ bitwise_or_expr) andKw:(__ AND) end:(__ bitwise_or_expr) {
+    return (left: any) => ({
       type: "between_expr",
-      left: read(left),
+      left: left,
       betweenKw: read(betweenKw),
       begin: read(begin),
       andKw: read(andKw),
       end: read(end),
     });
   }
-  / bitwise_or_expr
 
 unary_comparison_op
   = kws:(NOT __ NULL / NOTNULL / ISNULL) &sqlite {
