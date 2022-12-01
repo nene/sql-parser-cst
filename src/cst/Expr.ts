@@ -1,5 +1,5 @@
 import { AllColumns, BaseNode, Empty, Keyword } from "./Base";
-import { DataType } from "./CreateTable";
+import { DataType } from "./DataType";
 import { Literal, StringLiteral } from "./Literal";
 import { Node } from "./Node";
 import {

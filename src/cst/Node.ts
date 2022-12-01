@@ -26,6 +26,7 @@ import { Alias } from "./Alias";
 import { AlterTableAction, AlterColumnAction } from "./AlterTable";
 import { AllConstraintNodes } from "./Constraint";
 import { AllCreateTableNodes } from "./CreateTable";
+import { AllDataTypeNodes } from "./DataType";
 import { AllExprNodes } from "./Expr";
 import { AllInsertNodes } from "./Insert";
 import { AllSelectNodes } from "./Select";
@@ -45,6 +46,7 @@ export type Node =
   | AllExprNodes
   | AllSelectNodes
   | AllCreateTableNodes
+  | AllDataTypeNodes
   | AllConstraintNodes
   | AlterTableAction
   | AlterColumnAction
