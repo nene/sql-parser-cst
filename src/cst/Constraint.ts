@@ -156,7 +156,7 @@ export interface ConstraintGenerated extends BaseNode {
 export interface ConstraintCollate extends BaseNode {
   type: "constraint_collate";
   collateKw: Keyword<"COLLATE">;
-  collation: Identifier;
+  collation: Identifier | StringLiteral;
 }
 
 export interface ConstraintVisible extends BaseNode {

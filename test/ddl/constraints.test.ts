@@ -55,9 +55,17 @@ describe("constraints", () => {
       });
     });
 
-    it("COLLATE", () => {
-      testColConst("COLLATE utf8mb4_bin");
-      testColConst("COLLATE /*c1*/ utf8");
+    dialect(["mysql", "sqlite"], () => {
+      it("COLLATE", () => {
+        testColConst("COLLATE utf8mb4_bin");
+        testColConst("COLLATE /*c1*/ utf8");
+      });
+    });
+    dialect("bigquery", () => {
+      it("COLLATE", () => {
+        testColConst("COLLATE 'und:ci'");
+        testColConst("COLLATE /*c1*/ 'und:ci'");
+      });
     });
 
     it("GENERATED ALWAYS", () => {

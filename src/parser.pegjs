@@ -2076,7 +2076,7 @@ constraint_comment
   }
 
 constraint_collate
-  = kw:COLLATE id:(__ ident) {
+  = kw:COLLATE id:(__ (ident / literal_string)) {
     return loc({
       type: "constraint_collate",
       collateKw: kw,
