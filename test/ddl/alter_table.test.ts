@@ -144,4 +144,25 @@ describe("alter table", () => {
       testAlter("SET /*c1*/ DEFAULT /*c2*/ COLLATE /*c3*/ ''");
     });
   });
+
+  dialect("bigquery", () => {
+    it("supports SET OPTIONS (...)", () => {
+      testAlter("SET OPTIONS (description='My lovely table')");
+      testAlter("SET /*c1*/ OPTIONS /*c2*/ (/*c3*/ friendly_name /*c4*/ = /*c5*/ 'Bobby' /*c4*/)");
+    });
+
+    it("supports SET OPTIONS with all possible BigQuery table options", () => {
+      testAlter(`
+        SET OPTIONS (
+          expiration_timestamp=NULL,
+          partition_expiration_days=128,
+          require_partition_filter=true,
+          kms_key_name='blah',
+          friendly_name='Little bobby tables',
+          description="Robert'); DROP TABLE Students;--",
+          labels = [("org_unit", "development")]
+        )
+      `);
+    });
+  });
 });

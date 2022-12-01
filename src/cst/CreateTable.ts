@@ -1,15 +1,15 @@
 import { BaseNode, Keyword } from "./Base";
 import { ColumnConstraint, Constraint, TableConstraint } from "./Constraint";
 import { DataType } from "./DataType";
-import { Identifier, ListExpr, ParenExpr, Table } from "./Expr";
-import { NumberLiteral, StringLiteral } from "./Literal";
+import { Expr, Identifier, ListExpr, ParenExpr, Table } from "./Expr";
 import { SubSelect } from "./Select";
 
 export type AllCreateTableNodes =
   | CreateTableStmt
   | CreateTableAs
   | ColumnDefinition
-  | TableOption;
+  | TableOption
+  | BigqueryOptions;
 
 // CREATE TABLE
 export interface CreateTableStmt extends BaseNode {
@@ -41,9 +41,9 @@ export interface ColumnDefinition extends BaseNode {
 
 export interface TableOption extends BaseNode {
   type: "table_option";
-  name: TableOptionNameSqlite | TableOptionNameMysql;
+  name: TableOptionNameSqlite | TableOptionNameMysql | TableOptionNameBigquery;
   hasEq?: boolean; // True when "=" sign is used
-  value?: TableOptionValueMysql;
+  value?: TableOptionValueMysql | Expr;
 }
 
 type TableOptionNameSqlite =
@@ -81,18 +81,30 @@ type TableOptionNameMysql =
   | Keyword<"STATS_PERSISTENT">
   | Keyword<"STATS_SAMPLE_PAGES">;
 
-type TableOptionValueMysql =
-  | NumberLiteral
-  | StringLiteral
-  | Identifier
-  | Keyword<
-      | "DEFAULT"
-      | "DYNAMIC"
-      | "FIXED"
-      | "COMPRESSED"
-      | "REDUNDANT"
-      | "COMPACT"
-      | "NO"
-      | "FIRST"
-      | "LAST"
-    >;
+type TableOptionNameBigquery = Keyword<
+  | "EXPIRATION_TIMESTAMP"
+  | "PARTITION_EXPIRATION_DAYS"
+  | "REQUIRE_PARTITION_FILTER"
+  | "KMS_KEY_NAME"
+  | "FRIENDLY_NAME"
+  | "DESCRIPTION"
+  | "LABELS"
+>;
+
+type TableOptionValueMysql = Keyword<
+  | "DEFAULT"
+  | "DYNAMIC"
+  | "FIXED"
+  | "COMPRESSED"
+  | "REDUNDANT"
+  | "COMPACT"
+  | "NO"
+  | "FIRST"
+  | "LAST"
+>;
+
+export interface BigqueryOptions extends BaseNode {
+  type: "bigquery_options";
+  optionsKw: Keyword<"OPTIONS">;
+  options: ParenExpr<ListExpr<TableOption>>;
+}

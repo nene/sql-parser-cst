@@ -1,5 +1,5 @@
 import { BaseNode, Keyword } from "./Base";
-import { ColumnDefinition } from "./CreateTable";
+import { BigqueryOptions, ColumnDefinition } from "./CreateTable";
 import { DataType } from "./DataType";
 import { Expr, Identifier, ListExpr, Table } from "./Expr";
 import { StringLiteral } from "./Literal";
@@ -19,7 +19,8 @@ export type AlterTableAction =
   | AlterTableAddColumn
   | AlterTableDropColumn
   | AlterTableAlterColumn
-  | AlterTableSetDefaultCollate;
+  | AlterTableSetDefaultCollate
+  | AlterTableSetOptions;
 
 export interface AlterTableRenameTable extends BaseNode {
   type: "alter_table_rename_table";
@@ -90,4 +91,10 @@ export interface AlterTableSetDefaultCollate extends BaseNode {
   type: "alter_table_set_default_collate";
   setDefaultCollateKw: [Keyword<"SET">, Keyword<"DEFAULT">, Keyword<"COLLATE">];
   collation: StringLiteral;
+}
+
+export interface AlterTableSetOptions extends BaseNode {
+  type: "alter_table_set_options";
+  setKw: Keyword<"SET">;
+  options: BigqueryOptions;
 }
