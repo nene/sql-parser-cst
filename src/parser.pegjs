@@ -2616,10 +2616,10 @@ collate_expr
   / negation_expr
 
 negation_expr
-  = member_expr_or_func_call
-  / op:negation_operator right:(__ negation_expr) {
+  = op:negation_operator right:(__ negation_expr) {
     return loc(createPrefixOpExpr(op, read(right)));
   }
+  / member_expr_or_func_call
 
 negation_operator = "-" / "~" / "!"
 
