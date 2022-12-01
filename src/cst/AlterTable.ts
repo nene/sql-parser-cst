@@ -2,6 +2,7 @@ import { BaseNode, Keyword } from "./Base";
 import { ColumnDefinition } from "./CreateTable";
 import { DataType } from "./DataType";
 import { Expr, Identifier, ListExpr, Table } from "./Expr";
+import { StringLiteral } from "./Literal";
 
 // ALTER TABLE
 export interface AlterTableStmt extends BaseNode {
@@ -17,7 +18,8 @@ export type AlterTableAction =
   | AlterTableRenameColumn
   | AlterTableAddColumn
   | AlterTableDropColumn
-  | AlterTableAlterColumn;
+  | AlterTableAlterColumn
+  | AlterTableSetDefaultCollate;
 
 export interface AlterTableRenameTable extends BaseNode {
   type: "alter_table_rename_table";
@@ -82,4 +84,10 @@ export interface AlterColumnSetDataType extends BaseNode {
   type: "alter_column_set_data_type";
   setDataTypeKw: [Keyword<"SET">, Keyword<"DATA">, Keyword<"TYPE">];
   dataType: DataType;
+}
+
+export interface AlterTableSetDefaultCollate extends BaseNode {
+  type: "alter_table_set_default_collate";
+  setDefaultCollateKw: [Keyword<"SET">, Keyword<"DEFAULT">, Keyword<"COLLATE">];
+  collation: StringLiteral;
 }

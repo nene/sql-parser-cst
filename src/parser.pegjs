@@ -1384,6 +1384,7 @@ alter_action
   / alter_table_rename_column
   / alter_table_rename_table
   / x:alter_table_alter_column (&mysql / &bigquery) { return x; }
+  / x:alter_table_set_default_collate &bigquery { return x; }
 
 alter_table_add_column
   = addKw:(ADD __ COLUMN __ / ADD __) ifKw:(if_not_exists __)? col:column_definition {
@@ -1474,6 +1475,15 @@ alter_column_drop_not_null
 alter_column_set_data_type
   = kw:(SET __ DATA __ TYPE __) type:data_type {
     return loc({ type: "alter_column_set_data_type", setDataTypeKw: read(kw), dataType: type });
+  }
+
+alter_table_set_default_collate
+  = kw:(SET __ DEFAULT __ COLLATE __) collation:literal_string {
+    return loc({
+      type: "alter_table_set_default_collate",
+      setDefaultCollateKw: read(kw),
+      collation,
+    });
   }
 
 /**

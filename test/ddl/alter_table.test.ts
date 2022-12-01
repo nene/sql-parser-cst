@@ -137,4 +137,11 @@ describe("alter table", () => {
       });
     });
   });
+
+  dialect("bigquery", () => {
+    it("supports SET DEFAULT COLLATE", () => {
+      testAlter("SET DEFAULT COLLATE 'und:ci'");
+      testAlter("SET /*c1*/ DEFAULT /*c2*/ COLLATE /*c3*/ ''");
+    });
+  });
 });
