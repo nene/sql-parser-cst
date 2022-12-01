@@ -63,7 +63,8 @@ export type AlterColumnAction =
   | AlterColumnSetDefault
   | AlterColumnDropDefault
   | AlterColumnDropNotNull
-  | AlterColumnSetDataType;
+  | AlterColumnSetDataType
+  | AlterColumnSetOptions;
 
 export interface AlterColumnSetDefault extends BaseNode {
   type: "alter_column_set_default";
@@ -85,6 +86,12 @@ export interface AlterColumnSetDataType extends BaseNode {
   type: "alter_column_set_data_type";
   setDataTypeKw: [Keyword<"SET">, Keyword<"DATA">, Keyword<"TYPE">];
   dataType: DataType;
+}
+
+export interface AlterColumnSetOptions extends BaseNode {
+  type: "alter_column_set_options";
+  setKw: Keyword<"SET">;
+  options: BigqueryOptions;
 }
 
 export interface AlterTableSetDefaultCollate extends BaseNode {

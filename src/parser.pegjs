@@ -1457,6 +1457,7 @@ alter_column_action
   / alter_column_drop_default
   / x:alter_column_drop_not_null &bigquery { return x; }
   / x:alter_column_set_data_type &bigquery { return x; }
+  / x:alter_column_set_options &bigquery { return x; }
 
 alter_column_set_default
   = kw:(SET __ DEFAULT __) expr:expr {
@@ -1476,6 +1477,11 @@ alter_column_drop_not_null
 alter_column_set_data_type
   = kw:(SET __ DATA __ TYPE __) type:data_type {
     return loc({ type: "alter_column_set_data_type", setDataTypeKw: read(kw), dataType: type });
+  }
+
+alter_column_set_options
+  = kw:(SET __ ) options:bigquery_options {
+    return loc({ type: "alter_column_set_options", setKw: read(kw), options });
   }
 
 alter_table_set_default_collate

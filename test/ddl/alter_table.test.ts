@@ -136,6 +136,13 @@ describe("alter table", () => {
         testAlter("ALTER COLUMN foo /*c1*/ SET /*c2*/ DATA /*c3*/ TYPE /*c4*/ STRING");
       });
     });
+
+    dialect("bigquery", () => {
+      it("supports SET OPTIONS", () => {
+        testAlter("ALTER COLUMN foo SET OPTIONS ( description = 'Blah' )");
+        testAlter("ALTER COLUMN foo /*c1*/ SET /*c2*/ OPTIONS /*c3*/ ( description = NULL )");
+      });
+    });
   });
 
   dialect("bigquery", () => {

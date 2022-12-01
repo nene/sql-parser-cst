@@ -208,6 +208,7 @@ const showNode = cstTransformer<string>({
   alter_column_drop_not_null: (node) => show([node.dropNotNullKw]),
   alter_column_set_data_type: (node) =>
     show([node.setDataTypeKw, node.dataType]),
+  alter_column_set_options: (node) => show([node.setKw, node.options]),
   alter_table_set_default_collate: (node) =>
     show([node.setDefaultCollateKw, node.collation]),
   alter_table_set_options: (node) => show([node.setKw, node.options]),
