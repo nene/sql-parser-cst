@@ -1,5 +1,6 @@
 import { BaseNode, Keyword } from "./Base";
 import { ColumnDefinition } from "./CreateTable";
+import { DataType } from "./DataType";
 import { Expr, Identifier, ListExpr, Table } from "./Expr";
 
 // ALTER TABLE
@@ -58,7 +59,8 @@ export interface AlterTableAlterColumn extends BaseNode {
 export type AlterColumnAction =
   | AlterColumnSetDefault
   | AlterColumnDropDefault
-  | AlterColumnDropNotNull;
+  | AlterColumnDropNotNull
+  | AlterColumnSetDataType;
 
 export interface AlterColumnSetDefault extends BaseNode {
   type: "alter_column_set_default";
@@ -74,4 +76,10 @@ export interface AlterColumnDropDefault extends BaseNode {
 export interface AlterColumnDropNotNull extends BaseNode {
   type: "alter_column_drop_not_null";
   dropNotNullKw: [Keyword<"DROP">, Keyword<"NOT">, Keyword<"NULL">];
+}
+
+export interface AlterColumnSetDataType extends BaseNode {
+  type: "alter_column_set_data_type";
+  setDataTypeKw: [Keyword<"SET">, Keyword<"DATA">, Keyword<"TYPE">];
+  dataType: DataType;
 }

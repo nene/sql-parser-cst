@@ -128,5 +128,13 @@ describe("alter table", () => {
         testAlter("ALTER COLUMN foo /*c1*/ DROP /*c2*/ NOT /*c3*/ NULL");
       });
     });
+
+    dialect("bigquery", () => {
+      it("supports SET DATA TYPE", () => {
+        testAlter("ALTER COLUMN foo SET DATA TYPE INT");
+        testAlter("ALTER COLUMN foo SET DATA TYPE ARRAY<INT64>");
+        testAlter("ALTER COLUMN foo /*c1*/ SET /*c2*/ DATA /*c3*/ TYPE /*c4*/ STRING");
+      });
+    });
   });
 });

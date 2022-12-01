@@ -1454,6 +1454,7 @@ alter_column_action
   = alter_column_set_default
   / alter_column_drop_default
   / x:alter_column_drop_not_null &bigquery { return x; }
+  / x:alter_column_set_data_type &bigquery { return x; }
 
 alter_column_set_default
   = kw:(SET __ DEFAULT __) expr:expr {
@@ -1468,6 +1469,11 @@ alter_column_drop_default
 alter_column_drop_not_null
   = kw:(DROP __ NOT __ NULL) {
     return loc({ type: "alter_column_drop_not_null", dropNotNullKw: read(kw) });
+  }
+
+alter_column_set_data_type
+  = kw:(SET __ DATA __ TYPE __) type:data_type {
+    return loc({ type: "alter_column_set_data_type", setDataTypeKw: read(kw), dataType: type });
   }
 
 /**
@@ -3987,6 +3993,7 @@ TRIGGER             = kw:"TRIGGER"i             !ident_part { return loc(createK
 TRUE                = kw:"TRUE"i                !ident_part { return loc(createKeyword(kw)); }
 TRUNCATE            = kw:"TRUNCATE"i            !ident_part { return loc(createKeyword(kw)); }
 TUESDAY             = kw:"TUESDAY"i             !ident_part { return loc(createKeyword(kw)); }
+TYPE                = kw:"TYPE"i                !ident_part { return loc(createKeyword(kw)); }
 UNBOUNDED           = kw:"UNBOUNDED"i           !ident_part { return loc(createKeyword(kw)); }
 UNDEFINED           = kw:"UNDEFINED"i           !ident_part { return loc(createKeyword(kw)); }
 UNION               = kw:"UNION"i               !ident_part { return loc(createKeyword(kw)); }
