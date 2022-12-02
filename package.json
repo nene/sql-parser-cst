@@ -29,7 +29,8 @@
     "test:sqlite": "jest --config test/config/sqlite.json",
     "test": "yarn generate && yarn test:bigquery && yarn test:mysql && yarn test:sqlite",
     "perf:big": "yarn ts-node perf/perf-test.ts big",
-    "perf:func": "yarn ts-node perf/perf-test.ts func"
+    "perf:func": "yarn ts-node perf/perf-test.ts func",
+    "perf:select": "yarn ts-node perf/perf-test.ts select"
   },
   "devDependencies": {
     "@types/benchmark": "^2.1.2",

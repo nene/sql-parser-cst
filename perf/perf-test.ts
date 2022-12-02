@@ -25,6 +25,12 @@ function createTestData(variant: string) {
       mysql: getTestData("mysql"),
       bigquery: getTestData("bigquery"),
     };
+  } else if (variant === "select") {
+    return {
+      sqlite: getTestData("select"),
+      mysql: getTestData("select"),
+      bigquery: getTestData("select"),
+    };
   } else {
     throw new Error(`Unknown test data variant: ${variant}`);
   }
