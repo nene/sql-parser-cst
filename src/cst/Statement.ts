@@ -15,6 +15,7 @@ import { CreateTriggerStmt, DropTriggerStmt } from "./Trigger";
 import { TruncateStmt } from "./Truncate";
 import { UpdateStmt } from "./Update";
 import { CreateViewStmt, DropViewStmt } from "./View";
+import { CreateSchemaStmt, DropSchemaStmt } from "./Schema";
 
 export type Statement =
   | Empty
@@ -30,6 +31,8 @@ export type Statement =
   | MergeStmt
   | CreateViewStmt
   | DropViewStmt
+  | CreateSchemaStmt
+  | DropSchemaStmt
   | CreateIndexStmt
   | DropIndexStmt
   | CreateTriggerStmt

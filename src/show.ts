@@ -292,6 +292,13 @@ const showNode = cstTransformer<string>({
     show([node.insertKw, node.columns, node.values]),
   merge_action_update: (node) => show([node.updateKw, node.set]),
 
+  // CREATE SCHEMA statement
+  create_schema_stmt: (node) =>
+    show([node.createSchemaKw, node.ifNotExistsKw, node.name]),
+  // DROP SCHEMA statement
+  drop_schema_stmt: (node) =>
+    show([node.dropSchemaKw, node.ifExistsKw, node.name, node.behaviorKw]),
+
   // CREATE VIEW statement
   create_view_stmt: (node) =>
     show([

@@ -36,6 +36,7 @@ statement
   / x:drop_trigger_stmt (&mysql / &sqlite) { return x; }
   / x:analyze_stmt (&mysql / &sqlite) { return x; }
   / x:explain_stmt (&mysql / &sqlite) { return x; }
+  / x:(create_schema_stmt / drop_schema_stmt) (&mysql / &bigquery) { return x; }
   / transaction_stmt
   / x:sqlite_stmt &sqlite { return x; }
   / empty
@@ -1598,6 +1599,38 @@ drop_trigger_stmt
         trigger,
       });
     }
+
+/**
+ * ------------------------------------------------------------------------------------ *
+ *                                                                                      *
+ * CREATE SCHEMA  /  DROP SCHEMA                                                        *
+ *                                                                                      *
+ * ------------------------------------------------------------------------------------ *
+ */
+create_schema_stmt
+  = kw:(CREATE __ schema_kw __) ifKw:(if_not_exists __)? name:table {
+    return loc({
+      type: "create_schema_stmt",
+      createSchemaKw: read(kw),
+      ifNotExistsKw: read(ifKw),
+      name,
+    });
+  }
+
+drop_schema_stmt
+  = kw:(DROP __ schema_kw __) ifKw:(if_exists __)? name:table behaviorKw:(__ (CASCADE / RESTRICT))? {
+    return loc({
+      type: "drop_schema_stmt",
+      dropSchemaKw: read(kw),
+      ifExistsKw: read(ifKw),
+      name,
+      behaviorKw: read(behaviorKw)
+    });
+  }
+
+schema_kw
+  = SCHEMA
+  / kw:DATABASE &mysql { return kw; }
 
 /**
  * ------------------------------------------------------------------------------------ *
