@@ -2475,10 +2475,10 @@ and_op
   / op:"&&" &mysql { return op; }
 
 not_expr
-  = comparison_expr
-  / kw:NOT expr:(__ not_expr) {
+  = kw:NOT expr:(__ not_expr) {
     return loc(createPrefixOpExpr(kw, read(expr)));
   }
+  / comparison_expr
 
 comparison_expr
   = left:bitwise_or_expr rightFn:_comparison_expr_right? {
