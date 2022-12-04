@@ -1958,7 +1958,7 @@ mysql_table_opt_value
   / NO / FIRST / LAST  // for INSERT_METHOD
 
 bigquery_options
-  = kw:(OPTIONS __) options:paren_name_value_pair_list {
+  = kw:(OPTIONS __) options:paren_equals_expr_list {
     return loc({
       type: "bigquery_options",
       optionsKw: read(kw),
@@ -1966,22 +1966,23 @@ bigquery_options
     });
   }
 
-paren_name_value_pair_list
-  = "(" c1:__ list:name_value_pair_list c2:__ ")" {
+paren_equals_expr_list
+  = "(" c1:__ list:equals_expr_list c2:__ ")" {
     return loc(createParenExpr(c1, list, c2));
   }
 
-name_value_pair_list
-  = head:name_value_pair tail:(__ "," __ name_value_pair)* {
+equals_expr_list
+  = head:equals_expr tail:(__ "," __ equals_expr)* {
     return loc(createListExpr(head, tail));
   }
 
-name_value_pair
+equals_expr
   = name:(ident __) "=" value:(__ expr) {
     return loc({
-      type: "name_value_pair",
-      name: read(name),
-      value: read(value),
+      type: "binary_expr",
+      left: read(name),
+      operator: "=",
+      right: read(value),
     });
   }
 

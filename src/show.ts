@@ -184,7 +184,6 @@ const showNode = cstTransformer<string>({
   table_option: (node) =>
     show([node.name, node.hasEq ? "=" : undefined, node.value]),
   bigquery_options: (node) => show([node.optionsKw, node.options]),
-  name_value_pair: (node) => show([node.name, "=", node.value]),
 
   // ALTER TABLE statement
   alter_table_stmt: (node) =>
