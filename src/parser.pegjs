@@ -1958,7 +1958,7 @@ mysql_table_opt_value
   / NO / FIRST / LAST  // for INSERT_METHOD
 
 bigquery_options
-  = kw:(OPTIONS __) options:paren_table_option_bigquery_list {
+  = kw:(OPTIONS __) options:paren_name_value_pair_list {
     return loc({
       type: "bigquery_options",
       optionsKw: read(kw),
@@ -1966,34 +1966,24 @@ bigquery_options
     });
   }
 
-paren_table_option_bigquery_list
-  = "(" c1:__ list:table_option_bigquery_list c2:__ ")" {
+paren_name_value_pair_list
+  = "(" c1:__ list:name_value_pair_list c2:__ ")" {
     return loc(createParenExpr(c1, list, c2));
   }
 
-table_option_bigquery_list
-  = head:table_option_bigquery tail:(__ "," __ table_option_bigquery)* {
+name_value_pair_list
+  = head:name_value_pair tail:(__ "," __ name_value_pair)* {
     return loc(createListExpr(head, tail));
   }
 
-table_option_bigquery
-  = kw:(bigquery_table_option_name __) "=" v:(__ expr) {
+name_value_pair
+  = name:(ident __) "=" value:(__ expr) {
     return loc({
-      type: "table_option",
-      name: read(kw),
-      hasEq: true,
-      value: read(v),
+      type: "name_value_pair",
+      name: read(name),
+      value: read(value),
     });
   }
-
-bigquery_table_option_name
-  = EXPIRATION_TIMESTAMP
-  / PARTITION_EXPIRATION_DAYS
-  / REQUIRE_PARTITION_FILTER
-  / KMS_KEY_NAME
-  / FRIENDLY_NAME
-  / DESCRIPTION
-  / LABELS
 
 /**
  * ------------------------------------------------------------------------------------ *
@@ -3829,7 +3819,6 @@ DELETE              = kw:"DELETE"i              !ident_part { return loc(createK
 DENSE_RANK          = kw:"DENSE_RANK"i          !ident_part { return loc(createKeyword(kw)); }
 DESC                = kw:"DESC"i                !ident_part { return loc(createKeyword(kw)); }
 DESCRIBE            = kw:"DESCRIBE"i            !ident_part { return loc(createKeyword(kw)); }
-DESCRIPTION         = kw:"DESCRIPTION"i         !ident_part { return loc(createKeyword(kw)); }
 DETACH              = kw:"DETACH"i              !ident_part { return loc(createKeyword(kw)); }
 DIRECTORY           = kw:"DIRECTORY"i           !ident_part { return loc(createKeyword(kw)); }
 DISK                = kw:"DISK"i                !ident_part { return loc(createKeyword(kw)); }
@@ -3858,7 +3847,6 @@ EXCLUDE             = kw:"EXCLUDE"i             !ident_part { return loc(createK
 EXCLUSIVE           = kw:"EXCLUSIVE"i           !ident_part { return loc(createKeyword(kw)); }
 EXISTS              = kw:"EXISTS"i              !ident_part { return loc(createKeyword(kw)); }
 EXPANSION           = kw:"EXPANSION"i           !ident_part { return loc(createKeyword(kw)); }
-EXPIRATION_TIMESTAMP      = kw:"EXPIRATION_TIMESTAMP"i      !ident_part { return loc(createKeyword(kw)); }
 EXPLAIN             = kw:"EXPLAIN"i             !ident_part { return loc(createKeyword(kw)); }
 EXTRACT             = kw:"EXTRACT"i             !ident_part { return loc(createKeyword(kw)); }
 FAIL                = kw:"FAIL"i                !ident_part { return loc(createKeyword(kw)); }
@@ -3874,7 +3862,6 @@ FOR                 = kw:"FOR"i                 !ident_part { return loc(createK
 FOREIGN             = kw:"FOREIGN"i             !ident_part { return loc(createKeyword(kw)); }
 FORMAT              = kw:"FORMAT"i              !ident_part { return loc(createKeyword(kw)); }
 FRIDAY              = kw:"FRIDAY"i              !ident_part { return loc(createKeyword(kw)); }
-FRIENDLY_NAME       = kw:"FRIENDLY_NAME"i       !ident_part { return loc(createKeyword(kw)); }
 FROM                = kw:"FROM"i                !ident_part { return loc(createKeyword(kw)); }
 FULL                = kw:"FULL"i                !ident_part { return loc(createKeyword(kw)); }
 FULLTEXT            = kw:"FULLTEXT"i            !ident_part { return loc(createKeyword(kw)); }
@@ -3924,8 +3911,6 @@ JOIN                = kw:"JOIN"i                !ident_part { return loc(createK
 JSON                = kw:"JSON"i                !ident_part { return loc(createKeyword(kw)); }
 KEY                 = kw:"KEY"i                 !ident_part { return loc(createKeyword(kw)); }
 KEY_BLOCK_SIZE      = kw:"KEY_BLOCK_SIZE"i      !ident_part { return loc(createKeyword(kw)); }
-KMS_KEY_NAME        = kw:"KMS_KEY_NAME"i        !ident_part { return loc(createKeyword(kw)); }
-LABELS              = kw:"LABELS"i              !ident_part { return loc(createKeyword(kw)); }
 LAG                 = kw:"LAG"i                 !ident_part { return loc(createKeyword(kw)); }
 LANGUAGE            = kw:"LANGUAGE"i            !ident_part { return loc(createKeyword(kw)); }
 LAST                = kw:"LAST"i                !ident_part { return loc(createKeyword(kw)); }
@@ -3997,7 +3982,6 @@ PACK_KEYS           = kw:"PACK_KEYS"i           !ident_part { return loc(createK
 PARSER              = kw:"PARSER"i              !ident_part { return loc(createKeyword(kw)); }
 PARTIAL             = kw:"PARTIAL"i             !ident_part { return loc(createKeyword(kw)); }
 PARTITION           = kw:"PARTITION"i           !ident_part { return loc(createKeyword(kw)); }
-PARTITION_EXPIRATION_DAYS = kw:"PARTITION_EXPIRATION_DAYS"i !ident_part { return loc(createKeyword(kw)); }
 PASSWORD            = kw:"PASSWORD"i            !ident_part { return loc(createKeyword(kw)); }
 PERCENT             = kw:"PERCENT"i             !ident_part { return loc(createKeyword(kw)); }
 PERCENT_RANK        = kw:"PERCENT_RANK"i        !ident_part { return loc(createKeyword(kw)); }
@@ -4026,7 +4010,6 @@ RELEASE             = kw:"RELEASE"i             !ident_part { return loc(createK
 RENAME              = kw:"RENAME"i              !ident_part { return loc(createKeyword(kw)); }
 REPLACE             = kw:"REPLACE"i             !ident_part { return loc(createKeyword(kw)); }
 REPLICATION         = kw:"REPLICATION"i         !ident_part { return loc(createKeyword(kw)); }
-REQUIRE_PARTITION_FILTER  = kw:"REQUIRE_PARTITION_FILTER"i  !ident_part { return loc(createKeyword(kw)); }
 RESPECT             = kw:"RESPECT"i             !ident_part { return loc(createKeyword(kw)); }
 RESTRICT            = kw:"RESTRICT"i            !ident_part { return loc(createKeyword(kw)); }
 RETURN              = kw:"RETURN"i              !ident_part { return loc(createKeyword(kw)); }

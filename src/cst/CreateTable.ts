@@ -9,7 +9,8 @@ export type AllCreateTableNodes =
   | CreateTableAs
   | ColumnDefinition
   | TableOption
-  | BigqueryOptions;
+  | BigqueryOptions
+  | NameValuePair;
 
 // CREATE TABLE
 export interface CreateTableStmt extends BaseNode {
@@ -41,7 +42,7 @@ export interface ColumnDefinition extends BaseNode {
 
 export interface TableOption extends BaseNode {
   type: "table_option";
-  name: TableOptionNameSqlite | TableOptionNameMysql | TableOptionNameBigquery;
+  name: TableOptionNameSqlite | TableOptionNameMysql;
   hasEq?: boolean; // True when "=" sign is used
   value?: TableOptionValueMysql | Expr;
 }
@@ -81,16 +82,6 @@ type TableOptionNameMysql =
   | Keyword<"STATS_PERSISTENT">
   | Keyword<"STATS_SAMPLE_PAGES">;
 
-type TableOptionNameBigquery = Keyword<
-  | "EXPIRATION_TIMESTAMP"
-  | "PARTITION_EXPIRATION_DAYS"
-  | "REQUIRE_PARTITION_FILTER"
-  | "KMS_KEY_NAME"
-  | "FRIENDLY_NAME"
-  | "DESCRIPTION"
-  | "LABELS"
->;
-
 type TableOptionValueMysql = Keyword<
   | "DEFAULT"
   | "DYNAMIC"
@@ -106,5 +97,11 @@ type TableOptionValueMysql = Keyword<
 export interface BigqueryOptions extends BaseNode {
   type: "bigquery_options";
   optionsKw: Keyword<"OPTIONS">;
-  options: ParenExpr<ListExpr<TableOption>>;
+  options: ParenExpr<ListExpr<NameValuePair>>;
+}
+
+export interface NameValuePair extends BaseNode {
+  type: "name_value_pair";
+  name: Identifier;
+  value: Expr;
 }
