@@ -66,11 +66,15 @@ export interface PairExpr<T1 = Node, T2 = Node> extends BaseNode {
   expr2: T2;
 }
 
-export interface BinaryExpr extends BaseNode {
+export interface BinaryExpr<
+  TLeft = Expr,
+  TOperator = string | Keyword | Keyword[],
+  TRight = Expr
+> extends BaseNode {
   type: "binary_expr";
-  left: Expr;
-  operator: string | Keyword | Keyword[];
-  right: Expr;
+  left: TLeft;
+  operator: TOperator;
+  right: TRight;
 }
 
 export interface PrefixOpExpr extends BaseNode {
