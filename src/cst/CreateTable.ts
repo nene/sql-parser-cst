@@ -8,9 +8,7 @@ export type AllCreateTableNodes =
   | CreateTableStmt
   | CreateTableAs
   | ColumnDefinition
-  | TableOption
-  | BigqueryOptions
-  | NameValuePair;
+  | TableOption;
 
 // CREATE TABLE
 export interface CreateTableStmt extends BaseNode {
@@ -93,15 +91,3 @@ type TableOptionValueMysql = Keyword<
   | "FIRST"
   | "LAST"
 >;
-
-export interface BigqueryOptions extends BaseNode {
-  type: "bigquery_options";
-  optionsKw: Keyword<"OPTIONS">;
-  options: ParenExpr<ListExpr<NameValuePair>>;
-}
-
-export interface NameValuePair extends BaseNode {
-  type: "name_value_pair";
-  name: Identifier;
-  value: Expr;
-}

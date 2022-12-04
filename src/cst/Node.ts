@@ -30,12 +30,13 @@ import { AllDataTypeNodes } from "./DataType";
 import { AllExprNodes } from "./Expr";
 import { AllInsertNodes } from "./Insert";
 import { AllSelectNodes } from "./Select";
-import { AllSqliteNodes } from "./Sqlite";
 import { AllTransactionNodes } from "./Transaction";
 import { AllTriggerNodes } from "./Trigger";
 import { AllUpdateNodes } from "./Update";
 import { AllFrameNodes } from "./WindowFrame";
 import { AllMergeNodes } from "./Merge";
+import { AllSqliteNodes } from "./Sqlite";
+import { AllBigqueryNodes } from "./Bigquery";
 
 export type Node =
   | Program
@@ -56,4 +57,5 @@ export type Node =
   | AllInsertNodes
   | AllUpdateNodes
   | AllMergeNodes
-  | AllSqliteNodes;
+  | AllSqliteNodes
+  | AllBigqueryNodes;

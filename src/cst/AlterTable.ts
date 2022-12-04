@@ -1,5 +1,6 @@
 import { BaseNode, Keyword } from "./Base";
-import { BigqueryOptions, ColumnDefinition } from "./CreateTable";
+import { BigqueryOptions } from "./Bigquery";
+import { ColumnDefinition } from "./CreateTable";
 import { DataType } from "./DataType";
 import { Expr, Identifier, ListExpr, Table } from "./Expr";
 import { StringLiteral } from "./Literal";
