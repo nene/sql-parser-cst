@@ -20,6 +20,7 @@ export interface CreateViewStmt extends BaseNode {
 export interface DropViewStmt extends BaseNode {
   type: "drop_view_stmt";
   dropKw: Keyword<"DROP">;
+  materializedKw?: Keyword<"MATERIALIZED">;
   viewKw: Keyword<"VIEW">;
   ifExistsKw?: [Keyword<"IF">, Keyword<"EXISTS">];
   views: ListExpr<Table>;

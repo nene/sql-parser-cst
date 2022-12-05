@@ -53,6 +53,13 @@ describe("view", () => {
       test("DROP VIEW view1 /*c1*/,/*c2*/ view2");
     });
 
+    dialect("bigquery", () => {
+      it("supports DROP MATERIALIZED VIEW", () => {
+        test("DROP MATERIALIZED VIEW my_view");
+        test("DROP /*c1*/ MATERIALIZED /*c2*/ VIEW my_view");
+      });
+    });
+
     dialect("mysql", () => {
       it("with CASCADE/RESTRICT behavior", () => {
         test("DROP VIEW v1 CASCADE");

@@ -1197,6 +1197,7 @@ create_view_stmt
 
 drop_view_stmt
   = dropKw:DROP
+    materKw:(__ MATERIALIZED)?
     viewKw:(__ VIEW)
     ifKw:(__ if_exists)?
     views:(__ table_list)
@@ -1204,6 +1205,7 @@ drop_view_stmt
       return loc({
         type: "drop_view_stmt",
         dropKw: read(dropKw),
+        materializedKw: read(materKw),
         viewKw: read(viewKw),
         ifExistsKw: read(ifKw),
         views: read(views),

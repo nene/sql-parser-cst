@@ -320,6 +320,7 @@ const showNode = cstTransformer<string>({
   drop_view_stmt: (node) =>
     show([
       node.dropKw,
+      node.materializedKw,
       node.viewKw,
       node.ifExistsKw,
       node.views,
