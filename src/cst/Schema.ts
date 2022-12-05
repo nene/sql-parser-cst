@@ -1,8 +1,12 @@
+import { AlterSchemaAction } from "./AlterAction";
 import { BaseNode, Keyword } from "./Base";
 import { BigqueryOptionDefaultCollate, BigqueryOptions } from "./Bigquery";
 import { Table } from "./Expr";
 
-export type AllSchemaStatements = CreateSchemaStmt | DropSchemaStmt;
+export type AllSchemaStatements =
+  | CreateSchemaStmt
+  | DropSchemaStmt
+  | AlterSchemaStmt;
 
 // CREATE SCHEMA
 export interface CreateSchemaStmt extends BaseNode {
@@ -13,6 +17,8 @@ export interface CreateSchemaStmt extends BaseNode {
   options: CreateSchemaOption[];
 }
 
+type CreateSchemaOption = BigqueryOptions | BigqueryOptionDefaultCollate;
+
 // DROP SCHEMA
 export interface DropSchemaStmt extends BaseNode {
   type: "drop_schema_stmt";
@@ -22,4 +28,11 @@ export interface DropSchemaStmt extends BaseNode {
   behaviorKw?: Keyword<"CASCADE" | "RESTRICT">;
 }
 
-type CreateSchemaOption = BigqueryOptions | BigqueryOptionDefaultCollate;
+// ALTER SCHEMA
+export interface AlterSchemaStmt extends BaseNode {
+  type: "alter_schema_stmt";
+  alterSchemaKw: [Keyword<"ALTER">, Keyword<"SCHEMA" | "DATABASE">];
+  ifExistsKw?: [Keyword<"IF">, Keyword<"EXISTS">];
+  name: Table;
+  actions: AlterSchemaAction[];
+}

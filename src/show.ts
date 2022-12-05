@@ -301,6 +301,8 @@ const showNode = cstTransformer<string>({
   // DROP SCHEMA statement
   drop_schema_stmt: (node) =>
     show([node.dropSchemaKw, node.ifExistsKw, node.name, node.behaviorKw]),
+  alter_schema_stmt: (node) =>
+    show([node.alterSchemaKw, node.ifExistsKw, node.name, node.actions]),
 
   // CREATE VIEW statement
   create_view_stmt: (node) =>

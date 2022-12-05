@@ -36,7 +36,7 @@ statement
   / x:drop_trigger_stmt (&mysql / &sqlite) { return x; }
   / x:analyze_stmt (&mysql / &sqlite) { return x; }
   / x:explain_stmt (&mysql / &sqlite) { return x; }
-  / x:(create_schema_stmt / drop_schema_stmt) (&mysql / &bigquery) { return x; }
+  / x:(create_schema_stmt / drop_schema_stmt / alter_schema_stmt) (&mysql / &bigquery) { return x; }
   / transaction_stmt
   / x:sqlite_stmt &sqlite { return x; }
   / empty
@@ -1645,6 +1645,10 @@ create_schema_stmt
     });
   }
 
+create_schema_option
+  = x:bigquery_options &bigquery { return x; }
+  / x:bigquery_option_default_collate &bigquery { return x; }
+
 drop_schema_stmt
   = kw:(DROP __ schema_kw __) ifKw:(if_exists __)? name:table behaviorKw:(__ (CASCADE / RESTRICT))? {
     return loc({
@@ -1656,13 +1660,24 @@ drop_schema_stmt
     });
   }
 
+alter_schema_stmt
+  = kw:(ALTER __ schema_kw __) ifKw:(if_exists __)? name:table actions:(__ alter_schema_action)+ {
+    return loc({
+      type: "alter_schema_stmt",
+      alterSchemaKw: read(kw),
+      ifExistsKw: read(ifKw),
+      name,
+      actions: actions.map(read),
+    });
+  }
+
+alter_schema_action
+  = &bigquery ac:alter_action_set_options { return ac; }
+  / &bigquery ac:alter_action_set_default_collate { return ac; }
+
 schema_kw
   = SCHEMA
   / kw:DATABASE &mysql { return kw; }
-
-create_schema_option
-  = x:bigquery_options &bigquery { return x; }
-  / x:bigquery_option_default_collate &bigquery { return x; }
 
 /**
  * ------------------------------------------------------------------------------------ *

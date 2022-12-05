@@ -62,6 +62,30 @@ describe("schema", () => {
         });
       });
     });
+
+    describe("ALTER SCHEMA", () => {
+      dialect("bigquery", () => {
+        it("supports IF EXISTS", () => {
+          test("ALTER SCHEMA IF EXISTS my_schema SET OPTIONS(foo='bar')");
+          test(`
+            ALTER /*c0*/ SCHEMA /*c1*/ IF /*c2*/ EXISTS /*c3*/ my_schema /*c4*/
+            SET /*c5*/ OPTIONS /*c6*/ (foo='bar')
+          `);
+        });
+
+        it("supports SET OPTIONS(...)", () => {
+          test("ALTER SCHEMA my_schm SET OPTIONS(description='foo')");
+        });
+
+        it("supports SET DEFAULT COLLATE", () => {
+          test("ALTER SCHEMA my_schm SET DEFAULT COLLATE 'mycollation'");
+          test(`
+            ALTER SCHEMA my_schm /*c1*/
+            SET /*c2*/ DEFAULT /*c3*/ COLLATE /*c4*/ 'mycollation'
+          `);
+        });
+      });
+    });
   });
 
   dialect("sqlite", () => {

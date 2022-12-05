@@ -16,6 +16,10 @@ export type AlterTableAction =
   | AlterActionSetDefaultCollate
   | AlterActionSetOptions;
 
+export type AlterSchemaAction =
+  | AlterActionSetDefaultCollate
+  | AlterActionSetOptions;
+
 export interface AlterActionRenameTable extends BaseNode {
   type: "alter_action_rename_table";
   renameKw: Keyword<"RENAME"> | [Keyword<"RENAME">, Keyword<"TO" | "AS">];
