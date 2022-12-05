@@ -10,7 +10,7 @@ describe("create table", () => {
     );
   });
 
-  dialect("sqlite", () => {
+  dialect(["sqlite", "bigquery"], () => {
     it("supports CREATE TEMP TABLE", () => {
       test("CREATE TEMP TABLE foo (id INT)");
     });
