@@ -10,7 +10,7 @@ import { InsertStmt } from "./Insert";
 import { MergeStmt } from "./Merge";
 import { CompoundSelectStmt, SelectStmt } from "./Select";
 import { AllSqliteStatements } from "./Sqlite";
-import { TransactionStmt } from "./Transaction";
+import { AllTransactionStatements } from "./Transaction";
 import { AllTriggerStatements } from "./Trigger";
 import { TruncateStmt } from "./Truncate";
 import { UpdateStmt } from "./Update";
@@ -35,5 +35,5 @@ export type Statement =
   | AllTriggerStatements
   | AnalyzeStmt
   | ExplainStmt
-  | TransactionStmt
+  | AllTransactionStatements
   | AllSqliteStatements;

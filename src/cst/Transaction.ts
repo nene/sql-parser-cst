@@ -1,9 +1,11 @@
 import { BaseNode, Keyword } from "./Base";
 import { Identifier } from "./Expr";
 
-export type AllTransactionNodes = TransactionStmt | RollbackToSavepoint;
+export type AllTransactionNodes =
+  | AllTransactionStatements
+  | RollbackToSavepoint;
 
-export type TransactionStmt =
+export type AllTransactionStatements =
   | StartTransactionStmt
   | CommitTransactionStmt
   | RollbackTransactionStmt
