@@ -1,4 +1,5 @@
 import { BaseNode, Keyword } from "./Base";
+import { BigqueryOptions } from "./Bigquery";
 import { ColumnConstraint, Constraint, TableConstraint } from "./Constraint";
 import { DataType } from "./DataType";
 import { Expr, Identifier, ListExpr, ParenExpr, Table } from "./Expr";
@@ -21,7 +22,7 @@ export interface CreateTableStmt extends BaseNode {
   columns?: ParenExpr<
     ListExpr<ColumnDefinition | TableConstraint | Constraint<TableConstraint>>
   >;
-  options?: ListExpr<TableOption>;
+  options?: ListExpr<TableOption> | BigqueryTableOption[];
   as?: CreateTableAs;
 }
 
@@ -91,3 +92,5 @@ type TableOptionValueMysql = Keyword<
   | "FIRST"
   | "LAST"
 >;
+
+type BigqueryTableOption = BigqueryOptions;

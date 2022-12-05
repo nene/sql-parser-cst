@@ -1887,8 +1887,11 @@ create_virtual_table_stmt
  * ------------------------------------------------------------------------------------ *
  */
 table_options
-  = head:table_option tail:(__ "," __ table_option)* {
+  = (&sqlite / &bigquery) head:table_option tail:(__ "," __ table_option)* {
     return loc(createListExpr(head, tail));
+  }
+  / &bigquery head:table_option_bigquery tail:(__ table_option_bigquery)* {
+    return readSpaceSepList(head, tail);
   }
 
 table_option
@@ -1960,6 +1963,9 @@ mysql_table_opt_value
   / DEFAULT
   / DYNAMIC / FIXED / COMPRESSED / REDUNDANT / COMPACT  // for ROW_FORMAT
   / NO / FIRST / LAST  // for INSERT_METHOD
+
+table_option_bigquery
+  = bigquery_options
 
 bigquery_options
   = kw:(OPTIONS __) options:paren_equals_expr_list {

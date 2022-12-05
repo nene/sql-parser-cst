@@ -67,6 +67,11 @@ describe("table options", () => {
   });
 
   dialect("bigquery", () => {
-    it.skip("CREATE TABLE options using OPTIONS()", () => {});
+    it.skip("supports DEFAULT COLLATE option", () => {
+      testOpts(`DEFAULT COLLATE 'und:ci'`);
+    });
+    it("supports OPTIONS()", () => {
+      testOpts(`OPTIONS(description = 'Hello', friendly_name = 'Blah')`);
+    });
   });
 });
