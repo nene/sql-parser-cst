@@ -1968,6 +1968,7 @@ mysql_table_opt_value
 table_option_bigquery
   = bigquery_options
   / bigquery_option_default_collate
+  / partition_by_clause
 
 bigquery_options
   = kw:(OPTIONS __) options:paren_equals_expr_list {

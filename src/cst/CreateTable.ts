@@ -3,7 +3,7 @@ import { BigqueryOptionDefaultCollate, BigqueryOptions } from "./Bigquery";
 import { ColumnConstraint, Constraint, TableConstraint } from "./Constraint";
 import { DataType } from "./DataType";
 import { Expr, Identifier, ListExpr, ParenExpr, Table } from "./Expr";
-import { SubSelect } from "./Select";
+import { PartitionByClause, SubSelect } from "./Select";
 
 export type AllCreateTableNodes =
   | CreateTableStmt
@@ -93,4 +93,7 @@ type TableOptionValueMysql = Keyword<
   | "LAST"
 >;
 
-type BigqueryTableOption = BigqueryOptions | BigqueryOptionDefaultCollate;
+type BigqueryTableOption =
+  | BigqueryOptions
+  | BigqueryOptionDefaultCollate
+  | PartitionByClause;

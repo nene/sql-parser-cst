@@ -76,5 +76,10 @@ describe("table options", () => {
       testOpts(`OPTIONS(description = 'Hello', friendly_name = 'Blah')`);
       testOpts(`OPTIONS /*c1*/ (/*c2*/ description = 'Hello' /*c2*/)`);
     });
+
+    it("supports PARTITION BY", () => {
+      testOpts(`PARTITION BY DATE(_PARTITIONTIME)`);
+      testOpts(`PARTITION /*c1*/ BY /*c2*/ _PARTITIONTIME`);
+    });
   });
 });
