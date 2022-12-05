@@ -1,5 +1,5 @@
 import { BaseNode, Keyword } from "./Base";
-import { BigqueryOptions } from "./Bigquery";
+import { BigqueryOptionDefaultCollate, BigqueryOptions } from "./Bigquery";
 import { ColumnConstraint, Constraint, TableConstraint } from "./Constraint";
 import { DataType } from "./DataType";
 import { Expr, Identifier, ListExpr, ParenExpr, Table } from "./Expr";
@@ -93,4 +93,4 @@ type TableOptionValueMysql = Keyword<
   | "LAST"
 >;
 
-type BigqueryTableOption = BigqueryOptions;
+type BigqueryTableOption = BigqueryOptions | BigqueryOptionDefaultCollate;

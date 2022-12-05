@@ -67,7 +67,7 @@ describe("table options", () => {
   });
 
   dialect("bigquery", () => {
-    it.skip("supports DEFAULT COLLATE option", () => {
+    it("supports DEFAULT COLLATE option", () => {
       testOpts(`DEFAULT COLLATE 'und:ci'`);
     });
     it("supports OPTIONS()", () => {

@@ -1,5 +1,5 @@
 import { BaseNode, Keyword } from "./Base";
-import { BigqueryOptions } from "./Bigquery";
+import { BigqueryOptionDefaultCollate, BigqueryOptions } from "./Bigquery";
 import { Table } from "./Expr";
 
 // CREATE SCHEMA
@@ -20,4 +20,4 @@ export interface DropSchemaStmt extends BaseNode {
   behaviorKw?: Keyword<"CASCADE" | "RESTRICT">;
 }
 
-type CreateSchemaOption = BigqueryOptions;
+type CreateSchemaOption = BigqueryOptions | BigqueryOptionDefaultCollate;

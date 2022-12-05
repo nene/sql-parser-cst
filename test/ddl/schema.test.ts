@@ -21,7 +21,7 @@ describe("schema", () => {
       });
 
       dialect("bigquery", () => {
-        it.skip("supports DEFAULT COLLATE", () => {
+        it("supports DEFAULT COLLATE", () => {
           test("CREATE SCHEMA my_schema DEFAULT COLLATE 'udn:ci'");
           test("CREATE SCHEMA my_schema /*c1*/ DEFAULT /*c2*/ COLLATE /*c3*/ 'udn:ci'");
         });
@@ -29,6 +29,10 @@ describe("schema", () => {
         it("supports OPTIONS()", () => {
           test("CREATE SCHEMA my_schema OPTIONS(description='Hello')");
           test("CREATE SCHEMA my_schema /*c1*/ OPTIONS /*c2*/ (/*c1*/ description='Hello' /*c3*/)");
+        });
+
+        it("supports both OPTIONS() and DEFAULT COLLATE", () => {
+          test("CREATE SCHEMA my_schema OPTIONS(description='Hello') DEFAULT COLLATE 'udn:ci'");
         });
       });
     });

@@ -60,7 +60,7 @@ export interface ParenExpr<T = Node> extends BaseNode {
   expr: T;
 }
 
-export interface PairExpr<T1 = Node, T2 = Node> extends BaseNode {
+export interface PairExpr<T1 = Node | Node[], T2 = Node> extends BaseNode {
   type: "pair_expr";
   expr1: T1;
   expr2: T2;

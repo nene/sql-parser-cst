@@ -1635,6 +1635,7 @@ schema_kw
 
 create_schema_option
   = x:bigquery_options &bigquery { return x; }
+  / x:bigquery_option_default_collate &bigquery { return x; }
 
 /**
  * ------------------------------------------------------------------------------------ *
@@ -1966,6 +1967,7 @@ mysql_table_opt_value
 
 table_option_bigquery
   = bigquery_options
+  / bigquery_option_default_collate
 
 bigquery_options
   = kw:(OPTIONS __) options:paren_equals_expr_list {
@@ -1993,6 +1995,15 @@ equals_expr
       left: read(name),
       operator: "=",
       right: read(value),
+    });
+  }
+
+bigquery_option_default_collate
+  = kw:(DEFAULT __ COLLATE __) value:literal_string {
+    return loc({
+      type: "bigquery_option_default_collate",
+      defaultCollateKw: read(kw),
+      collation: value,
     });
   }
 

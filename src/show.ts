@@ -184,6 +184,8 @@ const showNode = cstTransformer<string>({
   table_option: (node) =>
     show([node.name, node.hasEq ? "=" : undefined, node.value]),
   bigquery_options: (node) => show([node.optionsKw, node.options]),
+  bigquery_option_default_collate: (node) =>
+    show([node.defaultCollateKw, node.collation]),
 
   // ALTER TABLE statement
   alter_table_stmt: (node) =>
