@@ -1319,7 +1319,7 @@ create_definition_list
   }
 
 create_definition
-  = table_constraint
+  = !bigquery c:table_constraint { return c; }
   / column_definition
 
 column_definition
@@ -2062,7 +2062,7 @@ table_constraint
     }
 
 constraint_name
-  = kw:CONSTRAINT name:(__ ident)? {
+  = !bigquery kw:CONSTRAINT name:(__ ident)? {
     return loc({
       type: "constraint_name",
       constraintKw: kw,
@@ -2071,7 +2071,7 @@ constraint_name
   }
 
 constraint_deferrable
-  = kw:(DEFERRABLE / NOT __ DEFERRABLE)
+  = !bigquery kw:(DEFERRABLE / NOT __ DEFERRABLE)
     init:(__ initially_immediate_or_deferred)? {
       return loc({
         type: "constraint_deferrable",
@@ -2085,15 +2085,18 @@ initially_immediate_or_deferred
 
 column_constraint_type
   = constraint_not_null
-  / constraint_null
+  / !bigquery con:constraint_null { return con; }
   / constraint_default
-  / column_constraint_primary_key
+  / constraint_collate
+  / !bigquery con:column_constraint_type_common { return con; }
+  / &mysql con:column_constraint_type_mysql { return con; }
+
+column_constraint_type_common
+  = column_constraint_primary_key
   / column_constraint_unique
   / references_specification
   / constraint_check
-  / constraint_collate
   / constraint_generated
-  / &mysql con:column_constraint_type_mysql { return con; }
 
 column_constraint_type_mysql
   = column_constraint_index
