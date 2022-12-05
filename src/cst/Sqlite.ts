@@ -2,10 +2,13 @@ import { BaseNode, Keyword } from "./Base";
 import { Expr, FuncCall, Identifier, ParenExpr, Table } from "./Expr";
 import { Literal, StringLiteral } from "./Literal";
 
-export type AllSqliteNodes = SqliteStmt | PragmaAssignment | PragmaFuncCall;
+export type AllSqliteNodes =
+  | AllSqliteStatements
+  | PragmaAssignment
+  | PragmaFuncCall;
 
 // SQLite-specific statements
-export type SqliteStmt =
+export type AllSqliteStatements =
   | AttachDatabaseStmt
   | DetachDatabaseStmt
   | VacuumStmt

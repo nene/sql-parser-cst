@@ -9,7 +9,7 @@ import { AllIndexStatements } from "./Index";
 import { InsertStmt } from "./Insert";
 import { MergeStmt } from "./Merge";
 import { CompoundSelectStmt, SelectStmt } from "./Select";
-import { SqliteStmt } from "./Sqlite";
+import { AllSqliteStatements } from "./Sqlite";
 import { TransactionStmt } from "./Transaction";
 import { AllTriggerStatements } from "./Trigger";
 import { TruncateStmt } from "./Truncate";
@@ -36,4 +36,4 @@ export type Statement =
   | AnalyzeStmt
   | ExplainStmt
   | TransactionStmt
-  | SqliteStmt;
+  | AllSqliteStatements;
