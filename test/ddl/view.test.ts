@@ -28,7 +28,9 @@ describe("view", () => {
         test("CREATE TEMPORARY VIEW my_view AS SELECT 1");
         test("CREATE /*c1*/ TEMP /*c2*/ VIEW my_view AS SELECT 1");
       });
+    });
 
+    dialect(["sqlite", "bigquery"], () => {
       it("supports IF NOT EXISTS", () => {
         test("CREATE VIEW IF NOT EXISTS my_view AS SELECT 1");
         test("CREATE VIEW /*c1*/ IF /*c2*/ NOT /*c3*/ EXISTS /*c4*/ my_view AS SELECT 1");
