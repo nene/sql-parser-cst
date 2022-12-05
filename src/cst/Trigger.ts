@@ -3,13 +3,14 @@ import { Expr, Identifier, ListExpr, Table } from "./Expr";
 import { Program } from "./Program";
 
 export type AllTriggerNodes =
-  | CreateTriggerStmt
-  | DropTriggerStmt
+  | AllTriggerStatements
   | TriggerEvent
   | TriggerCondition
   | TriggerBody
   | TriggerCondition
   | TriggerBody;
+
+export type AllTriggerStatements = CreateTriggerStmt | DropTriggerStmt;
 
 // CREATE TRIGGER
 export interface CreateTriggerStmt extends BaseNode {

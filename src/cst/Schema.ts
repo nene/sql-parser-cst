@@ -2,6 +2,8 @@ import { BaseNode, Keyword } from "./Base";
 import { BigqueryOptionDefaultCollate, BigqueryOptions } from "./Bigquery";
 import { Table } from "./Expr";
 
+export type AllSchemaStatements = CreateSchemaStmt | DropSchemaStmt;
+
 // CREATE SCHEMA
 export interface CreateSchemaStmt extends BaseNode {
   type: "create_schema_stmt";

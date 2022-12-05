@@ -2,6 +2,8 @@ import { BaseNode, Keyword } from "./Base";
 import { Identifier, ListExpr, ParenExpr, Table } from "./Expr";
 import { SortSpecification, WhereClause } from "./Select";
 
+export type AllIndexStatements = CreateIndexStmt | DropIndexStmt;
+
 // CREATE INDEX
 export interface CreateIndexStmt extends BaseNode {
   type: "create_index_stmt";

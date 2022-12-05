@@ -5,17 +5,17 @@ import { CreateTableStmt } from "./CreateTable";
 import { DeleteStmt } from "./Delete";
 import { DropTableStmt } from "./DropTable";
 import { ExplainStmt } from "./Explain";
-import { CreateIndexStmt, DropIndexStmt } from "./Index";
+import { AllIndexStatements } from "./Index";
 import { InsertStmt } from "./Insert";
 import { MergeStmt } from "./Merge";
 import { CompoundSelectStmt, SelectStmt } from "./Select";
 import { SqliteStmt } from "./Sqlite";
 import { TransactionStmt } from "./Transaction";
-import { CreateTriggerStmt, DropTriggerStmt } from "./Trigger";
+import { AllTriggerStatements } from "./Trigger";
 import { TruncateStmt } from "./Truncate";
 import { UpdateStmt } from "./Update";
-import { CreateViewStmt, DropViewStmt } from "./View";
-import { CreateSchemaStmt, DropSchemaStmt } from "./Schema";
+import { AllViewStatements } from "./View";
+import { AllSchemaStatements } from "./Schema";
 
 export type Statement =
   | Empty
@@ -29,14 +29,10 @@ export type Statement =
   | TruncateStmt
   | UpdateStmt
   | MergeStmt
-  | CreateViewStmt
-  | DropViewStmt
-  | CreateSchemaStmt
-  | DropSchemaStmt
-  | CreateIndexStmt
-  | DropIndexStmt
-  | CreateTriggerStmt
-  | DropTriggerStmt
+  | AllViewStatements
+  | AllSchemaStatements
+  | AllIndexStatements
+  | AllTriggerStatements
   | AnalyzeStmt
   | ExplainStmt
   | TransactionStmt

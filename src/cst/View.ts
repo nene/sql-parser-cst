@@ -3,6 +3,8 @@ import { BigqueryOptions } from "./Bigquery";
 import { Identifier, ListExpr, ParenExpr, Table } from "./Expr";
 import { ClusterByClause, PartitionByClause, SubSelect } from "./Select";
 
+export type AllViewStatements = CreateViewStmt | DropViewStmt;
+
 // CREATE VIEW
 export interface CreateViewStmt extends BaseNode {
   type: "create_view_stmt";
