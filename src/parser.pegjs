@@ -2090,6 +2090,7 @@ column_constraint_type
   / constraint_collate
   / !bigquery con:column_constraint_type_common { return con; }
   / &mysql con:column_constraint_type_mysql { return con; }
+  / &bigquery con:bigquery_options { return con; }
 
 column_constraint_type_common
   = column_constraint_primary_key

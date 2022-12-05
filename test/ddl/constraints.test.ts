@@ -141,6 +141,12 @@ describe("constraints", () => {
       });
     });
 
+    dialect("bigquery", () => {
+      it("supports OPTIONS(..)", () => {
+        testColConst("OPTIONS(description='this is a great column')");
+      });
+    });
+
     dialect(["mysql", "sqlite"], () => {
       it("supports CONSTRAINT keyword for column constraints", () => {
         testColConst("CONSTRAINT NULL");

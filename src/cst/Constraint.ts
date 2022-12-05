@@ -2,6 +2,7 @@ import { BaseNode, Keyword } from "./Base";
 import { StringLiteral } from "./Literal";
 import { Expr, Identifier, ListExpr, ParenExpr, Table } from "./Expr";
 import { SortSpecification } from "./Select";
+import { BigqueryOptions } from "./Bigquery";
 
 export type AllConstraintNodes =
   | Constraint<ColumnConstraint | TableConstraint>
@@ -56,7 +57,8 @@ export type ColumnConstraint =
   | ConstraintVisible
   | ConstraintColumnFormat
   | ConstraintStorage
-  | ConstraintEngineAttribute;
+  | ConstraintEngineAttribute
+  | BigqueryOptions;
 
 export interface ConstraintPrimaryKey extends BaseNode {
   type: "constraint_primary_key";
