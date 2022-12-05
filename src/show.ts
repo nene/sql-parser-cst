@@ -294,7 +294,7 @@ const showNode = cstTransformer<string>({
 
   // CREATE SCHEMA statement
   create_schema_stmt: (node) =>
-    show([node.createSchemaKw, node.ifNotExistsKw, node.name]),
+    show([node.createSchemaKw, node.ifNotExistsKw, node.name, node.options]),
   // DROP SCHEMA statement
   drop_schema_stmt: (node) =>
     show([node.dropSchemaKw, node.ifExistsKw, node.name, node.behaviorKw]),

@@ -1608,12 +1608,13 @@ drop_trigger_stmt
  * ------------------------------------------------------------------------------------ *
  */
 create_schema_stmt
-  = kw:(CREATE __ schema_kw __) ifKw:(if_not_exists __)? name:table {
+  = kw:(CREATE __ schema_kw __) ifKw:(if_not_exists __)? name:table options:(__ create_schema_option)* {
     return loc({
       type: "create_schema_stmt",
       createSchemaKw: read(kw),
       ifNotExistsKw: read(ifKw),
       name,
+      options: options.map(read),
     });
   }
 
@@ -1631,6 +1632,9 @@ drop_schema_stmt
 schema_kw
   = SCHEMA
   / kw:DATABASE &mysql { return kw; }
+
+create_schema_option
+  = x:bigquery_options &bigquery { return x; }
 
 /**
  * ------------------------------------------------------------------------------------ *

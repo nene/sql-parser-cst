@@ -26,7 +26,7 @@ describe("schema", () => {
           test("CREATE SCHEMA my_schema /*c1*/ DEFAULT /*c2*/ COLLATE /*c3*/ 'udn:ci'");
         });
 
-        it.skip("supports OPTIONS()", () => {
+        it("supports OPTIONS()", () => {
           test("CREATE SCHEMA my_schema OPTIONS(description='Hello')");
           test("CREATE SCHEMA my_schema /*c1*/ OPTIONS /*c2*/ (/*c1*/ description='Hello' /*c3*/)");
         });

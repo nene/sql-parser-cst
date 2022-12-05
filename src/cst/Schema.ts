@@ -1,4 +1,5 @@
 import { BaseNode, Keyword } from "./Base";
+import { BigqueryOptions } from "./Bigquery";
 import { Table } from "./Expr";
 
 // CREATE SCHEMA
@@ -7,6 +8,7 @@ export interface CreateSchemaStmt extends BaseNode {
   createSchemaKw: [Keyword<"CREATE">, Keyword<"SCHEMA" | "DATABASE">];
   ifNotExistsKw?: [Keyword<"IF">, Keyword<"NOT">, Keyword<"EXISTS">];
   name: Table;
+  options: CreateSchemaOption[];
 }
 
 // DROP SCHEMA
@@ -17,3 +19,5 @@ export interface DropSchemaStmt extends BaseNode {
   name: Table;
   behaviorKw?: Keyword<"CASCADE" | "RESTRICT">;
 }
+
+type CreateSchemaOption = BigqueryOptions;
