@@ -15,8 +15,9 @@ export type AllCreateTableNodes =
 export interface CreateTableStmt extends BaseNode {
   type: "create_table_stmt";
   createKw: Keyword<"CREATE">;
-  tableKw: Keyword<"TABLE">;
+  orReplaceKw?: [Keyword<"OR">, Keyword<"REPLACE">];
   temporaryKw?: Keyword<"TEMP" | "TEMPORARY">;
+  tableKw: Keyword<"TABLE">;
   ifNotExistsKw?: [Keyword<"IF">, Keyword<"NOT">, Keyword<"EXISTS">];
   table: Table;
   columns?: ParenExpr<

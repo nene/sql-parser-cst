@@ -36,6 +36,14 @@ describe("create table", () => {
     test("create table /*c3*/ if /*c4*/ not /*c5*/ exists /*c6*/ foo (id INT)");
   });
 
+  dialect("bigquery", () => {
+    it("supports OR REPLACE", () => {
+      test("CREATE OR REPLACE TABLE foo (id INT)");
+      test("CREATE OR REPLACE TEMPORARY TABLE foo (id INT)");
+      test("CREATE /*c1*/ OR /*c2*/ REPLACE /*c3*/ TABLE foo (id INT)");
+    });
+  });
+
   describe("CREATE TABLE AS", () => {
     it("supports CREATE TABLE ... AS select", () => {
       test("CREATE TABLE foo AS SELECT 1");

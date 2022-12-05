@@ -134,6 +134,7 @@ const showNode = cstTransformer<string>({
   create_table_stmt: (node) =>
     show([
       node.createKw,
+      node.orReplaceKw,
       node.temporaryKw,
       node.tableKw,
       node.ifNotExistsKw,

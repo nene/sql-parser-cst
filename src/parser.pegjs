@@ -1274,6 +1274,7 @@ drop_index_stmt
  */
 create_table_stmt
   = createKw:CREATE
+    replKw:(__ OR __ REPLACE)?
     tmpKw:(__ (TEMPORARY / TEMP))?
     tableKw:(__ TABLE)
     ifKw:(__ if_not_exists)?
@@ -1285,6 +1286,7 @@ create_table_stmt
       return loc({
         type: "create_table_stmt",
         createKw,
+        orReplaceKw: read(replKw),
         temporaryKw: read(tmpKw),
         tableKw: read(tableKw),
         ifNotExistsKw: read(ifKw),
