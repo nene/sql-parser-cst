@@ -1412,38 +1412,38 @@ alter_action_list
     }
 
 alter_action
-  = alter_table_add_column
-  / alter_table_drop_column
-  / alter_table_rename_column
-  / alter_table_rename_table
-  / x:alter_table_alter_column (&mysql / &bigquery) { return x; }
-  / x:alter_table_set_default_collate &bigquery { return x; }
-  / x:alter_table_set_options &bigquery { return x; }
+  = alter_action_add_column
+  / alter_action_drop_column
+  / alter_action_rename_column
+  / alter_action_rename_table
+  / x:alter_action_alter_column (&mysql / &bigquery) { return x; }
+  / x:alter_action_set_default_collate &bigquery { return x; }
+  / x:alter_action_set_options &bigquery { return x; }
 
-alter_table_add_column
+alter_action_add_column
   = addKw:(ADD __ COLUMN __ / ADD __) ifKw:(if_not_exists __)? col:column_definition {
       return loc({
-        type: "alter_table_add_column",
+        type: "alter_action_add_column",
         addKw: read(addKw),
         ifNotExistsKw: read(ifKw),
         column: col
       });
     }
 
-alter_table_drop_column
+alter_action_drop_column
   = kw:(DROP __ COLUMN __ / DROP __) ifKw:(if_exists __)? col:ident {
       return loc({
-        type: "alter_table_drop_column",
+        type: "alter_action_drop_column",
         dropKw: read(kw),
         ifExistsKw: read(ifKw),
         column: col,
       })
     }
 
-alter_table_rename_table
+alter_action_rename_table
   = kw:(rename_table_kw __) t:table {
     return loc({
-      type: "alter_table_rename_table",
+      type: "alter_action_rename_table",
       renameKw: read(kw),
       newName: t,
     });
@@ -1454,10 +1454,10 @@ rename_table_kw
   / kw:(RENAME __ AS) &mysql { return read(kw); }
   / kw:RENAME &mysql { return kw; }
 
-alter_table_rename_column
+alter_action_rename_column
   = kw:(rename_column_kw __) ifKw:(if_exists __)? oldName:(ident __) toKw:(TO __) newName:ident {
     return loc({
-      type: "alter_table_rename_column",
+      type: "alter_action_rename_column",
       renameKw: read(kw),
       ifExistsKw: read(ifKw),
       oldName: read(oldName),
@@ -1470,10 +1470,10 @@ rename_column_kw
   = kw:(RENAME __ COLUMN) { return read(kw); }
   / kw:RENAME &sqlite { return kw; }
 
-alter_table_alter_column
+alter_action_alter_column
   = alterKw:(alter_column_kw __) ifKw:(if_exists __)? column:(column __) action:alter_column_action {
     return loc({
-      type: "alter_table_alter_column",
+      type: "alter_action_alter_column",
       alterKw: read(alterKw),
       ifExistsKw: read(ifKw),
       column: read(column),
@@ -1517,19 +1517,19 @@ alter_column_set_options
     return loc({ type: "alter_column_set_options", setKw: read(kw), options });
   }
 
-alter_table_set_default_collate
+alter_action_set_default_collate
   = kw:(SET __ DEFAULT __ COLLATE __) collation:literal_string {
     return loc({
-      type: "alter_table_set_default_collate",
+      type: "alter_action_set_default_collate",
       setDefaultCollateKw: read(kw),
       collation,
     });
   }
 
-alter_table_set_options
+alter_action_set_options
   = kw:(SET __ ) options:bigquery_options {
     return loc({
-      type: "alter_table_set_options",
+      type: "alter_action_set_options",
       setKw: read(kw),
       options,
     });

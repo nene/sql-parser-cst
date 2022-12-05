@@ -23,7 +23,7 @@ import { Program } from "./Program";
 import { Statement } from "./Statement";
 import { AllColumns, Keyword } from "./Base";
 import { Alias } from "./Alias";
-import { AlterTableAction, AlterColumnAction } from "./AlterTable";
+import { AllAlterActionNodes } from "./AlterAction";
 import { AllConstraintNodes } from "./Constraint";
 import { AllCreateTableNodes } from "./CreateTable";
 import { AllDataTypeNodes } from "./DataType";
@@ -49,8 +49,7 @@ export type Node =
   | AllCreateTableNodes
   | AllDataTypeNodes
   | AllConstraintNodes
-  | AlterTableAction
-  | AlterColumnAction
+  | AllAlterActionNodes
   | AllTriggerNodes
   | AllTransactionNodes
   | AllFrameNodes
