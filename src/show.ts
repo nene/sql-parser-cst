@@ -329,6 +329,15 @@ const showNode = cstTransformer<string>({
       node.views,
       node.behaviorKw,
     ]),
+  alter_view_stmt: (node) =>
+    show([
+      node.alterKw,
+      node.materializedKw,
+      node.viewKw,
+      node.ifExistsKw,
+      node.name,
+      node.actions,
+    ]),
 
   // CREATE INDEX statement
   create_index_stmt: (node) =>

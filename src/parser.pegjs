@@ -27,6 +27,7 @@ statement
   = dml_statement
   / create_view_stmt
   / drop_view_stmt
+  / x:alter_view_stmt &bigquery { return x; }
   / create_index_stmt
   / drop_index_stmt
   / create_table_stmt
@@ -1223,6 +1224,27 @@ drop_view_stmt
         behaviorKw: read(behaviorKw),
       });
     }
+
+alter_view_stmt
+  = alterKw:ALTER
+    materKw:(__ MATERIALIZED)?
+    viewKw:(__ VIEW)
+    ifKw:(__ if_exists)?
+    name:(__ table)
+    actions:(__ alter_view_action)+ {
+      return loc({
+        type: "alter_view_stmt",
+        alterKw,
+        materializedKw: read(materKw),
+        viewKw: read(viewKw),
+        ifExistsKw: read(ifKw),
+        name: read(name),
+        actions: actions.map(read),
+      });
+    }
+
+alter_view_action
+  = &bigquery ac:alter_action_set_options { return ac; }
 
 /**
  * ------------------------------------------------------------------------------------ *

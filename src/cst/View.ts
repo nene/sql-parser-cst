@@ -1,9 +1,10 @@
+import { AlterActionSetOptions } from "./AlterAction";
 import { BaseNode, Keyword } from "./Base";
 import { BigqueryOptions } from "./Bigquery";
 import { Identifier, ListExpr, ParenExpr, Table } from "./Expr";
 import { ClusterByClause, PartitionByClause, SubSelect } from "./Select";
 
-export type AllViewStatements = CreateViewStmt | DropViewStmt;
+export type AllViewStatements = CreateViewStmt | DropViewStmt | AlterViewStmt;
 
 // CREATE VIEW
 export interface CreateViewStmt extends BaseNode {
@@ -32,4 +33,15 @@ export interface DropViewStmt extends BaseNode {
   ifExistsKw?: [Keyword<"IF">, Keyword<"EXISTS">];
   views: ListExpr<Table>;
   behaviorKw?: Keyword<"CASCADE" | "RESTRICT">;
+}
+
+// ALTER VIEW
+export interface AlterViewStmt extends BaseNode {
+  type: "alter_view_stmt";
+  alterKw: Keyword<"ALTER">;
+  materializedKw?: Keyword<"MATERIALIZED">;
+  viewKw: Keyword<"VIEW">;
+  ifExistsKw?: [Keyword<"IF">, Keyword<"EXISTS">];
+  name: Table;
+  actions: AlterActionSetOptions[];
 }

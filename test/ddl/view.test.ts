@@ -109,4 +109,22 @@ describe("view", () => {
       });
     });
   });
+
+  describe("ALTER VIEW", () => {
+    dialect("bigquery", () => {
+      it("supports ALTER VIEW [IF EXISTS] .. SET OPTIONS()", () => {
+        test("ALTER VIEW my_view SET OPTIONS(description='blah')");
+        test("ALTER VIEW IF EXISTS my_view SET OPTIONS(description='blah')");
+      });
+
+      it("supports ALTER MATERIALIZED VIEW [IF EXISTS] .. SET OPTIONS()", () => {
+        test("ALTER MATERIALIZED VIEW my_view SET OPTIONS(description='blah')");
+        test("ALTER MATERIALIZED VIEW IF EXISTS my_view SET OPTIONS(description='blah')");
+        test(`
+          ALTER /*c1*/ MATERIALIZED /*c2*/ VIEW /*c3*/ IF /*c4*/ EXISTS /*c5*/ my_view /*c6*/
+          SET /*c7*/ OPTIONS /*c8*/ (description='blah')
+        `);
+      });
+    });
+  });
 });
