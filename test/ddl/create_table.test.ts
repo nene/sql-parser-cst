@@ -1,19 +1,16 @@
 import { dialect, test } from "../test_utils";
 
 describe("create table", () => {
-  it("parses simple CREATE TABLE statement", () => {
+  it("supports simple CREATE TABLE statement", () => {
     test("CREATE TABLE foo (id INT)");
-    test("CREATE TEMPORARY TABLE foo (id INT)");
-    test("CREATE TABLE IF NOT EXISTS foo (id INT)");
-    test(
-      "create /*c1*/ temporary /*c2*/ table /*c3*/ if /*c4*/ not /*c5*/ exists /*c6*/ foo (id INT)"
-    );
+    test("CREATE /*c1*/ TABLE /*c2*/ foo /*c3*/ (id INT)");
   });
 
-  dialect(["sqlite", "bigquery"], () => {
-    it("supports CREATE TEMP TABLE", () => {
-      test("CREATE TEMP TABLE foo (id INT)");
-    });
+  it("supports CREATE TABLE with multiple column definitions", () => {
+    test("CREATE TABLE foo (id INT, age SMALLINT)");
+    test(
+      "CREATE TABLE foo /*c1*/ (/*c2*/ id /*c3*/ INT /*c4*/, /*c5*/ age /*c6*/ SMALLINT /*c7*/)"
+    );
   });
 
   dialect("sqlite", () => {
@@ -23,11 +20,20 @@ describe("create table", () => {
     });
   });
 
-  it("parses CREATE TABLE with multiple column definitions", () => {
-    test("CREATE TABLE foo (id INT, age SMALLINT)");
-    test(
-      "CREATE TABLE foo /*c1*/ (/*c2*/ id /*c3*/ INT /*c4*/, /*c5*/ age /*c6*/ SMALLINT /*c7*/)"
-    );
+  it("supports CREATE TEMPORARY TABLE", () => {
+    test("CREATE TEMPORARY TABLE foo (id INT)");
+    test("CREATE /*c1*/ TEMPORARY /*c2*/ TABLE foo (id INT)");
+  });
+
+  dialect(["sqlite", "bigquery"], () => {
+    it("supports CREATE TEMP TABLE", () => {
+      test("CREATE TEMP TABLE foo (id INT)");
+    });
+  });
+
+  it("supports IF NOT EXISTS", () => {
+    test("CREATE TABLE IF NOT EXISTS foo (id INT)");
+    test("create table /*c3*/ if /*c4*/ not /*c5*/ exists /*c6*/ foo (id INT)");
   });
 
   describe("CREATE TABLE AS", () => {
