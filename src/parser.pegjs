@@ -1180,6 +1180,7 @@ create_view_stmt
     ifKw:(__ if_not_exists)?
     name:(__ table)
     cols:(__ paren_column_list)?
+    options:(__ create_view_option)*
     asKw:(__ AS)
     select:(__ compound_select_stmt) {
       return loc({
@@ -1192,10 +1193,14 @@ create_view_stmt
         ifNotExistsKw: read(ifKw),
         name: read(name),
         columns: read(cols),
+        options: options.map(read),
         asKw: read(asKw),
         expr: read(select),
       });
     }
+
+create_view_option
+  = &bigquery op:bigquery_options { return op; }
 
 drop_view_stmt
   = dropKw:DROP

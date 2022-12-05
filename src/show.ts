@@ -314,6 +314,7 @@ const showNode = cstTransformer<string>({
       node.ifNotExistsKw,
       node.name,
       node.columns,
+      node.options,
       node.asKw,
       node.expr,
     ]),

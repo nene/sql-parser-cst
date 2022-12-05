@@ -1,4 +1,5 @@
 import { BaseNode, Keyword } from "./Base";
+import { BigqueryOptions } from "./Bigquery";
 import { Identifier, ListExpr, ParenExpr, Table } from "./Expr";
 import { SubSelect } from "./Select";
 
@@ -13,9 +14,12 @@ export interface CreateViewStmt extends BaseNode {
   ifNotExistsKw?: [Keyword<"IF">, Keyword<"NOT">, Keyword<"EXISTS">];
   name: Table;
   columns?: ParenExpr<ListExpr<Identifier>>;
+  options: CreateViewOption[];
   asKw: Keyword<"AS">;
   expr: SubSelect;
 }
+
+type CreateViewOption = BigqueryOptions;
 
 // DROP VIEW
 export interface DropViewStmt extends BaseNode {

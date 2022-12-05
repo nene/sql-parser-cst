@@ -38,6 +38,14 @@ describe("view", () => {
     });
 
     dialect("bigquery", () => {
+      it("supports OPTIONS(...)", () => {
+        test("CREATE VIEW my_view OPTIONS(description = 'blah') AS SELECT 1");
+        test("CREATE VIEW my_view (col1, col2) OPTIONS(description = 'blah') AS SELECT 1");
+        test("CREATE VIEW my_view /*c1*/ OPTIONS(description = 'blah') /*c2*/ AS SELECT 1");
+      });
+    });
+
+    dialect("bigquery", () => {
       describe("materialized view", () => {
         it("supports CREATE MATERIALIZED VIEW", () => {
           test("CREATE MATERIALIZED VIEW my_view AS SELECT 1");
