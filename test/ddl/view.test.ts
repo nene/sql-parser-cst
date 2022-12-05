@@ -36,6 +36,15 @@ describe("view", () => {
         test("CREATE VIEW /*c1*/ IF /*c2*/ NOT /*c3*/ EXISTS /*c4*/ my_view AS SELECT 1");
       });
     });
+
+    dialect("bigquery", () => {
+      describe("materialized view", () => {
+        it("supports CREATE MATERIALIZED VIEW", () => {
+          test("CREATE MATERIALIZED VIEW my_view AS SELECT 1");
+          test("CREATE /*c1*/ MATERIALIZED /*c2*/ VIEW my_view AS SELECT 1");
+        });
+      });
+    });
   });
 
   describe("DROP VIEW", () => {

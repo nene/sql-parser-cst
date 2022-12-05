@@ -8,6 +8,7 @@ export interface CreateViewStmt extends BaseNode {
   createKw: Keyword<"CREATE">;
   orReplaceKw?: [Keyword<"OR">, Keyword<"REPLACE">];
   temporaryKw?: Keyword<"TEMP" | "TEMPORARY">;
+  materializedKw?: Keyword<"MATERIALIZED">;
   viewKw: Keyword<"VIEW">;
   ifNotExistsKw?: [Keyword<"IF">, Keyword<"NOT">, Keyword<"EXISTS">];
   name: Table;

@@ -1175,6 +1175,7 @@ create_view_stmt
   = createKw:CREATE
     repKw:(__ OR __ REPLACE)?
     tmpKw:(__ (TEMP / TEMPORARY))?
+    materKw:(__ MATERIALIZED)?
     viewKw:(__ VIEW)
     ifKw:(__ if_not_exists)?
     name:(__ table)
@@ -1186,6 +1187,7 @@ create_view_stmt
         createKw,
         orReplaceKw: read(repKw),
         temporaryKw: read(tmpKw),
+        materializedKw: read(materKw),
         viewKw: read(viewKw),
         ifNotExistsKw: read(ifKw),
         name: read(name),
