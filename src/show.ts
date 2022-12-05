@@ -318,7 +318,13 @@ const showNode = cstTransformer<string>({
     ]),
   // DROP VIEW statement
   drop_view_stmt: (node) =>
-    show([node.dropViewKw, node.ifExistsKw, node.views, node.behaviorKw]),
+    show([
+      node.dropKw,
+      node.viewKw,
+      node.ifExistsKw,
+      node.views,
+      node.behaviorKw,
+    ]),
 
   // CREATE INDEX statement
   create_index_stmt: (node) =>

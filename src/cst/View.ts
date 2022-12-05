@@ -19,7 +19,8 @@ export interface CreateViewStmt extends BaseNode {
 // DROP VIEW
 export interface DropViewStmt extends BaseNode {
   type: "drop_view_stmt";
-  dropViewKw: [Keyword<"DROP">, Keyword<"VIEW">];
+  dropKw: Keyword<"DROP">;
+  viewKw: Keyword<"VIEW">;
   ifExistsKw?: [Keyword<"IF">, Keyword<"EXISTS">];
   views: ListExpr<Table>;
   behaviorKw?: Keyword<"CASCADE" | "RESTRICT">;

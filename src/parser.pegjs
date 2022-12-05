@@ -1196,13 +1196,15 @@ create_view_stmt
     }
 
 drop_view_stmt
-  = kws:(DROP __ VIEW)
+  = dropKw:DROP
+    viewKw:(__ VIEW)
     ifKw:(__ if_exists)?
     views:(__ table_list)
     behaviorKw:(__ (CASCADE / RESTRICT))? {
       return loc({
         type: "drop_view_stmt",
-        dropViewKw: read(kws),
+        dropKw: read(dropKw),
+        viewKw: read(viewKw),
         ifExistsKw: read(ifKw),
         views: read(views),
         behaviorKw: read(behaviorKw),
