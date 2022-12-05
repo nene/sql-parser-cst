@@ -1173,6 +1173,7 @@ merge_action_insert
  */
 create_view_stmt
   = createKw:CREATE
+    repKw:(__ OR __ REPLACE)?
     tmpKw:(__ (TEMP / TEMPORARY))?
     viewKw:(__ VIEW)
     ifKw:(__ if_not_exists)?
@@ -1183,6 +1184,7 @@ create_view_stmt
       return loc({
         type: "create_view_stmt",
         createKw,
+        orReplaceKw: read(repKw),
         temporaryKw: read(tmpKw),
         viewKw: read(viewKw),
         ifNotExistsKw: read(ifKw),

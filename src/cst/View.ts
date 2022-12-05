@@ -6,6 +6,7 @@ import { SubSelect } from "./Select";
 export interface CreateViewStmt extends BaseNode {
   type: "create_view_stmt";
   createKw: Keyword<"CREATE">;
+  orReplaceKw?: [Keyword<"OR">, Keyword<"REPLACE">];
   temporaryKw?: Keyword<"TEMP" | "TEMPORARY">;
   viewKw: Keyword<"VIEW">;
   ifNotExistsKw?: [Keyword<"IF">, Keyword<"NOT">, Keyword<"EXISTS">];

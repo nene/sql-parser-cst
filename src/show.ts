@@ -307,6 +307,7 @@ const showNode = cstTransformer<string>({
   create_view_stmt: (node) =>
     show([
       node.createKw,
+      node.orReplaceKw,
       node.temporaryKw,
       node.viewKw,
       node.ifNotExistsKw,

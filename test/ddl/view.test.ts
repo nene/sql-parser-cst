@@ -15,6 +15,13 @@ describe("view", () => {
       );
     });
 
+    dialect(["mysql", "bigquery"], () => {
+      it("supports OR REPLACE", () => {
+        test("CREATE OR REPLACE VIEW my_view AS SELECT 1");
+        test("CREATE /*c1*/ OR /*c2*/ REPLACE /*c3*/ VIEW my_view AS SELECT 1");
+      });
+    });
+
     dialect("sqlite", () => {
       it("TEMPORARY view", () => {
         test("CREATE TEMP VIEW my_view AS SELECT 1");
