@@ -66,36 +66,30 @@ export interface AlterActionSetOptions extends BaseNode {
 }
 
 export type AlterColumnAction =
-  | AlterColumnSetDefault
-  | AlterColumnDropDefault
-  | AlterColumnDropNotNull
-  | AlterColumnSetDataType
-  | AlterColumnSetOptions;
+  | AlterActionSetDefault
+  | AlterActionDropDefault
+  | AlterActionDropNotNull
+  | AlterActionSetDataType
+  | AlterActionSetOptions;
 
-export interface AlterColumnSetDefault extends BaseNode {
-  type: "alter_column_set_default";
+export interface AlterActionSetDefault extends BaseNode {
+  type: "alter_action_set_default";
   setDefaultKw: [Keyword<"SET">, Keyword<"DEFAULT">];
   expr: Expr;
 }
 
-export interface AlterColumnDropDefault extends BaseNode {
-  type: "alter_column_drop_default";
+export interface AlterActionDropDefault extends BaseNode {
+  type: "alter_action_drop_default";
   dropDefaultKw: [Keyword<"DROP">, Keyword<"DEFAULT">];
 }
 
-export interface AlterColumnDropNotNull extends BaseNode {
-  type: "alter_column_drop_not_null";
+export interface AlterActionDropNotNull extends BaseNode {
+  type: "alter_action_drop_not_null";
   dropNotNullKw: [Keyword<"DROP">, Keyword<"NOT">, Keyword<"NULL">];
 }
 
-export interface AlterColumnSetDataType extends BaseNode {
-  type: "alter_column_set_data_type";
+export interface AlterActionSetDataType extends BaseNode {
+  type: "alter_action_set_data_type";
   setDataTypeKw: [Keyword<"SET">, Keyword<"DATA">, Keyword<"TYPE">];
   dataType: DataType;
-}
-
-export interface AlterColumnSetOptions extends BaseNode {
-  type: "alter_column_set_options";
-  setKw: Keyword<"SET">;
-  options: BigqueryOptions;
 }

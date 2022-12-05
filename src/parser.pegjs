@@ -1486,35 +1486,30 @@ alter_column_kw
   / kw:ALTER &sqlite { return kw; }
 
 alter_column_action
-  = alter_column_set_default
-  / alter_column_drop_default
-  / x:alter_column_drop_not_null &bigquery { return x; }
-  / x:alter_column_set_data_type &bigquery { return x; }
-  / x:alter_column_set_options &bigquery { return x; }
+  = alter_action_set_default
+  / alter_action_drop_default
+  / x:alter_action_drop_not_null &bigquery { return x; }
+  / x:alter_action_set_data_type &bigquery { return x; }
+  / x:alter_action_set_options &bigquery { return x; }
 
-alter_column_set_default
+alter_action_set_default
   = kw:(SET __ DEFAULT __) expr:expr {
-    return loc({ type: "alter_column_set_default", setDefaultKw: read(kw), expr });
+    return loc({ type: "alter_action_set_default", setDefaultKw: read(kw), expr });
   }
 
-alter_column_drop_default
+alter_action_drop_default
   = kw:(DROP __ DEFAULT) {
-    return loc({ type: "alter_column_drop_default", dropDefaultKw: read(kw) });
+    return loc({ type: "alter_action_drop_default", dropDefaultKw: read(kw) });
   }
 
-alter_column_drop_not_null
+alter_action_drop_not_null
   = kw:(DROP __ NOT __ NULL) {
-    return loc({ type: "alter_column_drop_not_null", dropNotNullKw: read(kw) });
+    return loc({ type: "alter_action_drop_not_null", dropNotNullKw: read(kw) });
   }
 
-alter_column_set_data_type
+alter_action_set_data_type
   = kw:(SET __ DATA __ TYPE __) type:data_type {
-    return loc({ type: "alter_column_set_data_type", setDataTypeKw: read(kw), dataType: type });
-  }
-
-alter_column_set_options
-  = kw:(SET __ ) options:bigquery_options {
-    return loc({ type: "alter_column_set_options", setKw: read(kw), options });
+    return loc({ type: "alter_action_set_data_type", setDataTypeKw: read(kw), dataType: type });
   }
 
 alter_action_set_default_collate
