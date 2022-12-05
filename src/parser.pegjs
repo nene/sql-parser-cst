@@ -1901,7 +1901,7 @@ create_virtual_table_stmt
  * ------------------------------------------------------------------------------------ *
  */
 table_options
-  = (&sqlite / &bigquery) head:table_option tail:(__ "," __ table_option)* {
+  = (&sqlite / &mysql) head:table_option tail:(__ "," __ table_option)* {
     return loc(createListExpr(head, tail));
   }
   / &bigquery head:table_option_bigquery tail:(__ table_option_bigquery)* {
