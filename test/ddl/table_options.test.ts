@@ -69,9 +69,12 @@ describe("table options", () => {
   dialect("bigquery", () => {
     it("supports DEFAULT COLLATE option", () => {
       testOpts(`DEFAULT COLLATE 'und:ci'`);
+      testOpts(`DEFAULT /*c1*/ COLLATE /*c2*/ 'und:ci'`);
     });
+
     it("supports OPTIONS()", () => {
       testOpts(`OPTIONS(description = 'Hello', friendly_name = 'Blah')`);
+      testOpts(`OPTIONS /*c1*/ (/*c2*/ description = 'Hello' /*c2*/)`);
     });
   });
 });
