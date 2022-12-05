@@ -1485,6 +1485,24 @@ alter_column_kw
   = kw:(ALTER __ COLUMN) { return read(kw); }
   / kw:ALTER &sqlite { return kw; }
 
+alter_action_set_default_collate
+  = kw:(SET __ DEFAULT __ COLLATE __) collation:literal_string {
+    return loc({
+      type: "alter_action_set_default_collate",
+      setDefaultCollateKw: read(kw),
+      collation,
+    });
+  }
+
+alter_action_set_options
+  = kw:(SET __ ) options:bigquery_options {
+    return loc({
+      type: "alter_action_set_options",
+      setKw: read(kw),
+      options,
+    });
+  }
+
 alter_column_action
   = alter_action_set_default
   / alter_action_drop_default
@@ -1510,24 +1528,6 @@ alter_action_drop_not_null
 alter_action_set_data_type
   = kw:(SET __ DATA __ TYPE __) type:data_type {
     return loc({ type: "alter_action_set_data_type", setDataTypeKw: read(kw), dataType: type });
-  }
-
-alter_action_set_default_collate
-  = kw:(SET __ DEFAULT __ COLLATE __) collation:literal_string {
-    return loc({
-      type: "alter_action_set_default_collate",
-      setDefaultCollateKw: read(kw),
-      collation,
-    });
-  }
-
-alter_action_set_options
-  = kw:(SET __ ) options:bigquery_options {
-    return loc({
-      type: "alter_action_set_options",
-      setKw: read(kw),
-      options,
-    });
   }
 
 /**
