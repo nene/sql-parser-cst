@@ -3,7 +3,7 @@ import { BigqueryOptionDefaultCollate, BigqueryOptions } from "./Bigquery";
 import { ColumnConstraint, Constraint, TableConstraint } from "./Constraint";
 import { DataType } from "./DataType";
 import { Expr, Identifier, ListExpr, ParenExpr, Table } from "./Expr";
-import { PartitionByClause, SubSelect } from "./Select";
+import { ClusterByClause, PartitionByClause, SubSelect } from "./Select";
 
 export type AllCreateTableNodes =
   | CreateTableStmt
@@ -96,4 +96,5 @@ type TableOptionValueMysql = Keyword<
 type BigqueryTableOption =
   | BigqueryOptions
   | BigqueryOptionDefaultCollate
-  | PartitionByClause;
+  | PartitionByClause
+  | ClusterByClause;

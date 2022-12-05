@@ -81,5 +81,10 @@ describe("table options", () => {
       testOpts(`PARTITION BY DATE(_PARTITIONTIME)`);
       testOpts(`PARTITION /*c1*/ BY /*c2*/ _PARTITIONTIME`);
     });
+
+    it("supports CLUSTER BY", () => {
+      testOpts(`CLUSTER BY col1, col2, col3`);
+      testOpts(`CLUSTER /*c1*/ BY /*c2*/ col1 /*c3*/,/*c4*/ col2`);
+    });
   });
 });

@@ -593,6 +593,19 @@ partition_by_clause
   }
 
 /**
+ * SELECT? .. PARTITION BY
+ * --------------------------------------------------------------------------------------
+ */
+cluster_by_clause
+  = kws:(CLUSTER __ BY __) columns:column_list {
+    return loc({
+      type: "cluster_by_clause",
+      clusterByKw: read(kws),
+      columns,
+    });
+  }
+
+/**
  * SELECT .. ORDER BY
  * --------------------------------------------------------------------------------------
  */
@@ -1969,6 +1982,7 @@ table_option_bigquery
   = bigquery_options
   / bigquery_option_default_collate
   / partition_by_clause
+  / cluster_by_clause
 
 bigquery_options
   = kw:(OPTIONS __) options:paren_equals_expr_list {
@@ -3750,6 +3764,7 @@ mysql = &{ return isMysql(); }
 sqlite = &{ return isSqlite(); }
 
 // All keywords (sorted alphabetically)
+CLUSTER             = kw:"CLUSTER"i             !ident_part { return loc(createKeyword(kw)); }
 ABORT               = kw:"ABORT"i               !ident_part { return loc(createKeyword(kw)); }
 ACTION              = kw:"ACTION"i              !ident_part { return loc(createKeyword(kw)); }
 ADD                 = kw:"ADD"i                 !ident_part { return loc(createKeyword(kw)); }

@@ -87,7 +87,7 @@ const showNode = cstTransformer<string>({
   tablesample_percent: (node) => show([node.percent, node.percentKw]),
   sort_specification: (node) =>
     show([node.expr, node.orderKw, node.nullHandlingKw]),
-  // WHERE .. GROUP BY .. HAVING .. QUALIFY ... ORDER BY .. PARTITION BY
+  // WHERE .. GROUP BY .. HAVING .. QUALIFY ... ORDER BY .. PARTITION BY .. CLUSTER BY
   where_clause: (node) => show([node.whereKw, node.expr]),
   group_by_clause: (node) => show([node.groupByKw, node.columns]),
   group_by_rollup: (node) => show([node.rollupKw, node.columns]),
@@ -97,6 +97,7 @@ const showNode = cstTransformer<string>({
     show([node.orderByKw, node.specifications, node.withRollupKw]),
   partition_by_clause: (node) =>
     show([node.partitionByKw, node.specifications]),
+  cluster_by_clause: (node) => show([node.clusterByKw, node.columns]),
   // WINDOW
   window_clause: (node) => show(node.windowKw) + show(node.namedWindows, ","),
   named_window: (node) => show([node.name, node.asKw, node.window]),
