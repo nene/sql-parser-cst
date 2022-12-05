@@ -1200,7 +1200,11 @@ create_view_stmt
     }
 
 create_view_option
-  = &bigquery op:bigquery_options { return op; }
+  = &bigquery op:(
+        bigquery_options
+      / cluster_by_clause
+      / partition_by_clause
+    ) { return op; }
 
 drop_view_stmt
   = dropKw:DROP

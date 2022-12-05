@@ -1,7 +1,7 @@
 import { BaseNode, Keyword } from "./Base";
 import { BigqueryOptions } from "./Bigquery";
 import { Identifier, ListExpr, ParenExpr, Table } from "./Expr";
-import { SubSelect } from "./Select";
+import { ClusterByClause, PartitionByClause, SubSelect } from "./Select";
 
 // CREATE VIEW
 export interface CreateViewStmt extends BaseNode {
@@ -19,7 +19,7 @@ export interface CreateViewStmt extends BaseNode {
   expr: SubSelect;
 }
 
-type CreateViewOption = BigqueryOptions;
+type CreateViewOption = BigqueryOptions | ClusterByClause | PartitionByClause;
 
 // DROP VIEW
 export interface DropViewStmt extends BaseNode {

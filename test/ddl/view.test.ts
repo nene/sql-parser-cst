@@ -51,6 +51,28 @@ describe("view", () => {
           test("CREATE MATERIALIZED VIEW my_view AS SELECT 1");
           test("CREATE /*c1*/ MATERIALIZED /*c2*/ VIEW my_view AS SELECT 1");
         });
+
+        it("supports PARTITION BY option", () => {
+          test("CREATE MATERIALIZED VIEW my_view PARTITION BY timestamp_col AS SELECT 1");
+        });
+
+        it("supports CLUSTER BY option", () => {
+          test("CREATE MATERIALIZED VIEW my_view CLUSTER BY col1, col2 AS SELECT 1");
+        });
+
+        it("supports OPTIONS(...)", () => {
+          test("CREATE MATERIALIZED VIEW my_view OPTIONS(description='Hi') AS SELECT 1");
+        });
+
+        it("supports combination of multiple view options", () => {
+          test(`
+            CREATE MATERIALIZED VIEW my_view
+            PARTITION BY timestamp_col
+            CLUSTER BY col1, col2
+            OPTIONS(description='Hi')
+            AS SELECT 1
+          `);
+        });
       });
     });
   });
