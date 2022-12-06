@@ -20,7 +20,7 @@
   "scripts": {
     "prepublishOnly": "yarn test && yarn build",
     "pretty": "prettier --write .",
-    "generate": "ts-node ./generate.ts",
+    "generate": "ts-node ./scripts/generate.ts",
     "watch:generate": "npm-watch",
     "clean": "rm -rf lib; rm -rf src/generated_parser.ts",
     "build": "yarn clean && yarn generate && tsc",
