@@ -9,7 +9,7 @@ export class FormattedSyntaxError extends Error {
 function formatError(e: SyntaxError, sql: string, fileName: string): string {
   const lineNr = e.location.start.line;
   const colNr = e.location.start.column;
-  const line = sql.split("\n")[lineNr - 1];
+  const line = sql.split(/\r\n|\n|\r/)[lineNr - 1];
   const indent = "".padStart(String(lineNr).length);
 
   const found = describeFound(expandFound(e.found, colNr, line));
