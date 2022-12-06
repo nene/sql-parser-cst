@@ -23,6 +23,12 @@ function fromLines(lines: string[]): string {
   return lines.join("\n");
 }
 
+function caseInsensitiveStringCompare(a: string, b: string): -1 | 0 | 1 {
+  const aa = a.toLocaleLowerCase();
+  const bb = b.toLowerCase();
+  return aa < bb ? -1 : aa > bb ? 1 : 0;
+}
+
 function extractKeywordsRules(lines: string[]) {
   const startIndex =
     lines.findIndex((line) => /^\/\*! keywords:start /.test(line)) + 1;
@@ -52,7 +58,7 @@ function addKeywordsToGrammarFile(keywords: string[]) {
   const newKeywordRules = [
     ...keywordRules,
     ...keywords.map(createKeywordRule),
-  ].sort();
+  ].sort(caseInsensitiveStringCompare);
 
   writeGrammar(fromLines([...before, ...newKeywordRules, ...after]));
 }
