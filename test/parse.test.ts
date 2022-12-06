@@ -44,7 +44,7 @@ describe("parse()", () => {
   });
 
   it("uses the filename option in syntax error messages", () => {
-    expect(() => parse("CREATE PUZZLE 123;", { dialect: "sqlite", fileName: "prod-database.sql" }))
+    expect(() => parse("CREATE PUZZLE 123;", { dialect: "sqlite", filename: "prod-database.sql" }))
       .toThrowErrorMatchingInlineSnapshot(`
       "Syntax Error: Unexpected "PUZZLE"
       Was expecting to see: "ASSIGNMENT", "CAPACITY", "DATABASE", "FULLTEXT", "INDEX", "MATERIALIZED", "OR", "RESERVATION", "SCHEMA", "SPATIAL", "TABLE", "TEMP", "TEMPORARY", "TRIGGER", "UNIQUE", "VIEW", or "VIRTUAL"

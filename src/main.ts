@@ -23,7 +23,7 @@ export function parse(sql: string, options: ParserOptions): Program {
       throw new FormattedSyntaxError(
         e,
         sql,
-        options.fileName ?? "untitled.sql"
+        options.filename ?? "untitled.sql"
       );
     }
     throw e;

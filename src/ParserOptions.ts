@@ -16,5 +16,5 @@ export type ParserOptions = {
   includeRange?: boolean;
   paramTypes?: ParamType[];
   /** SQL file name, used when reporting syntax errors */
-  fileName?: string;
+  filename?: string;
 };
