@@ -40,6 +40,7 @@ statement
   / x:(create_schema_stmt / drop_schema_stmt / alter_schema_stmt) (&mysql / &bigquery) { return x; }
   / transaction_stmt
   / x:sqlite_stmt &sqlite { return x; }
+  / x:bigquery_stmt &bigquery { return x; }
   / empty
 
 dml_statement
@@ -1947,6 +1948,59 @@ create_virtual_table_stmt
 /**
  * ------------------------------------------------------------------------------------ *
  *                                                                                      *
+ * BigQuery statements                                                                  *
+ *                                                                                      *
+ * ------------------------------------------------------------------------------------ *
+ */
+bigquery_stmt
+  = create_bigquery_entity_stmt
+  / drop_bigquery_entity_stmt
+
+// CREATE CAPACITY
+// CREATE RESERVATION
+// CREATE ASSIGNMENT
+create_bigquery_entity_stmt
+  = kw:(CREATE __ bigquery_entity __) name:(table __) asKw:(AS __) json:literal_json {
+    const createKw = read(kw);
+    const node = {
+      createKw,
+      name: read(name),
+      asKw: read(asKw),
+      json,
+    };
+    switch (createKw[1].name) {
+      case "CAPACITY": return loc({ type: "create_capacity_stmt", ...node });
+      case "RESERVATION": return loc({ type: "create_reservation_stmt", ...node });
+      case "ASSIGNMENT": return loc({ type: "create_assignment_stmt", ...node });
+    }
+  }
+
+// DROP CAPACITY
+// DROP RESERVATION
+// DROP ASSIGNMENT
+drop_bigquery_entity_stmt
+  = kw:(DROP __ bigquery_entity __) ifKw:(if_exists __)? name:table {
+    const dropKw = read(kw);
+    const node = {
+      dropKw,
+      ifExistsKw: read(ifKw),
+      name,
+    };
+    switch (dropKw[1].name) {
+      case "CAPACITY": return loc({ type: "drop_capacity_stmt", ...node });
+      case "RESERVATION": return loc({ type: "drop_reservation_stmt", ...node });
+      case "ASSIGNMENT": return loc({ type: "drop_assignment_stmt", ...node });
+    }
+  }
+
+bigquery_entity
+  = CAPACITY
+  / RESERVATION
+  / ASSIGNMENT
+
+/**
+ * ------------------------------------------------------------------------------------ *
+ *                                                                                      *
  * Table options                                                                        *
  *                                                                                      *
  * ------------------------------------------------------------------------------------ *
@@ -3819,7 +3873,6 @@ mysql = &{ return isMysql(); }
 sqlite = &{ return isSqlite(); }
 
 // All keywords (sorted alphabetically)
-CLUSTER             = kw:"CLUSTER"i             !ident_part { return loc(createKeyword(kw)); }
 ABORT               = kw:"ABORT"i               !ident_part { return loc(createKeyword(kw)); }
 ACTION              = kw:"ACTION"i              !ident_part { return loc(createKeyword(kw)); }
 ADD                 = kw:"ADD"i                 !ident_part { return loc(createKeyword(kw)); }
@@ -3834,6 +3887,7 @@ AND                 = kw:"AND"i                 !ident_part { return loc(createK
 ARRAY               = kw:"ARRAY"i               !ident_part { return loc(createKeyword(kw)); }
 AS                  = kw:"AS"i                  !ident_part { return loc(createKeyword(kw)); }
 ASC                 = kw:"ASC"i                 !ident_part { return loc(createKeyword(kw)); }
+ASSIGNMENT          = kw:"ASSIGNMENT"i          !ident_part { return loc(createKeyword(kw)); }
 ATTACH              = kw:"ATTACH"i              !ident_part { return loc(createKeyword(kw)); }
 AUTO_INCREMENT      = kw:"AUTO_INCREMENT"i      !ident_part { return loc(createKeyword(kw)); }
 AUTOEXTEND_SIZE     = kw:"AUTOEXTEND_SIZE"i     !ident_part { return loc(createKeyword(kw)); }
@@ -3856,6 +3910,7 @@ BY                  = kw:"BY"i                  !ident_part { return loc(createK
 BYTEINT             = kw:"BYTEINT"i             !ident_part { return loc(createKeyword(kw)); }
 BYTES               = kw:"BYTES"i               !ident_part { return loc(createKeyword(kw)); }
 CALL                = kw:"CALL"i                !ident_part { return loc(createKeyword(kw)); }
+CAPACITY            = kw:"CAPACITY"i            !ident_part { return loc(createKeyword(kw)); }
 CASCADE             = kw:"CASCADE"i             !ident_part { return loc(createKeyword(kw)); }
 CASCADED            = kw:"CASCADED"i            !ident_part { return loc(createKeyword(kw)); }
 CASE                = kw:"CASE"i                !ident_part { return loc(createKeyword(kw)); }
@@ -3866,6 +3921,7 @@ CHARACTER           = kw:"CHARACTER"i           !ident_part { return loc(createK
 CHARSET             = kw:"CHARSET"i             !ident_part { return loc(createKeyword(kw)); }
 CHECK               = kw:"CHECK"i               !ident_part { return loc(createKeyword(kw)); }
 CHECKSUM            = kw:"CHECKSUM"i            !ident_part { return loc(createKeyword(kw)); }
+CLUSTER             = kw:"CLUSTER"i             !ident_part { return loc(createKeyword(kw)); }
 COLLATE             = kw:"COLLATE"i             !ident_part { return loc(createKeyword(kw)); }
 COLLATION           = kw:"COLLATION"i           !ident_part { return loc(createKeyword(kw)); }
 COLUMN              = kw:"COLUMN"i              !ident_part { return loc(createKeyword(kw)); }
@@ -4103,6 +4159,7 @@ RELEASE             = kw:"RELEASE"i             !ident_part { return loc(createK
 RENAME              = kw:"RENAME"i              !ident_part { return loc(createKeyword(kw)); }
 REPLACE             = kw:"REPLACE"i             !ident_part { return loc(createKeyword(kw)); }
 REPLICATION         = kw:"REPLICATION"i         !ident_part { return loc(createKeyword(kw)); }
+RESERVATION         = kw:"RESERVATION"i         !ident_part { return loc(createKeyword(kw)); }
 RESPECT             = kw:"RESPECT"i             !ident_part { return loc(createKeyword(kw)); }
 RESTRICT            = kw:"RESTRICT"i            !ident_part { return loc(createKeyword(kw)); }
 RETURN              = kw:"RETURN"i              !ident_part { return loc(createKeyword(kw)); }

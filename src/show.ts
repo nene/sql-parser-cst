@@ -424,6 +424,19 @@ const showNode = cstTransformer<string>({
       node.module,
     ]),
 
+  // BigQuery-specific statements
+  create_capacity_stmt: (node) =>
+    show([node.createKw, node.name, node.asKw, node.json]),
+  drop_capacity_stmt: (node) => show([node.dropKw, node.ifExistsKw, node.name]),
+  create_reservation_stmt: (node) =>
+    show([node.createKw, node.name, node.asKw, node.json]),
+  drop_reservation_stmt: (node) =>
+    show([node.dropKw, node.ifExistsKw, node.name]),
+  create_assignment_stmt: (node) =>
+    show([node.createKw, node.name, node.asKw, node.json]),
+  drop_assignment_stmt: (node) =>
+    show([node.dropKw, node.ifExistsKw, node.name]),
+
   // Expressions
   list_expr: (node) => show(node.items, ","),
   paren_expr: (node) => "(" + show(node.expr) + ")",

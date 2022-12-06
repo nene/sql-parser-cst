@@ -16,6 +16,7 @@ import { TruncateStmt } from "./Truncate";
 import { UpdateStmt } from "./Update";
 import { AllViewStatements } from "./View";
 import { AllSchemaStatements } from "./Schema";
+import { AllBigqueryStatements } from "./Bigquery";
 
 export type Statement =
   | Empty
@@ -36,4 +37,5 @@ export type Statement =
   | AnalyzeStmt
   | ExplainStmt
   | AllTransactionStatements
-  | AllSqliteStatements;
+  | AllSqliteStatements
+  | AllBigqueryStatements;
