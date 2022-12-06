@@ -1,12 +1,12 @@
 import { Expectation, SyntaxError } from "./parser";
 
 export class FormattedSyntaxError extends Error {
-  constructor(e: SyntaxError, sql: string, fileName: string) {
-    super(formatError(e, sql, fileName));
+  constructor(e: SyntaxError, sql: string, filename?: string) {
+    super(formatError(e, sql, filename));
   }
 }
 
-function formatError(e: SyntaxError, sql: string, fileName: string): string {
+function formatError(e: SyntaxError, sql: string, filename?: string): string {
   const lineNr = e.location.start.line;
   const colNr = e.location.start.column;
   const line = sql.split(/\r\n|\n|\r/)[lineNr - 1];
@@ -17,7 +17,7 @@ function formatError(e: SyntaxError, sql: string, fileName: string): string {
 
   return `Syntax Error: Unexpected ${found}
 Was expecting to see: ${expected}
---> ${fileName}:${lineNr}:${colNr}
+--> ${filename}:${lineNr}:${colNr}
 ${indent} |
 ${lineNr} | ${line}
 ${indent} | ${"^".padStart(colNr)}`;

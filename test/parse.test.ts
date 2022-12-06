@@ -24,7 +24,7 @@ describe("parse()", () => {
       .toThrowErrorMatchingInlineSnapshot(`
       "Syntax Error: Unexpected "baz"
       Was expecting to see: ",", ";", "EXCEPT", "FROM", "GROUP", "HAVING", "INTERSECT", "LIMIT", "ORDER", "UNION", "WHERE", "WINDOW", or end of input
-      --> untitled.sql:1:16
+      --> undefined:1:16
         |
       1 | SELECT foo bar baz
         |                ^"
@@ -36,7 +36,7 @@ describe("parse()", () => {
       .toThrowErrorMatchingInlineSnapshot(`
       "Syntax Error: Unexpected "baz"
       Was expecting to see: ",", ";", "EXCEPT", "FROM", "GROUP", "HAVING", "INTERSECT", "LIMIT", "ORDER", "UNION", "WHERE", "WINDOW", or end of input
-      --> untitled.sql:101:16
+      --> undefined:101:16
           |
       101 | SELECT foo bar baz
           |                ^"
