@@ -22,7 +22,8 @@ describe("parse()", () => {
   it("throws nicely formatted error message when SQL syntax error found", () => {
     expect(() => parse("SELECT foo bar baz", { dialect: "sqlite" }))
       .toThrowErrorMatchingInlineSnapshot(`
-      "Syntax Error: Expected ",", ";", "EXCEPT", "FROM", "GROUP", "HAVING", "INTERSECT", "LIMIT", "ORDER", "UNION", "WHERE", "WINDOW", or end of input but "b" found.
+      "Syntax Error: Unexpected "b"
+      Was expecting to see: ",", ";", "EXCEPT", "FROM", "GROUP", "HAVING", "INTERSECT", "LIMIT", "ORDER", "UNION", "WHERE", "WINDOW", or end of input
       --> untitled.sql:1:16
         |
       1 | SELECT foo bar baz
@@ -33,7 +34,8 @@ describe("parse()", () => {
   it("indents syntax error properly when it happen on a large line number", () => {
     expect(() => parse("\n".repeat(100) + "SELECT foo bar baz", { dialect: "sqlite" }))
       .toThrowErrorMatchingInlineSnapshot(`
-      "Syntax Error: Expected ",", ";", "EXCEPT", "FROM", "GROUP", "HAVING", "INTERSECT", "LIMIT", "ORDER", "UNION", "WHERE", "WINDOW", or end of input but "b" found.
+      "Syntax Error: Unexpected "b"
+      Was expecting to see: ",", ";", "EXCEPT", "FROM", "GROUP", "HAVING", "INTERSECT", "LIMIT", "ORDER", "UNION", "WHERE", "WINDOW", or end of input
       --> untitled.sql:101:16
           |
       101 | SELECT foo bar baz
@@ -44,7 +46,8 @@ describe("parse()", () => {
   it("uses the filename option in syntax error messages", () => {
     expect(() => parse("CREATE PUZZLE 123;", { dialect: "sqlite", fileName: "prod-database.sql" }))
       .toThrowErrorMatchingInlineSnapshot(`
-      "Syntax Error: Expected "ASSIGNMENT", "CAPACITY", "DATABASE", "FULLTEXT", "INDEX", "MATERIALIZED", "OR", "RESERVATION", "SCHEMA", "SPATIAL", "TABLE", "TEMP", "TEMPORARY", "TRIGGER", "UNIQUE", "VIEW", or "VIRTUAL" but "P" found.
+      "Syntax Error: Unexpected "P"
+      Was expecting to see: "ASSIGNMENT", "CAPACITY", "DATABASE", "FULLTEXT", "INDEX", "MATERIALIZED", "OR", "RESERVATION", "SCHEMA", "SPATIAL", "TABLE", "TEMP", "TEMPORARY", "TRIGGER", "UNIQUE", "VIEW", or "VIRTUAL"
       --> prod-database.sql:1:8
         |
       1 | CREATE PUZZLE 123;
