@@ -3872,7 +3872,13 @@ bigquery = &{ return isBigquery(); }
 mysql = &{ return isMysql(); }
 sqlite = &{ return isSqlite(); }
 
-// All keywords (sorted alphabetically)
+/**
+ * Note: To add keyword rules to the list below use the command:
+ *
+ *   yarn add:keyword KEYWORD1 KEYWORD2
+ */
+
+/*! keywords:start */
 ABORT               = kw:"ABORT"i               !ident_part { return loc(createKeyword(kw)); }
 ACTION              = kw:"ACTION"i              !ident_part { return loc(createKeyword(kw)); }
 ADD                 = kw:"ADD"i                 !ident_part { return loc(createKeyword(kw)); }
@@ -4276,3 +4282,4 @@ XOR                 = kw:"XOR"i                 !ident_part { return loc(createK
 YEAR                = kw:"YEAR"i                !ident_part { return loc(createKeyword(kw)); }
 YEAR_MONTH          = kw:"YEAR_MONTH"           !ident_part { return loc(createKeyword(kw)); }
 ZEROFILL            = kw:"ZEROFILL"i            !ident_part { return loc(createKeyword(kw)); }
+/*! keywords:end */
