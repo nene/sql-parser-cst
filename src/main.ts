@@ -20,7 +20,11 @@ export function parse(sql: string, options: ParserOptions): Program {
     return parseSql(sql, options);
   } catch (e) {
     if (e instanceof SyntaxError) {
-      throw new FormattedSyntaxError(e, sql, "untitled.sql");
+      throw new FormattedSyntaxError(
+        e,
+        sql,
+        options.fileName ?? "untitled.sql"
+      );
     }
     throw e;
   }

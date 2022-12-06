@@ -40,4 +40,15 @@ describe("parse()", () => {
           |                ^"
     `);
   });
+
+  it("uses the filename option in syntax error messages", () => {
+    expect(() => parse("CREATE PUZZLE 123;", { dialect: "sqlite", fileName: "prod-database.sql" }))
+      .toThrowErrorMatchingInlineSnapshot(`
+      "Syntax Error: Expected "ASSIGNMENT", "CAPACITY", "DATABASE", "FULLTEXT", "INDEX", "MATERIALIZED", "OR", "RESERVATION", "SCHEMA", "SPATIAL", "TABLE", "TEMP", "TEMPORARY", "TRIGGER", "UNIQUE", "VIEW", or "VIRTUAL" but "P" found.
+      --> prod-database.sql:1:8
+        |
+      1 | CREATE PUZZLE 123;
+        |        ^"
+    `);
+  });
 });
