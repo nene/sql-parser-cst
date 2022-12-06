@@ -22,7 +22,7 @@ describe("parse()", () => {
   it("throws nicely formatted error message when SQL syntax error found", () => {
     expect(() => parse("SELECT foo bar baz", { dialect: "sqlite" }))
       .toThrowErrorMatchingInlineSnapshot(`
-      "Syntax Error: Unexpected "b"
+      "Syntax Error: Unexpected "baz"
       Was expecting to see: ",", ";", "EXCEPT", "FROM", "GROUP", "HAVING", "INTERSECT", "LIMIT", "ORDER", "UNION", "WHERE", "WINDOW", or end of input
       --> untitled.sql:1:16
         |
@@ -34,7 +34,7 @@ describe("parse()", () => {
   it("indents syntax error properly when it happen on a large line number", () => {
     expect(() => parse("\n".repeat(100) + "SELECT foo bar baz", { dialect: "sqlite" }))
       .toThrowErrorMatchingInlineSnapshot(`
-      "Syntax Error: Unexpected "b"
+      "Syntax Error: Unexpected "baz"
       Was expecting to see: ",", ";", "EXCEPT", "FROM", "GROUP", "HAVING", "INTERSECT", "LIMIT", "ORDER", "UNION", "WHERE", "WINDOW", or end of input
       --> untitled.sql:101:16
           |
@@ -46,7 +46,7 @@ describe("parse()", () => {
   it("uses the filename option in syntax error messages", () => {
     expect(() => parse("CREATE PUZZLE 123;", { dialect: "sqlite", fileName: "prod-database.sql" }))
       .toThrowErrorMatchingInlineSnapshot(`
-      "Syntax Error: Unexpected "P"
+      "Syntax Error: Unexpected "PUZZLE"
       Was expecting to see: "ASSIGNMENT", "CAPACITY", "DATABASE", "FULLTEXT", "INDEX", "MATERIALIZED", "OR", "RESERVATION", "SCHEMA", "SPATIAL", "TABLE", "TEMP", "TEMPORARY", "TRIGGER", "UNIQUE", "VIEW", or "VIRTUAL"
       --> prod-database.sql:1:8
         |

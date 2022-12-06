@@ -11,16 +11,34 @@ function formatError(e: SyntaxError, sql: string, fileName: string): string {
   const colNr = e.location.start.column;
   const line = sql.split("\n")[lineNr - 1];
   const indent = "".padStart(String(lineNr).length);
-  return `Syntax Error: Unexpected ${describeFound(e.found)}
-Was expecting to see: ${describeExpected(e.expected)}
+
+  const found = describeFound(expandFound(e.found, colNr, line));
+  const expected = describeExpected(e.expected);
+
+  return `Syntax Error: Unexpected ${found}
+Was expecting to see: ${expected}
 --> ${fileName}:${lineNr}:${colNr}
 ${indent} |
 ${lineNr} | ${line}
 ${indent} | ${"^".padStart(colNr)}`;
 }
 
+// When we stopped at a single letter, display the whole word instead
+function expandFound(
+  found: string | null,
+  colNr: number,
+  line: string
+): string | null {
+  if (found !== null && /^\w$/.test(found)) {
+    const [word] = line.slice(colNr - 1).match(/\w+/) || [];
+    return word;
+  }
+  return found;
+}
+
 //
-// These functions have been copied from the PegJS generator parser.
+// These functions have been copied from the generated parser.
+// But we can't import them as they live inside a closure.
 //
 
 function describeFound(found1: string | null) {
