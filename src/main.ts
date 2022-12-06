@@ -1,7 +1,8 @@
 import { Node, Program } from "./cst/Node";
-import { parse as parseSql } from "./parser";
+import { parse as parseSql, SyntaxError } from "./parser";
 import { show as showSql } from "./show";
 import { DialectName, ParserOptions, validDialectNames } from "./ParserOptions";
+import { FormattedSyntaxError } from "./FormattedSyntaxError";
 export { format } from "./format/format";
 export * from "./cstVisitor";
 export * from "./cstTransformer";
@@ -15,7 +16,14 @@ export function parse(sql: string, options: ParserOptions): Program {
   if (!validDialectNames[options.dialect]) {
     throw new Error(`Unsupported dialect name: "${options.dialect}"`);
   }
-  return parseSql(sql, options);
+  try {
+    return parseSql(sql, options);
+  } catch (e) {
+    if (e instanceof SyntaxError) {
+      throw new FormattedSyntaxError(e, sql, "untitled.sql");
+    }
+    throw e;
+  }
 }
 
 /**
