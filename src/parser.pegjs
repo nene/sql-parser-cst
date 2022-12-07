@@ -1,7 +1,45 @@
 {
-  // All helper functions used in this file come from /src/utils/
-  // These are atomatically added during code-generation.
-  // See /generate.ts for details.
+  import { identity } from "./utils/generic";
+  import {
+    readCommaSepList,
+    readSpaceSepList,
+  } from "./utils/list";
+  import {
+    parseHexBlob,
+    parseBitBlob,
+    parseAsciiBlob,
+  } from "./utils/blob";
+  import {
+    createBinaryExprChain,
+    createBinaryExpr,
+    createCompoundSelectStmtChain,
+    createJoinExprChain,
+    createMemberExprChain,
+    createFuncCall,
+    createPrefixOpExpr,
+    createPostfixOpExpr,
+    createKeyword,
+    createIdentifier,
+    createAlias,
+    createParenExpr,
+    createListExpr,
+  } from "./utils/node";
+  import {
+    trailing,
+    surrounding,
+  } from "./utils/whitespace";
+  import { read } from "./utils/read";
+  import {
+    setRangeFunction,
+    setOptionsFunction,
+    isBigquery,
+    isMysql,
+    isSqlite,
+    hasParamType,
+    isEnabledWhitespace,
+  } from "./utils/parserState";
+  import { isReservedKeyword } from "./utils/keywords";
+  import { loc } from "./utils/loc";
 
   setRangeFunction(() => [peg$savedPos, peg$currPos]);
 

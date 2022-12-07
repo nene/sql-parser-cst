@@ -2,6 +2,7 @@ import peggy from "peggy";
 import tspegjs from "ts-pegjs";
 import fs from "fs";
 import path from "path";
+import { moveImports } from "./move-imports";
 
 const source = fs.readFileSync(
   path.resolve(__dirname, "../src/parser.pegjs"),
@@ -11,54 +12,9 @@ const source = fs.readFileSync(
 console.log(`Generating parser...`);
 
 const parser = peggy.generate(source, {
-  plugins: [tspegjs],
+  plugins: [tspegjs, moveImports],
   output: "source",
   format: "commonjs",
-  tspegjs: {
-    customHeader: `
-      import { identity } from "./utils/generic";
-      import {
-        readCommaSepList,
-        readSpaceSepList,
-      } from "./utils/list";
-      import {
-        parseHexBlob,
-        parseBitBlob,
-        parseAsciiBlob,
-      } from "./utils/blob";
-      import {
-        createBinaryExprChain,
-        createBinaryExpr,
-        createCompoundSelectStmtChain,
-        createJoinExprChain,
-        createMemberExprChain,
-        createFuncCall,
-        createPrefixOpExpr,
-        createPostfixOpExpr,
-        createKeyword,
-        createIdentifier,
-        createAlias,
-        createParenExpr,
-        createListExpr,
-      } from "./utils/node";
-      import {
-        trailing,
-        surrounding,
-      } from "./utils/whitespace";
-      import { read } from "./utils/read";
-      import {
-        setRangeFunction,
-        setOptionsFunction,
-        isBigquery,
-        isMysql,
-        isSqlite,
-        hasParamType,
-        isEnabledWhitespace,
-      } from "./utils/parserState";
-      import { isReservedKeyword } from "./utils/keywords";
-      import { loc } from "./utils/loc";
-    `,
-  },
 } as peggy.SourceBuildOptions<"source">);
 
 fs.writeFileSync(path.resolve(__dirname, `../src/parser.ts`), parser);
