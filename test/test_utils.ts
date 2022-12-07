@@ -54,6 +54,19 @@ export function test(sql: string, options?: Partial<ParserOptions>) {
   expect(show(parse(sql, options || preserveAll))).toBe(sql);
 }
 
+export function testWc(sql: string, options?: Partial<ParserOptions>) {
+  test(sql, options);
+  test(withComments(sql), options);
+}
+
+function withComments(sql: string): string {
+  let count = 0;
+  return sql.replace(/ +/g, () => {
+    count++;
+    return ` /*${count}*/ `;
+  });
+}
+
 export function testExpr(expr: string) {
   expect(show(parse(`SELECT ${expr}`, preserveAll))).toBe(`SELECT ${expr}`);
 }

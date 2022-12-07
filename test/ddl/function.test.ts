@@ -1,11 +1,10 @@
-import { dialect, test } from "../test_utils";
+import { dialect, test, testWc } from "../test_utils";
 
 describe("function", () => {
   dialect("bigquery", () => {
     describe("CREATE FUNCTION", () => {
       it("supports basic CREATE FUNCTION", () => {
-        test("CREATE FUNCTION foo() AS (1 * 2)");
-        test("CREATE /*c1*/ FUNCTION /*c2*/ foo /*c3*/ ( /*c4*/ ) /*c5*/ AS /*c6*/ (1 * 2)");
+        testWc("CREATE FUNCTION foo ( ) AS (1 * 2)");
       });
     });
   });
