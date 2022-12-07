@@ -8,6 +8,10 @@ describe("function", () => {
         testWc("CREATE FUNCTION foo.bar.baz ( ) AS (1)");
       });
 
+      it("supports parameters", () => {
+        testWc("CREATE FUNCTION multiplicate ( x INT , y INT ) AS (x * y)");
+      });
+
       it("supports OR REPLACE", () => {
         testWc("CREATE OR REPLACE FUNCTION foo() AS (1)");
       });

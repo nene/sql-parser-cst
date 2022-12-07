@@ -37,6 +37,7 @@ import { AllFrameNodes } from "./WindowFrame";
 import { AllMergeNodes } from "./Merge";
 import { AllSqliteNodes } from "./Sqlite";
 import { AllBigqueryNodes } from "./Bigquery";
+import { AllFunctionNodes } from "./Function";
 
 export type Node =
   | Program
@@ -56,5 +57,6 @@ export type Node =
   | AllInsertNodes
   | AllUpdateNodes
   | AllMergeNodes
+  | AllFunctionNodes
   | AllSqliteNodes
   | AllBigqueryNodes;

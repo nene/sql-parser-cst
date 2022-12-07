@@ -1773,8 +1773,20 @@ paren_func_param_list
   }
 
 func_param_list
-  = &. {
+  = head:func_param tail:(__ "," __ func_param)* {
+    return loc(createListExpr(head, tail));
+  }
+  / &. {
     return loc({ type: "list_expr", items: [] });
+  }
+
+func_param
+  = name:(ident __) type:data_type {
+    return loc({
+      type: "function_param",
+      name: read(name),
+      dataType: type,
+    });
   }
 
 /**

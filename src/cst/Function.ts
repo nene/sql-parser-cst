@@ -1,6 +1,9 @@
 import { BaseNode, Keyword } from "./Base";
-import { Expr, ListExpr, ParenExpr, Table } from "./Expr";
+import { DataType } from "./DataType";
+import { Expr, Identifier, ListExpr, ParenExpr, Table } from "./Expr";
 import { StringLiteral } from "./Literal";
+
+export type AllFunctionNodes = AllFunctionStatements | FunctionParam;
 
 export type AllFunctionStatements = CreateFunctionStmt;
 
@@ -13,7 +16,13 @@ export interface CreateFunctionStmt extends BaseNode {
   functionKw: Keyword<"FUNCTION">;
   ifNotExistsKw?: [Keyword<"IF">, Keyword<"NOT">, Keyword<"EXISTS">];
   name: Table;
-  params: ParenExpr<ListExpr<Expr>>;
+  params: ParenExpr<ListExpr<FunctionParam>>;
   asKw: Keyword<"AS">;
   expr: ParenExpr<Expr> | StringLiteral;
+}
+
+export interface FunctionParam extends BaseNode {
+  type: "function_param";
+  name: Identifier;
+  dataType: DataType;
 }
