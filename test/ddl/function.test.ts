@@ -5,6 +5,20 @@ describe("function", () => {
     describe("CREATE FUNCTION", () => {
       it("supports basic CREATE FUNCTION", () => {
         testWc("CREATE FUNCTION foo ( ) AS (1 * 2)");
+        testWc("CREATE FUNCTION foo.bar.baz ( ) AS (1)");
+      });
+
+      it("supports OR REPLACE", () => {
+        testWc("CREATE OR REPLACE FUNCTION foo() AS (1)");
+      });
+
+      it("supports TEMPORARY FUNCTION", () => {
+        testWc("CREATE TEMP FUNCTION foo() AS (1)");
+        testWc("CREATE TEMPORARY FUNCTION foo() AS (1)");
+      });
+
+      it("supports IF NOT EXISTS", () => {
+        testWc("CREATE FUNCTION IF NOT EXISTS foo() AS (1)");
       });
     });
   });

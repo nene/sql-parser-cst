@@ -1749,13 +1749,17 @@ schema_kw
  * ------------------------------------------------------------------------------------ *
  */
 create_function_stmt
-  = kw:(CREATE __) fKw:(FUNCTION __)
+  = kw:(CREATE __) orKw:(OR __ REPLACE __)? tempKw:((TEMPORARY / TEMP) __)? funKw:(FUNCTION __)
+    ifKw:(if_not_exists __)?
     name:(table __) params:(paren_func_param_list __)
     asKw:(AS __) expr:paren_expr {
       return loc({
         type: "create_function_stmt",
         createKw: read(kw),
-        functionKw: read(fKw),
+        orReplaceKw: read(orKw),
+        temporaryKw: read(tempKw),
+        functionKw: read(funKw),
+        ifNotExistsKw: read(ifKw),
         name: read(name),
         params: read(params),
         asKw: read(asKw),
