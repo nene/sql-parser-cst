@@ -372,10 +372,12 @@ const showNode = cstTransformer<string>({
       node.ifNotExistsKw,
       node.name,
       node.params,
+      node.returns,
       node.asKw,
       node.expr,
     ]),
   function_param: (node) => show([node.name, node.dataType]),
+  function_returns: (node) => show([node.returnsKw, node.dataType]),
 
   // CREATE TRIGGER statement
   create_trigger_stmt: (node) =>

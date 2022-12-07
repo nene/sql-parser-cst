@@ -3,7 +3,10 @@ import { DataType } from "./DataType";
 import { Expr, Identifier, ListExpr, ParenExpr, Table } from "./Expr";
 import { StringLiteral } from "./Literal";
 
-export type AllFunctionNodes = AllFunctionStatements | FunctionParam;
+export type AllFunctionNodes =
+  | AllFunctionStatements
+  | FunctionParam
+  | FunctionReturns;
 
 export type AllFunctionStatements = CreateFunctionStmt;
 
@@ -17,6 +20,7 @@ export interface CreateFunctionStmt extends BaseNode {
   ifNotExistsKw?: [Keyword<"IF">, Keyword<"NOT">, Keyword<"EXISTS">];
   name: Table;
   params: ParenExpr<ListExpr<FunctionParam>>;
+  returns?: FunctionReturns;
   asKw: Keyword<"AS">;
   expr: ParenExpr<Expr> | StringLiteral;
 }
@@ -24,5 +28,11 @@ export interface CreateFunctionStmt extends BaseNode {
 export interface FunctionParam extends BaseNode {
   type: "function_param";
   name: Identifier;
+  dataType: DataType;
+}
+
+export interface FunctionReturns extends BaseNode {
+  type: "function_returns";
+  returnsKw: Keyword<"RETURNS">;
   dataType: DataType;
 }

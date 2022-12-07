@@ -24,6 +24,10 @@ describe("function", () => {
       it("supports IF NOT EXISTS", () => {
         testWc("CREATE FUNCTION IF NOT EXISTS foo() AS (1)");
       });
+
+      it("supports RETURNS", () => {
+        testWc("CREATE FUNCTION foo() RETURNS INT AS (1)");
+      });
     });
   });
 

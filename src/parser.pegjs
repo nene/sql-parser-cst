@@ -1752,6 +1752,7 @@ create_function_stmt
   = kw:(CREATE __) orKw:(OR __ REPLACE __)? tempKw:((TEMPORARY / TEMP) __)? funKw:(FUNCTION __)
     ifKw:(if_not_exists __)?
     name:(table __) params:(paren_func_param_list __)
+    returns:(function_returns __)?
     asKw:(AS __) expr:paren_expr {
       return loc({
         type: "create_function_stmt",
@@ -1762,6 +1763,7 @@ create_function_stmt
         ifNotExistsKw: read(ifKw),
         name: read(name),
         params: read(params),
+        returns: read(returns),
         asKw: read(asKw),
         expr,
       });
@@ -1785,6 +1787,15 @@ func_param
     return loc({
       type: "function_param",
       name: read(name),
+      dataType: type,
+    });
+  }
+
+function_returns
+  = kw:(RETURNS __) type:data_type {
+    return loc({
+      type: "function_returns",
+      returnsKw: read(kw),
       dataType: type,
     });
   }
@@ -4258,6 +4269,7 @@ RESPECT             = kw:"RESPECT"i             !ident_part { return loc(createK
 RESTRICT            = kw:"RESTRICT"i            !ident_part { return loc(createKeyword(kw)); }
 RETURN              = kw:"RETURN"i              !ident_part { return loc(createKeyword(kw)); }
 RETURNING           = kw:"RETURNING"i           !ident_part { return loc(createKeyword(kw)); }
+RETURNS             = kw:"RETURNS"i             !ident_part { return loc(createKeyword(kw)); }
 RIGHT               = kw:"RIGHT"i               !ident_part { return loc(createKeyword(kw)); }
 RLIKE               = kw:"RLIKE"i               !ident_part { return loc(createKeyword(kw)); }
 ROLLBACK            = kw:"ROLLBACK"i            !ident_part { return loc(createKeyword(kw)); }
