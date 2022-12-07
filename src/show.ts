@@ -362,6 +362,20 @@ const showNode = cstTransformer<string>({
       node.table,
     ]),
 
+  // CREATE FUNCTION
+  create_function_stmt: (node) =>
+    show([
+      node.createKw,
+      node.orReplaceKw,
+      node.temporaryKw,
+      node.functionKw,
+      node.ifNotExistsKw,
+      node.name,
+      node.params,
+      node.asKw,
+      node.expr,
+    ]),
+
   // CREATE TRIGGER statement
   create_trigger_stmt: (node) =>
     show([

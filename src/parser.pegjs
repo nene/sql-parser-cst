@@ -76,6 +76,7 @@ statement
   / x:analyze_stmt (&mysql / &sqlite) { return x; }
   / x:explain_stmt (&mysql / &sqlite) { return x; }
   / x:(create_schema_stmt / drop_schema_stmt / alter_schema_stmt) (&mysql / &bigquery) { return x; }
+  / x:(create_function_stmt) (&bigquery) { return x; }
   / transaction_stmt
   / x:sqlite_stmt &sqlite { return x; }
   / x:bigquery_stmt &bigquery { return x; }
@@ -1739,6 +1740,38 @@ alter_schema_action
 schema_kw
   = SCHEMA
   / kw:DATABASE &mysql { return kw; }
+
+/**
+ * ------------------------------------------------------------------------------------ *
+ *                                                                                      *
+ * CREATE FUNCTION / DROP FUNCTION                                                      *
+ *                                                                                      *
+ * ------------------------------------------------------------------------------------ *
+ */
+create_function_stmt
+  = kw:(CREATE __) fKw:(FUNCTION __)
+    name:(table __) params:(paren_func_param_list __)
+    asKw:(AS __) expr:paren_expr {
+      return loc({
+        type: "create_function_stmt",
+        createKw: read(kw),
+        functionKw: read(fKw),
+        name: read(name),
+        params: read(params),
+        asKw: read(asKw),
+        expr,
+      });
+    }
+
+paren_func_param_list
+  = "(" c1:__ list:func_param_list c2:__ ")" {
+    return loc(createParenExpr(c1, list, c2));
+  }
+
+func_param_list
+  = &. {
+    return loc({ type: "list_expr", items: [] });
+  }
 
 /**
  * ------------------------------------------------------------------------------------ *
@@ -4058,6 +4091,7 @@ FRIDAY              = kw:"FRIDAY"i              !ident_part { return loc(createK
 FROM                = kw:"FROM"i                !ident_part { return loc(createKeyword(kw)); }
 FULL                = kw:"FULL"i                !ident_part { return loc(createKeyword(kw)); }
 FULLTEXT            = kw:"FULLTEXT"i            !ident_part { return loc(createKeyword(kw)); }
+FUNCTION            = kw:"FUNCTION"i            !ident_part { return loc(createKeyword(kw)); }
 GENERATED           = kw:"GENERATED"i           !ident_part { return loc(createKeyword(kw)); }
 GEOGRAPHY           = kw:"GEOGRAPHY"i           !ident_part { return loc(createKeyword(kw)); }
 GLOB                = kw:"GLOB"i                !ident_part { return loc(createKeyword(kw)); }

@@ -17,6 +17,7 @@ import { UpdateStmt } from "./Update";
 import { AllViewStatements } from "./View";
 import { AllSchemaStatements } from "./Schema";
 import { AllBigqueryStatements } from "./Bigquery";
+import { AllFunctionStatements } from "./Function";
 
 export type Statement =
   | Empty
@@ -34,6 +35,7 @@ export type Statement =
   | AllSchemaStatements
   | AllIndexStatements
   | AllTriggerStatements
+  | AllFunctionStatements
   | AnalyzeStmt
   | ExplainStmt
   | AllTransactionStatements
