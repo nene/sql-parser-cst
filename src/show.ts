@@ -380,6 +380,15 @@ const showNode = cstTransformer<string>({
     ]),
   function_param: (node) => show([node.name, node.dataType]),
   function_returns: (node) => show([node.returnsKw, node.dataType]),
+  // DROP FUNCTION
+  drop_function_stmt: (node) =>
+    show([
+      node.dropKw,
+      node.tableKw,
+      node.functionKw,
+      node.ifExistsKw,
+      node.name,
+    ]),
 
   // CREATE TRIGGER statement
   create_trigger_stmt: (node) =>

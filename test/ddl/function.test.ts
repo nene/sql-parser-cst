@@ -40,6 +40,22 @@ describe("function", () => {
         });
       });
     });
+
+    describe("DROP FUNCTION", () => {
+      it("supports basic DROP FUNCTION", () => {
+        testWc("DROP FUNCTION foo");
+        testWc("DROP FUNCTION foo.bar.baz");
+      });
+
+      it("supports IF EXISTS", () => {
+        testWc("DROP FUNCTION IF EXISTS foo");
+      });
+
+      it("supports DROP TABlE FUNCTION", () => {
+        testWc("DROP TABLE FUNCTION foo");
+        testWc("DROP TABLE FUNCTION IF EXISTS foo.bar.baz");
+      });
+    });
   });
 
   dialect(["mysql", "sqlite"], () => {

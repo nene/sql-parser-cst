@@ -8,7 +8,7 @@ export type AllFunctionNodes =
   | FunctionParam
   | FunctionReturns;
 
-export type AllFunctionStatements = CreateFunctionStmt;
+export type AllFunctionStatements = CreateFunctionStmt | DropFunctionStmt;
 
 // CREATE FUNCTION
 export interface CreateFunctionStmt extends BaseNode {
@@ -39,4 +39,13 @@ export interface FunctionReturns extends BaseNode {
   type: "function_returns";
   returnsKw: Keyword<"RETURNS">;
   dataType: DataType;
+}
+
+export interface DropFunctionStmt extends BaseNode {
+  type: "drop_function_stmt";
+  dropKw: Keyword<"DROP">;
+  tableKw?: Keyword<"TABLE">;
+  functionKw: Keyword<"FUNCTION">;
+  ifExistsKw?: [Keyword<"IF">, Keyword<"EXISTS">];
+  name: Table;
 }
