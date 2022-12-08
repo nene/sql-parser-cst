@@ -30,8 +30,14 @@ describe("function", () => {
       });
 
       describe("JS functions", () => {
-        it("supports LANGUAGE JS", () => {
+        it("supports LANGUAGE js", () => {
           testWc("CREATE FUNCTION foo() RETURNS INT LANGUAGE js AS 'return(x*y);'");
+        });
+
+        it("does not support JS language (only lowercase 'js')", () => {
+          expect(() =>
+            test("CREATE FUNCTION foo() RETURNS INT LANGUAGE JS AS 'return(x*y);'")
+          ).toThrowError();
         });
 
         it("supports DETERMINISTIC / NOT DETERMINISTIC", () => {

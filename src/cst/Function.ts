@@ -6,7 +6,8 @@ import { StringLiteral } from "./Literal";
 export type AllFunctionNodes =
   | AllFunctionStatements
   | FunctionParam
-  | FunctionReturns;
+  | FunctionReturns
+  | FunctionLanguage;
 
 export type AllFunctionStatements = CreateFunctionStmt | DropFunctionStmt;
 
@@ -24,7 +25,7 @@ export interface CreateFunctionStmt extends BaseNode {
   deterministicKw?:
     | Keyword<"DETERMINISTIC">
     | [Keyword<"NOT">, Keyword<"DETERMINISTIC">];
-  languageJsKw?: [Keyword<"LANGUAGE">, Keyword<"JS">];
+  language?: FunctionLanguage;
   asKw: Keyword<"AS">;
   expr: ParenExpr<Expr> | StringLiteral;
 }
@@ -39,6 +40,12 @@ export interface FunctionReturns extends BaseNode {
   type: "function_returns";
   returnsKw: Keyword<"RETURNS">;
   dataType: DataType;
+}
+
+export interface FunctionLanguage extends BaseNode {
+  type: "function_language";
+  languageKw: Keyword<"LANGUAGE">;
+  language: Identifier;
 }
 
 export interface DropFunctionStmt extends BaseNode {

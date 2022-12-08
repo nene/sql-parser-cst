@@ -1755,7 +1755,7 @@ create_function_stmt
     name:(table __) params:(paren_func_param_list __)
     returns:(function_returns __)?
     determKw:(DETERMINISTIC __ / NOT __ DETERMINISTIC __)?
-    langKw:(LANGUAGE __ JS __)?
+    lang:(function_language __)?
     asKw:(AS __) expr:(paren_expr / literal_string) {
       return loc({
         type: "create_function_stmt",
@@ -1768,7 +1768,7 @@ create_function_stmt
         params: read(params),
         returns: read(returns),
         deterministicKw: read(determKw),
-        languageJsKw: read(langKw),
+        language: read(lang),
         asKw: read(asKw),
         expr,
       });
@@ -1803,6 +1803,20 @@ function_returns
       returnsKw: read(kw),
       dataType: type,
     });
+  }
+
+function_language
+  = kw:(LANGUAGE __) lang:js_language {
+    return loc({
+      type: "function_language",
+      languageKw: read(kw),
+      language: lang,
+    });
+  }
+
+js_language
+  = "js" !ident_part {
+    return loc(createIdentifier("js", "js"));
   }
 
 drop_function_stmt
@@ -4181,7 +4195,6 @@ ISNULL              = kw:"ISNULL"               !ident_part { return loc(createK
 ISOWEEK             = kw:"ISOWEEK"i             !ident_part { return loc(createKeyword(kw)); }
 ISOYEAR             = kw:"ISOYEAR"i             !ident_part { return loc(createKeyword(kw)); }
 JOIN                = kw:"JOIN"i                !ident_part { return loc(createKeyword(kw)); }
-JS                  = kw:"JS"i                  !ident_part { return loc(createKeyword(kw)); }
 JSON                = kw:"JSON"i                !ident_part { return loc(createKeyword(kw)); }
 KEY                 = kw:"KEY"i                 !ident_part { return loc(createKeyword(kw)); }
 KEY_BLOCK_SIZE      = kw:"KEY_BLOCK_SIZE"i      !ident_part { return loc(createKeyword(kw)); }
