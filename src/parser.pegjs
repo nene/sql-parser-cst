@@ -1794,6 +1794,7 @@ create_function_clause
   / function_determinism
   / function_language
   / function_as
+  / bigquery_options
 
 function_returns
   = kw:(RETURNS __) type:data_type {

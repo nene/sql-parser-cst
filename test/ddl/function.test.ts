@@ -29,6 +29,11 @@ describe("function", () => {
         testWc("CREATE FUNCTION foo() RETURNS INT AS (1)");
       });
 
+      it("supports OPTIONS(..)", () => {
+        testWc("CREATE FUNCTION foo() OPTIONS (description='hello') AS (1)");
+        testWc("CREATE FUNCTION foo() AS (1) OPTIONS (description='my func')");
+      });
+
       describe("JS functions", () => {
         it("supports LANGUAGE js", () => {
           testWc("CREATE FUNCTION foo() RETURNS INT LANGUAGE js AS 'return(x*y);'");
@@ -43,6 +48,13 @@ describe("function", () => {
         it("supports DETERMINISTIC / NOT DETERMINISTIC", () => {
           testWc(`CREATE FUNCTION foo() RETURNS STRING DETERMINISTIC LANGUAGE js AS 'return("");'`);
           testWc(`CREATE FUNCTION foo() RETURNS INT NOT DETERMINISTIC LANGUAGE js AS 'return(0);'`);
+        });
+
+        it("supports OPTIONS(..)", () => {
+          testWc(
+            "CREATE FUNCTION foo() RETURNS INT LANGUAGE js OPTIONS (foo=15) AS 'return(x*y);'"
+          );
+          testWc("CREATE FUNCTION foo() RETURNS INT LANGUAGE js AS 'return(x*y);' OPTIONS(foo=2)");
         });
       });
     });
