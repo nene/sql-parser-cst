@@ -1753,6 +1753,7 @@ create_function_stmt
     ifKw:(if_not_exists __)?
     name:(table __) params:(paren_func_param_list __)
     returns:(function_returns __)?
+    determKw:(DETERMINISTIC __ / NOT __ DETERMINISTIC __)?
     langKw:(LANGUAGE __ JS __)?
     asKw:(AS __) expr:(paren_expr / literal_string) {
       return loc({
@@ -1765,6 +1766,7 @@ create_function_stmt
         name: read(name),
         params: read(params),
         returns: read(returns),
+        deterministicKw: read(determKw),
         languageJsKw: read(langKw),
         asKw: read(asKw),
         expr,
@@ -4075,6 +4077,7 @@ DENSE_RANK          = kw:"DENSE_RANK"i          !ident_part { return loc(createK
 DESC                = kw:"DESC"i                !ident_part { return loc(createKeyword(kw)); }
 DESCRIBE            = kw:"DESCRIBE"i            !ident_part { return loc(createKeyword(kw)); }
 DETACH              = kw:"DETACH"i              !ident_part { return loc(createKeyword(kw)); }
+DETERMINISTIC       = kw:"DETERMINISTIC"i       !ident_part { return loc(createKeyword(kw)); }
 DIRECTORY           = kw:"DIRECTORY"i           !ident_part { return loc(createKeyword(kw)); }
 DISK                = kw:"DISK"i                !ident_part { return loc(createKeyword(kw)); }
 DISTINCT            = kw:"DISTINCT"i            !ident_part { return loc(createKeyword(kw)); }

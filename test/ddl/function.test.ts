@@ -29,8 +29,15 @@ describe("function", () => {
         testWc("CREATE FUNCTION foo() RETURNS INT AS (1)");
       });
 
-      it("supports LANGUAGE JS", () => {
-        testWc("CREATE FUNCTION foo() LANGUAGE js AS 'return(x*y);'");
+      describe("JS functions", () => {
+        it("supports LANGUAGE JS", () => {
+          testWc("CREATE FUNCTION foo() RETURNS INT LANGUAGE js AS 'return(x*y);'");
+        });
+
+        it("supports DETERMINISTIC / NOT DETERMINISTIC", () => {
+          testWc(`CREATE FUNCTION foo() RETURNS STRING DETERMINISTIC LANGUAGE js AS 'return("");'`);
+          testWc(`CREATE FUNCTION foo() RETURNS INT NOT DETERMINISTIC LANGUAGE js AS 'return(0);'`);
+        });
       });
     });
   });
