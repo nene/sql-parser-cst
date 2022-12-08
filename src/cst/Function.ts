@@ -7,7 +7,9 @@ export type AllFunctionNodes =
   | AllFunctionStatements
   | FunctionParam
   | FunctionReturns
-  | FunctionLanguage;
+  | FunctionDeterminism
+  | FunctionLanguage
+  | FunctionAs;
 
 export type AllFunctionStatements = CreateFunctionStmt | DropFunctionStmt;
 
@@ -21,13 +23,7 @@ export interface CreateFunctionStmt extends BaseNode {
   ifNotExistsKw?: [Keyword<"IF">, Keyword<"NOT">, Keyword<"EXISTS">];
   name: Table;
   params: ParenExpr<ListExpr<FunctionParam>>;
-  returns?: FunctionReturns;
-  deterministicKw?:
-    | Keyword<"DETERMINISTIC">
-    | [Keyword<"NOT">, Keyword<"DETERMINISTIC">];
-  language?: FunctionLanguage;
-  asKw: Keyword<"AS">;
-  expr: ParenExpr<Expr> | StringLiteral;
+  clauses: CreateFunctionClause[];
 }
 
 export interface FunctionParam extends BaseNode {
@@ -36,16 +32,35 @@ export interface FunctionParam extends BaseNode {
   dataType: DataType;
 }
 
+type CreateFunctionClause =
+  | FunctionReturns
+  | FunctionDeterminism
+  | FunctionLanguage
+  | FunctionAs;
+
 export interface FunctionReturns extends BaseNode {
   type: "function_returns";
   returnsKw: Keyword<"RETURNS">;
   dataType: DataType;
 }
 
+export interface FunctionDeterminism extends BaseNode {
+  type: "function_determinism";
+  deterministicKw?:
+    | Keyword<"DETERMINISTIC">
+    | [Keyword<"NOT">, Keyword<"DETERMINISTIC">];
+}
+
 export interface FunctionLanguage extends BaseNode {
   type: "function_language";
   languageKw: Keyword<"LANGUAGE">;
   language: Identifier;
+}
+
+export interface FunctionAs extends BaseNode {
+  type: "function_as";
+  asKw: Keyword<"AS">;
+  expr: ParenExpr<Expr> | StringLiteral;
 }
 
 export interface DropFunctionStmt extends BaseNode {

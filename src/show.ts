@@ -372,15 +372,13 @@ const showNode = cstTransformer<string>({
       node.ifNotExistsKw,
       node.name,
       node.params,
-      node.returns,
-      node.deterministicKw,
-      node.language,
-      node.asKw,
-      node.expr,
+      node.clauses,
     ]),
   function_param: (node) => show([node.name, node.dataType]),
   function_returns: (node) => show([node.returnsKw, node.dataType]),
+  function_determinism: (node) => show([node.deterministicKw]),
   function_language: (node) => show([node.languageKw, node.language]),
+  function_as: (node) => show([node.asKw, node.expr]),
   // DROP FUNCTION
   drop_function_stmt: (node) =>
     show([

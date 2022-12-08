@@ -1752,11 +1752,8 @@ schema_kw
 create_function_stmt
   = kw:(CREATE __) orKw:(OR __ REPLACE __)? tempKw:((TEMPORARY / TEMP) __)? funKw:(FUNCTION __)
     ifKw:(if_not_exists __)?
-    name:(table __) params:(paren_func_param_list __)
-    returns:(function_returns __)?
-    determKw:(DETERMINISTIC __ / NOT __ DETERMINISTIC __)?
-    lang:(function_language __)?
-    asKw:(AS __) expr:(paren_expr / literal_string) {
+    name:(table __) params:paren_func_param_list
+    clauses:(__ create_function_clause)+ {
       return loc({
         type: "create_function_stmt",
         createKw: read(kw),
@@ -1765,12 +1762,8 @@ create_function_stmt
         functionKw: read(funKw),
         ifNotExistsKw: read(ifKw),
         name: read(name),
-        params: read(params),
-        returns: read(returns),
-        deterministicKw: read(determKw),
-        language: read(lang),
-        asKw: read(asKw),
-        expr,
+        params,
+        clauses: clauses.map(read),
       });
     }
 
@@ -1796,12 +1789,26 @@ func_param
     });
   }
 
+create_function_clause
+  = function_returns
+  / function_determinism
+  / function_language
+  / function_as
+
 function_returns
   = kw:(RETURNS __) type:data_type {
     return loc({
       type: "function_returns",
       returnsKw: read(kw),
       dataType: type,
+    });
+  }
+
+function_determinism
+  = kw:(DETERMINISTIC / NOT __ DETERMINISTIC) {
+    return loc({
+      type: "function_determinism",
+      deterministicKw: read(kw),
     });
   }
 
@@ -1817,6 +1824,15 @@ function_language
 js_language
   = "js" !ident_part {
     return loc(createIdentifier("js", "js"));
+  }
+
+function_as
+  = kw:(AS __) expr:(paren_expr / literal_string) {
+    return loc({
+      type: "function_as",
+      asKw: read(kw),
+      expr,
+    });
   }
 
 drop_function_stmt
