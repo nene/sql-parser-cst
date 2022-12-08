@@ -57,6 +57,20 @@ describe("function", () => {
           testWc("CREATE FUNCTION foo() RETURNS INT LANGUAGE js AS 'return(x*y);' OPTIONS(foo=2)");
         });
       });
+
+      describe("remote functions", () => {
+        it("supports REMOTE WITH CONNECTION", () => {
+          testWc("CREATE FUNCTION foo() RETURNS INT REMOTE WITH CONNECTION myconnection_id");
+        });
+
+        it("supports OPTIONS(..)", () => {
+          testWc(`
+            CREATE FUNCTION multiply()
+            RETURNS INT REMOTE WITH CONNECTION myproj.us.myconnection
+            OPTIONS(endpoint="https://example.com/multiply")
+          `);
+        });
+      });
     });
 
     describe("DROP FUNCTION", () => {

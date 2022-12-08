@@ -379,6 +379,8 @@ const showNode = cstTransformer<string>({
   function_determinism: (node) => show([node.deterministicKw]),
   function_language: (node) => show([node.languageKw, node.language]),
   function_as: (node) => show([node.asKw, node.expr]),
+  function_remote: (node) =>
+    show([node.remoteWithConnectionKw, node.connection]),
   // DROP FUNCTION
   drop_function_stmt: (node) =>
     show([

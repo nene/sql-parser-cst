@@ -1,4 +1,5 @@
 import { BaseNode, Keyword } from "./Base";
+import { BigqueryOptions } from "./Bigquery";
 import { DataType } from "./DataType";
 import { Expr, Identifier, ListExpr, ParenExpr, Table } from "./Expr";
 import { StringLiteral } from "./Literal";
@@ -9,7 +10,8 @@ export type AllFunctionNodes =
   | FunctionReturns
   | FunctionDeterminism
   | FunctionLanguage
-  | FunctionAs;
+  | FunctionAs
+  | FunctionRemote;
 
 export type AllFunctionStatements = CreateFunctionStmt | DropFunctionStmt;
 
@@ -36,7 +38,9 @@ type CreateFunctionClause =
   | FunctionReturns
   | FunctionDeterminism
   | FunctionLanguage
-  | FunctionAs;
+  | FunctionAs
+  | BigqueryOptions
+  | FunctionRemote;
 
 export interface FunctionReturns extends BaseNode {
   type: "function_returns";
@@ -61,6 +65,16 @@ export interface FunctionAs extends BaseNode {
   type: "function_as";
   asKw: Keyword<"AS">;
   expr: ParenExpr<Expr> | StringLiteral;
+}
+
+export interface FunctionRemote extends BaseNode {
+  type: "function_remote";
+  remoteWithConnectionKw: [
+    Keyword<"REMOTE">,
+    Keyword<"WITH">,
+    Keyword<"CONNECTION">
+  ];
+  connection: Table;
 }
 
 export interface DropFunctionStmt extends BaseNode {

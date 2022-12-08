@@ -1794,6 +1794,7 @@ create_function_clause
   / function_determinism
   / function_language
   / function_as
+  / function_remote
   / bigquery_options
 
 function_returns
@@ -1833,6 +1834,15 @@ function_as
       type: "function_as",
       asKw: read(kw),
       expr,
+    });
+  }
+
+function_remote
+  = kw:(REMOTE __ WITH __ CONNECTION __) name:table {
+    return loc({
+      type: "function_remote",
+      remoteWithConnectionKw: read(kw),
+      connection: name,
     });
   }
 
@@ -4311,6 +4321,7 @@ REFERENCES          = kw:"REFERENCES"i          !ident_part { return loc(createK
 REGEXP              = kw:"REGEXP"i              !ident_part { return loc(createKeyword(kw)); }
 REINDEX             = kw:"REINDEX"i             !ident_part { return loc(createKeyword(kw)); }
 RELEASE             = kw:"RELEASE"i             !ident_part { return loc(createKeyword(kw)); }
+REMOTE              = kw:"REMOTE"i              !ident_part { return loc(createKeyword(kw)); }
 RENAME              = kw:"RENAME"i              !ident_part { return loc(createKeyword(kw)); }
 REPLACE             = kw:"REPLACE"i             !ident_part { return loc(createKeyword(kw)); }
 REPLICATION         = kw:"REPLICATION"i         !ident_part { return loc(createKeyword(kw)); }
