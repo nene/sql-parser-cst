@@ -1753,7 +1753,8 @@ create_function_stmt
     ifKw:(if_not_exists __)?
     name:(table __) params:(paren_func_param_list __)
     returns:(function_returns __)?
-    asKw:(AS __) expr:paren_expr {
+    langKw:(LANGUAGE __ JS __)?
+    asKw:(AS __) expr:(paren_expr / literal_string) {
       return loc({
         type: "create_function_stmt",
         createKw: read(kw),
@@ -1764,6 +1765,7 @@ create_function_stmt
         name: read(name),
         params: read(params),
         returns: read(returns),
+        languageJsKw: read(langKw),
         asKw: read(asKw),
         expr,
       });
@@ -4162,6 +4164,7 @@ ISNULL              = kw:"ISNULL"               !ident_part { return loc(createK
 ISOWEEK             = kw:"ISOWEEK"i             !ident_part { return loc(createKeyword(kw)); }
 ISOYEAR             = kw:"ISOYEAR"i             !ident_part { return loc(createKeyword(kw)); }
 JOIN                = kw:"JOIN"i                !ident_part { return loc(createKeyword(kw)); }
+JS                  = kw:"JS"i                  !ident_part { return loc(createKeyword(kw)); }
 JSON                = kw:"JSON"i                !ident_part { return loc(createKeyword(kw)); }
 KEY                 = kw:"KEY"i                 !ident_part { return loc(createKeyword(kw)); }
 KEY_BLOCK_SIZE      = kw:"KEY_BLOCK_SIZE"i      !ident_part { return loc(createKeyword(kw)); }

@@ -21,6 +21,7 @@ export interface CreateFunctionStmt extends BaseNode {
   name: Table;
   params: ParenExpr<ListExpr<FunctionParam>>;
   returns?: FunctionReturns;
+  languageJsKw?: [Keyword<"LANGUAGE">, Keyword<"JS">];
   asKw: Keyword<"AS">;
   expr: ParenExpr<Expr> | StringLiteral;
 }

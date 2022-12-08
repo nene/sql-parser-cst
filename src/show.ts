@@ -373,6 +373,7 @@ const showNode = cstTransformer<string>({
       node.name,
       node.params,
       node.returns,
+      node.languageJsKw,
       node.asKw,
       node.expr,
     ]),

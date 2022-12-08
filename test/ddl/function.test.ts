@@ -28,6 +28,10 @@ describe("function", () => {
       it("supports RETURNS", () => {
         testWc("CREATE FUNCTION foo() RETURNS INT AS (1)");
       });
+
+      it("supports LANGUAGE JS", () => {
+        testWc("CREATE FUNCTION foo() LANGUAGE js AS 'return(x*y);'");
+      });
     });
   });
 
