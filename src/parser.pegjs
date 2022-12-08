@@ -68,8 +68,8 @@ statement
   / x:alter_view_stmt &bigquery { return x; }
   / create_index_stmt
   / drop_index_stmt
+  / x:(create_function_stmt / drop_function_stmt) &bigquery { return x; }
   / create_table_stmt
-  / x:drop_function_stmt &bigquery { return x; }
   / drop_table_stmt
   / alter_table_stmt
   / x:create_trigger_stmt (&mysql / &sqlite) { return x; }
@@ -77,7 +77,6 @@ statement
   / x:analyze_stmt (&mysql / &sqlite) { return x; }
   / x:explain_stmt (&mysql / &sqlite) { return x; }
   / x:(create_schema_stmt / drop_schema_stmt / alter_schema_stmt) (&mysql / &bigquery) { return x; }
-  / x:create_function_stmt &bigquery { return x; }
   / transaction_stmt
   / x:sqlite_stmt &sqlite { return x; }
   / x:bigquery_stmt &bigquery { return x; }
@@ -1750,15 +1749,21 @@ schema_kw
  * ------------------------------------------------------------------------------------ *
  */
 create_function_stmt
-  = kw:(CREATE __) orKw:(OR __ REPLACE __)? tempKw:((TEMPORARY / TEMP) __)? funKw:(FUNCTION __)
+  = kw:(CREATE __)
+    orKw:(OR __ REPLACE __)?
+    tempKw:((TEMPORARY / TEMP) __)?
+    tableKw:(TABLE __)?
+    funKw:(FUNCTION __)
     ifKw:(if_not_exists __)?
-    name:(table __) params:paren_func_param_list
+    name:(table __)
+    params:paren_func_param_list
     clauses:(__ create_function_clause)+ {
       return loc({
         type: "create_function_stmt",
         createKw: read(kw),
         orReplaceKw: read(orKw),
         temporaryKw: read(tempKw),
+        tableKw: read(tableKw),
         functionKw: read(funKw),
         ifNotExistsKw: read(ifKw),
         name: read(name),
@@ -1829,7 +1834,7 @@ js_language
   }
 
 function_as
-  = kw:(AS __) expr:(paren_expr / literal_string) {
+  = kw:(AS __) expr:(paren_expr / literal_string / compound_select_stmt) {
     return loc({
       type: "function_as",
       asKw: read(kw),

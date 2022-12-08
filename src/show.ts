@@ -368,6 +368,7 @@ const showNode = cstTransformer<string>({
       node.createKw,
       node.orReplaceKw,
       node.temporaryKw,
+      node.tableKw,
       node.functionKw,
       node.ifNotExistsKw,
       node.name,

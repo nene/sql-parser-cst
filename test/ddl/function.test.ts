@@ -71,6 +71,39 @@ describe("function", () => {
           `);
         });
       });
+
+      describe("table functions", () => {
+        it("supports CREATE TABLE FUNCTION", () => {
+          testWc("CREATE TABLE FUNCTION foo() AS SELECT * FROM tbl");
+          testWc("CREATE OR REPLACE TABLE FUNCTION foo() AS SELECT 1");
+          testWc("CREATE TABLE FUNCTION IF NOT EXISTS foo() AS SELECT 1");
+        });
+
+        it.skip("supports RETURNS TABLE <..>", () => {
+          testWc("CREATE TABLE FUNCTION foo() RETURNS < col1 INT64 > AS SELECT 1");
+          testWc(`
+            CREATE TABLE FUNCTION foo()
+            RETURNS< name STRING , age INT >
+            AS SELECT 'John', 64
+          `);
+        });
+
+        it.skip("supports parameters with ANY TYPE", () => {
+          testWc(`
+            CREATE TABLE FUNCTION foo( p ANY TYPE )
+            AS SELECT * FROM tbl WHERE col = p
+          `);
+        });
+
+        it.skip("supports OPTIONS(..)", () => {
+          testWc(`
+            CREATE TABLE FUNCTION doubleit(x INT)
+            RETURNS TABLE<x INT64>
+            OPTIONS(description='haha')
+            AS SELECT x*2
+          `);
+        });
+      });
     });
 
     describe("DROP FUNCTION", () => {

@@ -3,6 +3,7 @@ import { BigqueryOptions } from "./Bigquery";
 import { DataType } from "./DataType";
 import { Expr, Identifier, ListExpr, ParenExpr, Table } from "./Expr";
 import { StringLiteral } from "./Literal";
+import { SubSelect } from "./Select";
 
 export type AllFunctionNodes =
   | AllFunctionStatements
@@ -21,6 +22,7 @@ export interface CreateFunctionStmt extends BaseNode {
   createKw: Keyword<"CREATE">;
   orReplaceKw?: [Keyword<"OR">, Keyword<"REPLACE">];
   temporaryKw?: Keyword<"TEMP" | "TEMPORARY">;
+  tableKw?: Keyword<"TABLE">;
   functionKw: Keyword<"FUNCTION">;
   ifNotExistsKw?: [Keyword<"IF">, Keyword<"NOT">, Keyword<"EXISTS">];
   name: Table;
@@ -64,7 +66,7 @@ export interface FunctionLanguage extends BaseNode {
 export interface FunctionAs extends BaseNode {
   type: "function_as";
   asKw: Keyword<"AS">;
-  expr: ParenExpr<Expr> | StringLiteral;
+  expr: ParenExpr<Expr> | StringLiteral | SubSelect;
 }
 
 export interface FunctionRemote extends BaseNode {
