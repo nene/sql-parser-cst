@@ -88,7 +88,7 @@ describe("function", () => {
           `);
         });
 
-        it.skip("supports parameters with ANY TYPE", () => {
+        it("supports parameters with ANY TYPE", () => {
           testWc(`
             CREATE TABLE FUNCTION foo( p ANY TYPE )
             AS SELECT * FROM tbl WHERE col = p

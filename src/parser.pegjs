@@ -2704,6 +2704,8 @@ type_name_bigquery
   / BIGNUMERIC
   / BIGDECIMAL
   / FLOAT64
+  // used in TABLE FUNCTION parameters list
+  / kw:(ANY __ TYPE) { return read(kw); }
 
 type_name_mysql
   = BOOLEAN
@@ -4057,6 +4059,7 @@ ALTER               = kw:"ALTER"i               !ident_part { return loc(createK
 ALWAYS              = kw:"ALWAYS"i              !ident_part { return loc(createKeyword(kw)); }
 ANALYZE             = kw:"ANALYZE"i             !ident_part { return loc(createKeyword(kw)); }
 AND                 = kw:"AND"i                 !ident_part { return loc(createKeyword(kw)); }
+ANY                 = kw:"ANY"i                 !ident_part { return loc(createKeyword(kw)); }
 ARRAY               = kw:"ARRAY"i               !ident_part { return loc(createKeyword(kw)); }
 AS                  = kw:"AS"i                  !ident_part { return loc(createKeyword(kw)); }
 ASC                 = kw:"ASC"i                 !ident_part { return loc(createKeyword(kw)); }
