@@ -2623,7 +2623,7 @@ data_type
   = kw:(type_name __) params:type_length_params {
     return loc({ type: "data_type", nameKw: read(kw), params });
   }
-  / &bigquery type:(array_type / struct_type) {
+  / &bigquery type:(array_type / struct_type / table_type) {
     return type;
   }
   / kw:type_name {
@@ -2647,6 +2647,11 @@ array_type
 
 struct_type
   = kw:STRUCT params:(__ generic_type_params)? {
+    return loc({ type: "data_type", nameKw: read(kw), params: read(params) });
+  }
+
+table_type
+  = kw:TABLE params:(__ generic_type_params) {
     return loc({ type: "data_type", nameKw: read(kw), params: read(params) });
   }
 

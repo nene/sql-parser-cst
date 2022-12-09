@@ -79,11 +79,11 @@ describe("function", () => {
           testWc("CREATE TABLE FUNCTION IF NOT EXISTS foo() AS SELECT 1");
         });
 
-        it.skip("supports RETURNS TABLE <..>", () => {
-          testWc("CREATE TABLE FUNCTION foo() RETURNS < col1 INT64 > AS SELECT 1");
+        it("supports RETURNS TABLE <..>", () => {
+          testWc("CREATE TABLE FUNCTION foo() RETURNS TABLE < col1 INT64 > AS SELECT 1");
           testWc(`
             CREATE TABLE FUNCTION foo()
-            RETURNS< name STRING , age INT >
+            RETURNS TABLE< name STRING , age INT >
             AS SELECT 'John', 64
           `);
         });
