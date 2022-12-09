@@ -95,7 +95,7 @@ describe("function", () => {
           `);
         });
 
-        it.skip("supports OPTIONS(..)", () => {
+        it("supports OPTIONS(..)", () => {
           testWc(`
             CREATE TABLE FUNCTION doubleit(x INT)
             RETURNS TABLE<x INT64>
