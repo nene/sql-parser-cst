@@ -34,7 +34,8 @@ export type AllBigqueryStatements =
   | DropReservationStmt
   | CreateAssignmentStmt
   | DropAssignmentStmt
-  | CreateRowAccessPolicyStmt;
+  | CreateRowAccessPolicyStmt
+  | DropRowAccessPolicyStmt;
 
 export interface CreateCapacityStmt extends BaseNode {
   type: "create_capacity_stmt";
@@ -99,4 +100,19 @@ export interface RowAccessPolicyGrant extends BaseNode {
   type: "row_access_policy_grant";
   grantToKw: [Keyword<"GRANT">, Keyword<"TO">];
   grantees: ParenExpr<ListExpr<StringLiteral>>;
+}
+
+export interface DropRowAccessPolicyStmt extends BaseNode {
+  type: "drop_row_access_policy_stmt";
+  dropKw: Keyword<"DROP">;
+  allKw?: Keyword<"ALL">;
+  rowAccessPolicyKw: [
+    Keyword<"ROW">,
+    Keyword<"ACCESS">,
+    Keyword<"POLICY" | "POLICIES">
+  ];
+  ifExistsKw?: [Keyword<"IF">, Keyword<"EXISTS">];
+  name?: Keyword;
+  onKw: Keyword<"ON">;
+  table: Table;
 }

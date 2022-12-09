@@ -480,6 +480,16 @@ const showNode = cstTransformer<string>({
       node.filterExpr,
     ]),
   row_access_policy_grant: (node) => show([node.grantToKw, node.grantees]),
+  drop_row_access_policy_stmt: (node) =>
+    show([
+      node.dropKw,
+      node.allKw,
+      node.rowAccessPolicyKw,
+      node.ifExistsKw,
+      node.name,
+      node.onKw,
+      node.table,
+    ]),
 
   // Expressions
   list_expr: (node) => show(node.items, ","),

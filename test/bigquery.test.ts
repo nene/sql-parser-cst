@@ -48,6 +48,20 @@ describe("BigQuery specific statements", () => {
         `);
       });
     });
+
+    describe("DROP ROW ACCESS POLICY", () => {
+      it("supports DROP ROW ACCESS POLICY", () => {
+        testWc(`DROP ROW ACCESS POLICY policy_name ON my_table`);
+      });
+
+      it("supports IF EXISTS", () => {
+        testWc(`DROP ROW ACCESS POLICY IF EXISTS policy_name ON db.my_table`);
+      });
+
+      it("supports DROP ALL ROW ACCESS POLICIES", () => {
+        testWc(`DROP ALL ROW ACCESS POLICIES ON my_table`);
+      });
+    });
   });
 
   it("ignore empty testsuite", () => {

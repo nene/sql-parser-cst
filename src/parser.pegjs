@@ -2118,6 +2118,7 @@ bigquery_stmt
   = create_bigquery_entity_stmt
   / drop_bigquery_entity_stmt
   / create_row_access_policy_stmt
+  / drop_row_access_policy_stmt
 
 // CREATE CAPACITY
 // CREATE RESERVATION
@@ -2205,6 +2206,38 @@ string_list
   = head:literal_string tail:(__ "," __ literal_string)* {
     return loc(createListExpr(head, tail));
   }
+
+drop_row_access_policy_stmt
+  = kw:(DROP __)
+    policyKw:(ROW __ ACCESS __ POLICY __)
+    ifKw:(if_exists __)?
+    name:(ident __)
+    onKw:(ON __)
+    table:table {
+      return loc({
+        type: "drop_row_access_policy_stmt",
+        dropKw: read(kw),
+        rowAccessPolicyKw: read(policyKw),
+        ifExistsKw: read(ifKw),
+        name: read(name),
+        onKw: read(onKw),
+        table,
+      });
+    }
+  / kw:(DROP __)
+    allKw:(ALL __)
+    policyKw:(ROW __ ACCESS __ POLICIES __)
+    onKw:(ON __)
+    table:table {
+      return loc({
+        type: "drop_row_access_policy_stmt",
+        dropKw: read(kw),
+        allKw: read(allKw),
+        rowAccessPolicyKw: read(policyKw),
+        onKw: read(onKw),
+        table,
+      });
+    }
 
 /**
  * ------------------------------------------------------------------------------------ *
@@ -4364,6 +4397,7 @@ PERSIST             = kw:"PERSIST"i             !ident_part { return loc(createK
 PERSIST_ONLY        = kw:"PERSIST_ONLY"i        !ident_part { return loc(createKeyword(kw)); }
 PIVOT               = kw:"PIVOT"i               !ident_part { return loc(createKeyword(kw)); }
 PLAN                = kw:"PLAN"i                !ident_part { return loc(createKeyword(kw)); }
+POLICIES            = kw:"POLICIES"i            !ident_part { return loc(createKeyword(kw)); }
 POLICY              = kw:"POLICY"i              !ident_part { return loc(createKeyword(kw)); }
 PRAGMA              = kw:"PRAGMA"i              !ident_part { return loc(createKeyword(kw)); }
 PRECEDING           = kw:"PRECEDING"i           !ident_part { return loc(createKeyword(kw)); }
