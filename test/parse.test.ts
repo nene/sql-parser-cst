@@ -47,7 +47,7 @@ describe("parse()", () => {
     expect(() => parse("CREATE PUZZLE 123;", { dialect: "sqlite", filename: "prod-database.sql" }))
       .toThrowErrorMatchingInlineSnapshot(`
       "Syntax Error: Unexpected "PUZZLE"
-      Was expecting to see: "ASSIGNMENT", "CAPACITY", "DATABASE", "FULLTEXT", "FUNCTION", "INDEX", "MATERIALIZED", "OR", "RESERVATION", "SCHEMA", "SPATIAL", "TABLE", "TEMP", "TEMPORARY", "TRIGGER", "UNIQUE", "VIEW", or "VIRTUAL"
+      Was expecting to see: "ASSIGNMENT", "CAPACITY", "DATABASE", "FULLTEXT", "FUNCTION", "INDEX", "MATERIALIZED", "OR", "RESERVATION", "ROW", "SCHEMA", "SPATIAL", "TABLE", "TEMP", "TEMPORARY", "TRIGGER", "UNIQUE", "VIEW", or "VIRTUAL"
       --> prod-database.sql:1:8
         |
       1 | CREATE PUZZLE 123;

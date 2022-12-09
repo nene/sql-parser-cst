@@ -2117,6 +2117,7 @@ create_virtual_table_stmt
 bigquery_stmt
   = create_bigquery_entity_stmt
   / drop_bigquery_entity_stmt
+  / create_row_access_policy_stmt
 
 // CREATE CAPACITY
 // CREATE RESERVATION
@@ -2159,6 +2160,51 @@ bigquery_entity
   = CAPACITY
   / RESERVATION
   / ASSIGNMENT
+
+create_row_access_policy_stmt
+  = kw:(CREATE __)
+    orKw:(OR __ REPLACE __)?
+    policyKw:(ROW __ ACCESS __ POLICY __)
+    ifKw:(if_not_exists __)?
+    name:(ident __)
+    onKw:(ON __)
+    table:(table __)
+    grantTo:(row_access_policy_grant __)?
+    filterKw:(FILTER __ USING __)
+    filterExpr:paren_list_expr {
+      return loc({
+        type: "create_row_access_policy_stmt",
+        createKw: read(kw),
+        orReplaceKw: read(orKw),
+        rowAccessPolicyKw: read(policyKw),
+        ifNotExistsKw: read(ifKw),
+        name: read(name),
+        onKw: read(onKw),
+        table: read(table),
+        grantTo: read(grantTo),
+        filterUsingKw: read(filterKw),
+        filterExpr,
+      });
+    }
+
+row_access_policy_grant
+  = kw:(GRANT __ TO __) list:paren_string_list {
+    return loc({
+      type: "row_access_policy_grant",
+      grantToKw: read(kw),
+      grantees: list,
+    });
+  }
+
+paren_string_list
+  = "(" c1:__ list:string_list c2:__ ")" {
+    return loc(createParenExpr(c1, list, c2));
+  }
+
+string_list
+  = head:literal_string tail:(__ "," __ literal_string)* {
+    return loc(createListExpr(head, tail));
+  }
 
 /**
  * ------------------------------------------------------------------------------------ *
@@ -4049,6 +4095,7 @@ sqlite = &{ return isSqlite(); }
 
 /*! keywords:start */
 ABORT               = kw:"ABORT"i               !ident_part { return loc(createKeyword(kw)); }
+ACCESS              = kw:"ACCESS"i              !ident_part { return loc(createKeyword(kw)); }
 ACTION              = kw:"ACTION"i              !ident_part { return loc(createKeyword(kw)); }
 ADD                 = kw:"ADD"i                 !ident_part { return loc(createKeyword(kw)); }
 AFTER               = kw:"AFTER"i               !ident_part { return loc(createKeyword(kw)); }
@@ -4197,6 +4244,7 @@ GEOGRAPHY           = kw:"GEOGRAPHY"i           !ident_part { return loc(createK
 GLOB                = kw:"GLOB"i                !ident_part { return loc(createKeyword(kw)); }
 GLOBAL              = kw:"GLOBAL"i              !ident_part { return loc(createKeyword(kw)); }
 GO                  = kw:"GO"i                  !ident_part { return loc(createKeyword(kw)); }
+GRANT               = kw:"GRANT"i               !ident_part { return loc(createKeyword(kw)); }
 GRANTS              = kw:"GRANTS"i              !ident_part { return loc(createKeyword(kw)); }
 GROUP               = kw:"GROUP"i               !ident_part { return loc(createKeyword(kw)); }
 GROUP_CONCAT        = kw:"GROUP_CONCAT"i        !ident_part { return loc(createKeyword(kw)); }
@@ -4316,6 +4364,7 @@ PERSIST             = kw:"PERSIST"i             !ident_part { return loc(createK
 PERSIST_ONLY        = kw:"PERSIST_ONLY"i        !ident_part { return loc(createKeyword(kw)); }
 PIVOT               = kw:"PIVOT"i               !ident_part { return loc(createKeyword(kw)); }
 PLAN                = kw:"PLAN"i                !ident_part { return loc(createKeyword(kw)); }
+POLICY              = kw:"POLICY"i              !ident_part { return loc(createKeyword(kw)); }
 PRAGMA              = kw:"PRAGMA"i              !ident_part { return loc(createKeyword(kw)); }
 PRECEDING           = kw:"PRECEDING"i           !ident_part { return loc(createKeyword(kw)); }
 PRECISION           = kw:"PRECISION"i           !ident_part { return loc(createKeyword(kw)); }

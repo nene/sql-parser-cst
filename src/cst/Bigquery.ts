@@ -12,7 +12,8 @@ import { JsonLiteral, StringLiteral } from "./Literal";
 export type AllBigqueryNodes =
   | BigqueryOptions
   | BigqueryOptionDefaultCollate
-  | AllBigqueryStatements;
+  | AllBigqueryStatements
+  | RowAccessPolicyGrant;
 
 export interface BigqueryOptions extends BaseNode {
   type: "bigquery_options";
@@ -32,7 +33,8 @@ export type AllBigqueryStatements =
   | CreateReservationStmt
   | DropReservationStmt
   | CreateAssignmentStmt
-  | DropAssignmentStmt;
+  | DropAssignmentStmt
+  | CreateRowAccessPolicyStmt;
 
 export interface CreateCapacityStmt extends BaseNode {
   type: "create_capacity_stmt";
@@ -77,4 +79,24 @@ export interface DropAssignmentStmt extends BaseNode {
   dropKw: [Keyword<"DROP">, Keyword<"ASSIGNMENT">];
   ifExistsKw?: [Keyword<"IF">, Keyword<"EXISTS">];
   name: Table;
+}
+
+export interface CreateRowAccessPolicyStmt extends BaseNode {
+  type: "create_row_access_policy_stmt";
+  createKw: Keyword<"CREATE">;
+  orReplaceKw?: [Keyword<"OR">, Keyword<"REPLACE">];
+  rowAccessPolicyKw: [Keyword<"ROW">, Keyword<"ACCESS">, Keyword<"POLICY">];
+  ifNotExistsKw?: [Keyword<"IF">, Keyword<"NOT">, Keyword<"EXISTS">];
+  name: Keyword;
+  onKw: Keyword<"ON">;
+  table: Table;
+  grantTo?: RowAccessPolicyGrant;
+  filterUsingKw: [Keyword<"FILTER">, Keyword<"USING">];
+  filterExpr: ParenExpr<Expr>;
+}
+
+export interface RowAccessPolicyGrant extends BaseNode {
+  type: "row_access_policy_grant";
+  grantToKw: [Keyword<"GRANT">, Keyword<"TO">];
+  grantees: ParenExpr<ListExpr<StringLiteral>>;
 }

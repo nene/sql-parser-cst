@@ -466,6 +466,20 @@ const showNode = cstTransformer<string>({
     show([node.createKw, node.name, node.asKw, node.json]),
   drop_assignment_stmt: (node) =>
     show([node.dropKw, node.ifExistsKw, node.name]),
+  create_row_access_policy_stmt: (node) =>
+    show([
+      node.createKw,
+      node.orReplaceKw,
+      node.rowAccessPolicyKw,
+      node.ifNotExistsKw,
+      node.name,
+      node.onKw,
+      node.table,
+      node.grantTo,
+      node.filterUsingKw,
+      node.filterExpr,
+    ]),
+  row_access_policy_grant: (node) => show([node.grantToKw, node.grantees]),
 
   // Expressions
   list_expr: (node) => show(node.items, ","),
