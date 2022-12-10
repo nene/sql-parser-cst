@@ -1342,6 +1342,7 @@ drop_index_stmt
     kw:(DROP __)
     indexTypeKw:(SEARCH __)?
     indexKw:(INDEX __)
+    ifKw:(if_exists __)?
     indexes:(table_list __)
     onKw:(ON __)
     table:table {
@@ -1350,6 +1351,7 @@ drop_index_stmt
         dropKw: read(kw),
         indexTypeKw: read(indexTypeKw),
         indexKw: read(indexKw),
+        ifExistsKw: read(ifKw),
         indexes: read(indexes),
         onKw: read(onKw),
         table,

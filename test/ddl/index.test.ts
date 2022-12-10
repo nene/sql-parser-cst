@@ -17,6 +17,10 @@ describe("index", () => {
       it("supports SEARCH INDEX", () => {
         testWc("CREATE SEARCH INDEX my_idx ON tbl (col)");
       });
+
+      it("supports IF NOT EXISTS", () => {
+        testWc("CREATE SEARCH INDEX IF NOT EXISTS idx ON tbl (col)");
+      });
     });
 
     dialect("mysql", () => {
@@ -69,6 +73,10 @@ describe("index", () => {
       it("supports DROP SEARCH INDEX name ON table", () => {
         testWc("DROP SEARCH INDEX my_idx ON tbl");
         testWc("DROP SEARCH INDEX idx ON proj.schm.tbl");
+      });
+
+      it("supports IF EXISTS", () => {
+        testWc("DROP SEARCH INDEX IF EXISTS my_idx ON tbl");
       });
     });
   });
