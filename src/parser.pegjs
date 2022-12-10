@@ -1301,7 +1301,7 @@ create_index_stmt
     name:(table __)
     onKw:(ON __)
     table:(table __)
-    columns:paren_sort_specification_list
+    columns:(paren_sort_specification_list / paren_verbose_all_columns)
     clauses: (__ create_index_subclause)* {
       return loc({
         type: "create_index_stmt",
@@ -1326,6 +1326,16 @@ index_type_kw
 create_index_subclause
   = &sqlite x:where_clause { return x; }
   / &bigquery x:bigquery_options { return x; }
+
+paren_verbose_all_columns
+  = "(" c1:__ x:verbose_all_columns c2:__ ")" {
+    return loc(createParenExpr(c1, x, c2));
+  }
+
+verbose_all_columns
+  = &bigquery kws:(ALL __ COLUMNS) {
+    return loc({ type: "verbose_all_columns", allColumnsKw: read(kws) })
+  }
 
 // DROP INDEX
 drop_index_stmt
@@ -4200,6 +4210,7 @@ COLLATE             = kw:"COLLATE"i             !ident_part { return loc(createK
 COLLATION           = kw:"COLLATION"i           !ident_part { return loc(createKeyword(kw)); }
 COLUMN              = kw:"COLUMN"i              !ident_part { return loc(createKeyword(kw)); }
 COLUMN_FORMAT       = kw:"COLUMN_FORMAT"i       !ident_part { return loc(createKeyword(kw)); }
+COLUMNS             = kw:"COLUMNS"i             !ident_part { return loc(createKeyword(kw)); }
 COMMENT             = kw:"COMMENT"i             !ident_part { return loc(createKeyword(kw)); }
 COMMIT              = kw:"COMMIT"i              !ident_part { return loc(createKeyword(kw)); }
 COMPACT             = kw:"COMPACT"i             !ident_part { return loc(createKeyword(kw)); }

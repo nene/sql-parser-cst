@@ -352,6 +352,7 @@ const showNode = cstTransformer<string>({
       node.columns,
       node.clauses,
     ]),
+  verbose_all_columns: (node) => show(node.allColumnsKw),
   // DROP INDEX
   drop_index_stmt: (node) =>
     show([

@@ -22,6 +22,10 @@ describe("index", () => {
         testWc("CREATE SEARCH INDEX IF NOT EXISTS idx ON tbl (col)");
       });
 
+      it("supports ALL COLUMNS", () => {
+        testWc("CREATE SEARCH INDEX idx ON tbl ( ALL COLUMNS )");
+      });
+
       it("supports OPTIONS(..)", () => {
         testWc("CREATE SEARCH INDEX idx ON tbl (col) OPTIONS(analyzer='LOG_ANALYZER')");
       });

@@ -3,6 +3,8 @@ import { BigqueryOptions } from "./Bigquery";
 import { Identifier, ListExpr, ParenExpr, Table } from "./Expr";
 import { SortSpecification, WhereClause } from "./Select";
 
+export type AllIndexNodes = AllIndexStatements | VerboseAllColumns;
+
 export type AllIndexStatements = CreateIndexStmt | DropIndexStmt;
 
 // CREATE INDEX
@@ -15,8 +17,16 @@ export interface CreateIndexStmt extends BaseNode {
   name: Table;
   onKw: Keyword<"ON">;
   table: Table;
-  columns: ParenExpr<ListExpr<SortSpecification | Identifier>>;
+  columns:
+    | ParenExpr<ListExpr<SortSpecification | Identifier>>
+    | ParenExpr<VerboseAllColumns>;
   clauses: (WhereClause | BigqueryOptions)[];
+}
+
+// In contrast to normal AllColumns node, which represents the star (*)
+export interface VerboseAllColumns extends BaseNode {
+  type: "verbose_all_columns";
+  allColumnsKw: [Keyword<"ALL">, Keyword<"COLUMNS">];
 }
 
 // DROP INDEX
