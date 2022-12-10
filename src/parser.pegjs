@@ -1302,8 +1302,7 @@ create_index_stmt
     onKw:(ON __)
     table:(table __)
     columns:paren_sort_specification_list
-    where:(__ where_clause)?
-    options:(__ bigquery_options)? {
+    clauses: (__ create_index_subclause)* {
       return loc({
         type: "create_index_stmt",
         createKw: read(kw),
@@ -1314,8 +1313,7 @@ create_index_stmt
         onKw: read(onKw),
         table: read(table),
         columns,
-        where: read(where),
-        options: read(options),
+        clauses: clauses.map(read),
       });
     }
 
@@ -1324,6 +1322,10 @@ index_type_kw
   / x:FULLTEXT &mysql { return x; }
   / x:SPATIAL &mysql { return x; }
   / x:SEARCH &bigquery { return x; }
+
+create_index_subclause
+  = &sqlite x:where_clause { return x; }
+  / &bigquery x:bigquery_options { return x; }
 
 // DROP INDEX
 drop_index_stmt

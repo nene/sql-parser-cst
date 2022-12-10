@@ -350,8 +350,7 @@ const showNode = cstTransformer<string>({
       node.onKw,
       node.table,
       node.columns,
-      node.where,
-      node.options,
+      node.clauses,
     ]),
   // DROP INDEX
   drop_index_stmt: (node) =>

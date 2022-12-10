@@ -16,8 +16,7 @@ export interface CreateIndexStmt extends BaseNode {
   onKw: Keyword<"ON">;
   table: Table;
   columns: ParenExpr<ListExpr<SortSpecification | Identifier>>;
-  where?: WhereClause;
-  options?: BigqueryOptions;
+  clauses: (WhereClause | BigqueryOptions)[];
 }
 
 // DROP INDEX
