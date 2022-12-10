@@ -355,7 +355,9 @@ const showNode = cstTransformer<string>({
   // DROP INDEX
   drop_index_stmt: (node) =>
     show([
-      node.dropIndexKw,
+      node.dropKw,
+      node.indexTypeKw,
+      node.indexKw,
       node.ifExistsKw,
       node.indexes,
       node.onKw,

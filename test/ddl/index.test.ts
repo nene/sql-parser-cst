@@ -2,13 +2,21 @@ import { dialect, testWc } from "../test_utils";
 
 describe("index", () => {
   describe("CREATE INDEX", () => {
-    it("simple CREATE INDEX statement", () => {
-      testWc("CREATE INDEX my_idx ON tbl ( col1 , col2 )");
-      testWc("CREATE INDEX schm.my_idx ON schm.tbl (col)");
+    dialect(["sqlite", "mysql"], () => {
+      it("simple CREATE INDEX statement", () => {
+        testWc("CREATE INDEX my_idx ON tbl ( col1 , col2 )");
+        testWc("CREATE INDEX schm.my_idx ON schm.tbl (col)");
+      });
+
+      it("supports UNIQUE index", () => {
+        testWc("CREATE UNIQUE INDEX my_idx ON tbl (col)");
+      });
     });
 
-    it("supports UNIQUE index", () => {
-      testWc("CREATE UNIQUE INDEX my_idx ON tbl (col)");
+    dialect("bigquery", () => {
+      it("supports SEARCH INDEX", () => {
+        testWc("CREATE SEARCH INDEX my_idx ON tbl (col)");
+      });
     });
 
     dialect("mysql", () => {
@@ -54,6 +62,13 @@ describe("index", () => {
       it("supports DROP INDEX name ON table", () => {
         testWc("DROP INDEX my_idx ON tbl");
         testWc("DROP INDEX idx ON schm.tbl");
+      });
+    });
+
+    dialect("bigquery", () => {
+      it("supports DROP SEARCH INDEX name ON table", () => {
+        testWc("DROP SEARCH INDEX my_idx ON tbl");
+        testWc("DROP SEARCH INDEX idx ON proj.schm.tbl");
       });
     });
   });

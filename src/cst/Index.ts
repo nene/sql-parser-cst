@@ -8,7 +8,7 @@ export type AllIndexStatements = CreateIndexStmt | DropIndexStmt;
 export interface CreateIndexStmt extends BaseNode {
   type: "create_index_stmt";
   createKw: Keyword<"CREATE">;
-  indexTypeKw?: Keyword<"UNIQUE" | "FULLTEXT" | "SPATIAL">;
+  indexTypeKw?: Keyword<"UNIQUE" | "FULLTEXT" | "SPATIAL" | "SEARCH">;
   indexKw: Keyword<"INDEX">;
   ifNotExistsKw?: [Keyword<"IF">, Keyword<"NOT">, Keyword<"EXISTS">];
   name: Table;
@@ -21,7 +21,9 @@ export interface CreateIndexStmt extends BaseNode {
 // DROP INDEX
 export interface DropIndexStmt extends BaseNode {
   type: "drop_index_stmt";
-  dropIndexKw: [Keyword<"DROP">, Keyword<"INDEX">];
+  dropKw: Keyword<"DROP">;
+  indexTypeKw?: Keyword<"SEARCH">;
+  indexKw: Keyword<"INDEX">;
   ifExistsKw?: [Keyword<"IF">, Keyword<"EXISTS">];
   indexes: ListExpr<Table>;
   onKw?: Keyword<"ON">;

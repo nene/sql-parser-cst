@@ -1295,7 +1295,7 @@ alter_view_action
  */
 create_index_stmt
   = kw:(CREATE __)
-    typeKw:((UNIQUE / FULLTEXT / SPATIAL) __)?
+    typeKw:(index_type_kw __)?
     indexKw:(INDEX __)
     ifKw:(if_not_exists __)?
     name:(table __)
@@ -1317,27 +1317,39 @@ create_index_stmt
       });
     }
 
+index_type_kw
+  = x:UNIQUE (&mysql / &sqlite) { return x; }
+  / x:FULLTEXT &mysql { return x; }
+  / x:SPATIAL &mysql { return x; }
+  / x:SEARCH &bigquery { return x; }
+
 // DROP INDEX
 drop_index_stmt
   = &sqlite
-    kws:(DROP __ INDEX __)
+    kw:(DROP __)
+    indexKw:(INDEX __)
     ifKw:(if_exists __)?
     indexes:table_list {
       return loc({
         type: "drop_index_stmt",
-        dropIndexKw: read(kws),
+        dropKw: read(kw),
+        indexKw: read(indexKw),
         ifExistsKw: read(ifKw),
         indexes: read(indexes)
       });
     }
-  / &mysql
-    kws:(DROP __ INDEX __)
+  / (&mysql / &bigquery)
+    kw:(DROP __)
+    indexTypeKw:(SEARCH __)?
+    indexKw:(INDEX __)
     indexes:(table_list __)
     onKw:(ON __)
     table:table {
       return loc({
         type: "drop_index_stmt",
-        dropIndexKw: read(kws),
+        dropKw: read(kw),
+        indexTypeKw: read(indexTypeKw),
+        indexKw: read(indexKw),
         indexes: read(indexes),
         onKw: read(onKw),
         table,
@@ -4442,6 +4454,7 @@ SAFE_ORDINAL        = kw:"SAFE_ORDINAL"i        !ident_part { return loc(createK
 SATURDAY            = kw:"SATURDAY"i            !ident_part { return loc(createKeyword(kw)); }
 SAVEPOINT           = kw:"SAVEPOINT"i           !ident_part { return loc(createKeyword(kw)); }
 SCHEMA              = kw:"SCHEMA"i              !ident_part { return loc(createKeyword(kw)); }
+SEARCH              = kw:"SEARCH"i              !ident_part { return loc(createKeyword(kw)); }
 SECOND              = kw:"SECOND"i              !ident_part { return loc(createKeyword(kw)); }
 SECOND_MICROSECOND  = kw:"SECOND_MICROSECOND"   !ident_part { return loc(createKeyword(kw)); }
 SECONDARY_ENGINE_ATTRIBUTE = kw:"SECONDARY_ENGINE_ATTRIBUTE"i !ident_part { return loc(createKeyword(kw)); }
