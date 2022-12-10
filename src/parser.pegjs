@@ -1302,7 +1302,8 @@ create_index_stmt
     onKw:(ON __)
     table:(table __)
     columns:paren_sort_specification_list
-    where:(__ where_clause)? {
+    where:(__ where_clause)?
+    options:(__ bigquery_options)? {
       return loc({
         type: "create_index_stmt",
         createKw: read(kw),
@@ -1314,6 +1315,7 @@ create_index_stmt
         table: read(table),
         columns,
         where: read(where),
+        options: read(options),
       });
     }
 

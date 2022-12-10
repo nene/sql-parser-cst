@@ -1,4 +1,5 @@
 import { BaseNode, Keyword } from "./Base";
+import { BigqueryOptions } from "./Bigquery";
 import { Identifier, ListExpr, ParenExpr, Table } from "./Expr";
 import { SortSpecification, WhereClause } from "./Select";
 
@@ -16,6 +17,7 @@ export interface CreateIndexStmt extends BaseNode {
   table: Table;
   columns: ParenExpr<ListExpr<SortSpecification | Identifier>>;
   where?: WhereClause;
+  options?: BigqueryOptions;
 }
 
 // DROP INDEX

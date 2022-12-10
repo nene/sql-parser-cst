@@ -21,6 +21,10 @@ describe("index", () => {
       it("supports IF NOT EXISTS", () => {
         testWc("CREATE SEARCH INDEX IF NOT EXISTS idx ON tbl (col)");
       });
+
+      it("supports OPTIONS(..)", () => {
+        testWc("CREATE SEARCH INDEX idx ON tbl (col) OPTIONS(analyzer='LOG_ANALYZER')");
+      });
     });
 
     dialect("mysql", () => {
