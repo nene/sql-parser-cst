@@ -1,3 +1,4 @@
+import { AlterActionSetOptions } from "./AlterAction";
 import { BaseNode, Keyword } from "./Base";
 import {
   BinaryExpr,
@@ -35,7 +36,10 @@ export type AllBigqueryStatements =
   | CreateAssignmentStmt
   | DropAssignmentStmt
   | CreateRowAccessPolicyStmt
-  | DropRowAccessPolicyStmt;
+  | DropRowAccessPolicyStmt
+  | AlterOrganizationStmt
+  | AlterProjectStmt
+  | AlterBiCapacityStmt;
 
 export interface CreateCapacityStmt extends BaseNode {
   type: "create_capacity_stmt";
@@ -115,4 +119,27 @@ export interface DropRowAccessPolicyStmt extends BaseNode {
   name?: Keyword;
   onKw: Keyword<"ON">;
   table: Table;
+}
+
+// ALTER ORGANIZATION
+export interface AlterOrganizationStmt extends BaseNode {
+  type: "alter_organization_stmt";
+  alterOrganizationKw: [Keyword<"ALTER">, Keyword<"ORGANIZATION">];
+  actions: AlterActionSetOptions[];
+}
+
+// ALTER PROJECT
+export interface AlterProjectStmt extends BaseNode {
+  type: "alter_project_stmt";
+  alterProjectKw: [Keyword<"ALTER">, Keyword<"PROJECT">];
+  name: Identifier;
+  actions: AlterActionSetOptions[];
+}
+
+// ALTER BI_CAPACITY
+export interface AlterBiCapacityStmt extends BaseNode {
+  type: "alter_bi_capacity_stmt";
+  alterBiCapacityKw: [Keyword<"ALTER">, Keyword<"BI_CAPACITY">];
+  name: Table;
+  actions: AlterActionSetOptions[];
 }

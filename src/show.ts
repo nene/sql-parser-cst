@@ -493,6 +493,12 @@ const showNode = cstTransformer<string>({
       node.onKw,
       node.table,
     ]),
+  alter_organization_stmt: (node) =>
+    show([node.alterOrganizationKw, node.actions]),
+  alter_project_stmt: (node) =>
+    show([node.alterProjectKw, node.name, node.actions]),
+  alter_bi_capacity_stmt: (node) =>
+    show([node.alterBiCapacityKw, node.name, node.actions]),
 
   // Expressions
   list_expr: (node) => show(node.items, ","),

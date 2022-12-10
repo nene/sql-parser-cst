@@ -2147,6 +2147,9 @@ bigquery_stmt
   / drop_bigquery_entity_stmt
   / create_row_access_policy_stmt
   / drop_row_access_policy_stmt
+  / alter_organization_stmt
+  / alter_project_stmt
+  / alter_bi_capacity_stmt
 
 // CREATE CAPACITY
 // CREATE RESERVATION
@@ -2266,6 +2269,35 @@ drop_row_access_policy_stmt
         table,
       });
     }
+
+alter_organization_stmt
+  = kw:(ALTER __ ORGANIZATION __) action:alter_action_set_options {
+    return loc({
+      type: "alter_organization_stmt",
+      alterOrganizationKw: read(kw),
+      actions: [action],
+    });
+  }
+
+alter_project_stmt
+  = kw:(ALTER __ PROJECT __) name:(ident __) action:alter_action_set_options {
+    return loc({
+      type: "alter_project_stmt",
+      alterProjectKw: read(kw),
+      name: read(name),
+      actions: [action],
+    });
+  }
+
+alter_bi_capacity_stmt
+  = kw:(ALTER __ BI_CAPACITY __) name:(table __) action:alter_action_set_options {
+    return loc({
+      type: "alter_bi_capacity_stmt",
+      alterBiCapacityKw: read(kw),
+      name: read(name),
+      actions: [action],
+    });
+  }
 
 /**
  * ------------------------------------------------------------------------------------ *
@@ -4180,6 +4212,7 @@ AVG_ROW_LENGTH      = kw:"AVG_ROW_LENGTH"i      !ident_part { return loc(createK
 BEFORE              = kw:"BEFORE"i              !ident_part { return loc(createKeyword(kw)); }
 BEGIN               = kw:"BEGIN"i               !ident_part { return loc(createKeyword(kw)); }
 BETWEEN             = kw:"BETWEEN"i             !ident_part { return loc(createKeyword(kw)); }
+BI_CAPACITY         = kw:"BI_CAPACITY"i         !ident_part { return loc(createKeyword(kw)); }
 BIGDECIMAL          = kw:"BIGDECIMAL"i          !ident_part { return loc(createKeyword(kw)); }
 BIGINT              = kw:"BIGINT"i              !ident_part { return loc(createKeyword(kw)); }
 BIGNUMERIC          = kw:"BIGNUMERIC"i          !ident_part { return loc(createKeyword(kw)); }
@@ -4411,6 +4444,7 @@ OPTIONS             = kw:"OPTIONS"i             !ident_part { return loc(createK
 OR                  = kw:"OR"i                  !ident_part { return loc(createKeyword(kw)); }
 ORDER               = kw:"ORDER"i               !ident_part { return loc(createKeyword(kw)); }
 ORDINAL             = kw:"ORDINAL"i             !ident_part { return loc(createKeyword(kw)); }
+ORGANIZATION        = kw:"ORGANIZATION"i        !ident_part { return loc(createKeyword(kw)); }
 OTHERS              = kw:"OTHERS"i              !ident_part { return loc(createKeyword(kw)); }
 OUTER               = kw:"OUTER"i               !ident_part { return loc(createKeyword(kw)); }
 OUTFILE             = kw:"OUTFILE"i             !ident_part { return loc(createKeyword(kw)); }
@@ -4432,6 +4466,7 @@ PRAGMA              = kw:"PRAGMA"i              !ident_part { return loc(createK
 PRECEDING           = kw:"PRECEDING"i           !ident_part { return loc(createKeyword(kw)); }
 PRECISION           = kw:"PRECISION"i           !ident_part { return loc(createKeyword(kw)); }
 PRIMARY             = kw:"PRIMARY"i             !ident_part { return loc(createKeyword(kw)); }
+PROJECT             = kw:"PROJECT"i             !ident_part { return loc(createKeyword(kw)); }
 QUALIFY             = kw:"QUALIFY"i             !ident_part { return loc(createKeyword(kw)); }
 QUARTER             = kw:"QUARTER"i             !ident_part { return loc(createKeyword(kw)); }
 QUERY               = kw:"QUERY"i               !ident_part { return loc(createKeyword(kw)); }
