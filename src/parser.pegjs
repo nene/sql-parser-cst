@@ -155,11 +155,6 @@ with_clause
       });
     }
 
-common_table_expression_list
-  = head:common_table_expression tail:(__ "," __ common_table_expression)* {
-    return loc(createListExpr(head, tail));
-  }
-
 common_table_expression
   = table:ident
     columns:(__ paren_column_list)?
@@ -352,11 +347,6 @@ table_or_alias_standard
     return loc(createAlias(t, alias));
   }
 
-paren_expr_join
-  = "(" c1:__ t:join_expr c2:__ ")" {
-    return loc(createParenExpr(c1, t, c2));
-  }
-
 join_op
   = natural_join
   / cross_join
@@ -444,11 +434,6 @@ pivot_expr_right
     };
   }
 
-pivot_for_in_parens
-  = "(" c1:__ forIn:pivot_for_in c2:__ ")" {
-    return loc(createParenExpr(c1, forIn, c2));
-  }
-
 pivot_for_in
   = fns:(func_call_or_alias_list __) forKw:(FOR __) col:(column __) inKw:(IN __) pCols:expr_or_alias_list_parens {
     return loc({
@@ -461,24 +446,9 @@ pivot_for_in
     });
   }
 
-func_call_or_alias_list
-  = head:func_call_or_alias tail:(__ "," __ func_call_or_alias)* {
-    return loc(createListExpr(head, tail));
-  }
-
 func_call_or_alias
   = fn:func_call alias:(__ alias)? {
     return loc(createAlias(fn, alias));
-  }
-
-expr_or_alias_list_parens
-  = "(" c1:__ list:expr_or_alias_list c2:__ ")" {
-    return loc(createParenExpr(c1, list, c2));
-  }
-
-expr_or_alias_list
-  = head:expr_or_alias tail:(__ "," __ expr_or_alias)* {
-    return loc(createListExpr(head, tail))
   }
 
 expr_or_alias
@@ -499,11 +469,6 @@ unpivot_expr_right
       };
     }
 
-unpivot_for_in_parens
-  = "(" c1:__ forIn:unpivot_for_in c2:__ ")" {
-    return loc(createParenExpr(c1, forIn, c2));
-  }
-
 unpivot_for_in
   = vCol:((column / paren_column_list) __)
     forKw:(FOR __) nCol:(column __) inKw:(IN __)
@@ -518,29 +483,9 @@ unpivot_for_in
       });
     }
 
-paren_column_or_alias_list
-  = "(" c1:__ list:column_or_alias_list c2:__ ")" {
-    return loc(createParenExpr(c1, list, c2));
-  }
-
-column_or_alias_list
-  = head:column_or_alias tail:(__ "," __ column_or_alias)* {
-    return loc(createListExpr(head, tail));
-  }
-
 column_or_alias
   = col:column alias:(__ alias)? {
     return loc(createAlias(col, alias));
-  }
-
-paren_paren_column_list_or_alias_list
-  = "(" c1:__ list:paren_column_list_or_alias_list c2:__ ")" {
-    return loc(createParenExpr(c1, list, c2));
-  }
-
-paren_column_list_or_alias_list
-  = head:paren_column_list_or_alias tail:(__ "," __ paren_column_list_or_alias)* {
-    return loc(createListExpr(head, tail));
   }
 
 paren_column_list_or_alias
@@ -556,11 +501,6 @@ tablesample_expr_right
       tablesampleKw: read(kw),
       args,
     };
-  }
-
-tablesample_percent_paren
-  = "(" c1:__ perc:tablesample_percent c2:__ ")" {
-    return loc(createParenExpr(c1, perc, c2));
   }
 
 tablesample_percent
@@ -660,16 +600,6 @@ order_by_clause
     });
   }
 
-paren_sort_specification_list
-  = "(" c1:__ expr:sort_specification_list c2:__ ")" {
-    return loc(createParenExpr(c1, expr, c2));
-  }
-
-sort_specification_list
-  = head:sort_specification tail:(__ "," __ sort_specification)* {
-    return loc(createListExpr(head, tail));
-  }
-
 sort_specification
   = e:expr orderKw:(__ (DESC / ASC))? nullsKw:(__ sort_specification_nulls)? {
     // don't create full sort_specification node when dealing with just a column name
@@ -730,11 +660,6 @@ window_clause
     });
   }
 
-named_window_list
-  = head:named_window tail:(__ "," __ named_window)* {
-    return readCommaSepList(head, tail);
-  }
-
 named_window
   = name:(ident __) kw:(AS __) def:window_definition_in_parens {
     return loc({
@@ -743,11 +668,6 @@ named_window
       asKw: read(kw),
       window: def,
     });
-  }
-
-window_definition_in_parens
-  = "(" c1:__ win:window_definition c2:__ ")" {
-    return loc(createParenExpr(c1, win, c2));
   }
 
 window_definition
@@ -930,11 +850,6 @@ values_kw
   = VALUES
   / kw:VALUE &mysql { return kw; }
 
-values_list
-  = head:values_row tail:(__ "," __ values_row)* {
-    return loc(createListExpr(head, tail));
-  }
-
 values_row
   = &sqlite list:paren_list_expr { return list; }
   / &bigquery list:paren_list_expr_with_default { return list; }
@@ -947,16 +862,6 @@ row_constructor
       rowKw: read(kw),
       row,
     });
-  }
-
-paren_list_expr_with_default
-  = "(" c1:__ list:list_expr_with_default c2:__ ")" {
-    return loc(createParenExpr(c1, list, c2));
-  }
-
-list_expr_with_default
-  = head:(expr / default) tail:(__ "," __ (expr / default))* {
-    return loc(createListExpr(head, tail));
   }
 
 default
@@ -1036,11 +941,6 @@ update_clause
       });
     }
 
-table_or_alias_list
-  = head:table_or_alias tail:(__ "," __ table_or_alias)* {
-    return loc(createListExpr(head, tail));
-  }
-
 set_clause
   = kw:(SET __) set:column_assignment_list {
     return loc({
@@ -1061,11 +961,6 @@ other_update_clause
   / returning_clause
   / order_by_clause
   / limit_clause
-
-column_assignment_list
-  = head:column_assignment tail:(__ "," __ column_assignment)* {
-      return loc(createListExpr(head, tail));
-    }
 
 column_assignment
   = col:((optionally_qualified_column / paren_column_list) __) "=" expr:(__ column_value) {
@@ -1327,11 +1222,6 @@ create_index_subclause
   = &sqlite x:where_clause { return x; }
   / &bigquery x:bigquery_options { return x; }
 
-paren_verbose_all_columns
-  = "(" c1:__ x:verbose_all_columns c2:__ ")" {
-    return loc(createParenExpr(c1, x, c2));
-  }
-
 verbose_all_columns
   = &bigquery kws:(ALL __ COLUMNS) {
     return loc({ type: "verbose_all_columns", allColumnsKw: read(kws) })
@@ -1415,16 +1305,6 @@ create_table_as = asKw:AS expr:(__ sub_select) {
 if_not_exists
   = kws:(IF __ NOT __ EXISTS) { return read(kws); }
 
-create_table_definition
-  = "(" c1:__ list:create_definition_list c2:__ ")" {
-    return loc(createParenExpr(c1, list, c2));
-  }
-
-create_definition_list
-  = head:create_definition tail:(__ "," __ create_definition)* {
-    return loc(createListExpr(head, tail));
-  }
-
 create_definition
   = !bigquery c:table_constraint { return c; }
   / column_definition
@@ -1494,11 +1374,6 @@ alter_table_stmt
         table: read(t),
         actions,
       });
-    }
-
-alter_action_list
-  = head:alter_action tail:(__ "," __ alter_action)* {
-      return loc(createListExpr(head, tail));
     }
 
 alter_action
@@ -1800,18 +1675,6 @@ create_function_stmt
       });
     }
 
-paren_func_param_list
-  = "(" c1:__ list:func_param_list c2:__ ")" {
-    return loc(createParenExpr(c1, list, c2));
-  }
-
-func_param_list
-  = head:func_param tail:(__ "," __ func_param)* {
-    return loc(createListExpr(head, tail));
-  }
-  / &. {
-    return loc({ type: "list_expr", items: [] });
-  }
 
 func_param
   = name:(ident __) type:data_type {
@@ -2113,11 +1976,6 @@ pragma_func_call
     });
   }
 
-pragma_func_call_args
-  = "(" c1:__ v:pragma_value c2:__ ")" {
-    return loc(createParenExpr(c1, v, c2));
-  }
-
 pragma_value
   = kw:ident_name { return createKeyword(kw); }
   / literal
@@ -2226,16 +2084,6 @@ row_access_policy_grant
       grantToKw: read(kw),
       grantees: list,
     });
-  }
-
-paren_string_list
-  = "(" c1:__ list:string_list c2:__ ")" {
-    return loc(createParenExpr(c1, list, c2));
-  }
-
-string_list
-  = head:literal_string tail:(__ "," __ literal_string)* {
-    return loc(createListExpr(head, tail));
   }
 
 drop_row_access_policy_stmt
@@ -2397,16 +2245,6 @@ bigquery_options
       optionsKw: read(kw),
       options,
     });
-  }
-
-paren_equals_expr_list
-  = "(" c1:__ list:equals_expr_list c2:__ ")" {
-    return loc(createParenExpr(c1, list, c2));
-  }
-
-equals_expr_list
-  = head:equals_expr tail:(__ "," __ equals_expr)* {
-    return loc(createListExpr(head, tail));
   }
 
 equals_expr
@@ -2769,16 +2607,6 @@ data_type
     return loc({ type: "data_type", nameKw: kw });
   }
 
-type_length_params
-  = "(" c1:__ params:literal_list c2:__ ")" {
-    return loc(createParenExpr(c1, params, c2));
-  }
-
-literal_list
-  = head:literal tail:(__ "," __ literal)* {
-    return loc(createListExpr(head, tail));
-  }
-
 array_type
   = kw:ARRAY params:(__ generic_type_params)? {
     return loc({ type: "data_type", nameKw: read(kw), params: read(params) });
@@ -2800,11 +2628,6 @@ generic_type_params
       type: "generic_type_params",
       params: read(list),
     });
-  }
-
-data_type_list
-  = head:name_and_type_pair tail:(__ "," __ name_and_type_pair)* {
-    return loc(createListExpr(head, tail));
   }
 
 name_and_type_pair
@@ -3156,36 +2979,6 @@ primary
   / (&mysql / &bigquery) e:interval_expr { return e; }
   / parameter
 
-paren_expr
-  = "(" c1:__ expr:expr c2:__ ")" {
-    return loc(createParenExpr(c1, expr, c2));
-  }
-
-paren_expr_select
-  = "(" c1:__ stmt:compound_select_stmt c2:__ ")" {
-    return loc(createParenExpr(c1, stmt, c2));
-  }
-
-paren_list_expr
-  = "("  c2:__ list:list_expr c3:__ ")" {
-    return loc(createParenExpr(c2, list, c3));
-  }
-
-empty_list_expr
-  = &. {
-    return loc({ type: "list_expr", items: [] });
-  }
-
-multi_element_list_expr
-  = head:expr n2:(__ "," __ expr) tail:(__ "," __ expr)* {
-    return loc(createListExpr(head, [n2, ...tail]));
-  }
-
-list_expr
-  = head:expr tail:(__ "," __ expr)* {
-    return loc(createListExpr(head, tail));
-  }
-
 cast_expr
   = kw:cast_kw args:(__ cast_args_in_parens)  {
     return loc({
@@ -3198,11 +2991,6 @@ cast_expr
 cast_kw
   = CAST
   / kw:SAFE_CAST &bigquery { return kw; }
-
-cast_args_in_parens
-  = "(" c1:__ arg:cast_arg c2:__ ")" {
-    return loc(createParenExpr(c1, arg, c2));
-  }
 
 cast_arg
   = e:(expr __) kw:AS t:(__ data_type) f:(__ cast_format)? {
@@ -3233,11 +3021,6 @@ raise_expr
     });
   }
 
-raise_args_in_parens
-  = "(" c1:__ arg:raise_args c2:__ ")" {
-    return loc(createParenExpr(c1, arg, c2));
-  }
-
 raise_args
   = head:(IGNORE / ROLLBACK / ABORT / FAIL) tail:(__ "," __ literal_string)* {
     return loc(createListExpr(head, tail));
@@ -3250,11 +3033,6 @@ extract_expr
       extractKw: read(kw),
       args,
     });
-  }
-
-extract_expr_parens
-  = "(" c1:__ e:extract_from c2:__ ")" {
-    return loc(createParenExpr(c1, e, c2));
   }
 
 extract_from
@@ -3297,11 +3075,6 @@ week_expr
       weekKw: read(kw),
       args,
     });
-  }
-
-week_expr_parens
-  = "(" c1:__ unit:weekday_unit c2:__ ")" {
-    return loc(createParenExpr(c1, unit, c2));
   }
 
 weekday_unit
@@ -3385,11 +3158,6 @@ paren_less_func_name_bigquery
 paren_less_func_name_mysql
   = kw:(LOCALTIME / LOCALTIMESTAMP / CURRENT_USER) &mysql { return kw; }
 
-paren_func_args
-  = "(" c1:__ args:func_args c2:__ ")" {
-    return loc(createParenExpr(c1, args, c2));
-  }
-
 func_args
   = distinctKw:(DISTINCT __)? args:func_args_list
     nulls:(__ (IGNORE / RESPECT) __ NULLS)?
@@ -3443,11 +3211,6 @@ filter_arg
       filterKw: read(kw),
       where: e,
     });
-  }
-
-paren_where_expr
-  = "(" c1:__ e:where_clause c2:__ ")" {
-    return loc(createParenExpr(c1, e, c2));
   }
 
 over_arg
@@ -3565,25 +3328,40 @@ parameter
 /**
  * ------------------------------------------------------------------------------------ *
  *                                                                                      *
- * Table names                                                                          *
+ * Parenthesis and lists                                                                *
  *                                                                                      *
  * ------------------------------------------------------------------------------------ *
  */
-table_list
-  = head:table tail:(__ "," __ table)* {
+paren_expr
+  = "(" c1:__ expr:expr c2:__ ")" {
+    return loc(createParenExpr(c1, expr, c2));
+  }
+
+paren_expr_select
+  = "(" c1:__ stmt:compound_select_stmt c2:__ ")" {
+    return loc(createParenExpr(c1, stmt, c2));
+  }
+
+paren_list_expr
+  = "("  c2:__ list:list_expr c3:__ ")" {
+    return loc(createParenExpr(c2, list, c3));
+  }
+
+empty_list_expr
+  = &. {
+    return loc({ type: "list_expr", items: [] });
+  }
+
+multi_element_list_expr
+  = head:expr n2:(__ "," __ expr) tail:(__ "," __ expr)* {
+    return loc(createListExpr(head, [n2, ...tail]));
+  }
+
+list_expr
+  = head:expr tail:(__ "," __ expr)* {
     return loc(createListExpr(head, tail));
   }
 
-table
-  = member_expr
-
-/**
- * ------------------------------------------------------------------------------------ *
- *                                                                                      *
- * Column names                                                                         *
- *                                                                                      *
- * ------------------------------------------------------------------------------------ *
- */
 paren_column_list
   = "(" c1:__ cols:column_list c2:__ ")" {
     return loc(createParenExpr(c1, cols, c2));
@@ -3594,6 +3372,242 @@ column_list
     return loc(createListExpr(head, tail));
   }
 
+table_list
+  = head:table tail:(__ "," __ table)* {
+    return loc(createListExpr(head, tail));
+  }
+
+expr_or_explicit_alias_list
+  = head:expr_or_explicit_alias tail:(__ "," __ expr_or_explicit_alias)* {
+    return loc(createListExpr(head, tail))
+  }
+
+paren_where_expr
+  = "(" c1:__ e:where_clause c2:__ ")" {
+    return loc(createParenExpr(c1, e, c2));
+  }
+
+paren_func_args
+  = "(" c1:__ args:func_args c2:__ ")" {
+    return loc(createParenExpr(c1, args, c2));
+  }
+
+paren_expr_join
+  = "(" c1:__ t:join_expr c2:__ ")" {
+    return loc(createParenExpr(c1, t, c2));
+  }
+
+paren_column_or_alias_list
+  = "(" c1:__ list:column_or_alias_list c2:__ ")" {
+    return loc(createParenExpr(c1, list, c2));
+  }
+
+column_or_alias_list
+  = head:column_or_alias tail:(__ "," __ column_or_alias)* {
+    return loc(createListExpr(head, tail));
+  }
+
+paren_paren_column_list_or_alias_list
+  = "(" c1:__ list:paren_column_list_or_alias_list c2:__ ")" {
+    return loc(createParenExpr(c1, list, c2));
+  }
+
+paren_column_list_or_alias_list
+  = head:paren_column_list_or_alias tail:(__ "," __ paren_column_list_or_alias)* {
+    return loc(createListExpr(head, tail));
+  }
+
+paren_sort_specification_list
+  = "(" c1:__ expr:sort_specification_list c2:__ ")" {
+    return loc(createParenExpr(c1, expr, c2));
+  }
+
+sort_specification_list
+  = head:sort_specification tail:(__ "," __ sort_specification)* {
+    return loc(createListExpr(head, tail));
+  }
+
+paren_list_expr_with_default
+  = "(" c1:__ list:list_expr_with_default c2:__ ")" {
+    return loc(createParenExpr(c1, list, c2));
+  }
+
+list_expr_with_default
+  = head:(expr / default) tail:(__ "," __ (expr / default))* {
+    return loc(createListExpr(head, tail));
+  }
+
+paren_verbose_all_columns
+  = "(" c1:__ x:verbose_all_columns c2:__ ")" {
+    return loc(createParenExpr(c1, x, c2));
+  }
+
+paren_func_param_list
+  = "(" c1:__ list:func_param_list c2:__ ")" {
+    return loc(createParenExpr(c1, list, c2));
+  }
+
+func_param_list
+  = head:func_param tail:(__ "," __ func_param)* {
+    return loc(createListExpr(head, tail));
+  }
+  / &. {
+    return loc({ type: "list_expr", items: [] });
+  }
+
+paren_string_list
+  = "(" c1:__ list:string_list c2:__ ")" {
+    return loc(createParenExpr(c1, list, c2));
+  }
+
+string_list
+  = head:literal_string tail:(__ "," __ literal_string)* {
+    return loc(createListExpr(head, tail));
+  }
+
+paren_equals_expr_list
+  = "(" c1:__ list:equals_expr_list c2:__ ")" {
+    return loc(createParenExpr(c1, list, c2));
+  }
+
+equals_expr_list
+  = head:equals_expr tail:(__ "," __ equals_expr)* {
+    return loc(createListExpr(head, tail));
+  }
+
+create_table_definition
+  = "(" c1:__ list:create_definition_list c2:__ ")" {
+    return loc(createParenExpr(c1, list, c2));
+  }
+
+create_definition_list
+  = head:create_definition tail:(__ "," __ create_definition)* {
+    return loc(createListExpr(head, tail));
+  }
+
+common_table_expression_list
+  = head:common_table_expression tail:(__ "," __ common_table_expression)* {
+    return loc(createListExpr(head, tail));
+  }
+
+func_call_or_alias_list
+  = head:func_call_or_alias tail:(__ "," __ func_call_or_alias)* {
+    return loc(createListExpr(head, tail));
+  }
+
+expr_or_alias_list_parens
+  = "(" c1:__ list:expr_or_alias_list c2:__ ")" {
+    return loc(createParenExpr(c1, list, c2));
+  }
+
+expr_or_alias_list
+  = head:expr_or_alias tail:(__ "," __ expr_or_alias)* {
+    return loc(createListExpr(head, tail))
+  }
+
+named_window_list
+  = head:named_window tail:(__ "," __ named_window)* {
+    return readCommaSepList(head, tail);
+  }
+
+window_definition_in_parens
+  = "(" c1:__ win:window_definition c2:__ ")" {
+    return loc(createParenExpr(c1, win, c2));
+  }
+
+values_list
+  = head:values_row tail:(__ "," __ values_row)* {
+    return loc(createListExpr(head, tail));
+  }
+
+table_or_alias_list
+  = head:table_or_alias tail:(__ "," __ table_or_alias)* {
+    return loc(createListExpr(head, tail));
+  }
+
+column_assignment_list
+  = head:column_assignment tail:(__ "," __ column_assignment)* {
+      return loc(createListExpr(head, tail));
+    }
+
+alter_action_list
+  = head:alter_action tail:(__ "," __ alter_action)* {
+      return loc(createListExpr(head, tail));
+    }
+
+literal_list
+  = head:literal tail:(__ "," __ literal)* {
+    return loc(createListExpr(head, tail));
+  }
+
+data_type_list
+  = head:name_and_type_pair tail:(__ "," __ name_and_type_pair)* {
+    return loc(createListExpr(head, tail));
+  }
+
+pivot_for_in_parens
+  = "(" c1:__ forIn:pivot_for_in c2:__ ")" {
+    return loc(createParenExpr(c1, forIn, c2));
+  }
+
+unpivot_for_in_parens
+  = "(" c1:__ forIn:unpivot_for_in c2:__ ")" {
+    return loc(createParenExpr(c1, forIn, c2));
+  }
+
+tablesample_percent_paren
+  = "(" c1:__ perc:tablesample_percent c2:__ ")" {
+    return loc(createParenExpr(c1, perc, c2));
+  }
+
+pragma_func_call_args
+  = "(" c1:__ v:pragma_value c2:__ ")" {
+    return loc(createParenExpr(c1, v, c2));
+  }
+
+type_length_params
+  = "(" c1:__ params:literal_list c2:__ ")" {
+    return loc(createParenExpr(c1, params, c2));
+  }
+
+cast_args_in_parens
+  = "(" c1:__ arg:cast_arg c2:__ ")" {
+    return loc(createParenExpr(c1, arg, c2));
+  }
+
+raise_args_in_parens
+  = "(" c1:__ arg:raise_args c2:__ ")" {
+    return loc(createParenExpr(c1, arg, c2));
+  }
+
+extract_expr_parens
+  = "(" c1:__ e:extract_from c2:__ ")" {
+    return loc(createParenExpr(c1, e, c2));
+  }
+
+week_expr_parens
+  = "(" c1:__ unit:weekday_unit c2:__ ")" {
+    return loc(createParenExpr(c1, unit, c2));
+  }
+
+
+/**
+ * ------------------------------------------------------------------------------------ *
+ *                                                                                      *
+ * Table names                                                                          *
+ *                                                                                      *
+ * ------------------------------------------------------------------------------------ *
+ */
+table
+  = member_expr
+
+/**
+ * ------------------------------------------------------------------------------------ *
+ *                                                                                      *
+ * Column names                                                                         *
+ *                                                                                      *
+ * ------------------------------------------------------------------------------------ *
+ */
 optionally_qualified_column
   = tbl:(ident __) "." col:(__ qualified_column) {
     return loc({
@@ -3735,11 +3749,6 @@ untyped_struct_expr
       type: "struct_expr",
       expr: read(expr),
     });
-  }
-
-expr_or_explicit_alias_list
-  = head:expr_or_explicit_alias tail:(__ "," __ expr_or_explicit_alias)* {
-    return loc(createListExpr(head, tail))
   }
 
 expr_or_explicit_alias
