@@ -1003,7 +1003,7 @@ truncate_stmt
  */
 merge_stmt
   = mergeKw:(MERGE __) intoKw:(INTO __)? target:(table_or_alias __)
-    usingKw:(USING __) source:((table_or_alias / paren_expr_select_or_alias) __)
+    usingKw:(USING __) source:((table_or_alias / alias$paren_compound_select_stmt) __)
     onKw:(ON __) condition:expr
     clauses:(__ merge_when_clause)+ {
       return loc({
@@ -3378,7 +3378,7 @@ paren_column_or_alias_list
   }
 
 list_column_or_alias
-  = head:column_or_alias tail:(__ "," __ column_or_alias)* {
+  = head:alias$column tail:(__ "," __ alias$column)* {
     return loc(createListExpr(head, tail));
   }
 
@@ -3388,7 +3388,7 @@ paren_paren_column_list_or_alias_list
   }
 
 paren_column_list_or_alias_list
-  = head:paren_column_list_or_alias tail:(__ "," __ paren_column_list_or_alias)* {
+  = head:alias$paren_list_column tail:(__ "," __ alias$paren_list_column)* {
     return loc(createListExpr(head, tail));
   }
 
@@ -3466,7 +3466,7 @@ list_common_table_expression
   }
 
 list_func_call_or_alias
-  = head:func_call_or_alias tail:(__ "," __ func_call_or_alias)* {
+  = head:alias$func_call tail:(__ "," __ alias$func_call)* {
     return loc(createListExpr(head, tail));
   }
 
@@ -3476,7 +3476,7 @@ paren_list_expr_or_alias
   }
 
 list_expr_or_alias
-  = head:expr_or_alias tail:(__ "," __ expr_or_alias)* {
+  = head:alias$expr tail:(__ "," __ alias$expr)* {
     return loc(createListExpr(head, tail))
   }
 
@@ -3572,27 +3572,27 @@ paren_weekday_unit
  *                                                                                      *
  * ------------------------------------------------------------------------------------ *
  */
-func_call_or_alias
+alias$func_call
   = fn:func_call alias:(__ alias)? {
     return loc(createAlias(fn, alias));
   }
 
-expr_or_alias
+alias$expr
   = e:expr alias:(__ alias)? {
     return loc(createAlias(e, alias));
   }
 
-column_or_alias
+alias$column
   = col:column alias:(__ alias)? {
     return loc(createAlias(col, alias));
   }
 
-paren_column_list_or_alias
+alias$paren_list_column
   = list:paren_list_column alias:(__ alias)? {
     return loc(createAlias(list, alias));
   }
 
-paren_expr_select_or_alias
+alias$paren_compound_select_stmt
   = expr:paren_compound_select_stmt alias:(__ alias)? {
     return loc(createAlias(expr, alias));
   }
