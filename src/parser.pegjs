@@ -3429,9 +3429,7 @@ list_func_param
   = head:func_param tail:(__ "," __ func_param)* {
     return loc(createListExpr(head, tail));
   }
-  / &. {
-    return loc({ type: "list_expr", items: [] });
-  }
+  / empty_list_expr
 
 paren$list$string
   = "(" c1:__ list:list$string c2:__ ")" {
