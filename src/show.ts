@@ -99,7 +99,7 @@ const showNode = cstTransformer<string>({
     show([node.partitionByKw, node.specifications]),
   cluster_by_clause: (node) => show([node.clusterByKw, node.columns]),
   // WINDOW
-  window_clause: (node) => show(node.windowKw) + show(node.namedWindows, ","),
+  window_clause: (node) => show([node.windowKw, node.namedWindows]),
   named_window: (node) => show([node.name, node.asKw, node.window]),
   window_definition: (node) =>
     show([node.baseWindowName, node.partitionBy, node.orderBy, node.frame]),

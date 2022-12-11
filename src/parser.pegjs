@@ -3507,7 +3507,7 @@ expr_or_alias_list
 
 named_window_list
   = head:named_window tail:(__ "," __ named_window)* {
-    return readCommaSepList(head, tail);
+    return loc(createListExpr(head, tail));
   }
 
 window_definition_in_parens

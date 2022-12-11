@@ -162,7 +162,7 @@ export interface HavingClause extends BaseNode {
 export interface WindowClause extends BaseNode {
   type: "window_clause";
   windowKw: Keyword<"WINDOW">;
-  namedWindows: NamedWindow[];
+  namedWindows: ListExpr<NamedWindow>;
 }
 
 export interface NamedWindow extends BaseNode {
