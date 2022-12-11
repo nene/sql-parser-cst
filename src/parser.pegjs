@@ -999,7 +999,7 @@ truncate_stmt
  */
 merge_stmt
   = mergeKw:(MERGE __) intoKw:(INTO __)? target:(table_or_alias __)
-    usingKw:(USING __) source:((table_or_alias / alias$paren_compound_select_stmt) __)
+    usingKw:(USING __) source:((table_or_alias / alias$paren$compound_select_stmt) __)
     onKw:(ON __) condition:expr
     clauses:(__ merge_when_clause)+ {
       return loc({
@@ -3595,7 +3595,7 @@ alias$paren$list$column
     return loc(createAlias(list, alias));
   }
 
-alias$paren_compound_select_stmt
+alias$paren$compound_select_stmt
   = expr:paren$compound_select_stmt alias:(__ alias)? {
     return loc(createAlias(expr, alias));
   }
