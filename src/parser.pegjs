@@ -2056,7 +2056,7 @@ create_row_access_policy_stmt
     }
 
 row_access_policy_grant
-  = kw:(GRANT __ TO __) list:paren$list$string {
+  = kw:(GRANT __ TO __) list:paren$list$literal_string {
     return loc({
       type: "row_access_policy_grant",
       grantToKw: read(kw),
@@ -3431,12 +3431,12 @@ list_func_param
   }
   / empty_list_expr
 
-paren$list$string
-  = "(" c1:__ list:list$string c2:__ ")" {
+paren$list$literal_string
+  = "(" c1:__ list:list$literal_string c2:__ ")" {
     return loc(createParenExpr(c1, list, c2));
   }
 
-list$string
+list$literal_string
   = head:literal_string tail:(__ "," __ literal_string)* {
     return loc(createListExpr(head, tail));
   }
