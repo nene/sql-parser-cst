@@ -3,6 +3,7 @@ import tspegjs from "ts-pegjs";
 import fs from "fs";
 import path from "path";
 import { moveImports } from "./move-imports";
+import { dollarRules } from "./dollar-rules";
 
 const source = fs.readFileSync(
   path.resolve(__dirname, "../src/parser.pegjs"),
@@ -12,7 +13,7 @@ const source = fs.readFileSync(
 console.log(`Generating parser...`);
 
 const parser = peggy.generate(source, {
-  plugins: [tspegjs, moveImports],
+  plugins: [tspegjs, moveImports, dollarRules],
   output: "source",
   format: "commonjs",
 } as peggy.SourceBuildOptions<"source">);
