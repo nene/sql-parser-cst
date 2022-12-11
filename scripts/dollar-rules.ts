@@ -20,9 +20,7 @@ const dollarRulesPass: Pass = (ast) => {
     } else if (isParenRule(rule)) {
       return createParenRule(rule);
     } else if (isListRule(rule)) {
-      // console.log(JSON.stringify(rule, undefined, 2));
-      // throw new Error("Exit");
-      return rule;
+      return createListRule(rule);
     } else {
       return rule;
     }
@@ -169,6 +167,84 @@ function createParenRule(rule: ast.Rule): ast.Rule {
       location: rule.location,
     },
     location: rule.location,
+  };
+}
+
+/**
+ * Generates rule matching the template:
+ *
+ *     list$my_rule
+ *       = head:my_rule tail:(__ "," __ my_rule)* {
+ *         return loc(createListExpr(head, tail));
+ *       }
+ */
+function createListRule(rule: ast.Rule): ast.Rule {
+  return {
+    ...rule,
+    expression: {
+      type: "action",
+      expression: {
+        type: "sequence",
+        elements: [
+          {
+            type: "labeled",
+            label: "head",
+            labelLocation: rule.location,
+            expression: {
+              type: "rule_ref",
+              name: extractSubRuleName(rule.name),
+              location: rule.location,
+            },
+            location: rule.location,
+          },
+          {
+            type: "labeled",
+            label: "tail",
+            labelLocation: rule.location,
+            expression: {
+              type: "zero_or_more",
+              expression: {
+                type: "group",
+                expression: {
+                  type: "sequence",
+                  elements: [
+                    {
+                      type: "rule_ref",
+                      name: "__",
+                      location: rule.location,
+                    },
+                    {
+                      type: "literal",
+                      value: ",",
+                      ignoreCase: false,
+                      location: rule.location,
+                    },
+                    {
+                      type: "rule_ref",
+                      name: "__",
+                      location: rule.location,
+                    },
+                    {
+                      type: "rule_ref",
+                      name: extractSubRuleName(rule.name),
+                      location: rule.location,
+                    },
+                  ],
+                  location: rule.location,
+                },
+                location: rule.location,
+              },
+              location: rule.location,
+            },
+            location: rule.location,
+          },
+        ],
+        location: rule.location,
+      },
+      code: "\n    return loc(createListExpr(head, tail));\n  ",
+      codeLocation: rule.location,
+      location: rule.location,
+    },
   };
 }
 
