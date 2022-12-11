@@ -844,6 +844,9 @@ row_constructor
     });
   }
 
+expr_or_default
+  = expr / default
+
 default
   = kw:DEFAULT {
     return loc({ type: "default", kw });
@@ -3411,9 +3414,6 @@ list$expr_or_default
   = head:expr_or_default tail:(__ "," __ expr_or_default)* {
     return loc(createListExpr(head, tail));
   }
-
-expr_or_default
-  = expr / default
 
 paren$verbose_all_columns
   = "(" c1:__ x:verbose_all_columns c2:__ ")" {
