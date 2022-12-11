@@ -446,16 +446,6 @@ pivot_for_in
     });
   }
 
-func_call_or_alias
-  = fn:func_call alias:(__ alias)? {
-    return loc(createAlias(fn, alias));
-  }
-
-expr_or_alias
-  = e:expr alias:(__ alias)? {
-    return loc(createAlias(e, alias));
-  }
-
 // UNPIVOT ......................................................
 unpivot_expr_right
   = &bigquery kw:(UNPIVOT __)
@@ -482,16 +472,6 @@ unpivot_for_in
         unpivotColumns: upCols,
       });
     }
-
-column_or_alias
-  = col:column alias:(__ alias)? {
-    return loc(createAlias(col, alias));
-  }
-
-paren_column_list_or_alias
-  = list:paren_list_column alias:(__ alias)? {
-    return loc(createAlias(list, alias));
-  }
 
 // TABLESAMPLE ........................................................
 tablesample_expr_right
@@ -1038,11 +1018,6 @@ merge_stmt
         clauses: clauses.map(read),
       });
     }
-
-paren_expr_select_or_alias
-  = expr:paren_compound_select_stmt alias:(__ alias)? {
-    return loc(createAlias(expr, alias));
-  }
 
 merge_when_clause
   = whenKw:(WHEN __) matchedKw:(MATCHED __ / NOT __ MATCHED __) byKw:(BY __ (TARGET / SOURCE) __)?
@@ -3588,6 +3563,38 @@ paren_extract_from
 paren_weekday_unit
   = "(" c1:__ unit:weekday_unit c2:__ ")" {
     return loc(createParenExpr(c1, unit, c2));
+  }
+
+/**
+ * ------------------------------------------------------------------------------------ *
+ *                                                                                      *
+ * Aliases                                                                              *
+ *                                                                                      *
+ * ------------------------------------------------------------------------------------ *
+ */
+func_call_or_alias
+  = fn:func_call alias:(__ alias)? {
+    return loc(createAlias(fn, alias));
+  }
+
+expr_or_alias
+  = e:expr alias:(__ alias)? {
+    return loc(createAlias(e, alias));
+  }
+
+column_or_alias
+  = col:column alias:(__ alias)? {
+    return loc(createAlias(col, alias));
+  }
+
+paren_column_list_or_alias
+  = list:paren_list_column alias:(__ alias)? {
+    return loc(createAlias(list, alias));
+  }
+
+paren_expr_select_or_alias
+  = expr:paren_compound_select_stmt alias:(__ alias)? {
+    return loc(createAlias(expr, alias));
   }
 
 
