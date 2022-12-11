@@ -1637,7 +1637,7 @@ create_function_stmt
     funKw:(FUNCTION __)
     ifKw:(if_not_exists __)?
     name:(table __)
-    params:paren$list_func_param
+    params:(paren$list$func_param / paren$empty_list)
     clauses:(__ create_function_clause)+ {
       return loc({
         type: "create_function_stmt",
@@ -3310,6 +3310,16 @@ parameter
  *                                                                                      *
  * ------------------------------------------------------------------------------------ *
  */
+empty_list
+  = &. {
+    return loc({ type: "list_expr", items: [] });
+  }
+
+paren$empty_list
+  = "(" c1:__ list:empty_list c2:__ ")" {
+    return loc(createParenExpr(c1, list, c2));
+  }
+
 paren$expr
   = "(" c1:__ expr:expr c2:__ ")" {
     return loc(createParenExpr(c1, expr, c2));
@@ -3323,11 +3333,6 @@ paren$compound_select_stmt
 paren$list$expr
   = "("  c2:__ list:list$expr c3:__ ")" {
     return loc(createParenExpr(c2, list, c3));
-  }
-
-empty_list_expr
-  = &. {
-    return loc({ type: "list_expr", items: [] });
   }
 
 multi_element_list_expr
@@ -3420,16 +3425,15 @@ paren$verbose_all_columns
     return loc(createParenExpr(c1, x, c2));
   }
 
-paren$list_func_param
-  = "(" c1:__ list:list_func_param c2:__ ")" {
+paren$list$func_param
+  = "(" c1:__ list:list$func_param c2:__ ")" {
     return loc(createParenExpr(c1, list, c2));
   }
 
-list_func_param
+list$func_param
   = head:func_param tail:(__ "," __ func_param)* {
     return loc(createListExpr(head, tail));
   }
-  / empty_list_expr
 
 paren$list$literal_string
   = "(" c1:__ list:list$literal_string c2:__ ")" {
@@ -3725,7 +3729,7 @@ typed_array_expr
   / array_expr
 
 array_expr
-  = "[" items:(__ (list$expr / empty_list_expr) __) "]" {
+  = "[" items:(__ (list$expr / empty_list) __) "]" {
     return loc({
       type: "array_expr",
       expr: read(items),
