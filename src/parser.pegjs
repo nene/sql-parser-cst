@@ -3369,11 +3369,6 @@ empty_list
     return loc({ type: "list_expr", items: [] });
   }
 
-multi_element_list_expr
-  = head:expr n2:(__ "," __ expr) tail:(__ "," __ expr)* {
-    return loc(createListExpr(head, [n2, ...tail]));
-  }
-
 /**
  * ------------------------------------------------------------------------------------ *
  *                                                                                      *
@@ -3542,8 +3537,9 @@ struct_expr
     });
   }
 
+// untyped struct must have at least 2 elements in it
 untyped_struct_expr
-  = "(" expr:(__ multi_element_list_expr __) ")" {
+  = "(" expr:(__ e:list$expr __ &{ return e.items.length > 1; }) ")" {
     return loc({
       type: "struct_expr",
       expr: read(expr),
