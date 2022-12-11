@@ -325,7 +325,7 @@ table_or_subquery
   / table_or_alias
 
 table_or_alias
-  = &sqlite table:(table_or_alias_standard __) kw:(INDEXED __ BY) id:(__ ident) {
+  = &sqlite table:(alias$table __) kw:(INDEXED __ BY) id:(__ ident) {
     return loc({
       type: "indexed_table",
       table: read(table),
@@ -333,19 +333,14 @@ table_or_alias
       index: read(id),
     });
   }
-  / &sqlite table:(table_or_alias_standard __) kw:(NOT __ INDEXED) {
+  / &sqlite table:(alias$table __) kw:(NOT __ INDEXED) {
     return loc({
       type: "not_indexed_table",
       table: read(table),
       notIndexedKw: read(kw),
     });
   }
-  / table_or_alias_standard
-
-table_or_alias_standard
-  = t:table alias:(__ alias)? {
-    return loc(createAlias(t, alias));
-  }
+  / alias$table
 
 join_op
   = natural_join
@@ -3588,6 +3583,11 @@ alias$expr
 alias$column
   = col:column alias:(__ alias)? {
     return loc(createAlias(col, alias));
+  }
+
+alias$table
+  = t:table alias:(__ alias)? {
+    return loc(createAlias(t, alias));
   }
 
 alias$paren$list$column
