@@ -119,7 +119,7 @@ intersect_select_stmt
 
 sub_select
   = select_stmt
-  / paren_expr_select
+  / paren_compound_select_stmt
 
 intersect_op
   = kws:(INTERSECT __ (ALL / DISTINCT)) { return read(kws); }
@@ -127,7 +127,7 @@ intersect_op
 
 select_stmt
   = cte:(with_clause __)?
-    select:(select_main_clause / paren_expr_select)
+    select:(select_main_clause / paren_compound_select_stmt)
     otherClauses:(__ other_clause)* {
       return loc({
         type: "select_stmt",
@@ -146,7 +146,7 @@ select_main_clause
 with_clause
   = withKw:WITH
     recursiveKw:(__ RECURSIVE)?
-    tables:(__ common_table_expression_list) {
+    tables:(__ list_common_table_expression) {
       return loc({
         type: "with_clause",
         withKw,
@@ -157,10 +157,10 @@ with_clause
 
 common_table_expression
   = table:ident
-    columns:(__ paren_column_list)?
+    columns:(__ paren_list_column)?
     asKw:(__ AS)
     opt:(__ cte_option)?
-    select:(__ paren_expr_select) {
+    select:(__ paren_compound_select_stmt) {
       return loc({
         type: "common_table_expression",
         table: table,
@@ -229,7 +229,7 @@ select_columns
     }
 
 column_list_item
-  = expr:star_or_qualified_star kw:(__ EXCEPT __) columns:paren_column_list {
+  = expr:star_or_qualified_star kw:(__ EXCEPT __) columns:paren_list_column {
     return loc({
       type: "except_columns",
       expr,
@@ -237,7 +237,7 @@ column_list_item
       columns,
     });
   }
-  / expr:star_or_qualified_star kw:(__ REPLACE __) columns:expr_or_alias_list_parens {
+  / expr:star_or_qualified_star kw:(__ REPLACE __) columns:paren_list_expr_or_alias {
     return loc({
       type: "replace_columns",
       expr,
@@ -319,7 +319,7 @@ join_expr_right
   }
 
 table_or_subquery
-  = t:(unnest_with_offset_expr / func_call / paren_expr_join / paren_expr_select) alias:(__ alias)? {
+  = t:(unnest_with_offset_expr / func_call / paren_join_expr / paren_compound_select_stmt) alias:(__ alias)? {
     return loc(createAlias(t, alias));
   }
   / table_or_alias
@@ -378,7 +378,7 @@ join_specification
   = using_clause / on_clause
 
 using_clause
-  = kw:USING expr:(__ paren_column_list) {
+  = kw:USING expr:(__ paren_list_column) {
     return loc({
       type: "join_using_specification",
       usingKw: kw,
@@ -426,7 +426,7 @@ unnest_expr
 
 // PIVOT ........................................................
 pivot_expr_right
-  = &bigquery kw:(PIVOT __) args:pivot_for_in_parens {
+  = &bigquery kw:(PIVOT __) args:paren_pivot_for_in {
     return {
       type: "pivot_expr_right",
       pivotKw: read(kw),
@@ -435,7 +435,7 @@ pivot_expr_right
   }
 
 pivot_for_in
-  = fns:(func_call_or_alias_list __) forKw:(FOR __) col:(column __) inKw:(IN __) pCols:expr_or_alias_list_parens {
+  = fns:(list_func_call_or_alias __) forKw:(FOR __) col:(column __) inKw:(IN __) pCols:paren_list_expr_or_alias {
     return loc({
       type: "pivot_for_in",
       aggregations: read(fns),
@@ -460,7 +460,7 @@ expr_or_alias
 unpivot_expr_right
   = &bigquery kw:(UNPIVOT __)
     nulls:((INCLUDE / EXCLUDE) __ NULLS __)?
-    args:unpivot_for_in_parens {
+    args:paren_unpivot_for_in {
       return {
         type: "unpivot_expr_right",
         unpivotKw: read(kw),
@@ -470,7 +470,7 @@ unpivot_expr_right
     }
 
 unpivot_for_in
-  = vCol:((column / paren_column_list) __)
+  = vCol:((column / paren_list_column) __)
     forKw:(FOR __) nCol:(column __) inKw:(IN __)
     upCols:(paren_column_or_alias_list / paren_paren_column_list_or_alias_list) {
       return loc({
@@ -489,13 +489,13 @@ column_or_alias
   }
 
 paren_column_list_or_alias
-  = list:paren_column_list alias:(__ alias)? {
+  = list:paren_list_column alias:(__ alias)? {
     return loc(createAlias(list, alias));
   }
 
 // TABLESAMPLE ........................................................
 tablesample_expr_right
-  = &bigquery kw:(TABLESAMPLE __ SYSTEM __) args:tablesample_percent_paren {
+  = &bigquery kw:(TABLESAMPLE __ SYSTEM __) args:paren_tablesample_percent {
     return {
       type: "tablesample_expr_right",
       tablesampleKw: read(kw),
@@ -578,7 +578,7 @@ partition_by_clause
  * --------------------------------------------------------------------------------------
  */
 cluster_by_clause
-  = kws:(CLUSTER __ BY __) columns:column_list {
+  = kws:(CLUSTER __ BY __) columns:list_column {
     return loc({
       type: "cluster_by_clause",
       clusterByKw: read(kws),
@@ -591,7 +591,7 @@ cluster_by_clause
  * --------------------------------------------------------------------------------------
  */
 order_by_clause
-  = kws:(ORDER __ BY __) l:sort_specification_list rolKw:(__ WITH __ ROLLUP)? {
+  = kws:(ORDER __ BY __) l:list_sort_specification rolKw:(__ WITH __ ROLLUP)? {
     return loc({
       type: "order_by_clause",
       orderByKw: read(kws),
@@ -652,7 +652,7 @@ limit_clause
  * --------------------------------------------------------------------------------------
  */
 window_clause
-  = kw:(WINDOW __) wins:named_window_list {
+  = kw:(WINDOW __) wins:list_named_window {
     return loc({
       type: "window_clause",
       windowKw: read(kw),
@@ -661,7 +661,7 @@ window_clause
   }
 
 named_window
-  = name:(ident __) kw:(AS __) def:window_definition_in_parens {
+  = name:(ident __) kw:(AS __) def:paren_window_definition {
     return loc({
       type: "named_window",
       name: read(name),
@@ -796,7 +796,7 @@ insert_clause
     orAction:(__ or_alternate_action)?
     intoKw:(__ INTO)?
     table:(__ table_or_explicit_alias)
-    columns:(__ paren_column_list)? {
+    columns:(__ paren_list_column)? {
       return loc({
         type: "insert_clause",
         insertKw,
@@ -838,7 +838,7 @@ insert_source
   / default_values
 
 values_clause
-  = kw:values_kw values:(__ values_list) {
+  = kw:values_kw values:(__ list_values_row) {
     return loc({
       type: "values_clause",
       valuesKw: kw,
@@ -876,7 +876,7 @@ default_values
 
 upsert_clause
   = &sqlite
-    kw:(ON __ CONFLICT __) columns:(paren_sort_specification_list __)? where:(where_clause __)?
+    kw:(ON __ CONFLICT __) columns:(paren_list_sort_specification __)? where:(where_clause __)?
     doKw:DO action:(__ upsert_action) {
     return loc({
       type: "upsert_clause",
@@ -931,7 +931,7 @@ update_clause
   = kw:(UPDATE __)
     options:(upsert_options __)?
     orAction:(or_alternate_action __)?
-    tables:table_or_alias_list {
+    tables:list_table_or_alias {
       return loc({
         type: "update_clause",
         updateKw: read(kw),
@@ -942,7 +942,7 @@ update_clause
     }
 
 set_clause
-  = kw:(SET __) set:column_assignment_list {
+  = kw:(SET __) set:list_column_assignment {
     return loc({
       type: "set_clause",
       setKw: read(kw),
@@ -963,7 +963,7 @@ other_update_clause
   / limit_clause
 
 column_assignment
-  = col:((optionally_qualified_column / paren_column_list) __) "=" expr:(__ column_value) {
+  = col:((optionally_qualified_column / paren_list_column) __) "=" expr:(__ column_value) {
     return loc({
       type: "column_assignment",
       column: read(col),
@@ -1040,7 +1040,7 @@ merge_stmt
     }
 
 paren_expr_select_or_alias
-  = expr:paren_expr_select alias:(__ alias)? {
+  = expr:paren_compound_select_stmt alias:(__ alias)? {
     return loc(createAlias(expr, alias));
   }
 
@@ -1091,7 +1091,7 @@ merge_action_update
   }
 
 merge_action_insert
-  = insertKw:(INSERT __) columns:(paren_column_list __)? values:(values_clause / ROW) {
+  = insertKw:(INSERT __) columns:(paren_list_column __)? values:(values_clause / ROW) {
     return loc({
       type: "merge_action_insert",
       insertKw: read(insertKw),
@@ -1115,7 +1115,7 @@ create_view_stmt
     viewKw:(__ VIEW)
     ifKw:(__ if_not_exists)?
     name:(__ table)
-    cols:(__ paren_column_list)?
+    cols:(__ paren_list_column)?
     options:(__ create_view_option)*
     asKw:(__ AS)
     select:(__ compound_select_stmt) {
@@ -1147,7 +1147,7 @@ drop_view_stmt
     materKw:(__ MATERIALIZED)?
     viewKw:(__ VIEW)
     ifKw:(__ if_exists)?
-    views:(__ table_list)
+    views:(__ list_table)
     behaviorKw:(__ (CASCADE / RESTRICT))? {
       return loc({
         type: "drop_view_stmt",
@@ -1196,7 +1196,7 @@ create_index_stmt
     name:(table __)
     onKw:(ON __)
     table:(table __)
-    columns:(paren_sort_specification_list / paren_verbose_all_columns)
+    columns:(paren_list_sort_specification / paren_verbose_all_columns)
     clauses: (__ create_index_subclause)* {
       return loc({
         type: "create_index_stmt",
@@ -1233,7 +1233,7 @@ drop_index_stmt
     kw:(DROP __)
     indexKw:(INDEX __)
     ifKw:(if_exists __)?
-    indexes:table_list {
+    indexes:list_table {
       return loc({
         type: "drop_index_stmt",
         dropKw: read(kw),
@@ -1247,7 +1247,7 @@ drop_index_stmt
     indexTypeKw:(SEARCH __)?
     indexKw:(INDEX __)
     ifKw:(if_exists __)?
-    indexes:(table_list __)
+    indexes:(list_table __)
     onKw:(ON __)
     table:table {
       return loc({
@@ -1276,7 +1276,7 @@ create_table_stmt
     tableKw:(__ TABLE)
     ifKw:(__ if_not_exists)?
     table:(__ table)
-    columns:(__ create_table_definition)?
+    columns:(__ paren_list_create_definition)?
     options:(__ table_options)?
     as:(__ create_table_as)?
     {
@@ -1338,7 +1338,7 @@ drop_table_stmt
     temporaryKw:(TEMPORARY __)?
     tableKw:(TABLE __)
     ifExistsKw:(if_exists __)?
-    tables:table_list
+    tables:list_table
     behaviorKw:(__ (CASCADE / RESTRICT))?
     {
       return loc({
@@ -1366,7 +1366,7 @@ alter_table_stmt
   = kw:(ALTER __ TABLE __)
     ifKw:(if_exists __)?
     t:(table __)
-    actions:alter_action_list {
+    actions:list_alter_action {
       return loc({
         type: "alter_table_stmt",
         alterTableKw: read(kw),
@@ -1532,7 +1532,7 @@ create_trigger_stmt
     }
 
 trigger_event
-  = timeKw:(trigger_time_kw __)? eventKw:(UPDATE __) ofKw:(OF __) cols:column_list {
+  = timeKw:(trigger_time_kw __)? eventKw:(UPDATE __) ofKw:(OF __) cols:list_column {
       return loc({
         type: "trigger_event",
         timeKw: read(timeKw),
@@ -1659,7 +1659,7 @@ create_function_stmt
     funKw:(FUNCTION __)
     ifKw:(if_not_exists __)?
     name:(table __)
-    params:paren_func_param_list
+    params:paren_list_func_param
     clauses:(__ create_function_clause)+ {
       return loc({
         type: "create_function_stmt",
@@ -1763,7 +1763,7 @@ drop_function_stmt
  * ------------------------------------------------------------------------------------ *
  */
 analyze_stmt
-  = kw:ANALYZE tKw:(__ TABLE)? tables:(__ table_list)? {
+  = kw:ANALYZE tKw:(__ TABLE)? tables:(__ list_table)? {
     return loc({
       type: "analyze_stmt",
       analyzeKw: kw,
@@ -1968,7 +1968,7 @@ pragma_assignment
   }
 
 pragma_func_call
-  = name:(__ table) args:(__ pragma_func_call_args) {
+  = name:(__ table) args:(__ paren_pragma_value) {
     return loc({
       type: "pragma_func_call",
       name: read(name),
@@ -2078,7 +2078,7 @@ create_row_access_policy_stmt
     }
 
 row_access_policy_grant
-  = kw:(GRANT __ TO __) list:paren_string_list {
+  = kw:(GRANT __ TO __) list:paren_list_string {
     return loc({
       type: "row_access_policy_grant",
       grantToKw: read(kw),
@@ -2239,7 +2239,7 @@ table_option_bigquery
   / cluster_by_clause
 
 bigquery_options
-  = kw:(OPTIONS __) options:paren_equals_expr_list {
+  = kw:(OPTIONS __) options:paren_list_equals_expr {
     return loc({
       type: "bigquery_options",
       optionsKw: read(kw),
@@ -2446,7 +2446,7 @@ table_constraint_type
 
 table_constraint_primary_key
   = kws:(PRIMARY __ KEY __)
-    columns:paren_sort_specification_list
+    columns:paren_list_sort_specification
     confl:(__ on_conflict_clause)? {
       return loc({
         type: "constraint_primary_key",
@@ -2467,7 +2467,7 @@ column_constraint_primary_key
 
 table_constraint_unique
   = kws:(unique_key __)
-    columns:paren_column_list
+    columns:paren_list_column
     confl:(__ on_conflict_clause)? {
       return loc({
         type: "constraint_unique",
@@ -2506,7 +2506,7 @@ constraint_check
 constraint_foreign_key
   = kws:(FOREIGN __ KEY __)
     i:(ident __)?
-    columns:paren_column_list
+    columns:paren_list_column
     ref:(__ references_specification) {
       return loc({
         type: "constraint_foreign_key",
@@ -2519,7 +2519,7 @@ constraint_foreign_key
 references_specification
   = kw:(REFERENCES __)
     table:table
-    columns:(__ paren_column_list)?
+    columns:(__ paren_list_column)?
     options:(__ (referential_action / referential_match))* {
       return loc({
         type: "references_specification",
@@ -2554,7 +2554,7 @@ reference_action_type
 
 table_constraint_index
   = kw:((INDEX / KEY) __)
-    columns:paren_column_list {
+    columns:paren_list_column {
       return loc({
         type: "constraint_index",
         indexKw: read(kw),
@@ -2563,7 +2563,7 @@ table_constraint_index
     }
   / typeKw:((FULLTEXT / SPATIAL) __)
     kw:((INDEX / KEY) __ )?
-    columns:paren_column_list {
+    columns:paren_list_column {
       return loc({
         type: "constraint_index",
         indexTypeKw: read(typeKw),
@@ -2597,7 +2597,7 @@ on_conflict_clause
  * ------------------------------------------------------------------------------------ *
  */
 data_type
-  = kw:(type_name __) params:type_length_params {
+  = kw:(type_name __) params:paren_list_literal {
     return loc({ type: "data_type", nameKw: read(kw), params });
   }
   / &bigquery type:(array_type / struct_type / table_type) {
@@ -2623,7 +2623,7 @@ table_type
   }
 
 generic_type_params
-  = "<" list:(__ data_type_list __) ">" {
+  = "<" list:(__ list_data_type __) ">" {
     return loc({
       type: "generic_type_params",
       params: read(list),
@@ -2968,7 +2968,7 @@ primary
   = literal
   / &bigquery x:(typed_array_expr / typed_struct_expr) { return x; }
   / paren_expr
-  / paren_expr_select
+  / paren_compound_select_stmt
   / paren_list_expr
   / cast_expr
   / &sqlite e:raise_expr { return e; }
@@ -2980,7 +2980,7 @@ primary
   / parameter
 
 cast_expr
-  = kw:cast_kw args:(__ cast_args_in_parens)  {
+  = kw:cast_kw args:(__ paren_cast_arg)  {
     return loc({
       type: "cast_expr",
       castKw: kw,
@@ -3013,7 +3013,7 @@ cast_format
   }
 
 raise_expr
-  = kw:RAISE args:(__ raise_args_in_parens) {
+  = kw:RAISE args:(__ paren_raise_args) {
     return loc({
       type: "raise_expr",
       raiseKw: kw,
@@ -3027,7 +3027,7 @@ raise_args
   }
 
 extract_expr
-  = kw:(EXTRACT __) args:extract_expr_parens {
+  = kw:(EXTRACT __) args:paren_extract_from {
     return loc({
       type: "extract_expr",
       extractKw: read(kw),
@@ -3069,7 +3069,7 @@ extract_unit_bigquery
   / WEEK
 
 week_expr
-  = kw:(WEEK __) args:week_expr_parens {
+  = kw:(WEEK __) args:paren_weekday_unit {
     return loc({
       type: "week_expr",
       weekKw: read(kw),
@@ -3205,7 +3205,7 @@ named_arg
   }
 
 filter_arg
-  = kw:(FILTER __) e:paren_where_expr &sqlite {
+  = kw:(FILTER __) e:paren_where_clause &sqlite {
     return loc({
       type: "filter_arg",
       filterKw: read(kw),
@@ -3214,7 +3214,7 @@ filter_arg
   }
 
 over_arg
-  = kw:(OVER __) win:(window_definition_in_parens / ident) {
+  = kw:(OVER __) win:(paren_window_definition / ident) {
     return loc({
       type: "over_arg",
       overKw: read(kw),
@@ -3303,7 +3303,7 @@ interval_unit_mysql
   / YEAR_MONTH
 
 exists_expr
-  = kw:EXISTS expr:(__ paren_expr_select) {
+  = kw:EXISTS expr:(__ paren_compound_select_stmt) {
     return loc(createPrefixOpExpr(kw, read(expr)));
   }
 
@@ -3337,7 +3337,7 @@ paren_expr
     return loc(createParenExpr(c1, expr, c2));
   }
 
-paren_expr_select
+paren_compound_select_stmt
   = "(" c1:__ stmt:compound_select_stmt c2:__ ")" {
     return loc(createParenExpr(c1, stmt, c2));
   }
@@ -3362,27 +3362,27 @@ list_expr
     return loc(createListExpr(head, tail));
   }
 
-paren_column_list
-  = "(" c1:__ cols:column_list c2:__ ")" {
+paren_list_column
+  = "(" c1:__ cols:list_column c2:__ ")" {
     return loc(createParenExpr(c1, cols, c2));
   }
 
-column_list
+list_column
   = head:column tail:(__ "," __ column)* {
     return loc(createListExpr(head, tail));
   }
 
-table_list
+list_table
   = head:table tail:(__ "," __ table)* {
     return loc(createListExpr(head, tail));
   }
 
-expr_or_explicit_alias_list
+list_expr_or_explicit_alias
   = head:expr_or_explicit_alias tail:(__ "," __ expr_or_explicit_alias)* {
     return loc(createListExpr(head, tail))
   }
 
-paren_where_expr
+paren_where_clause
   = "(" c1:__ e:where_clause c2:__ ")" {
     return loc(createParenExpr(c1, e, c2));
   }
@@ -3392,17 +3392,17 @@ paren_func_args
     return loc(createParenExpr(c1, args, c2));
   }
 
-paren_expr_join
+paren_join_expr
   = "(" c1:__ t:join_expr c2:__ ")" {
     return loc(createParenExpr(c1, t, c2));
   }
 
 paren_column_or_alias_list
-  = "(" c1:__ list:column_or_alias_list c2:__ ")" {
+  = "(" c1:__ list:list_column_or_alias c2:__ ")" {
     return loc(createParenExpr(c1, list, c2));
   }
 
-column_or_alias_list
+list_column_or_alias
   = head:column_or_alias tail:(__ "," __ column_or_alias)* {
     return loc(createListExpr(head, tail));
   }
@@ -3417,12 +3417,12 @@ paren_column_list_or_alias_list
     return loc(createListExpr(head, tail));
   }
 
-paren_sort_specification_list
-  = "(" c1:__ expr:sort_specification_list c2:__ ")" {
+paren_list_sort_specification
+  = "(" c1:__ expr:list_sort_specification c2:__ ")" {
     return loc(createParenExpr(c1, expr, c2));
   }
 
-sort_specification_list
+list_sort_specification
   = head:sort_specification tail:(__ "," __ sort_specification)* {
     return loc(createListExpr(head, tail));
   }
@@ -3442,12 +3442,12 @@ paren_verbose_all_columns
     return loc(createParenExpr(c1, x, c2));
   }
 
-paren_func_param_list
-  = "(" c1:__ list:func_param_list c2:__ ")" {
+paren_list_func_param
+  = "(" c1:__ list:list_func_param c2:__ ")" {
     return loc(createParenExpr(c1, list, c2));
   }
 
-func_param_list
+list_func_param
   = head:func_param tail:(__ "," __ func_param)* {
     return loc(createListExpr(head, tail));
   }
@@ -3455,137 +3455,137 @@ func_param_list
     return loc({ type: "list_expr", items: [] });
   }
 
-paren_string_list
-  = "(" c1:__ list:string_list c2:__ ")" {
+paren_list_string
+  = "(" c1:__ list:list_string c2:__ ")" {
     return loc(createParenExpr(c1, list, c2));
   }
 
-string_list
+list_string
   = head:literal_string tail:(__ "," __ literal_string)* {
     return loc(createListExpr(head, tail));
   }
 
-paren_equals_expr_list
-  = "(" c1:__ list:equals_expr_list c2:__ ")" {
+paren_list_equals_expr
+  = "(" c1:__ list:list_equals_expr c2:__ ")" {
     return loc(createParenExpr(c1, list, c2));
   }
 
-equals_expr_list
+list_equals_expr
   = head:equals_expr tail:(__ "," __ equals_expr)* {
     return loc(createListExpr(head, tail));
   }
 
-create_table_definition
-  = "(" c1:__ list:create_definition_list c2:__ ")" {
+paren_list_create_definition
+  = "(" c1:__ list:list_create_definition c2:__ ")" {
     return loc(createParenExpr(c1, list, c2));
   }
 
-create_definition_list
+list_create_definition
   = head:create_definition tail:(__ "," __ create_definition)* {
     return loc(createListExpr(head, tail));
   }
 
-common_table_expression_list
+list_common_table_expression
   = head:common_table_expression tail:(__ "," __ common_table_expression)* {
     return loc(createListExpr(head, tail));
   }
 
-func_call_or_alias_list
+list_func_call_or_alias
   = head:func_call_or_alias tail:(__ "," __ func_call_or_alias)* {
     return loc(createListExpr(head, tail));
   }
 
-expr_or_alias_list_parens
-  = "(" c1:__ list:expr_or_alias_list c2:__ ")" {
+paren_list_expr_or_alias
+  = "(" c1:__ list:list_expr_or_alias c2:__ ")" {
     return loc(createParenExpr(c1, list, c2));
   }
 
-expr_or_alias_list
+list_expr_or_alias
   = head:expr_or_alias tail:(__ "," __ expr_or_alias)* {
     return loc(createListExpr(head, tail))
   }
 
-named_window_list
+list_named_window
   = head:named_window tail:(__ "," __ named_window)* {
     return loc(createListExpr(head, tail));
   }
 
-window_definition_in_parens
+paren_window_definition
   = "(" c1:__ win:window_definition c2:__ ")" {
     return loc(createParenExpr(c1, win, c2));
   }
 
-values_list
+list_values_row
   = head:values_row tail:(__ "," __ values_row)* {
     return loc(createListExpr(head, tail));
   }
 
-table_or_alias_list
+list_table_or_alias
   = head:table_or_alias tail:(__ "," __ table_or_alias)* {
     return loc(createListExpr(head, tail));
   }
 
-column_assignment_list
+list_column_assignment
   = head:column_assignment tail:(__ "," __ column_assignment)* {
       return loc(createListExpr(head, tail));
     }
 
-alter_action_list
+list_alter_action
   = head:alter_action tail:(__ "," __ alter_action)* {
       return loc(createListExpr(head, tail));
     }
 
-literal_list
+list_literal
   = head:literal tail:(__ "," __ literal)* {
     return loc(createListExpr(head, tail));
   }
 
-data_type_list
+list_data_type
   = head:name_and_type_pair tail:(__ "," __ name_and_type_pair)* {
     return loc(createListExpr(head, tail));
   }
 
-pivot_for_in_parens
+paren_pivot_for_in
   = "(" c1:__ forIn:pivot_for_in c2:__ ")" {
     return loc(createParenExpr(c1, forIn, c2));
   }
 
-unpivot_for_in_parens
+paren_unpivot_for_in
   = "(" c1:__ forIn:unpivot_for_in c2:__ ")" {
     return loc(createParenExpr(c1, forIn, c2));
   }
 
-tablesample_percent_paren
+paren_tablesample_percent
   = "(" c1:__ perc:tablesample_percent c2:__ ")" {
     return loc(createParenExpr(c1, perc, c2));
   }
 
-pragma_func_call_args
+paren_pragma_value
   = "(" c1:__ v:pragma_value c2:__ ")" {
     return loc(createParenExpr(c1, v, c2));
   }
 
-type_length_params
-  = "(" c1:__ params:literal_list c2:__ ")" {
+paren_list_literal
+  = "(" c1:__ params:list_literal c2:__ ")" {
     return loc(createParenExpr(c1, params, c2));
   }
 
-cast_args_in_parens
+paren_cast_arg
   = "(" c1:__ arg:cast_arg c2:__ ")" {
     return loc(createParenExpr(c1, arg, c2));
   }
 
-raise_args_in_parens
+paren_raise_args
   = "(" c1:__ arg:raise_args c2:__ ")" {
     return loc(createParenExpr(c1, arg, c2));
   }
 
-extract_expr_parens
+paren_extract_from
   = "(" c1:__ e:extract_from c2:__ ")" {
     return loc(createParenExpr(c1, e, c2));
   }
 
-week_expr_parens
+paren_weekday_unit
   = "(" c1:__ unit:weekday_unit c2:__ ")" {
     return loc(createParenExpr(c1, unit, c2));
   }
@@ -3736,7 +3736,7 @@ typed_struct_expr
   / untyped_struct_expr
 
 struct_expr
-  = "(" expr:(__ expr_or_explicit_alias_list __) ")" {
+  = "(" expr:(__ list_expr_or_explicit_alias __) ")" {
     return loc({
       type: "struct_expr",
       expr: read(expr),
