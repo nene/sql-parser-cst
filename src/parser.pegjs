@@ -3303,29 +3303,46 @@ parameter
  *                                                                                      *
  * ------------------------------------------------------------------------------------ *
  */
+paren$cast_arg = .
+paren$compound_select_stmt = .
+paren$empty_list = .
+paren$expr = .
+paren$extract_from = .
+paren$func_args = .
+paren$join_expr = .
+paren$list$alias$column = .
+paren$list$alias$expr = .
+paren$list$alias$paren$list$column = .
+paren$list$column = .
+paren$list$create_definition = .
+paren$list$equals_expr = .
+paren$list$expr = .
+paren$list$expr_or_default = .
+paren$list$func_param = .
+paren$list$literal = .
+paren$list$literal_string = .
+paren$list$sort_specification = .
+paren$pivot_for_in = .
+paren$pragma_value = .
+paren$raise_args = .
+paren$tablesample_percent = .
+paren$unpivot_for_in = .
+paren$verbose_all_columns = .
+paren$weekday_unit = .
+paren$where_clause = .
+paren$window_definition = .
+
+/**
+ * ------------------------------------------------------------------------------------ *
+ *                                                                                      *
+ * Lists                                                                                *
+ *                                                                                      *
+ * ------------------------------------------------------------------------------------ *
+ */
+
 empty_list
   = &. {
     return loc({ type: "list_expr", items: [] });
-  }
-
-paren$empty_list
-  = "(" c1:__ list:empty_list c2:__ ")" {
-    return loc(createParenExpr(c1, list, c2));
-  }
-
-paren$expr
-  = "(" c1:__ expr:expr c2:__ ")" {
-    return loc(createParenExpr(c1, expr, c2));
-  }
-
-paren$compound_select_stmt
-  = "(" c1:__ stmt:compound_select_stmt c2:__ ")" {
-    return loc(createParenExpr(c1, stmt, c2));
-  }
-
-paren$list$expr
-  = "("  c2:__ list:list$expr c3:__ ")" {
-    return loc(createParenExpr(c2, list, c3));
   }
 
 multi_element_list_expr
@@ -3336,11 +3353,6 @@ multi_element_list_expr
 list$expr
   = head:expr tail:(__ "," __ expr)* {
     return loc(createListExpr(head, tail));
-  }
-
-paren$list$column
-  = "(" c1:__ cols:list$column c2:__ ")" {
-    return loc(createParenExpr(c1, cols, c2));
   }
 
 list$column
@@ -3358,34 +3370,9 @@ list$expr_or_explicit_alias
     return loc(createListExpr(head, tail))
   }
 
-paren$where_clause
-  = "(" c1:__ e:where_clause c2:__ ")" {
-    return loc(createParenExpr(c1, e, c2));
-  }
-
-paren$func_args
-  = "(" c1:__ args:func_args c2:__ ")" {
-    return loc(createParenExpr(c1, args, c2));
-  }
-
-paren$join_expr
-  = "(" c1:__ t:join_expr c2:__ ")" {
-    return loc(createParenExpr(c1, t, c2));
-  }
-
-paren$list$alias$column
-  = "(" c1:__ list:list$alias$column c2:__ ")" {
-    return loc(createParenExpr(c1, list, c2));
-  }
-
 list$alias$column
   = head:alias$column tail:(__ "," __ alias$column)* {
     return loc(createListExpr(head, tail));
-  }
-
-paren$list$alias$paren$list$column
-  = "(" c1:__ list:list$alias$paren$list$column c2:__ ")" {
-    return loc(createParenExpr(c1, list, c2));
   }
 
 list$alias$paren$list$column
@@ -3393,19 +3380,9 @@ list$alias$paren$list$column
     return loc(createListExpr(head, tail));
   }
 
-paren$list$sort_specification
-  = "(" c1:__ expr:list$sort_specification c2:__ ")" {
-    return loc(createParenExpr(c1, expr, c2));
-  }
-
 list$sort_specification
   = head:sort_specification tail:(__ "," __ sort_specification)* {
     return loc(createListExpr(head, tail));
-  }
-
-paren$list$expr_or_default
-  = "(" c1:__ list:list$expr_or_default c2:__ ")" {
-    return loc(createParenExpr(c1, list, c2));
   }
 
 list$expr_or_default
@@ -3413,24 +3390,9 @@ list$expr_or_default
     return loc(createListExpr(head, tail));
   }
 
-paren$verbose_all_columns
-  = "(" c1:__ x:verbose_all_columns c2:__ ")" {
-    return loc(createParenExpr(c1, x, c2));
-  }
-
-paren$list$func_param
-  = "(" c1:__ list:list$func_param c2:__ ")" {
-    return loc(createParenExpr(c1, list, c2));
-  }
-
 list$func_param
   = head:func_param tail:(__ "," __ func_param)* {
     return loc(createListExpr(head, tail));
-  }
-
-paren$list$literal_string
-  = "(" c1:__ list:list$literal_string c2:__ ")" {
-    return loc(createParenExpr(c1, list, c2));
   }
 
 list$literal_string
@@ -3438,19 +3400,9 @@ list$literal_string
     return loc(createListExpr(head, tail));
   }
 
-paren$list$equals_expr
-  = "(" c1:__ list:list$equals_expr c2:__ ")" {
-    return loc(createParenExpr(c1, list, c2));
-  }
-
 list$equals_expr
   = head:equals_expr tail:(__ "," __ equals_expr)* {
     return loc(createListExpr(head, tail));
-  }
-
-paren$list$create_definition
-  = "(" c1:__ list:list$create_definition c2:__ ")" {
-    return loc(createParenExpr(c1, list, c2));
   }
 
 list$create_definition
@@ -3468,11 +3420,6 @@ list$alias$func_call
     return loc(createListExpr(head, tail));
   }
 
-paren$list$alias$expr
-  = "(" c1:__ list:list$alias$expr c2:__ ")" {
-    return loc(createParenExpr(c1, list, c2));
-  }
-
 list$alias$expr
   = head:alias$expr tail:(__ "," __ alias$expr)* {
     return loc(createListExpr(head, tail))
@@ -3481,11 +3428,6 @@ list$alias$expr
 list$named_window
   = head:named_window tail:(__ "," __ named_window)* {
     return loc(createListExpr(head, tail));
-  }
-
-paren$window_definition
-  = "(" c1:__ win:window_definition c2:__ ")" {
-    return loc(createParenExpr(c1, win, c2));
   }
 
 list$values_row
@@ -3518,50 +3460,7 @@ list$name_and_type_pair
     return loc(createListExpr(head, tail));
   }
 
-paren$pivot_for_in
-  = "(" c1:__ forIn:pivot_for_in c2:__ ")" {
-    return loc(createParenExpr(c1, forIn, c2));
-  }
 
-paren$unpivot_for_in
-  = "(" c1:__ forIn:unpivot_for_in c2:__ ")" {
-    return loc(createParenExpr(c1, forIn, c2));
-  }
-
-paren$tablesample_percent
-  = "(" c1:__ perc:tablesample_percent c2:__ ")" {
-    return loc(createParenExpr(c1, perc, c2));
-  }
-
-paren$pragma_value
-  = "(" c1:__ v:pragma_value c2:__ ")" {
-    return loc(createParenExpr(c1, v, c2));
-  }
-
-paren$list$literal
-  = "(" c1:__ params:list$literal c2:__ ")" {
-    return loc(createParenExpr(c1, params, c2));
-  }
-
-paren$cast_arg
-  = "(" c1:__ arg:cast_arg c2:__ ")" {
-    return loc(createParenExpr(c1, arg, c2));
-  }
-
-paren$raise_args
-  = "(" c1:__ arg:raise_args c2:__ ")" {
-    return loc(createParenExpr(c1, arg, c2));
-  }
-
-paren$extract_from
-  = "(" c1:__ e:extract_from c2:__ ")" {
-    return loc(createParenExpr(c1, e, c2));
-  }
-
-paren$weekday_unit
-  = "(" c1:__ unit:weekday_unit c2:__ ")" {
-    return loc(createParenExpr(c1, unit, c2));
-  }
 
 /**
  * ------------------------------------------------------------------------------------ *
