@@ -396,6 +396,22 @@ const showNode = cstTransformer<string>({
       node.name,
     ]),
 
+  // CREATE PROCEDURE
+  create_procedure_stmt: (node) =>
+    show([
+      node.createKw,
+      node.orReplaceKw,
+      node.procedureKw,
+      node.ifNotExistsKw,
+      node.name,
+      node.params,
+      node.clauses,
+    ]),
+  procedure_param: (node) => show([node.mode, node.name, node.dataType]),
+  // DROP PROCEDURE
+  drop_procedure_stmt: (node) =>
+    show([node.dropKw, node.procedureKw, node.ifExistsKw, node.name]),
+
   // CREATE TRIGGER statement
   create_trigger_stmt: (node) =>
     show([

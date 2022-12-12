@@ -39,6 +39,7 @@ import { AllSqliteNodes } from "./Sqlite";
 import { AllBigqueryNodes } from "./Bigquery";
 import { AllIndexNodes } from "./Index";
 import { AllFunctionNodes } from "./Function";
+import { AllProcedureNodes } from "./Procedure";
 
 export type Node =
   | AllProgramNodes
@@ -60,5 +61,6 @@ export type Node =
   | AllMergeNodes
   | AllIndexNodes
   | AllFunctionNodes
+  | AllProcedureNodes
   | AllSqliteNodes
   | AllBigqueryNodes;

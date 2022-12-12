@@ -18,6 +18,7 @@ import { AllViewStatements } from "./View";
 import { AllSchemaStatements } from "./Schema";
 import { AllBigqueryStatements } from "./Bigquery";
 import { AllFunctionStatements } from "./Function";
+import { AllProcedureStatements } from "./Procedure";
 
 export type Statement =
   | Empty
@@ -36,6 +37,7 @@ export type Statement =
   | AllIndexStatements
   | AllTriggerStatements
   | AllFunctionStatements
+  | AllProcedureStatements
   | AnalyzeStmt
   | ExplainStmt
   | AllTransactionStatements

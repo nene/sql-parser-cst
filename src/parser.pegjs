@@ -63,24 +63,28 @@ multiple_stmt
 
 statement
   = dml_statement
-  / create_view_stmt
+  / ddl_statement
+  / x:analyze_stmt (&mysql / &sqlite) { return x; }
+  / x:explain_stmt (&mysql / &sqlite) { return x; }
+  / transaction_stmt
+  / x:sqlite_stmt &sqlite { return x; }
+  / x:bigquery_stmt &bigquery { return x; }
+  / empty
+
+ddl_statement
+  = create_view_stmt
   / drop_view_stmt
   / x:alter_view_stmt &bigquery { return x; }
   / create_index_stmt
   / drop_index_stmt
   / x:(create_function_stmt / drop_function_stmt) &bigquery { return x; }
+  / x:(create_procedure_stmt / drop_procedure_stmt) &bigquery { return x; }
   / create_table_stmt
   / drop_table_stmt
   / alter_table_stmt
   / x:create_trigger_stmt (&mysql / &sqlite) { return x; }
   / x:drop_trigger_stmt (&mysql / &sqlite) { return x; }
-  / x:analyze_stmt (&mysql / &sqlite) { return x; }
-  / x:explain_stmt (&mysql / &sqlite) { return x; }
   / x:(create_schema_stmt / drop_schema_stmt / alter_schema_stmt) (&mysql / &bigquery) { return x; }
-  / transaction_stmt
-  / x:sqlite_stmt &sqlite { return x; }
-  / x:bigquery_stmt &bigquery { return x; }
-  / empty
 
 dml_statement
   = compound_select_stmt
@@ -1729,6 +1733,81 @@ drop_function_stmt
 /**
  * ------------------------------------------------------------------------------------ *
  *                                                                                      *
+ * CREATE PROCEDURE / DROP PROCEDURE                                                    *
+ *                                                                                      *
+ * ------------------------------------------------------------------------------------ *
+ */
+create_procedure_stmt
+  = kw:(CREATE __)
+    orKw:(OR __ REPLACE __)?
+    procKw:(PROCEDURE __)
+    ifKw:(if_not_exists __)?
+    name:(table __)
+    params:(paren$list$procedure_param / paren$empty_list)
+    clauses:(__ create_procedure_clause)+ {
+      return loc({
+        type: "create_procedure_stmt",
+        createKw: read(kw),
+        orReplaceKw: read(orKw),
+        procedureKw: read(procKw),
+        ifNotExistsKw: read(ifKw),
+        name: read(name),
+        params,
+        clauses: clauses.map(read),
+      });
+    }
+
+procedure_param
+  = mode:((INOUT / IN / OUT) __)? name:(ident __) type:data_type {
+    return loc({
+      type: "procedure_param",
+      mode: read(mode),
+      name: read(name),
+      dataType: type,
+    });
+  }
+
+create_procedure_clause
+  = bigquery_options
+  / procedure_body
+
+procedure_body
+  = beginKw:(BEGIN __) program:proc_program endKw:(__ END) {
+    return loc({
+      type: "code_block",
+      beginKw: read(beginKw),
+      program,
+      endKw: read(endKw),
+    });
+  }
+
+proc_program
+  = head:proc_statement tail:(__ ";" __ (proc_statement / empty))+ {
+    return loc({
+      type: "program",
+      statements: readCommaSepList(head, tail),
+    });
+  }
+
+proc_statement
+  = dml_statement
+  / ddl_statement
+  / bigquery_stmt;
+
+drop_procedure_stmt
+  = kw:(DROP __) procKw:(PROCEDURE __) ifKw:(if_exists __)? name:table {
+    return loc({
+      type: "drop_procedure_stmt",
+      dropKw: read(kw),
+      procedureKw: read(procKw),
+      ifExistsKw: read(ifKw),
+      name,
+    });
+  }
+
+/**
+ * ------------------------------------------------------------------------------------ *
+ *                                                                                      *
  * ANALYZE                                                                              *
  *                                                                                      *
  * ------------------------------------------------------------------------------------ *
@@ -3322,6 +3401,7 @@ paren$list$expr_or_default = .
 paren$list$func_param = .
 paren$list$literal = .
 paren$list$literal_string = .
+paren$list$procedure_param = .
 paren$list$sort_specification = .
 paren$pivot_for_in = .
 paren$pragma_value = .
@@ -3359,6 +3439,7 @@ list$literal = .
 list$literal_string = .
 list$name_and_type_pair = .
 list$named_window = .
+list$procedure_param = .
 list$sort_specification = .
 list$table = .
 list$table_or_alias = .
@@ -4164,6 +4245,7 @@ INDEX               = kw:"INDEX"i               !ident_part { return loc(createK
 INDEXED             = kw:"INDEXED"              !ident_part { return loc(createKeyword(kw)); }
 INITIALLY           = kw:"INITIALLY"i           !ident_part { return loc(createKeyword(kw)); }
 INNER               = kw:"INNER"i               !ident_part { return loc(createKeyword(kw)); }
+INOUT               = kw:"INOUT"i               !ident_part { return loc(createKeyword(kw)); }
 INPLACE             = kw:"INPLACE"i             !ident_part { return loc(createKeyword(kw)); }
 INSERT              = kw:"INSERT"i              !ident_part { return loc(createKeyword(kw)); }
 INSERT_METHOD       = kw:"INSERT_METHOD"i       !ident_part { return loc(createKeyword(kw)); }
@@ -4250,6 +4332,7 @@ ORDER               = kw:"ORDER"i               !ident_part { return loc(createK
 ORDINAL             = kw:"ORDINAL"i             !ident_part { return loc(createKeyword(kw)); }
 ORGANIZATION        = kw:"ORGANIZATION"i        !ident_part { return loc(createKeyword(kw)); }
 OTHERS              = kw:"OTHERS"i              !ident_part { return loc(createKeyword(kw)); }
+OUT                 = kw:"OUT"i                 !ident_part { return loc(createKeyword(kw)); }
 OUTER               = kw:"OUTER"i               !ident_part { return loc(createKeyword(kw)); }
 OUTFILE             = kw:"OUTFILE"i             !ident_part { return loc(createKeyword(kw)); }
 OVER                = kw:"OVER"i                !ident_part { return loc(createKeyword(kw)); }
@@ -4270,6 +4353,7 @@ PRAGMA              = kw:"PRAGMA"i              !ident_part { return loc(createK
 PRECEDING           = kw:"PRECEDING"i           !ident_part { return loc(createKeyword(kw)); }
 PRECISION           = kw:"PRECISION"i           !ident_part { return loc(createKeyword(kw)); }
 PRIMARY             = kw:"PRIMARY"i             !ident_part { return loc(createKeyword(kw)); }
+PROCEDURE           = kw:"PROCEDURE"i           !ident_part { return loc(createKeyword(kw)); }
 PROJECT             = kw:"PROJECT"i             !ident_part { return loc(createKeyword(kw)); }
 QUALIFY             = kw:"QUALIFY"i             !ident_part { return loc(createKeyword(kw)); }
 QUARTER             = kw:"QUARTER"i             !ident_part { return loc(createKeyword(kw)); }
