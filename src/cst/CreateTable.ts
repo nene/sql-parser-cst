@@ -3,7 +3,7 @@ import { BigqueryOptionDefaultCollate, BigqueryOptions } from "./Bigquery";
 import { ColumnConstraint, Constraint, TableConstraint } from "./Constraint";
 import { DataType } from "./DataType";
 import { Expr, Identifier, ListExpr, ParenExpr, Table } from "./Expr";
-import { AsClause } from "./ProcClause";
+import { AsClause, WithConnectionClause } from "./ProcClause";
 import { ClusterByClause, PartitionByClause, SubSelect } from "./Select";
 
 export type AllCreateTableNodes =
@@ -112,7 +112,8 @@ type BigqueryCreateTableClause =
   | ClusterByClause
   | CreateTableCopyClause
   | CreateTableCloneClause
-  | ForSystemTimeAsOfClause;
+  | ForSystemTimeAsOfClause
+  | WithConnectionClause;
 
 interface CreateTableCopyClause extends BaseNode {
   type: "create_table_copy_clause";

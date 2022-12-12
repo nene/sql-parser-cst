@@ -128,9 +128,13 @@ describe("create table", () => {
       });
 
       it("supports CREATE EXTERNAL TABLE with column list", () => {
+        testWc("CREATE EXTERNAL TABLE foo (x INT64, y STRING)");
+      });
+
+      it("supports WITH CONNECTION", () => {
         testWc(`
-          CREATE EXTERNAL TABLE foo (x INT64, y STRING)
-          OPTIONS(format='CSV', uris=['path.csv'])
+          CREATE EXTERNAL TABLE foo
+          WITH CONNECTION \`my_connection_id\`
         `);
       });
     });
