@@ -23,7 +23,8 @@ export interface CreateTableStmt extends BaseNode {
   columns?: ParenExpr<
     ListExpr<ColumnDefinition | TableConstraint | Constraint<TableConstraint>>
   >;
-  options?: ListExpr<TableOption> | BigqueryTableOption[];
+  options?: ListExpr<TableOption>;
+  clauses: BigqueryCreateTableClause[];
   as?: AsClause<SubSelect>;
 }
 
@@ -88,7 +89,7 @@ type TableOptionValueMysql = Keyword<
   | "LAST"
 >;
 
-type BigqueryTableOption =
+type BigqueryCreateTableClause =
   | BigqueryOptions
   | BigqueryOptionDefaultCollate
   | PartitionByClause

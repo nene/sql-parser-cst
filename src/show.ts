@@ -142,6 +142,7 @@ const showNode = cstTransformer<string>({
       node.table,
       node.columns,
       node.options,
+      node.clauses,
       node.as,
     ]),
   column_definition: (node) =>

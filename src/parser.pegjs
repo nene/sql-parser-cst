@@ -1253,6 +1253,7 @@ create_table_stmt
     table:(__ table)
     columns:(__ paren$list$create_definition)?
     options:(__ table_options)?
+    clauses:(__ create_table_clause_bigquery)*
     as:(__ create_table_as)?
     {
       return loc({
@@ -1265,6 +1266,7 @@ create_table_stmt
         table: read(table),
         columns: read(columns),
         options: read(options),
+        clauses: clauses.map(read),
         as: read(as),
       });
     }
@@ -2205,9 +2207,6 @@ table_options
   = (&sqlite / &mysql) head:table_option tail:(__ "," __ table_option)* {
     return loc(createListExpr(head, tail));
   }
-  / &bigquery head:table_option_bigquery tail:(__ table_option_bigquery)* {
-    return readSpaceSepList(head, tail);
-  }
 
 table_option
   = &sqlite opt:table_option_sqlite { return opt; }
@@ -2279,11 +2278,12 @@ mysql_table_opt_value
   / DYNAMIC / FIXED / COMPRESSED / REDUNDANT / COMPACT  // for ROW_FORMAT
   / NO / FIRST / LAST  // for INSERT_METHOD
 
-table_option_bigquery
-  = bigquery_options
-  / bigquery_option_default_collate
-  / partition_by_clause
-  / cluster_by_clause
+create_table_clause_bigquery
+  = &bigquery x:(
+      bigquery_options
+    / bigquery_option_default_collate
+    / partition_by_clause
+    / cluster_by_clause) { return x; }
 
 bigquery_options
   = kw:(OPTIONS __) options:paren$list$equals_expr {
