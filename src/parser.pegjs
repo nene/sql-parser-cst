@@ -1296,7 +1296,6 @@ column_constraint_list
 create_table_clause
   = create_table_as_clause
   / (&bigquery / &mysql) x:create_table_like_clause { return x; }
-  / &bigquery x:create_table_copy_clause { return x; }
   / &bigquery x:create_table_clause_bigquery { return x; }
 
 create_table_as_clause
@@ -1317,6 +1316,15 @@ create_table_like_clause
     });
   }
 
+create_table_clause_bigquery
+  = create_table_copy_clause
+  / create_table_clone_clause
+  / for_system_time_as_of_clause
+  / bigquery_options
+  / bigquery_option_default_collate
+  / partition_by_clause
+  / cluster_by_clause
+
 create_table_copy_clause
   = kw:(COPY __) name:table {
     return loc({
@@ -1326,11 +1334,23 @@ create_table_copy_clause
     });
   }
 
-create_table_clause_bigquery
-  = bigquery_options
-  / bigquery_option_default_collate
-  / partition_by_clause
-  / cluster_by_clause
+create_table_clone_clause
+  = kw:(CLONE __) name:table {
+    return loc({
+      type: "create_table_clone_clause",
+      cloneKw: read(kw),
+      name,
+    });
+  }
+
+for_system_time_as_of_clause
+  = kw:(FOR __ SYSTEM __ TIME __ AS __ OF __) expr:expr {
+    return loc({
+      type: "for_system_time_as_of_clause",
+      forSystemTimeAsOfKw: read(kw),
+      expr,
+    });
+  }
 
 bigquery_options
   = kw:(OPTIONS __) options:paren$list$equals_expr {
@@ -4142,6 +4162,7 @@ CHARACTER           = kw:"CHARACTER"i           !ident_part { return loc(createK
 CHARSET             = kw:"CHARSET"i             !ident_part { return loc(createKeyword(kw)); }
 CHECK               = kw:"CHECK"i               !ident_part { return loc(createKeyword(kw)); }
 CHECKSUM            = kw:"CHECKSUM"i            !ident_part { return loc(createKeyword(kw)); }
+CLONE               = kw:"CLONE"i               !ident_part { return loc(createKeyword(kw)); }
 CLUSTER             = kw:"CLUSTER"i             !ident_part { return loc(createKeyword(kw)); }
 COLLATE             = kw:"COLLATE"i             !ident_part { return loc(createKeyword(kw)); }
 COLLATION           = kw:"COLLATION"i           !ident_part { return loc(createKeyword(kw)); }

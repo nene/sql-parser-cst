@@ -86,4 +86,29 @@ describe("create table", () => {
       });
     });
   });
+
+  dialect("bigquery", () => {
+    describe("CREATE TABLE CLONE", () => {
+      it("supports basic CREATE TABLE ... CLONE", () => {
+        testWc("CREATE TABLE foo CLONE bar");
+      });
+
+      it("supports FOR SYSTEM TIME AS OF", () => {
+        testWc(`
+          CREATE TABLE mydataset.newtable
+          CLONE mydataset.sourcetable
+          FOR SYSTEM TIME AS OF TIMESTAMP_SUB(CURRENT_TIMESTAMP(), INTERVAL 1 HOUR)
+        `);
+      });
+
+      it("supports OPTIONS(..)", () => {
+        testWc(`
+          CREATE TABLE mydataset.newtable
+          CLONE mydataset.sourcetable
+          FOR SYSTEM TIME AS OF '2017-01-01 10:00:00-07:00'
+          OPTIONS(friendly_name="my_table_snapshot")
+        `);
+      });
+    });
+  });
 });

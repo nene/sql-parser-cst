@@ -11,7 +11,9 @@ export type AllCreateTableNodes =
   | ColumnDefinition
   | TableOption
   | CreateTableLikeClause
-  | CreateTableCopyClause;
+  | CreateTableCopyClause
+  | CreateTableCloneClause
+  | ForSystemTimeAsOfClause;
 
 // CREATE TABLE
 export interface CreateTableStmt extends BaseNode {
@@ -93,7 +95,6 @@ type TableOptionValueMysql = Keyword<
 type CreateTableClause =
   | AsClause<SubSelect>
   | CreateTableLikeClause
-  | CreateTableCopyClause
   | BigqueryCreateTableClause;
 
 interface CreateTableLikeClause extends BaseNode {
@@ -102,14 +103,35 @@ interface CreateTableLikeClause extends BaseNode {
   name: Table;
 }
 
+type BigqueryCreateTableClause =
+  | BigqueryOptions
+  | BigqueryOptionDefaultCollate
+  | PartitionByClause
+  | ClusterByClause
+  | CreateTableCopyClause
+  | CreateTableCloneClause
+  | ForSystemTimeAsOfClause;
+
 interface CreateTableCopyClause extends BaseNode {
   type: "create_table_copy_clause";
   copyKw: Keyword<"COPY">;
   name: Table;
 }
 
-type BigqueryCreateTableClause =
-  | BigqueryOptions
-  | BigqueryOptionDefaultCollate
-  | PartitionByClause
-  | ClusterByClause;
+interface CreateTableCloneClause extends BaseNode {
+  type: "create_table_clone_clause";
+  cloneKw: Keyword<"CLONE">;
+  name: Table;
+}
+
+interface ForSystemTimeAsOfClause extends BaseNode {
+  type: "for_system_time_as_of_clause";
+  forSystemTimeAsOfKw: [
+    Keyword<"FOR">,
+    Keyword<"SYSTEM">,
+    Keyword<"TIME">,
+    Keyword<"AS">,
+    Keyword<"OF">
+  ];
+  expr: Expr;
+}
