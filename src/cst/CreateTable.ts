@@ -24,8 +24,7 @@ export interface CreateTableStmt extends BaseNode {
     ListExpr<ColumnDefinition | TableConstraint | Constraint<TableConstraint>>
   >;
   options?: ListExpr<TableOption>;
-  clauses: BigqueryCreateTableClause[];
-  as?: AsClause<SubSelect>;
+  clauses: CreateTableClause[];
 }
 
 export interface ColumnDefinition extends BaseNode {
@@ -88,6 +87,8 @@ type TableOptionValueMysql = Keyword<
   | "FIRST"
   | "LAST"
 >;
+
+type CreateTableClause = AsClause<SubSelect> | BigqueryCreateTableClause;
 
 type BigqueryCreateTableClause =
   | BigqueryOptions
