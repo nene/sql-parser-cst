@@ -52,4 +52,22 @@ describe("create table", () => {
       });
     });
   });
+
+  describe("CREATE TABLE LIKE", () => {
+    dialect(["bigquery", "mysql"], () => {
+      it("supports basic CREATE TABLE ... LIKE", () => {
+        testWc("CREATE TABLE foo LIKE bar");
+      });
+    });
+
+    dialect("bigquery", () => {
+      it("supports CREATE TABLE ... LIKE ... AS", () => {
+        testWc(`
+          CREATE TABLE mydataset.newtable
+          LIKE mydataset.sourcetable
+          AS SELECT * FROM mydataset.myothertable
+        `);
+      });
+    });
+  });
 });

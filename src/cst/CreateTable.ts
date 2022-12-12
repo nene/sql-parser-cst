@@ -9,7 +9,8 @@ import { ClusterByClause, PartitionByClause, SubSelect } from "./Select";
 export type AllCreateTableNodes =
   | CreateTableStmt
   | ColumnDefinition
-  | TableOption;
+  | TableOption
+  | CreateTableLikeClause;
 
 // CREATE TABLE
 export interface CreateTableStmt extends BaseNode {
@@ -88,7 +89,16 @@ type TableOptionValueMysql = Keyword<
   | "LAST"
 >;
 
-type CreateTableClause = AsClause<SubSelect> | BigqueryCreateTableClause;
+type CreateTableClause =
+  | AsClause<SubSelect>
+  | CreateTableLikeClause
+  | BigqueryCreateTableClause;
+
+interface CreateTableLikeClause extends BaseNode {
+  type: "create_table_like_clause";
+  likeKw: Keyword;
+  name: Table;
+}
 
 type BigqueryCreateTableClause =
   | BigqueryOptions
