@@ -1301,29 +1301,29 @@ create_table_clause
 
 create_table_as_clause
   = asKw:AS expr:(__ sub_select) {
-    return {
+    return loc({
       type: "as_clause",
       asKw,
       expr: read(expr),
-    };
+    });
   }
 
 create_table_like_clause
   = kw:(LIKE __) name:table {
-    return {
+    return loc({
       type: "create_table_like_clause",
       likeKw: read(kw),
       name,
-    };
+    });
   }
 
 create_table_copy_clause
   = kw:(COPY __) name:table {
-    return {
+    return loc({
       type: "create_table_copy_clause",
       copyKw: read(kw),
       name,
-    };
+    });
   }
 
 create_table_clause_bigquery
