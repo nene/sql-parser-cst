@@ -10,7 +10,8 @@ export type AllCreateTableNodes =
   | CreateTableStmt
   | ColumnDefinition
   | TableOption
-  | CreateTableLikeClause;
+  | CreateTableLikeClause
+  | CreateTableCopyClause;
 
 // CREATE TABLE
 export interface CreateTableStmt extends BaseNode {
@@ -92,11 +93,18 @@ type TableOptionValueMysql = Keyword<
 type CreateTableClause =
   | AsClause<SubSelect>
   | CreateTableLikeClause
+  | CreateTableCopyClause
   | BigqueryCreateTableClause;
 
 interface CreateTableLikeClause extends BaseNode {
   type: "create_table_like_clause";
-  likeKw: Keyword;
+  likeKw: Keyword<"LIKE">;
+  name: Table;
+}
+
+interface CreateTableCopyClause extends BaseNode {
+  type: "create_table_copy_clause";
+  copyKw: Keyword<"COPY">;
   name: Table;
 }
 

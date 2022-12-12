@@ -70,4 +70,20 @@ describe("create table", () => {
       });
     });
   });
+
+  dialect("bigquery", () => {
+    describe("CREATE TABLE COPY", () => {
+      it("supports basic CREATE TABLE ... COPY", () => {
+        testWc("CREATE TABLE foo COPY bar");
+      });
+
+      it("supports CREATE TABLE ... COPY with options", () => {
+        testWc(`
+          CREATE TABLE mydataset.newtable
+          COPY mydataset.sourcetable
+          OPTIONS(description='blah')
+        `);
+      });
+    });
+  });
 });

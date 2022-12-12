@@ -187,6 +187,7 @@ const showNode = cstTransformer<string>({
     show([node.name, node.hasEq ? "=" : undefined, node.value]),
   // additional clauses
   create_table_like_clause: (node) => show([node.likeKw, node.name]),
+  create_table_copy_clause: (node) => show([node.copyKw, node.name]),
   bigquery_options: (node) => show([node.optionsKw, node.options]),
   bigquery_option_default_collate: (node) =>
     show([node.defaultCollateKw, node.collation]),

@@ -1296,6 +1296,7 @@ column_constraint_list
 create_table_clause
   = create_table_as_clause
   / (&bigquery / &mysql) x:create_table_like_clause { return x; }
+  / &bigquery x:create_table_copy_clause { return x; }
   / &bigquery x:create_table_clause_bigquery { return x; }
 
 create_table_as_clause
@@ -1312,6 +1313,15 @@ create_table_like_clause
     return {
       type: "create_table_like_clause",
       likeKw: read(kw),
+      name,
+    };
+  }
+
+create_table_copy_clause
+  = kw:(COPY __) name:table {
+    return {
+      type: "create_table_copy_clause",
+      copyKw: read(kw),
       name,
     };
   }
