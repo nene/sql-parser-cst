@@ -19,6 +19,7 @@ import { AllSchemaStatements } from "./Schema";
 import { AllBigqueryStatements } from "./Bigquery";
 import { AllFunctionStatements } from "./Function";
 import { AllProcedureStatements } from "./Procedure";
+import { AllDclStatements } from "./Dcl";
 
 export type Statement =
   | Empty
@@ -41,5 +42,6 @@ export type Statement =
   | AnalyzeStmt
   | ExplainStmt
   | AllTransactionStatements
+  | AllDclStatements
   | AllSqliteStatements
   | AllBigqueryStatements;

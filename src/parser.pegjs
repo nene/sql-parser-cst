@@ -64,6 +64,7 @@ multiple_stmt
 statement
   = dml_statement
   / ddl_statement
+  / dcl_statement
   / x:analyze_stmt (&mysql / &sqlite) { return x; }
   / x:explain_stmt (&mysql / &sqlite) { return x; }
   / transaction_stmt
@@ -2033,6 +2034,38 @@ release_savepoint_stmt
 /**
  * ------------------------------------------------------------------------------------ *
  *                                                                                      *
+ * DCL: GRANT / REVOKE statements                                                       *
+ *                                                                                      *
+ * ------------------------------------------------------------------------------------ *
+ */
+dcl_statement
+  = &bigquery x:grant_stmt { return x; }
+
+grant_stmt
+  = kw:(GRANT __) roles:(list$ident __)
+    onKw:(ON __) resType:(resource_type_kw __) resName:(table __)
+    toKw:(TO __) users:(list$literal_string) {
+      return loc({
+        type: "grant_stmt",
+        grantKw: read(kw),
+        roles: read(roles),
+        onKw: read(onKw),
+        resourceType: read(resType),
+        resourceName: read(resName),
+        toKw: read(toKw),
+        users,
+      });
+    }
+
+resource_type_kw
+  = SCHEMA
+  / TABLE
+  / VIEW
+  / kw:(EXTERNAL __ TABLE) { return read(kw); }
+
+/**
+ * ------------------------------------------------------------------------------------ *
+ *                                                                                      *
  * SQLite statements                                                                    *
  *                                                                                      *
  * ------------------------------------------------------------------------------------ *
@@ -3491,6 +3524,7 @@ list$expr = .
 list$expr_or_default = .
 list$expr_or_explicit_alias = .
 list$func_param = .
+list$ident = .
 list$literal = .
 list$literal_string = .
 list$name_and_type_pair = .

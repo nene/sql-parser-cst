@@ -462,6 +462,28 @@ const showNode = cstTransformer<string>({
   release_savepoint_stmt: (node) =>
     show([node.releaseKw, node.savepointKw, node.savepoint]),
 
+  // GRANT & REVOKE
+  grant_stmt: (node) =>
+    show([
+      node.grantKw,
+      node.roles,
+      node.onKw,
+      node.resourceType,
+      node.resourceName,
+      node.toKw,
+      node.users,
+    ]),
+  revoke_stmt: (node) =>
+    show([
+      node.revokeKw,
+      node.roles,
+      node.onKw,
+      node.resourceType,
+      node.resourceName,
+      node.fromKw,
+      node.users,
+    ]),
+
   // SQLite-specific statements
   attach_database_stmt: (node) =>
     show([node.attachKw, node.databaseKw, node.file, node.asKw, node.schema]),
