@@ -115,4 +115,24 @@ describe("create table", () => {
       });
     });
   });
+
+  dialect("bigquery", () => {
+    describe("CREATE EXTERNAL TABLE", () => {
+      it("supports CREATE EXTERNAL TABLE with OPTIONS(..)", () => {
+        testWc(`
+          CREATE EXTERNAL TABLE foo OPTIONS (
+            format = 'CSV',
+            uris = ['gs://bucket/path2.csv']
+          )
+        `);
+      });
+
+      it("supports CREATE EXTERNAL TABLE with column list", () => {
+        testWc(`
+          CREATE EXTERNAL TABLE foo (x INT64, y STRING)
+          OPTIONS(format='CSV', uris=['path.csv'])
+        `);
+      });
+    });
+  });
 });
