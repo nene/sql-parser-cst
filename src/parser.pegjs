@@ -2039,7 +2039,7 @@ release_savepoint_stmt
  * ------------------------------------------------------------------------------------ *
  */
 dcl_statement
-  = &bigquery x:grant_stmt { return x; }
+  = &bigquery x:(grant_stmt / revoke_stmt) { return x; }
 
 grant_stmt
   = kw:(GRANT __) roles:(list$ident __)
@@ -2053,6 +2053,22 @@ grant_stmt
         resourceType: read(resType),
         resourceName: read(resName),
         toKw: read(toKw),
+        users,
+      });
+    }
+
+revoke_stmt
+  = kw:(REVOKE __) roles:(list$ident __)
+    onKw:(ON __) resType:(resource_type_kw __) resName:(table __)
+    fromKw:(FROM __) users:(list$literal_string) {
+      return loc({
+        type: "revoke_stmt",
+        revokeKw: read(kw),
+        roles: read(roles),
+        onKw: read(onKw),
+        resourceType: read(resType),
+        resourceName: read(resName),
+        fromKw: read(fromKw),
         users,
       });
     }
@@ -4471,6 +4487,7 @@ RESTRICT            = kw:"RESTRICT"i            !ident_part { return loc(createK
 RETURN              = kw:"RETURN"i              !ident_part { return loc(createKeyword(kw)); }
 RETURNING           = kw:"RETURNING"i           !ident_part { return loc(createKeyword(kw)); }
 RETURNS             = kw:"RETURNS"i             !ident_part { return loc(createKeyword(kw)); }
+REVOKE              = kw:"REVOKE"i              !ident_part { return loc(createKeyword(kw)); }
 RIGHT               = kw:"RIGHT"i               !ident_part { return loc(createKeyword(kw)); }
 RLIKE               = kw:"RLIKE"i               !ident_part { return loc(createKeyword(kw)); }
 ROLLBACK            = kw:"ROLLBACK"i            !ident_part { return loc(createKeyword(kw)); }
