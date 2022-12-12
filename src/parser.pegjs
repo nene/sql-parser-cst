@@ -1650,7 +1650,6 @@ create_function_stmt
       });
     }
 
-
 func_param
   = name:(ident __) type:data_type {
     return loc({
@@ -1661,36 +1660,36 @@ func_param
   }
 
 create_function_clause
-  = function_returns
-  / function_determinism
-  / function_language
-  / function_as
-  / function_remote
+  = returns_clause
+  / determinism_clause
+  / language_clause
+  / as_clause
+  / remote_clause
   / bigquery_options
 
-function_returns
+returns_clause
   = kw:(RETURNS __) type:data_type {
     return loc({
-      type: "function_returns",
+      type: "returns_clause",
       returnsKw: read(kw),
       dataType: type,
     });
   }
 
-function_determinism
+determinism_clause
   = kw:(DETERMINISTIC / NOT __ DETERMINISTIC) {
     return loc({
-      type: "function_determinism",
+      type: "determinism_clause",
       deterministicKw: read(kw),
     });
   }
 
-function_language
+language_clause
   = kw:(LANGUAGE __) lang:js_language {
     return loc({
-      type: "function_language",
+      type: "language_clause",
       languageKw: read(kw),
-      language: lang,
+      name: lang,
     });
   }
 
@@ -1699,20 +1698,20 @@ js_language
     return loc(createIdentifier("js", "js"));
   }
 
-function_as
+as_clause
   = kw:(AS __) expr:(paren$expr / literal_string / compound_select_stmt) {
     return loc({
-      type: "function_as",
+      type: "as_clause",
       asKw: read(kw),
       expr,
     });
   }
 
-function_remote
+remote_clause
   = kw:(REMOTE __ WITH __ CONNECTION __) name:table {
     return loc({
-      type: "function_remote",
-      remoteWithConnectionKw: read(kw),
+      type: "remote_clause",
+      withConnectionKw: read(kw),
       connection: name,
     });
   }

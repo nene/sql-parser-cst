@@ -1,18 +1,16 @@
 import { BaseNode, Keyword } from "./Base";
 import { BigqueryOptions } from "./Bigquery";
 import { DataType } from "./DataType";
-import { Expr, Identifier, ListExpr, ParenExpr, Table } from "./Expr";
-import { StringLiteral } from "./Literal";
-import { SubSelect } from "./Select";
+import { Identifier, ListExpr, ParenExpr, Table } from "./Expr";
+import {
+  AsClause,
+  DeterminismClause,
+  LanguageClause,
+  RemoteClause,
+  ReturnsClause,
+} from "./ProcClause";
 
-export type AllFunctionNodes =
-  | AllFunctionStatements
-  | FunctionParam
-  | FunctionReturns
-  | FunctionDeterminism
-  | FunctionLanguage
-  | FunctionAs
-  | FunctionRemote;
+export type AllFunctionNodes = AllFunctionStatements | FunctionParam;
 
 export type AllFunctionStatements = CreateFunctionStmt | DropFunctionStmt;
 
@@ -37,47 +35,12 @@ export interface FunctionParam extends BaseNode {
 }
 
 type CreateFunctionClause =
-  | FunctionReturns
-  | FunctionDeterminism
-  | FunctionLanguage
-  | FunctionAs
+  | ReturnsClause
+  | DeterminismClause
+  | LanguageClause
+  | AsClause
   | BigqueryOptions
-  | FunctionRemote;
-
-export interface FunctionReturns extends BaseNode {
-  type: "function_returns";
-  returnsKw: Keyword<"RETURNS">;
-  dataType: DataType;
-}
-
-export interface FunctionDeterminism extends BaseNode {
-  type: "function_determinism";
-  deterministicKw?:
-    | Keyword<"DETERMINISTIC">
-    | [Keyword<"NOT">, Keyword<"DETERMINISTIC">];
-}
-
-export interface FunctionLanguage extends BaseNode {
-  type: "function_language";
-  languageKw: Keyword<"LANGUAGE">;
-  language: Identifier;
-}
-
-export interface FunctionAs extends BaseNode {
-  type: "function_as";
-  asKw: Keyword<"AS">;
-  expr: ParenExpr<Expr> | StringLiteral | SubSelect;
-}
-
-export interface FunctionRemote extends BaseNode {
-  type: "function_remote";
-  remoteWithConnectionKw: [
-    Keyword<"REMOTE">,
-    Keyword<"WITH">,
-    Keyword<"CONNECTION">
-  ];
-  connection: Table;
-}
+  | RemoteClause;
 
 export interface DropFunctionStmt extends BaseNode {
   type: "drop_function_stmt";

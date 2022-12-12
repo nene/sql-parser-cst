@@ -38,6 +38,7 @@ import { AllMergeNodes } from "./Merge";
 import { AllSqliteNodes } from "./Sqlite";
 import { AllBigqueryNodes } from "./Bigquery";
 import { AllIndexNodes } from "./Index";
+import { AllProcClauseNodes } from "./ProcClause";
 import { AllFunctionNodes } from "./Function";
 import { AllProcedureNodes } from "./Procedure";
 
@@ -60,6 +61,7 @@ export type Node =
   | AllUpdateNodes
   | AllMergeNodes
   | AllIndexNodes
+  | AllProcClauseNodes
   | AllFunctionNodes
   | AllProcedureNodes
   | AllSqliteNodes

@@ -380,12 +380,11 @@ const showNode = cstTransformer<string>({
       node.clauses,
     ]),
   function_param: (node) => show([node.name, node.dataType]),
-  function_returns: (node) => show([node.returnsKw, node.dataType]),
-  function_determinism: (node) => show([node.deterministicKw]),
-  function_language: (node) => show([node.languageKw, node.language]),
-  function_as: (node) => show([node.asKw, node.expr]),
-  function_remote: (node) =>
-    show([node.remoteWithConnectionKw, node.connection]),
+  returns_clause: (node) => show([node.returnsKw, node.dataType]),
+  determinism_clause: (node) => show([node.deterministicKw]),
+  language_clause: (node) => show([node.languageKw, node.name]),
+  as_clause: (node) => show([node.asKw, node.expr]),
+  remote_clause: (node) => show([node.withConnectionKw, node.connection]),
   // DROP FUNCTION
   drop_function_stmt: (node) =>
     show([
