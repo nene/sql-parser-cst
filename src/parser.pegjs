@@ -1685,17 +1685,12 @@ determinism_clause
   }
 
 language_clause
-  = kw:(LANGUAGE __) lang:js_language {
+  = kw:(LANGUAGE __) lang:ident {
     return loc({
       type: "language_clause",
       languageKw: read(kw),
       name: lang,
     });
-  }
-
-js_language
-  = "js" !ident_part {
-    return loc(createIdentifier("js", "js"));
   }
 
 as_clause
@@ -1708,7 +1703,7 @@ as_clause
   }
 
 remote_clause
-  = kw:(REMOTE __ WITH __ CONNECTION __) name:table {
+  = kw:(REMOTE __ WITH __ CONNECTION __ / WITH __ CONNECTION __) name:table {
     return loc({
       type: "remote_clause",
       withConnectionKw: read(kw),
@@ -1769,6 +1764,9 @@ procedure_param
 create_procedure_clause
   = bigquery_options
   / procedure_body
+  / remote_clause
+  / language_clause
+  / as_clause
 
 procedure_body
   = beginKw:(BEGIN __) program:proc_program endKw:(__ END) {

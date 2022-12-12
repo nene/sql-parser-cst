@@ -2,6 +2,7 @@ import { BaseNode, Keyword } from "./Base";
 import { BigqueryOptions } from "./Bigquery";
 import { DataType } from "./DataType";
 import { Identifier, ListExpr, ParenExpr, Table } from "./Expr";
+import { AsClause, LanguageClause, RemoteClause } from "./ProcClause";
 import { CodeBlock } from "./Program";
 
 export type AllProcedureNodes = AllProcedureStatements | ProcedureParam;
@@ -27,7 +28,12 @@ export interface ProcedureParam extends BaseNode {
   dataType: DataType;
 }
 
-type CreateProcedureClause = CodeBlock | BigqueryOptions;
+type CreateProcedureClause =
+  | CodeBlock
+  | BigqueryOptions
+  | RemoteClause
+  | LanguageClause
+  | AsClause;
 
 // DROP PROCEDURE
 export interface DropProcedureStmt extends BaseNode {

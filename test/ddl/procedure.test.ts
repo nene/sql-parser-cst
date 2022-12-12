@@ -53,6 +53,33 @@ describe("procedure", () => {
       it("supports OPTIONS(..)", () => {
         testWc("CREATE PROCEDURE foo() OPTIONS (description='hello') BEGIN SELECT 1; END");
       });
+
+      describe("Apache Spark procedure", () => {
+        it("supports loading procedure from PySpark file", () => {
+          testWc(`
+            CREATE PROCEDURE my_bq_project.my_dataset.spark_proc()
+            WITH CONNECTION \`my-project-id.us.my-connection\`
+            OPTIONS(engine="SPARK", main_file_uri="gs://my-bucket/my-pyspark-main.py")
+            LANGUAGE PYTHON
+          `);
+        });
+
+        it("supports inline Python procedure", () => {
+          test(`
+            CREATE PROCEDURE my_proc()
+            WITH CONNECTION \`my-project-id.us.my-connection\`
+            OPTIONS(engine="SPARK")
+            LANGUAGE PYTHON AS R"""
+              from pyspark.sql import SparkSession
+
+              # Load data from BigQuery.
+              words = spark.read.format("bigquery") \
+                .option("table", "bigquery-public-data:samples.shakespeare") \
+                .load()
+            """
+          `);
+        });
+      });
     });
 
     describe("DROP PROCEDURE", () => {
