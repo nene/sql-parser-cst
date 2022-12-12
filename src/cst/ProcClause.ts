@@ -1,8 +1,7 @@
 import { BaseNode, Keyword } from "./Base";
 import { DataType } from "./DataType";
-import { Expr, Identifier, ParenExpr, Table } from "./Expr";
-import { StringLiteral } from "./Literal";
-import { SubSelect } from "./Select";
+import { Identifier, Table } from "./Expr";
+import { Node } from "./Node";
 
 export type AllProcClauseNodes =
   | ReturnsClause
@@ -30,10 +29,10 @@ export interface LanguageClause extends BaseNode {
   name: Identifier;
 }
 
-export interface AsClause extends BaseNode {
+export interface AsClause<T = Node> extends BaseNode {
   type: "as_clause";
   asKw: Keyword<"AS">;
-  expr: ParenExpr<Expr> | StringLiteral | SubSelect;
+  expr: T;
 }
 
 export interface RemoteClause extends BaseNode {

@@ -1,7 +1,8 @@
 import { BaseNode, Keyword } from "./Base";
 import { BigqueryOptions } from "./Bigquery";
 import { DataType } from "./DataType";
-import { Identifier, ListExpr, ParenExpr, Table } from "./Expr";
+import { Expr, Identifier, ListExpr, ParenExpr, Table } from "./Expr";
+import { StringLiteral } from "./Literal";
 import {
   AsClause,
   DeterminismClause,
@@ -9,6 +10,7 @@ import {
   RemoteClause,
   ReturnsClause,
 } from "./ProcClause";
+import { SubSelect } from "./Select";
 
 export type AllFunctionNodes = AllFunctionStatements | FunctionParam;
 
@@ -38,7 +40,7 @@ type CreateFunctionClause =
   | ReturnsClause
   | DeterminismClause
   | LanguageClause
-  | AsClause
+  | AsClause<ParenExpr<Expr> | StringLiteral | SubSelect>
   | BigqueryOptions
   | RemoteClause;
 
