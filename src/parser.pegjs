@@ -1271,7 +1271,7 @@ create_table_stmt
 
 create_table_as = asKw:AS expr:(__ sub_select) {
   return {
-    type: "create_table_as",
+    type: "as_clause",
     asKw,
     expr: read(expr),
   };

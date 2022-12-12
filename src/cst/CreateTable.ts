@@ -3,11 +3,11 @@ import { BigqueryOptionDefaultCollate, BigqueryOptions } from "./Bigquery";
 import { ColumnConstraint, Constraint, TableConstraint } from "./Constraint";
 import { DataType } from "./DataType";
 import { Expr, Identifier, ListExpr, ParenExpr, Table } from "./Expr";
+import { AsClause } from "./ProcClause";
 import { ClusterByClause, PartitionByClause, SubSelect } from "./Select";
 
 export type AllCreateTableNodes =
   | CreateTableStmt
-  | CreateTableAs
   | ColumnDefinition
   | TableOption;
 
@@ -24,13 +24,7 @@ export interface CreateTableStmt extends BaseNode {
     ListExpr<ColumnDefinition | TableConstraint | Constraint<TableConstraint>>
   >;
   options?: ListExpr<TableOption> | BigqueryTableOption[];
-  as?: CreateTableAs;
-}
-
-export interface CreateTableAs extends BaseNode {
-  type: "create_table_as";
-  asKw: Keyword<"AS">;
-  expr: SubSelect;
+  as?: AsClause<SubSelect>;
 }
 
 export interface ColumnDefinition extends BaseNode {
