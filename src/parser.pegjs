@@ -1329,6 +1329,7 @@ create_table_clause_bigquery
   / partition_by_clause
   / cluster_by_clause
   / with_connection_clause
+  / with_partition_columns_clause
 
 create_table_copy_clause
   = kw:(COPY __) name:table {
@@ -1354,6 +1355,15 @@ for_system_time_as_of_clause
       type: "for_system_time_as_of_clause",
       forSystemTimeAsOfKw: read(kw),
       expr,
+    });
+  }
+
+with_partition_columns_clause
+  = kw:(WITH __ PARTITION __ COLUMNS) columns:(__ paren$list$column_definition)? {
+    return loc({
+      type: "with_partition_columns_clause",
+      withPartitionColumnsKw: read(kw),
+      columns: read(columns),
     });
   }
 
@@ -3438,6 +3448,7 @@ paren$list$alias$column = .
 paren$list$alias$expr = .
 paren$list$alias$paren$list$column = .
 paren$list$column = .
+paren$list$column_definition = .
 paren$list$create_definition = .
 paren$list$equals_expr = .
 paren$list$expr = .
@@ -3472,6 +3483,7 @@ list$alias$paren$list$column = .
 list$alter_action = .
 list$column = .
 list$column_assignment = .
+list$column_definition = .
 list$common_table_expression = .
 list$create_definition = .
 list$equals_expr = .

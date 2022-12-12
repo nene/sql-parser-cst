@@ -137,6 +137,25 @@ describe("create table", () => {
           WITH CONNECTION \`my_connection_id\`
         `);
       });
+
+      it("supports WITH PARTITION COLUMNS", () => {
+        testWc(`
+          CREATE EXTERNAL TABLE foo
+          WITH PARTITION COLUMNS
+          OPTIONS(uris=['gs://bucket/path/*'], format='PARQUET')
+        `);
+      });
+
+      it("supports WITH PARTITION COLUMNS (col1, col2, ...)", () => {
+        testWc(`
+          CREATE EXTERNAL TABLE foo
+          WITH PARTITION COLUMNS (
+            field_1 STRING ,
+            field_2 INT64
+          )
+          OPTIONS(uris=['gs://bucket/path/*'], format='PARQUET')
+        `);
+      });
     });
   });
 });

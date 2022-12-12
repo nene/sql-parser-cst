@@ -13,7 +13,8 @@ export type AllCreateTableNodes =
   | CreateTableLikeClause
   | CreateTableCopyClause
   | CreateTableCloneClause
-  | ForSystemTimeAsOfClause;
+  | ForSystemTimeAsOfClause
+  | WithPartitionColumnsClause;
 
 // CREATE TABLE
 export interface CreateTableStmt extends BaseNode {
@@ -113,7 +114,8 @@ type BigqueryCreateTableClause =
   | CreateTableCopyClause
   | CreateTableCloneClause
   | ForSystemTimeAsOfClause
-  | WithConnectionClause;
+  | WithConnectionClause
+  | WithPartitionColumnsClause;
 
 interface CreateTableCopyClause extends BaseNode {
   type: "create_table_copy_clause";
@@ -137,4 +139,14 @@ interface ForSystemTimeAsOfClause extends BaseNode {
     Keyword<"OF">
   ];
   expr: Expr;
+}
+
+interface WithPartitionColumnsClause extends BaseNode {
+  type: "with_partition_columns_clause";
+  withPartitionColumnsKw: [
+    Keyword<"WITH">,
+    Keyword<"PARTITION">,
+    Keyword<"COLUMNS">
+  ];
+  columns?: ParenExpr<ListExpr<ColumnDefinition>>;
 }
