@@ -1305,6 +1305,39 @@ create_table_as = asKw:AS expr:(__ sub_select) {
   };
 }
 
+create_table_clause_bigquery
+  = bigquery_options
+  / bigquery_option_default_collate
+  / partition_by_clause
+  / cluster_by_clause
+
+bigquery_options
+  = kw:(OPTIONS __) options:paren$list$equals_expr {
+    return loc({
+      type: "bigquery_options",
+      optionsKw: read(kw),
+      options,
+    });
+  }
+
+equals_expr
+  = name:(ident __) "=" value:(__ expr) {
+    return loc({
+      type: "binary_expr",
+      left: read(name),
+      operator: "=",
+      right: read(value),
+    });
+  }
+
+bigquery_option_default_collate
+  = kw:(DEFAULT __ COLLATE __) value:literal_string {
+    return loc({
+      type: "bigquery_option_default_collate",
+      defaultCollateKw: read(kw),
+      collation: value,
+    });
+  }
 
 /**
  * ------------------------------------------------------------------------------------ *
@@ -2280,40 +2313,6 @@ mysql_table_opt_value
   / DEFAULT
   / DYNAMIC / FIXED / COMPRESSED / REDUNDANT / COMPACT  // for ROW_FORMAT
   / NO / FIRST / LAST  // for INSERT_METHOD
-
-create_table_clause_bigquery
-  = bigquery_options
-  / bigquery_option_default_collate
-  / partition_by_clause
-  / cluster_by_clause
-
-bigquery_options
-  = kw:(OPTIONS __) options:paren$list$equals_expr {
-    return loc({
-      type: "bigquery_options",
-      optionsKw: read(kw),
-      options,
-    });
-  }
-
-equals_expr
-  = name:(ident __) "=" value:(__ expr) {
-    return loc({
-      type: "binary_expr",
-      left: read(name),
-      operator: "=",
-      right: read(value),
-    });
-  }
-
-bigquery_option_default_collate
-  = kw:(DEFAULT __ COLLATE __) value:literal_string {
-    return loc({
-      type: "bigquery_option_default_collate",
-      defaultCollateKw: read(kw),
-      collation: value,
-    });
-  }
 
 /**
  * ------------------------------------------------------------------------------------ *
