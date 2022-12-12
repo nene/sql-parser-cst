@@ -3,7 +3,7 @@ import { BigqueryOptions } from "./Bigquery";
 import { DataType } from "./DataType";
 import { Identifier, ListExpr, ParenExpr, Table } from "./Expr";
 import { StringLiteral } from "./Literal";
-import { AsClause, LanguageClause, RemoteClause } from "./ProcClause";
+import { AsClause, LanguageClause, WithConnectionClause } from "./ProcClause";
 import { CodeBlock } from "./Program";
 
 export type AllProcedureNodes = AllProcedureStatements | ProcedureParam;
@@ -32,7 +32,7 @@ export interface ProcedureParam extends BaseNode {
 type CreateProcedureClause =
   | CodeBlock
   | BigqueryOptions
-  | RemoteClause
+  | WithConnectionClause
   | LanguageClause
   | AsClause<StringLiteral>;
 

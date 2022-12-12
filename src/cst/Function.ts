@@ -7,7 +7,7 @@ import {
   AsClause,
   DeterminismClause,
   LanguageClause,
-  RemoteClause,
+  WithConnectionClause,
   ReturnsClause,
 } from "./ProcClause";
 import { SubSelect } from "./Select";
@@ -42,7 +42,7 @@ type CreateFunctionClause =
   | LanguageClause
   | AsClause<ParenExpr<Expr> | StringLiteral | SubSelect>
   | BigqueryOptions
-  | RemoteClause;
+  | WithConnectionClause;
 
 export interface DropFunctionStmt extends BaseNode {
   type: "drop_function_stmt";

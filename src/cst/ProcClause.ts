@@ -8,7 +8,7 @@ export type AllProcClauseNodes =
   | DeterminismClause
   | LanguageClause
   | AsClause
-  | RemoteClause;
+  | WithConnectionClause;
 
 export interface ReturnsClause extends BaseNode {
   type: "returns_clause";
@@ -35,8 +35,8 @@ export interface AsClause<T = Node> extends BaseNode {
   expr: T;
 }
 
-export interface RemoteClause extends BaseNode {
-  type: "remote_clause";
+export interface WithConnectionClause extends BaseNode {
+  type: "with_connection_clause";
   withConnectionKw:
     | [Keyword<"REMOTE">, Keyword<"WITH">, Keyword<"CONNECTION">]
     | [Keyword<"WITH">, Keyword<"CONNECTION">];

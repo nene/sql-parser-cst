@@ -1747,7 +1747,7 @@ create_function_clause
   / determinism_clause
   / language_clause
   / as_clause
-  / remote_clause
+  / with_connection_clause
   / bigquery_options
 
 returns_clause
@@ -1785,10 +1785,10 @@ as_clause
     });
   }
 
-remote_clause
+with_connection_clause
   = kw:(REMOTE __ WITH __ CONNECTION __ / WITH __ CONNECTION __) name:table {
     return loc({
-      type: "remote_clause",
+      type: "with_connection_clause",
       withConnectionKw: read(kw),
       connection: name,
     });
@@ -1847,7 +1847,7 @@ procedure_param
 create_procedure_clause
   = bigquery_options
   / procedure_body
-  / remote_clause
+  / with_connection_clause
   / language_clause
   / as_clause
 
