@@ -2198,6 +2198,7 @@ bigquery_stmt
   / alter_organization_stmt
   / alter_project_stmt
   / alter_bi_capacity_stmt
+  / assert_stmt
 
 // CREATE CAPACITY
 // CREATE RESERVATION
@@ -2334,6 +2335,25 @@ alter_bi_capacity_stmt
       alterBiCapacityKw: read(kw),
       name: read(name),
       actions: [action],
+    });
+  }
+
+assert_stmt
+  = kw:(ASSERT __) expr:expr as:(__ assert_as_clause)? {
+    return loc({
+      type: "assert_stmt",
+      assertKw: read(kw),
+      expr,
+      as: read(as),
+    });
+  }
+
+assert_as_clause
+  = kw:(AS __) expr:literal_string {
+    return loc({
+      type: "as_clause",
+      asKw: read(kw),
+      expr,
     });
   }
 
@@ -4194,6 +4214,7 @@ ANY                 = kw:"ANY"i                 !ident_part { return loc(createK
 ARRAY               = kw:"ARRAY"i               !ident_part { return loc(createKeyword(kw)); }
 AS                  = kw:"AS"i                  !ident_part { return loc(createKeyword(kw)); }
 ASC                 = kw:"ASC"i                 !ident_part { return loc(createKeyword(kw)); }
+ASSERT              = kw:"ASSERT"i              !ident_part { return loc(createKeyword(kw)); }
 ASSIGNMENT          = kw:"ASSIGNMENT"i          !ident_part { return loc(createKeyword(kw)); }
 ATTACH              = kw:"ATTACH"i              !ident_part { return loc(createKeyword(kw)); }
 AUTO_INCREMENT      = kw:"AUTO_INCREMENT"i      !ident_part { return loc(createKeyword(kw)); }

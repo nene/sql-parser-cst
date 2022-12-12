@@ -546,6 +546,7 @@ const showNode = cstTransformer<string>({
     show([node.alterProjectKw, node.name, node.actions]),
   alter_bi_capacity_stmt: (node) =>
     show([node.alterBiCapacityKw, node.name, node.actions]),
+  assert_stmt: (node) => show([node.assertKw, node.expr, node.as]),
 
   // Expressions
   list_expr: (node) => show(node.items, ","),

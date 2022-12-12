@@ -9,6 +9,7 @@ import {
   Table,
 } from "./Expr";
 import { JsonLiteral, StringLiteral } from "./Literal";
+import { AsClause } from "./ProcClause";
 
 export type AllBigqueryNodes =
   | BigqueryOptions
@@ -39,7 +40,8 @@ export type AllBigqueryStatements =
   | DropRowAccessPolicyStmt
   | AlterOrganizationStmt
   | AlterProjectStmt
-  | AlterBiCapacityStmt;
+  | AlterBiCapacityStmt
+  | AssertStmt;
 
 export interface CreateCapacityStmt extends BaseNode {
   type: "create_capacity_stmt";
@@ -142,4 +144,12 @@ export interface AlterBiCapacityStmt extends BaseNode {
   alterBiCapacityKw: [Keyword<"ALTER">, Keyword<"BI_CAPACITY">];
   name: Table;
   actions: AlterActionSetOptions[];
+}
+
+// ASSERT
+export interface AssertStmt extends BaseNode {
+  type: "assert_stmt";
+  assertKw: Keyword<"ASSERT">;
+  expr: Expr;
+  as?: AsClause<StringLiteral>;
 }
