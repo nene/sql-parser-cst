@@ -1534,7 +1534,7 @@ trigger_condition
 trigger_body
   = beginKw:(BEGIN __) program:trigger_program endKw:(__ END) {
     return loc({
-      type: "trigger_body",
+      type: "code_block",
       beginKw: read(beginKw),
       program,
       endKw: read(endKw),

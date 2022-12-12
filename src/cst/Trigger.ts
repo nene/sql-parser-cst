@@ -1,14 +1,11 @@
 import { BaseNode, Keyword } from "./Base";
 import { Expr, Identifier, ListExpr, Table } from "./Expr";
-import { Program } from "./Program";
+import { CodeBlock, Program } from "./Program";
 
 export type AllTriggerNodes =
   | AllTriggerStatements
   | TriggerEvent
-  | TriggerCondition
-  | TriggerBody
-  | TriggerCondition
-  | TriggerBody;
+  | TriggerCondition;
 
 export type AllTriggerStatements = CreateTriggerStmt | DropTriggerStmt;
 
@@ -25,7 +22,7 @@ export interface CreateTriggerStmt extends BaseNode {
   table: Table;
   forEachRowKw?: [Keyword<"FOR">, Keyword<"EACH">, Keyword<"ROW">];
   condition?: TriggerCondition;
-  body: TriggerBody;
+  body: CodeBlock;
 }
 
 export interface TriggerEvent extends BaseNode {
@@ -40,13 +37,6 @@ export interface TriggerCondition extends BaseNode {
   type: "trigger_condition";
   whenKw?: Keyword<"WHEN">;
   expr: Expr;
-}
-
-export interface TriggerBody extends BaseNode {
-  type: "trigger_body";
-  beginKw: Keyword<"BEGIN">;
-  program: Program;
-  endKw: Keyword<"END">;
 }
 
 // DROP TRIGGER

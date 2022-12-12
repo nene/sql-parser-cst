@@ -19,7 +19,7 @@ export * from "./Analyze";
 export * from "./Explain";
 export * from "./Statement";
 export * from "./Program";
-import { Program } from "./Program";
+import { AllProgramNodes } from "./Program";
 import { Statement } from "./Statement";
 import { AllColumns, Keyword } from "./Base";
 import { Alias } from "./Alias";
@@ -41,7 +41,7 @@ import { AllIndexNodes } from "./Index";
 import { AllFunctionNodes } from "./Function";
 
 export type Node =
-  | Program
+  | AllProgramNodes
   | Statement
   | Keyword
   | AllColumns

@@ -38,6 +38,7 @@ const showWhitespaceItem = (ws: Whitespace): string => ws.text;
 
 const showNode = cstTransformer<string>({
   program: (node) => show(node.statements, ";"),
+  code_block: (node) => show([node.beginKw, node.program, node.endKw]),
   empty: () => "",
 
   // SELECT statement
@@ -413,7 +414,6 @@ const showNode = cstTransformer<string>({
   trigger_event: (node) =>
     show([node.timeKw, node.eventKw, node.ofKw, node.columns]),
   trigger_condition: (node) => show([node.whenKw, node.expr]),
-  trigger_body: (node) => show([node.beginKw, node.program, node.endKw]),
   // DROP TRIGGER
   drop_trigger_stmt: (node) =>
     show([node.dropTriggerKw, node.ifExistsKw, node.trigger]),
