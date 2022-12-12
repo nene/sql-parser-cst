@@ -1248,6 +1248,8 @@ create_table_stmt
   = createKw:CREATE
     replKw:(__ OR __ REPLACE)?
     tmpKw:(__ (TEMPORARY / TEMP))?
+    externalKw:(__ EXTERNAL)?
+    snapshotKw:(__ SNAPSHOT)?
     tableKw:(__ TABLE)
     ifKw:(__ if_not_exists)?
     table:(__ table)
@@ -1260,6 +1262,8 @@ create_table_stmt
         createKw,
         orReplaceKw: read(replKw),
         temporaryKw: read(tmpKw),
+        externalKw: read(externalKw),
+        snapshotKw: read(snapshotKw),
         tableKw: read(tableKw),
         ifNotExistsKw: read(ifKw),
         table: read(table),
@@ -4241,6 +4245,7 @@ EXCLUSIVE           = kw:"EXCLUSIVE"i           !ident_part { return loc(createK
 EXISTS              = kw:"EXISTS"i              !ident_part { return loc(createKeyword(kw)); }
 EXPANSION           = kw:"EXPANSION"i           !ident_part { return loc(createKeyword(kw)); }
 EXPLAIN             = kw:"EXPLAIN"i             !ident_part { return loc(createKeyword(kw)); }
+EXTERNAL            = kw:"EXTERNAL"i            !ident_part { return loc(createKeyword(kw)); }
 EXTRACT             = kw:"EXTRACT"i             !ident_part { return loc(createKeyword(kw)); }
 FAIL                = kw:"FAIL"i                !ident_part { return loc(createKeyword(kw)); }
 FALSE               = kw:"FALSE"i               !ident_part { return loc(createKeyword(kw)); }
@@ -4450,6 +4455,7 @@ SIGNED              = kw:"SIGNED"i              !ident_part { return loc(createK
 SIMPLE              = kw:"SIMPLE"i              !ident_part { return loc(createKeyword(kw)); }
 SKIP                = kw:"SKIP"i                !ident_part { return loc(createKeyword(kw)); }
 SMALLINT            = kw:"SMALLINT"i            !ident_part { return loc(createKeyword(kw)); }
+SNAPSHOT            = kw:"SNAPSHOT"i            !ident_part { return loc(createKeyword(kw)); }
 SOURCE              = kw:"SOURCE"i              !ident_part { return loc(createKeyword(kw)); }
 SPATIAL             = kw:"SPATIAL"i             !ident_part { return loc(createKeyword(kw)); }
 SQL                 = kw:"SQL"i                 !ident_part { return loc(createKeyword(kw)); }

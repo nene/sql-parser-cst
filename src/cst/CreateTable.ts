@@ -21,6 +21,8 @@ export interface CreateTableStmt extends BaseNode {
   createKw: Keyword<"CREATE">;
   orReplaceKw?: [Keyword<"OR">, Keyword<"REPLACE">];
   temporaryKw?: Keyword<"TEMP" | "TEMPORARY">;
+  externalKw?: Keyword<"EXTERNAL">;
+  snapshotKw?: Keyword<"SNAPSHOT">;
   tableKw: Keyword<"TABLE">;
   ifNotExistsKw?: [Keyword<"IF">, Keyword<"NOT">, Keyword<"EXISTS">];
   table: Table;

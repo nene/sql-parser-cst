@@ -137,6 +137,8 @@ const showNode = cstTransformer<string>({
       node.createKw,
       node.orReplaceKw,
       node.temporaryKw,
+      node.externalKw,
+      node.snapshotKw,
       node.tableKw,
       node.ifNotExistsKw,
       node.table,

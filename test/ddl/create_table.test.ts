@@ -109,6 +109,10 @@ describe("create table", () => {
           OPTIONS(friendly_name="my_table_snapshot")
         `);
       });
+
+      it("supports CREATE SNAPSHOT TABLE ... CLONE", () => {
+        testWc("CREATE SNAPSHOT TABLE foo CLONE bar");
+      });
     });
   });
 });
