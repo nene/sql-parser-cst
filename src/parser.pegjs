@@ -1388,7 +1388,7 @@ equals_expr
   }
 
 bigquery_option_default_collate
-  = kw:(DEFAULT __ COLLATE __) value:literal_string {
+  = kw:(DEFAULT __ COLLATE __) value:string_literal {
     return loc({
       type: "bigquery_option_default_collate",
       defaultCollateKw: read(kw),
@@ -1521,7 +1521,7 @@ alter_column_kw
   / kw:ALTER &sqlite { return kw; }
 
 alter_action_set_default_collate
-  = kw:(SET __ DEFAULT __ COLLATE __) collation:literal_string {
+  = kw:(SET __ DEFAULT __ COLLATE __) collation:string_literal {
     return loc({
       type: "alter_action_set_default_collate",
       setDefaultCollateKw: read(kw),
@@ -1789,7 +1789,7 @@ language_clause
   }
 
 as_clause
-  = kw:(AS __) expr:(paren$expr / literal_string / compound_select_stmt) {
+  = kw:(AS __) expr:(paren$expr / string_literal / compound_select_stmt) {
     return loc({
       type: "as_clause",
       asKw: read(kw),
@@ -2044,7 +2044,7 @@ dcl_statement
 grant_stmt
   = kw:(GRANT __) roles:(list$ident __)
     onKw:(ON __) resType:(resource_type_kw __) resName:(table __)
-    toKw:(TO __) users:(list$literal_string) {
+    toKw:(TO __) users:(list$string_literal) {
       return loc({
         type: "grant_stmt",
         grantKw: read(kw),
@@ -2060,7 +2060,7 @@ grant_stmt
 revoke_stmt
   = kw:(REVOKE __) roles:(list$ident __)
     onKw:(ON __) resType:(resource_type_kw __) resName:(table __)
-    fromKw:(FROM __) users:(list$literal_string) {
+    fromKw:(FROM __) users:(list$string_literal) {
       return loc({
         type: "revoke_stmt",
         revokeKw: read(kw),
@@ -2117,7 +2117,7 @@ detach_database_stmt
   }
 
 vacuum_stmt
-  = kw:(VACUUM __) schema:(ident __)? intoKw:(INTO __) file:literal_string {
+  = kw:(VACUUM __) schema:(ident __)? intoKw:(INTO __) file:string_literal {
     return loc({
       type: "vacuum_stmt",
       vacuumKw: read(kw),
@@ -2204,7 +2204,7 @@ bigquery_stmt
 // CREATE RESERVATION
 // CREATE ASSIGNMENT
 create_bigquery_entity_stmt
-  = kw:(CREATE __ bigquery_entity __) name:(table __) asKw:(AS __) json:literal_json {
+  = kw:(CREATE __ bigquery_entity __) name:(table __) asKw:(AS __) json:json_literal {
     const createKw = read(kw);
     const node = {
       createKw,
@@ -2269,7 +2269,7 @@ create_row_access_policy_stmt
     }
 
 row_access_policy_grant
-  = kw:(GRANT __ TO __) list:paren$list$literal_string {
+  = kw:(GRANT __ TO __) list:paren$list$string_literal {
     return loc({
       type: "row_access_policy_grant",
       grantToKw: read(kw),
@@ -2349,7 +2349,7 @@ assert_stmt
   }
 
 assert_as_clause
-  = kw:(AS __) expr:literal_string {
+  = kw:(AS __) expr:string_literal {
     return loc({
       type: "as_clause",
       asKw: read(kw),
@@ -2432,8 +2432,8 @@ mysql_table_opt_name
   / STATS_SAMPLE_PAGES
 
 mysql_table_opt_value
-  = literal_string
-  / literal_number
+  = string_literal
+  / number_literal
   / ident
   / DEFAULT
   / DYNAMIC / FIXED / COMPRESSED / REDUNDANT / COMPACT  // for ROW_FORMAT
@@ -2548,7 +2548,7 @@ constraint_auto_increment
   }
 
 constraint_comment
-  = kw:COMMENT str:(__ literal_string) {
+  = kw:COMMENT str:(__ string_literal) {
     return loc({
       type: "constraint_comment",
       commentKw: kw,
@@ -2557,7 +2557,7 @@ constraint_comment
   }
 
 constraint_collate
-  = kw:COLLATE id:(__ (ident / literal_string)) {
+  = kw:COLLATE id:(__ (ident / string_literal)) {
     return loc({
       type: "constraint_collate",
       collateKw: kw,
@@ -2589,7 +2589,7 @@ constraint_storage
   }
 
 constraint_engine_attribute
-  = kw:(ENGINE_ATTRIBUTE / SECONDARY_ENGINE_ATTRIBUTE) eq:(__ "=")? v:(__ literal_string) {
+  = kw:(ENGINE_ATTRIBUTE / SECONDARY_ENGINE_ATTRIBUTE) eq:(__ "=")? v:(__ string_literal) {
     return loc({
       type: "constraint_engine_attribute",
       engineAttributeKw: eq ? trailing(kw, eq[0]) : kw,
@@ -3040,7 +3040,7 @@ regexp_op_kw
   / kw:MATCH &sqlite { return kw; }
 
 escape_expr
-  = left:bitwise_or_expr c1:__ op:ESCAPE c2:__ right:literal_string {
+  = left:bitwise_or_expr c1:__ op:ESCAPE c2:__ right:string_literal {
     return loc(createBinaryExpr(left, c1, op, c2, right));
   }
   / bitwise_or_expr
@@ -3212,7 +3212,7 @@ raise_expr
   }
 
 raise_args
-  = head:(IGNORE / ROLLBACK / ABORT / FAIL) tail:(__ "," __ literal_string)* {
+  = head:(IGNORE / ROLLBACK / ABORT / FAIL) tail:(__ "," __ string_literal)* {
     return loc(createListExpr(head, tail));
   }
 
@@ -3541,7 +3541,7 @@ paren$list$expr = .
 paren$list$expr_or_default = .
 paren$list$func_param = .
 paren$list$literal = .
-paren$list$literal_string = .
+paren$list$string_literal = .
 paren$list$procedure_param = .
 paren$list$sort_specification = .
 paren$pivot_for_in = .
@@ -3579,7 +3579,7 @@ list$expr_or_explicit_alias = .
 list$func_param = .
 list$ident = .
 list$literal = .
-list$literal_string = .
+list$string_literal = .
 list$type_param = .
 list$named_window = .
 list$procedure_param = .
@@ -3655,7 +3655,7 @@ column
  */
 alias_ident
   = ident
-  / s:literal_plain_string { return loc(createIdentifier(s.text, s.value)); }
+  / s:string_literal_plain { return loc(createIdentifier(s.text, s.value)); }
 
 ident "identifier"
   = name:ident_name !{ return isReservedKeyword(name); } {
@@ -3667,7 +3667,7 @@ quoted_ident
   = &sqlite ident:bracket_quoted_ident { return ident; }
   / (&sqlite / &mysql) ident:backticks_quoted_ident_qq { return ident; }
   / &bigquery ident:(bigquery_quoted_member_expr / backticks_quoted_ident_bs) { return ident; }
-  / &sqlite str:literal_double_quoted_string_qq { return loc(createIdentifier(str.text, str.value)); }
+  / &sqlite str:string_literal_double_quoted_qq { return loc(createIdentifier(str.text, str.value)); }
 
 backticks_quoted_ident_qq
   = "`" chars:([^`] / escaped_backtick_qq)+ "`" { return loc(createIdentifier(text(), chars.join(""))); }
@@ -3783,21 +3783,21 @@ expr_or_explicit_alias
  * ------------------------------------------------------------------------------------ *
  */
 literal
-  = literal_string
-  / literal_number
-  / literal_blob
-  / literal_boolean
-  / literal_null
-  / literal_datetime
-  / literal_json
-  / literal_numeric
+  = string_literal
+  / number_literal
+  / blob_literal
+  / boolean_literal
+  / null_literal
+  / datetime_literal
+  / json_literal
+  / numeric_literal
 
-literal_null
+null_literal
   = kw:NULL {
     return loc({ type: "null", text: kw.text, value: null });
   }
 
-literal_boolean
+boolean_literal
   = kw:TRUE {
     return loc({ type: "boolean", text: kw.text, value: true });
   }
@@ -3805,17 +3805,17 @@ literal_boolean
     return loc({ type: "boolean", text: kw.text, value: false });
   }
 
-literal_string "string"
-  = &mysql s:literal_string_mysql { return s; }
-  / (&sqlite / &bigquery) s:literal_plain_string { return s; }
+string_literal "string"
+  = &mysql s:string_literal_mysql { return s; }
+  / (&sqlite / &bigquery) s:string_literal_plain { return s; }
 
-literal_string_mysql
-  = literal_string_with_charset
-  / literal_plain_string
-  / literal_natural_charset_string
+string_literal_mysql
+  = string_literal_with_charset
+  / string_literal_plain
+  / string_literal_natural_charset
 
-literal_string_with_charset // for MySQL only
-  = charset:charset_introducer string:(__ literal_string_without_charset) {
+string_literal_with_charset // for MySQL only
+  = charset:charset_introducer string:(__ string_literal_without_charset) {
     return loc({
       type: "string_with_charset",
       charset,
@@ -3823,22 +3823,22 @@ literal_string_with_charset // for MySQL only
     });
   }
 
-literal_string_without_charset // for MySQL only
-  = literal_blob
-  / literal_plain_string
+string_literal_without_charset // for MySQL only
+  = blob_literal
+  / string_literal_plain
 
 // The most ordinary string type, without any prefixes
-literal_plain_string
+string_literal_plain
   = &bigquery s:(
-      literal_triple_single_quoted_string
-    / literal_triple_double_quoted_string
-    / literal_single_quoted_string_bs
-    / literal_double_quoted_string_bs
-    / literal_raw_string) { return s; }
-  / &sqlite s:literal_single_quoted_string_qq { return s; }
+      string_literal_triple_single_quoted
+    / string_literal_triple_double_quoted
+    / string_literal_single_quoted_bs
+    / string_literal_double_quoted_bs
+    / string_literal_raw) { return s; }
+  / &sqlite s:string_literal_single_quoted_qq { return s; }
   / &mysql s:(
-      literal_single_quoted_string_qq_bs
-    / literal_double_quoted_string_qq_bs) { return s; }
+      string_literal_single_quoted_qq_bs
+    / string_literal_double_quoted_qq_bs) { return s; }
 
 charset_introducer
   = "_" cs:charset_name !ident_part { return cs; }
@@ -3887,7 +3887,7 @@ charset_name
   / "hp8"i
   / "gbk"i
 
-literal_single_quoted_string_qq_bs // with repeated quote or backslash for escaping
+string_literal_single_quoted_qq_bs // with repeated quote or backslash for escaping
   = "'" chars:([^'\\] / escaped_single_quote_qq / backslash_escape)* "'" {
     return loc({
       type: "string",
@@ -3896,7 +3896,7 @@ literal_single_quoted_string_qq_bs // with repeated quote or backslash for escap
     });
   }
 
-literal_single_quoted_string_bs // with backslash for escaping
+string_literal_single_quoted_bs // with backslash for escaping
   = "'" chars:([^'\\] / backslash_escape)* "'" {
     return loc({
       type: "string",
@@ -3905,7 +3905,7 @@ literal_single_quoted_string_bs // with backslash for escaping
     });
   }
 
-literal_single_quoted_string_qq // with repeated quote for escaping
+string_literal_single_quoted_qq // with repeated quote for escaping
   = "'" chars:([^'] / escaped_single_quote_qq)* "'" {
     return loc({
       type: "string",
@@ -3917,7 +3917,7 @@ literal_single_quoted_string_qq // with repeated quote for escaping
 escaped_single_quote_qq
   = "''" { return "'"; }
 
-literal_double_quoted_string_qq // with repeated quote for escaping
+string_literal_double_quoted_qq // with repeated quote for escaping
   = "\"" chars:([^"] / escaped_double_quote_qq)* "\"" {
     return loc({
       type: "string",
@@ -3929,7 +3929,7 @@ literal_double_quoted_string_qq // with repeated quote for escaping
 escaped_double_quote_qq
   = '""' { return '"'; }
 
-literal_double_quoted_string_qq_bs // with repeated quote or backslash for escaping
+string_literal_double_quoted_qq_bs // with repeated quote or backslash for escaping
   = "\"" chars:([^"\\] / escaped_double_quote_qq / backslash_escape)* "\"" {
     return loc({
       type: "string",
@@ -3938,7 +3938,7 @@ literal_double_quoted_string_qq_bs // with repeated quote or backslash for escap
     });
   }
 
-literal_double_quoted_string_bs // with backslash for escaping
+string_literal_double_quoted_bs // with backslash for escaping
   = "\"" chars:([^"\\] / backslash_escape)* "\"" {
     return loc({
       type: "string",
@@ -3947,7 +3947,7 @@ literal_double_quoted_string_bs // with backslash for escaping
     });
   }
 
-literal_triple_single_quoted_string
+string_literal_triple_single_quoted
   = "'''" chars:([^'\\] / single_quote_in_3quote / backslash_escape)* "'''" {
     return loc({
       type: "string",
@@ -3959,7 +3959,7 @@ literal_triple_single_quoted_string
 single_quote_in_3quote
   = s:("''" / "'") !"'" { return s; }
 
-literal_triple_double_quoted_string
+string_literal_triple_double_quoted
   = '"""' chars:([^"\\] / double_quote_in_3quote / backslash_escape)* '"""' {
     return loc({
       type: "string",
@@ -4001,8 +4001,8 @@ backslash_escape
   / "\\Z" &mysql { return "\x1A"; /* Ctrl+Z (ASCII code 26 dec, 1A hex) */ }
   / "\\" c:. { return c; }
 
-literal_natural_charset_string
-  = "N"i str:literal_single_quoted_string_qq_bs {
+string_literal_natural_charset
+  = "N"i str:string_literal_single_quoted_qq_bs {
     return loc({
       type: "string",
       text: text(),
@@ -4010,8 +4010,8 @@ literal_natural_charset_string
     });
   }
 
-literal_raw_string
-  = "R"i cs:literal_raw_string_chars {
+string_literal_raw
+  = "R"i cs:string_literal_raw_chars {
     return loc({
       type: "string",
       text: text(),
@@ -4019,8 +4019,8 @@ literal_raw_string
     });
   }
 
-literal_raw_byte_string
-  = ("RB"i / "BR"i) cs:literal_raw_string_chars {
+blob_literal_raw_byte
+  = ("RB"i / "BR"i) cs:string_literal_raw_chars {
     return loc({
       type: "blob",
       text: text(),
@@ -4028,18 +4028,18 @@ literal_raw_byte_string
     });
   }
 
-literal_raw_string_chars
+string_literal_raw_chars
   = "'''" cs:([^'] / single_quote_in_3quote)* "'''" { return cs; }
   / '"""' cs:([^"] / double_quote_in_3quote)* '"""' { return cs; }
   / "'" cs:[^']* "'" { return cs; }
   / '"' cs:[^"]* '"' { return cs; }
 
-literal_byte_string
+blob_literal_byte
   = "B"i str:(
-      literal_triple_double_quoted_string
-    / literal_triple_single_quoted_string
-    / literal_double_quoted_string_bs
-    / literal_single_quoted_string_bs) {
+      string_literal_triple_double_quoted
+    / string_literal_triple_single_quoted
+    / string_literal_double_quoted_bs
+    / string_literal_single_quoted_bs) {
       return loc({
         type: "blob",
         text: text(),
@@ -4047,9 +4047,9 @@ literal_byte_string
       });
     }
 
-literal_datetime
+datetime_literal
   = kw:(TIME / DATE / TIMESTAMP / DATETIME)
-    str:(__ literal_plain_string) {
+    str:(__ string_literal_plain) {
       return loc({
         type: "datetime",
         kw,
@@ -4057,8 +4057,8 @@ literal_datetime
       });
     }
 
-literal_json
-  = &bigquery kw:JSON str:(__ literal_plain_string) {
+json_literal
+  = &bigquery kw:JSON str:(__ string_literal_plain) {
     return loc({
       type: "json",
       jsonKw: kw,
@@ -4066,8 +4066,8 @@ literal_json
     });
   }
 
-literal_numeric
-  = &bigquery kw:(NUMERIC / BIGNUMERIC) str:(__ literal_plain_string) {
+numeric_literal
+  = &bigquery kw:(NUMERIC / BIGNUMERIC) str:(__ string_literal_plain) {
     return loc({
       type: "numeric",
       numericKw: kw,
@@ -4075,14 +4075,14 @@ literal_numeric
     });
   }
 
-literal_blob
-  = literal_hex_blob
-  / &mysql n:literal_bit_blob { return n; }
-  / &mysql n:literal_hex_number_blob { return n; }
-  / &bigquery n:literal_raw_byte_string { return n; }
-  / &bigquery n:literal_byte_string { return n; }
+blob_literal
+  = blob_literal_hex_string
+  / &mysql n:blob_literal_bit_string { return n; }
+  / &mysql n:blob_literal_hex { return n; }
+  / &bigquery n:blob_literal_raw_byte { return n; }
+  / &bigquery n:blob_literal_byte { return n; }
 
-literal_hex_blob
+blob_literal_hex_string
   = "X"i "'" chars:hex_digit* "'" {
     return loc({
       type: "blob",
@@ -4091,7 +4091,7 @@ literal_hex_blob
     });
   }
 
-literal_bit_blob
+blob_literal_bit_string
   = "b"i "'" chars:[01]* "'" {
     return loc({
       type: "blob",
@@ -4100,11 +4100,11 @@ literal_bit_blob
     });
   }
 
-literal_number "number"
-  = literal_decimal_number
-  / n:literal_hex_number (&sqlite / &bigquery) { return n; }
+number_literal "number"
+  = number_literal_decimal
+  / n:number_literal_hex (&sqlite / &bigquery) { return n; }
 
-literal_hex_number
+number_literal_hex
   = "0x" hex_digit+ {
     return loc({
       type: "number",
@@ -4114,7 +4114,7 @@ literal_hex_number
   }
 
 // The exact same syntax as above, but treated as blob
-literal_hex_number_blob
+blob_literal_hex
   = "0x" chars:hex_digit+ {
     return loc({
       type: "blob",
@@ -4123,7 +4123,7 @@ literal_hex_number_blob
     });
   }
 
-literal_decimal_number
+number_literal_decimal
   = int frac? exp? !ident_start {
     return loc({
       type: "number",
