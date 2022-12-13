@@ -35,12 +35,16 @@ describe("array", () => {
               "params": {
                 "items": [
                   {
-                    "nameKw": {
-                      "name": "INT64",
-                      "text": "INT64",
-                      "type": "keyword",
+                    "constraints": [],
+                    "dataType": {
+                      "nameKw": {
+                        "name": "INT64",
+                        "text": "INT64",
+                        "type": "keyword",
+                      },
+                      "type": "data_type",
                     },
-                    "type": "data_type",
+                    "type": "array_type_param",
                   },
                 ],
                 "type": "list_expr",

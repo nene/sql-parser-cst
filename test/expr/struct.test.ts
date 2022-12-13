@@ -43,12 +43,8 @@ describe("struct", () => {
               "params": {
                 "items": [
                   {
-                    "expr1": {
-                      "name": "id",
-                      "text": "id",
-                      "type": "identifier",
-                    },
-                    "expr2": {
+                    "constraints": [],
+                    "dataType": {
                       "nameKw": {
                         "name": "INT64",
                         "text": "INT64",
@@ -56,7 +52,12 @@ describe("struct", () => {
                       },
                       "type": "data_type",
                     },
-                    "type": "pair_expr",
+                    "name": {
+                      "name": "id",
+                      "text": "id",
+                      "type": "identifier",
+                    },
+                    "type": "struct_type_param",
                   },
                 ],
                 "type": "list_expr",

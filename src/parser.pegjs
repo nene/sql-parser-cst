@@ -2796,18 +2796,35 @@ table_type
   }
 
 generic_type_params
-  = "<" list:(__ list$name_and_type_pair __) ">" {
+  = "<" list:(__ list$type_param __) ">" {
     return loc({
       type: "generic_type_params",
       params: read(list),
     });
   }
 
-name_and_type_pair
-  = expr1:ident expr2:(__ data_type) {
-    return loc({ type: "pair_expr", expr1, expr2: read(expr2) });
+type_param
+  = struct_type_param
+  / array_type_param
+
+struct_type_param
+  = name:(ident __) dataType:data_type constraints:(__ column_constraint_type)* {
+    return loc({
+      type: "struct_type_param",
+      name: read(name),
+      dataType,
+      constraints: constraints.map(read),
+    });
   }
-  / data_type
+
+array_type_param
+  = dataType:data_type constraints:(__ column_constraint_type)* {
+    return loc({
+      type: "array_type_param",
+      dataType,
+      constraints: constraints.map(read),
+    });
+  }
 
 type_name
   = &bigquery t:type_name_bigquery { return t; }
@@ -3563,7 +3580,7 @@ list$func_param = .
 list$ident = .
 list$literal = .
 list$literal_string = .
-list$name_and_type_pair = .
+list$type_param = .
 list$named_window = .
 list$procedure_param = .
 list$sort_specification = .

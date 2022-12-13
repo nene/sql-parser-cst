@@ -182,6 +182,38 @@ describe("data types", () => {
       it("nested STRUCTs and ARRAYs", () => {
         testType("ARRAY<STRUCT<x ARRAY<INT64>>>");
       });
+
+      describe("array element constraints", () => {
+        it("not-nullable ARRAY", () => {
+          testType("ARRAY<INT64 NOT NULL>");
+        });
+
+        it("string array with collation", () => {
+          testType("ARRAY<STRING COLLATE 'und:ci'>");
+        });
+      });
+
+      describe("struct field constraints", () => {
+        it("not-nullable STRUCT", () => {
+          testType("STRUCT<name STRING NOT NULL>");
+        });
+
+        it("struct field with collation", () => {
+          testType("STRUCT<name STRING COLLATE 'und:ci'>");
+        });
+
+        it("struct field with default", () => {
+          testType("STRUCT<name STRING DEFAULT 'unknown'>");
+        });
+
+        it("struct field with options", () => {
+          testType("STRUCT<name STRING OPTIONS(description='a string field')>");
+        });
+
+        it("struct field with multiple constraints", () => {
+          testType("STRUCT<id INT NOT NULL OPTIONS(description='GUID') DEFAULT 1>");
+        });
+      });
     });
 
     it("GEOGRAPHY type", () => {

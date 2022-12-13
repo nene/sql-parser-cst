@@ -590,6 +590,9 @@ const showNode = cstTransformer<string>({
   // Data types
   data_type: (node) => show([node.nameKw, node.params]),
   generic_type_params: (node) => show(["<", node.params, ">"]),
+  array_type_param: (node) => show([node.dataType, node.constraints]),
+  struct_type_param: (node) =>
+    show([node.name, node.dataType, node.constraints]),
 
   // Tables & columns
   member_expr: (node) =>
