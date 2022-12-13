@@ -3844,49 +3844,8 @@ string_literal_plain
 charset_introducer
   = "_" cs:charset_name !ident_part { return cs; }
 
-// these are sorted by length, so we try to match first the longest
 charset_name
-  = "armscii8"i
-  / "macroman"i
-  / "keybcs2"i
-  / "utf8mb4"i
-  / "utf16le"i
-  / "geostd8"i
-  / "eucjpms"i
-  / "gb18030"i
-  / "latin1"i
-  / "latin2"i
-  / "hebrew"i
-  / "tis620"i
-  / "gb2312"i
-  / "cp1250"i
-  / "latin5"i
-  / "latin7"i
-  / "cp1251"i
-  / "cp1256"i
-  / "cp1257"i
-  / "binary"i
-  / "cp850"i
-  / "koi8r"i
-  / "ascii"i
-  / "euckr"i
-  / "koi8u"i
-  / "greek"i
-  / "cp866"i
-  / "macce"i
-  / "cp852"i
-  / "utf16"i
-  / "utf32"i
-  / "cp932"i
-  / "big5"i
-  / "dec8"i
-  / "swe7"i
-  / "ujis"i
-  / "sjis"i
-  / "utf8"i
-  / "ucs2"i
-  / "hp8"i
-  / "gbk"i
+  = ident_name_basic { return text(); }
 
 string_literal_single_quoted_qq_bs // with repeated quote or backslash for escaping
   = "'" chars:([^'\\] / escaped_single_quote_qq / backslash_escape)* "'" {
