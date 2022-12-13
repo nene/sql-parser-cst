@@ -6,7 +6,10 @@ export type Literal =
   | BlobLiteral
   | BooleanLiteral
   | NullLiteral
-  | DateTimeLiteral
+  | DatetimeLiteral
+  | TimeLiteral
+  | DateLiteral
+  | TimestampLiteral
   | JsonLiteral
   | NumericLiteral
   | BignumericLiteral;
@@ -41,9 +44,27 @@ export interface NullLiteral extends BaseNode {
   value: null;
 }
 
-export interface DateTimeLiteral extends BaseNode {
+export interface DatetimeLiteral extends BaseNode {
   type: "datetime_literal";
-  kw: Keyword<"TIME" | "DATE" | "TIMESTAMP" | "DATETIME">;
+  datetimeKw: Keyword<"DATETIME">;
+  string: StringLiteral;
+}
+
+export interface TimeLiteral extends BaseNode {
+  type: "time_literal";
+  timeKw: Keyword<"TIME">;
+  string: StringLiteral;
+}
+
+export interface DateLiteral extends BaseNode {
+  type: "date_literal";
+  dateKw: Keyword<"DATE">;
+  string: StringLiteral;
+}
+
+export interface TimestampLiteral extends BaseNode {
+  type: "timestamp_literal";
+  timestampKw: Keyword<"TIMESTAMP">;
   string: StringLiteral;
 }
 

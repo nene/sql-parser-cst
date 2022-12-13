@@ -612,7 +612,10 @@ const showNode = cstTransformer<string>({
 
   // special literals
   string_with_charset: (node) => "_" + node.charset + show(node.string),
-  datetime_literal: (node) => show([node.kw, node.string]),
+  datetime_literal: (node) => show([node.datetimeKw, node.string]),
+  date_literal: (node) => show([node.dateKw, node.string]),
+  time_literal: (node) => show([node.timeKw, node.string]),
+  timestamp_literal: (node) => show([node.timestampKw, node.string]),
   json_literal: (node) => show([node.jsonKw, node.string]),
   numeric_literal: (node) => show([node.numericKw, node.string]),
   bignumeric_literal: (node) => show([node.bignumericKw, node.string]),

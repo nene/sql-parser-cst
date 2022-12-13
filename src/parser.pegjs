@@ -4049,11 +4049,31 @@ blob_literal_byte
     }
 
 datetime_literal
-  = kw:(TIME / DATE / TIMESTAMP / DATETIME)
-    str:(__ string_literal_plain) {
+  = kw:DATETIME str:(__ string_literal_plain) {
       return loc({
         type: "datetime_literal",
-        kw,
+        datetimeKw: kw,
+        string: read(str)
+      });
+    }
+  / kw:TIMESTAMP str:(__ string_literal_plain) {
+      return loc({
+        type: "timestamp_literal",
+        timestampKw: kw,
+        string: read(str)
+      });
+    }
+  / kw:DATE str:(__ string_literal_plain) {
+      return loc({
+        type: "date_literal",
+        dateKw: kw,
+        string: read(str)
+      });
+    }
+  / kw:TIME str:(__ string_literal_plain) {
+      return loc({
+        type: "time_literal",
+        timeKw: kw,
         string: read(str)
       });
     }
