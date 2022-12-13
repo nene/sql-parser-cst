@@ -1,4 +1,4 @@
-import { dialect, testWc } from "./test_utils";
+import { dialect, testWc } from "../test_utils";
 
 describe("BigQuery specific statements", () => {
   dialect("bigquery", () => {
