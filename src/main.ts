@@ -1,7 +1,6 @@
 export * from "./cst/Node";
 export * from "./cstVisitor";
 export * from "./cstTransformer";
-export { format } from "./format/format";
 export { DialectName, ParserOptions } from "./ParserOptions";
 export { FormattedSyntaxError } from "./FormattedSyntaxError";
 
