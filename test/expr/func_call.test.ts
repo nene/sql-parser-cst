@@ -32,7 +32,7 @@ describe("function call", () => {
               "items": [
                 {
                   "text": "1",
-                  "type": "number",
+                  "type": "number_literal",
                   "value": 1,
                 },
               ],

@@ -3794,15 +3794,15 @@ literal
 
 null_literal
   = kw:NULL {
-    return loc({ type: "null", text: kw.text, value: null });
+    return loc({ type: "null_literal", text: kw.text, value: null });
   }
 
 boolean_literal
   = kw:TRUE {
-    return loc({ type: "boolean", text: kw.text, value: true });
+    return loc({ type: "boolean_literal", text: kw.text, value: true });
   }
   / kw:FALSE {
-    return loc({ type: "boolean", text: kw.text, value: false });
+    return loc({ type: "boolean_literal", text: kw.text, value: false });
   }
 
 string_literal "string"
@@ -3890,7 +3890,7 @@ charset_name
 string_literal_single_quoted_qq_bs // with repeated quote or backslash for escaping
   = "'" chars:([^'\\] / escaped_single_quote_qq / backslash_escape)* "'" {
     return loc({
-      type: "string",
+      type: "string_literal",
       text: text(),
       value: chars.join(""),
     });
@@ -3899,7 +3899,7 @@ string_literal_single_quoted_qq_bs // with repeated quote or backslash for escap
 string_literal_single_quoted_bs // with backslash for escaping
   = "'" chars:([^'\\] / backslash_escape)* "'" {
     return loc({
-      type: "string",
+      type: "string_literal",
       text: text(),
       value: chars.join(""),
     });
@@ -3908,7 +3908,7 @@ string_literal_single_quoted_bs // with backslash for escaping
 string_literal_single_quoted_qq // with repeated quote for escaping
   = "'" chars:([^'] / escaped_single_quote_qq)* "'" {
     return loc({
-      type: "string",
+      type: "string_literal",
       text: text(),
       value: chars.join(""),
     });
@@ -3920,7 +3920,7 @@ escaped_single_quote_qq
 string_literal_double_quoted_qq // with repeated quote for escaping
   = "\"" chars:([^"] / escaped_double_quote_qq)* "\"" {
     return loc({
-      type: "string",
+      type: "string_literal",
       text: text(),
       value: chars.join(""),
     });
@@ -3932,7 +3932,7 @@ escaped_double_quote_qq
 string_literal_double_quoted_qq_bs // with repeated quote or backslash for escaping
   = "\"" chars:([^"\\] / escaped_double_quote_qq / backslash_escape)* "\"" {
     return loc({
-      type: "string",
+      type: "string_literal",
       text: text(),
       value: chars.join(""),
     });
@@ -3941,7 +3941,7 @@ string_literal_double_quoted_qq_bs // with repeated quote or backslash for escap
 string_literal_double_quoted_bs // with backslash for escaping
   = "\"" chars:([^"\\] / backslash_escape)* "\"" {
     return loc({
-      type: "string",
+      type: "string_literal",
       text: text(),
       value: chars.join(""),
     });
@@ -3950,7 +3950,7 @@ string_literal_double_quoted_bs // with backslash for escaping
 string_literal_triple_single_quoted
   = "'''" chars:([^'\\] / single_quote_in_3quote / backslash_escape)* "'''" {
     return loc({
-      type: "string",
+      type: "string_literal",
       text: text(),
       value: chars.join(""),
     });
@@ -3962,7 +3962,7 @@ single_quote_in_3quote
 string_literal_triple_double_quoted
   = '"""' chars:([^"\\] / double_quote_in_3quote / backslash_escape)* '"""' {
     return loc({
-      type: "string",
+      type: "string_literal",
       text: text(),
       value: chars.join(""),
     });
@@ -4004,7 +4004,7 @@ backslash_escape
 string_literal_natural_charset
   = "N"i str:string_literal_single_quoted_qq_bs {
     return loc({
-      type: "string",
+      type: "string_literal",
       text: text(),
       value: str.value,
     });
@@ -4013,7 +4013,7 @@ string_literal_natural_charset
 string_literal_raw
   = "R"i cs:string_literal_raw_chars {
     return loc({
-      type: "string",
+      type: "string_literal",
       text: text(),
       value: cs.join(""),
     });
@@ -4022,7 +4022,7 @@ string_literal_raw
 blob_literal_raw_byte
   = ("RB"i / "BR"i) cs:string_literal_raw_chars {
     return loc({
-      type: "blob",
+      type: "blob_literal",
       text: text(),
       value: parseTextBlob(cs.join("")),
     });
@@ -4041,7 +4041,7 @@ blob_literal_byte
     / string_literal_double_quoted_bs
     / string_literal_single_quoted_bs) {
       return loc({
-        type: "blob",
+        type: "blob_literal",
         text: text(),
         value: parseTextBlob(str.value),
       });
@@ -4051,7 +4051,7 @@ datetime_literal
   = kw:(TIME / DATE / TIMESTAMP / DATETIME)
     str:(__ string_literal_plain) {
       return loc({
-        type: "datetime",
+        type: "datetime_literal",
         kw,
         string: read(str)
       });
@@ -4060,7 +4060,7 @@ datetime_literal
 json_literal
   = &bigquery kw:JSON str:(__ string_literal_plain) {
     return loc({
-      type: "json",
+      type: "json_literal",
       jsonKw: kw,
       string: read(str),
     });
@@ -4069,7 +4069,7 @@ json_literal
 numeric_literal
   = &bigquery kw:(NUMERIC / BIGNUMERIC) str:(__ string_literal_plain) {
     return loc({
-      type: "numeric",
+      type: "numeric_literal",
       numericKw: kw,
       string: read(str),
     });
@@ -4085,7 +4085,7 @@ blob_literal
 blob_literal_hex_string
   = "X"i "'" chars:hex_digit* "'" {
     return loc({
-      type: "blob",
+      type: "blob_literal",
       text: text(),
       value: parseHexBlob(chars.join("")),
     });
@@ -4094,7 +4094,7 @@ blob_literal_hex_string
 blob_literal_bit_string
   = "b"i "'" chars:[01]* "'" {
     return loc({
-      type: "blob",
+      type: "blob_literal",
       text: text(),
       value: parseBitBlob(chars.join("")),
     });
@@ -4107,7 +4107,7 @@ number_literal "number"
 number_literal_hex
   = "0x" hex_digit+ {
     return loc({
-      type: "number",
+      type: "number_literal",
       text: text(),
       value: parseInt(text(), 16),
     });
@@ -4117,7 +4117,7 @@ number_literal_hex
 blob_literal_hex
   = "0x" chars:hex_digit+ {
     return loc({
-      type: "blob",
+      type: "blob_literal",
       text: text(),
       value: parseHexBlob(chars.join("")),
     });
@@ -4126,7 +4126,7 @@ blob_literal_hex
 number_literal_decimal
   = int frac? exp? !ident_start {
     return loc({
-      type: "number",
+      type: "number_literal",
       text: text(),
       value: parseFloat(text()),
     });

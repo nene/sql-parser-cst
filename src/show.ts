@@ -612,18 +612,18 @@ const showNode = cstTransformer<string>({
 
   // special literals
   string_with_charset: (node) => "_" + node.charset + show(node.string),
-  datetime: (node) => show([node.kw, node.string]),
-  json: (node) => show([node.jsonKw, node.string]),
-  numeric: (node) => show([node.numericKw, node.string]),
+  datetime_literal: (node) => show([node.kw, node.string]),
+  json_literal: (node) => show([node.jsonKw, node.string]),
+  numeric_literal: (node) => show([node.numericKw, node.string]),
 
   // Basic language elements
   keyword: (node) => node.text,
   identifier: (node) => node.text,
-  string: (node) => node.text,
-  number: (node) => node.text,
-  blob: (node) => node.text,
-  boolean: (node) => node.text,
-  null: (node) => node.text,
+  string_literal: (node) => node.text,
+  number_literal: (node) => node.text,
+  blob_literal: (node) => node.text,
+  boolean_literal: (node) => node.text,
+  null_literal: (node) => node.text,
   parameter: (node) => node.text,
 
   // Cast to FullTransformMap, so TypeScript ensures all node types are covered

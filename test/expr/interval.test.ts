@@ -25,7 +25,7 @@ describe("temporal intervals", () => {
         {
           "expr": {
             "text": "42",
-            "type": "number",
+            "type": "number_literal",
             "value": 42,
           },
           "intervalKw": {
@@ -80,7 +80,7 @@ describe("temporal intervals", () => {
         {
           "expr": {
             "text": "'3-6'",
-            "type": "string",
+            "type": "string_literal",
             "value": "3-6",
           },
           "intervalKw": {

@@ -11,10 +11,10 @@ describe("date/time literal", () => {
         },
         "string": {
           "text": "'10:05:58'",
-          "type": "string",
+          "type": "string_literal",
           "value": "10:05:58",
         },
-        "type": "datetime",
+        "type": "datetime_literal",
       }
     `);
     testExpr(`TIME '20:15:00'`);

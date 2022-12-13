@@ -183,7 +183,7 @@ describe("window functions", () => {
                   "end": {
                     "expr": {
                       "text": "2",
-                      "type": "number",
+                      "type": "number_literal",
                       "value": 2,
                     },
                     "followingKw": {

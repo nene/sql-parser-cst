@@ -137,17 +137,17 @@ describe("select", () => {
                 "items": [
                   {
                     "text": "1",
-                    "type": "number",
+                    "type": "number_literal",
                     "value": 1,
                   },
                   {
                     "text": "2",
-                    "type": "number",
+                    "type": "number_literal",
                     "value": 2,
                   },
                   {
                     "text": "3",
-                    "type": "number",
+                    "type": "number_literal",
                     "value": 3,
                   },
                 ],
@@ -210,7 +210,7 @@ describe("select", () => {
                     },
                     "expr": {
                       "text": "1",
-                      "type": "number",
+                      "type": "number_literal",
                       "value": 1,
                     },
                     "type": "alias",

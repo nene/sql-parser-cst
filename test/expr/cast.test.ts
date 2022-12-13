@@ -40,7 +40,7 @@ describe("type cast", () => {
             },
             "expr": {
               "text": "10",
-              "type": "number",
+              "type": "number_literal",
               "value": 10,
             },
             "format": undefined,

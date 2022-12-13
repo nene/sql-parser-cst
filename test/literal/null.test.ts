@@ -5,7 +5,7 @@ describe("null literal", () => {
     expect(parseExpr(`null`)).toMatchInlineSnapshot(`
       {
         "text": "null",
-        "type": "null",
+        "type": "null_literal",
         "value": null,
       }
     `);

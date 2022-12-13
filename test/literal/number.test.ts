@@ -6,7 +6,7 @@ describe("number literal", () => {
     expect(parseExpr(`0`)).toMatchInlineSnapshot(`
       {
         "text": "0",
-        "type": "number",
+        "type": "number_literal",
         "value": 0,
       }
     `);
@@ -17,7 +17,7 @@ describe("number literal", () => {
     expect(parseExpr(`15`)).toMatchInlineSnapshot(`
       {
         "text": "15",
-        "type": "number",
+        "type": "number_literal",
         "value": 15,
       }
     `);
@@ -28,7 +28,7 @@ describe("number literal", () => {
     expect(parseExpr(`0.15`)).toMatchInlineSnapshot(`
       {
         "text": "0.15",
-        "type": "number",
+        "type": "number_literal",
         "value": 0.15,
       }
     `);
@@ -50,7 +50,7 @@ describe("number literal", () => {
       expect(parseExpr(`0x12FC0a`)).toMatchInlineSnapshot(`
         {
           "text": "0x12FC0a",
-          "type": "number",
+          "type": "number_literal",
           "value": 1244170,
         }
       `);

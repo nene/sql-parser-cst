@@ -58,12 +58,12 @@ describe("array", () => {
               "items": [
                 {
                   "text": "1",
-                  "type": "number",
+                  "type": "number_literal",
                   "value": 1,
                 },
                 {
                   "text": "2",
-                  "type": "number",
+                  "type": "number_literal",
                   "value": 2,
                 },
               ],

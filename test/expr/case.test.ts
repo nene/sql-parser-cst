@@ -57,14 +57,14 @@ describe("CASE expression", () => {
               "operator": "=",
               "right": {
                 "text": "1",
-                "type": "number",
+                "type": "number_literal",
                 "value": 1,
               },
               "type": "binary_expr",
             },
             "result": {
               "text": "'dog'",
-              "type": "string",
+              "type": "string_literal",
               "value": "dog",
             },
             "thenKw": {
@@ -87,7 +87,7 @@ describe("CASE expression", () => {
             },
             "result": {
               "text": "'mouse'",
-              "type": "string",
+              "type": "string_literal",
               "value": "mouse",
             },
             "type": "case_else",

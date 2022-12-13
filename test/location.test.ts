@@ -23,7 +23,7 @@ describe("location", () => {
                             9,
                           ],
                           "text": "1",
-                          "type": "number",
+                          "type": "number_literal",
                           "value": 1,
                         },
                         "operator": "+",
@@ -147,7 +147,7 @@ describe("location", () => {
                   15,
                 ],
                 "text": "1",
-                "type": "number",
+                "type": "number_literal",
                 "value": 1,
               },
               "range": [
@@ -169,7 +169,7 @@ describe("location", () => {
                 18,
               ],
               "text": "2",
-              "type": "number",
+              "type": "number_literal",
               "value": 2,
             },
             "range": [

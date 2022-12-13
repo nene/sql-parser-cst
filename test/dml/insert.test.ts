@@ -213,12 +213,12 @@ describe("insert into", () => {
                     "items": [
                       {
                         "text": "1",
-                        "type": "number",
+                        "type": "number_literal",
                         "value": 1,
                       },
                       {
                         "text": "2",
-                        "type": "number",
+                        "type": "number_literal",
                         "value": 2,
                       },
                     ],
@@ -231,12 +231,12 @@ describe("insert into", () => {
                     "items": [
                       {
                         "text": "3",
-                        "type": "number",
+                        "type": "number_literal",
                         "value": 3,
                       },
                       {
                         "text": "4",
-                        "type": "number",
+                        "type": "number_literal",
                         "value": 4,
                       },
                     ],

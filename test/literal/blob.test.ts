@@ -6,7 +6,7 @@ describe("blob literal", () => {
       expect(parseExpr(`x'3132332D414243'`)).toMatchInlineSnapshot(`
         {
           "text": "x'3132332D414243'",
-          "type": "blob",
+          "type": "blob_literal",
           "value": [
             49,
             50,
@@ -25,7 +25,7 @@ describe("blob literal", () => {
       expect(parseExpr(`x'F'`)).toMatchInlineSnapshot(`
         {
           "text": "x'F'",
-          "type": "blob",
+          "type": "blob_literal",
           "value": [
             15,
           ],
@@ -40,7 +40,7 @@ describe("blob literal", () => {
         expect(parseExpr(`0x3132332D414243`)).toMatchInlineSnapshot(`
           {
             "text": "0x3132332D414243",
-            "type": "blob",
+            "type": "blob_literal",
             "value": [
               49,
               50,
@@ -59,7 +59,7 @@ describe("blob literal", () => {
         expect(parseExpr(`0xF`)).toMatchInlineSnapshot(`
           {
             "text": "0xF",
-            "type": "blob",
+            "type": "blob_literal",
             "value": [
               15,
             ],
@@ -76,7 +76,7 @@ describe("blob literal", () => {
         expect(parseExpr(`b'01010111'`)).toMatchInlineSnapshot(`
           {
             "text": "b'01010111'",
-            "type": "blob",
+            "type": "blob_literal",
             "value": [
               87,
             ],
@@ -89,7 +89,7 @@ describe("blob literal", () => {
         expect(parseExpr(`b'1'`)).toMatchInlineSnapshot(`
           {
             "text": "b'1'",
-            "type": "blob",
+            "type": "blob_literal",
             "value": [
               1,
             ],
@@ -112,7 +112,7 @@ describe("blob literal", () => {
         expect(parseExpr(`b'abc'`)).toMatchInlineSnapshot(`
           {
             "text": "b'abc'",
-            "type": "blob",
+            "type": "blob_literal",
             "value": [
               97,
               98,
@@ -126,7 +126,7 @@ describe("blob literal", () => {
         expect(parseExpr(`b'''a''c'''`)).toMatchInlineSnapshot(`
           {
             "text": "b'''a''c'''",
-            "type": "blob",
+            "type": "blob_literal",
             "value": [
               97,
               39,
@@ -138,7 +138,7 @@ describe("blob literal", () => {
         expect(parseExpr(`B"""a""c"""`)).toMatchInlineSnapshot(`
           {
             "text": "B"""a""c"""",
-            "type": "blob",
+            "type": "blob_literal",
             "value": [
               97,
               34,
@@ -153,7 +153,7 @@ describe("blob literal", () => {
         expect(parseExpr(String.raw`B"\n"`)).toMatchInlineSnapshot(`
           {
             "text": "B"\\n"",
-            "type": "blob",
+            "type": "blob_literal",
             "value": [
               10,
             ],
@@ -166,7 +166,7 @@ describe("blob literal", () => {
         expect(parseExpr(String.raw`B"ä1"`)).toMatchInlineSnapshot(`
           {
             "text": "B"ä1"",
-            "type": "blob",
+            "type": "blob_literal",
             "value": [
               195,
               164,
@@ -189,7 +189,7 @@ describe("blob literal", () => {
         expect(parseExpr(`rb'abc'`)).toMatchInlineSnapshot(`
           {
             "text": "rb'abc'",
-            "type": "blob",
+            "type": "blob_literal",
             "value": [
               97,
               98,
@@ -203,7 +203,7 @@ describe("blob literal", () => {
         expect(parseExpr(`rb'''a''c'''`)).toMatchInlineSnapshot(`
           {
             "text": "rb'''a''c'''",
-            "type": "blob",
+            "type": "blob_literal",
             "value": [
               97,
               39,
@@ -215,7 +215,7 @@ describe("blob literal", () => {
         expect(parseExpr(`BR"""a""c"""`)).toMatchInlineSnapshot(`
           {
             "text": "BR"""a""c"""",
-            "type": "blob",
+            "type": "blob_literal",
             "value": [
               97,
               34,
@@ -230,7 +230,7 @@ describe("blob literal", () => {
         expect(parseExpr(String.raw`BR"\n"`)).toMatchInlineSnapshot(`
           {
             "text": "BR"\\n"",
-            "type": "blob",
+            "type": "blob_literal",
             "value": [
               92,
               110,

@@ -22,10 +22,10 @@ describe("NUMERIC & BIGNUMERIC literals", () => {
           },
           "string": {
             "text": "'256'",
-            "type": "string",
+            "type": "string_literal",
             "value": "256",
           },
-          "type": "numeric",
+          "type": "numeric_literal",
         }
       `);
     });
@@ -40,10 +40,10 @@ describe("NUMERIC & BIGNUMERIC literals", () => {
           },
           "string": {
             "text": "'256'",
-            "type": "string",
+            "type": "string_literal",
             "value": "256",
           },
-          "type": "numeric",
+          "type": "numeric_literal",
         }
       `);
     });

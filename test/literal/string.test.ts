@@ -8,7 +8,7 @@ function testStringEscaping(q: Quote, tests: StringTest[]) {
     const quotedText = q + text + q;
     it(`${quotedText} evaluates to: ${visible || value}`, () => {
       expect(parseExpr(quotedText)).toEqual({
-        type: "string",
+        type: "string_literal",
         text: quotedText,
         value,
       });
@@ -54,7 +54,7 @@ describe("string literal", () => {
       expect(parseExpr(`'hello'`)).toMatchInlineSnapshot(`
         {
           "text": "'hello'",
-          "type": "string",
+          "type": "string_literal",
           "value": "hello",
         }
       `);
@@ -68,7 +68,7 @@ describe("string literal", () => {
         expect(parseExpr(`'hel''lo'`)).toMatchInlineSnapshot(`
           {
             "text": "'hel''lo'",
-            "type": "string",
+            "type": "string_literal",
             "value": "hel'lo",
           }
         `);
@@ -95,7 +95,7 @@ describe("string literal", () => {
         expect(parseExpr(`"hello"`)).toMatchInlineSnapshot(`
           {
             "text": ""hello"",
-            "type": "string",
+            "type": "string_literal",
             "value": "hello",
           }
         `);
@@ -110,7 +110,7 @@ describe("string literal", () => {
         expect(parseExpr(`"hel""lo"`)).toMatchInlineSnapshot(`
           {
             "text": ""hel""lo"",
-            "type": "string",
+            "type": "string_literal",
             "value": "hel"lo",
           }
         `);
@@ -137,7 +137,7 @@ describe("string literal", () => {
         expect(parseExpr(`'''It's about time!'''`)).toMatchInlineSnapshot(`
           {
             "text": "'''It's about time!'''",
-            "type": "string",
+            "type": "string_literal",
             "value": "It's about time!",
           }
         `);
@@ -147,7 +147,7 @@ describe("string literal", () => {
         expect(parseExpr(`'''Are you ''sure'' about this?'''`)).toMatchInlineSnapshot(`
           {
             "text": "'''Are you ''sure'' about this?'''",
-            "type": "string",
+            "type": "string_literal",
             "value": "Are you ''sure'' about this?",
           }
         `);
@@ -161,7 +161,7 @@ describe("string literal", () => {
         expect(parseExpr(`"""Are you "sure" about this?"""`)).toMatchInlineSnapshot(`
           {
             "text": """"Are you "sure" about this?"""",
-            "type": "string",
+            "type": "string_literal",
             "value": "Are you "sure" about this?",
           }
         `);
@@ -171,7 +171,7 @@ describe("string literal", () => {
         expect(parseExpr(`"""Are you ""sure"" about this?"""`)).toMatchInlineSnapshot(`
           {
             "text": """"Are you ""sure"" about this?"""",
-            "type": "string",
+            "type": "string_literal",
             "value": "Are you ""sure"" about this?",
           }
         `);
@@ -192,7 +192,7 @@ describe("string literal", () => {
         expect(parseExpr(String.raw`r'no\nescapes'`)).toMatchInlineSnapshot(`
           {
             "text": "r'no\\nescapes'",
-            "type": "string",
+            "type": "string_literal",
             "value": "no\\nescapes",
           }
         `);
@@ -213,7 +213,7 @@ describe("string literal", () => {
             "charset": "binary",
             "string": {
               "text": "'hello'",
-              "type": "string",
+              "type": "string_literal",
               "value": "hello",
             },
             "type": "string_with_charset",
@@ -244,7 +244,7 @@ describe("string literal", () => {
       expect(parseExpr(`N'hello'`)).toMatchInlineSnapshot(`
         {
           "text": "N'hello'",
-          "type": "string",
+          "type": "string_literal",
           "value": "hello",
         }
       `);

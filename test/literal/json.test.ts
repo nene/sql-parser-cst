@@ -19,10 +19,10 @@ describe("JSON literal", () => {
           },
           "string": {
             "text": "'{"key": "value"}'",
-            "type": "string",
+            "type": "string_literal",
             "value": "{"key": "value"}",
           },
-          "type": "json",
+          "type": "json_literal",
         }
       `);
     });

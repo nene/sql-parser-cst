@@ -115,7 +115,7 @@ describe("member_expr", () => {
               "args": {
                 "expr": {
                   "text": "0",
-                  "type": "number",
+                  "type": "number_literal",
                   "value": 0,
                 },
                 "type": "paren_expr",

@@ -115,7 +115,7 @@ which preserves all of this information:
                     "type": "binary_expr",
                     "left": { "type": "identifier", "text": "\"first_name\"", "name": "first_name" },
                     "operator": "||",
-                    "right": { "type": "string", "text": "' jr.'", "value": " jr." }
+                    "right": { "type": "string_literal", "text": "' jr.'", "value": " jr." }
                   }
                 },
                 "asKw": { "type": "keyword", "text": "as", "name": "AS" },

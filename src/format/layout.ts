@@ -101,10 +101,10 @@ const layoutNode = cstTransformer<Layout>({
   // Basic language elements
   keyword: (node) => node.text,
   identifier: (node) => node.text,
-  string: (node) => node.text,
-  number: (node) => node.text,
-  boolean: (node) => node.text,
-  null: (node) => node.text,
+  string_literal: (node) => node.text,
+  number_literal: (node) => node.text,
+  boolean_literal: (node) => node.text,
+  null_literal: (node) => node.text,
 });
 
 // utils for easy creation of lines

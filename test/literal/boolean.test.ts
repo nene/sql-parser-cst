@@ -5,7 +5,7 @@ describe("boolean literal", () => {
     expect(parseExpr(`true`)).toMatchInlineSnapshot(`
       {
         "text": "true",
-        "type": "boolean",
+        "type": "boolean_literal",
         "value": true,
       }
     `);
@@ -17,7 +17,7 @@ describe("boolean literal", () => {
     expect(parseExpr(`false`)).toMatchInlineSnapshot(`
       {
         "text": "false",
-        "type": "boolean",
+        "type": "boolean_literal",
         "value": false,
       }
     `);
