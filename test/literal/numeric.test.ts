@@ -33,7 +33,7 @@ describe("NUMERIC & BIGNUMERIC literals", () => {
     it("parses BIGNUMERIC literal", () => {
       expect(parseExpr(`BIGNUMERIC '256'`)).toMatchInlineSnapshot(`
         {
-          "numericKw": {
+          "bignumericKw": {
             "name": "BIGNUMERIC",
             "text": "BIGNUMERIC",
             "type": "keyword",
@@ -43,7 +43,7 @@ describe("NUMERIC & BIGNUMERIC literals", () => {
             "type": "string_literal",
             "value": "256",
           },
-          "type": "numeric_literal",
+          "type": "bignumeric_literal",
         }
       `);
     });

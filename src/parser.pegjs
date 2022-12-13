@@ -3791,6 +3791,7 @@ literal
   / datetime_literal
   / json_literal
   / numeric_literal
+  / bignumeric_literal
 
 null_literal
   = kw:NULL {
@@ -4067,10 +4068,19 @@ json_literal
   }
 
 numeric_literal
-  = &bigquery kw:(NUMERIC / BIGNUMERIC) str:(__ string_literal_plain) {
+  = &bigquery kw:NUMERIC str:(__ string_literal_plain) {
     return loc({
       type: "numeric_literal",
       numericKw: kw,
+      string: read(str),
+    });
+  }
+
+bignumeric_literal
+  = &bigquery kw:BIGNUMERIC str:(__ string_literal_plain) {
+    return loc({
+      type: "bignumeric_literal",
+      bignumericKw: kw,
       string: read(str),
     });
   }

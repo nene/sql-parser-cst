@@ -615,6 +615,7 @@ const showNode = cstTransformer<string>({
   datetime_literal: (node) => show([node.kw, node.string]),
   json_literal: (node) => show([node.jsonKw, node.string]),
   numeric_literal: (node) => show([node.numericKw, node.string]),
+  bignumeric_literal: (node) => show([node.bignumericKw, node.string]),
 
   // Basic language elements
   keyword: (node) => node.text,
