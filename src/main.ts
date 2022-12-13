@@ -1,13 +1,15 @@
+export * from "./cst/Node";
+export * from "./cstVisitor";
+export * from "./cstTransformer";
+export { format } from "./format/format";
+export { DialectName, ParserOptions } from "./ParserOptions";
+export { FormattedSyntaxError } from "./FormattedSyntaxError";
+
 import { Node, Program } from "./cst/Node";
 import { parse as parseSql, SyntaxError } from "./parser";
 import { show as showSql } from "./show";
-import { DialectName, ParserOptions, validDialectNames } from "./ParserOptions";
+import { ParserOptions, validDialectNames } from "./ParserOptions";
 import { FormattedSyntaxError } from "./FormattedSyntaxError";
-export { format } from "./format/format";
-export * from "./cstVisitor";
-export * from "./cstTransformer";
-
-export { DialectName, ParserOptions };
 
 export function parse(sql: string, options: ParserOptions): Program {
   if (!options || !options.dialect) {
