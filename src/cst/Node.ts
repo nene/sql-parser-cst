@@ -30,50 +30,51 @@ export * from "./Truncate";
 export * from "./Update";
 export * from "./View";
 export * from "./WindowFrame";
-import { AllProgramNodes } from "./Program";
-import { Statement } from "./Statement";
-import { AllColumns, Keyword } from "./Base";
+
 import { Alias } from "./Alias";
 import { AllAlterActionNodes } from "./AlterAction";
+import { AllBigqueryNodes } from "./Bigquery";
+import { AllColumns, Keyword } from "./Base";
 import { AllConstraintNodes } from "./Constraint";
 import { AllCreateTableNodes } from "./CreateTable";
 import { AllDataTypeNodes } from "./DataType";
 import { AllExprNodes } from "./Expr";
+import { AllFrameNodes } from "./WindowFrame";
+import { AllFunctionNodes } from "./Function";
+import { AllIndexNodes } from "./Index";
 import { AllInsertNodes } from "./Insert";
+import { AllMergeNodes } from "./Merge";
+import { AllProcClauseNodes } from "./ProcClause";
+import { AllProcedureNodes } from "./Procedure";
+import { AllProgramNodes } from "./Program";
 import { AllSelectNodes } from "./Select";
+import { AllSqliteNodes } from "./Sqlite";
 import { AllTransactionNodes } from "./Transaction";
 import { AllTriggerNodes } from "./Trigger";
 import { AllUpdateNodes } from "./Update";
-import { AllFrameNodes } from "./WindowFrame";
-import { AllMergeNodes } from "./Merge";
-import { AllSqliteNodes } from "./Sqlite";
-import { AllBigqueryNodes } from "./Bigquery";
-import { AllIndexNodes } from "./Index";
-import { AllProcClauseNodes } from "./ProcClause";
-import { AllFunctionNodes } from "./Function";
-import { AllProcedureNodes } from "./Procedure";
+import { Statement } from "./Statement";
 
 export type Node =
-  | AllProgramNodes
-  | Statement
-  | Keyword
-  | AllColumns
   | Alias
-  | AllExprNodes
-  | AllSelectNodes
+  | AllAlterActionNodes
+  | AllBigqueryNodes
+  | AllColumns
+  | AllConstraintNodes
   | AllCreateTableNodes
   | AllDataTypeNodes
-  | AllConstraintNodes
-  | AllAlterActionNodes
-  | AllTriggerNodes
-  | AllTransactionNodes
+  | AllExprNodes
   | AllFrameNodes
-  | AllInsertNodes
-  | AllUpdateNodes
-  | AllMergeNodes
-  | AllIndexNodes
-  | AllProcClauseNodes
   | AllFunctionNodes
+  | AllIndexNodes
+  | AllInsertNodes
+  | AllMergeNodes
+  | AllProcClauseNodes
   | AllProcedureNodes
+  | AllProgramNodes
+  | AllSelectNodes
   | AllSqliteNodes
-  | AllBigqueryNodes;
+  | AllTransactionNodes
+  | AllTriggerNodes
+  | AllUpdateNodes
+  | Keyword
+  | Statement;
