@@ -1,47 +1,47 @@
-import { AlterTableStmt } from "./AlterTable";
-import { AnalyzeStmt } from "./Analyze";
-import { Empty } from "./Base";
-import { CreateTableStmt } from "./CreateTable";
-import { DeleteStmt } from "./Delete";
-import { DropTableStmt } from "./DropTable";
-import { ExplainStmt } from "./Explain";
+import { AllBigqueryStatements } from "./Bigquery";
+import { AllDclStatements } from "./Dcl";
+import { AllFunctionStatements } from "./Function";
 import { AllIndexStatements } from "./Index";
-import { InsertStmt } from "./Insert";
-import { MergeStmt } from "./Merge";
-import { CompoundSelectStmt, SelectStmt } from "./Select";
+import { AllProcedureStatements } from "./Procedure";
+import { AllSchemaStatements } from "./Schema";
 import { AllSqliteStatements } from "./Sqlite";
 import { AllTransactionStatements } from "./Transaction";
 import { AllTriggerStatements } from "./Trigger";
+import { AllViewStatements } from "./View";
+import { AlterTableStmt } from "./AlterTable";
+import { AnalyzeStmt } from "./Analyze";
+import { CompoundSelectStmt, SelectStmt } from "./Select";
+import { CreateTableStmt } from "./CreateTable";
+import { DeleteStmt } from "./Delete";
+import { DropTableStmt } from "./DropTable";
+import { Empty } from "./Base";
+import { ExplainStmt } from "./Explain";
+import { InsertStmt } from "./Insert";
+import { MergeStmt } from "./Merge";
 import { TruncateStmt } from "./Truncate";
 import { UpdateStmt } from "./Update";
-import { AllViewStatements } from "./View";
-import { AllSchemaStatements } from "./Schema";
-import { AllBigqueryStatements } from "./Bigquery";
-import { AllFunctionStatements } from "./Function";
-import { AllProcedureStatements } from "./Procedure";
-import { AllDclStatements } from "./Dcl";
 
 export type Statement =
-  | Empty
-  | CompoundSelectStmt
-  | SelectStmt
-  | CreateTableStmt
-  | AlterTableStmt
-  | DropTableStmt
-  | InsertStmt
-  | DeleteStmt
-  | TruncateStmt
-  | UpdateStmt
-  | MergeStmt
-  | AllViewStatements
-  | AllSchemaStatements
-  | AllIndexStatements
-  | AllTriggerStatements
-  | AllFunctionStatements
-  | AllProcedureStatements
-  | AnalyzeStmt
-  | ExplainStmt
-  | AllTransactionStatements
+  | AllBigqueryStatements
   | AllDclStatements
+  | AllFunctionStatements
+  | AllIndexStatements
+  | AllProcedureStatements
+  | AllSchemaStatements
   | AllSqliteStatements
-  | AllBigqueryStatements;
+  | AllTransactionStatements
+  | AllTriggerStatements
+  | AllViewStatements
+  | AlterTableStmt
+  | AnalyzeStmt
+  | CompoundSelectStmt
+  | CreateTableStmt
+  | DeleteStmt
+  | DropTableStmt
+  | Empty
+  | ExplainStmt
+  | InsertStmt
+  | MergeStmt
+  | SelectStmt
+  | TruncateStmt
+  | UpdateStmt;
