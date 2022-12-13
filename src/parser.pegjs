@@ -4024,7 +4024,7 @@ literal_raw_byte_string
     return loc({
       type: "blob",
       text: text(),
-      value: parseAsciiBlob(cs),
+      value: parseAsciiBlob(cs.join("")),
     });
   }
 
@@ -4043,7 +4043,7 @@ literal_byte_string
       return loc({
         type: "blob",
         text: text(),
-        value: parseAsciiBlob(str.value.split("")),
+        value: parseAsciiBlob(str.value),
       });
     }
 

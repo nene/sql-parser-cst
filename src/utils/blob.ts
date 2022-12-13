@@ -23,12 +23,12 @@ export const parseBitBlob = (data: string): number[] => {
 };
 
 /**
- * Converts array of chars to decimal array
+ * Converts string to decimal array
  */
-export const parseAsciiBlob = (data: string[]): number[] => {
+export const parseAsciiBlob = (data: string): number[] => {
   // TextEncoder is globally available in NodeJS,
   // but for some reason the type is missing.
   // See: https://github.com/DefinitelyTyped/DefinitelyTyped/discussions/60038
   // @ts-ignore
-  return [...new TextEncoder().encode(data.join(""))];
+  return [...new TextEncoder().encode(data)];
 };
