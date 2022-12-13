@@ -160,6 +160,21 @@ describe("blob literal", () => {
           }
         `);
       });
+
+      it("correctly parses byte values of UTF-8 characters", () => {
+        // encoding of ä in UTF-8: https://unicode-table.com/en/00E4/
+        expect(parseExpr(String.raw`B"ä1"`)).toMatchInlineSnapshot(`
+          {
+            "text": "B"ä1"",
+            "type": "blob",
+            "value": [
+              195,
+              164,
+              49,
+            ],
+          }
+        `);
+      });
     });
 
     describe("raw byte strings", () => {
