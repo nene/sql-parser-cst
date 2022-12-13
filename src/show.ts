@@ -547,6 +547,8 @@ const showNode = cstTransformer<string>({
   alter_bi_capacity_stmt: (node) =>
     show([node.alterBiCapacityKw, node.name, node.actions]),
   assert_stmt: (node) => show([node.assertKw, node.expr, node.as]),
+  export_data_stmt: (node) =>
+    show([node.exportDataKw, node.withConnection, node.options, node.as]),
 
   // Expressions
   list_expr: (node) => show(node.items, ","),

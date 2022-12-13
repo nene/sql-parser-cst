@@ -2199,6 +2199,7 @@ bigquery_stmt
   / alter_project_stmt
   / alter_bi_capacity_stmt
   / assert_stmt
+  / export_data_stmt
 
 // CREATE CAPACITY
 // CREATE RESERVATION
@@ -2350,6 +2351,27 @@ assert_stmt
 
 assert_as_clause
   = kw:(AS __) expr:string_literal {
+    return loc({
+      type: "as_clause",
+      asKw: read(kw),
+      expr,
+    });
+  }
+
+export_data_stmt
+  = kw:(EXPORT __ DATA __) con:(with_connection_clause __)?
+    options:(bigquery_options __) as:compound_select_as_clause {
+      return loc({
+        type: "export_data_stmt",
+        exportDataKw: read(kw),
+        withConnection: read(con),
+        options: read(options),
+        as,
+      });
+    }
+
+compound_select_as_clause
+  = kw:(AS __) expr:compound_select_stmt {
     return loc({
       type: "as_clause",
       asKw: read(kw),
@@ -4335,6 +4357,7 @@ EXCLUSIVE           = kw:"EXCLUSIVE"i           !ident_part { return loc(createK
 EXISTS              = kw:"EXISTS"i              !ident_part { return loc(createKeyword(kw)); }
 EXPANSION           = kw:"EXPANSION"i           !ident_part { return loc(createKeyword(kw)); }
 EXPLAIN             = kw:"EXPLAIN"i             !ident_part { return loc(createKeyword(kw)); }
+EXPORT              = kw:"EXPORT"i              !ident_part { return loc(createKeyword(kw)); }
 EXTERNAL            = kw:"EXTERNAL"i            !ident_part { return loc(createKeyword(kw)); }
 EXTRACT             = kw:"EXTRACT"i             !ident_part { return loc(createKeyword(kw)); }
 FAIL                = kw:"FAIL"i                !ident_part { return loc(createKeyword(kw)); }

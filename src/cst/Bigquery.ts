@@ -9,7 +9,8 @@ import {
   Table,
 } from "./Expr";
 import { JsonLiteral, StringLiteral } from "./Literal";
-import { AsClause } from "./ProcClause";
+import { AsClause, WithConnectionClause } from "./ProcClause";
+import { SubSelect } from "./Select";
 
 export type AllBigqueryNodes =
   | BigqueryOptions
@@ -41,7 +42,8 @@ export type AllBigqueryStatements =
   | AlterOrganizationStmt
   | AlterProjectStmt
   | AlterBiCapacityStmt
-  | AssertStmt;
+  | AssertStmt
+  | ExportDataStmt;
 
 export interface CreateCapacityStmt extends BaseNode {
   type: "create_capacity_stmt";
@@ -152,4 +154,13 @@ export interface AssertStmt extends BaseNode {
   assertKw: Keyword<"ASSERT">;
   expr: Expr;
   as?: AsClause<StringLiteral>;
+}
+
+// EXPORT DATA
+export interface ExportDataStmt extends BaseNode {
+  type: "export_data_stmt";
+  exportDataKw: [Keyword<"EXPORT">, Keyword<"DATA">];
+  withConnection?: WithConnectionClause;
+  options: BigqueryOptions;
+  as: AsClause<SubSelect>;
 }
