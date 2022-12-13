@@ -7,7 +7,7 @@
   import {
     parseHexBlob,
     parseBitBlob,
-    parseAsciiBlob,
+    parseTextBlob,
   } from "./utils/blob";
   import {
     createBinaryExprChain,
@@ -4024,7 +4024,7 @@ literal_raw_byte_string
     return loc({
       type: "blob",
       text: text(),
-      value: parseAsciiBlob(cs.join("")),
+      value: parseTextBlob(cs.join("")),
     });
   }
 
@@ -4043,7 +4043,7 @@ literal_byte_string
       return loc({
         type: "blob",
         text: text(),
-        value: parseAsciiBlob(str.value),
+        value: parseTextBlob(str.value),
       });
     }
 

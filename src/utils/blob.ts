@@ -25,7 +25,7 @@ export const parseBitBlob = (data: string): number[] => {
 /**
  * Converts string to decimal array
  */
-export const parseAsciiBlob = (data: string): number[] => {
+export const parseTextBlob = (data: string): number[] => {
   // TextEncoder is globally available in NodeJS,
   // but for some reason the type is missing.
   // See: https://github.com/DefinitelyTyped/DefinitelyTyped/discussions/60038
