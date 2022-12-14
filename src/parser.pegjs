@@ -2191,6 +2191,7 @@ bigquery_stmt
   / alter_bi_capacity_stmt
   / assert_stmt
   / export_data_stmt
+  / load_data_stmt
 
 // CREATE CAPACITY
 // CREATE RESERVATION
@@ -2367,6 +2368,36 @@ compound_select_as_clause
       type: "as_clause",
       asKw: read(kw),
       expr,
+    });
+  }
+
+load_data_stmt
+  = kw:(LOAD __ DATA __) intoKw:((INTO / OVERWRITE) __) table:table
+    columns:(__ paren$list$column_definition)? clauses:(__ load_data_clause)* {
+      return loc({
+        type: "load_data_stmt",
+        loadDataKw: read(kw),
+        intoKw: read(intoKw),
+        table,
+        columns: read(columns),
+        clauses: clauses.map(read),
+      });
+    }
+
+load_data_clause
+  = partition_by_clause
+  / cluster_by_clause
+  / bigquery_options
+  / from_files_options
+  / with_partition_columns_clause
+  / with_connection_clause
+
+from_files_options
+  = kw:(FROM __ FILES __) options:paren$list$equals_expr {
+    return loc({
+      type: "from_files_options",
+      fromFilesKw: read(kw),
+      options,
     });
   }
 
@@ -4353,6 +4384,7 @@ EXTERNAL            = kw:"EXTERNAL"i            !ident_part { return loc(createK
 EXTRACT             = kw:"EXTRACT"i             !ident_part { return loc(createKeyword(kw)); }
 FAIL                = kw:"FAIL"i                !ident_part { return loc(createKeyword(kw)); }
 FALSE               = kw:"FALSE"i               !ident_part { return loc(createKeyword(kw)); }
+FILES               = kw:"FILES"i               !ident_part { return loc(createKeyword(kw)); }
 FILTER              = kw:"FILTER"i              !ident_part { return loc(createKeyword(kw)); }
 FIRST               = kw:"FIRST"i               !ident_part { return loc(createKeyword(kw)); }
 FIRST_VALUE         = kw:"FIRST_VALUE"i         !ident_part { return loc(createKeyword(kw)); }
@@ -4424,6 +4456,7 @@ LEAD                = kw:"LEAD"i                !ident_part { return loc(createK
 LEFT                = kw:"LEFT"i                !ident_part { return loc(createKeyword(kw)); }
 LIKE                = kw:"LIKE"i                !ident_part { return loc(createKeyword(kw)); }
 LIMIT               = kw:"LIMIT"i               !ident_part { return loc(createKeyword(kw)); }
+LOAD                = kw:"LOAD"i                !ident_part { return loc(createKeyword(kw)); }
 LOCAL               = kw:"LOCAL"i               !ident_part { return loc(createKeyword(kw)); }
 LOCALTIME           = kw:"LOCALTIME"i           !ident_part { return loc(createKeyword(kw)); }
 LOCALTIMESTAMP      = kw:"LOCALTIMESTAMP"i      !ident_part { return loc(createKeyword(kw)); }
@@ -4485,6 +4518,7 @@ OUT                 = kw:"OUT"i                 !ident_part { return loc(createK
 OUTER               = kw:"OUTER"i               !ident_part { return loc(createKeyword(kw)); }
 OUTFILE             = kw:"OUTFILE"i             !ident_part { return loc(createKeyword(kw)); }
 OVER                = kw:"OVER"i                !ident_part { return loc(createKeyword(kw)); }
+OVERWRITE           = kw:"OVERWRITE"i           !ident_part { return loc(createKeyword(kw)); }
 PACK_KEYS           = kw:"PACK_KEYS"i           !ident_part { return loc(createKeyword(kw)); }
 PARSER              = kw:"PARSER"i              !ident_part { return loc(createKeyword(kw)); }
 PARTIAL             = kw:"PARTIAL"i             !ident_part { return loc(createKeyword(kw)); }
