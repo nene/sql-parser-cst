@@ -46,6 +46,10 @@ describe("create table", () => {
       testWc("CREATE TABLE foo AS (SELECT 1)");
     });
 
+    it("supports CREATE TABLE ... AS SELECT UNION SELECT", () => {
+      testWc("CREATE TABLE foo AS SELECT 1 AS x UNION SELECT 2 AS x");
+    });
+
     dialect("mysql", () => {
       it("supports CREATE TABLE ...(defs) AS select", () => {
         testWc("CREATE TABLE foo (id INT) AS SELECT 1");

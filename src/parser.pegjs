@@ -1299,18 +1299,9 @@ column_constraint_list
   }
 
 create_table_clause
-  = create_table_as_clause
+  = compound_select_as_clause
   / (&bigquery / &mysql) x:create_table_like_clause { return x; }
   / &bigquery x:create_table_clause_bigquery { return x; }
-
-create_table_as_clause
-  = asKw:AS expr:(__ sub_select) {
-    return loc({
-      type: "as_clause",
-      asKw,
-      expr: read(expr),
-    });
-  }
 
 create_table_like_clause
   = kw:(LIKE __) name:table {
