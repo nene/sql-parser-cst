@@ -330,7 +330,7 @@ table_or_subquery
   / table_or_alias
 
 table_or_alias
-  = &sqlite table:(alias$table __) kw:(INDEXED __ BY) id:(__ ident) {
+  = &sqlite table:(alias$entity_name __) kw:(INDEXED __ BY) id:(__ ident) {
     return loc({
       type: "indexed_table",
       table: read(table),
@@ -338,14 +338,14 @@ table_or_alias
       index: read(id),
     });
   }
-  / &sqlite table:(alias$table __) kw:(NOT __ INDEXED) {
+  / &sqlite table:(alias$entity_name __) kw:(NOT __ INDEXED) {
     return loc({
       type: "not_indexed_table",
       table: read(table),
       notIndexedKw: read(kw),
     });
   }
-  / alias$table
+  / alias$entity_name
 
 join_op
   = natural_join
@@ -806,7 +806,7 @@ or_alternate_action
   }
 
 table_or_explicit_alias
-  = t:table alias:(__ explicit_alias)? {
+  = t:entity_name alias:(__ explicit_alias)? {
     return loc(createAlias(t, alias));
   }
 
@@ -987,7 +987,7 @@ delete_stmt
  * ------------------------------------------------------------------------------------ *
  */
 truncate_stmt
-  = kws:(TRUNCATE __ TABLE __) tbl:table {
+  = kws:(TRUNCATE __ TABLE __) tbl:entity_name {
     return loc({
       type: "truncate_stmt",
       truncateTableKw: read(kws),
@@ -1090,7 +1090,7 @@ create_view_stmt
     materKw:(__ MATERIALIZED)?
     viewKw:(__ VIEW)
     ifKw:(__ if_not_exists)?
-    name:(__ table)
+    name:(__ entity_name)
     cols:(__ paren$list$column)?
     options:(__ create_view_option)*
     asKw:(__ AS)
@@ -1123,7 +1123,7 @@ drop_view_stmt
     materKw:(__ MATERIALIZED)?
     viewKw:(__ VIEW)
     ifKw:(__ if_exists)?
-    views:(__ list$table)
+    views:(__ list$entity_name)
     behaviorKw:(__ (CASCADE / RESTRICT))? {
       return loc({
         type: "drop_view_stmt",
@@ -1141,7 +1141,7 @@ alter_view_stmt
     materKw:(__ MATERIALIZED)?
     viewKw:(__ VIEW)
     ifKw:(__ if_exists)?
-    name:(__ table)
+    name:(__ entity_name)
     actions:(__ alter_view_action)+ {
       return loc({
         type: "alter_view_stmt",
@@ -1169,9 +1169,9 @@ create_index_stmt
     typeKw:(index_type_kw __)?
     indexKw:(INDEX __)
     ifKw:(if_not_exists __)?
-    name:(table __)
+    name:(entity_name __)
     onKw:(ON __)
-    table:(table __)
+    table:(entity_name __)
     columns:(paren$list$sort_specification / paren$verbose_all_columns)
     clauses: (__ create_index_subclause)* {
       return loc({
@@ -1209,7 +1209,7 @@ drop_index_stmt
     kw:(DROP __)
     indexKw:(INDEX __)
     ifKw:(if_exists __)?
-    indexes:list$table {
+    indexes:list$entity_name {
       return loc({
         type: "drop_index_stmt",
         dropKw: read(kw),
@@ -1223,9 +1223,9 @@ drop_index_stmt
     indexTypeKw:(SEARCH __)?
     indexKw:(INDEX __)
     ifKw:(if_exists __)?
-    indexes:(list$table __)
+    indexes:(list$entity_name __)
     onKw:(ON __)
-    table:table {
+    table:entity_name {
       return loc({
         type: "drop_index_stmt",
         dropKw: read(kw),
@@ -1253,7 +1253,7 @@ create_table_stmt
     snapshotKw:(__ SNAPSHOT)?
     tableKw:(__ TABLE)
     ifKw:(__ if_not_exists)?
-    name:(__ table)
+    name:(__ entity_name)
     columns:(__ paren$list$create_definition)?
     options:(__ table_options)?
     clauses:(__ create_table_clause)*
@@ -1304,7 +1304,7 @@ create_table_clause
   / &bigquery x:create_table_clause_bigquery { return x; }
 
 create_table_like_clause
-  = kw:(LIKE __) name:table {
+  = kw:(LIKE __) name:entity_name {
     return loc({
       type: "create_table_like_clause",
       likeKw: read(kw),
@@ -1324,7 +1324,7 @@ create_table_clause_bigquery
   / with_partition_columns_clause
 
 create_table_copy_clause
-  = kw:(COPY __) name:table {
+  = kw:(COPY __) name:entity_name {
     return loc({
       type: "create_table_copy_clause",
       copyKw: read(kw),
@@ -1333,7 +1333,7 @@ create_table_copy_clause
   }
 
 create_table_clone_clause
-  = kw:(CLONE __) name:table {
+  = kw:(CLONE __) name:entity_name {
     return loc({
       type: "create_table_clone_clause",
       cloneKw: read(kw),
@@ -1399,7 +1399,7 @@ drop_table_stmt
     temporaryKw:(TEMPORARY __)?
     tableKw:(TABLE __)
     ifExistsKw:(if_exists __)?
-    tables:list$table
+    tables:list$entity_name
     behaviorKw:(__ (CASCADE / RESTRICT))?
     {
       return loc({
@@ -1426,7 +1426,7 @@ if_exists
 alter_table_stmt
   = kw:(ALTER __ TABLE __)
     ifKw:(if_exists __)?
-    t:(table __)
+    t:(entity_name __)
     actions:list$alter_action {
       return loc({
         type: "alter_table_stmt",
@@ -1467,7 +1467,7 @@ alter_action_drop_column
     }
 
 alter_action_rename_table
-  = kw:(rename_table_kw __) t:table {
+  = kw:(rename_table_kw __) t:entity_name {
     return loc({
       type: "alter_action_rename_table",
       renameKw: read(kw),
@@ -1568,10 +1568,10 @@ create_trigger_stmt
     tmpKw:((TEMPORARY / TEMP) __)?
     trigKw:(TRIGGER __)
     ifKw:(if_not_exists __)?
-    name:(table __)
+    name:(entity_name __)
     event:(trigger_event __)
     onKw:(ON __)
-    table:(table __)
+    table:(entity_name __)
     eachKw:(FOR __ EACH __ ROW __)?
     when:(trigger_condition __)?
     body:trigger_body
@@ -1644,7 +1644,7 @@ trigger_program
 drop_trigger_stmt
   = kw:(DROP __ TRIGGER __)
     ifKw:(if_exists __)?
-    trigger:table {
+    trigger:entity_name {
       return loc({
         type: "drop_trigger_stmt",
         dropTriggerKw: read(kw),
@@ -1661,7 +1661,7 @@ drop_trigger_stmt
  * ------------------------------------------------------------------------------------ *
  */
 create_schema_stmt
-  = kw:(CREATE __ schema_kw __) ifKw:(if_not_exists __)? name:table options:(__ create_schema_option)* {
+  = kw:(CREATE __ schema_kw __) ifKw:(if_not_exists __)? name:entity_name options:(__ create_schema_option)* {
     return loc({
       type: "create_schema_stmt",
       createSchemaKw: read(kw),
@@ -1676,7 +1676,7 @@ create_schema_option
   / x:bigquery_option_default_collate &bigquery { return x; }
 
 drop_schema_stmt
-  = kw:(DROP __ schema_kw __) ifKw:(if_exists __)? name:table behaviorKw:(__ (CASCADE / RESTRICT))? {
+  = kw:(DROP __ schema_kw __) ifKw:(if_exists __)? name:entity_name behaviorKw:(__ (CASCADE / RESTRICT))? {
     return loc({
       type: "drop_schema_stmt",
       dropSchemaKw: read(kw),
@@ -1687,7 +1687,7 @@ drop_schema_stmt
   }
 
 alter_schema_stmt
-  = kw:(ALTER __ schema_kw __) ifKw:(if_exists __)? name:table actions:(__ alter_schema_action)+ {
+  = kw:(ALTER __ schema_kw __) ifKw:(if_exists __)? name:entity_name actions:(__ alter_schema_action)+ {
     return loc({
       type: "alter_schema_stmt",
       alterSchemaKw: read(kw),
@@ -1719,7 +1719,7 @@ create_function_stmt
     tableKw:(TABLE __)?
     funKw:(FUNCTION __)
     ifKw:(if_not_exists __)?
-    name:(table __)
+    name:(entity_name __)
     params:(paren$list$func_param / paren$empty_list)
     clauses:(__ create_function_clause)+ {
       return loc({
@@ -1789,7 +1789,7 @@ as_clause
   }
 
 with_connection_clause
-  = kw:(REMOTE __ WITH __ CONNECTION __ / WITH __ CONNECTION __) name:table {
+  = kw:(REMOTE __ WITH __ CONNECTION __ / WITH __ CONNECTION __) name:entity_name {
     return loc({
       type: "with_connection_clause",
       withConnectionKw: read(kw),
@@ -1799,7 +1799,7 @@ with_connection_clause
 
 drop_function_stmt
   = kw:(DROP __) tableKw:(TABLE __)? funKw:(FUNCTION __)
-    ifKw:(if_exists __)? name:table {
+    ifKw:(if_exists __)? name:entity_name {
       return loc({
         type: "drop_function_stmt",
         dropKw: read(kw),
@@ -1822,7 +1822,7 @@ create_procedure_stmt
     orKw:(OR __ REPLACE __)?
     procKw:(PROCEDURE __)
     ifKw:(if_not_exists __)?
-    name:(table __)
+    name:(entity_name __)
     params:(paren$list$procedure_param / paren$empty_list)
     clauses:(__ create_procedure_clause)+ {
       return loc({
@@ -1878,7 +1878,7 @@ proc_statement
   / bigquery_stmt;
 
 drop_procedure_stmt
-  = kw:(DROP __) procKw:(PROCEDURE __) ifKw:(if_exists __)? name:table {
+  = kw:(DROP __) procKw:(PROCEDURE __) ifKw:(if_exists __)? name:entity_name {
     return loc({
       type: "drop_procedure_stmt",
       dropKw: read(kw),
@@ -1896,7 +1896,7 @@ drop_procedure_stmt
  * ------------------------------------------------------------------------------------ *
  */
 analyze_stmt
-  = kw:ANALYZE tKw:(__ TABLE)? tables:(__ list$table)? {
+  = kw:ANALYZE tKw:(__ TABLE)? tables:(__ list$entity_name)? {
     return loc({
       type: "analyze_stmt",
       analyzeKw: kw,
@@ -2034,7 +2034,7 @@ dcl_statement
 
 grant_stmt
   = kw:(GRANT __) roles:(list$ident __)
-    onKw:(ON __) resType:(resource_type_kw __) resName:(table __)
+    onKw:(ON __) resType:(resource_type_kw __) resName:(entity_name __)
     toKw:(TO __) users:(list$string_literal) {
       return loc({
         type: "grant_stmt",
@@ -2050,7 +2050,7 @@ grant_stmt
 
 revoke_stmt
   = kw:(REVOKE __) roles:(list$ident __)
-    onKw:(ON __) resType:(resource_type_kw __) resName:(table __)
+    onKw:(ON __) resType:(resource_type_kw __) resName:(entity_name __)
     fromKw:(FROM __) users:(list$string_literal) {
       return loc({
         type: "revoke_stmt",
@@ -2126,12 +2126,12 @@ vacuum_stmt
   }
 
 reindex_stmt
-  = kw:REINDEX table:(__ table)? {
+  = kw:REINDEX table:(__ entity_name)? {
     return loc({ type: "reindex_stmt", reindexKw: kw, table: read(table) });
   }
 
 pragma_stmt
-  = kw:(PRAGMA __) pragma:(pragma_assignment / pragma_func_call / table) {
+  = kw:(PRAGMA __) pragma:(pragma_assignment / pragma_func_call / entity_name) {
     return loc({
       type: "pragma_stmt",
       pragmaKw: read(kw),
@@ -2140,7 +2140,7 @@ pragma_stmt
   }
 
 pragma_assignment
-  = name:(table __) "=" value:(__ pragma_value) {
+  = name:(entity_name __) "=" value:(__ pragma_value) {
     return loc({
       type: "pragma_assignment",
       name: read(name),
@@ -2149,7 +2149,7 @@ pragma_assignment
   }
 
 pragma_func_call
-  = name:(__ table) args:(__ paren$pragma_value) {
+  = name:(__ entity_name) args:(__ paren$pragma_value) {
     return loc({
       type: "pragma_func_call",
       name: read(name),
@@ -2162,7 +2162,7 @@ pragma_value
   / literal
 
 create_virtual_table_stmt
-  = kw:(CREATE __ VIRTUAL __ TABLE __) ifKw:(if_not_exists __)? name:(table __)
+  = kw:(CREATE __ VIRTUAL __ TABLE __) ifKw:(if_not_exists __)? name:(entity_name __)
     usingKw:(USING __) func:(func_call / ident) {
       return loc({
         type: "create_virtual_table_stmt",
@@ -2197,7 +2197,7 @@ bigquery_stmt
 // CREATE RESERVATION
 // CREATE ASSIGNMENT
 create_bigquery_entity_stmt
-  = kw:(CREATE __ bigquery_entity __) name:(table __) asKw:(AS __) json:json_literal {
+  = kw:(CREATE __ bigquery_entity __) name:(entity_name __) asKw:(AS __) json:json_literal {
     const createKw = read(kw);
     const node = {
       createKw,
@@ -2216,7 +2216,7 @@ create_bigquery_entity_stmt
 // DROP RESERVATION
 // DROP ASSIGNMENT
 drop_bigquery_entity_stmt
-  = kw:(DROP __ bigquery_entity __) ifKw:(if_exists __)? name:table {
+  = kw:(DROP __ bigquery_entity __) ifKw:(if_exists __)? name:entity_name {
     const dropKw = read(kw);
     const node = {
       dropKw,
@@ -2242,7 +2242,7 @@ create_row_access_policy_stmt
     ifKw:(if_not_exists __)?
     name:(ident __)
     onKw:(ON __)
-    table:(table __)
+    table:(entity_name __)
     grantTo:(row_access_policy_grant __)?
     filterKw:(FILTER __ USING __)
     filterExpr:paren$list$expr {
@@ -2276,7 +2276,7 @@ drop_row_access_policy_stmt
     ifKw:(if_exists __)?
     name:(ident __)
     onKw:(ON __)
-    table:table {
+    table:entity_name {
       return loc({
         type: "drop_row_access_policy_stmt",
         dropKw: read(kw),
@@ -2291,7 +2291,7 @@ drop_row_access_policy_stmt
     allKw:(ALL __)
     policyKw:(ROW __ ACCESS __ POLICIES __)
     onKw:(ON __)
-    table:table {
+    table:entity_name {
       return loc({
         type: "drop_row_access_policy_stmt",
         dropKw: read(kw),
@@ -2322,7 +2322,7 @@ alter_project_stmt
   }
 
 alter_bi_capacity_stmt
-  = kw:(ALTER __ BI_CAPACITY __) name:(table __) action:alter_action_set_options {
+  = kw:(ALTER __ BI_CAPACITY __) name:(entity_name __) action:alter_action_set_options {
     return loc({
       type: "alter_bi_capacity_stmt",
       alterBiCapacityKw: read(kw),
@@ -2372,7 +2372,7 @@ compound_select_as_clause
   }
 
 load_data_stmt
-  = kw:(LOAD __ DATA __) intoKw:((INTO / OVERWRITE) __) table:table
+  = kw:(LOAD __ DATA __) intoKw:((INTO / OVERWRITE) __) table:entity_name
     columns:(__ paren$list$column_definition)? clauses:(__ load_data_clause)* {
       return loc({
         type: "load_data_stmt",
@@ -2735,7 +2735,7 @@ constraint_foreign_key
 
 references_specification
   = kw:(REFERENCES __)
-    table:table
+    table:entity_name
     columns:(__ paren$list$column)?
     options:(__ (referential_action / referential_match))* {
       return loc({
@@ -3628,7 +3628,7 @@ list$type_param = .
 list$named_window = .
 list$procedure_param = .
 list$sort_specification = .
-list$table = .
+list$entity_name = .
 list$table_or_alias = .
 list$values_row = .
 
@@ -3650,7 +3650,7 @@ alias$expr = .
 alias$func_call = .
 alias$paren$compound_select_stmt = .
 alias$paren$list$column = .
-alias$table = .
+alias$entity_name = .
 alias$unnest_or_member_expr = .
 
 /**
@@ -3660,7 +3660,7 @@ alias$unnest_or_member_expr = .
  *                                                                                      *
  * ------------------------------------------------------------------------------------ *
  */
-table
+entity_name
   = member_expr
 
 /**
