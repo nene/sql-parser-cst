@@ -38,14 +38,9 @@ const ruleTemplatesPass: Pass = (ast) => {
     }
   });
 
-  console.log("templates:");
-  console.log(Object.keys(templates));
-
   ast.rules = ast.rules.map((rule) => {
     const match = matchRuleWithTemplate(rule.name, templates);
     if (match) {
-      console.log("subrule:");
-      console.log(match.subRuleName);
       return {
         ...rule,
         expression: cloneRuleExpr(
