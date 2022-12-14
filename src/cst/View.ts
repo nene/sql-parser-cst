@@ -1,7 +1,7 @@
 import { AlterActionSetOptions } from "./AlterAction";
 import { BaseNode, Keyword } from "./Base";
 import { BigqueryOptions } from "./Bigquery";
-import { Identifier, ListExpr, ParenExpr, Table } from "./Expr";
+import { Identifier, ListExpr, ParenExpr, EntityName } from "./Expr";
 import { ClusterByClause, PartitionByClause, SubSelect } from "./Select";
 
 export type AllViewStatements = CreateViewStmt | DropViewStmt | AlterViewStmt;
@@ -15,7 +15,7 @@ export interface CreateViewStmt extends BaseNode {
   materializedKw?: Keyword<"MATERIALIZED">;
   viewKw: Keyword<"VIEW">;
   ifNotExistsKw?: [Keyword<"IF">, Keyword<"NOT">, Keyword<"EXISTS">];
-  name: Table;
+  name: EntityName;
   columns?: ParenExpr<ListExpr<Identifier>>;
   options: CreateViewOption[];
   asKw: Keyword<"AS">;
@@ -31,7 +31,7 @@ export interface DropViewStmt extends BaseNode {
   materializedKw?: Keyword<"MATERIALIZED">;
   viewKw: Keyword<"VIEW">;
   ifExistsKw?: [Keyword<"IF">, Keyword<"EXISTS">];
-  views: ListExpr<Table>;
+  views: ListExpr<EntityName>;
   behaviorKw?: Keyword<"CASCADE" | "RESTRICT">;
 }
 
@@ -42,6 +42,6 @@ export interface AlterViewStmt extends BaseNode {
   materializedKw?: Keyword<"MATERIALIZED">;
   viewKw: Keyword<"VIEW">;
   ifExistsKw?: [Keyword<"IF">, Keyword<"EXISTS">];
-  name: Table;
+  name: EntityName;
   actions: AlterActionSetOptions[];
 }

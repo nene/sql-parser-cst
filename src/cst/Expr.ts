@@ -268,8 +268,9 @@ export interface BigQueryQuotedMemberExpr extends BaseNode {
   expr: MemberExpr;
 }
 
-// Type alias to use in places where MemberExpr or Identifier should refer to a table
-export type Table = MemberExpr | Identifier | BigQueryQuotedMemberExpr;
+// Type alias to use in places where MemberExpr or Identifier
+// should refer to a table, view, stored procedure, or any other schema-qualified name
+export type EntityName = MemberExpr | Identifier | BigQueryQuotedMemberExpr;
 
 export interface ArraySubscript extends BaseNode {
   type: "array_subscript";

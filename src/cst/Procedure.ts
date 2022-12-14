@@ -1,7 +1,7 @@
 import { BaseNode, Keyword } from "./Base";
 import { BigqueryOptions } from "./Bigquery";
 import { DataType } from "./DataType";
-import { Identifier, ListExpr, ParenExpr, Table } from "./Expr";
+import { Identifier, ListExpr, ParenExpr, EntityName } from "./Expr";
 import { StringLiteral } from "./Literal";
 import { AsClause, LanguageClause, WithConnectionClause } from "./ProcClause";
 import { CodeBlock } from "./Program";
@@ -17,7 +17,7 @@ export interface CreateProcedureStmt extends BaseNode {
   orReplaceKw?: [Keyword<"OR">, Keyword<"REPLACE">];
   procedureKw: Keyword<"PROCEDURE">;
   ifNotExistsKw?: [Keyword<"IF">, Keyword<"NOT">, Keyword<"EXISTS">];
-  name: Table;
+  name: EntityName;
   params: ParenExpr<ListExpr<ProcedureParam>>;
   clauses: CreateProcedureClause[];
 }
@@ -42,5 +42,5 @@ export interface DropProcedureStmt extends BaseNode {
   dropKw: Keyword<"DROP">;
   procedureKw: Keyword<"PROCEDURE">;
   ifExistsKw?: [Keyword<"IF">, Keyword<"EXISTS">];
-  name: Table;
+  name: EntityName;
 }

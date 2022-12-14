@@ -2,7 +2,7 @@ import { BaseNode, Keyword } from "./Base";
 import { BigqueryOptionDefaultCollate, BigqueryOptions } from "./Bigquery";
 import { ColumnConstraint, Constraint, TableConstraint } from "./Constraint";
 import { DataType } from "./DataType";
-import { Expr, Identifier, ListExpr, ParenExpr, Table } from "./Expr";
+import { Expr, Identifier, ListExpr, ParenExpr, EntityName } from "./Expr";
 import { AsClause, WithConnectionClause } from "./ProcClause";
 import { ClusterByClause, PartitionByClause, SubSelect } from "./Select";
 
@@ -26,7 +26,7 @@ export interface CreateTableStmt extends BaseNode {
   snapshotKw?: Keyword<"SNAPSHOT">;
   tableKw: Keyword<"TABLE">;
   ifNotExistsKw?: [Keyword<"IF">, Keyword<"NOT">, Keyword<"EXISTS">];
-  name: Table;
+  name: EntityName;
   columns?: ParenExpr<
     ListExpr<ColumnDefinition | TableConstraint | Constraint<TableConstraint>>
   >;
@@ -103,7 +103,7 @@ type CreateTableClause =
 export interface CreateTableLikeClause extends BaseNode {
   type: "create_table_like_clause";
   likeKw: Keyword<"LIKE">;
-  name: Table;
+  name: EntityName;
 }
 
 type BigqueryCreateTableClause =
@@ -120,13 +120,13 @@ type BigqueryCreateTableClause =
 export interface CreateTableCopyClause extends BaseNode {
   type: "create_table_copy_clause";
   copyKw: Keyword<"COPY">;
-  name: Table;
+  name: EntityName;
 }
 
 export interface CreateTableCloneClause extends BaseNode {
   type: "create_table_clone_clause";
   cloneKw: Keyword<"CLONE">;
-  name: Table;
+  name: EntityName;
 }
 
 export interface ForSystemTimeAsOfClause extends BaseNode {

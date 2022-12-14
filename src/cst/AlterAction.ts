@@ -2,7 +2,7 @@ import { BaseNode, Keyword } from "./Base";
 import { BigqueryOptions } from "./Bigquery";
 import { ColumnDefinition } from "./CreateTable";
 import { DataType } from "./DataType";
-import { Expr, Identifier, Table } from "./Expr";
+import { Expr, Identifier, EntityName } from "./Expr";
 import { StringLiteral } from "./Literal";
 
 export type AllAlterActionNodes = AlterTableAction | AlterColumnAction;
@@ -23,7 +23,7 @@ export type AlterSchemaAction =
 export interface AlterActionRenameTable extends BaseNode {
   type: "alter_action_rename_table";
   renameKw: Keyword<"RENAME"> | [Keyword<"RENAME">, Keyword<"TO" | "AS">];
-  newName: Table;
+  newName: EntityName;
 }
 
 export interface AlterActionRenameColumn extends BaseNode {

@@ -1,5 +1,5 @@
 import { BaseNode, Keyword } from "./Base";
-import { Expr, Identifier, ListExpr, ParenExpr, Table } from "./Expr";
+import { Expr, Identifier, ListExpr, ParenExpr, EntityName } from "./Expr";
 import { Alias } from "./Alias";
 import {
   ReturningClause,
@@ -41,7 +41,7 @@ export interface InsertClause extends BaseNode {
   options: UpsertOption[];
   orAction?: OrAlternateAction;
   intoKw?: Keyword<"INTO">;
-  table: Table | Alias<Table>;
+  table: EntityName | Alias<EntityName>;
   columns?: ParenExpr<ListExpr<Identifier>>;
 }
 

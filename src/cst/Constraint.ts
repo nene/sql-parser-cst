@@ -1,6 +1,6 @@
 import { BaseNode, Keyword } from "./Base";
 import { StringLiteral } from "./Literal";
-import { Expr, Identifier, ListExpr, ParenExpr, Table } from "./Expr";
+import { Expr, Identifier, ListExpr, ParenExpr, EntityName } from "./Expr";
 import { SortSpecification } from "./Select";
 import { BigqueryOptions } from "./Bigquery";
 
@@ -77,7 +77,7 @@ export interface ConstraintForeignKey extends BaseNode {
 export interface ReferencesSpecification extends BaseNode {
   type: "references_specification";
   referencesKw: Keyword<"REFERENCES">;
-  table: Table;
+  table: EntityName;
   columns?: ParenExpr<ListExpr<Identifier>>;
   options: (ReferentialAction | ReferentialMatch)[];
 }

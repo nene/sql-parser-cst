@@ -1,6 +1,6 @@
 import { BaseNode, Keyword } from "./Base";
 import { DataType } from "./DataType";
-import { Identifier, Table } from "./Expr";
+import { Identifier, EntityName } from "./Expr";
 import { Node } from "./Node";
 
 export type AllProcClauseNodes =
@@ -40,5 +40,5 @@ export interface WithConnectionClause extends BaseNode {
   withConnectionKw:
     | [Keyword<"REMOTE">, Keyword<"WITH">, Keyword<"CONNECTION">]
     | [Keyword<"WITH">, Keyword<"CONNECTION">];
-  connection: Table;
+  connection: EntityName;
 }

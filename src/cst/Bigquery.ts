@@ -7,7 +7,7 @@ import {
   Identifier,
   ListExpr,
   ParenExpr,
-  Table,
+  EntityName,
 } from "./Expr";
 import { JsonLiteral, StringLiteral } from "./Literal";
 import { AsClause, WithConnectionClause } from "./ProcClause";
@@ -51,7 +51,7 @@ export type AllBigqueryStatements =
 export interface CreateCapacityStmt extends BaseNode {
   type: "create_capacity_stmt";
   createKw: [Keyword<"CREATE">, Keyword<"CAPACITY">];
-  name: Table;
+  name: EntityName;
   asKw: Keyword<"AS">;
   json: JsonLiteral;
 }
@@ -60,13 +60,13 @@ export interface DropCapacityStmt extends BaseNode {
   type: "drop_capacity_stmt";
   dropKw: [Keyword<"DROP">, Keyword<"CAPACITY">];
   ifExistsKw?: [Keyword<"IF">, Keyword<"EXISTS">];
-  name: Table;
+  name: EntityName;
 }
 
 export interface CreateReservationStmt extends BaseNode {
   type: "create_reservation_stmt";
   createKw: [Keyword<"CREATE">, Keyword<"RESERVATION">];
-  name: Table;
+  name: EntityName;
   asKw: Keyword<"AS">;
   json: JsonLiteral;
 }
@@ -75,13 +75,13 @@ export interface DropReservationStmt extends BaseNode {
   type: "drop_reservation_stmt";
   dropKw: [Keyword<"DROP">, Keyword<"RESERVATION">];
   ifExistsKw?: [Keyword<"IF">, Keyword<"EXISTS">];
-  name: Table;
+  name: EntityName;
 }
 
 export interface CreateAssignmentStmt extends BaseNode {
   type: "create_assignment_stmt";
   createKw: [Keyword<"CREATE">, Keyword<"ASSIGNMENT">];
-  name: Table;
+  name: EntityName;
   asKw: Keyword<"AS">;
   json: JsonLiteral;
 }
@@ -90,7 +90,7 @@ export interface DropAssignmentStmt extends BaseNode {
   type: "drop_assignment_stmt";
   dropKw: [Keyword<"DROP">, Keyword<"ASSIGNMENT">];
   ifExistsKw?: [Keyword<"IF">, Keyword<"EXISTS">];
-  name: Table;
+  name: EntityName;
 }
 
 export interface CreateRowAccessPolicyStmt extends BaseNode {
@@ -101,7 +101,7 @@ export interface CreateRowAccessPolicyStmt extends BaseNode {
   ifNotExistsKw?: [Keyword<"IF">, Keyword<"NOT">, Keyword<"EXISTS">];
   name: Keyword;
   onKw: Keyword<"ON">;
-  table: Table;
+  table: EntityName;
   grantTo?: RowAccessPolicyGrant;
   filterUsingKw: [Keyword<"FILTER">, Keyword<"USING">];
   filterExpr: ParenExpr<Expr>;
@@ -125,7 +125,7 @@ export interface DropRowAccessPolicyStmt extends BaseNode {
   ifExistsKw?: [Keyword<"IF">, Keyword<"EXISTS">];
   name?: Keyword;
   onKw: Keyword<"ON">;
-  table: Table;
+  table: EntityName;
 }
 
 // ALTER ORGANIZATION
@@ -147,7 +147,7 @@ export interface AlterProjectStmt extends BaseNode {
 export interface AlterBiCapacityStmt extends BaseNode {
   type: "alter_bi_capacity_stmt";
   alterBiCapacityKw: [Keyword<"ALTER">, Keyword<"BI_CAPACITY">];
-  name: Table;
+  name: EntityName;
   actions: AlterActionSetOptions[];
 }
 
@@ -173,7 +173,7 @@ export interface LoadDataStmt extends BaseNode {
   type: "load_data_stmt";
   loadDataKw: [Keyword<"LOAD">, Keyword<"DATA">];
   intoKw: Keyword<"INTO" | "OVERWRITE">;
-  table: Table;
+  table: EntityName;
   columns?: ParenExpr<ListExpr<ColumnDefinition>>;
   clauses: LoadDataClause[];
 }

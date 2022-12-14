@@ -1,6 +1,6 @@
 import { Alias } from "./Alias";
 import { BaseNode, Keyword } from "./Base";
-import { Table } from "./Expr";
+import { EntityName } from "./Expr";
 import { ReturningClause, WhereClause, WithClause } from "./Select";
 
 // DELETE FROM
@@ -9,7 +9,7 @@ export interface DeleteStmt extends BaseNode {
   with?: WithClause;
   deleteKw: Keyword<"DELETE">;
   fromKw?: Keyword<"FROM">;
-  table: Table | Alias<Table>;
+  table: EntityName | Alias<EntityName>;
   where?: WhereClause;
   returning?: ReturningClause;
 }

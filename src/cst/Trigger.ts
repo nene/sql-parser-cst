@@ -1,5 +1,5 @@
 import { BaseNode, Keyword } from "./Base";
-import { Expr, Identifier, ListExpr, Table } from "./Expr";
+import { Expr, Identifier, ListExpr, EntityName } from "./Expr";
 import { CodeBlock, Program } from "./Program";
 
 export type AllTriggerNodes =
@@ -16,10 +16,10 @@ export interface CreateTriggerStmt extends BaseNode {
   temporaryKw?: Keyword<"TEMP" | "TEMPORARY">;
   triggerKw: Keyword<"TRIGGER">;
   ifNotExistsKw?: [Keyword<"IF">, Keyword<"NOT">, Keyword<"EXISTS">];
-  name: Table;
+  name: EntityName;
   event: TriggerEvent;
   onKw: Keyword<"ON">;
-  table: Table;
+  table: EntityName;
   forEachRowKw?: [Keyword<"FOR">, Keyword<"EACH">, Keyword<"ROW">];
   condition?: TriggerCondition;
   body: CodeBlock;
@@ -44,5 +44,5 @@ export interface DropTriggerStmt extends BaseNode {
   type: "drop_trigger_stmt";
   dropTriggerKw: [Keyword<"DROP">, Keyword<"TRIGGER">];
   ifExistsKw?: [Keyword<"IF">, Keyword<"EXISTS">];
-  trigger: Table;
+  trigger: EntityName;
 }

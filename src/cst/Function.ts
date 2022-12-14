@@ -1,7 +1,7 @@
 import { BaseNode, Keyword } from "./Base";
 import { BigqueryOptions } from "./Bigquery";
 import { DataType } from "./DataType";
-import { Expr, Identifier, ListExpr, ParenExpr, Table } from "./Expr";
+import { Expr, Identifier, ListExpr, ParenExpr, EntityName } from "./Expr";
 import { StringLiteral } from "./Literal";
 import {
   AsClause,
@@ -25,7 +25,7 @@ export interface CreateFunctionStmt extends BaseNode {
   tableKw?: Keyword<"TABLE">;
   functionKw: Keyword<"FUNCTION">;
   ifNotExistsKw?: [Keyword<"IF">, Keyword<"NOT">, Keyword<"EXISTS">];
-  name: Table;
+  name: EntityName;
   params: ParenExpr<ListExpr<FunctionParam>>;
   clauses: CreateFunctionClause[];
 }
@@ -50,5 +50,5 @@ export interface DropFunctionStmt extends BaseNode {
   tableKw?: Keyword<"TABLE">;
   functionKw: Keyword<"FUNCTION">;
   ifExistsKw?: [Keyword<"IF">, Keyword<"EXISTS">];
-  name: Table;
+  name: EntityName;
 }

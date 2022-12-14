@@ -1,6 +1,6 @@
 import { Alias } from "./Alias";
 import { BaseNode, Keyword } from "./Base";
-import { Expr, Identifier, ListExpr, ParenExpr, Table } from "./Expr";
+import { Expr, Identifier, ListExpr, ParenExpr, EntityName } from "./Expr";
 import { ValuesClause } from "./Insert";
 import { SelectStmt } from "./Select";
 import { SetClause } from "./Update";
@@ -17,9 +17,12 @@ export interface MergeStmt extends BaseNode {
   type: "merge_stmt";
   mergeKw: Keyword<"MERGE">;
   intoKw: Keyword<"INTO">;
-  target: Table | Alias<Table>;
+  target: EntityName | Alias<EntityName>;
   usingKw: Keyword<"USING">;
-  source: Table | ParenExpr<SelectStmt> | Alias<Table | ParenExpr<SelectStmt>>;
+  source:
+    | EntityName
+    | ParenExpr<SelectStmt>
+    | Alias<EntityName | ParenExpr<SelectStmt>>;
   onKw: Keyword<"ON">;
   condition: Expr;
   clauses: MergeWhenClause[];

@@ -1,5 +1,5 @@
 import { BaseNode, Keyword } from "./Base";
-import { Identifier, ListExpr, Table } from "./Expr";
+import { Identifier, ListExpr, EntityName } from "./Expr";
 import { StringLiteral } from "./Literal";
 
 export type AllDclStatements = GrantStmt | RevokeStmt;
@@ -13,7 +13,7 @@ export interface GrantStmt extends BaseNode {
   resourceType:
     | Keyword<"SCHEMA" | "TABLE" | "VIEW">
     | [Keyword<"EXTERNAL">, Keyword<"TABLE">];
-  resourceName: Table;
+  resourceName: EntityName;
   toKw: Keyword<"TO">;
   users: ListExpr<StringLiteral>;
 }
@@ -27,7 +27,7 @@ export interface RevokeStmt extends BaseNode {
   resourceType:
     | Keyword<"SCHEMA" | "TABLE" | "VIEW">
     | [Keyword<"EXTERNAL">, Keyword<"TABLE">];
-  resourceName: Table;
+  resourceName: EntityName;
   fromKw: Keyword<"FROM">;
   users: ListExpr<StringLiteral>;
 }

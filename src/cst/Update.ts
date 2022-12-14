@@ -6,7 +6,7 @@ import {
   ListExpr,
   MemberExpr,
   ParenExpr,
-  Table,
+  EntityName,
 } from "./Expr";
 import { Default, OrAlternateAction, UpsertOption } from "./Insert";
 import {
@@ -44,7 +44,7 @@ export interface UpdateClause extends BaseNode {
   updateKw: Keyword<"UPDATE">;
   options: UpsertOption[];
   orAction?: OrAlternateAction;
-  tables: ListExpr<Table | Alias<Table>>;
+  tables: ListExpr<EntityName | Alias<EntityName>>;
 }
 
 export interface SetClause extends BaseNode {

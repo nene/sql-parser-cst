@@ -6,7 +6,7 @@ import {
   ListExpr,
   MemberExpr,
   ParenExpr,
-  Table,
+  EntityName,
 } from "./Expr";
 import { Alias } from "./Alias";
 import { FrameClause } from "./WindowFrame";
@@ -236,7 +236,7 @@ type JoinOp =
   | Keyword<"JOIN" | "STRAIGHT_JOIN">;
 
 export type TableOrSubquery =
-  | Table
+  | EntityName
   | FuncCall
   | IndexedTable
   | NotIndexedTable
@@ -248,13 +248,13 @@ export type TableOrSubquery =
 // SQLite only
 export interface IndexedTable extends BaseNode {
   type: "indexed_table";
-  table: Table | Alias<Table>;
+  table: EntityName | Alias<EntityName>;
   indexedByKw: [Keyword<"INDEXED">, Keyword<"BY">];
   index: Identifier;
 }
 export interface NotIndexedTable extends BaseNode {
   type: "not_indexed_table";
-  table: Table | Alias<Table>;
+  table: EntityName | Alias<EntityName>;
   notIndexedKw: [Keyword<"NOT">, Keyword<"INDEXED">];
 }
 

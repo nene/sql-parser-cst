@@ -1,6 +1,6 @@
 import { BaseNode, Keyword } from "./Base";
 import { BigqueryOptions } from "./Bigquery";
-import { Identifier, ListExpr, ParenExpr, Table } from "./Expr";
+import { Identifier, ListExpr, ParenExpr, EntityName } from "./Expr";
 import { SortSpecification, WhereClause } from "./Select";
 
 export type AllIndexNodes = AllIndexStatements | VerboseAllColumns;
@@ -14,9 +14,9 @@ export interface CreateIndexStmt extends BaseNode {
   indexTypeKw?: Keyword<"UNIQUE" | "FULLTEXT" | "SPATIAL" | "SEARCH">;
   indexKw: Keyword<"INDEX">;
   ifNotExistsKw?: [Keyword<"IF">, Keyword<"NOT">, Keyword<"EXISTS">];
-  name: Table;
+  name: EntityName;
   onKw: Keyword<"ON">;
-  table: Table;
+  table: EntityName;
   columns:
     | ParenExpr<ListExpr<SortSpecification | Identifier>>
     | ParenExpr<VerboseAllColumns>;
@@ -36,7 +36,7 @@ export interface DropIndexStmt extends BaseNode {
   indexTypeKw?: Keyword<"SEARCH">;
   indexKw: Keyword<"INDEX">;
   ifExistsKw?: [Keyword<"IF">, Keyword<"EXISTS">];
-  indexes: ListExpr<Table>;
+  indexes: ListExpr<EntityName>;
   onKw?: Keyword<"ON">;
-  table?: Table;
+  table?: EntityName;
 }
