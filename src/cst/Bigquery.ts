@@ -1,5 +1,6 @@
 import { AlterActionSetOptions } from "./AlterAction";
 import { BaseNode, Keyword } from "./Base";
+import { ColumnDefinition, WithPartitionColumnsClause } from "./CreateTable";
 import {
   BinaryExpr,
   Expr,
@@ -10,13 +11,14 @@ import {
 } from "./Expr";
 import { JsonLiteral, StringLiteral } from "./Literal";
 import { AsClause, WithConnectionClause } from "./ProcClause";
-import { SubSelect } from "./Select";
+import { ClusterByClause, PartitionByClause, SubSelect } from "./Select";
 
 export type AllBigqueryNodes =
   | BigqueryOptions
   | BigqueryOptionDefaultCollate
   | AllBigqueryStatements
-  | RowAccessPolicyGrant;
+  | RowAccessPolicyGrant
+  | FromFilesOptions;
 
 export interface BigqueryOptions extends BaseNode {
   type: "bigquery_options";
@@ -43,7 +45,8 @@ export type AllBigqueryStatements =
   | AlterProjectStmt
   | AlterBiCapacityStmt
   | AssertStmt
-  | ExportDataStmt;
+  | ExportDataStmt
+  | LoadDataStmt;
 
 export interface CreateCapacityStmt extends BaseNode {
   type: "create_capacity_stmt";
@@ -163,4 +166,28 @@ export interface ExportDataStmt extends BaseNode {
   withConnection?: WithConnectionClause;
   options: BigqueryOptions;
   as: AsClause<SubSelect>;
+}
+
+// LOAD DATA
+export interface LoadDataStmt extends BaseNode {
+  type: "load_data_stmt";
+  loadDataKw: [Keyword<"LOAD">, Keyword<"DATA">];
+  intoKw: Keyword<"INTO" | "OVERWRITE">;
+  table: Table;
+  columns?: ParenExpr<ListExpr<ColumnDefinition>>;
+  clauses: LoadDataClause[];
+}
+
+type LoadDataClause =
+  | PartitionByClause
+  | ClusterByClause
+  | BigqueryOptions
+  | FromFilesOptions
+  | WithPartitionColumnsClause
+  | WithConnectionClause;
+
+export interface FromFilesOptions extends BaseNode {
+  type: "from_files_options";
+  fromFilesKw: [Keyword<"FROM">, Keyword<"FILES">];
+  options: ParenExpr<ListExpr<BinaryExpr<Identifier, "=", Expr>>>;
 }

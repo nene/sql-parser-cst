@@ -549,6 +549,15 @@ const showNode = cstTransformer<string>({
   assert_stmt: (node) => show([node.assertKw, node.expr, node.as]),
   export_data_stmt: (node) =>
     show([node.exportDataKw, node.withConnection, node.options, node.as]),
+  load_data_stmt: (node) =>
+    show([
+      node.loadDataKw,
+      node.intoKw,
+      node.table,
+      node.columns,
+      node.clauses,
+    ]),
+  from_files_options: (node) => show([node.fromFilesKw, node.options]),
 
   // Expressions
   list_expr: (node) => show(node.items, ","),
