@@ -26,7 +26,7 @@ export interface CreateTableStmt extends BaseNode {
   snapshotKw?: Keyword<"SNAPSHOT">;
   tableKw: Keyword<"TABLE">;
   ifNotExistsKw?: [Keyword<"IF">, Keyword<"NOT">, Keyword<"EXISTS">];
-  table: Table;
+  name: Table;
   columns?: ParenExpr<
     ListExpr<ColumnDefinition | TableConstraint | Constraint<TableConstraint>>
   >;

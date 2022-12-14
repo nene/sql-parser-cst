@@ -141,7 +141,7 @@ const showNode = cstTransformer<string>({
       node.snapshotKw,
       node.tableKw,
       node.ifNotExistsKw,
-      node.table,
+      node.name,
       node.columns,
       node.options,
       node.clauses,
@@ -499,7 +499,7 @@ const showNode = cstTransformer<string>({
     show([
       node.createVirtualTableKw,
       node.ifNotExistsKw,
-      node.table,
+      node.name,
       node.usingKw,
       node.module,
     ]),

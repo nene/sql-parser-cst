@@ -1253,7 +1253,7 @@ create_table_stmt
     snapshotKw:(__ SNAPSHOT)?
     tableKw:(__ TABLE)
     ifKw:(__ if_not_exists)?
-    table:(__ table)
+    name:(__ table)
     columns:(__ paren$list$create_definition)?
     options:(__ table_options)?
     clauses:(__ create_table_clause)*
@@ -1267,7 +1267,7 @@ create_table_stmt
         snapshotKw: read(snapshotKw),
         tableKw: read(tableKw),
         ifNotExistsKw: read(ifKw),
-        table: read(table),
+        name: read(name),
         columns: read(columns),
         options: read(options),
         clauses: clauses.map(read),
@@ -2162,13 +2162,13 @@ pragma_value
   / literal
 
 create_virtual_table_stmt
-  = kw:(CREATE __ VIRTUAL __ TABLE __) ifKw:(if_not_exists __)? table:(table __)
+  = kw:(CREATE __ VIRTUAL __ TABLE __) ifKw:(if_not_exists __)? name:(table __)
     usingKw:(USING __) func:(func_call / ident) {
       return loc({
         type: "create_virtual_table_stmt",
         createVirtualTableKw: read(kw),
         ifNotExistsKw: read(ifKw),
-        table: read(table),
+        name: read(name),
         usingKw: read(usingKw),
         module: func.type === "identifier" ? { type: "func_call", name: func } : func,
       });

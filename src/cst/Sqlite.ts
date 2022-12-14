@@ -72,7 +72,7 @@ export interface CreateVirtualTableStmt extends BaseNode {
     Keyword<"TABLE">
   ];
   ifNotExistsKw?: [Keyword<"IF">, Keyword<"NOT">, Keyword<"EXISTS">];
-  table: Table;
+  name: Table;
   usingKw: Keyword<"USING">;
   module: FuncCall;
 }
