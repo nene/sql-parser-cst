@@ -8,7 +8,16 @@ with the goal of being able to re-create the exact original source code.
 
 **Try it live in [AstExplorer][].**
 
-For now it supports the following SQL dialects:
+## Features
+
+- Detailed TypeScript types for the syntax tree
+- Unified syntax tree for multiple SQL dialects
+- Includes source code location data for all nodes
+- Includes comments in the syntax tree
+- Helpful error messages
+- Fast
+
+Supports the following SQL dialects:
 
 - **SQLite** - full support.
 - **BigQuery** - full support for SELECT, DML and DDL syntax.
@@ -18,9 +27,11 @@ For now it supports the following SQL dialects:
   (see [#5](https://github.com/nene/sql-parser-cst/issues/5)
   and [#7](https://github.com/nene/sql-parser-cst/issues/7) for implementation progress).
 
-**Note:** This software is still in very active development.
-The syntax tree structure is constantly evolving and changing
-even between patch versions.
+**Note:** This software is in very active development.
+The syntax tree structure is mostly stable now,
+though there are bound to be changes as new SQL dialects
+are added and they contain features that need to be accommodated
+to the syntax tree.
 
 ## Usage
 
