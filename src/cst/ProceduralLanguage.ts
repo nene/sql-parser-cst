@@ -1,10 +1,10 @@
 import { BaseNode, Keyword } from "./Base";
 import { DataType } from "./DataType";
-import { Identifier, ListExpr, Expr } from "./Expr";
+import { Identifier, ListExpr, ParenExpr, BinaryExpr, Expr } from "./Expr";
 
 export type AllProceduralNodes = AllProceduralStatements | DeclareDefault;
 
-export type AllProceduralStatements = DeclareStmt;
+export type AllProceduralStatements = DeclareStmt | SetStmt;
 
 // DECLARE
 export interface DeclareStmt extends BaseNode {
@@ -19,4 +19,13 @@ export interface DeclareDefault extends BaseNode {
   type: "declare_default";
   defaultKw: Keyword<"DEFAULT">;
   expr: Expr;
+}
+
+// SET
+export interface SetStmt extends BaseNode {
+  type: "set_stmt";
+  setKw: Keyword<"SET">;
+  assignments: ListExpr<
+    BinaryExpr<Identifier | ParenExpr<ListExpr<Identifier>>, "=", Expr>
+  >;
 }

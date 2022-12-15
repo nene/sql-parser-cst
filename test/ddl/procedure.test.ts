@@ -30,6 +30,7 @@ describe("procedure", () => {
           CREATE PROCEDURE blah()
           BEGIN
             DECLARE x INT;
+            SET x = 0;
           END
         `);
       });

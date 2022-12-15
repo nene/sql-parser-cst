@@ -2075,6 +2075,7 @@ resource_type_kw
  */
 proc_statement
   = declare_stmt
+  / set_stmt
 
 declare_stmt
   = kw:(DECLARE __) names:list$ident type:(__ data_type)? deflt:(__ declare_default)? {
@@ -2093,6 +2094,25 @@ declare_default
       type: "declare_default",
       defaultKw: read(kw),
       expr,
+    });
+  }
+
+set_stmt
+  = kw:(SET __) assignments:list$set_assignment {
+    return loc({
+      type: "set_stmt",
+      setKw: read(kw),
+      assignments,
+    });
+  }
+
+set_assignment
+  = name:((ident / paren$list$ident) __) "=" value:(__ expr) {
+    return loc({
+      type: "binary_expr",
+      left: read(name),
+      operator: "=",
+      right: read(value),
     });
   }
 
@@ -3597,10 +3617,11 @@ paren$list$equals_expr = .
 paren$list$expr = .
 paren$list$expr_or_default = .
 paren$list$func_param = .
+paren$list$ident = .
 paren$list$literal = .
-paren$list$string_literal = .
 paren$list$procedure_param = .
 paren$list$sort_specification = .
+paren$list$string_literal = .
 paren$pivot_for_in = .
 paren$pragma_value = .
 paren$raise_args = .
@@ -3634,6 +3655,7 @@ list$column_assignment = .
 list$column_definition = .
 list$common_table_expression = .
 list$create_definition = .
+list$entity_name = .
 list$equals_expr = .
 list$expr = .
 list$expr_or_default = .
@@ -3641,13 +3663,13 @@ list$expr_or_explicit_alias = .
 list$func_param = .
 list$ident = .
 list$literal = .
-list$string_literal = .
-list$type_param = .
 list$named_window = .
 list$procedure_param = .
+list$set_assignment = .
 list$sort_specification = .
-list$entity_name = .
+list$string_literal = .
 list$table_or_alias = .
+list$type_param = .
 list$values_row = .
 
 empty_list
