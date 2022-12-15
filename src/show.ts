@@ -484,6 +484,11 @@ const showNode = cstTransformer<string>({
       node.users,
     ]),
 
+  // Procedural language
+  declare_stmt: (node) =>
+    show([node.declareKw, node.names, node.dataType, node.default]),
+  declare_default: (node) => show([node.defaultKw, node.expr]),
+
   // SQLite-specific statements
   attach_database_stmt: (node) =>
     show([node.attachKw, node.databaseKw, node.file, node.asKw, node.schema]),

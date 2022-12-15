@@ -45,6 +45,7 @@ import { AllIndexNodes } from "./Index";
 import { AllInsertNodes } from "./Insert";
 import { AllMergeNodes } from "./Merge";
 import { AllProcClauseNodes } from "./ProcClause";
+import { AllProceduralNodes } from "./ProceduralLanguage";
 import { AllProcedureNodes } from "./Procedure";
 import { AllProgramNodes } from "./Program";
 import { AllSelectNodes } from "./Select";
@@ -69,6 +70,7 @@ export type Node =
   | AllInsertNodes
   | AllMergeNodes
   | AllProcClauseNodes
+  | AllProceduralNodes
   | AllProcedureNodes
   | AllProgramNodes
   | AllSelectNodes

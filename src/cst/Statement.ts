@@ -2,6 +2,7 @@ import { AllBigqueryStatements } from "./Bigquery";
 import { AllDclStatements } from "./Dcl";
 import { AllFunctionStatements } from "./Function";
 import { AllIndexStatements } from "./Index";
+import { AllProceduralStatements } from "./ProceduralLanguage";
 import { AllProcedureStatements } from "./Procedure";
 import { AllSchemaStatements } from "./Schema";
 import { AllSqliteStatements } from "./Sqlite";
@@ -26,6 +27,7 @@ export type Statement =
   | AllDclStatements
   | AllFunctionStatements
   | AllIndexStatements
+  | AllProceduralStatements
   | AllProcedureStatements
   | AllSchemaStatements
   | AllSqliteStatements
