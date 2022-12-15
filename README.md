@@ -33,6 +33,12 @@ though there are bound to be changes as new SQL dialects
 are added and they contain features that need to be accommodated
 to the syntax tree.
 
+## Install
+
+```
+npm install sql-parser-cst
+```
+
 ## Usage
 
 ```ts
