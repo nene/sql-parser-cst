@@ -1,5 +1,4 @@
 import { BaseNode, Keyword } from "./Base";
-import { ConstraintDefault } from "./Constraint";
 import { DataType } from "./DataType";
 import { Identifier, ListExpr, Expr } from "./Expr";
 
@@ -13,7 +12,7 @@ export interface DeclareStmt extends BaseNode {
   declareKw: Keyword<"DECLARE">;
   names: ListExpr<Identifier>;
   dataType?: DataType;
-  default?: ConstraintDefault;
+  default?: DeclareDefault;
 }
 
 export interface DeclareDefault extends BaseNode {
