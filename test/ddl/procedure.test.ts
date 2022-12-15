@@ -25,6 +25,15 @@ describe("procedure", () => {
         `);
       });
 
+      it("supports procedureal language statements in procedure body", () => {
+        test(`
+          CREATE PROCEDURE blah()
+          BEGIN
+            DECLARE x INT;
+          END
+        `);
+      });
+
       it("supports parameters", () => {
         testWc("CREATE PROCEDURE multiplicate ( x INT , y INT ) BEGIN SELECT 1; END");
       });

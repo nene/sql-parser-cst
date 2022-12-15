@@ -1870,6 +1870,7 @@ procedure_body_program
 procedure_body_statement
   = dml_statement
   / ddl_statement
+  / proc_statement
   / bigquery_stmt;
 
 drop_procedure_stmt
