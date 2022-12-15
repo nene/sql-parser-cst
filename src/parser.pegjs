@@ -65,6 +65,7 @@ statement
   = dml_statement
   / ddl_statement
   / dcl_statement
+  / x:proc_statement (&mysql / &bigquery) { return x; }
   / x:analyze_stmt (&mysql / &sqlite) { return x; }
   / x:explain_stmt (&mysql / &sqlite) { return x; }
   / transaction_stmt
@@ -2063,6 +2064,36 @@ resource_type_kw
   / TABLE
   / VIEW
   / kw:(EXTERNAL __ TABLE) { return read(kw); }
+
+/**
+ * ------------------------------------------------------------------------------------ *
+ *                                                                                      *
+ * Procedural language                                                                  *
+ *                                                                                      *
+ * ------------------------------------------------------------------------------------ *
+ */
+proc_statement
+  = declare_stmt
+
+declare_stmt
+  = kw:(DECLARE __) names:list$ident type:(__ data_type)? deflt:(__ declare_default)? {
+    return loc({
+      type: "declare_stmt",
+      declareKw: read(kw),
+      names,
+      dataType: read(type),
+      default: read(deflt),
+    });
+  }
+
+declare_default
+  = kw:(DEFAULT __) expr:expr {
+    return loc({
+      type: "declare_default",
+      defaultKw: read(kw),
+      expr,
+    });
+  }
 
 /**
  * ------------------------------------------------------------------------------------ *
@@ -4354,6 +4385,7 @@ DAYOFWEEK           = kw:"DAYOFWEEK"i           !ident_part { return loc(createK
 DAYOFYEAR           = kw:"DAYOFYEAR"i           !ident_part { return loc(createKeyword(kw)); }
 DEC                 = kw:"DEC"i                 !ident_part { return loc(createKeyword(kw)); }
 DECIMAL             = kw:"DECIMAL"i             !ident_part { return loc(createKeyword(kw)); }
+DECLARE             = kw:"DECLARE"i             !ident_part { return loc(createKeyword(kw)); }
 DEFAULT             = kw:"DEFAULT"i             !ident_part { return loc(createKeyword(kw)); }
 DEFERRABLE          = kw:"DEFERRABLE"i          !ident_part { return loc(createKeyword(kw)); }
 DEFERRED            = kw:"DEFERRED"i            !ident_part { return loc(createKeyword(kw)); }
