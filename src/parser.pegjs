@@ -1849,7 +1849,7 @@ create_procedure_clause
   / as_clause$sql_expr_or_code_string
 
 procedure_body
-  = beginKw:(BEGIN __) program:proc_program endKw:(__ END) {
+  = beginKw:(BEGIN __) program:procedure_body_program endKw:(__ END) {
     return loc({
       type: "code_block",
       beginKw: read(beginKw),
@@ -1858,15 +1858,15 @@ procedure_body
     });
   }
 
-proc_program
-  = head:proc_statement tail:(__ ";" __ (proc_statement / empty))+ {
+procedure_body_program
+  = head:procedure_body_statement tail:(__ ";" __ (procedure_body_statement / empty))+ {
     return loc({
       type: "program",
       statements: readCommaSepList(head, tail),
     });
   }
 
-proc_statement
+procedure_body_statement
   = dml_statement
   / ddl_statement
   / bigquery_stmt;
