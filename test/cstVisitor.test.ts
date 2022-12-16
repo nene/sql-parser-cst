@@ -2,7 +2,7 @@ import { cstVisitor } from "../src/main";
 import { parse, preserveAll, show } from "./test_utils";
 
 describe("cstVisitor", () => {
-  it("supports `null_literal`)", () => {
+  it("allows visiting null_literal", () => {
     const nulls: string[] = [];
     const visit = cstVisitor({
       null_literal: (node) => nulls.push(node.text),
