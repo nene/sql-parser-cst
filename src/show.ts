@@ -504,6 +504,8 @@ const showNode = cstTransformer<string>({
       node.condition,
       node.endRepeatKw,
     ]),
+  while_stmt: (node) =>
+    show([node.whileKw, node.condition, node.doKw, node.body, node.endWhileKw]),
   break_stmt: (node) => show([node.breakKw]),
   continue_stmt: (node) => show([node.continueKw]),
 

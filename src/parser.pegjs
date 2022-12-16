@@ -2077,6 +2077,7 @@ proc_statement
   / if_stmt
   / loop_stmt
   / repeat_stmt
+  / while_stmt
   / break_stmt
   / continue_stmt
 
@@ -2182,6 +2183,18 @@ repeat_stmt
       untilKw: read(untilKw),
       condition: read(cond),
       endRepeatKw: read(endKw),
+    });
+  }
+
+while_stmt
+  = kw:(WHILE __) cond:(expr __) doKw:(DO __) body:(inner_program __) endKw:(END __ WHILE) {
+    return loc({
+      type: "while_stmt",
+      whileKw: read(kw),
+      condition: read(cond),
+      doKw: read(doKw),
+      body: read(body),
+      endWhileKw: read(endKw),
     });
   }
 
@@ -4833,6 +4846,7 @@ WEDNESDAY           = kw:"WEDNESDAY"i           !ident_part { return loc(createK
 WEEK                = kw:"WEEK"i                !ident_part { return loc(createKeyword(kw)); }
 WHEN                = kw:"WHEN"i                !ident_part { return loc(createKeyword(kw)); }
 WHERE               = kw:"WHERE"i               !ident_part { return loc(createKeyword(kw)); }
+WHILE               = kw:"WHILE"i               !ident_part { return loc(createKeyword(kw)); }
 WINDOW              = kw:"WINDOW"i              !ident_part { return loc(createKeyword(kw)); }
 WITH                = kw:"WITH"i                !ident_part { return loc(createKeyword(kw)); }
 WITHOUT             = kw:"WITHOUT"i             !ident_part { return loc(createKeyword(kw)); }
