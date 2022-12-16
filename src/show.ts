@@ -506,6 +506,16 @@ const showNode = cstTransformer<string>({
     ]),
   while_stmt: (node) =>
     show([node.whileKw, node.condition, node.doKw, node.body, node.endWhileKw]),
+  for_stmt: (node) =>
+    show([
+      node.forKw,
+      node.left,
+      node.inKw,
+      node.right,
+      node.doKw,
+      node.body,
+      node.endForKw,
+    ]),
   break_stmt: (node) => show([node.breakKw]),
   continue_stmt: (node) => show([node.continueKw]),
 

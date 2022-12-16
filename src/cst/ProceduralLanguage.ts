@@ -2,6 +2,7 @@ import { BaseNode, Keyword } from "./Base";
 import { DataType } from "./DataType";
 import { Identifier, ListExpr, ParenExpr, BinaryExpr, Expr } from "./Expr";
 import { Program } from "./Program";
+import { SubSelect } from "./Select";
 import { Statement } from "./Statement";
 
 export type AllProceduralNodes =
@@ -18,6 +19,7 @@ export type AllProceduralStatements =
   | LoopStmt
   | RepeatStmt
   | WhileStmt
+  | ForStmt
   | BreakStmt
   | ContinueStmt;
 
@@ -100,6 +102,18 @@ export interface WhileStmt extends BaseNode {
   doKw: Keyword<"DO">;
   body: Program;
   endWhileKw: [Keyword<"END">, Keyword<"WHILE">];
+}
+
+// FOR
+export interface ForStmt extends BaseNode {
+  type: "for_stmt";
+  forKw: Keyword<"FOR">;
+  left: Identifier;
+  inKw: Keyword<"IN">;
+  right: ParenExpr<Expr | SubSelect>;
+  doKw: Keyword<"DO">;
+  body: Program;
+  endForKw: [Keyword<"END">, Keyword<"FOR">];
 }
 
 // BREAK | LEAVE

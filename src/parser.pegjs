@@ -2078,6 +2078,7 @@ proc_statement
   / loop_stmt
   / repeat_stmt
   / while_stmt
+  / x:for_stmt &bigquery { return x; }
   / break_stmt
   / continue_stmt
 
@@ -2197,6 +2198,21 @@ while_stmt
       endWhileKw: read(endKw),
     });
   }
+
+for_stmt
+  = kw:(FOR __) left:(ident __) inKw:(IN __) right:((paren$expr / paren$compound_select_stmt) __)
+    doKw:(DO __) body:(inner_program __) endKw:(END __ FOR) {
+      return loc({
+        type: "for_stmt",
+        forKw: read(kw),
+        left: read(left),
+        inKw: read(inKw),
+        right: read(right),
+        doKw: read(doKw),
+        body: read(body),
+        endForKw: read(endKw),
+      });
+    }
 
 break_stmt
   = kw:break_kw {
