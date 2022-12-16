@@ -1,3 +1,4 @@
+import { isObject } from "../utils/generic";
 import { Node, Whitespace } from "../cst/Node";
 import { cstTransformer } from "../cstTransformer";
 
@@ -11,7 +12,7 @@ export type Line = {
 };
 
 export const isLine = (item: Layout): item is Line =>
-  typeof item === "object" && (item as any).layout === "line";
+  isObject(item) && (item as any).layout === "line";
 
 type NodeArray = (Node | NodeArray | string)[];
 

@@ -1,4 +1,5 @@
 import { Node } from "./cst/Node";
+import { isObject } from "./utils/generic";
 
 /**
  * A map with a visitor function for each Node type, like:
@@ -39,4 +40,5 @@ export function cstVisitor(map: Partial<FullVisitorMap>): (node: Node) => void {
   return visit;
 }
 
-const isNode = (value: any): value is Node => typeof value?.type === "string";
+const isNode = (value: any): value is Node =>
+  isObject(value) && typeof value.type === "string";

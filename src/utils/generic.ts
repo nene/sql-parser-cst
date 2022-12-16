@@ -9,3 +9,7 @@ export const isDefined = <T>(x: T | undefined): x is T => x !== undefined;
 
 /** Type guard for strings */
 export const isString = (x: any): x is string => typeof x === "string";
+
+/** Type guard for objects */
+export const isObject = (x: any): x is Record<string, any> =>
+  typeof x === "object" && x !== null && !(x instanceof Array);
