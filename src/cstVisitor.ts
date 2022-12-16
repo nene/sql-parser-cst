@@ -39,5 +39,4 @@ export function cstVisitor(map: Partial<FullVisitorMap>): (node: Node) => void {
   return visit;
 }
 
-const isNode = (value: any): value is Node =>
-  typeof value === "object" && typeof value.type === "string";
+const isNode = (value: any): value is Node => typeof value?.type === "string";

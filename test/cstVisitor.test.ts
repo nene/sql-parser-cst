@@ -2,6 +2,16 @@ import { cstVisitor } from "../src/main";
 import { parse, preserveAll, show } from "./test_utils";
 
 describe("cstVisitor", () => {
+  it("supports `null_literal`)", () => {
+    const nulls: string[] = [];
+    const visit = cstVisitor({
+      null_literal: (node) => nulls.push(node.text),
+    });
+
+    visit(parse("SELECT * FROM employees WHERE id IS NULL"));
+    expect(nulls).toEqual(["NULL"]);
+  });
+
   it("allows visiting all identifiers", () => {
     const tables: string[] = [];
 
