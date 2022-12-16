@@ -2,16 +2,6 @@ import { cstVisitor } from "../src/main";
 import { parse, preserveAll, show } from "./test_utils";
 
 describe("cstVisitor", () => {
-  it("allows visiting null_literal", () => {
-    const nulls: string[] = [];
-    const visit = cstVisitor({
-      null_literal: (node) => nulls.push(node.text),
-    });
-
-    visit(parse("SELECT * FROM employees WHERE id IS NULL"));
-    expect(nulls).toEqual(["NULL"]);
-  });
-
   it("allows visiting all identifiers", () => {
     const tables: string[] = [];
 
@@ -58,5 +48,16 @@ describe("cstVisitor", () => {
     expect(show(cst)).toEqual(
       "SELECT t.firstname AS fname, t.lastname AS lname FROM my_table AS t"
     );
+  });
+
+  // Regression test for issue #9
+  it("allows visiting null_literal", () => {
+    const nulls: string[] = [];
+    const visit = cstVisitor({
+      null_literal: (node) => nulls.push(node.text),
+    });
+
+    visit(parse("SELECT * FROM employees WHERE id IS NULL"));
+    expect(nulls).toEqual(["NULL"]);
   });
 });
