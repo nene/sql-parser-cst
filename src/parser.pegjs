@@ -101,6 +101,20 @@ empty
     return loc({ type: "empty" });
   }
 
+inner_program
+  = head:inner_program_statement tail:(__ ";" __ (inner_program_statement / empty))+ {
+    return loc({
+      type: "program",
+      statements: readCommaSepList(head, tail),
+    });
+  }
+
+inner_program_statement
+  = dml_statement
+  / ddl_statement
+  / proc_statement
+  / bigquery_stmt;
+
 /**
  * ------------------------------------------------------------------------------------ *
  *                                                                                      *
@@ -1850,7 +1864,7 @@ create_procedure_clause
   / as_clause$sql_expr_or_code_string
 
 procedure_body
-  = beginKw:(BEGIN __) program:procedure_body_program endKw:(__ END) {
+  = beginKw:(BEGIN __) program:inner_program endKw:(__ END) {
     return loc({
       type: "code_block",
       beginKw: read(beginKw),
@@ -1858,20 +1872,6 @@ procedure_body
       endKw: read(endKw),
     });
   }
-
-procedure_body_program
-  = head:procedure_body_statement tail:(__ ";" __ (procedure_body_statement / empty))+ {
-    return loc({
-      type: "program",
-      statements: readCommaSepList(head, tail),
-    });
-  }
-
-procedure_body_statement
-  = dml_statement
-  / ddl_statement
-  / proc_statement
-  / bigquery_stmt;
 
 drop_procedure_stmt
   = kw:(DROP __) procKw:(PROCEDURE __) ifKw:(if_exists __)? name:entity_name {
@@ -2131,7 +2131,7 @@ if_stmt
   }
 
 if_clause
-  = ifKw:(IF __) condition:(expr __) thenKw:(THEN __) consequent:procedure_body_program {
+  = ifKw:(IF __) condition:(expr __) thenKw:(THEN __) consequent:inner_program {
     return loc({
       type: "if_clause",
       ifKw: read(ifKw),
@@ -2142,7 +2142,7 @@ if_clause
   }
 
 else_if_clause
-  = elifKw:(ELSEIF __) condition:(expr __) thenKw:(THEN __) consequent:procedure_body_program {
+  = elifKw:(ELSEIF __) condition:(expr __) thenKw:(THEN __) consequent:inner_program {
     return loc({
       type: "else_if_clause",
       elseIfKw: read(elifKw),
@@ -2153,7 +2153,7 @@ else_if_clause
   }
 
 else_clause
-  = elseKw:(ELSE __) consequent:procedure_body_program {
+  = elseKw:(ELSE __) consequent:inner_program {
     return loc({
       type: "else_clause",
       elseKw: read(elseKw),
