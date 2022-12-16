@@ -495,6 +495,7 @@ const showNode = cstTransformer<string>({
   elseif_clause: (node) =>
     show([node.elseifKw, node.condition, node.thenKw, node.consequent]),
   else_clause: (node) => show([node.elseKw, node.consequent]),
+  loop_stmt: (node) => show([node.loopKw, node.body, node.endLoopKw]),
 
   // SQLite-specific statements
   attach_database_stmt: (node) =>

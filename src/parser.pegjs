@@ -2075,6 +2075,7 @@ proc_statement
   = declare_stmt
   / set_stmt
   / if_stmt
+  / loop_stmt
 
 declare_stmt
   = kw:(DECLARE __) names:list$ident type:(__ data_type)? deflt:(__ declare_default)? {
@@ -2156,6 +2157,16 @@ else_clause
       type: "else_clause",
       elseKw: read(elseKw),
       consequent,
+    });
+  }
+
+loop_stmt
+  = loopKw:(LOOP __) body:inner_program endLoopKw:(__ END __ LOOP) {
+    return loc({
+      type: "loop_stmt",
+      loopKw: read(loopKw),
+      body,
+      endLoopKw: read(endLoopKw),
     });
   }
 
@@ -4579,6 +4590,7 @@ LOCKED              = kw:"LOCKED"i              !ident_part { return loc(createK
 LOGS                = kw:"LOGS"i                !ident_part { return loc(createKeyword(kw)); }
 LONGBLOB            = kw:"LONGBLOB"i            !ident_part { return loc(createKeyword(kw)); }
 LONGTEXT            = kw:"LONGTEXT"i            !ident_part { return loc(createKeyword(kw)); }
+LOOP                = kw:"LOOP"i                !ident_part { return loc(createKeyword(kw)); }
 LOW_PRIORITY        = kw:"LOW_PRIORITY"i        !ident_part { return loc(createKeyword(kw)); }
 MASTER              = kw:"MASTER"i              !ident_part { return loc(createKeyword(kw)); }
 MATCH               = kw:"MATCH"i               !ident_part { return loc(createKeyword(kw)); }

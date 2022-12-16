@@ -11,7 +11,7 @@ export type AllProceduralNodes =
   | ElseifClause
   | ElseClause;
 
-export type AllProceduralStatements = DeclareStmt | SetStmt | IfStmt;
+export type AllProceduralStatements = DeclareStmt | SetStmt | IfStmt | LoopStmt;
 
 // DECLARE
 export interface DeclareStmt extends BaseNode {
@@ -64,4 +64,12 @@ export interface ElseClause extends BaseNode {
   type: "else_clause";
   elseKw: Keyword<"ELSE">;
   consequent: Program;
+}
+
+// LOOP
+export interface LoopStmt extends BaseNode {
+  type: "loop_stmt";
+  loopKw: Keyword<"LOOP">;
+  body: Program;
+  endLoopKw: [Keyword<"END">, Keyword<"LOOP">];
 }
