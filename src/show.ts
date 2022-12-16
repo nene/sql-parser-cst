@@ -1,6 +1,6 @@
 import { Whitespace, Node } from "./cst/Node";
 import { cstTransformer, FullTransformMap } from "./cstTransformer";
-import { isDefined } from "./utils/generic";
+import { isDefined, isString } from "./utils/generic";
 
 type NodeArray = (Node | NodeArray | string | undefined)[];
 
@@ -8,7 +8,7 @@ export function show(
   node: Node | NodeArray | string,
   joinString: string = ""
 ): string {
-  if (typeof node === "string") {
+  if (isString(node)) {
     return node;
   }
   if (node instanceof Array) {

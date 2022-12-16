@@ -1,4 +1,4 @@
-import { isObject } from "../utils/generic";
+import { isObject, isString } from "../utils/generic";
 import { Node, Whitespace } from "../cst/Node";
 import { cstTransformer } from "../cstTransformer";
 
@@ -17,7 +17,7 @@ export const isLine = (item: Layout): item is Line =>
 type NodeArray = (Node | NodeArray | string)[];
 
 export function layout(node: Node | string | NodeArray): Layout {
-  if (typeof node === "string") {
+  if (isString(node)) {
     return node;
   }
   if (node instanceof Array) {
