@@ -52,13 +52,11 @@ start
   }
 
 program
-  = statements:multiple_stmt {
-    return loc({ type: "program", statements });
-  }
-
-multiple_stmt
   = head:statement tail:(__ ";" __ statement)* {
-    return readCommaSepList(head, tail);
+    return loc({
+      type: "program",
+      statements: readCommaSepList(head, tail),
+    });
   }
 
 statement
