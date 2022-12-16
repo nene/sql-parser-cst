@@ -2076,6 +2076,7 @@ proc_statement
   / set_stmt
   / if_stmt
   / loop_stmt
+  / repeat_stmt
   / break_stmt
   / continue_stmt
 
@@ -2169,6 +2170,18 @@ loop_stmt
       loopKw: read(loopKw),
       body,
       endLoopKw: read(endLoopKw),
+    });
+  }
+
+repeat_stmt
+  = kw:(REPEAT __) body:(inner_program __) untilKw:(UNTIL __) cond:(expr __) endKw:(END __ REPEAT) {
+    return loc({
+      type: "repeat_stmt",
+      repeatKw: read(kw),
+      body: read(body),
+      untilKw: read(untilKw),
+      condition: read(cond),
+      endRepeatKw: read(endKw),
     });
   }
 
@@ -4704,6 +4717,7 @@ REINDEX             = kw:"REINDEX"i             !ident_part { return loc(createK
 RELEASE             = kw:"RELEASE"i             !ident_part { return loc(createKeyword(kw)); }
 REMOTE              = kw:"REMOTE"i              !ident_part { return loc(createKeyword(kw)); }
 RENAME              = kw:"RENAME"i              !ident_part { return loc(createKeyword(kw)); }
+REPEAT              = kw:"REPEAT"i              !ident_part { return loc(createKeyword(kw)); }
 REPLACE             = kw:"REPLACE"i             !ident_part { return loc(createKeyword(kw)); }
 REPLICATION         = kw:"REPLICATION"i         !ident_part { return loc(createKeyword(kw)); }
 RESERVATION         = kw:"RESERVATION"i         !ident_part { return loc(createKeyword(kw)); }
@@ -4800,6 +4814,7 @@ UNLOCK              = kw:"UNLOCK"i              !ident_part { return loc(createK
 UNNEST              = kw:"UNNEST"i              !ident_part { return loc(createKeyword(kw)); }
 UNPIVOT             = kw:"UNPIVOT"              !ident_part { return loc(createKeyword(kw)); }
 UNSIGNED            = kw:"UNSIGNED"i            !ident_part { return loc(createKeyword(kw)); }
+UNTIL               = kw:"UNTIL"i               !ident_part { return loc(createKeyword(kw)); }
 UPDATE              = kw:"UPDATE"i              !ident_part { return loc(createKeyword(kw)); }
 USE                 = kw:"USE"i                 !ident_part { return loc(createKeyword(kw)); }
 USER                = kw:"USER"i                !ident_part { return loc(createKeyword(kw)); }

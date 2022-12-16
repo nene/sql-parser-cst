@@ -16,6 +16,7 @@ export type AllProceduralStatements =
   | SetStmt
   | IfStmt
   | LoopStmt
+  | RepeatStmt
   | BreakStmt
   | ContinueStmt;
 
@@ -78,6 +79,16 @@ export interface LoopStmt extends BaseNode {
   loopKw: Keyword<"LOOP">;
   body: Program;
   endLoopKw: [Keyword<"END">, Keyword<"LOOP">];
+}
+
+// REPEAT
+export interface RepeatStmt extends BaseNode {
+  type: "repeat_stmt";
+  repeatKw: Keyword<"REPEAT">;
+  body: Program;
+  untilKw: Keyword<"UNTIL">;
+  condition: Expr;
+  endRepeatKw: [Keyword<"END">, Keyword<"REPEAT">];
 }
 
 // BREAK | LEAVE

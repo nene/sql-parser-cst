@@ -496,6 +496,14 @@ const showNode = cstTransformer<string>({
     show([node.elseifKw, node.condition, node.thenKw, node.consequent]),
   else_clause: (node) => show([node.elseKw, node.consequent]),
   loop_stmt: (node) => show([node.loopKw, node.body, node.endLoopKw]),
+  repeat_stmt: (node) =>
+    show([
+      node.repeatKw,
+      node.body,
+      node.untilKw,
+      node.condition,
+      node.endRepeatKw,
+    ]),
   break_stmt: (node) => show([node.breakKw]),
   continue_stmt: (node) => show([node.continueKw]),
 
