@@ -1,9 +1,15 @@
 import { BaseNode, Keyword } from "./Base";
 import { DataType } from "./DataType";
-import { Identifier, ListExpr, ParenExpr, BinaryExpr, Expr } from "./Expr";
+import {
+  Identifier,
+  ListExpr,
+  ParenExpr,
+  BinaryExpr,
+  Expr,
+  FuncCall,
+} from "./Expr";
 import { Program } from "./Program";
 import { SubSelect } from "./Select";
-import { Statement } from "./Statement";
 
 export type AllProceduralNodes =
   | AllProceduralStatements
@@ -21,7 +27,8 @@ export type AllProceduralStatements =
   | WhileStmt
   | ForStmt
   | BreakStmt
-  | ContinueStmt;
+  | ContinueStmt
+  | CallStmt;
 
 // DECLARE
 export interface DeclareStmt extends BaseNode {
@@ -126,4 +133,11 @@ export interface BreakStmt extends BaseNode {
 export interface ContinueStmt extends BaseNode {
   type: "continue_stmt";
   continueKw: Keyword<"CONTINUE" | "ITERATE">;
+}
+
+// CALL
+export interface CallStmt extends BaseNode {
+  type: "call_stmt";
+  callKw: Keyword<"CALL">;
+  func: FuncCall;
 }

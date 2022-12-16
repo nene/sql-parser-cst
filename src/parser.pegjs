@@ -2081,6 +2081,7 @@ proc_statement
   / x:for_stmt &bigquery { return x; }
   / break_stmt
   / continue_stmt
+  / call_stmt
 
 declare_stmt
   = kw:(DECLARE __) names:list$ident type:(__ data_type)? deflt:(__ declare_default)? {
@@ -2231,6 +2232,11 @@ continue_stmt
 continue_kw
   = ITERATE
   / kw:CONTINUE &bigquery { return kw; }
+
+call_stmt
+  = kw:(CALL __) func:func_call {
+    return loc({ type: "call_stmt", callKw: read(kw), func });
+  }
 
 /**
  * ------------------------------------------------------------------------------------ *
