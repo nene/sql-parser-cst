@@ -1,5 +1,5 @@
 import { Node, Whitespace } from "../cst/Node";
-import { last } from "./generic";
+import { isObject, last } from "./generic";
 
 /** Attaches optional leading whitespace to AST node, or to array of AST nodes (to the first in array) */
 export const leading = (
@@ -10,7 +10,7 @@ export const leading = (
     // Add leading whitespace to first item in array
     return setFirst(node, leading(node[0], ws) as Node);
   }
-  if (typeof node !== "object") {
+  if (!isObject(node)) {
     throw new Error(
       `Expected Node object, instead got ${JSON.stringify(node)}`
     );
@@ -33,7 +33,7 @@ export const trailing = (
     // Add trailing whitespace to last item in array
     return setLast(node, trailing(last(node), ws) as Node);
   }
-  if (typeof node !== "object") {
+  if (!isObject(node)) {
     throw new Error(
       `Expected Node object, instead got ${JSON.stringify(node)}`
     );

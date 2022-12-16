@@ -21,6 +21,7 @@ import {
 } from "../cst/Node";
 import { leading, surrounding, trailing } from "./whitespace";
 import { readCommaSepList } from "./list";
+import { isObject } from "./generic";
 
 //
 // Helper functions for creating various types of Node objects
@@ -244,7 +245,7 @@ function isObjectMemberExprTailPart(
 function isFuncCallMemberExprTailPart(
   part: MemberExprTailPart | FuncCallTailPart
 ): part is FuncCallTailPart {
-  return typeof part[1] === "object" && part[1].type === "func_call_right";
+  return isObject(part[1]) && part[1].type === "func_call_right";
 }
 
 export function createMemberExprChain(
