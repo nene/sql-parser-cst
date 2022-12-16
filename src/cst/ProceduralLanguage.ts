@@ -8,7 +8,7 @@ export type AllProceduralNodes =
   | AllProceduralStatements
   | DeclareDefault
   | IfClause
-  | ElseIfClause
+  | ElseifClause
   | ElseClause;
 
 export type AllProceduralStatements = DeclareStmt | SetStmt | IfStmt;
@@ -40,7 +40,7 @@ export interface SetStmt extends BaseNode {
 // IF
 export interface IfStmt extends BaseNode {
   type: "if_stmt";
-  clauses: (IfClause | ElseIfClause | ElseClause)[];
+  clauses: (IfClause | ElseifClause | ElseClause)[];
   endIfKw: [Keyword<"END">, Keyword<"IF">];
 }
 
@@ -52,9 +52,9 @@ export interface IfClause extends BaseNode {
   consequent: Program;
 }
 
-export interface ElseIfClause extends BaseNode {
-  type: "else_if_clause";
-  elseIfKw: [Keyword<"ELSE">, Keyword<"IF">];
+export interface ElseifClause extends BaseNode {
+  type: "elseif_clause";
+  elseifKw: Keyword<"ELSEIF">;
   condition: Expr;
   thenKw: Keyword<"THEN">;
   consequent: Program;

@@ -492,8 +492,8 @@ const showNode = cstTransformer<string>({
   if_stmt: (node) => show([node.clauses, node.endIfKw]),
   if_clause: (node) =>
     show([node.ifKw, node.condition, node.thenKw, node.consequent]),
-  else_if_clause: (node) =>
-    show([node.elseIfKw, node.condition, node.thenKw, node.consequent]),
+  elseif_clause: (node) =>
+    show([node.elseifKw, node.condition, node.thenKw, node.consequent]),
   else_clause: (node) => show([node.elseKw, node.consequent]),
 
   // SQLite-specific statements

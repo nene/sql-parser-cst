@@ -2116,7 +2116,7 @@ set_assignment
   }
 
 if_stmt
-  = ifClause:(if_clause __) elifClauses:(else_if_clause __)* elseClause:(else_clause __)? endIfKw:(END __ IF) {
+  = ifClause:(if_clause __) elifClauses:(elseif_clause __)* elseClause:(else_clause __)? endIfKw:(END __ IF) {
     return loc({
       type: "if_stmt",
       clauses: [
@@ -2139,11 +2139,11 @@ if_clause
     });
   }
 
-else_if_clause
+elseif_clause
   = elifKw:(ELSEIF __) condition:(expr __) thenKw:(THEN __) consequent:inner_program {
     return loc({
-      type: "else_if_clause",
-      elseIfKw: read(elifKw),
+      type: "elseif_clause",
+      elseifKw: read(elifKw),
       condition: read(condition),
       thenKw: read(thenKw),
       consequent,
