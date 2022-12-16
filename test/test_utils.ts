@@ -13,6 +13,7 @@ import {
   ParserOptions,
   show,
 } from "../src/main";
+import { isString } from "../src/utils/generic";
 
 declare var __SQL_DIALECT__: DialectName;
 
@@ -44,7 +45,7 @@ export function parseStmt(
 }
 
 export function dialect(lang: DialectName | DialectName[], block: () => void) {
-  lang = typeof lang === "string" ? [lang] : lang;
+  lang = isString(lang) ? [lang] : lang;
   if (lang.includes(__SQL_DIALECT__)) {
     describe(__SQL_DIALECT__, block);
   }
