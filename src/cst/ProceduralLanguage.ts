@@ -1,10 +1,17 @@
 import { BaseNode, Keyword } from "./Base";
 import { DataType } from "./DataType";
 import { Identifier, ListExpr, ParenExpr, BinaryExpr, Expr } from "./Expr";
+import { Program } from "./Program";
+import { Statement } from "./Statement";
 
-export type AllProceduralNodes = AllProceduralStatements | DeclareDefault;
+export type AllProceduralNodes =
+  | AllProceduralStatements
+  | DeclareDefault
+  | IfClause
+  | ElseIfClause
+  | ElseClause;
 
-export type AllProceduralStatements = DeclareStmt | SetStmt;
+export type AllProceduralStatements = DeclareStmt | SetStmt | IfStmt;
 
 // DECLARE
 export interface DeclareStmt extends BaseNode {
@@ -28,4 +35,33 @@ export interface SetStmt extends BaseNode {
   assignments: ListExpr<
     BinaryExpr<Identifier | ParenExpr<ListExpr<Identifier>>, "=", Expr>
   >;
+}
+
+// IF
+export interface IfStmt extends BaseNode {
+  type: "if_stmt";
+  clauses: (IfClause | ElseIfClause | ElseClause)[];
+  endIfKw: [Keyword<"END">, Keyword<"IF">];
+}
+
+export interface IfClause extends BaseNode {
+  type: "if_clause";
+  ifKw: Keyword<"IF">;
+  condition: Expr;
+  thenKw: Keyword<"THEN">;
+  consequent: Program;
+}
+
+export interface ElseIfClause extends BaseNode {
+  type: "else_if_clause";
+  elseIfKw: [Keyword<"ELSE">, Keyword<"IF">];
+  condition: Expr;
+  thenKw: Keyword<"THEN">;
+  consequent: Program;
+}
+
+export interface ElseClause extends BaseNode {
+  type: "else_clause";
+  elseKw: Keyword<"ELSE">;
+  consequent: Program;
 }

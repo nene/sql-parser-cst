@@ -2076,6 +2076,7 @@ resource_type_kw
 proc_statement
   = declare_stmt
   / set_stmt
+  / if_stmt
 
 declare_stmt
   = kw:(DECLARE __) names:list$ident type:(__ data_type)? deflt:(__ declare_default)? {
@@ -2113,6 +2114,50 @@ set_assignment
       left: read(name),
       operator: "=",
       right: read(value),
+    });
+  }
+
+if_stmt
+  = ifClause:(if_clause __) elifClauses:(else_if_clause __)* elseClause:(else_clause __)? endIfKw:(END __ IF) {
+    return loc({
+      type: "if_stmt",
+      clauses: [
+        read(ifClause),
+        ...elifClauses.map(read),
+        ...(elseClause ? [read(elseClause)] : []),
+      ],
+      endIfKw: read(endIfKw),
+    });
+  }
+
+if_clause
+  = ifKw:(IF __) condition:(expr __) thenKw:(THEN __) consequent:procedure_body_program {
+    return loc({
+      type: "if_clause",
+      ifKw: read(ifKw),
+      condition: read(condition),
+      thenKw: read(thenKw),
+      consequent,
+    });
+  }
+
+else_if_clause
+  = elifKw:(ELSEIF __) condition:(expr __) thenKw:(THEN __) consequent:procedure_body_program {
+    return loc({
+      type: "else_if_clause",
+      elseIfKw: read(elifKw),
+      condition: read(condition),
+      thenKw: read(thenKw),
+      consequent,
+    });
+  }
+
+else_clause
+  = elseKw:(ELSE __) consequent:procedure_body_program {
+    return loc({
+      type: "else_clause",
+      elseKw: read(elseKw),
+      consequent,
     });
   }
 
@@ -4435,6 +4480,7 @@ DUPLICATE           = kw:"DUPLICATE"i           !ident_part { return loc(createK
 DYNAMIC             = kw:"DYNAMIC"i             !ident_part { return loc(createKeyword(kw)); }
 EACH                = kw:"EACH"i                !ident_part { return loc(createKeyword(kw)); }
 ELSE                = kw:"ELSE"i                !ident_part { return loc(createKeyword(kw)); }
+ELSEIF              = kw:"ELSEIF"i              !ident_part { return loc(createKeyword(kw)); }
 ENCRYPTION          = kw:"ENCRYPTION"i          !ident_part { return loc(createKeyword(kw)); }
 END                 = kw:"END"i                 !ident_part { return loc(createKeyword(kw)); }
 ENFORCED            = kw:"ENFORCED"i            !ident_part { return loc(createKeyword(kw)); }

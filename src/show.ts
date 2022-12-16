@@ -489,6 +489,12 @@ const showNode = cstTransformer<string>({
     show([node.declareKw, node.names, node.dataType, node.default]),
   declare_default: (node) => show([node.defaultKw, node.expr]),
   set_stmt: (node) => show([node.setKw, node.assignments]),
+  if_stmt: (node) => show([node.clauses, node.endIfKw]),
+  if_clause: (node) =>
+    show([node.ifKw, node.condition, node.thenKw, node.consequent]),
+  else_if_clause: (node) =>
+    show([node.elseIfKw, node.condition, node.thenKw, node.consequent]),
+  else_clause: (node) => show([node.elseKw, node.consequent]),
 
   // SQLite-specific statements
   attach_database_stmt: (node) =>
