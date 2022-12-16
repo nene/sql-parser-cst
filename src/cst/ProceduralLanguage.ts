@@ -11,7 +11,13 @@ export type AllProceduralNodes =
   | ElseifClause
   | ElseClause;
 
-export type AllProceduralStatements = DeclareStmt | SetStmt | IfStmt | LoopStmt;
+export type AllProceduralStatements =
+  | DeclareStmt
+  | SetStmt
+  | IfStmt
+  | LoopStmt
+  | BreakStmt
+  | ContinueStmt;
 
 // DECLARE
 export interface DeclareStmt extends BaseNode {
@@ -72,4 +78,16 @@ export interface LoopStmt extends BaseNode {
   loopKw: Keyword<"LOOP">;
   body: Program;
   endLoopKw: [Keyword<"END">, Keyword<"LOOP">];
+}
+
+// BREAK | LEAVE
+export interface BreakStmt extends BaseNode {
+  type: "break_stmt";
+  breakKw: Keyword<"BREAK" | "LEAVE">;
+}
+
+// CONTINUE | ITERATE
+export interface ContinueStmt extends BaseNode {
+  type: "continue_stmt";
+  continueKw: Keyword<"CONTINUE" | "ITERATE">;
 }

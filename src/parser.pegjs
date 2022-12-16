@@ -2076,6 +2076,8 @@ proc_statement
   / set_stmt
   / if_stmt
   / loop_stmt
+  / break_stmt
+  / continue_stmt
 
 declare_stmt
   = kw:(DECLARE __) names:list$ident type:(__ data_type)? deflt:(__ declare_default)? {
@@ -2169,6 +2171,24 @@ loop_stmt
       endLoopKw: read(endLoopKw),
     });
   }
+
+break_stmt
+  = kw:break_kw {
+    return loc({ type: "break_stmt", breakKw: kw });
+  }
+
+break_kw
+  = LEAVE
+  / kw:BREAK &bigquery { return kw; }
+
+continue_stmt
+  = kw:continue_kw {
+    return loc({ type: "continue_stmt", continueKw: kw });
+  }
+
+continue_kw
+  = ITERATE
+  / kw:CONTINUE &bigquery { return kw; }
 
 /**
  * ------------------------------------------------------------------------------------ *
@@ -4407,6 +4427,7 @@ BIT                 = kw:"BIT"i                 !ident_part { return loc(createK
 BLOB                = kw:"BLOB"i                !ident_part { return loc(createKeyword(kw)); }
 BOOL                = kw:"BOOL"i                !ident_part { return loc(createKeyword(kw)); }
 BOOLEAN             = kw:"BOOLEAN"i             !ident_part { return loc(createKeyword(kw)); }
+BREAK               = kw:"BREAK"i               !ident_part { return loc(createKeyword(kw)); }
 BTREE               = kw:"BTREE"i               !ident_part { return loc(createKeyword(kw)); }
 BY                  = kw:"BY"i                  !ident_part { return loc(createKeyword(kw)); }
 BYTEINT             = kw:"BYTEINT"i             !ident_part { return loc(createKeyword(kw)); }
@@ -4438,6 +4459,7 @@ COMPRESSION         = kw:"COMPRESSION"i         !ident_part { return loc(createK
 CONFLICT            = kw:"CONFLICT"i            !ident_part { return loc(createKeyword(kw)); }
 CONNECTION          = kw:"CONNECTION"i          !ident_part { return loc(createKeyword(kw)); }
 CONSTRAINT          = kw:"CONSTRAINT"i          !ident_part { return loc(createKeyword(kw)); }
+CONTINUE            = kw:"CONTINUE"i            !ident_part { return loc(createKeyword(kw)); }
 COPY                = kw:"COPY"i                !ident_part { return loc(createKeyword(kw)); }
 COUNT               = kw:"COUNT"i               !ident_part { return loc(createKeyword(kw)); }
 CREATE              = kw:"CREATE"i              !ident_part { return loc(createKeyword(kw)); }
@@ -4569,6 +4591,7 @@ IS                  = kw:"IS"i                  !ident_part { return loc(createK
 ISNULL              = kw:"ISNULL"               !ident_part { return loc(createKeyword(kw)); }
 ISOWEEK             = kw:"ISOWEEK"i             !ident_part { return loc(createKeyword(kw)); }
 ISOYEAR             = kw:"ISOYEAR"i             !ident_part { return loc(createKeyword(kw)); }
+ITERATE             = kw:"ITERATE"i             !ident_part { return loc(createKeyword(kw)); }
 JOIN                = kw:"JOIN"i                !ident_part { return loc(createKeyword(kw)); }
 JSON                = kw:"JSON"i                !ident_part { return loc(createKeyword(kw)); }
 KEY                 = kw:"KEY"i                 !ident_part { return loc(createKeyword(kw)); }
@@ -4578,6 +4601,7 @@ LANGUAGE            = kw:"LANGUAGE"i            !ident_part { return loc(createK
 LAST                = kw:"LAST"i                !ident_part { return loc(createKeyword(kw)); }
 LAST_VALUE          = kw:"LAST_VALUE"i          !ident_part { return loc(createKeyword(kw)); }
 LEAD                = kw:"LEAD"i                !ident_part { return loc(createKeyword(kw)); }
+LEAVE               = kw:"LEAVE"i               !ident_part { return loc(createKeyword(kw)); }
 LEFT                = kw:"LEFT"i                !ident_part { return loc(createKeyword(kw)); }
 LIKE                = kw:"LIKE"i                !ident_part { return loc(createKeyword(kw)); }
 LIMIT               = kw:"LIMIT"i               !ident_part { return loc(createKeyword(kw)); }
