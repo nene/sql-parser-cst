@@ -3519,12 +3519,16 @@ mysql_window_func_keyword
   / PERCENT_RANK
   / RANK
   / ROW_NUMBER
+  / IF
+  / LEFT
+  / RIGHT
 
 bigquery_func_keyword
   = LEFT
   / RIGHT
   / ARRAY
   / COLLATE
+  / IF
 
 paren_less_func_call
   = name:paren_less_func_name {

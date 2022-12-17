@@ -123,12 +123,20 @@ describe("function call", () => {
     });
   });
 
-  dialect("bigquery", () => {
-    it("supports functions with reserved keywords as names", () => {
-      testExpr(`LEFT('hello', 3)`);
-      testExpr(`RIGHT('hello', 3)`);
-    });
+  describe("functions with reserved keywords as names", () => {
+    dialect(["bigquery", "mysql"], () => {
+      it("IF() function", () => {
+        testExpr(`IF(x > 3, 'yes', 'no')`);
+      });
 
+      it("LEFT() / RIGHT() functions", () => {
+        testExpr(`LEFT('hello', 3)`);
+        testExpr(`RIGHT('hello', 3)`);
+      });
+    });
+  });
+
+  dialect("bigquery", () => {
     it("supports ARRAY function", () => {
       testExpr(`ARRAY(SELECT * FROM tbl)`);
     });
