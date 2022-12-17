@@ -134,15 +134,15 @@ describe("function call", () => {
         testExpr(`RIGHT('hello', 3)`);
       });
     });
-  });
 
-  dialect("bigquery", () => {
-    it("supports ARRAY function", () => {
-      testExpr(`ARRAY(SELECT * FROM tbl)`);
-    });
+    dialect("bigquery", () => {
+      it("supports COLLATE function", () => {
+        testExpr(`COLLATE('abc', 'und:ci')`);
+      });
 
-    it("supports COLLATE function", () => {
-      testExpr(`COLLATE('abc', 'und:ci')`);
+      it("supports ARRAY function", () => {
+        testExpr(`ARRAY(SELECT * FROM tbl)`);
+      });
     });
   });
 
