@@ -2083,6 +2083,7 @@ proc_statement
   / continue_stmt
   / call_stmt
   / return_stmt
+  / x:raise_stmt &bigquery { return x; }
 
 declare_stmt
   = kw:(DECLARE __) names:list$ident type:(__ data_type)? deflt:(__ declare_default)? {
@@ -2245,6 +2246,20 @@ return_stmt
   }
   / &bigquery kw:RETURN {
     return loc({ type: "return_stmt", returnKw: kw });
+  }
+
+raise_stmt
+  = kw:RAISE msg:(__ raise_message)? {
+    return loc({ type: "raise_stmt", raiseKw: kw, message: read(msg) });
+  }
+
+raise_message
+  = kw:(USING __ MESSAGE __) "=" string:(__ string_literal) {
+    return loc({
+      type: "raise_message",
+      usingMessageKw: read(kw),
+      string: read(string),
+    });
   }
 
 /**
@@ -4688,6 +4703,7 @@ MEDIUMINT           = kw:"MEDIUMINT"i           !ident_part { return loc(createK
 MEDIUMTEXT          = kw:"MEDIUMTEXT"i          !ident_part { return loc(createKeyword(kw)); }
 MEMORY              = kw:"MEMORY"i              !ident_part { return loc(createKeyword(kw)); }
 MERGE               = kw:"MERGE"i               !ident_part { return loc(createKeyword(kw)); }
+MESSAGE             = kw:"MESSAGE"i             !ident_part { return loc(createKeyword(kw)); }
 MICROSECOND         = kw:"MICROSECOND"i         !ident_part { return loc(createKeyword(kw)); }
 MILLISECOND         = kw:"MILLISECOND"i         !ident_part { return loc(createKeyword(kw)); }
 MIN                 = kw:"MIN"i                 !ident_part { return loc(createKeyword(kw)); }

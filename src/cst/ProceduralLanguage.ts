@@ -8,6 +8,7 @@ import {
   Expr,
   FuncCall,
 } from "./Expr";
+import { StringLiteral } from "./Literal";
 import { Program } from "./Program";
 import { SubSelect } from "./Select";
 
@@ -16,7 +17,8 @@ export type AllProceduralNodes =
   | DeclareDefault
   | IfClause
   | ElseifClause
-  | ElseClause;
+  | ElseClause
+  | RaiseMessage;
 
 export type AllProceduralStatements =
   | DeclareStmt
@@ -29,7 +31,8 @@ export type AllProceduralStatements =
   | BreakStmt
   | ContinueStmt
   | CallStmt
-  | ReturnStmt;
+  | ReturnStmt
+  | RaiseStmt;
 
 // DECLARE
 export interface DeclareStmt extends BaseNode {
@@ -148,4 +151,17 @@ export interface ReturnStmt extends BaseNode {
   type: "return_stmt";
   returnKw: Keyword<"RETURN">;
   expr?: Expr;
+}
+
+// RAISE
+export interface RaiseStmt extends BaseNode {
+  type: "raise_stmt";
+  raiseKw: Keyword<"RAISE">;
+  message?: RaiseMessage;
+}
+
+export interface RaiseMessage extends BaseNode {
+  type: "raise_message";
+  usingMessageKw: [Keyword<"USING">, Keyword<"MESSAGE">];
+  string: StringLiteral;
 }
