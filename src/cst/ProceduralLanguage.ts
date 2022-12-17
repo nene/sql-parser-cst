@@ -28,7 +28,8 @@ export type AllProceduralStatements =
   | ForStmt
   | BreakStmt
   | ContinueStmt
-  | CallStmt;
+  | CallStmt
+  | ReturnStmt;
 
 // DECLARE
 export interface DeclareStmt extends BaseNode {
@@ -140,4 +141,11 @@ export interface CallStmt extends BaseNode {
   type: "call_stmt";
   callKw: Keyword<"CALL">;
   func: FuncCall;
+}
+
+// RETURN
+export interface ReturnStmt extends BaseNode {
+  type: "return_stmt";
+  returnKw: Keyword<"RETURN">;
+  expr?: Expr;
 }

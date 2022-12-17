@@ -2082,6 +2082,7 @@ proc_statement
   / break_stmt
   / continue_stmt
   / call_stmt
+  / return_stmt
 
 declare_stmt
   = kw:(DECLARE __) names:list$ident type:(__ data_type)? deflt:(__ declare_default)? {
@@ -2236,6 +2237,14 @@ continue_kw
 call_stmt
   = kw:(CALL __) func:func_call {
     return loc({ type: "call_stmt", callKw: read(kw), func });
+  }
+
+return_stmt
+  = &mysql kw:(RETURN __) expr:expr {
+    return loc({ type: "return_stmt", returnKw: read(kw), expr });
+  }
+  / &bigquery kw:RETURN {
+    return loc({ type: "return_stmt", returnKw: kw });
   }
 
 /**

@@ -519,6 +519,7 @@ const showNode = cstTransformer<string>({
   break_stmt: (node) => show([node.breakKw]),
   continue_stmt: (node) => show([node.continueKw]),
   call_stmt: (node) => show([node.callKw, node.func]),
+  return_stmt: (node) => show([node.returnKw, node.expr]),
 
   // SQLite-specific statements
   attach_database_stmt: (node) =>
