@@ -495,6 +495,8 @@ const showNode = cstTransformer<string>({
   elseif_clause: (node) =>
     show([node.elseifKw, node.condition, node.thenKw, node.consequent]),
   else_clause: (node) => show([node.elseKw, node.consequent]),
+  case_stmt: (node) =>
+    show([node.caseKw, node.expr, node.clauses, node.endCaseKw]),
   loop_stmt: (node) => show([node.loopKw, node.body, node.endLoopKw]),
   repeat_stmt: (node) =>
     show([

@@ -19,8 +19,8 @@ export type AllExprNodes =
   | ExtractFrom
   | FilterArg
   | OverArg
-  | CaseWhen
-  | CaseElse
+  | CaseWhen<Expr>
+  | CaseElse<Expr>
   | IntervalUnitRange
   | PairExpr
   | WeekExpr
@@ -192,24 +192,24 @@ export interface BetweenExpr extends BaseNode {
 
 export interface CaseExpr extends BaseNode {
   type: "case_expr";
-  expr?: Expr;
   caseKw: Keyword<"CASE">;
+  expr?: Expr;
+  clauses: (CaseWhen<Expr> | CaseElse<Expr>)[];
   endKw: Keyword<"END">;
-  clauses: (CaseWhen | CaseElse)[];
 }
 
-export interface CaseWhen extends BaseNode {
+export interface CaseWhen<T> extends BaseNode {
   type: "case_when";
   whenKw: Keyword<"WHEN">;
   condition: Expr;
   thenKw: Keyword<"THEN">;
-  result: Expr;
+  result: T;
 }
 
-export interface CaseElse extends BaseNode {
+export interface CaseElse<T> extends BaseNode {
   type: "case_else";
   elseKw: Keyword<"ELSE">;
-  result: Expr;
+  result: T;
 }
 
 export interface IntervalExpr extends BaseNode {

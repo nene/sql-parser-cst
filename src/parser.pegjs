@@ -2075,6 +2075,7 @@ proc_statement
   = declare_stmt
   / set_stmt
   / if_stmt
+  / case_stmt
   / loop_stmt
   / repeat_stmt
   / while_stmt
@@ -2165,6 +2166,41 @@ else_clause
       type: "else_clause",
       elseKw: read(elseKw),
       consequent,
+    });
+  }
+
+case_stmt
+  = caseKw:CASE
+    expr:(__ expr)?
+    clauses:(__ case_stmt_when)+
+    els:(__ case_stmt_else)?
+    endKw:(__ END __ CASE) {
+      return loc({
+        type: "case_stmt",
+        caseKw,
+        expr: read(expr),
+        clauses: [...clauses.map(read), ...(els ? [read(els)] : [])],
+        endCaseKw: read(endKw),
+      });
+    }
+
+case_stmt_when
+  = whenKw:WHEN condition:(__ expr __) thenKw:THEN result:(__ inner_program) {
+    return loc({
+      type: "case_when",
+      whenKw,
+      condition: read(condition),
+      thenKw,
+      result: read(result),
+    });
+  }
+
+case_stmt_else
+  = kw:ELSE result:(__ inner_program) {
+    return loc({
+      type: "case_else",
+      elseKw: kw,
+      result: read(result),
     });
   }
 

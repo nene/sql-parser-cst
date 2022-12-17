@@ -7,6 +7,8 @@ import {
   BinaryExpr,
   Expr,
   FuncCall,
+  CaseWhen,
+  CaseElse,
 } from "./Expr";
 import { StringLiteral } from "./Literal";
 import { Program } from "./Program";
@@ -16,6 +18,8 @@ export type AllProceduralNodes =
   | AllProceduralStatements
   | DeclareDefault
   | IfClause
+  | CaseWhen<Program>
+  | CaseElse<Program>
   | ElseifClause
   | ElseClause
   | RaiseMessage;
@@ -24,6 +28,7 @@ export type AllProceduralStatements =
   | DeclareStmt
   | SetStmt
   | IfStmt
+  | CaseStmt
   | LoopStmt
   | RepeatStmt
   | WhileStmt
@@ -85,6 +90,15 @@ export interface ElseClause extends BaseNode {
   type: "else_clause";
   elseKw: Keyword<"ELSE">;
   consequent: Program;
+}
+
+// CASE
+export interface CaseStmt extends BaseNode {
+  type: "case_stmt";
+  caseKw: Keyword<"CASE">;
+  expr?: Expr;
+  clauses: (CaseWhen<Program> | CaseElse<Program>)[];
+  endCaseKw: [Keyword<"END">, Keyword<"CASE">];
 }
 
 // LOOP
