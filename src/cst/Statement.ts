@@ -21,12 +21,14 @@ import { InsertStmt } from "./Insert";
 import { MergeStmt } from "./Merge";
 import { TruncateStmt } from "./Truncate";
 import { UpdateStmt } from "./Update";
+import { AllPreparedStatements } from "./PreparedStatements";
 
 export type Statement =
   | AllBigqueryStatements
   | AllDclStatements
   | AllFunctionStatements
   | AllIndexStatements
+  | AllPreparedStatements
   | AllProceduralStatements
   | AllProcedureStatements
   | AllSchemaStatements

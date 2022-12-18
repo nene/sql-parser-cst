@@ -67,6 +67,7 @@ statement
   / x:analyze_stmt (&mysql / &sqlite) { return x; }
   / x:explain_stmt (&mysql / &sqlite) { return x; }
   / transaction_stmt
+  / x:execute_stmt (&mysql / &bigquery) { return x; }
   / x:sqlite_stmt &sqlite { return x; }
   / x:bigquery_stmt &bigquery { return x; }
   / empty
@@ -2295,6 +2296,48 @@ raise_message
       type: "raise_message",
       usingMessageKw: read(kw),
       string: read(string),
+    });
+  }
+
+/**
+ * ------------------------------------------------------------------------------------ *
+ *                                                                                      *
+ * Prepared statements                                                                  *
+ *                                                                                      *
+ * ------------------------------------------------------------------------------------ *
+ */
+execute_stmt
+  = kw:(EXECUTE __) immedKw:(immediate_kw __)? expr:expr
+    into:(__ execute_into_clause)?
+    using:(__ execute_using_clause)? {
+      return loc({
+        type: "execute_stmt",
+        executeKw: read(kw),
+        immediateKw: read(immedKw),
+        expr,
+        into: read(into),
+        using: read(using),
+      });
+    }
+
+immediate_kw
+  = x:IMMEDIATE &bigquery { return x; }
+
+execute_into_clause
+  = kw:(INTO __) variables:list$ident {
+    return loc({
+      type: "execute_into_clause",
+      intoKw: read(kw),
+      variables,
+    });
+  }
+
+execute_using_clause
+  = kw:(USING __) values:list$expr_or_explicit_alias {
+    return loc({
+      type: "execute_using_clause",
+      usingKw: read(kw),
+      values,
     });
   }
 
@@ -4635,6 +4678,7 @@ EVENTS              = kw:"EVENTS"i              !ident_part { return loc(createK
 EXCEPT              = kw:"EXCEPT"i              !ident_part { return loc(createKeyword(kw)); }
 EXCLUDE             = kw:"EXCLUDE"i             !ident_part { return loc(createKeyword(kw)); }
 EXCLUSIVE           = kw:"EXCLUSIVE"i           !ident_part { return loc(createKeyword(kw)); }
+EXECUTE             = kw:"EXECUTE"i             !ident_part { return loc(createKeyword(kw)); }
 EXISTS              = kw:"EXISTS"i              !ident_part { return loc(createKeyword(kw)); }
 EXPANSION           = kw:"EXPANSION"i           !ident_part { return loc(createKeyword(kw)); }
 EXPLAIN             = kw:"EXPLAIN"i             !ident_part { return loc(createKeyword(kw)); }

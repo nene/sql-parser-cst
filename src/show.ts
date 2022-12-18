@@ -525,6 +525,12 @@ const showNode = cstTransformer<string>({
   raise_stmt: (node) => show([node.raiseKw, node.message]),
   raise_message: (node) => show([node.usingMessageKw, "=", node.string]),
 
+  // Prepared statements
+  execute_stmt: (node) =>
+    show([node.executeKw, node.immediateKw, node.expr, node.into, node.using]),
+  execute_into_clause: (node) => show([node.intoKw, node.variables]),
+  execute_using_clause: (node) => show([node.usingKw, node.values]),
+
   // SQLite-specific statements
   attach_database_stmt: (node) =>
     show([node.attachKw, node.databaseKw, node.file, node.asKw, node.schema]),

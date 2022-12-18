@@ -17,8 +17,10 @@ export * from "./Index";
 export * from "./Insert";
 export * from "./Literal";
 export * from "./Merge";
+export * from "./PreparedStatements";
 export * from "./ProcClause";
 export * from "./Procedure";
+export * from "./ProceduralLanguage";
 export * from "./Program";
 export * from "./Schema";
 export * from "./Select";
@@ -54,6 +56,7 @@ import { AllTransactionNodes } from "./Transaction";
 import { AllTriggerNodes } from "./Trigger";
 import { AllUpdateNodes } from "./Update";
 import { Statement } from "./Statement";
+import { AllPreparedStatementNodes } from "./PreparedStatements";
 
 export type Node =
   | Alias
@@ -69,6 +72,7 @@ export type Node =
   | AllIndexNodes
   | AllInsertNodes
   | AllMergeNodes
+  | AllPreparedStatementNodes
   | AllProcClauseNodes
   | AllProceduralNodes
   | AllProcedureNodes
