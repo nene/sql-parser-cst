@@ -66,10 +66,10 @@ statement
   / x:proc_statement (&mysql / &bigquery) { return x; }
   / x:analyze_stmt (&mysql / &sqlite) { return x; }
   / x:explain_stmt (&mysql / &sqlite) { return x; }
-  / transaction_stmt
+  / transaction_statement
   / x:execute_stmt (&mysql / &bigquery) { return x; }
-  / x:sqlite_stmt &sqlite { return x; }
-  / x:bigquery_stmt &bigquery { return x; }
+  / x:sqlite_statement &sqlite { return x; }
+  / x:bigquery_statement &bigquery { return x; }
   / empty
 
 ddl_statement
@@ -112,7 +112,7 @@ inner_program_statement
   = dml_statement
   / ddl_statement
   / proc_statement
-  / bigquery_stmt;
+  / bigquery_statement;
 
 /**
  * ------------------------------------------------------------------------------------ *
@@ -1920,7 +1920,7 @@ explain_kw
  *                                                                                      *
  * ------------------------------------------------------------------------------------ *
  */
-transaction_stmt
+transaction_statement
   = start_transaction_stmt
   / commit_transaction_stmt
   / rollback_transaction_stmt
@@ -2367,7 +2367,7 @@ execute_using_clause
  *                                                                                      *
  * ------------------------------------------------------------------------------------ *
  */
-sqlite_stmt
+sqlite_statement
   = attach_database_stmt
   / detach_database_stmt
   / vacuum_stmt
@@ -2471,7 +2471,7 @@ create_virtual_table_stmt
  *                                                                                      *
  * ------------------------------------------------------------------------------------ *
  */
-bigquery_stmt
+bigquery_statement
   = create_bigquery_entity_stmt
   / drop_bigquery_entity_stmt
   / create_row_access_policy_stmt
