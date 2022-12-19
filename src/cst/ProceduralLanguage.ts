@@ -46,7 +46,7 @@ export type AllProceduralStatements =
 export interface LabeledStmt extends BaseNode {
   type: "labeled_stmt";
   beginLabel: Identifier;
-  statement: BlockStmt;
+  statement: BlockStmt | LoopStmt | RepeatStmt | WhileStmt | ForStmt;
   endLabel?: Identifier;
 }
 

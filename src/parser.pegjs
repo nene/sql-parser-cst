@@ -2067,10 +2067,10 @@ proc_statement
   / set_stmt
   / if_stmt
   / case_stmt
-  / loop_stmt
-  / repeat_stmt
-  / while_stmt
-  / x:for_stmt &bigquery { return x; }
+  / labeled$loop_stmt
+  / labeled$repeat_stmt
+  / labeled$while_stmt
+  / x:labeled$for_stmt &bigquery { return x; }
   / break_stmt
   / continue_stmt
   / call_stmt
@@ -2089,6 +2089,10 @@ labeled$__template__
   / __template__
 
 labeled$block_stmt = .
+labeled$loop_stmt = .
+labeled$while_stmt = .
+labeled$repeat_stmt = .
+labeled$for_stmt = .
 
 block_stmt
   = beginKw:(BEGIN __) program:inner_program exception:(__ exception_clause)? endKw:(__ END) {

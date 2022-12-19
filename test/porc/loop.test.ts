@@ -10,6 +10,22 @@ describe("LOOP", () => {
       `);
     });
 
+    it("supports begin label", () => {
+      testWc(`
+        my_label: LOOP
+          SELECT 1;
+        END LOOP
+      `);
+    });
+
+    it("supports end label", () => {
+      testWc(`
+        my_label: LOOP
+          SELECT 1;
+        END LOOP my_label
+      `);
+    });
+
     it("supports breaking out of LOOP with LEAVE", () => {
       testWc(`
         LOOP

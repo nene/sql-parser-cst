@@ -10,6 +10,22 @@ describe("WHILE", () => {
         END WHILE
       `);
     });
+
+    it("supports begin label", () => {
+      testWc(`
+        my_label: WHILE x < 10 DO
+          SELECT 1;
+        END WHILE
+      `);
+    });
+
+    it("supports end label", () => {
+      testWc(`
+        my_label: WHILE x < 10 DO
+          SELECT 1;
+        END WHILE my_label
+      `);
+    });
   });
 
   dialect("sqlite", () => {

@@ -17,6 +17,22 @@ describe("FOR..IN", () => {
         END FOR
       `);
     });
+
+    it("supports begin label", () => {
+      testWc(`
+        my_label: FOR x IN (SELECT 1) DO
+          SELECT 1;
+        END FOR
+      `);
+    });
+
+    it("supports end label", () => {
+      testWc(`
+        my_label: FOR x IN (SELECT 1) DO
+          SELECT 1;
+        END FOR my_label
+      `);
+    });
   });
 
   dialect(["sqlite", "mysql"], () => {

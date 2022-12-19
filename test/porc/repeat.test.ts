@@ -9,6 +9,24 @@ describe("REPEAT", () => {
         UNTIL x > 10 END REPEAT
       `);
     });
+
+    it("supports begin label", () => {
+      testWc(`
+        my_label: REPEAT
+          SELECT 1;
+          UNTIL x > 10
+        END REPEAT
+      `);
+    });
+
+    it("supports end label", () => {
+      testWc(`
+        my_label: REPEAT
+          SELECT 1;
+          UNTIL x > 10
+        END REPEAT my_label
+      `);
+    });
   });
 
   dialect("sqlite", () => {
