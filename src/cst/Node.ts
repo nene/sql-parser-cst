@@ -46,17 +46,17 @@ import { AllFunctionNodes } from "./Function";
 import { AllIndexNodes } from "./Index";
 import { AllInsertNodes } from "./Insert";
 import { AllMergeNodes } from "./Merge";
+import { AllPreparedStatementNodes } from "./PreparedStatements";
 import { AllProcClauseNodes } from "./ProcClause";
 import { AllProceduralNodes } from "./ProceduralLanguage";
 import { AllProcedureNodes } from "./Procedure";
-import { AllProgramNodes } from "./Program";
 import { AllSelectNodes } from "./Select";
 import { AllSqliteNodes } from "./Sqlite";
 import { AllTransactionNodes } from "./Transaction";
 import { AllTriggerNodes } from "./Trigger";
 import { AllUpdateNodes } from "./Update";
+import { Program } from "./Program";
 import { Statement } from "./Statement";
-import { AllPreparedStatementNodes } from "./PreparedStatements";
 
 export type Node =
   | Alias
@@ -76,11 +76,11 @@ export type Node =
   | AllProcClauseNodes
   | AllProceduralNodes
   | AllProcedureNodes
-  | AllProgramNodes
   | AllSelectNodes
   | AllSqliteNodes
   | AllTransactionNodes
   | AllTriggerNodes
   | AllUpdateNodes
   | Keyword
+  | Program
   | Statement;
