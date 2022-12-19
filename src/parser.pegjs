@@ -52,7 +52,7 @@ start
   }
 
 program
-  = head:statement tail:(__ ";" __ statement)* {
+  = head:(statement / empty) tail:(__ ";" __ (statement / empty))* {
     return loc({
       type: "program",
       statements: readCommaSepList(head, tail),
@@ -70,7 +70,6 @@ statement
   / x:execute_stmt (&mysql / &bigquery) { return x; }
   / x:sqlite_statement &sqlite { return x; }
   / x:bigquery_statement &bigquery { return x; }
-  / empty
 
 ddl_statement
   = create_view_stmt
@@ -101,7 +100,7 @@ empty
   }
 
 inner_program
-  = head:inner_program_statement tail:(__ ";" __ (inner_program_statement / empty))+ {
+  = head:statement tail:(__ ";" __ (statement / empty))+ {
     return loc({
       type: "program",
       statements: readCommaSepList(head, tail),
@@ -113,12 +112,6 @@ inner_program
       statements: [],
     });
   }
-
-inner_program_statement
-  = dml_statement
-  / ddl_statement
-  / proc_statement
-  / bigquery_statement;
 
 /**
  * ------------------------------------------------------------------------------------ *

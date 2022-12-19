@@ -21,6 +21,16 @@ describe("BEGIN..END", () => {
         END
       `);
     });
+
+    it("supports transactions inside BEGIN..END", () => {
+      testWc(`
+        BEGIN
+          BEGIN;
+          SELECT 1;
+          COMMIT;
+        END
+      `);
+    });
   });
 
   dialect("bigquery", () => {
