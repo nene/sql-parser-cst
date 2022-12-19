@@ -52,6 +52,50 @@ describe("BEGIN..END", () => {
         END my_label
       `);
     });
+
+    it("supports breaking out with LEAVE", () => {
+      testWc(`
+        BEGIN
+          if x > 10 THEN
+            LEAVE;
+          END IF;
+        END
+      `);
+    });
+
+    dialect("bigquery", () => {
+      it("supports breaking out with BREAK", () => {
+        testWc(`
+          BEGIN
+            if x > 10 THEN
+              BREAK;
+            END IF;
+          END
+        `);
+      });
+    });
+
+    it("supports continuing with ITERATE", () => {
+      testWc(`
+        BEGIN
+          if x = 10 THEN
+            ITERATE;
+          END IF;
+        END
+      `);
+    });
+
+    dialect("bigquery", () => {
+      it("supports continuing with CONTINUE", () => {
+        testWc(`
+          BEGIN
+            if x = 10 THEN
+              CONTINUE;
+            END IF;
+          END
+        `);
+      });
+    });
   });
 
   dialect("bigquery", () => {
