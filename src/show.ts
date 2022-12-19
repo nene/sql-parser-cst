@@ -38,7 +38,6 @@ const showWhitespaceItem = (ws: Whitespace): string => ws.text;
 
 const showNode = cstTransformer<string>({
   program: (node) => show(node.statements, ";"),
-  block_stmt: (node) => show([node.beginKw, node.program, node.endKw]),
   empty: () => "",
 
   // SELECT statement
@@ -485,6 +484,7 @@ const showNode = cstTransformer<string>({
     ]),
 
   // Procedural language
+  block_stmt: (node) => show([node.beginKw, node.program, node.endKw]),
   declare_stmt: (node) =>
     show([node.declareKw, node.names, node.dataType, node.default]),
   declare_default: (node) => show([node.defaultKw, node.expr]),
