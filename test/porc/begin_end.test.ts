@@ -24,6 +24,12 @@ describe("BEGIN..END", () => {
   });
 
   dialect("bigquery", () => {
+    it("supports empty BEGIN..END", () => {
+      testWc(`BEGIN END;`);
+    });
+  });
+
+  dialect("bigquery", () => {
     it("supports BEGIN..EXCEPTION..END", () => {
       testWc(`
         BEGIN
@@ -34,6 +40,14 @@ describe("BEGIN..END", () => {
           SELECT 'err2';
         END
       `);
+    });
+
+    it("supports empty EXCEPTION block", () => {
+      testWc(`BEGIN SELECT 1; EXCEPTION WHEN ERROR THEN END;`);
+    });
+
+    it("supports empty EXCEPTION within empty BEGIN..END", () => {
+      testWc(`BEGIN EXCEPTION WHEN ERROR THEN END;`);
     });
   });
 

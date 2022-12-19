@@ -107,6 +107,12 @@ inner_program
       statements: readCommaSepList(head, tail),
     });
   }
+  / empty {
+    return ({
+      type: "program",
+      statements: [],
+    });
+  }
 
 inner_program_statement
   = dml_statement
