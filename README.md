@@ -20,9 +20,7 @@ with the goal of being able to re-create the exact original source code.
 Supports the following SQL dialects:
 
 - **SQLite** - full support.
-- **BigQuery** - full support for SELECT, DML and DDL syntax.
-  Missing support for procedural language.
-  (see [#6](https://github.com/nene/sql-parser-cst/issues/6) for implementation progress).
+- **BigQuery** - full support.
 - **MySQL** - experimental
   (see [#5](https://github.com/nene/sql-parser-cst/issues/5)
   and [#7](https://github.com/nene/sql-parser-cst/issues/7) for implementation progress).
