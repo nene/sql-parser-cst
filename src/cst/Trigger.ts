@@ -1,6 +1,6 @@
 import { BaseNode, Keyword } from "./Base";
 import { Expr, Identifier, ListExpr, EntityName } from "./Expr";
-import { BlockStmt, Program } from "./Program";
+import { BlockStmt } from "./ProceduralLanguage";
 
 export type AllTriggerNodes =
   | AllTriggerStatements

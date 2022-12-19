@@ -25,6 +25,7 @@ export type AllProceduralNodes =
   | RaiseMessage;
 
 export type AllProceduralStatements =
+  | BlockStmt
   | DeclareStmt
   | SetStmt
   | IfStmt
@@ -38,6 +39,14 @@ export type AllProceduralStatements =
   | CallStmt
   | ReturnStmt
   | RaiseStmt;
+
+// BEGIN .. END
+export interface BlockStmt extends BaseNode {
+  type: "block_stmt";
+  beginKw: Keyword<"BEGIN">;
+  program: Program;
+  endKw: Keyword<"END">;
+}
 
 // DECLARE
 export interface DeclareStmt extends BaseNode {

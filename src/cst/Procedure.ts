@@ -4,7 +4,7 @@ import { DataType } from "./DataType";
 import { Identifier, ListExpr, ParenExpr, EntityName } from "./Expr";
 import { StringLiteral } from "./Literal";
 import { AsClause, LanguageClause, WithConnectionClause } from "./ProcClause";
-import { BlockStmt } from "./Program";
+import { BlockStmt } from "./ProceduralLanguage";
 
 export type AllProcedureNodes = AllProcedureStatements | ProcedureParam;
 
