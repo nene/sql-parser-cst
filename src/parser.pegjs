@@ -1857,20 +1857,10 @@ procedure_param
 
 create_procedure_clause
   = bigquery_options
-  / procedure_body
+  / code_block
   / with_connection_clause
   / language_clause
   / as_clause$sql_expr_or_code_string
-
-procedure_body
-  = beginKw:(BEGIN __) program:inner_program endKw:(__ END) {
-    return loc({
-      type: "code_block",
-      beginKw: read(beginKw),
-      program,
-      endKw: read(endKw),
-    });
-  }
 
 drop_procedure_stmt
   = kw:(DROP __) procKw:(PROCEDURE __) ifKw:(if_exists __)? name:entity_name {
@@ -2073,7 +2063,8 @@ resource_type_kw
  * ------------------------------------------------------------------------------------ *
  */
 proc_statement
-  = declare_stmt
+  = code_block
+  / declare_stmt
   / set_stmt
   / if_stmt
   / case_stmt
@@ -2086,6 +2077,16 @@ proc_statement
   / call_stmt
   / return_stmt
   / x:raise_stmt &bigquery { return x; }
+
+code_block
+  = beginKw:(BEGIN __) program:inner_program endKw:(__ END) {
+    return loc({
+      type: "code_block",
+      beginKw: read(beginKw),
+      program,
+      endKw: read(endKw),
+    });
+  }
 
 declare_stmt
   = kw:(DECLARE __) names:list$ident type:(__ data_type)? deflt:(__ declare_default)? {
