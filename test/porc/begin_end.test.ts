@@ -1,4 +1,4 @@
-import { dialect, parse, testWc } from "../test_utils";
+import { dialect, parse, test, testWc } from "../test_utils";
 
 describe("BEGIN..END", () => {
   dialect(["bigquery", "mysql"], () => {
@@ -29,6 +29,27 @@ describe("BEGIN..END", () => {
           SELECT 1;
           COMMIT;
         END
+      `);
+    });
+
+    it("supports begin label", () => {
+      test(`
+        my_label: BEGIN
+          SELECT 1;
+        END
+      `);
+      testWc(`
+        my_label : BEGIN
+          SELECT 1;
+        END
+      `);
+    });
+
+    it("supports end label", () => {
+      testWc(`
+        my_label: BEGIN
+          SELECT 1;
+        END my_label
       `);
     });
   });

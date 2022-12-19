@@ -2062,7 +2062,7 @@ resource_type_kw
  * ------------------------------------------------------------------------------------ *
  */
 proc_statement
-  = block_stmt
+  = labeled$block_stmt
   / declare_stmt
   / set_stmt
   / if_stmt
@@ -2076,6 +2076,19 @@ proc_statement
   / call_stmt
   / return_stmt
   / x:raise_stmt &bigquery { return x; }
+
+labeled$__template__
+  = beginLabel:(ident __) ":" stmt:(__ __template__) endLabel:(__ ident)? {
+    return loc({
+      type: "labeled_stmt",
+      beginLabel: read(beginLabel),
+      statement: read(stmt),
+      endLabel: read(endLabel),
+    });
+  }
+  / __template__
+
+labeled$block_stmt = .
 
 block_stmt
   = beginKw:(BEGIN __) program:inner_program exception:(__ exception_clause)? endKw:(__ END) {

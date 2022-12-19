@@ -27,6 +27,7 @@ export type AllProceduralNodes =
   | RaiseMessage;
 
 export type AllProceduralStatements =
+  | LabeledStmt
   | BlockStmt
   | DeclareStmt
   | SetStmt
@@ -41,6 +42,13 @@ export type AllProceduralStatements =
   | CallStmt
   | ReturnStmt
   | RaiseStmt;
+
+export interface LabeledStmt extends BaseNode {
+  type: "labeled_stmt";
+  beginLabel: Identifier;
+  statement: BlockStmt;
+  endLabel?: Identifier;
+}
 
 // BEGIN .. END
 export interface BlockStmt extends BaseNode {
