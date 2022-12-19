@@ -16,6 +16,8 @@ import { SubSelect } from "./Select";
 
 export type AllProceduralNodes =
   | AllProceduralStatements
+  | ExceptionClause
+  | ErrorCategory
   | DeclareDefault
   | IfClause
   | CaseWhen<Program>
@@ -45,7 +47,22 @@ export interface BlockStmt extends BaseNode {
   type: "block_stmt";
   beginKw: Keyword<"BEGIN">;
   program: Program;
+  exception?: ExceptionClause;
   endKw: Keyword<"END">;
+}
+
+export interface ExceptionClause extends BaseNode {
+  type: "exception_clause";
+  exceptionKw: Keyword<"EXCEPTION">;
+  whenKw: Keyword<"WHEN">;
+  condition: ErrorCategory;
+  thenKw: Keyword<"THEN">;
+  program: Program;
+}
+
+export interface ErrorCategory extends BaseNode {
+  type: "error_category";
+  errorKw: Keyword<"ERROR">;
 }
 
 // DECLARE

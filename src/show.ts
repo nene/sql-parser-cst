@@ -484,7 +484,17 @@ const showNode = cstTransformer<string>({
     ]),
 
   // Procedural language
-  block_stmt: (node) => show([node.beginKw, node.program, node.endKw]),
+  block_stmt: (node) =>
+    show([node.beginKw, node.program, node.exception, node.endKw]),
+  exception_clause: (node) =>
+    show([
+      node.exceptionKw,
+      node.whenKw,
+      node.condition,
+      node.thenKw,
+      node.program,
+    ]),
+  error_category: (node) => show(node.errorKw),
   declare_stmt: (node) =>
     show([node.declareKw, node.names, node.dataType, node.default]),
   declare_default: (node) => show([node.defaultKw, node.expr]),

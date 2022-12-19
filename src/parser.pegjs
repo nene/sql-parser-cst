@@ -2079,13 +2079,31 @@ proc_statement
   / x:raise_stmt &bigquery { return x; }
 
 block_stmt
-  = beginKw:(BEGIN __) program:inner_program endKw:(__ END) {
+  = beginKw:(BEGIN __) program:inner_program exception:(__ exception_clause)? endKw:(__ END) {
     return loc({
       type: "block_stmt",
       beginKw: read(beginKw),
       program,
+      exception: read(exception),
       endKw: read(endKw),
     });
+  }
+
+exception_clause
+  = &bigquery kw:(EXCEPTION __) whenKw:(WHEN __) cond:(error_category __) thenKw:(THEN __) program:inner_program {
+    return loc({
+      type: "exception_clause",
+      exceptionKw: read(kw),
+      whenKw: read(whenKw),
+      condition: read(cond),
+      thenKw: read(thenKw),
+      program,
+    });
+  }
+
+error_category
+  = kw:ERROR {
+    return loc({ type: "error_category", errorKw: kw });
   }
 
 declare_stmt
@@ -4674,9 +4692,11 @@ ENFORCED            = kw:"ENFORCED"i            !ident_part { return loc(createK
 ENGINE              = kw:"ENGINE"i              !ident_part { return loc(createKeyword(kw)); }
 ENGINE_ATTRIBUTE    = kw:"ENGINE_ATTRIBUTE"i    !ident_part { return loc(createKeyword(kw)); }
 ENUM                = kw:"ENUM"i                !ident_part { return loc(createKeyword(kw)); }
+ERROR               = kw:"ERROR"i               !ident_part { return loc(createKeyword(kw)); }
 ESCAPE              = kw:"ESCAPE"i              !ident_part { return loc(createKeyword(kw)); }
 EVENTS              = kw:"EVENTS"i              !ident_part { return loc(createKeyword(kw)); }
 EXCEPT              = kw:"EXCEPT"i              !ident_part { return loc(createKeyword(kw)); }
+EXCEPTION           = kw:"EXCEPTION"i           !ident_part { return loc(createKeyword(kw)); }
 EXCLUDE             = kw:"EXCLUDE"i             !ident_part { return loc(createKeyword(kw)); }
 EXCLUSIVE           = kw:"EXCLUSIVE"i           !ident_part { return loc(createKeyword(kw)); }
 EXECUTE             = kw:"EXECUTE"i             !ident_part { return loc(createKeyword(kw)); }
