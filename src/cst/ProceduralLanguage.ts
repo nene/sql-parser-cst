@@ -179,12 +179,14 @@ export interface ForStmt extends BaseNode {
 export interface BreakStmt extends BaseNode {
   type: "break_stmt";
   breakKw: Keyword<"BREAK" | "LEAVE">;
+  label?: Identifier;
 }
 
 // CONTINUE | ITERATE
 export interface ContinueStmt extends BaseNode {
   type: "continue_stmt";
   continueKw: Keyword<"CONTINUE" | "ITERATE">;
+  label?: Identifier;
 }
 
 // CALL

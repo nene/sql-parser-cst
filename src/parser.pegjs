@@ -2290,8 +2290,8 @@ for_stmt
     }
 
 break_stmt
-  = kw:break_kw {
-    return loc({ type: "break_stmt", breakKw: kw });
+  = kw:break_kw label:(__ ident)? {
+    return loc({ type: "break_stmt", breakKw: kw, label: read(label) });
   }
 
 break_kw
@@ -2299,8 +2299,8 @@ break_kw
   / kw:BREAK &bigquery { return kw; }
 
 continue_stmt
-  = kw:continue_kw {
-    return loc({ type: "continue_stmt", continueKw: kw });
+  = kw:continue_kw label:(__ ident)? {
+    return loc({ type: "continue_stmt", continueKw: kw, label: read(label) });
   }
 
 continue_kw
