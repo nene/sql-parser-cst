@@ -1638,7 +1638,7 @@ trigger_condition
 trigger_body
   = beginKw:(BEGIN __) program:trigger_program endKw:(__ END) {
     return loc({
-      type: "code_block",
+      type: "block_stmt",
       beginKw: read(beginKw),
       program,
       endKw: read(endKw),
@@ -1857,7 +1857,7 @@ procedure_param
 
 create_procedure_clause
   = bigquery_options
-  / code_block
+  / block_stmt
   / with_connection_clause
   / language_clause
   / as_clause$sql_expr_or_code_string
@@ -2063,7 +2063,7 @@ resource_type_kw
  * ------------------------------------------------------------------------------------ *
  */
 proc_statement
-  = code_block
+  = block_stmt
   / declare_stmt
   / set_stmt
   / if_stmt
@@ -2078,10 +2078,10 @@ proc_statement
   / return_stmt
   / x:raise_stmt &bigquery { return x; }
 
-code_block
+block_stmt
   = beginKw:(BEGIN __) program:inner_program endKw:(__ END) {
     return loc({
-      type: "code_block",
+      type: "block_stmt",
       beginKw: read(beginKw),
       program,
       endKw: read(endKw),

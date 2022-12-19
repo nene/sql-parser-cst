@@ -4,7 +4,7 @@ import { DataType } from "./DataType";
 import { Identifier, ListExpr, ParenExpr, EntityName } from "./Expr";
 import { StringLiteral } from "./Literal";
 import { AsClause, LanguageClause, WithConnectionClause } from "./ProcClause";
-import { CodeBlock } from "./Program";
+import { BlockStmt } from "./Program";
 
 export type AllProcedureNodes = AllProcedureStatements | ProcedureParam;
 
@@ -30,7 +30,7 @@ export interface ProcedureParam extends BaseNode {
 }
 
 type CreateProcedureClause =
-  | CodeBlock
+  | BlockStmt
   | BigqueryOptions
   | WithConnectionClause
   | LanguageClause

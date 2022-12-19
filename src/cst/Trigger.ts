@@ -1,6 +1,6 @@
 import { BaseNode, Keyword } from "./Base";
 import { Expr, Identifier, ListExpr, EntityName } from "./Expr";
-import { CodeBlock, Program } from "./Program";
+import { BlockStmt, Program } from "./Program";
 
 export type AllTriggerNodes =
   | AllTriggerStatements
@@ -22,7 +22,7 @@ export interface CreateTriggerStmt extends BaseNode {
   table: EntityName;
   forEachRowKw?: [Keyword<"FOR">, Keyword<"EACH">, Keyword<"ROW">];
   condition?: TriggerCondition;
-  body: CodeBlock;
+  body: BlockStmt;
 }
 
 export interface TriggerEvent extends BaseNode {

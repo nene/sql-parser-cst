@@ -1,15 +1,15 @@
 import { BaseNode, Keyword } from "./Base";
 import { Statement } from "./Statement";
 
-export type AllProgramNodes = Program | CodeBlock;
+export type AllProgramNodes = Program | BlockStmt;
 
 export interface Program extends BaseNode {
   type: "program";
   statements: Statement[];
 }
 
-export interface CodeBlock extends BaseNode {
-  type: "code_block";
+export interface BlockStmt extends BaseNode {
+  type: "block_stmt";
   beginKw: Keyword<"BEGIN">;
   program: Program;
   endKw: Keyword<"END">;
