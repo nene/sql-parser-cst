@@ -29,6 +29,7 @@ export const parseTextBlob = (data: string): number[] => {
   // TextEncoder is globally available in NodeJS,
   // but for some reason the type is missing.
   // See: https://github.com/DefinitelyTyped/DefinitelyTyped/discussions/60038
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   return [...new TextEncoder().encode(data)]; // eslint-disable-line no-undef
 };

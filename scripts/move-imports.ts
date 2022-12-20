@@ -21,6 +21,5 @@ const moveImportsPass: Pass = (ast) => {
     /"use strict";\n/,
     `"use strict";\n\n${imports.join("\n")}\n`
   );
-  // @ts-ignore
-  ast.code = withMovedImports;
+  (ast as any).code = withMovedImports;
 };
