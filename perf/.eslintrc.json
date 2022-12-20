@@ -2,5 +2,9 @@
   "env": {
     "node": true
   },
-  "extends": ["../.eslintrc.json"]
+  "extends": ["../.eslintrc.json"],
+  "rules": {
+    // this gets triggered when lib/ dir is not present
+    "@typescript-eslint/no-unsafe-call": "off"
+  }
 }
