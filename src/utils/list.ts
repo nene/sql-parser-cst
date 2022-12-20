@@ -10,7 +10,7 @@ export const readCommaSepList = <T extends Node>(
   tail: [Whitespace[], string, Whitespace[], T][]
 ): T[] => {
   const items = [head];
-  for (const [c1, comma, c2, expr] of tail) {
+  for (const [c1, _comma, c2, expr] of tail) {
     const lastIdx = items.length - 1;
     items[lastIdx] = trailing(items[lastIdx], c1) as T;
     items.push(leading(expr, c2) as T);
