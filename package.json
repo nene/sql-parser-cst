@@ -31,13 +31,17 @@
     "test": "yarn generate && yarn test:bigquery && yarn test:mysql && yarn test:sqlite",
     "perf:big": "yarn ts-node perf/perf-test.ts big",
     "perf:func": "yarn ts-node perf/perf-test.ts func",
-    "perf:select": "yarn ts-node perf/perf-test.ts select"
+    "perf:select": "yarn ts-node perf/perf-test.ts select",
+    "lint": "eslint src/**/*.ts"
   },
   "devDependencies": {
     "@types/benchmark": "^2.1.2",
     "@types/jest": "^29.1.2",
+    "@typescript-eslint/eslint-plugin": "^5.47.0",
+    "@typescript-eslint/parser": "^5.47.0",
     "benchmark": "^2.1.4",
     "dedent-js": "^1.0.1",
+    "eslint": "^8.30.0",
     "jest": "^29.1.2",
     "npm-watch": "^0.11.0",
     "peggy": "^2.0.1",
