@@ -72,6 +72,7 @@ const matchRuleWithTemplate = (
 
 type RuleWithTemplate = { template: ast.Rule; subRuleName: string };
 
+/* eslint-disable @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-assignment */
 const cloneRuleExpr = <T>(
   expr: T,
   location: ast.Rule["expression"]["location"],
@@ -96,6 +97,7 @@ const cloneRuleExpr = <T>(
     return expr;
   }
 };
+/* eslint-enable @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-assignment */
 
 const isRecord = (x: any): x is Record<string, any> => {
   return typeof x === "object" && x !== null;

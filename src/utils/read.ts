@@ -1,6 +1,7 @@
 import { Node, Whitespace } from "src/cst/Node";
 import { leading, trailing } from "./whitespace";
 
+/* eslint-disable @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-return */
 /**
  * Given array of syntax nodes and whitespace or single node or null,
  * associates whitespace with syntax nodes.
@@ -37,6 +38,7 @@ export const read = (items: any) => {
   }
   return nodes.length > 1 ? nodes : nodes[0];
 };
+/* eslint-enable @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-return */
 
 // True when dealing with whitespace array (as returned by __ rule)
 const isWhitespace = (

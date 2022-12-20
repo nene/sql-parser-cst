@@ -31,5 +31,5 @@ export const parseTextBlob = (data: string): number[] => {
   // See: https://github.com/DefinitelyTyped/DefinitelyTyped/discussions/60038
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
-  return [...new TextEncoder().encode(data)]; // eslint-disable-line no-undef
+  return [...new TextEncoder().encode(data)]; // eslint-disable-line
 };

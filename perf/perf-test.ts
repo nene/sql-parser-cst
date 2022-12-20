@@ -50,6 +50,6 @@ suite.add("bigquery", () => {
 });
 suite.on("cycle", (event: benchmark.Event) => {
   console.log(String(event.target));
-  console.log(`    Mean: ${event.target.stats?.mean.toFixed(4)} seconds`);
+  console.log(`    Mean: ${event.target.stats?.mean.toFixed(4) || ""} seconds`);
 });
 suite.run();
