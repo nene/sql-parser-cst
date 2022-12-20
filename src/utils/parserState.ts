@@ -11,7 +11,7 @@ export const setRangeFunction = (fn: () => [number, number]) => {
 export let getOptions: () => ParserOptions;
 
 /** Injects function to access options object */
-export const setOptionsFunction = (fn: Function) => {
+export const setOptionsFunction = (fn: () => any) => {
   getOptions = fn as () => ParserOptions;
 };
 
