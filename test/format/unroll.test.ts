@@ -55,16 +55,6 @@ describe("format: unroll()", () => {
   });
 
   it("line nested inside multiple arrays is just one line in array", () => {
-    const twoLines: Line[] = [
-      { layout: "line", items: ["hello"] },
-      {
-        layout: "line",
-        items: [
-          { layout: "line", items: ["my"] },
-          { layout: "line", items: ["world"] },
-        ],
-      },
-    ];
     expect(unroll([[[{ layout: "line", items: ["hello"] }]]])).toEqual([
       { layout: "line", items: ["hello"] },
     ]);

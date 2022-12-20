@@ -1,4 +1,4 @@
-import { dialect, parse, parseExpr, testExpr } from "../test_utils";
+import { dialect, parseExpr, testExpr } from "../test_utils";
 
 describe("struct", () => {
   dialect("bigquery", () => {

@@ -32,7 +32,7 @@
     "perf:big": "yarn ts-node perf/perf-test.ts big",
     "perf:func": "yarn ts-node perf/perf-test.ts func",
     "perf:select": "yarn ts-node perf/perf-test.ts select",
-    "lint": "eslint src/**/*.ts"
+    "lint": "eslint src/**/*.ts test/**/*.ts"
   },
   "devDependencies": {
     "@types/benchmark": "^2.1.2",

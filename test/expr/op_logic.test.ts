@@ -1,4 +1,4 @@
-import { dialect, showPrecedence, testExpr } from "../test_utils";
+import { dialect, testExpr } from "../test_utils";
 
 describe("logic operators", () => {
   dialect(["mysql", "sqlite"], () => {
