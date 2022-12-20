@@ -21,5 +21,6 @@ const moveImportsPass: Pass = (ast) => {
     /"use strict";\n/,
     `"use strict";\n\n${imports.join("\n")}\n`
   );
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
   (ast as any).code = withMovedImports;
 };

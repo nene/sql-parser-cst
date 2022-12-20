@@ -12,6 +12,7 @@ export type Line = {
 };
 
 export const isLine = (item: Layout): item is Line =>
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
   isObject(item) && (item as any).layout === "line";
 
 type NodeArray = (Node | NodeArray | string)[];
