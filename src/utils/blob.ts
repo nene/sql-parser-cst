@@ -30,5 +30,5 @@ export const parseTextBlob = (data: string): number[] => {
   // but for some reason the type is missing.
   // See: https://github.com/DefinitelyTyped/DefinitelyTyped/discussions/60038
   // @ts-ignore
-  return [...new TextEncoder().encode(data)];
+  return [...new TextEncoder().encode(data)]; // eslint-disable-line no-undef
 };
