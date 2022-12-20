@@ -1,6 +1,6 @@
 import { BaseNode, Keyword } from "./Base";
 import { ColumnConstraint } from "./Constraint";
-import { Identifier, ListExpr, PairExpr, ParenExpr } from "./Expr";
+import { Identifier, ListExpr, ParenExpr } from "./Expr";
 import { Literal } from "./Literal";
 
 export type AllDataTypeNodes =
