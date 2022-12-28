@@ -18,7 +18,7 @@ export function parse(sql: string, options: ParserOptions): Program {
     throw new Error(`Unsupported dialect name: "${options.dialect}"`);
   }
   try {
-    return parseSql(sql, options);
+    return parseSql(sql, options) as Program;
   } catch (e) {
     if (e instanceof SyntaxError) {
       throw new FormattedSyntaxError(e, sql, options.filename);

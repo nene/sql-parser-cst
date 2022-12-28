@@ -15,7 +15,7 @@ import {
 } from "../src/main";
 import { isString } from "../src/utils/generic";
 
-declare var __SQL_DIALECT__: DialectName;
+declare const __SQL_DIALECT__: DialectName;
 
 export const preserveAll: Partial<ParserOptions> = {
   preserveComments: true,

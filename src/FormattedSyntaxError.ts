@@ -17,7 +17,7 @@ function formatError(e: SyntaxError, sql: string, filename?: string): string {
 
   return `Syntax Error: Unexpected ${found}
 Was expecting to see: ${expected}
---> ${filename}:${lineNr}:${colNr}
+--> ${filename || "undefined"}:${lineNr}:${colNr}
 ${indent} |
 ${lineNr} | ${line}
 ${indent} | ${"^".padStart(colNr)}`;
@@ -31,7 +31,7 @@ function expandFound(
 ): string | null {
   if (found !== null && /^\w$/.test(found)) {
     const [word] = line.slice(colNr - 1).match(/\w+/) || [];
-    return word;
+    return word || null;
   }
   return found;
 }
@@ -40,6 +40,9 @@ function expandFound(
 // These functions have been copied from the generated parser.
 // But we can't import them as they live inside a closure.
 //
+/* eslint-disable @typescript-eslint/restrict-plus-operands */
+/* eslint-disable no-control-regex */
+/* eslint-disable no-case-declarations */
 
 function describeFound(found1: string | null) {
   return found1 ? '"' + literalEscape(found1) + '"' : "end of input";

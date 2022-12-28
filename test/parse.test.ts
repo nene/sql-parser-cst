@@ -2,12 +2,14 @@ import { parse } from "../src/main";
 
 describe("parse()", () => {
   it("throws helpful error when called without options", () => {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-call
     expect(() => (parse as any)("SELECT col FROM tbl")).toThrowErrorMatchingInlineSnapshot(
       `"No SQL dialect specified."`
     );
   });
 
   it("throws helpful error when called without dialect name", () => {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     expect(() => parse("SELECT col FROM tbl", {} as any)).toThrowErrorMatchingInlineSnapshot(
       `"No SQL dialect specified."`
     );
@@ -15,6 +17,7 @@ describe("parse()", () => {
 
   it("throws helpful error when called with incorrect dialect name", () => {
     expect(() =>
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       parse("SELECT col FROM tbl", { dialect: "aliensql" as any })
     ).toThrowErrorMatchingInlineSnapshot(`"Unsupported dialect name: "aliensql""`);
   });
