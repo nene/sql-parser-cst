@@ -7,6 +7,7 @@ export interface BaseNode {
 export interface Whitespace {
   type: "block_comment" | "line_comment" | "newline" | "space";
   text: string;
+  range?: [number, number];
 }
 
 export interface Keyword<T extends string = string> extends BaseNode {

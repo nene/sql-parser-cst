@@ -4529,26 +4529,26 @@ comment
 
 block_comment
   = "/*" (!"*/" .)* "*/" {
-    return {
+    return loc({
       type: "block_comment",
       text: text(),
-    };
+    });
   }
 
 line_comment
   = "--" (!end_of_line .)* {
-    return {
+    return loc({
       type: "line_comment",
       text: text(),
-    };
+    });
   }
 
 pound_sign_comment
   = "#" (!end_of_line .)* {
-    return {
+    return loc({
       type: "line_comment",
       text: text(),
-    };
+    });
   }
 
 // Whitespace

@@ -126,6 +126,87 @@ describe("location", () => {
     `);
   });
 
+  it("includeRange:true adds location data to comment nodes", () => {
+    expect(parse("SELECT /*com1*/ 2 --com2", { preserveComments: true, includeRange: true }))
+      .toMatchInlineSnapshot(`
+      {
+        "range": [
+          0,
+          17,
+        ],
+        "statements": [
+          {
+            "clauses": [
+              {
+                "asStructOrValueKw": undefined,
+                "columns": {
+                  "items": [
+                    {
+                      "range": [
+                        16,
+                        17,
+                      ],
+                      "text": "2",
+                      "type": "number_literal",
+                      "value": 2,
+                    },
+                  ],
+                  "leading": [
+                    {
+                      "range": [
+                        7,
+                        15,
+                      ],
+                      "text": "/*com1*/",
+                      "type": "block_comment",
+                    },
+                  ],
+                  "range": [
+                    16,
+                    17,
+                  ],
+                  "type": "list_expr",
+                },
+                "distinctKw": undefined,
+                "options": [],
+                "range": [
+                  0,
+                  17,
+                ],
+                "selectKw": {
+                  "name": "SELECT",
+                  "range": [
+                    0,
+                    6,
+                  ],
+                  "text": "SELECT",
+                  "type": "keyword",
+                },
+                "type": "select_clause",
+              },
+            ],
+            "range": [
+              0,
+              17,
+            ],
+            "type": "select_stmt",
+          },
+        ],
+        "trailing": [
+          {
+            "range": [
+              18,
+              24,
+            ],
+            "text": "--com2",
+            "type": "line_comment",
+          },
+        ],
+        "type": "program",
+      }
+    `);
+  });
+
   dialect("bigquery", () => {
     it("includeRange:true adds location data to member_expr nodes", () => {
       expect(parseExpr("my_arr[1][2]", { includeRange: true })).toMatchInlineSnapshot(`
