@@ -30,26 +30,24 @@ describe("constraints", () => {
       testColConst("DEFAULT /*c1*/ 10");
     });
 
-    dialect(["mysql", "sqlite"], () => {
-      it("PRIMARY KEY", () => {
-        testColConst("PRIMARY KEY");
-        testColConst("PRIMARY /*c*/ KEY");
-      });
+    it("PRIMARY KEY", () => {
+      testColConst("PRIMARY KEY");
+      testColConst("PRIMARY /*c*/ KEY");
+    });
 
-      it("UNIQUE", () => {
-        testColConst("UNIQUE");
-        testColConst("UNIQUE KEY");
-        testColConst("UNIQUE /*c*/ KEY");
-      });
+    it("UNIQUE", () => {
+      testColConst("UNIQUE");
+      testColConst("UNIQUE KEY");
+      testColConst("UNIQUE /*c*/ KEY");
+    });
 
-      it("CHECK", () => {
-        testColConst("CHECK (col > 10)");
-      });
+    it("CHECK", () => {
+      testColConst("CHECK (col > 10)");
+    });
 
-      it("REFERENCES", () => {
-        // full syntax is tested under table constraints tests
-        testColConst("REFERENCES tbl2 (col1)");
-      });
+    it("REFERENCES", () => {
+      // full syntax is tested under table constraints tests
+      testColConst("REFERENCES tbl2 (col1)");
     });
 
     dialect("sqlite", () => {
