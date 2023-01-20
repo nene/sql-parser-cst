@@ -30,35 +30,37 @@ describe("constraints", () => {
       testColConst("DEFAULT /*c1*/ 10");
     });
 
-    it("PRIMARY KEY", () => {
-      testColConst("PRIMARY KEY");
-      testColConst("PRIMARY /*c*/ KEY");
-    });
-
-    dialect("sqlite", () => {
-      it("AUTOINCREMENT on PRIMARY KEY column", () => {
-        testColConst("PRIMARY KEY AUTOINCREMENT");
+    dialect(["mysql", "sqlite"], () => {
+      it("PRIMARY KEY", () => {
+        testColConst("PRIMARY KEY");
+        testColConst("PRIMARY /*c*/ KEY");
       });
 
-      it("ASC / DESC on PRIMARY KEY column", () => {
-        testColConst("PRIMARY KEY ASC");
-        testColConst("PRIMARY KEY /*c*/ DESC");
+      dialect("sqlite", () => {
+        it("AUTOINCREMENT on PRIMARY KEY column", () => {
+          testColConst("PRIMARY KEY AUTOINCREMENT");
+        });
+
+        it("ASC / DESC on PRIMARY KEY column", () => {
+          testColConst("PRIMARY KEY ASC");
+          testColConst("PRIMARY KEY /*c*/ DESC");
+        });
       });
-    });
 
-    it("UNIQUE", () => {
-      testColConst("UNIQUE");
-      testColConst("UNIQUE KEY");
-      testColConst("UNIQUE /*c*/ KEY");
-    });
+      it("UNIQUE", () => {
+        testColConst("UNIQUE");
+        testColConst("UNIQUE KEY");
+        testColConst("UNIQUE /*c*/ KEY");
+      });
 
-    it("CHECK", () => {
-      testColConst("CHECK (col > 10)");
-    });
+      it("CHECK", () => {
+        testColConst("CHECK (col > 10)");
+      });
 
-    it("REFERENCES", () => {
-      // full syntax is tested under table constraints tests
-      testColConst("REFERENCES tbl2 (col1)");
+      it("REFERENCES", () => {
+        // full syntax is tested under table constraints tests
+        testColConst("REFERENCES tbl2 (col1)");
+      });
     });
 
     dialect("sqlite", () => {
