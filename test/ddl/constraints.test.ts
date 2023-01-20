@@ -35,6 +35,12 @@ describe("constraints", () => {
       testColConst("PRIMARY /*c*/ KEY");
     });
 
+    dialect("sqlite", () => {
+      it("AUTOINCREMENT on PRIMARY KEY column", () => {
+        testColConst("PRIMARY KEY AUTOINCREMENT");
+      });
+    });
+
     it("UNIQUE", () => {
       testColConst("UNIQUE");
       testColConst("UNIQUE KEY");

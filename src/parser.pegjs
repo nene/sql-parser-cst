@@ -2845,10 +2845,10 @@ column_constraint_type_common
   / references_specification
   / constraint_check
   / constraint_generated
+  / constraint_auto_increment
 
 column_constraint_type_mysql
   = column_constraint_index
-  / constraint_auto_increment
   / constraint_comment
   / constraint_visible
   / constraint_column_format
@@ -2875,9 +2875,13 @@ constraint_default
   }
 
 constraint_auto_increment
-  = kw:AUTO_INCREMENT {
+  = kw:auto_increment_kw {
     return loc({ type: "constraint_auto_increment", autoIncrementKw: kw });
   }
+
+auto_increment_kw
+  = kw:AUTOINCREMENT &sqlite { return kw; }
+  / kw:AUTO_INCREMENT &mysql { return kw; }
 
 constraint_comment
   = kw:COMMENT str:(__ string_literal) {
@@ -4602,6 +4606,7 @@ ASSIGNMENT          = kw:"ASSIGNMENT"i          !ident_part { return loc(createK
 ATTACH              = kw:"ATTACH"i              !ident_part { return loc(createKeyword(kw)); }
 AUTO_INCREMENT      = kw:"AUTO_INCREMENT"i      !ident_part { return loc(createKeyword(kw)); }
 AUTOEXTEND_SIZE     = kw:"AUTOEXTEND_SIZE"i     !ident_part { return loc(createKeyword(kw)); }
+AUTOINCREMENT       = kw:"AUTOINCREMENT"i       !ident_part { return loc(createKeyword(kw)); }
 AVG                 = kw:"AVG"i                 !ident_part { return loc(createKeyword(kw)); }
 AVG_ROW_LENGTH      = kw:"AVG_ROW_LENGTH"i      !ident_part { return loc(createKeyword(kw)); }
 BEFORE              = kw:"BEFORE"i              !ident_part { return loc(createKeyword(kw)); }

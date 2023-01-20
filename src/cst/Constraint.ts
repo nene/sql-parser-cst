@@ -138,7 +138,7 @@ export interface ConstraintDefault extends BaseNode {
 
 export interface ConstraintAutoIncrement extends BaseNode {
   type: "constraint_auto_increment";
-  autoIncrementKw: Keyword<"AUTO_INCREMENT">;
+  autoIncrementKw: Keyword<"AUTO_INCREMENT" | "AUTOINCREMENT">;
 }
 
 export interface ConstraintComment extends BaseNode {
