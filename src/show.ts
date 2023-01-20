@@ -161,7 +161,7 @@ const showNode = cstTransformer<string>({
   constraint_default: (node) => show([node.defaultKw, node.expr]),
   constraint_comment: (node) => show([node.commentKw, node.value]),
   constraint_primary_key: (node) =>
-    show([node.primaryKeyKw, node.columns, node.onConflict]),
+    show([node.primaryKeyKw, node.orderKw, node.columns, node.onConflict]),
   constraint_foreign_key: (node) =>
     show([node.foreignKeyKw, node.columns, node.references]),
   references_specification: (node) =>

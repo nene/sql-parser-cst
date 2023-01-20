@@ -63,6 +63,7 @@ export type ColumnConstraint =
 export interface ConstraintPrimaryKey extends BaseNode {
   type: "constraint_primary_key";
   primaryKeyKw: [Keyword<"PRIMARY">, Keyword<"KEY">];
+  orderKw?: Keyword<"ASC" | "DESC">;
   columns?: ParenExpr<ListExpr<SortSpecification | Identifier>>;
   onConflict?: OnConflictClause;
 }

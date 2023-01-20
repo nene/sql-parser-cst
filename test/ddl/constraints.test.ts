@@ -39,6 +39,11 @@ describe("constraints", () => {
       it("AUTOINCREMENT on PRIMARY KEY column", () => {
         testColConst("PRIMARY KEY AUTOINCREMENT");
       });
+
+      it("ASC / DESC on PRIMARY KEY column", () => {
+        testColConst("PRIMARY KEY ASC");
+        testColConst("PRIMARY KEY /*c*/ DESC");
+      });
     });
 
     it("UNIQUE", () => {
