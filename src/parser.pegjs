@@ -1008,6 +1008,8 @@ other_delete_clause_list
 other_delete_clause
   = where_clause
   / returning_clause
+  / order_by_clause
+  / limit_clause
 
 /**
  * ------------------------------------------------------------------------------------ *

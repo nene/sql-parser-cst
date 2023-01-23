@@ -1,4 +1,4 @@
-import { dialect, test } from "../test_utils";
+import { dialect, test, testWc } from "../test_utils";
 
 describe("delete from", () => {
   it("supports DELETE FROM without WHERE", () => {
@@ -41,6 +41,14 @@ describe("delete from", () => {
     it("supports DELETE ... RETURNING ...", () => {
       test("DELETE FROM tbl WHERE x > 0 RETURNING col1, col2");
       test("DELETE FROM tbl WHERE x > 0 /*c1*/ RETURNING /*c2*/ *");
+    });
+
+    it("supports DELETE ... LIMIT ...", () => {
+      testWc("DELETE FROM tbl LIMIT 10");
+    });
+
+    it("supports DELETE ... ORDER BY ... LIMIT ...", () => {
+      testWc("DELETE FROM tbl ORDER BY name LIMIT 10, 100");
     });
   });
 });
