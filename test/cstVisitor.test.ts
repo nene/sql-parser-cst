@@ -22,10 +22,10 @@ describe("cstVisitor", () => {
       },
     });
 
-    const cst = parse("select * from jobs where salary > 1000", includeAll);
+    const cst = parse("select * from jobs where payment_done = true", includeAll);
     toUpper(cst);
 
-    expect(show(cst)).toEqual("SELECT * FROM jobs WHERE salary > 1000");
+    expect(show(cst)).toEqual("SELECT * FROM jobs WHERE payment_done = TRUE");
   });
 
   it("allows injecting AS keywords to aliases", () => {
