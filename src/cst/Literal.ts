@@ -34,7 +34,7 @@ export interface BlobLiteral extends BaseNode {
 
 export interface BooleanLiteral extends BaseNode {
   type: "boolean_literal";
-  text: string;
+  valueKw: Keyword<"TRUE" | "FALSE">;
   value: boolean;
 }
 

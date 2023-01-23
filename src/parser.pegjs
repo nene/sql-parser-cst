@@ -4204,10 +4204,10 @@ null_literal
 
 boolean_literal
   = kw:TRUE {
-    return loc({ type: "boolean_literal", text: kw.text, value: true });
+    return loc({ type: "boolean_literal", valueKw: kw, value: true });
   }
   / kw:FALSE {
-    return loc({ type: "boolean_literal", text: kw.text, value: false });
+    return loc({ type: "boolean_literal", valueKw: kw, value: false });
   }
 
 string_literal "string"

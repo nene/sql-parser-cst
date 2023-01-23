@@ -4,9 +4,13 @@ describe("boolean literal", () => {
   it("supports TRUE", () => {
     expect(parseExpr(`true`)).toMatchInlineSnapshot(`
       {
-        "text": "true",
         "type": "boolean_literal",
         "value": true,
+        "valueKw": {
+          "name": "TRUE",
+          "text": "true",
+          "type": "keyword",
+        },
       }
     `);
     testExpr(`TRUE`);
@@ -16,9 +20,13 @@ describe("boolean literal", () => {
   it("supports FALSE", () => {
     expect(parseExpr(`false`)).toMatchInlineSnapshot(`
       {
-        "text": "false",
         "type": "boolean_literal",
         "value": false,
+        "valueKw": {
+          "name": "FALSE",
+          "text": "false",
+          "type": "keyword",
+        },
       }
     `);
     testExpr(`FALSE`);

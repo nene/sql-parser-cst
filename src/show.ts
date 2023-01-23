@@ -690,7 +690,7 @@ const showNode = cstTransformer<string>({
   string_literal: (node) => node.text,
   number_literal: (node) => node.text,
   blob_literal: (node) => node.text,
-  boolean_literal: (node) => node.text,
+  boolean_literal: (node) => show(node.valueKw),
   null_literal: (node) => show(node.nullKw),
   parameter: (node) => node.text,
 
