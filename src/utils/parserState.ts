@@ -26,7 +26,7 @@ export const hasParamType = (name: ParamType) => {
 };
 
 export const isEnabledWhitespace = (ws: Whitespace) =>
-  (getOptions().preserveComments &&
+  (getOptions().includeComments &&
     (ws.type === "line_comment" || ws.type === "block_comment")) ||
-  (getOptions().preserveNewlines && ws.type === "newline") ||
-  (getOptions().preserveSpaces && ws.type === "space");
+  (getOptions().includeNewlines && ws.type === "newline") ||
+  (getOptions().includeSpaces && ws.type === "space");

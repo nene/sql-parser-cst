@@ -15,7 +15,7 @@ describe("statement", () => {
 
   it("parses empty statements", () => {
     test("; ; ;");
-    expect(parse(";/*com*/;", { preserveComments: true })).toMatchInlineSnapshot(`
+    expect(parse(";/*com*/;", { includeComments: true })).toMatchInlineSnapshot(`
       {
         "statements": [
           {

@@ -36,7 +36,7 @@ export function parse(sql: string, options: ParserOptions): Program {
  *
  * Therefore only feed it syntax trees parsed with options:
  *
- *     { preserveSpaces: true, preserveComments: true, preserveNewlines: true }
+ *     { includeSpaces: true, includeComments: true, includeNewlines: true }
  */
 export function show(node: Node): string {
   // This might look like an unnecessary wrapper around show() from src/show.

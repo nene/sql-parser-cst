@@ -18,9 +18,9 @@ import { isString } from "../src/utils/generic";
 declare const __SQL_DIALECT__: DialectName;
 
 export const preserveAll: Partial<ParserOptions> = {
-  preserveComments: true,
-  preserveNewlines: true,
-  preserveSpaces: true,
+  includeComments: true,
+  includeNewlines: true,
+  includeSpaces: true,
 };
 
 export function parse(

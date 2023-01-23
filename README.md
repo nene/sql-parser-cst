@@ -45,9 +45,9 @@ import { parse, show, cstVisitor } from "sql-parser-cst";
 const cst = parse("select * from my_table", {
   dialect: "sqlite",
   // These are optional:
-  preserveSpaces: true, // Adds spaces/tabs
-  preserveNewlines: true, // Adds newlines
-  preserveComments: true, // Adds comments
+  includeSpaces: true, // Adds spaces/tabs
+  includeNewlines: true, // Adds newlines
+  includeComments: true, // Adds comments
   includeRange: true, // Adds source code location data
 });
 

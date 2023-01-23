@@ -10,9 +10,9 @@ export type ParamType = "?" | "?nr" | ":name" | "$name" | "@name";
 
 export type ParserOptions = {
   dialect: DialectName;
-  preserveComments?: boolean;
-  preserveNewlines?: boolean;
-  preserveSpaces?: boolean;
+  includeComments?: boolean;
+  includeNewlines?: boolean;
+  includeSpaces?: boolean;
   includeRange?: boolean;
   paramTypes?: ParamType[];
   /** SQL file name, used when reporting syntax errors */

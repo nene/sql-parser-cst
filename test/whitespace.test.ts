@@ -20,8 +20,8 @@ describe("whitespace", () => {
     `);
   });
 
-  it("preserveNewline:true adds line feeds to syntax tree", () => {
-    expect(parseExpr("1 /*com*/ + \n\n 2", { preserveNewlines: true })).toMatchInlineSnapshot(`
+  it("includeNewlines:true adds line feeds to syntax tree", () => {
+    expect(parseExpr("1 /*com*/ + \n\n 2", { includeNewlines: true })).toMatchInlineSnapshot(`
       {
         "left": {
           "text": "1",
@@ -51,8 +51,8 @@ describe("whitespace", () => {
     `);
   });
 
-  it("preserveSpaces:true adds horizontal spaces to syntax tree", () => {
-    expect(parseExpr("1 /*com*/ + \n\n 2", { preserveSpaces: true })).toMatchInlineSnapshot(`
+  it("includeSpaces:true adds horizontal spaces to syntax tree", () => {
+    expect(parseExpr("1 /*com*/ + \n\n 2", { includeSpaces: true })).toMatchInlineSnapshot(`
       {
         "left": {
           "text": "1",
@@ -90,8 +90,8 @@ describe("whitespace", () => {
     `);
   });
 
-  it("preserveComments:true adds comments to syntax tree", () => {
-    expect(parseExpr("1 /*com*/ + \n\n 2", { preserveComments: true })).toMatchInlineSnapshot(`
+  it("includeComments:true adds comments to syntax tree", () => {
+    expect(parseExpr("1 /*com*/ + \n\n 2", { includeComments: true })).toMatchInlineSnapshot(`
       {
         "left": {
           "text": "1",
@@ -115,12 +115,12 @@ describe("whitespace", () => {
     `);
   });
 
-  it("preserveComments/preserveSpaces/preserveNewlines combined include all whitespace to syntax tree", () => {
+  it("includeComments/includeSpaces/includeNewlines combined include all whitespace to syntax tree", () => {
     expect(
       parseExpr("1 /*com*/ + \n\n 2", {
-        preserveComments: true,
-        preserveSpaces: true,
-        preserveNewlines: true,
+        includeComments: true,
+        includeSpaces: true,
+        includeNewlines: true,
       })
     ).toMatchInlineSnapshot(`
       {
@@ -187,12 +187,12 @@ describe("whitespace", () => {
       test("SELECT 1 + /* comment 1 */ /* comment 2 */ 2");
     });
 
-    it("discards comments when preserveComments option is not set", () => {
+    it("discards comments when includeComments option is not set", () => {
       expect(
         show(
           parse("SELECT 1 + /* comment 1 */ /* comment 2 */ 2", {
-            preserveNewlines: true,
-            preserveSpaces: true,
+            includeNewlines: true,
+            includeSpaces: true,
           })
         )
       ).toBe("SELECT 1 +   2");

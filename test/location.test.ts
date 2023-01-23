@@ -127,7 +127,7 @@ describe("location", () => {
   });
 
   it("includeRange:true adds location data to comment nodes", () => {
-    expect(parse("SELECT /*com1*/ 2 --com2", { preserveComments: true, includeRange: true }))
+    expect(parse("SELECT /*com1*/ 2 --com2", { includeComments: true, includeRange: true }))
       .toMatchInlineSnapshot(`
       {
         "range": [
