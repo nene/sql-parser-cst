@@ -89,7 +89,7 @@ export interface CommonTableExpression extends BaseNode {
   table: Identifier;
   columns?: ParenExpr<ListExpr<Identifier>>;
   asKw: Keyword<"AS">;
-  optionKw?:
+  materializedKw?:
     | Keyword<"MATERIALIZED">
     | [Keyword<"NOT">, Keyword<"MATERIALIZED">];
   expr: Expr;

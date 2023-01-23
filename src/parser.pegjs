@@ -177,19 +177,19 @@ common_table_expression
   = table:ident
     columns:(__ paren$list$column)?
     asKw:(__ AS)
-    opt:(__ cte_option)?
+    materialized:(__ cte_materialized)?
     select:(__ paren$compound_select_stmt) {
       return loc({
         type: "common_table_expression",
         table: table,
         columns: read(columns),
         asKw: read(asKw),
-        optionKw: read(opt),
+        materializedKw: read(materialized),
         expr: read(select),
       });
     }
 
-cte_option
+cte_materialized
   = kws:(NOT __ MATERIALIZED / MATERIALIZED) { return read(kws); }
 
 // Other clauses of SELECT statement (besides WITH & SELECT)
