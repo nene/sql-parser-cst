@@ -13,7 +13,7 @@ import { SetClause } from "./Update";
 export type AllInsertNodes =
   | InsertStmt
   | InsertClause
-  | UpsertOption
+  | MysqlUpsertOption
   | OrAlternateAction
   | ValuesClause
   | RowConstructor
@@ -38,7 +38,7 @@ export interface InsertStmt extends BaseNode {
 export interface InsertClause extends BaseNode {
   type: "insert_clause";
   insertKw: Keyword<"INSERT" | "REPLACE">;
-  options: UpsertOption[];
+  options: MysqlUpsertOption[];
   orAction?: OrAlternateAction;
   intoKw?: Keyword<"INTO">;
   table: EntityName | Alias<EntityName>;
@@ -46,9 +46,9 @@ export interface InsertClause extends BaseNode {
 }
 
 // Only in MySQL INSERT & UPDATE clauses
-export interface UpsertOption extends BaseNode {
-  type: "upsert_option";
-  kw: Keyword<"LOW_PRIORITY" | "DELAYED" | "HIGH_PRIORITY" | "IGNORE">;
+export interface MysqlUpsertOption extends BaseNode {
+  type: "mysql_upsert_option";
+  optionKw: Keyword<"LOW_PRIORITY" | "DELAYED" | "HIGH_PRIORITY" | "IGNORE">;
 }
 
 // Only in SQLite

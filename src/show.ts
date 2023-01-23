@@ -248,7 +248,7 @@ const showNode = cstTransformer<string>({
       node.table,
       node.columns,
     ]),
-  upsert_option: (node) => show(node.kw),
+  mysql_upsert_option: (node) => show(node.optionKw),
   or_alternate_action: (node) => show([node.orKw, node.actionKw]),
   default_values: (node) => show(node.defaultValuesKw),
   default: (node) => show(node.defaultKw),

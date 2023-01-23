@@ -786,7 +786,7 @@ insert_stmt
 
 insert_clause
   = insertKw:(INSERT / REPLACE)
-    options:(__ upsert_options)?
+    options:(__ mysql_upsert_options)?
     orAction:(__ or_alternate_action)?
     intoKw:(__ INTO)?
     table:(__ table_or_explicit_alias)
@@ -802,14 +802,14 @@ insert_clause
       });
     }
 
-upsert_options
-  = head:upsert_opt tail:(__ upsert_opt)* {
+mysql_upsert_options
+  = head:mysql_upsert_opt tail:(__ mysql_upsert_opt)* {
     return readSpaceSepList(head, tail);
   }
 
-upsert_opt
+mysql_upsert_opt
   = kw:(LOW_PRIORITY / DELAYED / HIGH_PRIORITY / IGNORE) &mysql {
-    return loc({ type: "upsert_option", kw });
+    return loc({ type: "mysql_upsert_option", optionKw: kw });
   }
 
 or_alternate_action
@@ -926,7 +926,7 @@ update_stmt
 
 update_clause
   = kw:(UPDATE __)
-    options:(upsert_options __)?
+    options:(mysql_upsert_options __)?
     orAction:(or_alternate_action __)?
     tables:list$table_or_alias {
       return loc({
