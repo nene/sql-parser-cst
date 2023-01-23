@@ -73,12 +73,12 @@ export interface RowConstructor extends BaseNode {
 
 export interface DefaultValues extends BaseNode {
   type: "default_values";
-  kw: [Keyword<"DEFAULT">, Keyword<"VALUES">];
+  defaultValuesKw: [Keyword<"DEFAULT">, Keyword<"VALUES">];
 }
 
 export interface Default extends BaseNode {
   type: "default";
-  kw: Keyword<"DEFAULT">;
+  defaultKw: Keyword<"DEFAULT">;
 }
 
 // only in SQLite

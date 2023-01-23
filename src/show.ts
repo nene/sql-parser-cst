@@ -249,8 +249,8 @@ const showNode = cstTransformer<string>({
     ]),
   upsert_option: (node) => show(node.kw),
   or_alternate_action: (node) => show([node.orKw, node.actionKw]),
-  default_values: (node) => show(node.kw),
-  default: (node) => show(node.kw),
+  default_values: (node) => show(node.defaultValuesKw),
+  default: (node) => show(node.defaultKw),
   upsert_clause: (node) =>
     show([node.onConflictKw, node.columns, node.where, node.doKw, node.action]),
   upsert_action_nothing: (node) => show(node.nothingKw),

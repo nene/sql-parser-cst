@@ -860,12 +860,12 @@ expr_or_default
 
 default
   = kw:DEFAULT {
-    return loc({ type: "default", kw });
+    return loc({ type: "default", defaultKw: kw });
   }
 
 default_values
   = kws:(DEFAULT __ VALUES) {
-      return loc({ type: "default_values", kw: read(kws) });
+      return loc({ type: "default_values", defaultValuesKw: read(kws) });
     }
 
 upsert_clause
