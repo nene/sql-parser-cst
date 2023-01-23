@@ -4,7 +4,11 @@ describe("null literal", () => {
   it("null", () => {
     expect(parseExpr(`null`)).toMatchInlineSnapshot(`
       {
-        "text": "null",
+        "nullKw": {
+          "name": "NULL",
+          "text": "null",
+          "type": "keyword",
+        },
         "type": "null_literal",
         "value": null,
       }

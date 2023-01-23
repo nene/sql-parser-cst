@@ -4199,7 +4199,7 @@ literal
 
 null_literal
   = kw:NULL {
-    return loc({ type: "null_literal", text: kw.text, value: null });
+    return loc({ type: "null_literal", nullKw: kw, value: null });
   }
 
 boolean_literal

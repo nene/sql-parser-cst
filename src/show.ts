@@ -691,7 +691,7 @@ const showNode = cstTransformer<string>({
   number_literal: (node) => node.text,
   blob_literal: (node) => node.text,
   boolean_literal: (node) => node.text,
-  null_literal: (node) => node.text,
+  null_literal: (node) => show(node.nullKw),
   parameter: (node) => node.text,
 
   // Cast to FullTransformMap, so TypeScript ensures all node types are covered

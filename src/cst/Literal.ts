@@ -40,7 +40,7 @@ export interface BooleanLiteral extends BaseNode {
 
 export interface NullLiteral extends BaseNode {
   type: "null_literal";
-  text: string;
+  nullKw: Keyword<"NULL">;
   value: null;
 }
 

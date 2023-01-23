@@ -54,7 +54,7 @@ describe("cstVisitor", () => {
   it("allows visiting null_literal", () => {
     const nulls: string[] = [];
     const visit = cstVisitor({
-      null_literal: (node) => nulls.push(node.text),
+      null_literal: (node) => nulls.push(node.nullKw.text),
     });
 
     visit(parse("SELECT * FROM employees WHERE id IS NULL"));
