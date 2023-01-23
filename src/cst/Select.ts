@@ -17,6 +17,7 @@ export type AllSelectNodes =
   | WithClause
   | CommonTableExpression
   | SelectClause
+  | MysqlSelectOption
   | ExceptColumns
   | ReplaceColumns
   | FromClause
@@ -99,7 +100,16 @@ export interface SelectClause extends BaseNode {
   type: "select_clause";
   selectKw: Keyword<"SELECT">;
   distinctKw?: Keyword<"ALL" | "DISTINCT" | "DISTINCTROW">;
-  options: Keyword<
+  options: MysqlSelectOption[];
+  asStructOrValueKw?: [Keyword<"AS">, Keyword<"STRUCT" | "VALUE">];
+  columns: ListExpr<
+    AllColumns | ExceptColumns | ReplaceColumns | Expr | Alias<Expr> | Empty
+  >;
+}
+
+export interface MysqlSelectOption extends BaseNode {
+  type: "mysql_select_option";
+  optionKw: Keyword<
     | "HIGH_PRIORITY"
     | "STRAIGHT_JOIN"
     | "SQL_CALC_FOUND_ROWS"
@@ -108,10 +118,6 @@ export interface SelectClause extends BaseNode {
     | "SQL_BIG_RESULT"
     | "SQL_SMALL_RESULT"
     | "SQL_BUFFER_RESULT"
-  >[];
-  asStructOrValueKw?: [Keyword<"AS">, Keyword<"STRUCT" | "VALUE">];
-  columns: ListExpr<
-    AllColumns | ExceptColumns | ReplaceColumns | Expr | Alias<Expr> | Empty
   >;
 }
 

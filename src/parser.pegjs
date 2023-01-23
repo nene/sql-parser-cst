@@ -210,7 +210,7 @@ other_clause
 select_clause
   = selectKw:SELECT
     distinctKw:(__ distinct_kw)?
-    options:(__ select_option)*
+    options:(__ mysql_select_option)*
     asKw:(__ AS __ (STRUCT / VALUE))?
     columns:(__ select_columns) {
       return loc({
@@ -228,7 +228,7 @@ distinct_kw
   / DISTINCT
   / &mysql kw:DISTINCTROW { return kw; }
 
-select_option
+mysql_select_option
   = &mysql kw:(
     HIGH_PRIORITY
   / STRAIGHT_JOIN
@@ -238,7 +238,10 @@ select_option
   / SQL_BIG_RESULT
   / SQL_SMALL_RESULT
   / SQL_BUFFER_RESULT) {
-    return kw;
+    return loc({
+      type: "mysql_select_option",
+      optionKw: kw,
+    });
   }
 
 select_columns
