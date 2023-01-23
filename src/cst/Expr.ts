@@ -68,7 +68,7 @@ export interface PairExpr<T1 = Node | Node[], T2 = Node> extends BaseNode {
 
 export interface BinaryExpr<
   TLeft = Expr,
-  TOperator = SymbolOperator | Keyword | Keyword[],
+  TOperator = SymbolOperator | KeywordOperator,
   TRight = Expr
 > extends BaseNode {
   type: "binary_expr";
@@ -108,15 +108,41 @@ type SymbolOperator =
   | "<<"
   | "^"; // BigQuery, MySQL
 
+type KeywordOperator =
+  // arithmetic
+  | Keyword<"DIV"> // SQLite, MySQL,
+  | Keyword<"MOD"> // SQLite, MySQL
+  // Logic
+  | Keyword<"AND">
+  | Keyword<"OR">
+  | Keyword<"XOR"> // MySQL
+  // Collation
+  | Keyword<"COLLATE"> // SQLite, MySQL
+  // Comparison
+  | Keyword<"IS">
+  | [Keyword<"IS">, Keyword<"NOT">]
+  | [Keyword<"IS">, Keyword<"DISTINCT">, Keyword<"FROM">] // SQLite, BigQuery
+  | [Keyword<"IS">, Keyword<"NOT">, Keyword<"DISTINCT">, Keyword<"FROM">] // SQLite, BigQuery
+  | Keyword<"IN">
+  | [Keyword<"NOT">, Keyword<"IN">]
+  | Keyword<"LIKE" | "RLIKE" | "GLOB" | "MATCH"> // RLIKE is MySQL, GLOB/MATCH are SQLite
+  | [Keyword<"NOT">, Keyword<"LIKE" | "RLIKE" | "GLOB" | "MATCH">]
+  | Keyword<"ESCAPE">; // SQLite, MySQL
+
 export interface PrefixOpExpr extends BaseNode {
   type: "prefix_op_expr";
-  operator: "-" | "~" | "!" | Keyword[];
+  operator: "-" | "~" | "!" | Keyword<"NOT"> | Keyword<"EXISTS">;
   expr: Expr;
 }
 
 export interface PostfixOpExpr extends BaseNode {
   type: "postfix_op_expr";
-  operator: Keyword[];
+  operator:
+    | Keyword<"ISNULL"> // SQLite
+    | Keyword<"NOTNULL"> // SQLite
+    | [Keyword<"NOT">, Keyword<"NULL">] // SQLite
+    | [Keyword<"IS">, Keyword<"UNKNOWN">] // BigQuery, MySQL
+    | [Keyword<"IS">, Keyword<"NOT">, Keyword<"UNKNOWN">]; // BigQuery, MySQL
   expr: Expr;
 }
 
