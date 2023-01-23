@@ -264,15 +264,8 @@ const showNode = cstTransformer<string>({
   column_assignment: (node) => show([node.column, "=", node.expr]),
 
   // DELETE FROM statement
-  delete_stmt: (node) =>
-    show([
-      node.with,
-      node.deleteKw,
-      node.fromKw,
-      node.table,
-      node.where,
-      node.returning,
-    ]),
+  delete_stmt: (node) => show(node.clauses),
+  delete_clause: (node) => show([node.deleteKw, node.fromKw, node.table]),
 
   // TRUNCATE TABLE statement
   truncate_stmt: (node) => show([node.truncateTableKw, node.table]),

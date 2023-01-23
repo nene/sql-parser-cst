@@ -40,6 +40,7 @@ import { AllColumns, Keyword } from "./Base";
 import { AllConstraintNodes } from "./Constraint";
 import { AllCreateTableNodes } from "./CreateTable";
 import { AllDataTypeNodes } from "./DataType";
+import { AllDeleteNodes } from "./Delete";
 import { AllExprNodes } from "./Expr";
 import { AllFrameNodes } from "./WindowFrame";
 import { AllFunctionNodes } from "./Function";
@@ -66,6 +67,7 @@ export type Node =
   | AllConstraintNodes
   | AllCreateTableNodes
   | AllDataTypeNodes
+  | AllDeleteNodes
   | AllExprNodes
   | AllFrameNodes
   | AllFunctionNodes

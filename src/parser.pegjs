@@ -977,20 +977,37 @@ column_value
  * ------------------------------------------------------------------------------------ *
  */
 delete_stmt
-  = withCls:(with_clause __)?
-    delKw:(DELETE __) fromKw:(FROM __)? tbl:table_or_alias
-    where:(__ where_clause)?
-    returning:(__ returning_clause)? {
+  = withClause:(with_clause __)?
+    deleteClause:delete_clause
+    clauses:(__ other_delete_clause_list)? {
       return loc({
         type: "delete_stmt",
-        with: read(withCls),
-        deleteKw: read(delKw),
-        fromKw: read(fromKw),
-        table: tbl,
-        where: read(where),
-        returning: read(returning),
+        clauses: [
+          read(withClause),
+          read(deleteClause),
+          ...(read(clauses) || []),
+        ].filter(identity),
       });
     }
+
+delete_clause
+  = delKw:(DELETE __) fromKw:(FROM __)? tbl:table_or_alias {
+    return loc({
+      type: "delete_clause",
+      deleteKw: read(delKw),
+      fromKw: read(fromKw),
+      table: tbl,
+    });
+  }
+
+other_delete_clause_list
+  = head:other_delete_clause tail:(__ other_delete_clause)* {
+    return readSpaceSepList(head, tail);
+  }
+
+other_delete_clause
+  = where_clause
+  / returning_clause
 
 /**
  * ------------------------------------------------------------------------------------ *
