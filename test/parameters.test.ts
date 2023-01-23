@@ -1,4 +1,4 @@
-import { preserveAll, test } from "./test_utils";
+import { includeAll, test } from "./test_utils";
 
 describe("bound parameters", () => {
   describe("by default no parameters are supported", () => {
@@ -21,13 +21,13 @@ describe("bound parameters", () => {
 
   describe("when paramTypes includes '?'", () => {
     it("supports ? parameter placeholders", () => {
-      test("SELECT * FROM foo WHERE x = ? AND y = ?", { paramTypes: ["?"], ...preserveAll });
+      test("SELECT * FROM foo WHERE x = ? AND y = ?", { paramTypes: ["?"], ...includeAll });
     });
   });
 
   describe("when paramTypes includes '?nr'", () => {
     it("supports ?nr parameter placeholders", () => {
-      test("SELECT * FROM foo WHERE x = ?1 AND y = ?2", { paramTypes: ["?nr"], ...preserveAll });
+      test("SELECT * FROM foo WHERE x = ?1 AND y = ?2", { paramTypes: ["?nr"], ...includeAll });
     });
   });
 
@@ -35,7 +35,7 @@ describe("bound parameters", () => {
     it("supports :name parameter placeholders", () => {
       test("SELECT * FROM foo WHERE x = :foo AND y = :bar", {
         paramTypes: [":name"],
-        ...preserveAll,
+        ...includeAll,
       });
     });
   });
@@ -44,7 +44,7 @@ describe("bound parameters", () => {
     it("supports @name parameter placeholders", () => {
       test("SELECT * FROM foo WHERE x = @foo AND y = @bar", {
         paramTypes: ["@name"],
-        ...preserveAll,
+        ...includeAll,
       });
     });
   });
@@ -53,7 +53,7 @@ describe("bound parameters", () => {
     it("supports $name parameter placeholders", () => {
       test("SELECT * FROM foo WHERE x = $foo AND y = $bar", {
         paramTypes: ["$name"],
-        ...preserveAll,
+        ...includeAll,
       });
     });
   });

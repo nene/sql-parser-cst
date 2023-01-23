@@ -1,5 +1,5 @@
 import { cstVisitor } from "../src/main";
-import { parse, preserveAll, show } from "./test_utils";
+import { parse, includeAll, show } from "./test_utils";
 
 describe("cstVisitor", () => {
   it("allows visiting all identifiers", () => {
@@ -22,7 +22,7 @@ describe("cstVisitor", () => {
       },
     });
 
-    const cst = parse("select * from jobs where salary > 1000", preserveAll);
+    const cst = parse("select * from jobs where salary > 1000", includeAll);
     toUpper(cst);
 
     expect(show(cst)).toEqual("SELECT * FROM jobs WHERE salary > 1000");
@@ -42,7 +42,7 @@ describe("cstVisitor", () => {
       },
     });
 
-    const cst = parse("SELECT t.firstname fname, t.lastname lname FROM my_table t", preserveAll);
+    const cst = parse("SELECT t.firstname fname, t.lastname lname FROM my_table t", includeAll);
     makeAliasesExplicit(cst);
 
     expect(show(cst)).toEqual(

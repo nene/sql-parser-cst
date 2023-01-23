@@ -1,4 +1,4 @@
-import { dialect, parse, preserveAll, show, test } from "../test_utils";
+import { dialect, parse, includeAll, show, test } from "../test_utils";
 
 describe("constraints", () => {
   describe("column constraints", () => {
@@ -10,7 +10,7 @@ describe("constraints", () => {
 
     function testColConst(constraint: string) {
       const sql = `CREATE TABLE t (id INT ${constraint})`;
-      expect(show(parse(sql, preserveAll))).toBe(sql);
+      expect(show(parse(sql, includeAll))).toBe(sql);
     }
 
     dialect(["mysql", "sqlite"], () => {
@@ -201,7 +201,7 @@ describe("constraints", () => {
 
       function testTblConst(constraint: string) {
         const sql = `CREATE TABLE t (${constraint})`;
-        expect(show(parse(sql, preserveAll))).toBe(sql);
+        expect(show(parse(sql, includeAll))).toBe(sql);
       }
 
       it("PRIMARY KEY", () => {

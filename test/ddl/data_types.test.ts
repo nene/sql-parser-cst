@@ -1,10 +1,10 @@
 import { DialectName } from "../../src/ParserOptions";
-import { dialect, parse, preserveAll, show } from "../test_utils";
+import { dialect, parse, includeAll, show } from "../test_utils";
 
 describe("data types", () => {
   function testType(type: string) {
     const sql = `CREATE TABLE t (id ${type})`;
-    expect(show(parse(sql, preserveAll))).toBe(sql);
+    expect(show(parse(sql, includeAll))).toBe(sql);
   }
 
   function testTypeWithLength(type: string) {

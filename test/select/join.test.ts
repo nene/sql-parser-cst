@@ -1,5 +1,5 @@
 import { JoinExpr } from "../../src/cst/Node";
-import { dialect, parseFrom, test, show, preserveAll } from "../test_utils";
+import { dialect, parseFrom, test, show, includeAll } from "../test_utils";
 
 describe("join", () => {
   it("supports comma-joins", () => {
@@ -13,7 +13,7 @@ describe("join", () => {
   });
 
   it("treats chain of joins as left-associative operators", () => {
-    const join = parseFrom("foo JOIN bar JOIN baz", preserveAll) as JoinExpr;
+    const join = parseFrom("foo JOIN bar JOIN baz", includeAll) as JoinExpr;
     expect(show(join.left).trim()).toBe(`foo JOIN bar`);
     expect(show(join.right).trim()).toBe(`baz`);
   });

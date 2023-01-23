@@ -17,7 +17,7 @@ import { isString } from "../src/utils/generic";
 
 declare const __SQL_DIALECT__: DialectName;
 
-export const preserveAll: Partial<ParserOptions> = {
+export const includeAll: Partial<ParserOptions> = {
   includeComments: true,
   includeNewlines: true,
   includeSpaces: true,
@@ -52,7 +52,7 @@ export function dialect(lang: DialectName | DialectName[], block: () => void) {
 }
 
 export function test(sql: string, options?: Partial<ParserOptions>) {
-  expect(show(parse(sql, options || preserveAll))).toBe(sql);
+  expect(show(parse(sql, options || includeAll))).toBe(sql);
 }
 
 export function testWc(sql: string, options?: Partial<ParserOptions>) {
@@ -69,7 +69,7 @@ function withComments(sql: string): string {
 }
 
 export function testExpr(expr: string) {
-  expect(show(parse(`SELECT ${expr}`, preserveAll))).toBe(`SELECT ${expr}`);
+  expect(show(parse(`SELECT ${expr}`, includeAll))).toBe(`SELECT ${expr}`);
 }
 
 export function parseExpr(
@@ -104,7 +104,7 @@ export function parseExpr(
 
 export function testClause(clause: string) {
   const sql = `SELECT c FROM t ${clause}`;
-  expect(show(parse(sql, preserveAll))).toBe(sql);
+  expect(show(parse(sql, includeAll))).toBe(sql);
 }
 
 /**

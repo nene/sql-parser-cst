@@ -1,9 +1,9 @@
-import { dialect, show, parse, preserveAll, test } from "../test_utils";
+import { dialect, show, parse, includeAll, test } from "../test_utils";
 
 describe("alter table", () => {
   function testAlter(alter: string) {
     const sql = `ALTER TABLE t ${alter}`;
-    expect(show(parse(sql, preserveAll))).toBe(sql);
+    expect(show(parse(sql, includeAll))).toBe(sql);
   }
 
   it("supports basic ALTER TABLE", () => {
