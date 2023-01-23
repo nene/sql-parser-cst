@@ -1,46 +1,43 @@
-import { dialect, test, testWc } from "../test_utils";
+import { dialect, testWc } from "../test_utils";
 
 describe("delete from", () => {
   it("supports DELETE FROM without WHERE", () => {
-    test("DELETE FROM tbl");
-    test("DELETE FROM db.tbl");
+    testWc("DELETE FROM tbl");
+    testWc("DELETE FROM db.tbl");
   });
 
   it("supports DELETE FROM .. WHERE", () => {
-    test("DELETE FROM tbl WHERE x > 0");
-    test("DELETE /*c1*/ FROM /*c2*/ tbl /*c3*/ WHERE /*c4*/ true");
+    testWc("DELETE FROM tbl WHERE x > 0");
   });
 
   dialect("bigquery", () => {
     it("supports DELETE without FROM", () => {
-      test("DELETE tbl WHERE x > 0");
+      testWc("DELETE tbl WHERE x > 0");
     });
   });
 
   it("supports aliased table name", () => {
-    test("DELETE FROM tbl AS t");
-    test("DELETE FROM tbl t");
-    test("DELETE FROM tbl /*c1*/ AS /*c2*/ t");
+    testWc("DELETE FROM tbl AS t");
+    testWc("DELETE FROM tbl t");
   });
 
   dialect("sqlite", () => {
     it("supports INDEXED BY & NOT INDEXED modifiers on table name", () => {
-      test("DELETE FROM my_table INDEXED BY my_idx");
-      test("DELETE FROM my_table NOT INDEXED");
+      testWc("DELETE FROM my_table INDEXED BY my_idx");
+      testWc("DELETE FROM my_table NOT INDEXED");
     });
   });
 
   dialect("sqlite", () => {
     it("supports WITH ... DELETE FROM ..", () => {
-      test("WITH subsel AS (SELECT 1) DELETE FROM tbl");
-      test("WITH subsel AS (SELECT 1) /*c*/ DELETE FROM tbl");
+      testWc("WITH subsel AS (SELECT 1) DELETE FROM tbl");
     });
   });
 
   dialect("sqlite", () => {
     it("supports DELETE ... RETURNING ...", () => {
-      test("DELETE FROM tbl WHERE x > 0 RETURNING col1, col2");
-      test("DELETE FROM tbl WHERE x > 0 /*c1*/ RETURNING /*c2*/ *");
+      testWc("DELETE FROM tbl WHERE x > 0 RETURNING col1, col2");
+      testWc("DELETE FROM tbl WHERE x > 0 RETURNING *");
     });
 
     it("supports DELETE ... LIMIT ...", () => {
