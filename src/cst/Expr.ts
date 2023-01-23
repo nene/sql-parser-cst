@@ -68,7 +68,7 @@ export interface PairExpr<T1 = Node | Node[], T2 = Node> extends BaseNode {
 
 export interface BinaryExpr<
   TLeft = Expr,
-  TOperator = string | Keyword | Keyword[],
+  TOperator = SymbolOperator | Keyword | Keyword[],
   TRight = Expr
 > extends BaseNode {
   type: "binary_expr";
@@ -77,15 +77,46 @@ export interface BinaryExpr<
   right: TRight;
 }
 
+type SymbolOperator =
+  // standard arithmetics
+  | "+"
+  | "-"
+  | "*"
+  | "/"
+  | "%" // SQLite, MySQL
+  // comparison
+  | "="
+  | "==" // SQLite
+  | "<"
+  | ">"
+  | ">="
+  | "<="
+  | "<>"
+  | "!="
+  | "<=>" // MySQL
+  // string concat
+  | "||" // OR in MySQL
+  // Logic
+  | "&&" // MySQL
+  // JSON
+  | "->" // SQLite, MySQL
+  | "->>" // SQLite, MySQL
+  // bitwise
+  | "&"
+  | "|"
+  | ">>"
+  | "<<"
+  | "^"; // BigQuery, MySQL
+
 export interface PrefixOpExpr extends BaseNode {
   type: "prefix_op_expr";
-  operator: string | Keyword[];
+  operator: "-" | "~" | "!" | Keyword[];
   expr: Expr;
 }
 
 export interface PostfixOpExpr extends BaseNode {
   type: "postfix_op_expr";
-  operator: string | Keyword[];
+  operator: Keyword[];
   expr: Expr;
 }
 
