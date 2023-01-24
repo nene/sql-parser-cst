@@ -20,8 +20,6 @@ export type AllProceduralNodes =
   | ErrorCategory
   | DeclareDefault
   | IfClause
-  | CaseWhen<Program>
-  | CaseElse<Program>
   | ElseifClause
   | ElseClause
   | RaiseMessage;

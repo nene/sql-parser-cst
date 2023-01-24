@@ -1,7 +1,7 @@
 import { AllColumns, BaseNode, Empty, Keyword } from "./Base";
 import { DataType } from "./DataType";
 import { Literal, StringLiteral } from "./Literal";
-import { Node } from "./Node";
+import { Node, Program } from "./Node";
 import {
   LimitClause,
   OrderByClause,
@@ -19,8 +19,8 @@ export type AllExprNodes =
   | ExtractFrom
   | FilterArg
   | OverArg
-  | CaseWhen<Expr>
-  | CaseElse<Expr>
+  | CaseWhen<Expr | Program>
+  | CaseElse<Expr | Program>
   | IntervalUnitRange
   | PairExpr
   | WeekExpr
