@@ -6,7 +6,7 @@ Unlike a more usual parser which produces an Abstract Syntax Tree (AST),
 this parser preserves all the syntax elements present in the parsed source code,
 with the goal of being able to re-create the exact original source code.
 
-**Try it live in [AstExplorer][].**
+**Try it live in [SQL Explorer][].**
 
 ## Features
 
@@ -221,4 +221,4 @@ There's very little left of the original code though.
 [node-sql-parser]: https://github.com/taozhi8833998/node-sql-parser
 [@flora/sql-parser]: https://github.com/florajs/sql-parser
 [nquery]: https://github.com/alibaba/nquery
-[astexplorer]: https://astexplorer.net/#/gist/9636e48608a7c89707c5b345100de5b2/9331a011294bd03acc56cbe2d9ae9e60fa7dc8e6
+[sql explorer]: https://nene.github.io/sql-explorer/
