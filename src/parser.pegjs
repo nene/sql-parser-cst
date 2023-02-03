@@ -4167,11 +4167,16 @@ struct_expr
 
 // untyped struct must have at least 2 elements in it
 untyped_struct_expr
-  = "(" expr:(__ e:list$expr __ &{ return e.items.length > 1; }) ")" {
+  = "(" expr:(__ at_least_two_element_list_expr __) ")" {
     return loc({
       type: "struct_expr",
       expr: read(expr),
     });
+  }
+
+at_least_two_element_list_expr
+  = e:list$expr &{ return e.items.length > 1; } {
+    return e;
   }
 
 expr_or_explicit_alias

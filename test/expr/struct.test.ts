@@ -22,8 +22,28 @@ describe("struct", () => {
       testExpr(`STRUCT /*c1*/ <INT64> /*c2*/ (2)`);
     });
 
+    // Regression test for #17
     it("detects (1,2) as struct_expr", () => {
-      expect(parseExpr("(1,2)").type).toBe("struct_expr");
+      expect(parseExpr("(1,2)")).toMatchInlineSnapshot(`
+        {
+          "expr": {
+            "items": [
+              {
+                "text": "1",
+                "type": "number_literal",
+                "value": 1,
+              },
+              {
+                "text": "2",
+                "type": "number_literal",
+                "value": 2,
+              },
+            ],
+            "type": "list_expr",
+          },
+          "type": "struct_expr",
+        }
+      `);
     });
 
     it("detects (2) as ordinary parenthesized number", () => {
