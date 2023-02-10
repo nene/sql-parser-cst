@@ -192,9 +192,7 @@ const showNode = cstTransformer<string>({
   // additional clauses
   create_table_like_clause: (node) => show([node.likeKw, node.name]),
   create_table_copy_clause: (node) => show([node.copyKw, node.name]),
-  create_table_clone_clause: (node) => show([node.cloneKw, node.name]),
-  for_system_time_as_of_clause: (node) =>
-    show([node.forSystemTimeAsOfKw, node.expr]),
+  create_table_clone_clause: (node) => show([node.cloneKw, node.table]),
   with_partition_columns_clause: (node) =>
     show([node.withPartitionColumnsKw, node.columns]),
   bigquery_options: (node) => show([node.optionsKw, node.options]),

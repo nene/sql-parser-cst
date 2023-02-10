@@ -1366,7 +1366,6 @@ create_table_like_clause
 create_table_clause_bigquery
   = create_table_copy_clause
   / create_table_clone_clause
-  / for_system_time_as_of_clause
   / bigquery_options
   / bigquery_option_default_collate
   / partition_by_clause
@@ -1384,18 +1383,19 @@ create_table_copy_clause
   }
 
 create_table_clone_clause
-  = kw:(CLONE __) name:entity_name {
+  = kw:(CLONE __) table:(clone_for_system_time_as_of_expr / entity_name) {
     return loc({
       type: "create_table_clone_clause",
       cloneKw: read(kw),
-      name,
+      table,
     });
   }
 
-for_system_time_as_of_clause
-  = kw:(FOR __ SYSTEM_TIME __ AS __ OF __) expr:expr {
+clone_for_system_time_as_of_expr
+  = left:(entity_name __) kw:(FOR __ SYSTEM_TIME __ AS __ OF __) expr:expr {
     return loc({
-      type: "for_system_time_as_of_clause",
+      type: "for_system_time_as_of_expr",
+      left: read(left),
       forSystemTimeAsOfKw: read(kw),
       expr,
     });

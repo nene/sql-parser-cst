@@ -4,7 +4,12 @@ import { ColumnConstraint, Constraint, TableConstraint } from "./Constraint";
 import { DataType } from "./DataType";
 import { Expr, Identifier, ListExpr, ParenExpr, EntityName } from "./Expr";
 import { AsClause, WithConnectionClause } from "./ProcClause";
-import { ClusterByClause, PartitionByClause, SubSelect } from "./Select";
+import {
+  ClusterByClause,
+  ForSystemTimeAsOfExpr,
+  PartitionByClause,
+  SubSelect,
+} from "./Select";
 
 export type AllCreateTableNodes =
   | CreateTableStmt
@@ -13,7 +18,6 @@ export type AllCreateTableNodes =
   | CreateTableLikeClause
   | CreateTableCopyClause
   | CreateTableCloneClause
-  | ForSystemTimeAsOfClause
   | WithPartitionColumnsClause;
 
 // CREATE TABLE
@@ -113,7 +117,6 @@ type BigqueryCreateTableClause =
   | ClusterByClause
   | CreateTableCopyClause
   | CreateTableCloneClause
-  | ForSystemTimeAsOfClause
   | WithConnectionClause
   | WithPartitionColumnsClause;
 
@@ -126,18 +129,7 @@ export interface CreateTableCopyClause extends BaseNode {
 export interface CreateTableCloneClause extends BaseNode {
   type: "create_table_clone_clause";
   cloneKw: Keyword<"CLONE">;
-  name: EntityName;
-}
-
-export interface ForSystemTimeAsOfClause extends BaseNode {
-  type: "for_system_time_as_of_clause";
-  forSystemTimeAsOfKw: [
-    Keyword<"FOR">,
-    Keyword<"SYSTEM_TIME">,
-    Keyword<"AS">,
-    Keyword<"OF">
-  ];
-  expr: Expr;
+  table: EntityName | ForSystemTimeAsOfExpr;
 }
 
 export interface WithPartitionColumnsClause extends BaseNode {
