@@ -97,11 +97,11 @@ describe("create table", () => {
         testWc("CREATE TABLE foo CLONE bar");
       });
 
-      it("supports FOR SYSTEM TIME AS OF", () => {
+      it("supports FOR SYSTEM_TIME AS OF", () => {
         testWc(`
           CREATE TABLE mydataset.newtable
           CLONE mydataset.sourcetable
-          FOR SYSTEM TIME AS OF TIMESTAMP_SUB(CURRENT_TIMESTAMP(), INTERVAL 1 HOUR)
+          FOR SYSTEM_TIME AS OF TIMESTAMP_SUB(CURRENT_TIMESTAMP(), INTERVAL 1 HOUR)
         `);
       });
 
@@ -109,7 +109,7 @@ describe("create table", () => {
         testWc(`
           CREATE TABLE mydataset.newtable
           CLONE mydataset.sourcetable
-          FOR SYSTEM TIME AS OF '2017-01-01 10:00:00-07:00'
+          FOR SYSTEM_TIME AS OF '2017-01-01 10:00:00-07:00'
           OPTIONS(friendly_name="my_table_snapshot")
         `);
       });

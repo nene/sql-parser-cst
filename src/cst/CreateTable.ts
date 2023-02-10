@@ -133,8 +133,7 @@ export interface ForSystemTimeAsOfClause extends BaseNode {
   type: "for_system_time_as_of_clause";
   forSystemTimeAsOfKw: [
     Keyword<"FOR">,
-    Keyword<"SYSTEM">,
-    Keyword<"TIME">,
+    Keyword<"SYSTEM_TIME">,
     Keyword<"AS">,
     Keyword<"OF">
   ];

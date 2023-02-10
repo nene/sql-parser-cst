@@ -1377,7 +1377,7 @@ create_table_clone_clause
   }
 
 for_system_time_as_of_clause
-  = kw:(FOR __ SYSTEM __ TIME __ AS __ OF __) expr:expr {
+  = kw:(FOR __ SYSTEM_TIME __ AS __ OF __) expr:expr {
     return loc({
       type: "for_system_time_as_of_clause",
       forSystemTimeAsOfKw: read(kw),
@@ -4995,6 +4995,7 @@ STRUCT              = kw:"STRUCT"i              !ident_part { return loc(createK
 SUM                 = kw:"SUM"i                 !ident_part { return loc(createKeyword(kw)); }
 SUNDAY              = kw:"SUNDAY"i              !ident_part { return loc(createKeyword(kw)); }
 SYSTEM              = kw:"SYSTEM"i              !ident_part { return loc(createKeyword(kw)); }
+SYSTEM_TIME         = kw:"SYSTEM_TIME"i         !ident_part { return loc(createKeyword(kw)); }
 SYSTEM_USER         = kw:"SYSTEM_USER"i         !ident_part { return loc(createKeyword(kw)); }
 TABLE               = kw:"TABLE"i               !ident_part { return loc(createKeyword(kw)); }
 TABLES              = kw:"TABLES"i              !ident_part { return loc(createKeyword(kw)); }
