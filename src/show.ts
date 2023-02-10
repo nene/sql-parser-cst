@@ -231,6 +231,8 @@ const showNode = cstTransformer<string>({
     show([
       node.dropKw,
       node.temporaryKw,
+      node.snapshotKw,
+      node.externalKw,
       node.tableKw,
       node.ifExistsKw,
       node.tables,

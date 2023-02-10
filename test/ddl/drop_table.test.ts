@@ -1,4 +1,4 @@
-import { dialect, parseStmt, test } from "../test_utils";
+import { dialect, parseStmt, test, testWc } from "../test_utils";
 
 describe("drop table", () => {
   it("simple DROP TABLE statement", () => {
@@ -19,6 +19,16 @@ describe("drop table", () => {
     it("with TEMPORARY table", () => {
       test("DROP TEMPORARY TABLE my_tbl");
       test("DROP /*c1*/ TEMPORARY /*c2*/ TABLE my_tbl");
+    });
+  });
+
+  dialect("bigquery", () => {
+    it("with SNAPSHOT table", () => {
+      testWc("DROP SNAPSHOT TABLE my_tbl");
+    });
+
+    it("with EXTERNAL table", () => {
+      testWc("DROP EXTERNAL TABLE my_tbl");
     });
   });
 
@@ -44,7 +54,9 @@ describe("drop table", () => {
           "text": "DROP",
           "type": "keyword",
         },
+        "externalKw": undefined,
         "ifExistsKw": undefined,
+        "snapshotKw": undefined,
         "tableKw": {
           "name": "TABLE",
           "text": "TABLE",

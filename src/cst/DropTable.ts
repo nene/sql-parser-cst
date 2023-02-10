@@ -6,6 +6,8 @@ export interface DropTableStmt extends BaseNode {
   type: "drop_table_stmt";
   dropKw: Keyword<"DROP">;
   temporaryKw?: Keyword<"TEMP" | "TEMPORARY">;
+  snapshotKw?: Keyword<"SNAPSHOT">;
+  externalKw?: Keyword<"EXTERNAL">;
   tableKw: Keyword<"TABLE">;
   ifExistsKw?: [Keyword<"IF">, Keyword<"EXISTS">];
   tables: ListExpr<EntityName>;
