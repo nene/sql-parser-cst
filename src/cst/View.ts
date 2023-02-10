@@ -2,6 +2,7 @@ import { AlterActionSetOptions } from "./AlterAction";
 import { BaseNode, Keyword } from "./Base";
 import { BigqueryOptions } from "./Bigquery";
 import { Identifier, ListExpr, ParenExpr, EntityName } from "./Expr";
+import { AsClause } from "./ProcClause";
 import { ClusterByClause, PartitionByClause, SubSelect } from "./Select";
 
 export type AllViewStatements = CreateViewStmt | DropViewStmt | AlterViewStmt;
@@ -17,12 +18,14 @@ export interface CreateViewStmt extends BaseNode {
   ifNotExistsKw?: [Keyword<"IF">, Keyword<"NOT">, Keyword<"EXISTS">];
   name: EntityName;
   columns?: ParenExpr<ListExpr<Identifier>>;
-  options: CreateViewOption[];
-  asKw: Keyword<"AS">;
-  expr: SubSelect;
+  clauses: CreateViewClause[];
 }
 
-type CreateViewOption = BigqueryOptions | ClusterByClause | PartitionByClause;
+type CreateViewClause =
+  | BigqueryOptions
+  | ClusterByClause
+  | PartitionByClause
+  | AsClause<SubSelect>;
 
 // DROP VIEW
 export interface DropViewStmt extends BaseNode {

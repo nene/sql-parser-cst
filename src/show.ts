@@ -320,9 +320,7 @@ const showNode = cstTransformer<string>({
       node.ifNotExistsKw,
       node.name,
       node.columns,
-      node.options,
-      node.asKw,
-      node.expr,
+      node.clauses,
     ]),
   // DROP VIEW statement
   drop_view_stmt: (node) =>

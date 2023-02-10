@@ -1143,9 +1143,7 @@ create_view_stmt
     ifKw:(__ if_not_exists)?
     name:(__ entity_name)
     cols:(__ paren$list$column)?
-    options:(__ create_view_option)*
-    asKw:(__ AS)
-    select:(__ compound_select_stmt) {
+    clauses:(__ create_view_clause)+ {
       return loc({
         type: "create_view_stmt",
         createKw,
@@ -1156,18 +1154,18 @@ create_view_stmt
         ifNotExistsKw: read(ifKw),
         name: read(name),
         columns: read(cols),
-        options: options.map(read),
-        asKw: read(asKw),
-        expr: read(select),
+        clauses: clauses.map(read),
       });
     }
 
-create_view_option
-  = &bigquery op:(
-        bigquery_options
-      / cluster_by_clause
-      / partition_by_clause
-    ) { return op; }
+create_view_clause
+  = as_clause$compound_select_stmt
+  / &bigquery op:bigquery_create_view_clause { return op; }
+
+bigquery_create_view_clause
+  = bigquery_options
+  / cluster_by_clause
+  / partition_by_clause
 
 drop_view_stmt
   = dropKw:DROP
