@@ -1,4 +1,4 @@
-import { dialect, test } from "../test_utils";
+import { dialect, test, testWc } from "../test_utils";
 
 describe("select FROM", () => {
   it("supports basic syntax", () => {
@@ -269,6 +269,16 @@ describe("select FROM", () => {
 
       it("supports TABLESAMPLE inside JOIN", () => {
         test("SELECT * FROM tbl1 TABLESAMPLE SYSTEM (1 percent) JOIN tbl2");
+      });
+    });
+
+    describe("FOR SYSTEM_TIME AS OF operator", () => {
+      it("supports FOR SYSTEM_TIME AS OF", () => {
+        testWc("SELECT * FROM my_table FOR SYSTEM_TIME AS OF my_timestamp");
+      });
+
+      it("supports FOR SYSTEM_TIME AS OF inside JOIN", () => {
+        test("SELECT * FROM tbl1 FOR SYSTEM_TIME AS OF my_timestamp JOIN tbl2");
       });
     });
   });

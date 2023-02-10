@@ -18,6 +18,7 @@ import {
   UnpivotExpr,
   TablesampleExpr,
   FuncCall,
+  ForSystemTimeAsOfExpr,
 } from "../cst/Node";
 import { leading, surrounding, trailing } from "./whitespace";
 import { readCommaSepList } from "./list";
@@ -118,6 +119,17 @@ const derivePivotlikeLoc = <T extends { left: Node; args: Node }>(
   return { ...pivot, range: [start, end] };
 };
 
+const deriveForSystemTimeLoc = (
+  expr: ForSystemTimeAsOfExpr
+): ForSystemTimeAsOfExpr => {
+  if (!expr.left.range || !expr.expr.range) {
+    return expr;
+  }
+  const start = expr.left.range[0];
+  const end = expr.expr.range[1];
+  return { ...expr, range: [start, end] };
+};
+
 interface JoinExprRight {
   type: "join_expr_right";
   operator: JoinExpr["operator"];
@@ -144,11 +156,23 @@ interface TablesampleExprRight {
   args: TablesampleExpr["args"];
 }
 
+interface ForSystemTimeAsOfExprRight {
+  type: "for_system_time_as_of_expr_right";
+  forSystemTimeAsOfKw: ForSystemTimeAsOfExpr["forSystemTimeAsOfKw"];
+  expr: ForSystemTimeAsOfExpr["expr"];
+}
+
 export function createJoinExprChain(
   head: JoinExpr["left"],
   tail: [
     Whitespace[],
-    JoinExprRight | PivotExprRight | UnpivotExprRight | TablesampleExprRight
+    (
+      | JoinExprRight
+      | PivotExprRight
+      | UnpivotExprRight
+      | TablesampleExprRight
+      | ForSystemTimeAsOfExprRight
+    )
   ][]
 ) {
   return tail.reduce((left, [c1, right]) => {
@@ -161,6 +185,10 @@ export function createJoinExprChain(
         return derivePivotlikeLoc(createUnpivotExpr(left, c1, right));
       case "tablesample_expr_right":
         return derivePivotlikeLoc(createTablesampleExpr(left, c1, right));
+      case "for_system_time_as_of_expr_right":
+        return deriveForSystemTimeLoc(
+          createForSystemTimeAsOfExpr(left, c1, right)
+        );
     }
   }, head);
 }
@@ -216,6 +244,19 @@ function createTablesampleExpr(
     left: trailing(left, c1) as TablesampleExpr["left"],
     tablesampleKw: right.tablesampleKw,
     args: right.args,
+  };
+}
+
+function createForSystemTimeAsOfExpr(
+  left: ForSystemTimeAsOfExpr["left"],
+  c1: Whitespace[],
+  right: ForSystemTimeAsOfExprRight
+): ForSystemTimeAsOfExpr {
+  return {
+    type: "for_system_time_as_of_expr",
+    left: trailing(left, c1) as ForSystemTimeAsOfExpr["left"],
+    forSystemTimeAsOfKw: right.forSystemTimeAsOfKw,
+    expr: right.expr,
   };
 }
 

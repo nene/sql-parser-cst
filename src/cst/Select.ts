@@ -44,6 +44,7 @@ export type AllSelectNodes =
   | UnpivotForIn
   | TablesampleExpr
   | TablesamplePercent
+  | ForSystemTimeAsOfExpr
   | JoinOnSpecification
   | JoinUsingSpecification
   | SortSpecification
@@ -218,6 +219,7 @@ type TableExpr =
   | PivotExpr
   | UnpivotExpr
   | TablesampleExpr
+  | ForSystemTimeAsOfExpr
   | TableOrSubquery;
 
 export interface JoinExpr extends BaseNode {
@@ -328,6 +330,18 @@ export interface TablesamplePercent extends BaseNode {
   type: "tablesample_percent";
   percent: Expr;
   percentKw: Keyword<"PERCENT">;
+}
+
+export interface ForSystemTimeAsOfExpr extends BaseNode {
+  type: "for_system_time_as_of_expr";
+  left: TableExpr;
+  forSystemTimeAsOfKw: [
+    Keyword<"FOR">,
+    Keyword<"SYSTEM_TIME">,
+    Keyword<"AS">,
+    Keyword<"OF">
+  ];
+  expr: Expr;
 }
 
 export interface JoinOnSpecification extends BaseNode {

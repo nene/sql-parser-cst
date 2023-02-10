@@ -325,7 +325,13 @@ from_clause
 
 join_expr
   = head:table_or_subquery
-    tail:(__ (join_expr_right / pivot_expr_right / unpivot_expr_right / tablesample_expr_right))* {
+    tail:(__ (
+        join_expr_right
+      / pivot_expr_right
+      / unpivot_expr_right
+      / tablesample_expr_right
+      / for_system_time_as_of_expr_right
+    ))* {
       return createJoinExprChain(head, tail);
     }
 
@@ -504,6 +510,16 @@ tablesample_percent
       percent: p,
       percentKw: read(kw),
     });
+  }
+
+// FOR SYSTEM_TIME AS OF ........................................................
+for_system_time_as_of_expr_right
+  = &bigquery kw:(FOR __ SYSTEM_TIME __ AS __ OF __) expr:expr {
+    return {
+      type: "for_system_time_as_of_expr_right",
+      forSystemTimeAsOfKw: read(kw),
+      expr,
+    };
   }
 
 /**

@@ -86,6 +86,8 @@ const showNode = cstTransformer<string>({
     ]),
   tablesample_expr: (node) => show([node.left, node.tablesampleKw, node.args]),
   tablesample_percent: (node) => show([node.percent, node.percentKw]),
+  for_system_time_as_of_expr: (node) =>
+    show([node.left, node.forSystemTimeAsOfKw, node.expr]),
   sort_specification: (node) =>
     show([node.expr, node.orderKw, node.nullHandlingKw]),
   // WHERE .. GROUP BY .. HAVING .. QUALIFY ... ORDER BY .. PARTITION BY .. CLUSTER BY
