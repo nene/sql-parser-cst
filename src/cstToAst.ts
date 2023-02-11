@@ -1,23 +1,23 @@
 import { cstTransformer } from "./cstTransformer";
-import { Keyword, Node } from "./cst/Node";
+import { Keyword, Node as CstNode } from "./cst/Node";
 import { isString } from "./utils/generic";
 import { Expr, Node as AstNode, SelectStmt, Statement } from "./ast/Node";
 
-export const cstToAst = <T = AstNode>(node: Node): T => {
-  return cstToAst2(node) as T;
+export const cstToAst = <T extends AstNode>(cstNode: CstNode): T => {
+  const astNode = cstToAst2(cstNode) as T;
+  astNode.range = cstNode.range;
+  return astNode;
 };
 
 const cstToAst2 = cstTransformer<AstNode>({
   program: (node) => ({
     type: "program",
     statements: node.statements.map(cstToAst) as Statement[],
-    range: node.range,
   }),
   select_stmt: (node) => {
     const stmt: SelectStmt = {
       type: "select_stmt",
       columns: [],
-      range: node.range,
     };
     node.clauses.forEach((clause) => {
       if (clause.type === "select_clause") {
@@ -38,22 +38,18 @@ const cstToAst2 = cstTransformer<AstNode>({
     left: cstToAst(node.left),
     operator: isString(node.operator) ? node.operator : "",
     right: cstToAst(node.left),
-    range: node.range,
   }),
   identifier: (node) => ({
     type: "identifier",
     name: node.name,
-    range: node.range,
   }),
   string_literal: (node) => ({
     type: "string_literal",
     value: node.value,
-    range: node.range,
   }),
   number_literal: (node) => ({
     type: "number_literal",
     value: node.value,
-    range: node.range,
   }),
 });
 
