@@ -38,4 +38,11 @@ export interface SelectStmt extends BaseNode {
   columns: (Expr | Alias<Expr>)[];
 }
 
-export type Node = Expr | SelectStmt | Alias;
+export type Statement = SelectStmt;
+
+export interface Program extends BaseNode {
+  type: "program";
+  statements: Statement[];
+}
+
+export type Node = Program | Statement | Expr | Alias;

@@ -1,17 +1,23 @@
 import { cstTransformer } from "./cstTransformer";
 import { Keyword, Node } from "./cst/Node";
 import { isString } from "./utils/generic";
-import { Expr, Node as AstNode, SelectStmt } from "./ast/Node";
+import { Expr, Node as AstNode, SelectStmt, Statement } from "./ast/Node";
 
-const cstToAst = <T = AstNode>(node: Node): T => {
+export const cstToAst = <T = AstNode>(node: Node): T => {
   return cstToAst2(node) as T;
 };
 
 const cstToAst2 = cstTransformer<AstNode>({
+  program: (node) => ({
+    type: "program",
+    statements: node.statements.map(cstToAst) as Statement[],
+    range: node.range,
+  }),
   select_stmt: (node) => {
     const stmt: SelectStmt = {
       type: "select_stmt",
       columns: [],
+      range: node.range,
     };
     node.clauses.forEach((clause) => {
       if (clause.type === "select_clause") {
