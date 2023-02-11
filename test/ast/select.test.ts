@@ -28,12 +28,11 @@ describe("select", () => {
   });
 
   it("parses SELECT DISTINCT", () => {
-    expect(parseAstStmt("SELECT DISTINCT id")).toMatchInlineSnapshot(`
+    expect(parseAstStmt("SELECT DISTINCT *")).toMatchInlineSnapshot(`
       {
         "columns": [
           {
-            "name": "id",
-            "type": "identifier",
+            "type": "all_columns",
           },
         ],
         "distinct": "distinct",

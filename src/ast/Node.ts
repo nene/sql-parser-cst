@@ -32,10 +32,14 @@ export interface Alias<T = Node> extends BaseNode {
   alias: Identifier;
 }
 
+export interface AllColumns extends BaseNode {
+  type: "all_columns";
+}
+
 export interface SelectStmt extends BaseNode {
   type: "select_stmt";
   distinct?: "all" | "distinct" | "distinctrow";
-  columns: (Expr | Alias<Expr>)[];
+  columns: (AllColumns | Expr | Alias<Expr>)[];
 }
 
 export type Statement = SelectStmt;
@@ -45,4 +49,4 @@ export interface Program extends BaseNode {
   statements: Statement[];
 }
 
-export type Node = Program | Statement | Expr | Alias;
+export type Node = Program | Statement | Expr | Alias | AllColumns;

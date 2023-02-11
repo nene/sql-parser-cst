@@ -32,6 +32,7 @@ const cstToAst2 = cstTransformer<AstNode>({
     expr: cstToAst(node.expr),
     alias: cstToAst(node.alias),
   }),
+  all_columns: (node) => node,
   binary_expr: (node) => ({
     type: "binary_expr",
     left: cstToAst(node.left),
