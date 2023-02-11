@@ -1,48 +1,7 @@
 import { cstTransformer } from "./cstTransformer";
-import { Keyword, Node } from "./main";
+import { Keyword, Node } from "./cst/Node";
 import { isString } from "./utils/generic";
-
-interface BaseAstNode {
-  range?: [number, number];
-}
-
-interface Identifier extends BaseAstNode {
-  type: "identifier";
-  name: string;
-}
-
-interface StringLiteral extends BaseAstNode {
-  type: "string_literal";
-  value: string;
-}
-
-interface NumberLiteral extends BaseAstNode {
-  type: "number_literal";
-  value: number;
-}
-
-interface BinaryExpr extends BaseAstNode {
-  type: "binary_expr";
-  left: Expr;
-  operator: string;
-  right: Expr;
-}
-
-type Expr = BinaryExpr | StringLiteral | NumberLiteral | Identifier;
-
-interface Alias<T = AstNode> extends BaseAstNode {
-  type: "alias";
-  expr: T;
-  alias: Identifier;
-}
-
-interface SelectStmt extends BaseAstNode {
-  type: "select_stmt";
-  distinct?: "all" | "distinct" | "distinctrow";
-  columns: (Expr | Alias<Expr>)[];
-}
-
-type AstNode = Expr | SelectStmt | Alias;
+import { Expr, Node as AstNode, SelectStmt } from "./ast/Node";
 
 const cstToAst = <T = AstNode>(node: Node): T => {
   return cstToAst2(node) as T;
