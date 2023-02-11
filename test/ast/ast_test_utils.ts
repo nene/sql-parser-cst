@@ -8,7 +8,9 @@ export function parseAst(
   sql: string,
   options: Partial<ParserOptions> = {}
 ): Program {
-  return stripUndefinedFields(cstToAst(parse(sql, options)));
+  return stripUndefinedFields(
+    stripRangeFields(cstToAst(parse(sql, { ...options, includeRange: true })))
+  );
 }
 
 export function parseAstStmt(
@@ -31,6 +33,17 @@ function stripUndefinedFields<T extends Node>(ast: T): T {
         delete node[key];
       }
     }
+  });
+  return ast;
+}
+
+// Validates that range field is present, then discards it.
+function stripRangeFields<T extends Node>(ast: T): T {
+  astVisitAll(ast, (node) => {
+    if (!node.range) {
+      throw new Error(`Expected 'range' field in Node of type ${node.type}`);
+    }
+    delete node.range;
   });
   return ast;
 }
