@@ -1,11 +1,27 @@
 import { ParserOptions } from "../../src/main";
 import { cstToAst } from "../../src/cstToAst";
 import { parse } from "../test_utils";
-import { Node } from "../../src/ast/Node";
+import { Node, Program } from "../../src/ast/Node";
 import { isObject, isString } from "../../src/utils/generic";
 
-export function parseAst(sql: string, options: Partial<ParserOptions> = {}) {
+export function parseAst(
+  sql: string,
+  options: Partial<ParserOptions> = {}
+): Program {
   return stripUndefinedFields(cstToAst(parse(sql, options)));
+}
+
+export function parseAstStmt(
+  sql: string,
+  options: Partial<ParserOptions> = {}
+) {
+  const statements = parseAst(sql, options).statements;
+  if (statements.length !== 1) {
+    throw new Error(
+      `Expected exactly one statements, instead got ${statements.length}`
+    );
+  }
+  return statements[0];
 }
 
 function stripUndefinedFields<T extends Node>(ast: T): T {
