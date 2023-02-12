@@ -49,10 +49,31 @@ export type TableExpr = JoinExpr | TableOrSubquery;
 export interface JoinExpr extends BaseNode {
   type: "join_expr";
   left: TableExpr;
-  operator: "," | "natural join";
+  operator: JoinOp;
   right: TableOrSubquery;
   specification?: JoinOnSpecification | JoinUsingSpecification;
 }
+
+export type JoinOp =
+  | ","
+  | "join"
+  | "left join"
+  | "right join"
+  | "full join"
+  | "left outer join"
+  | "right outer join"
+  | "full outer join"
+  | "inner join"
+  | "cross join"
+  | "natural join"
+  | "natural left join"
+  | "natural right join"
+  | "natural full join"
+  | "natural left outer join"
+  | "natural right outer join"
+  | "natural full outer join"
+  | "natural inner join"
+  | "straight_join";
 
 export type TableOrSubquery = EntityName | SelectStmt | Alias<TableOrSubquery>;
 
