@@ -5,6 +5,7 @@ describe("select", () => {
   it("parses SELECT with standard clauses", () => {
     expect(
       parseAstSelect(`
+        WITH tbl AS (SELECT * FROM foo)
         SELECT col1, col2
         FROM tbl
         WHERE true
@@ -53,6 +54,30 @@ describe("select", () => {
         "where": {
           "type": "boolean_literal",
           "value": true,
+        },
+        "with": {
+          "tables": [
+            {
+              "expr": {
+                "columns": [
+                  {
+                    "type": "all_columns",
+                  },
+                ],
+                "from": {
+                  "name": "foo",
+                  "type": "identifier",
+                },
+                "type": "select_stmt",
+              },
+              "table": {
+                "name": "tbl",
+                "type": "identifier",
+              },
+              "type": "common_table_expression",
+            },
+          ],
+          "type": "with_clause",
         },
       }
     `);

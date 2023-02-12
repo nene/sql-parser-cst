@@ -8,6 +8,7 @@ import {
   Node as AstNode,
   SelectStmt,
   SortSpecification,
+  WithClause,
 } from "./ast/Node";
 
 export function cstToAst<T extends AstNode[]>(cstNode: CstNode[]): T;
@@ -35,6 +36,9 @@ const cstToAst2 = cstTransformer<AstNode>({
     };
     node.clauses.forEach((clause) => {
       switch (clause.type) {
+        case "with_clause":
+          stmt.with = cstToAst<WithClause>(clause);
+          break;
         case "select_clause":
           stmt.columns = cstToAst(clause.columns.items);
           stmt.distinct = keywordToString(clause.distinctKw);
@@ -68,6 +72,16 @@ const cstToAst2 = cstTransformer<AstNode>({
     });
     return stmt;
   },
+  with_clause: (node) => ({
+    type: "with_clause",
+    recursive: keywordToBoolean(node.recursiveKw),
+    tables: cstToAst(node.tables.items),
+  }),
+  common_table_expression: (node) => ({
+    type: "common_table_expression",
+    table: cstToAst(node.table),
+    expr: cstToAst(node.expr),
+  }),
   sort_specification: (node) => ({
     type: "sort_specification",
     expr: cstToAst(node.expr),
@@ -112,6 +126,7 @@ const cstToAst2 = cstTransformer<AstNode>({
     alias: cstToAst(node.alias),
   }),
   all_columns: (node) => node,
+  paren_expr: (node) => cstToAst(node.expr),
   binary_expr: (node) => ({
     type: "binary_expr",
     left: cstToAst(node.left),
@@ -143,4 +158,8 @@ const keywordToString = <T = string>(
     return undefined;
   }
   return kw.name.toLowerCase() as T;
+};
+
+const keywordToBoolean = (kw: Keyword | undefined): boolean | undefined => {
+  return kw ? true : undefined;
 };
