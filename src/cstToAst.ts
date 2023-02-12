@@ -2,25 +2,30 @@ import { cstTransformer } from "./cstTransformer";
 import { Keyword, Node as CstNode } from "./cst/Node";
 import { isString } from "./utils/generic";
 import {
-  AllColumns,
   Expr,
   Identifier,
   InsertStmt,
-  JoinOnSpecification,
-  JoinUsingSpecification,
   Node as AstNode,
   SelectStmt,
   SortSpecification,
-  SubSelect,
   TableExpr,
   WithClause,
 } from "./ast/Node";
 
 export function cstToAst<T extends AstNode[]>(cstNode: CstNode[]): T;
 export function cstToAst<T extends AstNode>(cstNode: CstNode): T;
+export function cstToAst<T extends AstNode[]>(
+  cstNode: CstNode[] | undefined
+): T | undefined;
 export function cstToAst<T extends AstNode>(
-  cstNode: CstNode | CstNode[]
-): T | T[] {
+  cstNode: CstNode | undefined
+): T | undefined;
+export function cstToAst<T extends AstNode>(
+  cstNode: CstNode | CstNode[] | undefined
+): T | T[] | undefined {
+  if (cstNode === undefined) {
+    return undefined;
+  }
   if (Array.isArray(cstNode)) {
     return cstNode.map(cstToAst) as T[];
   }
@@ -89,11 +94,7 @@ const cstToAst2 = cstTransformer<AstNode>({
     left: cstToAst(node.left),
     operator: isString(node.operator) ? "," : keywordToString(node.operator),
     right: cstToAst(node.right),
-    specification:
-      node.specification &&
-      cstToAst<JoinOnSpecification | JoinUsingSpecification>(
-        node.specification
-      ),
+    specification: cstToAst(node.specification),
   }),
   join_on_specification: (node) => ({
     type: "join_on_specification",
@@ -117,9 +118,7 @@ const cstToAst2 = cstTransformer<AstNode>({
       ...mergeClauses(node.clauses, {
         insert_clause: (clause) => ({
           table: cstToAst<InsertStmt["table"]>(clause.table),
-          columns: clause.columns
-            ? cstToAst<Identifier[]>(clause.columns.expr.items)
-            : undefined,
+          columns: cstToAst(clause.columns?.expr.items),
         }),
         values_clause: (clause) => ({
           values: clause.values.items.map((row) => {
@@ -149,9 +148,7 @@ const cstToAst2 = cstTransformer<AstNode>({
   func_call: (node) => ({
     type: "func_call",
     name: cstToAst(node.name),
-    args:
-      node.args &&
-      cstToAst<(Expr | AllColumns | SubSelect)[]>(node.args.expr.args.items),
+    args: cstToAst(node.args?.expr.args.items),
   }),
   identifier: (node) => ({
     type: "identifier",
