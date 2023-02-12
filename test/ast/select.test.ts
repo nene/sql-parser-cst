@@ -91,4 +91,39 @@ describe("select", () => {
       }
     `);
   });
+
+  it("parses ORDER BY sort specifiers", () => {
+    expect(parseAstStmt("SELECT * FROM t ORDER BY foo ASC, bar DESC")).toMatchInlineSnapshot(`
+      {
+        "columns": [
+          {
+            "type": "all_columns",
+          },
+        ],
+        "from": {
+          "name": "t",
+          "type": "identifier",
+        },
+        "orderBy": [
+          {
+            "expr": {
+              "name": "foo",
+              "type": "identifier",
+            },
+            "order": "asc",
+            "type": "sort_specification",
+          },
+          {
+            "expr": {
+              "name": "bar",
+              "type": "identifier",
+            },
+            "order": "desc",
+            "type": "sort_specification",
+          },
+        ],
+        "type": "select_stmt",
+      }
+    `);
+  });
 });

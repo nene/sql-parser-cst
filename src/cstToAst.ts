@@ -1,7 +1,13 @@
 import { cstTransformer } from "./cstTransformer";
 import { Keyword, Node as CstNode } from "./cst/Node";
 import { isString } from "./utils/generic";
-import { Expr, Identifier, Node as AstNode, SelectStmt } from "./ast/Node";
+import {
+  Expr,
+  Identifier,
+  Node as AstNode,
+  SelectStmt,
+  SortSpecification,
+} from "./ast/Node";
 
 export function cstToAst<T extends AstNode[]>(cstNode: CstNode[]): T;
 export function cstToAst<T extends AstNode>(cstNode: CstNode): T;
@@ -47,7 +53,9 @@ const cstToAst2 = cstTransformer<AstNode>({
           stmt.having = cstToAst<Expr>(clause.expr);
           break;
         case "order_by_clause":
-          stmt.orderBy = cstToAst<Identifier[]>(clause.specifications.items);
+          stmt.orderBy = cstToAst<(Identifier | SortSpecification)[]>(
+            clause.specifications.items
+          );
           break;
         case "limit_clause":
           stmt.limit = cstToAst<Expr>(clause.count);
@@ -58,6 +66,11 @@ const cstToAst2 = cstTransformer<AstNode>({
     });
     return stmt;
   },
+  sort_specification: (node) => ({
+    type: "sort_specification",
+    expr: cstToAst(node.expr),
+    order: keywordToString(node.orderKw) as "asc" | "desc",
+  }),
   alias: (node) => ({
     type: "alias",
     expr: cstToAst(node.expr),

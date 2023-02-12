@@ -46,6 +46,13 @@ export interface AllColumns extends BaseNode {
   type: "all_columns";
 }
 
+export interface SortSpecification extends BaseNode {
+  type: "sort_specification";
+  expr: Expr;
+  order: "asc" | "desc";
+  nulls?: "first" | "last";
+}
+
 export interface SelectStmt extends BaseNode {
   type: "select_stmt";
   distinct?: "all" | "distinct" | "distinctrow";
@@ -54,7 +61,7 @@ export interface SelectStmt extends BaseNode {
   where?: Expr;
   groupBy?: Identifier[];
   having?: Expr;
-  orderBy?: Identifier[];
+  orderBy?: (Identifier | SortSpecification)[];
   limit?: Expr;
 }
 
@@ -65,4 +72,10 @@ export interface Program extends BaseNode {
   statements: Statement[];
 }
 
-export type Node = Program | Statement | Expr | Alias | AllColumns;
+export type Node =
+  | Program
+  | Statement
+  | Expr
+  | Alias
+  | AllColumns
+  | SortSpecification;
