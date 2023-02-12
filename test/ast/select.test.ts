@@ -282,4 +282,18 @@ describe("select", () => {
       }
     `);
   });
+
+  it("parses SELECT FROM subquery", () => {
+    expect(parseAstSelect("SELECT * FROM (SELECT 1)").from).toMatchInlineSnapshot(`
+      {
+        "columns": [
+          {
+            "type": "number_literal",
+            "value": 1,
+          },
+        ],
+        "type": "select_stmt",
+      }
+    `);
+  });
 });

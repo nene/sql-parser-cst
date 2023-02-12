@@ -1,6 +1,6 @@
 import { Alias } from "./Alias";
 import { AllColumns, BaseNode } from "./Base";
-import { Expr, Identifier } from "./Expr";
+import { EntityName, Expr, Identifier } from "./Expr";
 
 export type AllSelectNodes =
   | SelectStmt
@@ -44,15 +44,17 @@ export interface SortSpecification extends BaseNode {
   nulls?: "first" | "last";
 }
 
-export type TableExpr = JoinExpr | Identifier;
+export type TableExpr = JoinExpr | TableOrSubquery;
 
 export interface JoinExpr extends BaseNode {
   type: "join_expr";
   left: TableExpr;
   operator: "," | "natural join";
-  right: Identifier;
+  right: TableOrSubquery;
   specification?: JoinOnSpecification | JoinUsingSpecification;
 }
+
+export type TableOrSubquery = EntityName | SelectStmt | Alias<TableOrSubquery>;
 
 export interface JoinOnSpecification extends BaseNode {
   type: "join_on_specification";
