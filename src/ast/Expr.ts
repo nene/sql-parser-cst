@@ -22,6 +22,7 @@ export interface FuncCall extends BaseNode {
   type: "func_call";
   name: Identifier;
   args?: (Expr | AllColumns | SubSelect)[];
+  distinct?: boolean;
 }
 
 export type EntityName = Identifier;

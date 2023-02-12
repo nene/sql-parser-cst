@@ -39,4 +39,23 @@ describe("select", () => {
       }
     `);
   });
+
+  it("parses func call with DISTINCT", () => {
+    expect(parseAstExpr("count(DISTINCT id)")).toMatchInlineSnapshot(`
+      {
+        "args": [
+          {
+            "name": "id",
+            "type": "identifier",
+          },
+        ],
+        "distinct": true,
+        "name": {
+          "name": "count",
+          "type": "identifier",
+        },
+        "type": "func_call",
+      }
+    `);
+  });
 });

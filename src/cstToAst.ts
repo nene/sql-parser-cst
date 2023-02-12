@@ -149,6 +149,7 @@ const cstToAst2 = cstTransformer<AstNode>({
     type: "func_call",
     name: cstToAst(node.name),
     args: cstToAst(node.args?.expr.args.items),
+    distinct: keywordToBoolean(node.args?.expr.distinctKw),
   }),
   identifier: (node) => ({
     type: "identifier",
