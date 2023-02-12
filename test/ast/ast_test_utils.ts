@@ -1,7 +1,7 @@
 import { ParserOptions } from "../../src/main";
 import { cstToAst } from "../../src/cstToAst";
 import { parse } from "../test_utils";
-import { Node, Program } from "../../src/ast/Node";
+import { Node, Program, SelectStmt } from "../../src/ast/Node";
 import { astVisitAll } from "../../src/astVisitAll";
 
 export function parseAst(
@@ -26,14 +26,22 @@ export function parseAstStmt(
   return statements[0];
 }
 
+export function parseAstSelect(
+  sql: string,
+  options: Partial<ParserOptions> = {}
+): SelectStmt {
+  const stmt = parseAstStmt(sql, options);
+  if (stmt.type !== "select_stmt") {
+    throw new Error(`Expected select_stmt, instead got ${stmt.type}`);
+  }
+  return stmt;
+}
+
 export function parseAstExpr(
   sql: string,
   options: Partial<ParserOptions> = {}
 ) {
-  const stmt = parseAstStmt(`SELECT ${sql}`, options);
-  // if (stmt.type !== "select_stmt") {
-  //   throw new Error(`Expected select_stmt, instead got ${stmt.type}`);
-  // }
+  const stmt = parseAstSelect(`SELECT ${sql}`, options);
   if (stmt.columns.length !== 1) {
     throw new Error(
       `Expected single column in select, instead got ${stmt.columns.length}`

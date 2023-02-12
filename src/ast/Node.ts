@@ -65,7 +65,12 @@ export interface SelectStmt extends BaseNode {
   limit?: Expr;
 }
 
-export type Statement = SelectStmt;
+export interface InsertStmt extends BaseNode {
+  type: "insert_stmt";
+  // TODO...
+}
+
+export type Statement = SelectStmt | InsertStmt;
 
 export interface Program extends BaseNode {
   type: "program";
