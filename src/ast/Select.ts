@@ -1,6 +1,7 @@
 import { Alias } from "./Alias";
 import { AllColumns, BaseNode } from "./Base";
 import { EntityName, Expr, Identifier } from "./Expr";
+import { FrameClause } from "./WindowFrame";
 
 export type AllSelectNodes =
   | SelectStmt
@@ -103,5 +104,5 @@ export interface WindowDefinition extends BaseNode {
   baseWindowName?: Identifier;
   partitionBy?: Identifier[];
   orderBy?: (Identifier | SortSpecification)[];
-  // frame?: FrameClause;
+  frame?: FrameClause;
 }

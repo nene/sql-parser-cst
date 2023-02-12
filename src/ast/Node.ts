@@ -5,10 +5,12 @@ export * from "./Insert";
 export * from "./Program";
 export * from "./Select";
 export * from "./Statement";
+export * from "./WindowFrame";
 
 import { Alias } from "./Alias";
 import { AllColumns } from "./Base";
 import { AllExprNodes } from "./Expr";
+import { AllFrameNodes } from "./WindowFrame";
 import { AllInsertNodes } from "./Insert";
 import { AllSelectNodes } from "./Select";
 import { Program } from "./Program";
@@ -18,6 +20,7 @@ export type Node =
   | Alias
   | AllColumns
   | AllExprNodes
+  | AllFrameNodes
   | AllInsertNodes
   | AllSelectNodes
   | Program

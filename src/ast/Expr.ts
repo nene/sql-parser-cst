@@ -33,6 +33,8 @@ export interface Identifier extends BaseNode {
   name: string;
 }
 
+export type Literal = StringLiteral | NumberLiteral | BooleanLiteral;
+
 export interface StringLiteral extends BaseNode {
   type: "string_literal";
   value: string;
