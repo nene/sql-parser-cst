@@ -26,6 +26,22 @@ export function parseAstStmt(
   return statements[0];
 }
 
+export function parseAstExpr(
+  sql: string,
+  options: Partial<ParserOptions> = {}
+) {
+  const stmt = parseAstStmt(`SELECT ${sql}`, options);
+  // if (stmt.type !== "select_stmt") {
+  //   throw new Error(`Expected select_stmt, instead got ${stmt.type}`);
+  // }
+  if (stmt.columns.length !== 1) {
+    throw new Error(
+      `Expected single column in select, instead got ${stmt.columns.length}`
+    );
+  }
+  return stmt.columns[0];
+}
+
 function stripUndefinedFields<T extends Node>(ast: T): T {
   astVisitAll(ast, (node: Record<any, any>) => {
     for (const key of Object.keys(node)) {
