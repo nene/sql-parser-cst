@@ -5,6 +5,7 @@ import {
   Expr,
   Identifier,
   InsertStmt,
+  NamedWindow,
   Node as AstNode,
   SelectStmt,
   SortSpecification,
@@ -72,6 +73,9 @@ const cstToAst2 = cstTransformer<AstNode>({
             clause.specifications.items
           ),
         }),
+        window_clause: (clause) => ({
+          window: cstToAst<NamedWindow[]>(clause.namedWindows.items),
+        }),
         limit_clause: (clause) => ({
           limit: cstToAst<Expr>(clause.count),
           offset: clause.offset && cstToAst<Expr>(clause.offset),
@@ -109,6 +113,17 @@ const cstToAst2 = cstTransformer<AstNode>({
     expr: cstToAst(node.expr),
     order: keywordToString(node.orderKw),
     nulls: keywordToString(node.nullHandlingKw?.[1]),
+  }),
+  named_window: (node) => ({
+    type: "named_window",
+    name: cstToAst(node.name),
+    window: cstToAst(node.window),
+  }),
+  window_definition: (node) => ({
+    type: "window_definition",
+    baseWindowName: cstToAst(node.baseWindowName),
+    partitionBy: cstToAst(node.partitionBy?.specifications.items),
+    orderBy: cstToAst(node.orderBy?.specifications.items),
   }),
   insert_stmt: (node): InsertStmt => {
     return {
@@ -150,6 +165,7 @@ const cstToAst2 = cstTransformer<AstNode>({
     name: cstToAst(node.name),
     args: cstToAst(node.args?.expr.args.items),
     distinct: keywordToBoolean(node.args?.expr.distinctKw),
+    over: cstToAst(node.over?.window),
   }),
   identifier: (node) => ({
     type: "identifier",

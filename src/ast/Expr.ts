@@ -1,5 +1,5 @@
 import { AllColumns, BaseNode } from "./Base";
-import { SubSelect } from "./Select";
+import { SubSelect, WindowDefinition } from "./Select";
 
 export type AllExprNodes = Expr;
 
@@ -23,6 +23,7 @@ export interface FuncCall extends BaseNode {
   name: Identifier;
   args?: (Expr | AllColumns | SubSelect)[];
   distinct?: boolean;
+  over?: Identifier | WindowDefinition;
 }
 
 export type EntityName = Identifier;

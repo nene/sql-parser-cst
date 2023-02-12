@@ -9,7 +9,9 @@ export type AllSelectNodes =
   | SortSpecification
   | JoinExpr
   | JoinOnSpecification
-  | JoinUsingSpecification;
+  | JoinUsingSpecification
+  | NamedWindow
+  | WindowDefinition;
 
 export type SubSelect = SelectStmt;
 
@@ -23,6 +25,7 @@ export interface SelectStmt extends BaseNode {
   groupBy?: Identifier[];
   having?: Expr;
   orderBy?: (Identifier | SortSpecification)[];
+  window?: NamedWindow[];
   limit?: Expr;
   offset?: Expr;
 }
@@ -87,4 +90,18 @@ export interface JoinOnSpecification extends BaseNode {
 export interface JoinUsingSpecification extends BaseNode {
   type: "join_using_specification";
   columns: Identifier[];
+}
+
+export interface NamedWindow extends BaseNode {
+  type: "named_window";
+  name: Identifier;
+  window: WindowDefinition;
+}
+
+export interface WindowDefinition extends BaseNode {
+  type: "window_definition";
+  baseWindowName?: Identifier;
+  partitionBy?: Identifier[];
+  orderBy?: (Identifier | SortSpecification)[];
+  // frame?: FrameClause;
 }

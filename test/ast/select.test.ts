@@ -303,4 +303,51 @@ describe("select", () => {
       }
     `);
   });
+
+  it("parses SELECT with WINDOW clause", () => {
+    expect(
+      parseAstSelect("SELECT * FROM t WINDOW win1 AS (baseWin PARTITION BY col1 ORDER BY col2)")
+    ).toMatchInlineSnapshot(`
+      {
+        "columns": [
+          {
+            "type": "all_columns",
+          },
+        ],
+        "from": {
+          "name": "t",
+          "type": "identifier",
+        },
+        "type": "select_stmt",
+        "window": [
+          {
+            "name": {
+              "name": "win1",
+              "type": "identifier",
+            },
+            "type": "named_window",
+            "window": {
+              "baseWindowName": {
+                "name": "baseWin",
+                "type": "identifier",
+              },
+              "orderBy": [
+                {
+                  "name": "col2",
+                  "type": "identifier",
+                },
+              ],
+              "partitionBy": [
+                {
+                  "name": "col1",
+                  "type": "identifier",
+                },
+              ],
+              "type": "window_definition",
+            },
+          },
+        ],
+      }
+    `);
+  });
 });

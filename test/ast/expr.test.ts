@@ -58,4 +58,26 @@ describe("select", () => {
       }
     `);
   });
+
+  it("parses window function call", () => {
+    expect(parseAstExpr("sum(price) OVER myWin")).toMatchInlineSnapshot(`
+      {
+        "args": [
+          {
+            "name": "price",
+            "type": "identifier",
+          },
+        ],
+        "name": {
+          "name": "sum",
+          "type": "identifier",
+        },
+        "over": {
+          "name": "myWin",
+          "type": "identifier",
+        },
+        "type": "func_call",
+      }
+    `);
+  });
 });
