@@ -9,6 +9,8 @@ export type Expr =
   | BooleanLiteral
   | Identifier;
 
+export type EntityName = Identifier;
+
 export interface Identifier extends BaseNode {
   type: "identifier";
   name: string;

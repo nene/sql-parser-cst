@@ -4,6 +4,7 @@ import { isString } from "./utils/generic";
 import {
   Expr,
   Identifier,
+  InsertStmt,
   Node as AstNode,
   SelectStmt,
   SortSpecification,
@@ -71,6 +72,38 @@ const cstToAst2 = cstTransformer<AstNode>({
     expr: cstToAst(node.expr),
     order: keywordToString(node.orderKw) as "asc" | "desc",
   }),
+  insert_stmt: (node) => {
+    const stmt: InsertStmt = {
+      type: "insert_stmt",
+      table: undefined as unknown as InsertStmt["table"],
+      values: [],
+    };
+    node.clauses.forEach((clause) => {
+      switch (clause.type) {
+        case "insert_clause":
+          stmt.table = cstToAst(clause.table);
+          stmt.columns = clause.columns
+            ? cstToAst<Identifier[]>(clause.columns.expr.items)
+            : undefined;
+          break;
+        case "values_clause":
+          stmt.values = clause.values.items.map((row) => {
+            if (row.type === "paren_expr") {
+              return cstToAst(row.expr.items);
+            } else {
+              return cstToAst(row.row.expr.items);
+            }
+          });
+          break;
+        default:
+          throw new Error(`Unimplemented InsertStmt clause: ${clause.type}`);
+      }
+    });
+    if (!stmt.table) {
+      throw new Error(`InsertStmt must have table field`);
+    }
+    return stmt;
+  },
   alias: (node) => ({
     type: "alias",
     expr: cstToAst(node.expr),
