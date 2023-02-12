@@ -11,6 +11,7 @@ export const astVisitAll = (node: Node, visit: (node: Node) => void) => {
       astVisitAll(child, visit);
     } else if (Array.isArray(child)) {
       child
+        .flat()
         .filter(isNode)
         .forEach((childNode) => astVisitAll(childNode, visit));
     }

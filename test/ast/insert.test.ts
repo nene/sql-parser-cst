@@ -27,36 +27,20 @@ describe("insert", () => {
         "values": [
           [
             {
-              "range": [
-                54,
-                55,
-              ],
               "type": "number_literal",
               "value": 1,
             },
             {
-              "range": [
-                57,
-                58,
-              ],
               "type": "number_literal",
               "value": 2,
             },
           ],
           [
             {
-              "range": [
-                62,
-                63,
-              ],
               "type": "number_literal",
               "value": 3,
             },
             {
-              "range": [
-                65,
-                66,
-              ],
               "type": "number_literal",
               "value": 4,
             },
