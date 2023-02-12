@@ -103,4 +103,36 @@ describe("select", () => {
       ]
     `);
   });
+
+  it("parses LIMIT <offset>, <count>", () => {
+    const select = parseAstSelect("SELECT * FROM t LIMIT 100, 15");
+    expect(select.limit).toMatchInlineSnapshot(`
+      {
+        "type": "number_literal",
+        "value": 15,
+      }
+    `);
+    expect(select.offset).toMatchInlineSnapshot(`
+      {
+        "type": "number_literal",
+        "value": 100,
+      }
+    `);
+  });
+
+  it("parses LIMIT <count> OFFSET <offset>", () => {
+    const select = parseAstSelect("SELECT * FROM t LIMIT 15 OFFSET 100");
+    expect(select.limit).toMatchInlineSnapshot(`
+      {
+        "type": "number_literal",
+        "value": 15,
+      }
+    `);
+    expect(select.offset).toMatchInlineSnapshot(`
+      {
+        "type": "number_literal",
+        "value": 100,
+      }
+    `);
+  });
 });

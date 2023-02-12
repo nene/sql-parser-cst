@@ -60,6 +60,7 @@ const cstToAst2 = cstTransformer<AstNode>({
           break;
         case "limit_clause":
           stmt.limit = cstToAst<Expr>(clause.count);
+          stmt.offset = clause.offset && cstToAst<Expr>(clause.offset);
           break;
         default:
           throw new Error(`Unimplemented SelectStmt clause: ${clause.type}`);

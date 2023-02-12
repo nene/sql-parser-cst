@@ -14,6 +14,7 @@ export interface SelectStmt extends BaseNode {
   having?: Expr;
   orderBy?: (Identifier | SortSpecification)[];
   limit?: Expr;
+  offset?: Expr;
 }
 
 export interface SortSpecification extends BaseNode {
