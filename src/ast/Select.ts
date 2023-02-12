@@ -6,14 +6,17 @@ export type AllSelectNodes =
   | SelectStmt
   | WithClause
   | CommonTableExpression
-  | SortSpecification;
+  | SortSpecification
+  | JoinExpr
+  | JoinOnSpecification
+  | JoinUsingSpecification;
 
 export interface SelectStmt extends BaseNode {
   type: "select_stmt";
   distinct?: "all" | "distinct" | "distinctrow";
   with?: WithClause;
   columns: (AllColumns | Expr | Alias<Expr>)[];
-  from?: Expr;
+  from?: TableExpr;
   where?: Expr;
   groupBy?: Identifier[];
   having?: Expr;
@@ -39,4 +42,24 @@ export interface SortSpecification extends BaseNode {
   expr: Expr;
   order?: "asc" | "desc";
   nulls?: "first" | "last";
+}
+
+export type TableExpr = JoinExpr | Identifier;
+
+export interface JoinExpr extends BaseNode {
+  type: "join_expr";
+  left: TableExpr;
+  operator: "," | "natural join";
+  right: Identifier;
+  specification?: JoinOnSpecification | JoinUsingSpecification;
+}
+
+export interface JoinOnSpecification extends BaseNode {
+  type: "join_on_specification";
+  expr: Expr;
+}
+
+export interface JoinUsingSpecification extends BaseNode {
+  type: "join_using_specification";
+  columns: Identifier[];
 }

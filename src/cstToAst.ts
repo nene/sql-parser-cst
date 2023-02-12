@@ -5,9 +5,12 @@ import {
   Expr,
   Identifier,
   InsertStmt,
+  JoinOnSpecification,
+  JoinUsingSpecification,
   Node as AstNode,
   SelectStmt,
   SortSpecification,
+  TableExpr,
   WithClause,
 } from "./ast/Node";
 
@@ -42,7 +45,7 @@ const cstToAst2 = cstTransformer<AstNode>({
           distinct: keywordToString(clause.distinctKw),
         }),
         from_clause: (clause) => ({
-          from: cstToAst<Expr>(clause.expr),
+          from: cstToAst<TableExpr>(clause.expr),
         }),
         where_clause: (clause) => ({
           where: cstToAst<Expr>(clause.expr),
@@ -78,6 +81,25 @@ const cstToAst2 = cstTransformer<AstNode>({
     type: "common_table_expression",
     table: cstToAst(node.table),
     expr: cstToAst(node.expr),
+  }),
+  join_expr: (node) => ({
+    type: "join_expr",
+    left: cstToAst(node.left),
+    operator: isString(node.operator) ? "," : keywordToString(node.operator),
+    right: cstToAst(node.right),
+    specification:
+      node.specification &&
+      cstToAst<JoinOnSpecification | JoinUsingSpecification>(
+        node.specification
+      ),
+  }),
+  join_on_specification: (node) => ({
+    type: "join_on_specification",
+    expr: cstToAst(node.expr),
+  }),
+  join_using_specification: (node) => ({
+    type: "join_using_specification",
+    columns: cstToAst(node.expr.expr.items),
   }),
   sort_specification: (node) => ({
     type: "sort_specification",
@@ -162,14 +184,21 @@ const mergeClauses = <TAstNode extends AstNode, TCstNode extends CstNode>(
   return result;
 };
 
-const keywordToString = <T = string>(
-  kw: Keyword | undefined
-): T | undefined => {
+function keywordToString<T = string>(kw: Keyword | Keyword[]): T;
+function keywordToString<T = string>(
+  kw: Keyword | Keyword[] | undefined
+): T | undefined;
+function keywordToString<T = string>(
+  kw: Keyword | Keyword[] | undefined
+): T | undefined {
   if (!kw) {
     return undefined;
   }
+  if (Array.isArray(kw)) {
+    return kw.map(keywordToString).join(" ") as T;
+  }
   return kw.name.toLowerCase() as T;
-};
+}
 
 const keywordToBoolean = (kw: Keyword | undefined): boolean | undefined => {
   return kw ? true : undefined;
