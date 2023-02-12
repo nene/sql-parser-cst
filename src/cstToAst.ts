@@ -1,18 +1,25 @@
 import { cstTransformer } from "./cstTransformer";
 import { Keyword, Node as CstNode } from "./cst/Node";
 import { isString } from "./utils/generic";
-import { Expr, Node as AstNode, SelectStmt, Statement } from "./ast/Node";
+import { Node as AstNode, SelectStmt } from "./ast/Node";
 
-export const cstToAst = <T extends AstNode>(cstNode: CstNode): T => {
+export function cstToAst<T extends AstNode>(cstNode: CstNode[]): T[];
+export function cstToAst<T extends AstNode>(cstNode: CstNode): T;
+export function cstToAst<T extends AstNode>(
+  cstNode: CstNode | CstNode[]
+): T | T[] {
+  if (Array.isArray(cstNode)) {
+    return cstNode.map(cstToAst) as T[];
+  }
   const astNode = cstToAst2(cstNode) as T;
   astNode.range = cstNode.range;
   return astNode;
-};
+}
 
 const cstToAst2 = cstTransformer<AstNode>({
   program: (node) => ({
     type: "program",
-    statements: node.statements.map(cstToAst) as Statement[],
+    statements: cstToAst(node.statements),
   }),
   select_stmt: (node) => {
     const stmt: SelectStmt = {
@@ -21,7 +28,7 @@ const cstToAst2 = cstTransformer<AstNode>({
     };
     node.clauses.forEach((clause) => {
       if (clause.type === "select_clause") {
-        stmt.columns = clause.columns.items.map(cstToAst) as Expr[];
+        stmt.columns = cstToAst(clause.columns.items);
         stmt.distinct = keywordToString(clause.distinctKw);
       }
     });
