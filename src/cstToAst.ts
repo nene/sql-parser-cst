@@ -29,48 +29,45 @@ const cstToAst2 = cstTransformer<AstNode>({
     type: "program",
     statements: cstToAst(node.statements),
   }),
-  select_stmt: (node) => {
-    const stmt: SelectStmt = {
+  select_stmt: (node): SelectStmt => {
+    return {
       type: "select_stmt",
       columns: [],
-    };
-    node.clauses.forEach((clause) => {
-      switch (clause.type) {
-        case "with_clause":
-          stmt.with = cstToAst<WithClause>(clause);
-          break;
-        case "select_clause":
-          stmt.columns = cstToAst(clause.columns.items);
-          stmt.distinct = keywordToString(clause.distinctKw);
-          break;
-        case "from_clause":
-          stmt.from = cstToAst<Expr>(clause.expr);
-          break;
-        case "where_clause":
-          stmt.where = cstToAst<Expr>(clause.expr);
-          break;
-        case "group_by_clause":
+      ...mergeClauses(node.clauses, {
+        with_clause: (clause) => ({
+          with: cstToAst<WithClause>(clause),
+        }),
+        select_clause: (clause) => ({
+          columns: cstToAst<SelectStmt["columns"]>(clause.columns.items),
+          distinct: keywordToString(clause.distinctKw),
+        }),
+        from_clause: (clause) => ({
+          from: cstToAst<Expr>(clause.expr),
+        }),
+        where_clause: (clause) => ({
+          where: cstToAst<Expr>(clause.expr),
+        }),
+        group_by_clause: (clause) => {
           if (clause.columns.type === "list_expr") {
-            stmt.groupBy = cstToAst<Identifier[]>(clause.columns.items);
+            return { groupBy: cstToAst<Identifier[]>(clause.columns.items) };
+          } else {
+            return {};
           }
-          break;
-        case "having_clause":
-          stmt.having = cstToAst<Expr>(clause.expr);
-          break;
-        case "order_by_clause":
-          stmt.orderBy = cstToAst<(Identifier | SortSpecification)[]>(
+        },
+        having_clause: (clause) => ({
+          having: cstToAst<Expr>(clause.expr),
+        }),
+        order_by_clause: (clause) => ({
+          orderBy: cstToAst<(Identifier | SortSpecification)[]>(
             clause.specifications.items
-          );
-          break;
-        case "limit_clause":
-          stmt.limit = cstToAst<Expr>(clause.count);
-          stmt.offset = clause.offset && cstToAst<Expr>(clause.offset);
-          break;
-        default:
-          throw new Error(`Unimplemented SelectStmt clause: ${clause.type}`);
-      }
-    });
-    return stmt;
+          ),
+        }),
+        limit_clause: (clause) => ({
+          limit: cstToAst<Expr>(clause.count),
+          offset: clause.offset && cstToAst<Expr>(clause.offset),
+        }),
+      }),
+    };
   },
   with_clause: (node) => ({
     type: "with_clause",
@@ -88,37 +85,29 @@ const cstToAst2 = cstTransformer<AstNode>({
     order: keywordToString(node.orderKw),
     nulls: node.nullHandlingKw && keywordToString(node.nullHandlingKw[1]),
   }),
-  insert_stmt: (node) => {
-    const stmt: InsertStmt = {
+  insert_stmt: (node): InsertStmt => {
+    return {
       type: "insert_stmt",
       table: undefined as unknown as InsertStmt["table"],
       values: [],
-    };
-    node.clauses.forEach((clause) => {
-      switch (clause.type) {
-        case "insert_clause":
-          stmt.table = cstToAst(clause.table);
-          stmt.columns = clause.columns
+      ...mergeClauses(node.clauses, {
+        insert_clause: (clause) => ({
+          table: cstToAst<InsertStmt["table"]>(clause.table),
+          columns: clause.columns
             ? cstToAst<Identifier[]>(clause.columns.expr.items)
-            : undefined;
-          break;
-        case "values_clause":
-          stmt.values = clause.values.items.map((row) => {
+            : undefined,
+        }),
+        values_clause: (clause) => ({
+          values: clause.values.items.map((row) => {
             if (row.type === "paren_expr") {
               return cstToAst(row.expr.items);
             } else {
               return cstToAst(row.row.expr.items);
             }
-          });
-          break;
-        default:
-          throw new Error(`Unimplemented InsertStmt clause: ${clause.type}`);
-      }
-    });
-    if (!stmt.table) {
-      throw new Error(`InsertStmt must have table field`);
-    }
-    return stmt;
+          }),
+        }),
+      }),
+    };
   },
   alias: (node) => ({
     type: "alias",
@@ -150,6 +139,28 @@ const cstToAst2 = cstTransformer<AstNode>({
     value: node.value,
   }),
 });
+
+type ClausesMap<TCstNode extends CstNode, TAstNode extends AstNode> = {
+  [K in TCstNode["type"]]: (
+    node: Extract<TCstNode, { type: K }>
+  ) => Partial<TAstNode>;
+};
+
+const mergeClauses = <TAstNode extends AstNode, TCstNode extends CstNode>(
+  clauses: TCstNode[],
+  map: Partial<ClausesMap<TCstNode, TAstNode>>
+): Partial<TAstNode> => {
+  const result: Partial<TAstNode> = {};
+  for (const clause of clauses) {
+    const node = clause as Extract<TCstNode, { type: typeof clause["type"] }>;
+    const fn = map[node.type] as (e: typeof node) => Partial<TAstNode>;
+    if (!fn) {
+      throw new Error(`No map entry for clause: ${node.type}`);
+    }
+    Object.assign(result, fn(node));
+  }
+  return result;
+};
 
 const keywordToString = <T = string>(
   kw: Keyword | undefined
