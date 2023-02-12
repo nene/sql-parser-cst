@@ -17,6 +17,11 @@ export interface NumberLiteral extends BaseNode {
   value: number;
 }
 
+export interface BooleanLiteral extends BaseNode {
+  type: "boolean_literal";
+  value: boolean;
+}
+
 export interface BinaryExpr extends BaseNode {
   type: "binary_expr";
   left: Expr;
@@ -24,7 +29,12 @@ export interface BinaryExpr extends BaseNode {
   right: Expr;
 }
 
-export type Expr = BinaryExpr | StringLiteral | NumberLiteral | Identifier;
+export type Expr =
+  | BinaryExpr
+  | StringLiteral
+  | NumberLiteral
+  | BooleanLiteral
+  | Identifier;
 
 export interface Alias<T = Node> extends BaseNode {
   type: "alias";
@@ -40,6 +50,12 @@ export interface SelectStmt extends BaseNode {
   type: "select_stmt";
   distinct?: "all" | "distinct" | "distinctrow";
   columns: (AllColumns | Expr | Alias<Expr>)[];
+  from?: Expr;
+  where?: Expr;
+  groupBy?: Identifier[];
+  having?: Expr;
+  orderBy?: Identifier[];
+  limit?: Expr;
 }
 
 export type Statement = SelectStmt;
