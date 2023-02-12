@@ -20,6 +20,6 @@ export interface SelectStmt extends BaseNode {
 export interface SortSpecification extends BaseNode {
   type: "sort_specification";
   expr: Expr;
-  order: "asc" | "desc";
+  order?: "asc" | "desc";
   nulls?: "first" | "last";
 }

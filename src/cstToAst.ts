@@ -71,7 +71,8 @@ const cstToAst2 = cstTransformer<AstNode>({
   sort_specification: (node) => ({
     type: "sort_specification",
     expr: cstToAst(node.expr),
-    order: keywordToString(node.orderKw) as "asc" | "desc",
+    order: keywordToString(node.orderKw),
+    nulls: node.nullHandlingKw && keywordToString(node.nullHandlingKw[1]),
   }),
   insert_stmt: (node) => {
     const stmt: InsertStmt = {

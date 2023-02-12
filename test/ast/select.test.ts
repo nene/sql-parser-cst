@@ -1,3 +1,4 @@
+import { dialect } from "../test_utils";
 import { parseAstSelect } from "./ast_test_utils";
 
 describe("select", () => {
@@ -102,6 +103,32 @@ describe("select", () => {
         },
       ]
     `);
+  });
+
+  dialect("sqlite", () => {
+    it("parses ORDER BY with NULLS FIRST/LAST", () => {
+      expect(parseAstSelect("SELECT * FROM t ORDER BY foo NULLS FIRST, bar NULLS LAST").orderBy)
+        .toMatchInlineSnapshot(`
+        [
+          {
+            "expr": {
+              "name": "foo",
+              "type": "identifier",
+            },
+            "nulls": "first",
+            "type": "sort_specification",
+          },
+          {
+            "expr": {
+              "name": "bar",
+              "type": "identifier",
+            },
+            "nulls": "last",
+            "type": "sort_specification",
+          },
+        ]
+      `);
+    });
   });
 
   it("parses LIMIT <offset>, <count>", () => {
