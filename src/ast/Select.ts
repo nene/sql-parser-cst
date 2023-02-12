@@ -11,6 +11,8 @@ export type AllSelectNodes =
   | JoinOnSpecification
   | JoinUsingSpecification;
 
+export type SubSelect = SelectStmt;
+
 export interface SelectStmt extends BaseNode {
   type: "select_stmt";
   distinct?: "all" | "distinct" | "distinctrow";
@@ -75,7 +77,7 @@ export type JoinOp =
   | "natural inner join"
   | "straight_join";
 
-export type TableOrSubquery = EntityName | SelectStmt | Alias<TableOrSubquery>;
+export type TableOrSubquery = EntityName | SubSelect | Alias<TableOrSubquery>;
 
 export interface JoinOnSpecification extends BaseNode {
   type: "join_on_specification";

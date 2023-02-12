@@ -2,6 +2,7 @@ import { cstTransformer } from "./cstTransformer";
 import { Keyword, Node as CstNode } from "./cst/Node";
 import { isString } from "./utils/generic";
 import {
+  AllColumns,
   Expr,
   Identifier,
   InsertStmt,
@@ -10,6 +11,7 @@ import {
   Node as AstNode,
   SelectStmt,
   SortSpecification,
+  SubSelect,
   TableExpr,
   WithClause,
 } from "./ast/Node";
@@ -143,6 +145,13 @@ const cstToAst2 = cstTransformer<AstNode>({
     left: cstToAst(node.left),
     operator: isString(node.operator) ? node.operator : "",
     right: cstToAst(node.left),
+  }),
+  func_call: (node) => ({
+    type: "func_call",
+    name: cstToAst(node.name),
+    args:
+      node.args &&
+      cstToAst<(Expr | AllColumns | SubSelect)[]>(node.args.expr.args.items),
   }),
   identifier: (node) => ({
     type: "identifier",

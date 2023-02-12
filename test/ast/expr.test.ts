@@ -17,4 +17,26 @@ describe("select", () => {
       }
     `);
   });
+
+  it("parses simple func call", () => {
+    expect(parseAstExpr("my_func(1, 2)")).toMatchInlineSnapshot(`
+      {
+        "args": [
+          {
+            "type": "number_literal",
+            "value": 1,
+          },
+          {
+            "type": "number_literal",
+            "value": 2,
+          },
+        ],
+        "name": {
+          "name": "my_func",
+          "type": "identifier",
+        },
+        "type": "func_call",
+      }
+    `);
+  });
 });
