@@ -32,4 +32,25 @@ describe("select", () => {
       }
     `);
   });
+
+  it("parses aliases", () => {
+    expect(parseAstStmt("SELECT x AS foo")).toMatchInlineSnapshot(`
+      {
+        "columns": [
+          {
+            "alias": {
+              "name": "foo",
+              "type": "identifier",
+            },
+            "expr": {
+              "name": "x",
+              "type": "identifier",
+            },
+            "type": "alias",
+          },
+        ],
+        "type": "select_stmt",
+      }
+    `);
+  });
 });
