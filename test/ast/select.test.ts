@@ -1,9 +1,9 @@
-import { parseAstStmt } from "./ast_test_utils";
+import { parseAstSelect } from "./ast_test_utils";
 
 describe("select", () => {
   it("parses SELECT with standard clauses", () => {
     expect(
-      parseAstStmt(`
+      parseAstSelect(`
         SELECT col1, col2
         FROM tbl
         WHERE true
@@ -57,73 +57,50 @@ describe("select", () => {
     `);
   });
 
-  it("parses SELECT DISTINCT", () => {
-    expect(parseAstStmt("SELECT DISTINCT *")).toMatchInlineSnapshot(`
-      {
-        "columns": [
-          {
-            "type": "all_columns",
-          },
-        ],
-        "distinct": "distinct",
-        "type": "select_stmt",
-      }
-    `);
+  it("parses SELECT ALL/DISTINCT", () => {
+    expect(parseAstSelect("SELECT DISTINCT *").distinct).toBe("distinct");
+    expect(parseAstSelect("SELECT ALL *").distinct).toBe("all");
   });
 
   it("parses aliases", () => {
-    expect(parseAstStmt("SELECT x AS foo")).toMatchInlineSnapshot(`
-      {
-        "columns": [
-          {
-            "alias": {
-              "name": "foo",
-              "type": "identifier",
-            },
-            "expr": {
-              "name": "x",
-              "type": "identifier",
-            },
-            "type": "alias",
+    expect(parseAstSelect("SELECT x AS foo").columns).toMatchInlineSnapshot(`
+      [
+        {
+          "alias": {
+            "name": "foo",
+            "type": "identifier",
           },
-        ],
-        "type": "select_stmt",
-      }
+          "expr": {
+            "name": "x",
+            "type": "identifier",
+          },
+          "type": "alias",
+        },
+      ]
     `);
   });
 
   it("parses ORDER BY sort specifiers", () => {
-    expect(parseAstStmt("SELECT * FROM t ORDER BY foo ASC, bar DESC")).toMatchInlineSnapshot(`
-      {
-        "columns": [
-          {
-            "type": "all_columns",
+    expect(parseAstSelect("SELECT * FROM t ORDER BY foo ASC, bar DESC").orderBy)
+      .toMatchInlineSnapshot(`
+      [
+        {
+          "expr": {
+            "name": "foo",
+            "type": "identifier",
           },
-        ],
-        "from": {
-          "name": "t",
-          "type": "identifier",
+          "order": "asc",
+          "type": "sort_specification",
         },
-        "orderBy": [
-          {
-            "expr": {
-              "name": "foo",
-              "type": "identifier",
-            },
-            "order": "asc",
-            "type": "sort_specification",
+        {
+          "expr": {
+            "name": "bar",
+            "type": "identifier",
           },
-          {
-            "expr": {
-              "name": "bar",
-              "type": "identifier",
-            },
-            "order": "desc",
-            "type": "sort_specification",
-          },
-        ],
-        "type": "select_stmt",
-      }
+          "order": "desc",
+          "type": "sort_specification",
+        },
+      ]
     `);
   });
 });
