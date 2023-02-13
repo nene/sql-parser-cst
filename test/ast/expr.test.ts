@@ -18,6 +18,23 @@ describe("select", () => {
     `);
   });
 
+  it("parses binary expr with keyword-operators", () => {
+    expect(parseAstExpr("true AND false")).toMatchInlineSnapshot(`
+      {
+        "left": {
+          "type": "boolean_literal",
+          "value": true,
+        },
+        "operator": "and",
+        "right": {
+          "type": "boolean_literal",
+          "value": true,
+        },
+        "type": "binary_expr",
+      }
+    `);
+  });
+
   it("parses simple func call", () => {
     expect(parseAstExpr("my_func(1, 2)")).toMatchInlineSnapshot(`
       {
