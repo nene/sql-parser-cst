@@ -5,10 +5,12 @@ export { DialectName, ParserOptions } from "./ParserOptions";
 export { FormattedSyntaxError } from "./FormattedSyntaxError";
 
 import { Node, Program } from "./cst/Node";
+import { Program as AstProgram } from "./ast/Node";
 import { parse as parseSql, SyntaxError } from "./parser";
 import { show as showSql } from "./show";
 import { ParserOptions, validDialectNames } from "./ParserOptions";
 import { FormattedSyntaxError } from "./FormattedSyntaxError";
+import { cstToAst } from "./cstToAst";
 
 export function parse(sql: string, options: ParserOptions): Program {
   if (!options || !options.dialect) {
@@ -43,4 +45,11 @@ export function show(node: Node): string {
   // The goal here is to restrict the input type to just Node,
   // not allowing all the additional types that are largely an implementation detail.
   return showSql(node);
+}
+
+/**
+ * Parses SQL into Abstract Syntax Tree (AST).
+ */
+export function parseAst(sql: string, options: ParserOptions): AstProgram {
+  return cstToAst(parse(sql, options));
 }

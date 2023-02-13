@@ -1,15 +1,25 @@
-import { ParserOptions } from "../../src/main";
-import { cstToAst } from "../../src/cstToAst";
-import { parse } from "../test_utils";
+import {
+  ParserOptions,
+  parseAst as origParseAst,
+  DialectName,
+} from "../../src/main";
 import { Node, Program, SelectStmt } from "../../src/ast/Node";
 import { astVisitAll } from "../../src/astVisitAll";
+
+declare const __SQL_DIALECT__: DialectName;
 
 export function parseAst(
   sql: string,
   options: Partial<ParserOptions> = {}
 ): Program {
   return stripUndefinedFields(
-    stripRangeFields(cstToAst(parse(sql, { ...options, includeRange: true })))
+    stripRangeFields(
+      origParseAst(sql, {
+        includeRange: true,
+        dialect: __SQL_DIALECT__,
+        ...options,
+      })
+    )
   );
 }
 
