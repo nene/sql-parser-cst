@@ -1,4 +1,4 @@
 import { InsertStmt } from "./Insert";
-import { SelectStmt } from "./Select";
+import { CompoundSelectStmt, SelectStmt } from "./Select";
 
-export type Statement = SelectStmt | InsertStmt;
+export type Statement = CompoundSelectStmt | SelectStmt | InsertStmt;

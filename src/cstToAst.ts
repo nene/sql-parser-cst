@@ -40,6 +40,12 @@ const cstToAst2 = cstTransformer<AstNode>({
     type: "program",
     statements: cstToAst(node.statements),
   }),
+  compound_select_stmt: (node) => ({
+    type: "compound_select_stmt",
+    left: cstToAst(node.left),
+    operator: keywordToString(node.operator),
+    right: cstToAst(node.right),
+  }),
   select_stmt: (node): SelectStmt => {
     return {
       type: "select_stmt",

@@ -4,6 +4,7 @@ import { EntityName, Expr, Identifier } from "./Expr";
 import { FrameClause } from "./WindowFrame";
 
 export type AllSelectNodes =
+  | CompoundSelectStmt
   | SelectStmt
   | WithClause
   | CommonTableExpression
@@ -13,6 +14,22 @@ export type AllSelectNodes =
   | JoinUsingSpecification
   | NamedWindow
   | WindowDefinition;
+
+export interface CompoundSelectStmt extends BaseNode {
+  type: "compound_select_stmt";
+  left: SubSelect;
+  operator:
+    | "union"
+    | "except"
+    | "intersect"
+    | "union all"
+    | "except all"
+    | "intersect all"
+    | "union distinct"
+    | "except distinct"
+    | "intersect distinct";
+  right: SubSelect;
+}
 
 export type SubSelect = SelectStmt;
 
