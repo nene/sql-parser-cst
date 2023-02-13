@@ -5,6 +5,7 @@ export type AllExprNodes = Expr;
 
 export type Expr =
   | BinaryExpr
+  | BetweenExpr
   | FuncCall
   | StringLiteral
   | NumberLiteral
@@ -16,6 +17,13 @@ export interface BinaryExpr extends BaseNode {
   left: Expr;
   operator: string;
   right: Expr;
+}
+
+export interface BetweenExpr extends BaseNode {
+  type: "between_expr";
+  left: Expr;
+  begin: Expr;
+  end: Expr;
 }
 
 export interface FuncCall extends BaseNode {

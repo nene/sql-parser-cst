@@ -194,6 +194,12 @@ const cstToAst2 = cstTransformer<AstNode>({
       : keywordToString(node.operator),
     right: cstToAst(node.left),
   }),
+  between_expr: (node) => ({
+    type: "between_expr",
+    left: cstToAst(node.left),
+    begin: cstToAst(node.begin),
+    end: cstToAst(node.end),
+  }),
   func_call: (node) => ({
     type: "func_call",
     name: cstToAst(node.name),

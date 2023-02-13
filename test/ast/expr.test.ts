@@ -97,4 +97,24 @@ describe("select", () => {
       }
     `);
   });
+
+  it("parses BETWEEN expr", () => {
+    expect(parseAstExpr("price BETWEEN 25 AND 100")).toMatchInlineSnapshot(`
+      {
+        "begin": {
+          "type": "number_literal",
+          "value": 25,
+        },
+        "end": {
+          "type": "number_literal",
+          "value": 100,
+        },
+        "left": {
+          "name": "price",
+          "type": "identifier",
+        },
+        "type": "between_expr",
+      }
+    `);
+  });
 });
