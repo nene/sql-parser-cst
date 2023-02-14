@@ -192,7 +192,7 @@ const cstToAst2 = cstTransformer<AstNode>({
     operator: isString(node.operator)
       ? node.operator
       : keywordToString(node.operator),
-    right: cstToAst(node.left),
+    right: cstToAst(node.right),
   }),
   prefix_op_expr: (node) => ({
     type: "prefix_op_expr",

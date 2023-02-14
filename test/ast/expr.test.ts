@@ -11,8 +11,8 @@ describe("select", () => {
         },
         "operator": "+",
         "right": {
-          "type": "string_literal",
-          "value": "hello",
+          "type": "number_literal",
+          "value": 1,
         },
         "type": "binary_expr",
       }
@@ -29,7 +29,7 @@ describe("select", () => {
         "operator": "and",
         "right": {
           "type": "boolean_literal",
-          "value": true,
+          "value": false,
         },
         "type": "binary_expr",
       }
