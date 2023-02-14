@@ -246,9 +246,45 @@ const cstToAst2 = cstTransformer<AstNode>({
     type: "number_literal",
     value: node.value,
   }),
+  blob_literal: (node) => ({
+    type: "blob_literal",
+    value: node.value,
+  }),
   boolean_literal: (node) => ({
     type: "boolean_literal",
     value: node.value,
+  }),
+  null_literal: (node) => ({
+    type: "null_literal",
+    value: node.value,
+  }),
+  date_literal: (node) => ({
+    type: "date_literal",
+    value: node.string.value,
+  }),
+  time_literal: (node) => ({
+    type: "time_literal",
+    value: node.string.value,
+  }),
+  datetime_literal: (node) => ({
+    type: "datetime_literal",
+    value: node.string.value,
+  }),
+  timestamp_literal: (node) => ({
+    type: "timestamp_literal",
+    value: node.string.value,
+  }),
+  json_literal: (node) => ({
+    type: "json_literal",
+    value: node.string.value,
+  }),
+  numeric_literal: (node) => ({
+    type: "numeric_literal",
+    value: node.string.value,
+  }),
+  bignumeric_literal: (node) => ({
+    type: "bignumeric_literal",
+    value: node.string.value,
   }),
 });
 

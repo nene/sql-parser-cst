@@ -1,7 +1,7 @@
 import { parseAstExpr } from "./ast_test_utils";
 import { dialect } from "../test_utils";
 
-describe("select", () => {
+describe("expr", () => {
   it("parses binary expr", () => {
     expect(parseAstExpr("'hello' + 1")).toMatchInlineSnapshot(`
       {
