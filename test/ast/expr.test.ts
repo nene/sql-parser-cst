@@ -179,6 +179,28 @@ describe("select", () => {
           "name": "price",
           "type": "identifier",
         },
+        "operator": "between",
+        "type": "between_expr",
+      }
+    `);
+  });
+
+  it("parses NOT BETWEEN expr", () => {
+    expect(parseAstExpr("price NOT BETWEEN 25 AND 100")).toMatchInlineSnapshot(`
+      {
+        "begin": {
+          "type": "number_literal",
+          "value": 25,
+        },
+        "end": {
+          "type": "number_literal",
+          "value": 100,
+        },
+        "left": {
+          "name": "price",
+          "type": "identifier",
+        },
+        "operator": "not between",
         "type": "between_expr",
       }
     `);

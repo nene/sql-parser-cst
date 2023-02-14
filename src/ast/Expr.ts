@@ -42,6 +42,7 @@ export interface PostfixOpExpr extends BaseNode {
 export interface BetweenExpr extends BaseNode {
   type: "between_expr";
   left: Expr;
+  operator: "between" | "not between";
   begin: Expr;
   end: Expr;
 }

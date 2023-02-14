@@ -210,6 +210,7 @@ const cstToAst2 = cstTransformer<AstNode>({
   between_expr: (node) => ({
     type: "between_expr",
     left: cstToAst(node.left),
+    operator: keywordToString(node.betweenKw),
     begin: cstToAst(node.begin),
     end: cstToAst(node.end),
   }),
