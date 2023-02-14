@@ -2,6 +2,7 @@ export * from "./Alias";
 export * from "./Base";
 export * from "./Expr";
 export * from "./Insert";
+export * from "./Literal";
 export * from "./Program";
 export * from "./Select";
 export * from "./Statement";

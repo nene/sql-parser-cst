@@ -1,4 +1,5 @@
 import { AllColumns, BaseNode } from "./Base";
+import { Literal } from "./Literal";
 import { SubSelect, WindowDefinition } from "./Select";
 
 export type AllExprNodes = Expr;
@@ -9,9 +10,7 @@ export type Expr =
   | PostfixOpExpr
   | BetweenExpr
   | FuncCall
-  | StringLiteral
-  | NumberLiteral
-  | BooleanLiteral
+  | Literal
   | Identifier;
 
 export interface BinaryExpr extends BaseNode {
@@ -58,21 +57,4 @@ export type EntityName = Identifier;
 export interface Identifier extends BaseNode {
   type: "identifier";
   name: string;
-}
-
-export type Literal = StringLiteral | NumberLiteral | BooleanLiteral;
-
-export interface StringLiteral extends BaseNode {
-  type: "string_literal";
-  value: string;
-}
-
-export interface NumberLiteral extends BaseNode {
-  type: "number_literal";
-  value: number;
-}
-
-export interface BooleanLiteral extends BaseNode {
-  type: "boolean_literal";
-  value: boolean;
 }
