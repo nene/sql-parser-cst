@@ -10,6 +10,7 @@ export * from "./WindowFrame";
 
 import { Alias } from "./Alias";
 import { AllColumns } from "./Base";
+import { AllDataTypeNodes } from "./DataType";
 import { AllExprNodes } from "./Expr";
 import { AllFrameNodes } from "./WindowFrame";
 import { AllInsertNodes } from "./Insert";
@@ -20,6 +21,7 @@ import { Statement } from "./Statement";
 export type Node =
   | Alias
   | AllColumns
+  | AllDataTypeNodes
   | AllExprNodes
   | AllFrameNodes
   | AllInsertNodes

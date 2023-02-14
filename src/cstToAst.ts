@@ -5,6 +5,7 @@ import {
   Expr,
   Identifier,
   InsertStmt,
+  Literal,
   NamedWindow,
   Node as AstNode,
   SelectStmt,
@@ -218,6 +219,19 @@ const cstToAst2 = cstTransformer<AstNode>({
     args: cstToAst(node.args?.expr.args.items),
     distinct: keywordToBoolean(node.args?.expr.distinctKw),
     over: cstToAst(node.over?.window),
+  }),
+  cast_expr: (node) => ({
+    type: "cast_expr",
+    expr: cstToAst(node.args.expr.expr),
+    dataType: cstToAst(node.args.expr.dataType),
+  }),
+  data_type: (node) => ({
+    type: "data_type",
+    name: keywordToString(node.nameKw),
+    params:
+      node.params?.type === "paren_expr"
+        ? cstToAst<Literal[]>(node.params.expr.items)
+        : undefined,
   }),
   identifier: (node) => ({
     type: "identifier",

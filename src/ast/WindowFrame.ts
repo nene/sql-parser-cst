@@ -1,5 +1,5 @@
 import { BaseNode } from "./Base";
-import { Literal } from "./Expr";
+import { Literal } from "./Literal";
 
 export type AllFrameNodes =
   | FrameClause

@@ -138,6 +138,32 @@ describe("select", () => {
     `);
   });
 
+  it("parses CAST() expression", () => {
+    expect(parseAstExpr("CAST(42 AS NUMERIC(10, 2))")).toMatchInlineSnapshot(`
+      {
+        "dataType": {
+          "name": "numeric",
+          "params": [
+            {
+              "type": "number_literal",
+              "value": 10,
+            },
+            {
+              "type": "number_literal",
+              "value": 2,
+            },
+          ],
+          "type": "data_type",
+        },
+        "expr": {
+          "type": "number_literal",
+          "value": 42,
+        },
+        "type": "cast_expr",
+      }
+    `);
+  });
+
   it("parses BETWEEN expr", () => {
     expect(parseAstExpr("price BETWEEN 25 AND 100")).toMatchInlineSnapshot(`
       {
