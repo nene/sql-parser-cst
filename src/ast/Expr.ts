@@ -5,6 +5,8 @@ export type AllExprNodes = Expr;
 
 export type Expr =
   | BinaryExpr
+  | PrefixOpExpr
+  | PostfixOpExpr
   | BetweenExpr
   | FuncCall
   | StringLiteral
@@ -17,6 +19,23 @@ export interface BinaryExpr extends BaseNode {
   left: Expr;
   operator: string;
   right: Expr;
+}
+
+export interface PrefixOpExpr extends BaseNode {
+  type: "prefix_op_expr";
+  operator: "-" | "~" | "!" | "not" | "exists";
+  expr: Expr;
+}
+
+export interface PostfixOpExpr extends BaseNode {
+  type: "postfix_op_expr";
+  operator:
+    | "isnull" // SQLite
+    | "notnull" // SQLite
+    | "not null" // SQLite
+    | "is unknown" // BigQuery, MySQL
+    | "is not unknown"; // BigQuery, MySQL
+  expr: Expr;
 }
 
 export interface BetweenExpr extends BaseNode {

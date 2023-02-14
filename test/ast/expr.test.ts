@@ -1,4 +1,5 @@
 import { parseAstExpr } from "./ast_test_utils";
+import { dialect } from "../test_utils";
 
 describe("select", () => {
   it("parses binary expr", () => {
@@ -33,6 +34,45 @@ describe("select", () => {
         "type": "binary_expr",
       }
     `);
+  });
+
+  it("parses prefix operator", () => {
+    expect(parseAstExpr("NOT false")).toMatchInlineSnapshot(`
+      {
+        "expr": {
+          "type": "boolean_literal",
+          "value": false,
+        },
+        "operator": "not",
+        "type": "prefix_op_expr",
+      }
+    `);
+
+    expect(parseAstExpr("-x")).toMatchInlineSnapshot(`
+      {
+        "expr": {
+          "name": "x",
+          "type": "identifier",
+        },
+        "operator": "-",
+        "type": "prefix_op_expr",
+      }
+    `);
+  });
+
+  dialect("sqlite", () => {
+    it("parses postfix operator", () => {
+      expect(parseAstExpr("x NOT NULL")).toMatchInlineSnapshot(`
+        {
+          "expr": {
+            "name": "x",
+            "type": "identifier",
+          },
+          "operator": "not null",
+          "type": "postfix_op_expr",
+        }
+      `);
+    });
   });
 
   it("parses simple func call", () => {
