@@ -1,15 +1,20 @@
 import { AllColumns, BaseNode } from "./Base";
 import { DataType } from "./DataType";
 import { Literal } from "./Literal";
+import { Program } from "./Program";
 import { SubSelect, WindowDefinition } from "./Select";
 
-export type AllExprNodes = Expr;
+export type AllExprNodes =
+  | Expr
+  | CaseWhen<Expr | Program>
+  | CaseElse<Expr | Program>;
 
 export type Expr =
   | BinaryExpr
   | PrefixOpExpr
   | PostfixOpExpr
   | BetweenExpr
+  | CaseExpr
   | FuncCall
   | CastExpr
   | MemberExpr
@@ -46,6 +51,23 @@ export interface BetweenExpr extends BaseNode {
   operator: "between" | "not between";
   begin: Expr;
   end: Expr;
+}
+
+export interface CaseExpr extends BaseNode {
+  type: "case_expr";
+  expr?: Expr;
+  clauses: (CaseWhen<Expr> | CaseElse<Expr>)[];
+}
+
+export interface CaseWhen<T> extends BaseNode {
+  type: "case_when";
+  condition: Expr;
+  result: T;
+}
+
+export interface CaseElse<T> extends BaseNode {
+  type: "case_else";
+  result: T;
 }
 
 export interface FuncCall extends BaseNode {

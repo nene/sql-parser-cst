@@ -214,6 +214,20 @@ const cstToAst2 = cstTransformer<AstNode>({
     begin: cstToAst(node.begin),
     end: cstToAst(node.end),
   }),
+  case_expr: (node) => ({
+    type: "case_expr",
+    expr: cstToAst(node.expr),
+    clauses: cstToAst(node.clauses),
+  }),
+  case_when: (node) => ({
+    type: "case_when",
+    condition: cstToAst(node.condition),
+    result: cstToAst(node.result),
+  }),
+  case_else: (node) => ({
+    type: "case_else",
+    result: cstToAst(node.result),
+  }),
   func_call: (node) => ({
     type: "func_call",
     name: cstToAst(node.name),

@@ -228,4 +228,54 @@ describe("expr", () => {
       }
     `);
   });
+
+  it("parses CASE", () => {
+    expect(
+      parseAstExpr(`
+        CASE foo
+          WHEN 1 THEN 'one'
+          WHEN 2 THEN 'two'
+          ELSE 'three'
+        END`)
+    ).toMatchInlineSnapshot(`
+      {
+        "clauses": [
+          {
+            "condition": {
+              "type": "number_literal",
+              "value": 1,
+            },
+            "result": {
+              "type": "string_literal",
+              "value": "one",
+            },
+            "type": "case_when",
+          },
+          {
+            "condition": {
+              "type": "number_literal",
+              "value": 2,
+            },
+            "result": {
+              "type": "string_literal",
+              "value": "two",
+            },
+            "type": "case_when",
+          },
+          {
+            "result": {
+              "type": "string_literal",
+              "value": "three",
+            },
+            "type": "case_else",
+          },
+        ],
+        "expr": {
+          "name": "foo",
+          "type": "identifier",
+        },
+        "type": "case_expr",
+      }
+    `);
+  });
 });
