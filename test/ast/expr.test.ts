@@ -36,6 +36,36 @@ describe("expr", () => {
     `);
   });
 
+  it("parses IN operator", () => {
+    expect(parseAstExpr("foo IN (1, 2, 3)")).toMatchInlineSnapshot(`
+      {
+        "left": {
+          "name": "foo",
+          "type": "identifier",
+        },
+        "operator": "in",
+        "right": {
+          "items": [
+            {
+              "type": "number_literal",
+              "value": 1,
+            },
+            {
+              "type": "number_literal",
+              "value": 2,
+            },
+            {
+              "type": "number_literal",
+              "value": 3,
+            },
+          ],
+          "type": "list_expr",
+        },
+        "type": "binary_expr",
+      }
+    `);
+  });
+
   it("parses prefix operator", () => {
     expect(parseAstExpr("NOT false")).toMatchInlineSnapshot(`
       {

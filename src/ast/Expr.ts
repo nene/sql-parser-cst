@@ -10,6 +10,7 @@ export type AllExprNodes =
   | CaseElse<Expr | Program>;
 
 export type Expr =
+  | ListExpr
   | BinaryExpr
   | PrefixOpExpr
   | PostfixOpExpr
@@ -20,6 +21,11 @@ export type Expr =
   | MemberExpr
   | Identifier
   | Literal;
+
+export interface ListExpr extends BaseNode {
+  type: "list_expr";
+  items: Expr[];
+}
 
 export interface BinaryExpr extends BaseNode {
   type: "binary_expr";

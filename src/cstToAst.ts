@@ -187,6 +187,10 @@ const cstToAst2 = cstTransformer<AstNode>({
   }),
   all_columns: (node) => node,
   paren_expr: (node) => cstToAst(node.expr),
+  list_expr: (node) => ({
+    type: "list_expr",
+    items: cstToAst(node.items),
+  }),
   binary_expr: (node) => ({
     type: "binary_expr",
     left: cstToAst(node.left),
