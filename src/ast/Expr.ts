@@ -1,6 +1,6 @@
 import { AllColumns, BaseNode } from "./Base";
 import { DataType } from "./DataType";
-import { Literal } from "./Literal";
+import { Literal, StringLiteral } from "./Literal";
 import { Program } from "./Program";
 import { SubSelect, WindowDefinition } from "./Select";
 
@@ -18,6 +18,7 @@ export type Expr =
   | CaseExpr
   | FuncCall
   | CastExpr
+  | RaiseExpr
   | MemberExpr
   | Identifier
   | Literal;
@@ -89,6 +90,11 @@ export interface CastExpr extends BaseNode {
   type: "cast_expr";
   expr: Expr;
   dataType: DataType;
+}
+
+export interface RaiseExpr extends BaseNode {
+  type: "raise_expr";
+  args: ("ignore" | "rollback" | "abort" | "fail" | StringLiteral)[];
 }
 
 export interface MemberExpr extends BaseNode {

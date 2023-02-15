@@ -340,4 +340,21 @@ describe("expr", () => {
       }
     `);
   });
+
+  dialect("sqlite", () => {
+    it("parses raise expr", () => {
+      expect(parseAstExpr("RAISE(ABORT, 'Error happened')")).toMatchInlineSnapshot(`
+        {
+          "args": [
+            "abort",
+            {
+              "type": "string_literal",
+              "value": "Error happened",
+            },
+          ],
+          "type": "raise_expr",
+        }
+      `);
+    });
+  });
 });

@@ -10,6 +10,7 @@ import {
   Node as AstNode,
   SelectStmt,
   SortSpecification,
+  StringLiteral,
   TableExpr,
   WithClause,
 } from "./ast/Node";
@@ -244,6 +245,14 @@ const cstToAst2 = cstTransformer<AstNode>({
     type: "cast_expr",
     expr: cstToAst(node.args.expr.expr),
     dataType: cstToAst(node.args.expr.dataType),
+  }),
+  raise_expr: (node) => ({
+    type: "raise_expr",
+    args: node.args.expr.items.map((arg) =>
+      arg.type === "keyword"
+        ? keywordToString(arg)
+        : cstToAst<StringLiteral>(arg)
+    ),
   }),
   data_type: (node) => ({
     type: "data_type",
