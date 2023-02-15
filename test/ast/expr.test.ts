@@ -138,6 +138,38 @@ describe("expr", () => {
     `);
   });
 
+  dialect("sqlite", () => {
+    it("parses function call with filter", () => {
+      expect(parseAstExpr("sum(price) FILTER (WHERE x > 10)")).toMatchInlineSnapshot(`
+        {
+          "args": [
+            {
+              "name": "price",
+              "type": "identifier",
+            },
+          ],
+          "filter": {
+            "left": {
+              "name": "x",
+              "type": "identifier",
+            },
+            "operator": ">",
+            "right": {
+              "type": "number_literal",
+              "value": 10,
+            },
+            "type": "binary_expr",
+          },
+          "name": {
+            "name": "sum",
+            "type": "identifier",
+          },
+          "type": "func_call",
+        }
+      `);
+    });
+  });
+
   it("parses CAST() expression", () => {
     expect(parseAstExpr("CAST(42 AS NUMERIC(10, 2))")).toMatchInlineSnapshot(`
       {

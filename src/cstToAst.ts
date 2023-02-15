@@ -233,6 +233,7 @@ const cstToAst2 = cstTransformer<AstNode>({
     name: cstToAst(node.name),
     args: cstToAst(node.args?.expr.args.items),
     distinct: keywordToBoolean(node.args?.expr.distinctKw),
+    filter: cstToAst(node.filter?.where.expr.expr),
     over: cstToAst(node.over?.window),
   }),
   cast_expr: (node) => ({

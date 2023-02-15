@@ -75,6 +75,7 @@ export interface FuncCall extends BaseNode {
   name: Identifier;
   args?: (Expr | AllColumns | SubSelect)[];
   distinct?: boolean;
+  filter?: Expr;
   over?: Identifier | WindowDefinition;
 }
 
