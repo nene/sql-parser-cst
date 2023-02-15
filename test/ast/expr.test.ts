@@ -205,4 +205,27 @@ describe("expr", () => {
       }
     `);
   });
+
+  it("parses member expr", () => {
+    expect(parseAstExpr("proj.schema.col")).toMatchInlineSnapshot(`
+      {
+        "object": {
+          "object": {
+            "name": "proj",
+            "type": "identifier",
+          },
+          "property": {
+            "name": "schema",
+            "type": "identifier",
+          },
+          "type": "member_expr",
+        },
+        "property": {
+          "name": "col",
+          "type": "identifier",
+        },
+        "type": "member_expr",
+      }
+    `);
+  });
 });

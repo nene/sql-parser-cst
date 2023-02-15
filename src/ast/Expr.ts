@@ -12,8 +12,9 @@ export type Expr =
   | BetweenExpr
   | FuncCall
   | CastExpr
-  | Literal
-  | Identifier;
+  | MemberExpr
+  | Identifier
+  | Literal;
 
 export interface BinaryExpr extends BaseNode {
   type: "binary_expr";
@@ -61,7 +62,13 @@ export interface CastExpr extends BaseNode {
   dataType: DataType;
 }
 
-export type EntityName = Identifier;
+export interface MemberExpr extends BaseNode {
+  type: "member_expr";
+  object: Expr;
+  property: Identifier; // ArraySubscript | AllColumns | Empty
+}
+
+export type EntityName = MemberExpr | Identifier;
 
 export interface Identifier extends BaseNode {
   type: "identifier";

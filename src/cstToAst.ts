@@ -234,6 +234,11 @@ const cstToAst2 = cstTransformer<AstNode>({
         ? cstToAst<Literal[]>(node.params.expr.items)
         : undefined,
   }),
+  member_expr: (node) => ({
+    type: "member_expr",
+    object: cstToAst(node.object),
+    property: cstToAst(node.property),
+  }),
   identifier: (node) => ({
     type: "identifier",
     name: node.name,
