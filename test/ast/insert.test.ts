@@ -96,4 +96,25 @@ describe("insert", () => {
       }
     `);
   });
+
+  it("parses INSERT OR REPLACE", () => {
+    expect(parseAstStmt(`INSERT OR REPLACE INTO tbl VALUES (1)`)).toMatchInlineSnapshot(`
+      {
+        "orAction": "replace",
+        "table": {
+          "name": "tbl",
+          "type": "identifier",
+        },
+        "type": "insert_stmt",
+        "values": [
+          [
+            {
+              "type": "number_literal",
+              "value": 1,
+            },
+          ],
+        ],
+      }
+    `);
+  });
 });
