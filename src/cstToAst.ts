@@ -2,7 +2,6 @@ import { cstTransformer } from "./cstTransformer";
 import { Keyword, Node as CstNode } from "./cst/Node";
 import { isString } from "./utils/generic";
 import {
-  DefaultValues,
   Expr,
   Identifier,
   InsertStmt,
@@ -13,7 +12,6 @@ import {
   SortSpecification,
   StringLiteral,
   TableExpr,
-  ValuesClause,
   WithClause,
 } from "./ast/Node";
 
@@ -179,10 +177,16 @@ const cstToAst2 = cstTransformer<AstNode>({
               : keywordToString(clause.orAction?.actionKw),
         }),
         values_clause: (clause) => ({
-          values: cstToAst<ValuesClause>(clause),
+          values: cstToAst<InsertStmt["values"]>(clause),
         }),
         default_values: (clause) => ({
-          values: cstToAst<DefaultValues>(clause),
+          values: cstToAst<InsertStmt["values"]>(clause),
+        }),
+        select_stmt: (clause) => ({
+          values: cstToAst<InsertStmt["values"]>(clause),
+        }),
+        compound_select_stmt: (clause) => ({
+          values: cstToAst<InsertStmt["values"]>(clause),
         }),
       }),
     };
@@ -355,7 +359,11 @@ const mergeClauses = <TAstNode extends AstNode, TCstNode extends CstNode>(
     const node = clause as Extract<TCstNode, { type: typeof clause["type"] }>;
     const fn = map[node.type] as (e: typeof node) => Partial<TAstNode>;
     if (!fn) {
-      throw new Error(`No map entry for clause: ${node.type}`);
+      throw new Error(
+        `No map entry for clause: ${node.type}\n${JSON.stringify(
+          Object.keys(map)
+        )}`
+      );
     }
     Object.assign(result, fn(node));
   }

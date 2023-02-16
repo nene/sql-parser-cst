@@ -1,7 +1,7 @@
 import { Alias } from "./Alias";
 import { BaseNode } from "./Base";
 import { EntityName, Expr, Identifier } from "./Expr";
-import { WithClause } from "./Select";
+import { SubSelect, WithClause } from "./Select";
 
 export type AllInsertNodes = InsertStmt | ValuesClause | DefaultValues;
 
@@ -11,7 +11,7 @@ export interface InsertStmt extends BaseNode {
   orAction?: "abort" | "fail" | "ignore" | "replace" | "rollback";
   table: EntityName | Alias<EntityName>;
   columns?: Identifier[];
-  values: ValuesClause | DefaultValues;
+  values: ValuesClause | DefaultValues | SubSelect;
 }
 
 export interface ValuesClause extends BaseNode {

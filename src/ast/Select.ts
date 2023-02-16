@@ -31,7 +31,7 @@ export interface CompoundSelectStmt extends BaseNode {
   right: SubSelect;
 }
 
-export type SubSelect = SelectStmt;
+export type SubSelect = SelectStmt | CompoundSelectStmt;
 
 export interface SelectStmt extends BaseNode {
   type: "select_stmt";

@@ -151,7 +151,7 @@ describe("insert", () => {
     `);
   });
 
-  it("parses DEFAULT VALUES", () => {
+  it("parses INSERT .. DEFAULT VALUES", () => {
     expect(parseAstStmt(`INSERT INTO tbl DEFAULT VALUES`)).toMatchInlineSnapshot(`
       {
         "table": {
@@ -161,6 +161,61 @@ describe("insert", () => {
         "type": "insert_stmt",
         "values": {
           "type": "default_values",
+        },
+      }
+    `);
+  });
+
+  it("parses INSERT .. SELECT", () => {
+    expect(parseAstStmt(`INSERT INTO tbl SELECT 1`)).toMatchInlineSnapshot(`
+      {
+        "table": {
+          "name": "tbl",
+          "type": "identifier",
+        },
+        "type": "insert_stmt",
+        "values": {
+          "columns": [
+            {
+              "type": "number_literal",
+              "value": 1,
+            },
+          ],
+          "type": "select_stmt",
+        },
+      }
+    `);
+  });
+
+  it("parses INSERT .. SELECT UNION SELECT", () => {
+    expect(parseAstStmt(`INSERT INTO tbl SELECT 1 UNION ALL SELECT 2`)).toMatchInlineSnapshot(`
+      {
+        "table": {
+          "name": "tbl",
+          "type": "identifier",
+        },
+        "type": "insert_stmt",
+        "values": {
+          "left": {
+            "columns": [
+              {
+                "type": "number_literal",
+                "value": 1,
+              },
+            ],
+            "type": "select_stmt",
+          },
+          "operator": "union all",
+          "right": {
+            "columns": [
+              {
+                "type": "number_literal",
+                "value": 2,
+              },
+            ],
+            "type": "select_stmt",
+          },
+          "type": "compound_select_stmt",
         },
       }
     `);
