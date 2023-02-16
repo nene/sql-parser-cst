@@ -49,4 +49,51 @@ describe("insert", () => {
       }
     `);
   });
+
+  it("parses WITH..INSERT", () => {
+    expect(
+      parseAstStmt(`
+        WITH foo AS (SELECT 1)
+        INSERT INTO tbl
+        VALUES (1)
+      `)
+    ).toMatchInlineSnapshot(`
+      {
+        "table": {
+          "name": "tbl",
+          "type": "identifier",
+        },
+        "type": "insert_stmt",
+        "values": [
+          [
+            {
+              "type": "number_literal",
+              "value": 1,
+            },
+          ],
+        ],
+        "with": {
+          "tables": [
+            {
+              "expr": {
+                "columns": [
+                  {
+                    "type": "number_literal",
+                    "value": 1,
+                  },
+                ],
+                "type": "select_stmt",
+              },
+              "table": {
+                "name": "foo",
+                "type": "identifier",
+              },
+              "type": "common_table_expression",
+            },
+          ],
+          "type": "with_clause",
+        },
+      }
+    `);
+  });
 });

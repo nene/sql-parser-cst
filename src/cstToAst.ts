@@ -165,6 +165,9 @@ const cstToAst2 = cstTransformer<AstNode>({
       table: undefined as unknown as InsertStmt["table"],
       values: [],
       ...mergeClauses(node.clauses, {
+        with_clause: (clause) => ({
+          with: cstToAst<WithClause>(clause),
+        }),
         insert_clause: (clause) => ({
           table: cstToAst<InsertStmt["table"]>(clause.table),
           columns: cstToAst(clause.columns?.expr.items),
