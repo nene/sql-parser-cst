@@ -24,28 +24,31 @@ describe("insert", () => {
           "type": "identifier",
         },
         "type": "insert_stmt",
-        "values": [
-          [
-            {
-              "type": "number_literal",
-              "value": 1,
-            },
-            {
-              "type": "number_literal",
-              "value": 2,
-            },
+        "values": {
+          "type": "values_clause",
+          "values": [
+            [
+              {
+                "type": "number_literal",
+                "value": 1,
+              },
+              {
+                "type": "number_literal",
+                "value": 2,
+              },
+            ],
+            [
+              {
+                "type": "number_literal",
+                "value": 3,
+              },
+              {
+                "type": "number_literal",
+                "value": 4,
+              },
+            ],
           ],
-          [
-            {
-              "type": "number_literal",
-              "value": 3,
-            },
-            {
-              "type": "number_literal",
-              "value": 4,
-            },
-          ],
-        ],
+        },
       }
     `);
   });
@@ -64,14 +67,17 @@ describe("insert", () => {
           "type": "identifier",
         },
         "type": "insert_stmt",
-        "values": [
-          [
-            {
-              "type": "number_literal",
-              "value": 1,
-            },
+        "values": {
+          "type": "values_clause",
+          "values": [
+            [
+              {
+                "type": "number_literal",
+                "value": 1,
+              },
+            ],
           ],
-        ],
+        },
         "with": {
           "tables": [
             {
@@ -106,14 +112,17 @@ describe("insert", () => {
           "type": "identifier",
         },
         "type": "insert_stmt",
-        "values": [
-          [
-            {
-              "type": "number_literal",
-              "value": 1,
-            },
+        "values": {
+          "type": "values_clause",
+          "values": [
+            [
+              {
+                "type": "number_literal",
+                "value": 1,
+              },
+            ],
           ],
-        ],
+        },
       }
     `);
   });
@@ -127,14 +136,17 @@ describe("insert", () => {
           "type": "identifier",
         },
         "type": "insert_stmt",
-        "values": [
-          [
-            {
-              "type": "number_literal",
-              "value": 1,
-            },
+        "values": {
+          "type": "values_clause",
+          "values": [
+            [
+              {
+                "type": "number_literal",
+                "value": 1,
+              },
+            ],
           ],
-        ],
+        },
       }
     `);
   });

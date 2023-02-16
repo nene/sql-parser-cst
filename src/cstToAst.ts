@@ -12,6 +12,7 @@ import {
   SortSpecification,
   StringLiteral,
   TableExpr,
+  ValuesClause,
   WithClause,
 } from "./ast/Node";
 
@@ -163,7 +164,7 @@ const cstToAst2 = cstTransformer<AstNode>({
     return {
       type: "insert_stmt",
       table: undefined as unknown as InsertStmt["table"],
-      values: [],
+      values: undefined as unknown as InsertStmt["values"],
       ...mergeClauses(node.clauses, {
         with_clause: (clause) => ({
           with: cstToAst<WithClause>(clause),
@@ -177,17 +178,21 @@ const cstToAst2 = cstTransformer<AstNode>({
               : keywordToString(clause.orAction?.actionKw),
         }),
         values_clause: (clause) => ({
-          values: clause.values.items.map((row) => {
-            if (row.type === "paren_expr") {
-              return cstToAst(row.expr.items);
-            } else {
-              return cstToAst(row.row.expr.items);
-            }
-          }),
+          values: cstToAst<ValuesClause>(clause),
         }),
       }),
     };
   },
+  values_clause: (node) => ({
+    type: "values_clause",
+    values: node.values.items.map((row) => {
+      if (row.type === "paren_expr") {
+        return cstToAst(row.expr.items);
+      } else {
+        return cstToAst(row.row.expr.items);
+      }
+    }),
+  }),
   alias: (node) => ({
     type: "alias",
     expr: cstToAst(node.expr),
