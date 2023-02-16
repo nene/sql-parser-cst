@@ -2,6 +2,7 @@ import { cstTransformer } from "./cstTransformer";
 import { Keyword, Node as CstNode } from "./cst/Node";
 import { isString } from "./utils/generic";
 import {
+  DefaultValues,
   Expr,
   Identifier,
   InsertStmt,
@@ -180,6 +181,9 @@ const cstToAst2 = cstTransformer<AstNode>({
         values_clause: (clause) => ({
           values: cstToAst<ValuesClause>(clause),
         }),
+        default_values: (clause) => ({
+          values: cstToAst<DefaultValues>(clause),
+        }),
       }),
     };
   },
@@ -192,6 +196,9 @@ const cstToAst2 = cstTransformer<AstNode>({
         return cstToAst(row.row.expr.items);
       }
     }),
+  }),
+  default_values: () => ({
+    type: "default_values",
   }),
   alias: (node) => ({
     type: "alias",

@@ -150,4 +150,19 @@ describe("insert", () => {
       }
     `);
   });
+
+  it("parses DEFAULT VALUES", () => {
+    expect(parseAstStmt(`INSERT INTO tbl DEFAULT VALUES`)).toMatchInlineSnapshot(`
+      {
+        "table": {
+          "name": "tbl",
+          "type": "identifier",
+        },
+        "type": "insert_stmt",
+        "values": {
+          "type": "default_values",
+        },
+      }
+    `);
+  });
 });

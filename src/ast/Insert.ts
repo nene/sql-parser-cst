@@ -3,7 +3,7 @@ import { BaseNode } from "./Base";
 import { EntityName, Expr, Identifier } from "./Expr";
 import { WithClause } from "./Select";
 
-export type AllInsertNodes = InsertStmt | ValuesClause;
+export type AllInsertNodes = InsertStmt | ValuesClause | DefaultValues;
 
 export interface InsertStmt extends BaseNode {
   type: "insert_stmt";
@@ -11,10 +11,14 @@ export interface InsertStmt extends BaseNode {
   orAction?: "abort" | "fail" | "ignore" | "replace" | "rollback";
   table: EntityName | Alias<EntityName>;
   columns?: Identifier[];
-  values: ValuesClause;
+  values: ValuesClause | DefaultValues;
 }
 
 export interface ValuesClause extends BaseNode {
   type: "values_clause";
   values: Expr[][];
+}
+
+export interface DefaultValues extends BaseNode {
+  type: "default_values";
 }
