@@ -12,6 +12,7 @@ export interface InsertStmt extends BaseNode {
   table: EntityName | Alias<EntityName>;
   columns?: Identifier[];
   values: ValuesClause | DefaultValues | SubSelect;
+  // upsert?: UpsertClause;
   returning?: (Expr | Alias<Expr>)[];
 }
 
@@ -23,3 +24,21 @@ export interface ValuesClause extends BaseNode {
 export interface DefaultValues extends BaseNode {
   type: "default_values";
 }
+
+// only in SQLite
+// export interface UpsertClause extends BaseNode {
+//   type: "upsert_clause";
+//   columns?: (SortSpecification | Identifier)[];
+//   where?: Expr;
+//   action: UpsertActionNothing | UpsertActionUpdate;
+// }
+
+// export interface UpsertActionNothing extends BaseNode {
+//   type: "upsert_action_nothing";
+// }
+
+// export interface UpsertActionUpdate extends BaseNode {
+//   type: "upsert_action_update";
+//   set: SetClause;
+//   where?: Expr;
+// }
