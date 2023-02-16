@@ -220,4 +220,33 @@ describe("insert", () => {
       }
     `);
   });
+
+  it("parses RETURNING clause", () => {
+    expect(parseAstStmt(`INSERT INTO tbl VALUES (1) RETURNING id`)).toMatchInlineSnapshot(`
+      {
+        "returning": [
+          {
+            "name": "id",
+            "type": "identifier",
+          },
+        ],
+        "table": {
+          "name": "tbl",
+          "type": "identifier",
+        },
+        "type": "insert_stmt",
+        "values": {
+          "type": "values_clause",
+          "values": [
+            [
+              {
+                "type": "number_literal",
+                "value": 1,
+              },
+            ],
+          ],
+        },
+      }
+    `);
+  });
 });

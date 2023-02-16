@@ -188,6 +188,11 @@ const cstToAst2 = cstTransformer<AstNode>({
         compound_select_stmt: (clause) => ({
           values: cstToAst<InsertStmt["values"]>(clause),
         }),
+        returning_clause: (clause) => ({
+          returning: cstToAst<Required<InsertStmt>["returning"]>(
+            clause.columns.items
+          ),
+        }),
       }),
     };
   },
@@ -359,11 +364,7 @@ const mergeClauses = <TAstNode extends AstNode, TCstNode extends CstNode>(
     const node = clause as Extract<TCstNode, { type: typeof clause["type"] }>;
     const fn = map[node.type] as (e: typeof node) => Partial<TAstNode>;
     if (!fn) {
-      throw new Error(
-        `No map entry for clause: ${node.type}\n${JSON.stringify(
-          Object.keys(map)
-        )}`
-      );
+      throw new Error(`No map entry for clause: ${node.type}`);
     }
     Object.assign(result, fn(node));
   }

@@ -12,6 +12,7 @@ export interface InsertStmt extends BaseNode {
   table: EntityName | Alias<EntityName>;
   columns?: Identifier[];
   values: ValuesClause | DefaultValues | SubSelect;
+  returning?: (Expr | Alias<Expr>)[];
 }
 
 export interface ValuesClause extends BaseNode {
