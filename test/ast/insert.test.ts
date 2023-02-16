@@ -117,4 +117,25 @@ describe("insert", () => {
       }
     `);
   });
+
+  it("parses REPLACE INTO statement the same as INSERT OR REPLACE INTO", () => {
+    expect(parseAstStmt(`REPLACE INTO tbl VALUES (1)`)).toMatchInlineSnapshot(`
+      {
+        "orAction": "replace",
+        "table": {
+          "name": "tbl",
+          "type": "identifier",
+        },
+        "type": "insert_stmt",
+        "values": [
+          [
+            {
+              "type": "number_literal",
+              "value": 1,
+            },
+          ],
+        ],
+      }
+    `);
+  });
 });

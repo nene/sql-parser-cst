@@ -171,7 +171,10 @@ const cstToAst2 = cstTransformer<AstNode>({
         insert_clause: (clause) => ({
           table: cstToAst<InsertStmt["table"]>(clause.table),
           columns: cstToAst(clause.columns?.expr.items),
-          orAction: keywordToString(clause.orAction?.actionKw),
+          orAction:
+            clause.insertKw.name === "REPLACE"
+              ? "replace"
+              : keywordToString(clause.orAction?.actionKw),
         }),
         values_clause: (clause) => ({
           values: clause.values.items.map((row) => {
