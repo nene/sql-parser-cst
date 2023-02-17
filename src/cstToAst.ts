@@ -6,12 +6,14 @@ import {
   Identifier,
   InsertStmt,
   Literal,
+  MemberExpr,
   NamedWindow,
   Node as AstNode,
   SelectStmt,
   SortSpecification,
   StringLiteral,
   TableExpr,
+  UpdateStmt,
   WithClause,
 } from "./ast/Node";
 
@@ -208,6 +210,29 @@ const cstToAst2 = cstTransformer<AstNode>({
   }),
   default_values: () => ({
     type: "default_values",
+  }),
+  update_stmt: (node): UpdateStmt => ({
+    type: "update_stmt",
+    tables: [],
+    assignments: [],
+    ...mergeClauses(node.clauses, {
+      update_clause: (clause) => ({
+        tables: cstToAst<UpdateStmt["tables"]>(clause.tables.items),
+      }),
+      set_clause: (clause) => ({
+        assignments: cstToAst<UpdateStmt["assignments"]>(
+          clause.assignments.items
+        ),
+      }),
+    }),
+  }),
+  column_assignment: (node) => ({
+    type: "column_assignment",
+    column:
+      node.column.type === "paren_expr"
+        ? cstToAst<Identifier[]>(node.column.expr.items)
+        : cstToAst<Identifier | MemberExpr>(node.column),
+    expr: cstToAst(node.expr),
   }),
   alias: (node) => ({
     type: "alias",
