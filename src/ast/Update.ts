@@ -1,6 +1,6 @@
 import { Alias } from "./Alias";
 import { BaseNode } from "./Base";
-import { Expr, Identifier, MemberExpr, EntityName } from "./Expr";
+import { Expr, Identifier, MemberExpr, EntityName, ListExpr } from "./Expr";
 import { SortSpecification, TableExpr, WithClause } from "./Select";
 
 export type AllUpdateNodes = UpdateStmt | ColumnAssignment;
@@ -20,6 +20,6 @@ export interface UpdateStmt extends BaseNode {
 
 export interface ColumnAssignment extends BaseNode {
   type: "column_assignment";
-  column: Identifier | MemberExpr | Identifier[];
+  column: Identifier | MemberExpr | ListExpr<Identifier>;
   expr: Expr;
 }

@@ -1,6 +1,7 @@
 import { AllColumns, BaseNode } from "./Base";
 import { DataType } from "./DataType";
 import { Literal, StringLiteral } from "./Literal";
+import { Node } from "./Node";
 import { Program } from "./Program";
 import { SubSelect, WindowDefinition } from "./Select";
 
@@ -23,9 +24,9 @@ export type Expr =
   | Identifier
   | Literal;
 
-export interface ListExpr extends BaseNode {
+export interface ListExpr<T = Node> extends BaseNode {
   type: "list_expr";
-  items: Expr[];
+  items: T[];
 }
 
 export interface BinaryExpr extends BaseNode {

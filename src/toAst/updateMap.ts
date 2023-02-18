@@ -3,7 +3,6 @@ import { AllUpdateNodes } from "../cst/Node";
 import {
   Expr,
   Identifier,
-  MemberExpr,
   Node as AstNode,
   SortSpecification,
   TableExpr,
@@ -50,10 +49,7 @@ export const updateMap: TransformMap<AstNode, AllUpdateNodes> = {
   }),
   column_assignment: (node) => ({
     type: "column_assignment",
-    column:
-      node.column.type === "paren_expr"
-        ? cstToAst<Identifier[]>(node.column.expr.items)
-        : cstToAst<Identifier | MemberExpr>(node.column),
+    column: cstToAst(node.column),
     expr: cstToAst(node.expr),
   }),
 };
