@@ -6,9 +6,6 @@ import {
   NamedWindow,
   Node as AstNode,
   SelectStmt,
-  SortSpecification,
-  TableExpr,
-  WithClause,
 } from "../ast/Node";
 import { cstToAst } from "../cstToAst";
 import {
@@ -17,6 +14,13 @@ import {
   mergeClauses,
 } from "./transformUtils";
 import { isString } from "../utils/generic";
+import {
+  fromClause,
+  limitClause,
+  orderByClause,
+  whereClause,
+  withClause,
+} from "./clauses";
 
 export const selectMap: TransformMap<AstNode, AllSelectNodes> = {
   compound_select_stmt: (node) => ({
@@ -30,18 +34,9 @@ export const selectMap: TransformMap<AstNode, AllSelectNodes> = {
       type: "select_stmt",
       columns: [],
       ...mergeClauses(node.clauses, {
-        with_clause: (clause) => ({
-          with: cstToAst<WithClause>(clause),
-        }),
         select_clause: (clause) => ({
           columns: cstToAst<SelectStmt["columns"]>(clause.columns.items),
           distinct: keywordToString(clause.distinctKw),
-        }),
-        from_clause: (clause) => ({
-          from: cstToAst<TableExpr>(clause.expr),
-        }),
-        where_clause: (clause) => ({
-          where: cstToAst<Expr>(clause.expr),
         }),
         group_by_clause: (clause) => {
           if (clause.columns.type === "list_expr") {
@@ -53,18 +48,14 @@ export const selectMap: TransformMap<AstNode, AllSelectNodes> = {
         having_clause: (clause) => ({
           having: cstToAst<Expr>(clause.expr),
         }),
-        order_by_clause: (clause) => ({
-          orderBy: cstToAst<(Identifier | SortSpecification)[]>(
-            clause.specifications.items
-          ),
-        }),
         window_clause: (clause) => ({
           window: cstToAst<NamedWindow[]>(clause.namedWindows.items),
         }),
-        limit_clause: (clause) => ({
-          limit: cstToAst<Expr>(clause.count),
-          offset: clause.offset && cstToAst<Expr>(clause.offset),
-        }),
+        with_clause: withClause,
+        from_clause: fromClause,
+        where_clause: whereClause,
+        order_by_clause: orderByClause,
+        limit_clause: limitClause,
       }),
     };
   },

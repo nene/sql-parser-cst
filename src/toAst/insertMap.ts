@@ -1,8 +1,9 @@
 import { TransformMap } from "../cstTransformer";
 import { AllInsertNodes } from "../cst/Node";
-import { InsertStmt, Node as AstNode, WithClause } from "../ast/Node";
+import { InsertStmt, Node as AstNode } from "../ast/Node";
 import { cstToAst } from "../cstToAst";
 import { keywordToString, mergeClauses } from "./transformUtils";
+import { withClause } from "./clauses";
 
 export const insertMap: TransformMap<AstNode, AllInsertNodes> = {
   insert_stmt: (node): InsertStmt => {
@@ -11,9 +12,7 @@ export const insertMap: TransformMap<AstNode, AllInsertNodes> = {
       table: undefined as unknown as InsertStmt["table"],
       values: undefined as unknown as InsertStmt["values"],
       ...mergeClauses(node.clauses, {
-        with_clause: (clause) => ({
-          with: cstToAst<WithClause>(clause),
-        }),
+        with_clause: withClause,
         insert_clause: (clause) => ({
           table: cstToAst<InsertStmt["table"]>(clause.table),
           columns: cstToAst(clause.columns?.expr.items),
