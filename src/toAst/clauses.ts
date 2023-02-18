@@ -3,10 +3,12 @@ import {
   FromClause,
   LimitClause,
   OrderByClause,
+  ReturningClause,
   WhereClause,
   WithClause as CstWithClause,
 } from "../cst/Node";
 import {
+  Alias,
   Expr,
   Identifier,
   SortSpecification,
@@ -35,4 +37,8 @@ export const orderByClause = (clause: OrderByClause) => ({
 export const limitClause = (clause: LimitClause) => ({
   limit: cstToAst<Expr>(clause.count),
   offset: clause.offset && cstToAst<Expr>(clause.offset),
+});
+
+export const returningClause = (clause: ReturningClause) => ({
+  returning: cstToAst<(Expr | Alias<Expr>)[]>(clause.columns.items),
 });

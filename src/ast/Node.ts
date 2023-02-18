@@ -1,5 +1,6 @@
 export * from "./Alias";
 export * from "./Base";
+export * from "./Delete";
 export * from "./Expr";
 export * from "./Insert";
 export * from "./Literal";
@@ -12,6 +13,7 @@ export * from "./WindowFrame";
 import { Alias } from "./Alias";
 import { AllColumns } from "./Base";
 import { AllDataTypeNodes } from "./DataType";
+import { AllDeleteNodes } from "./Delete";
 import { AllExprNodes } from "./Expr";
 import { AllFrameNodes } from "./WindowFrame";
 import { AllInsertNodes } from "./Insert";
@@ -24,6 +26,7 @@ export type Node =
   | Alias
   | AllColumns
   | AllDataTypeNodes
+  | AllDeleteNodes
   | AllExprNodes
   | AllFrameNodes
   | AllInsertNodes

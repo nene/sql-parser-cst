@@ -3,7 +3,7 @@ import { AllInsertNodes } from "../cst/Node";
 import { InsertStmt, Node as AstNode } from "../ast/Node";
 import { cstToAst } from "../cstToAst";
 import { keywordToString, mergeClauses } from "./transformUtils";
-import { withClause } from "./clauses";
+import { returningClause, withClause } from "./clauses";
 
 export const insertMap: TransformMap<AstNode, AllInsertNodes> = {
   insert_stmt: (node): InsertStmt => {
@@ -33,11 +33,7 @@ export const insertMap: TransformMap<AstNode, AllInsertNodes> = {
         compound_select_stmt: (clause) => ({
           values: cstToAst<InsertStmt["values"]>(clause),
         }),
-        returning_clause: (clause) => ({
-          returning: cstToAst<Required<InsertStmt>["returning"]>(
-            clause.columns.items
-          ),
-        }),
+        returning_clause: returningClause,
       }),
     };
   },
