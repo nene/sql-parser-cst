@@ -1,13 +1,7 @@
-import { parseAstStmt } from "./ast_test_utils";
+import { createParseSpecificStmt } from "./ast_test_utils";
 
 describe("insert", () => {
-  function parseAstInsert(sql: string) {
-    const stmt = parseAstStmt(sql);
-    if (stmt.type !== "insert_stmt") {
-      throw new Error(`Expected InsertStmt, instead got ${stmt.type}`);
-    }
-    return stmt;
-  }
+  const parseAstInsert = createParseSpecificStmt("insert_stmt");
 
   it("parses basic INSERT", () => {
     expect(

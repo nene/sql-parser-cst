@@ -3,7 +3,7 @@ import {
   parseAst as origParseAst,
   DialectName,
 } from "../../src/main";
-import { Node, Program, SelectStmt } from "../../src/ast/Node";
+import { Node, Program } from "../../src/ast/Node";
 import { astVisitAll } from "../../src/astVisitAll";
 
 declare const __SQL_DIALECT__: DialectName;
@@ -36,16 +36,19 @@ export function parseAstStmt(
   return statements[0];
 }
 
-export function parseAstSelect(
-  sql: string,
-  options: Partial<ParserOptions> = {}
-): SelectStmt {
-  const stmt = parseAstStmt(sql, options);
-  if (stmt.type !== "select_stmt") {
-    throw new Error(`Expected select_stmt, instead got ${stmt.type}`);
-  }
-  return stmt;
+export function createParseSpecificStmt<TType extends Node["type"]>(
+  type: TType
+) {
+  return (sql: string, options: Partial<ParserOptions> = {}) => {
+    const stmt = parseAstStmt(sql, options);
+    if (stmt.type !== type) {
+      throw new Error(`Expected ${type}, instead got ${stmt.type}`);
+    }
+    return stmt as Extract<Node, { type: TType }>;
+  };
 }
+
+export const parseAstSelect = createParseSpecificStmt("select_stmt");
 
 export function parseAstExpr(
   sql: string,

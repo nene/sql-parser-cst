@@ -1,13 +1,7 @@
-import { parseAstStmt } from "./ast_test_utils";
+import { createParseSpecificStmt } from "./ast_test_utils";
 
 describe("update", () => {
-  function parseAstUpdate(sql: string) {
-    const stmt = parseAstStmt(sql);
-    if (stmt.type !== "update_stmt") {
-      throw new Error(`Expected UpdateStmt, instead got ${stmt.type}`);
-    }
-    return stmt;
-  }
+  const parseAstUpdate = createParseSpecificStmt("update_stmt");
 
   it("parses basic UPDATE", () => {
     expect(parseAstUpdate(`UPDATE tbl SET x = 1, y = 2 WHERE true`)).toMatchInlineSnapshot(`
