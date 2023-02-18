@@ -8,6 +8,7 @@ export interface UpdateStmt extends BaseNode {
   type: "update_stmt";
   tables: (EntityName | Alias<EntityName>)[];
   assignments: ColumnAssignment[];
+  where?: Expr;
 }
 
 export interface ColumnAssignment extends BaseNode {

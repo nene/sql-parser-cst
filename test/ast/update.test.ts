@@ -2,7 +2,7 @@ import { parseAstStmt } from "./ast_test_utils";
 
 describe("update", () => {
   it("parses basic UPDATE", () => {
-    expect(parseAstStmt(`UPDATE tbl SET x = 1, y = 2`)).toMatchInlineSnapshot(`
+    expect(parseAstStmt(`UPDATE tbl SET x = 1, y = 2 WHERE true`)).toMatchInlineSnapshot(`
       {
         "assignments": [
           {
@@ -35,6 +35,10 @@ describe("update", () => {
           },
         ],
         "type": "update_stmt",
+        "where": {
+          "type": "boolean_literal",
+          "value": true,
+        },
       }
     `);
   });

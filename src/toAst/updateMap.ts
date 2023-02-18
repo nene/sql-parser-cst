@@ -1,6 +1,7 @@
 import { TransformMap } from "../cstTransformer";
 import { AllUpdateNodes } from "../cst/Node";
 import {
+  Expr,
   Identifier,
   MemberExpr,
   Node as AstNode,
@@ -22,6 +23,9 @@ export const updateMap: TransformMap<AstNode, AllUpdateNodes> = {
         assignments: cstToAst<UpdateStmt["assignments"]>(
           clause.assignments.items
         ),
+      }),
+      where_clause: (clause) => ({
+        where: cstToAst<Expr>(clause.expr),
       }),
     }),
   }),
