@@ -1,9 +1,17 @@
 import { parseAstStmt } from "./ast_test_utils";
 
 describe("insert", () => {
+  function parseAstInsert(sql: string) {
+    const stmt = parseAstStmt(sql);
+    if (stmt.type !== "insert_stmt") {
+      throw new Error(`Expected InsertStmt, instead got ${stmt.type}`);
+    }
+    return stmt;
+  }
+
   it("parses basic INSERT", () => {
     expect(
-      parseAstStmt(`
+      parseAstInsert(`
         INSERT INTO tbl (col1, col2)
         VALUES (1, 2), (3, 4)
       `)
@@ -55,126 +63,71 @@ describe("insert", () => {
 
   it("parses WITH..INSERT", () => {
     expect(
-      parseAstStmt(`
+      parseAstInsert(`
         WITH foo AS (SELECT 1)
         INSERT INTO tbl
         VALUES (1)
-      `)
+      `).with
     ).toMatchInlineSnapshot(`
       {
-        "table": {
-          "name": "tbl",
-          "type": "identifier",
-        },
-        "type": "insert_stmt",
-        "values": {
-          "type": "values_clause",
-          "values": [
-            [
-              {
-                "type": "number_literal",
-                "value": 1,
-              },
-            ],
-          ],
-        },
-        "with": {
-          "tables": [
-            {
-              "expr": {
-                "columns": [
-                  {
-                    "type": "number_literal",
-                    "value": 1,
-                  },
-                ],
-                "type": "select_stmt",
-              },
-              "table": {
-                "name": "foo",
-                "type": "identifier",
-              },
-              "type": "common_table_expression",
+        "tables": [
+          {
+            "expr": {
+              "columns": [
+                {
+                  "type": "number_literal",
+                  "value": 1,
+                },
+              ],
+              "type": "select_stmt",
             },
-          ],
-          "type": "with_clause",
-        },
+            "table": {
+              "name": "foo",
+              "type": "identifier",
+            },
+            "type": "common_table_expression",
+          },
+        ],
+        "type": "with_clause",
       }
     `);
   });
 
   it("parses INSERT OR REPLACE", () => {
-    expect(parseAstStmt(`INSERT OR REPLACE INTO tbl VALUES (1)`)).toMatchInlineSnapshot(`
-      {
-        "orAction": "replace",
-        "table": {
-          "name": "tbl",
-          "type": "identifier",
-        },
-        "type": "insert_stmt",
-        "values": {
-          "type": "values_clause",
-          "values": [
-            [
-              {
-                "type": "number_literal",
-                "value": 1,
-              },
-            ],
-          ],
-        },
-      }
-    `);
+    expect(parseAstInsert(`INSERT OR REPLACE INTO tbl VALUES (1)`).orAction).toBe("replace");
   });
 
   it("parses REPLACE INTO statement the same as INSERT OR REPLACE INTO", () => {
-    expect(parseAstStmt(`REPLACE INTO tbl VALUES (1)`)).toMatchInlineSnapshot(`
-      {
-        "orAction": "replace",
-        "table": {
-          "name": "tbl",
-          "type": "identifier",
-        },
-        "type": "insert_stmt",
-        "values": {
-          "type": "values_clause",
-          "values": [
-            [
-              {
-                "type": "number_literal",
-                "value": 1,
-              },
-            ],
-          ],
-        },
-      }
-    `);
+    expect(parseAstInsert(`REPLACE INTO tbl VALUES (1)`).orAction).toBe("replace");
   });
 
   it("parses INSERT .. DEFAULT VALUES", () => {
-    expect(parseAstStmt(`INSERT INTO tbl DEFAULT VALUES`)).toMatchInlineSnapshot(`
+    expect(parseAstInsert(`INSERT INTO tbl DEFAULT VALUES`).values).toMatchInlineSnapshot(`
       {
-        "table": {
-          "name": "tbl",
-          "type": "identifier",
-        },
-        "type": "insert_stmt",
-        "values": {
-          "type": "default_values",
-        },
+        "type": "default_values",
       }
     `);
   });
 
   it("parses INSERT .. SELECT", () => {
-    expect(parseAstStmt(`INSERT INTO tbl SELECT 1`)).toMatchInlineSnapshot(`
+    expect(parseAstInsert(`INSERT INTO tbl SELECT 1`).values).toMatchInlineSnapshot(`
       {
-        "table": {
-          "name": "tbl",
-          "type": "identifier",
-        },
-        "type": "insert_stmt",
-        "values": {
+        "columns": [
+          {
+            "type": "number_literal",
+            "value": 1,
+          },
+        ],
+        "type": "select_stmt",
+      }
+    `);
+  });
+
+  it("parses INSERT .. SELECT UNION SELECT", () => {
+    expect(parseAstInsert(`INSERT INTO tbl SELECT 1 UNION ALL SELECT 2`).values)
+      .toMatchInlineSnapshot(`
+      {
+        "left": {
           "columns": [
             {
               "type": "number_literal",
@@ -183,70 +136,30 @@ describe("insert", () => {
           ],
           "type": "select_stmt",
         },
-      }
-    `);
-  });
-
-  it("parses INSERT .. SELECT UNION SELECT", () => {
-    expect(parseAstStmt(`INSERT INTO tbl SELECT 1 UNION ALL SELECT 2`)).toMatchInlineSnapshot(`
-      {
-        "table": {
-          "name": "tbl",
-          "type": "identifier",
+        "operator": "union all",
+        "right": {
+          "columns": [
+            {
+              "type": "number_literal",
+              "value": 2,
+            },
+          ],
+          "type": "select_stmt",
         },
-        "type": "insert_stmt",
-        "values": {
-          "left": {
-            "columns": [
-              {
-                "type": "number_literal",
-                "value": 1,
-              },
-            ],
-            "type": "select_stmt",
-          },
-          "operator": "union all",
-          "right": {
-            "columns": [
-              {
-                "type": "number_literal",
-                "value": 2,
-              },
-            ],
-            "type": "select_stmt",
-          },
-          "type": "compound_select_stmt",
-        },
+        "type": "compound_select_stmt",
       }
     `);
   });
 
   it("parses RETURNING clause", () => {
-    expect(parseAstStmt(`INSERT INTO tbl VALUES (1) RETURNING id`)).toMatchInlineSnapshot(`
-      {
-        "returning": [
-          {
-            "name": "id",
-            "type": "identifier",
-          },
-        ],
-        "table": {
-          "name": "tbl",
+    expect(parseAstInsert(`INSERT INTO tbl VALUES (1) RETURNING id`).returning)
+      .toMatchInlineSnapshot(`
+      [
+        {
+          "name": "id",
           "type": "identifier",
         },
-        "type": "insert_stmt",
-        "values": {
-          "type": "values_clause",
-          "values": [
-            [
-              {
-                "type": "number_literal",
-                "value": 1,
-              },
-            ],
-          ],
-        },
-      }
+      ]
     `);
   });
 });
