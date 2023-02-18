@@ -8,7 +8,7 @@ import {
   UpdateStmt,
 } from "../ast/Node";
 import { cstToAst } from "../cstToAst";
-import { mergeClauses } from "./transformUtils";
+import { keywordToString, mergeClauses } from "./transformUtils";
 
 export const updateMap: TransformMap<AstNode, AllUpdateNodes> = {
   update_stmt: (node): UpdateStmt => ({
@@ -18,6 +18,7 @@ export const updateMap: TransformMap<AstNode, AllUpdateNodes> = {
     ...mergeClauses(node.clauses, {
       update_clause: (clause) => ({
         tables: cstToAst<UpdateStmt["tables"]>(clause.tables.items),
+        orAction: keywordToString(clause.orAction?.actionKw),
       }),
       set_clause: (clause) => ({
         assignments: cstToAst<UpdateStmt["assignments"]>(

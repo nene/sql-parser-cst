@@ -1,4 +1,4 @@
-import { UpdateStmt } from "src/main";
+import { UpdateStmt } from "./Update";
 import { InsertStmt } from "./Insert";
 import { CompoundSelectStmt, SelectStmt } from "./Select";
 

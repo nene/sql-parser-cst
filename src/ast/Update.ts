@@ -6,6 +6,7 @@ export type AllUpdateNodes = UpdateStmt | ColumnAssignment;
 
 export interface UpdateStmt extends BaseNode {
   type: "update_stmt";
+  orAction?: "abort" | "fail" | "ignore" | "replace" | "rollback";
   tables: (EntityName | Alias<EntityName>)[];
   assignments: ColumnAssignment[];
   where?: Expr;

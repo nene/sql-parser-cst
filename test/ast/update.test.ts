@@ -1,8 +1,17 @@
+// import { UpdateStmt } from "../../src/ast/Node";
 import { parseAstStmt } from "./ast_test_utils";
 
 describe("update", () => {
+  function parseAstUpdate(sql: string) {
+    const stmt = parseAstStmt(sql);
+    if (stmt.type !== "update_stmt") {
+      throw new Error(`Expected UpdateStmt, instead got ${stmt.type}`);
+    }
+    return stmt;
+  }
+
   it("parses basic UPDATE", () => {
-    expect(parseAstStmt(`UPDATE tbl SET x = 1, y = 2 WHERE true`)).toMatchInlineSnapshot(`
+    expect(parseAstUpdate(`UPDATE tbl SET x = 1, y = 2 WHERE true`)).toMatchInlineSnapshot(`
       {
         "assignments": [
           {
@@ -41,5 +50,9 @@ describe("update", () => {
         },
       }
     `);
+  });
+
+  it("parses UPDATE OR ABORT", () => {
+    expect(parseAstUpdate(`UPDATE OR ABORT tbl SET x=1`).orAction).toBe("abort");
   });
 });
