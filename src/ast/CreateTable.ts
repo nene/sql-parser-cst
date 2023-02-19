@@ -1,4 +1,5 @@
 import { BaseNode } from "./Base";
+import { Constraint, TableConstraint } from "./Constraint";
 import { DataType } from "./DataType";
 import { Identifier, EntityName } from "./Expr";
 
@@ -12,7 +13,11 @@ export interface CreateTableStmt extends BaseNode {
   snapshot?: boolean;
   ifNotExists?: boolean;
   name: EntityName;
-  columns?: ColumnDefinition[];
+  columns?: (
+    | ColumnDefinition
+    | TableConstraint
+    | Constraint<TableConstraint>
+  )[];
 }
 
 export interface ColumnDefinition extends BaseNode {

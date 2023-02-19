@@ -52,4 +52,140 @@ describe("create table", () => {
       expect(parseAstCreateTable(`CREATE SNAPSHOT TABLE my_table (id INT)`).snapshot).toBe(true);
     });
   });
+
+  dialect(["sqlite", "mysql"], () => {
+    it("parses table constraints", () => {
+      expect(
+        parseAstCreateTable(`
+          CREATE TABLE foo (
+            id INT,
+            PRIMARY KEY (id),
+            UNIQUE (id),
+            CHECK (id > 0),
+            FOREIGN KEY (usr_id) REFERENCES users (id)
+          )`).columns
+      ).toMatchInlineSnapshot(`
+        [
+          {
+            "dataType": {
+              "name": "int",
+              "type": "data_type",
+            },
+            "name": {
+              "name": "id",
+              "type": "identifier",
+            },
+            "type": "column_definition",
+          },
+          {
+            "columns": [
+              {
+                "name": "id",
+                "type": "identifier",
+              },
+            ],
+            "type": "constraint_primary_key",
+          },
+          {
+            "columns": [
+              {
+                "name": "id",
+                "type": "identifier",
+              },
+            ],
+            "type": "constraint_unique",
+          },
+          {
+            "expr": {
+              "left": {
+                "name": "id",
+                "type": "identifier",
+              },
+              "operator": ">",
+              "right": {
+                "type": "number_literal",
+                "value": 0,
+              },
+              "type": "binary_expr",
+            },
+            "type": "constraint_check",
+          },
+          {
+            "columns": [
+              {
+                "name": "usr_id",
+                "type": "identifier",
+              },
+            ],
+            "references": {
+              "columns": [
+                {
+                  "name": "id",
+                  "type": "identifier",
+                },
+              ],
+              "options": [],
+              "table": {
+                "name": "users",
+                "type": "identifier",
+              },
+              "type": "references_specification",
+            },
+            "type": "constraint_foreign_key",
+          },
+        ]
+      `);
+    });
+
+    it("parses named table constraint", () => {
+      expect(
+        parseAstCreateTable(`
+          CREATE TABLE foo (
+            CONSTRAINT prim_key PRIMARY KEY (id)
+          )`).columns
+      ).toMatchInlineSnapshot(`
+        [
+          {
+            "constraint": {
+              "columns": [
+                {
+                  "name": "id",
+                  "type": "identifier",
+                },
+              ],
+              "type": "constraint_primary_key",
+            },
+            "name": {
+              "name": "prim_key",
+              "type": "identifier",
+            },
+            "type": "constraint",
+          },
+        ]
+      `);
+    });
+  });
+
+  dialect("mysql", () => {
+    it("parses INDEX constraint", () => {
+      expect(
+        parseAstCreateTable(`
+          CREATE TABLE foo (
+            INDEX (id)
+          )`).columns
+      ).toMatchInlineSnapshot(`
+        [
+          {
+            "columns": [
+              {
+                "name": "id",
+                "type": "identifier",
+              },
+            ],
+            "type": "constraint_index",
+          },
+        ]
+      `);
+    });
+  });
 });
