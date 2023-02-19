@@ -1,5 +1,6 @@
 export * from "./Alias";
 export * from "./Base";
+export * from "./CreateTable";
 export * from "./Delete";
 export * from "./Expr";
 export * from "./Insert";
@@ -12,6 +13,7 @@ export * from "./WindowFrame";
 
 import { Alias } from "./Alias";
 import { AllColumns } from "./Base";
+import { AllCreateTableNodes } from "./CreateTable";
 import { AllDataTypeNodes } from "./DataType";
 import { AllDeleteNodes } from "./Delete";
 import { AllExprNodes } from "./Expr";
@@ -25,6 +27,7 @@ import { Statement } from "./Statement";
 export type Node =
   | Alias
   | AllColumns
+  | AllCreateTableNodes
   | AllDataTypeNodes
   | AllDeleteNodes
   | AllExprNodes

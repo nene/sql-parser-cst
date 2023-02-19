@@ -2,6 +2,7 @@ import { cstTransformer } from "../cstTransformer";
 import { Node as AstNode } from "../ast/Node";
 import { aliasMap } from "./aliasMap";
 import { baseMap } from "./baseMap";
+import { createTableMap } from "./createTableMap";
 import { dataTypeMap } from "./dataTypeMap";
 import { deleteMap } from "./deleteMap";
 import { exprMap } from "./exprMap";
@@ -14,6 +15,7 @@ import { windowFrameMap } from "./windowFrameMap";
 export const transformToAst = cstTransformer<AstNode>({
   ...aliasMap,
   ...baseMap,
+  ...createTableMap,
   ...dataTypeMap,
   ...deleteMap,
   ...exprMap,

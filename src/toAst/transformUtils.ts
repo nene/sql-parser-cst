@@ -43,7 +43,7 @@ export function keywordToString<T = string>(
 }
 
 export const keywordToBoolean = (
-  kw: Keyword | undefined
+  kw: Keyword | Keyword[] | undefined
 ): boolean | undefined => {
   return kw ? true : undefined;
 };
