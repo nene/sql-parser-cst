@@ -1,3 +1,4 @@
+import { dialect } from "../test_utils";
 import { createParseSpecificStmt } from "./ast_test_utils";
 
 describe("insert", () => {
@@ -87,8 +88,10 @@ describe("insert", () => {
     `);
   });
 
-  it("parses INSERT OR REPLACE", () => {
-    expect(parseAstInsert(`INSERT OR REPLACE INTO tbl VALUES (1)`).orAction).toBe("replace");
+  dialect("sqlite", () => {
+    it("parses INSERT OR REPLACE", () => {
+      expect(parseAstInsert(`INSERT OR REPLACE INTO tbl VALUES (1)`).orAction).toBe("replace");
+    });
   });
 
   it("parses REPLACE INTO statement the same as INSERT OR REPLACE INTO", () => {

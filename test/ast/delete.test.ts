@@ -1,3 +1,4 @@
+import { dialect } from "../test_utils";
 import { createParseSpecificStmt } from "./ast_test_utils";
 
 describe("delete", () => {
@@ -45,15 +46,17 @@ describe("delete", () => {
     `);
   });
 
-  it("parses RETURNING", () => {
-    expect(parseAstDelete(`DELETE FROM tbl RETURNING 1`).returning).toMatchInlineSnapshot(`
-      [
-        {
-          "type": "number_literal",
-          "value": 1,
-        },
-      ]
-    `);
+  dialect("sqlite", () => {
+    it("parses RETURNING", () => {
+      expect(parseAstDelete(`DELETE FROM tbl RETURNING 1`).returning).toMatchInlineSnapshot(`
+        [
+          {
+            "type": "number_literal",
+            "value": 1,
+          },
+        ]
+      `);
+    });
   });
 
   it("parses ORDER BY and LIMIT clauses", () => {
