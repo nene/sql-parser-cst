@@ -166,6 +166,30 @@ describe("create table", () => {
     });
   });
 
+  dialect("sqlite", () => {
+    it("parses PRIMARY KEY with ON CONFLICT", () => {
+      expect(
+        parseAstCreateTable(`
+          CREATE TABLE foo (
+            PRIMARY KEY (id) ON CONFLICT ROLLBACK
+          )`).columns
+      ).toMatchInlineSnapshot(`
+        [
+          {
+            "columns": [
+              {
+                "name": "id",
+                "type": "identifier",
+              },
+            ],
+            "onConflict": "rollback",
+            "type": "constraint_primary_key",
+          },
+        ]
+      `);
+    });
+  });
+
   dialect("mysql", () => {
     it("parses INDEX constraint", () => {
       expect(

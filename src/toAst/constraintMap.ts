@@ -2,6 +2,7 @@ import { TransformMap } from "../cstTransformer";
 import { AllConstraintNodes } from "../cst/Node";
 import { Node as AstNode } from "../ast/Node";
 import { cstToAst } from "../cstToAst";
+import { keywordToString } from "./transformUtils";
 
 export const constraintMap: TransformMap<AstNode, AllConstraintNodes> = {
   constraint: (node) => ({
@@ -12,6 +13,7 @@ export const constraintMap: TransformMap<AstNode, AllConstraintNodes> = {
   constraint_primary_key: (node) => ({
     type: "constraint_primary_key",
     columns: cstToAst(node.columns?.expr.items),
+    onConflict: keywordToString(node.onConflict?.resolutionKw),
   }),
   constraint_unique: (node) => ({
     type: "constraint_unique",
