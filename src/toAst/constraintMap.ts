@@ -38,4 +38,13 @@ export const constraintMap: TransformMap<AstNode, AllConstraintNodes> = {
     columns: cstToAst(node.columns?.expr.items),
     options: cstToAst(node.options),
   }),
+  referential_action: (node) => ({
+    type: "referential_action",
+    event: keywordToString(node.eventKw),
+    action: keywordToString(node.actionKw),
+  }),
+  referential_match: (node) => ({
+    type: "referential_match",
+    matchType: keywordToString(node.typeKw),
+  }),
 };

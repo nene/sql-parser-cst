@@ -190,6 +190,53 @@ describe("create table", () => {
     });
   });
 
+  dialect("sqlite", () => {
+    it("parses FOREIGN KEY with ON DELETE CASCADE & MATCH FULL", () => {
+      expect(
+        parseAstCreateTable(`
+          CREATE TABLE tbl (
+            FOREIGN KEY (id) REFERENCES foo (id) ON DELETE CASCADE MATCH FULL
+          )`).columns
+      ).toMatchInlineSnapshot(`
+        [
+          {
+            "columns": [
+              {
+                "name": "id",
+                "type": "identifier",
+              },
+            ],
+            "references": {
+              "columns": [
+                {
+                  "name": "id",
+                  "type": "identifier",
+                },
+              ],
+              "options": [
+                {
+                  "action": "cascade",
+                  "event": "delete",
+                  "type": "referential_action",
+                },
+                {
+                  "matchType": "full",
+                  "type": "referential_match",
+                },
+              ],
+              "table": {
+                "name": "foo",
+                "type": "identifier",
+              },
+              "type": "references_specification",
+            },
+            "type": "constraint_foreign_key",
+          },
+        ]
+      `);
+    });
+  });
+
   dialect("mysql", () => {
     it("parses INDEX constraint", () => {
       expect(
