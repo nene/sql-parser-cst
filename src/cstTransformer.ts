@@ -4,6 +4,8 @@ import { Node } from "./cst/Node";
 // Learned this TypeScript-Fu from here:
 // https://stackoverflow.com/questions/64092736/alternative-to-switch-statement-for-typescript-discriminated-union
 
+type NodeByType<TType, TNode> = Extract<TNode, { type: TType }>;
+
 /**
  * A map with a transform function for each Node type, like:
  *
@@ -12,20 +14,22 @@ import { Node } from "./cst/Node";
  *       paren_expr: (node: ParenExpr) => {},
  *       ... }
  */
-export type FullTransformMap<T> = {
-  [K in Node["type"]]: (node: Extract<Node, { type: K }>) => T;
+export type FullTransformMap<T, TNode extends Node = Node> = {
+  [TType in TNode["type"]]: (node: NodeByType<TType, TNode>) => T;
 };
+
+export type TransformMap<T, TNode extends Node = Node> = Partial<
+  FullTransformMap<T, TNode>
+>;
 
 /**
  * Creates a function that transforms the whole syntax tree to data type T.
  * @param map An object with a transform function for each CST node type
  */
-export function cstTransformer<T>(
-  map: Partial<FullTransformMap<T>>
-): (node: Node) => T {
+export function cstTransformer<T>(map: TransformMap<T>): (node: Node) => T {
   return (node: Node) => {
     const fn = map[node.type] as (
-      e: Extract<Node, { type: typeof node["type"] }>
+      param: NodeByType<typeof node["type"], Node>
     ) => T;
     if (!fn) {
       if (!node.type) {
