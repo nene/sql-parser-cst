@@ -37,19 +37,6 @@ describe("SQLite specific statements", () => {
       });
     });
 
-    describe("CREATE VIRTUAL TABLE", () => {
-      it("supports CREATE VIRTUAL TABLE statement", () => {
-        test("CREATE VIRTUAL TABLE tbl USING my_module");
-        test("CREATE VIRTUAL TABLE schm.tbl USING my_module");
-        test("CREATE VIRTUAL TABLE IF NOT EXISTS tbl USING my_module");
-        test("CREATE VIRTUAL TABLE tbl USING my_module(1, 2, 3)");
-        test(
-          `CREATE /*c1*/ VIRTUAL /*c2*/ TABLE /*c3*/ IF /*c4*/ NOT /*c5*/ EXISTS /*c6*/ tbl /*c7*/
-          USING /*c8*/ my_module /*c9*/ (/*c10*/ 1 /*c11*/,/*c12*/ 2 /*c13*/)`
-        );
-      });
-    });
-
     describe("PRAGMA", () => {
       it("supports quering PRAGMA name", () => {
         test("PRAGMA function_list");

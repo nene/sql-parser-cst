@@ -1,5 +1,5 @@
 import { BaseNode, Keyword } from "./Base";
-import { Expr, FuncCall, Identifier, ParenExpr, EntityName } from "./Expr";
+import { Expr, Identifier, ParenExpr, EntityName } from "./Expr";
 import { Literal, StringLiteral } from "./Literal";
 
 export type AllSqliteNodes =
@@ -13,8 +13,7 @@ export type AllSqliteStatements =
   | DetachDatabaseStmt
   | VacuumStmt
   | ReindexStmt
-  | PragmaStmt
-  | CreateVirtualTableStmt;
+  | PragmaStmt;
 
 export interface AttachDatabaseStmt extends BaseNode {
   type: "attach_database_stmt";
@@ -62,17 +61,4 @@ export interface PragmaFuncCall extends BaseNode {
   type: "pragma_func_call";
   name: EntityName;
   args: ParenExpr<Literal | Keyword>;
-}
-
-export interface CreateVirtualTableStmt extends BaseNode {
-  type: "create_virtual_table_stmt";
-  createVirtualTableKw: [
-    Keyword<"CREATE">,
-    Keyword<"VIRTUAL">,
-    Keyword<"TABLE">
-  ];
-  ifNotExistsKw?: [Keyword<"IF">, Keyword<"NOT">, Keyword<"EXISTS">];
-  name: EntityName;
-  usingKw: Keyword<"USING">;
-  module: FuncCall;
 }

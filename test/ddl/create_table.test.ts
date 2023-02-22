@@ -162,4 +162,13 @@ describe("create table", () => {
       });
     });
   });
+
+  dialect("sqlite", () => {
+    it("supports CREATE VIRTUAL TABLE statement", () => {
+      testWc("CREATE VIRTUAL TABLE tbl USING my_module");
+      testWc("CREATE VIRTUAL TABLE schm.tbl USING my_module");
+      testWc("CREATE VIRTUAL TABLE IF NOT EXISTS tbl USING my_module");
+      testWc("CREATE VIRTUAL TABLE tbl USING my_module(1, 2, 3)");
+    });
+  });
 });

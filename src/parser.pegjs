@@ -1300,6 +1300,7 @@ create_table_stmt
     tmpKw:(__ (TEMPORARY / TEMP))?
     externalKw:(__ EXTERNAL)?
     snapshotKw:(__ SNAPSHOT)?
+    virtualKw:(__ VIRTUAL)?
     tableKw:(__ TABLE)
     ifKw:(__ if_not_exists)?
     name:(__ entity_name)
@@ -1314,6 +1315,7 @@ create_table_stmt
         temporaryKw: read(tmpKw),
         externalKw: read(externalKw),
         snapshotKw: read(snapshotKw),
+        virtualKw: read(virtualKw),
         tableKw: read(tableKw),
         ifNotExistsKw: read(ifKw),
         name: read(name),
@@ -1351,6 +1353,7 @@ create_table_clause
   = as_clause$compound_select_stmt
   / (&bigquery / &mysql) x:create_table_like_clause { return x; }
   / &bigquery x:create_table_clause_bigquery { return x; }
+  / &sqlite x:create_table_using_clause { return x; }
 
 create_table_like_clause
   = kw:(LIKE __) name:entity_name {
@@ -1405,6 +1408,15 @@ with_partition_columns_clause
       type: "with_partition_columns_clause",
       withPartitionColumnsKw: read(kw),
       columns: read(columns),
+    });
+  }
+
+create_table_using_clause
+  = usingKw:(USING __) func:(func_call / ident) {
+    return loc({
+      type: "create_table_using_clause",
+      usingKw: read(usingKw),
+      module: func.type === "identifier" ? { type: "func_call", name: func } : func,
     });
   }
 
@@ -2429,7 +2441,6 @@ sqlite_statement
   / vacuum_stmt
   / reindex_stmt
   / pragma_stmt
-  / create_virtual_table_stmt
 
 attach_database_stmt
   = kw:(ATTACH __) dbKw:(DATABASE __)? file:(expr __) asKw:(AS __) schema:ident {
@@ -2506,19 +2517,6 @@ pragma_func_call
 pragma_value
   = kw:ident_name { return createKeyword(kw); }
   / literal
-
-create_virtual_table_stmt
-  = kw:(CREATE __ VIRTUAL __ TABLE __) ifKw:(if_not_exists __)? name:(entity_name __)
-    usingKw:(USING __) func:(func_call / ident) {
-      return loc({
-        type: "create_virtual_table_stmt",
-        createVirtualTableKw: read(kw),
-        ifNotExistsKw: read(ifKw),
-        name: read(name),
-        usingKw: read(usingKw),
-        module: func.type === "identifier" ? { type: "func_call", name: func } : func,
-      });
-    }
 
 /**
  * ------------------------------------------------------------------------------------ *

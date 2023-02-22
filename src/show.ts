@@ -141,6 +141,7 @@ const showNode = cstTransformer<string>({
       node.temporaryKw,
       node.externalKw,
       node.snapshotKw,
+      node.virtualKw,
       node.tableKw,
       node.ifNotExistsKw,
       node.name,
@@ -195,6 +196,7 @@ const showNode = cstTransformer<string>({
   create_table_clone_clause: (node) => show([node.cloneKw, node.table]),
   with_partition_columns_clause: (node) =>
     show([node.withPartitionColumnsKw, node.columns]),
+  create_table_using_clause: (node) => show([node.usingKw, node.module]),
   bigquery_options: (node) => show([node.optionsKw, node.options]),
   bigquery_option_default_collate: (node) =>
     show([node.defaultCollateKw, node.collation]),
@@ -553,14 +555,6 @@ const showNode = cstTransformer<string>({
   pragma_stmt: (node) => show([node.pragmaKw, node.pragma]),
   pragma_assignment: (node) => show([node.name, "=", node.value]),
   pragma_func_call: (node) => show([node.name, node.args]),
-  create_virtual_table_stmt: (node) =>
-    show([
-      node.createVirtualTableKw,
-      node.ifNotExistsKw,
-      node.name,
-      node.usingKw,
-      node.module,
-    ]),
 
   // BigQuery-specific statements
   create_capacity_stmt: (node) =>

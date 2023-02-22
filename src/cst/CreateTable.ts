@@ -2,7 +2,14 @@ import { BaseNode, Keyword } from "./Base";
 import { BigqueryOptionDefaultCollate, BigqueryOptions } from "./Bigquery";
 import { ColumnConstraint, Constraint, TableConstraint } from "./Constraint";
 import { DataType } from "./DataType";
-import { Expr, Identifier, ListExpr, ParenExpr, EntityName } from "./Expr";
+import {
+  Expr,
+  Identifier,
+  ListExpr,
+  ParenExpr,
+  EntityName,
+  FuncCall,
+} from "./Expr";
 import { AsClause, WithConnectionClause } from "./ProcClause";
 import {
   ClusterByClause,
@@ -18,7 +25,8 @@ export type AllCreateTableNodes =
   | CreateTableLikeClause
   | CreateTableCopyClause
   | CreateTableCloneClause
-  | WithPartitionColumnsClause;
+  | WithPartitionColumnsClause
+  | CreateTableUsingClause;
 
 // CREATE TABLE
 export interface CreateTableStmt extends BaseNode {
@@ -28,6 +36,7 @@ export interface CreateTableStmt extends BaseNode {
   temporaryKw?: Keyword<"TEMP" | "TEMPORARY">;
   externalKw?: Keyword<"EXTERNAL">;
   snapshotKw?: Keyword<"SNAPSHOT">;
+  virtualKw?: Keyword<"VIRTUAL">;
   tableKw: Keyword<"TABLE">;
   ifNotExistsKw?: [Keyword<"IF">, Keyword<"NOT">, Keyword<"EXISTS">];
   name: EntityName;
@@ -102,7 +111,8 @@ type TableOptionValueMysql = Keyword<
 type CreateTableClause =
   | AsClause<SubSelect>
   | CreateTableLikeClause
-  | BigqueryCreateTableClause;
+  | BigqueryCreateTableClause
+  | SqliteCreateTableClause;
 
 export interface CreateTableLikeClause extends BaseNode {
   type: "create_table_like_clause";
@@ -140,4 +150,12 @@ export interface WithPartitionColumnsClause extends BaseNode {
     Keyword<"COLUMNS">
   ];
   columns?: ParenExpr<ListExpr<ColumnDefinition>>;
+}
+
+type SqliteCreateTableClause = CreateTableUsingClause;
+
+export interface CreateTableUsingClause extends BaseNode {
+  type: "create_table_using_clause";
+  usingKw: Keyword<"USING">;
+  module: FuncCall;
 }
