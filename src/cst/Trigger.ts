@@ -18,8 +18,6 @@ export interface CreateTriggerStmt extends BaseNode {
   ifNotExistsKw?: [Keyword<"IF">, Keyword<"NOT">, Keyword<"EXISTS">];
   name: EntityName;
   event: TriggerEvent;
-  onKw: Keyword<"ON">;
-  table: EntityName;
   forEachRowKw?: [Keyword<"FOR">, Keyword<"EACH">, Keyword<"ROW">];
   condition?: TriggerCondition;
   body: BlockStmt;
@@ -31,6 +29,8 @@ export interface TriggerEvent extends BaseNode {
   eventKw: Keyword<"INSERT" | "DELETE" | "UPDATE">;
   ofKw?: Keyword<"OF">;
   columns?: ListExpr<Identifier>;
+  onKw: Keyword<"ON">;
+  table: EntityName;
 }
 
 export interface TriggerCondition extends BaseNode {

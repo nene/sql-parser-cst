@@ -423,14 +423,19 @@ const showNode = cstTransformer<string>({
       node.ifNotExistsKw,
       node.name,
       node.event,
-      node.onKw,
-      node.table,
       node.forEachRowKw,
       node.condition,
       node.body,
     ]),
   trigger_event: (node) =>
-    show([node.timeKw, node.eventKw, node.ofKw, node.columns]),
+    show([
+      node.timeKw,
+      node.eventKw,
+      node.ofKw,
+      node.columns,
+      node.onKw,
+      node.table,
+    ]),
   trigger_condition: (node) => show([node.whenKw, node.expr]),
   // DROP TRIGGER
   drop_trigger_stmt: (node) =>
