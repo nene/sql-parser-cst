@@ -14,8 +14,33 @@ describe("raise function", () => {
       testExpr(`RAISE(FAIL /*c1*/,/*c2*/ 'My error')`);
     });
 
-    it("parses RAISE() as raise_expr", () => {
-      expect(parseExpr(`RAISE(IGNORE)`).type).toBe("raise_expr");
+    it("parses RAISE() as raise_expr containing raise_expr_type", () => {
+      expect(parseExpr(`RAISE(IGNORE)`)).toMatchInlineSnapshot(`
+        {
+          "args": {
+            "expr": {
+              "items": [
+                {
+                  "type": "raise_expr_type",
+                  "typeKw": {
+                    "name": "IGNORE",
+                    "text": "IGNORE",
+                    "type": "keyword",
+                  },
+                },
+              ],
+              "type": "list_expr",
+            },
+            "type": "paren_expr",
+          },
+          "raiseKw": {
+            "name": "RAISE",
+            "text": "RAISE",
+            "type": "keyword",
+          },
+          "type": "raise_expr",
+        }
+      `);
     });
   });
 

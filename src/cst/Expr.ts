@@ -17,6 +17,7 @@ export type AllExprNodes =
   | CastArg
   | CastFormat
   | CastFormatTimezone
+  | RaiseExprType
   | ExtractFrom
   | FilterArg
   | OverArg
@@ -213,9 +214,12 @@ export interface CastFormatTimezone extends BaseNode {
 export interface RaiseExpr extends BaseNode {
   type: "raise_expr";
   raiseKw: Keyword<"RAISE">;
-  args: ParenExpr<
-    ListExpr<Keyword<"IGNORE" | "ROLLBACK" | "ABORT" | "FAIL"> | StringLiteral>
-  >;
+  args: ParenExpr<ListExpr<RaiseExprType | StringLiteral>>;
+}
+
+export interface RaiseExprType extends BaseNode {
+  type: "raise_expr_type";
+  typeKw: Keyword<"IGNORE" | "ROLLBACK" | "ABORT" | "FAIL">;
 }
 
 export interface ExtractExpr extends BaseNode {

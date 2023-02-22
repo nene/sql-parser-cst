@@ -3600,8 +3600,16 @@ raise_expr
   }
 
 raise_args
-  = head:(IGNORE / ROLLBACK / ABORT / FAIL) tail:(__ "," __ string_literal)* {
+  = head:raise_expr_type tail:(__ "," __ string_literal)* {
     return loc(createListExpr(head, tail));
+  }
+
+raise_expr_type
+  = kw:(IGNORE / ROLLBACK / ABORT / FAIL) {
+    return loc({
+      type: "raise_expr_type",
+      typeKw: kw,
+    });
   }
 
 extract_expr
