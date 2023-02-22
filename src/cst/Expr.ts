@@ -45,6 +45,7 @@ export type Expr =
   | MemberExpr
   | BigQueryQuotedMemberExpr
   | Identifier
+  | Variable
   | Parameter
   | TypedExpr
   | ArrayExpr
@@ -342,6 +343,12 @@ export interface ArraySubscriptSpecifier extends BaseNode {
 
 export interface Identifier extends BaseNode {
   type: "identifier";
+  text: string;
+  name: string;
+}
+
+export interface Variable extends BaseNode {
+  type: "variable";
   text: string;
   name: string;
 }

@@ -3544,6 +3544,7 @@ primary
   / exists_expr
   / ident
   / (&mysql / &bigquery) e:interval_expr { return e; }
+  / &bigquery e:variable { return e; }
   / parameter
 
 cast_expr
@@ -4139,6 +4140,22 @@ ident_name_basic
 ident_start = [A-Za-z_]
 
 ident_part  = [A-Za-z0-9_]
+
+/**
+ * ------------------------------------------------------------------------------------ *
+ *                                                                                      *
+ * Variables                                                                            *
+ *                                                                                      *
+ * ------------------------------------------------------------------------------------ *
+ */
+variable
+  = "@@" ident_name {
+    return loc({
+      type: "variable",
+      name: text(),
+      text: text(),
+    });
+  }
 
 /**
  * ------------------------------------------------------------------------------------ *
