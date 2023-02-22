@@ -1,10 +1,10 @@
-import { dialect, parseExpr, testExpr } from "../test_utils";
+import { dialect, parseExpr, testExpr, testExprWc } from "../test_utils";
 
 describe("type cast", () => {
   it("supports cast() function", () => {
     testExpr(`CAST(x AS INT)`);
     testExpr(`CAST(2 / 8 AS DECIMAL(3, 2))`);
-    testExpr(`CAST /*c1*/ ( /*c2*/ x /*c3*/ AS /*c4*/ INT /*c5*/)`);
+    testExprWc(`CAST ( x AS INT )`);
   });
 
   dialect("bigquery", () => {
@@ -13,14 +13,13 @@ describe("type cast", () => {
     });
 
     it("supports CAST with FORMAT", () => {
-      testExpr(`CAST('86-11-08' AS DATE FORMAT 'YY-MM-DD')`);
-      testExpr(`CAST(1024 AS STRING FORMAT get_fmt(4))`);
-      testExpr(`CAST(8 AS STRING /*c1*/ FORMAT /*c2*/ '$99' /*c3*/)`);
+      testExprWc(`CAST('86-11-08' AS DATE FORMAT 'YY-MM-DD')`);
+      testExprWc(`CAST(1024 AS STRING FORMAT get_fmt(4))`);
     });
 
     it("supports CAST with FORMAT..AT TIME ZONE", () => {
-      testExpr(`CAST('12:11:08' AS TIME FORMAT 'HH:MI:SS' AT TIME ZONE 'Asia/Kolkata')`);
-      testExpr(`CAST(TIME '12:11:08' AS STRING FORMAT 'HH:MI:SS' AT TIME ZONE 'Asia/Kolkata')`);
+      testExprWc(`CAST('12:11:08' AS TIME FORMAT 'HH:MI:SS' AT TIME ZONE 'Asia/Kolkata')`);
+      testExprWc(`CAST(TIME '12:11:08' AS STRING FORMAT 'HH:MI:SS' AT TIME ZONE 'Asia/Kolkata')`);
     });
   });
 

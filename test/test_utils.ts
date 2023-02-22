@@ -72,6 +72,11 @@ export function testExpr(expr: string) {
   expect(show(parse(`SELECT ${expr}`, includeAll))).toBe(`SELECT ${expr}`);
 }
 
+export function testExprWc(expr: string) {
+  testExpr(expr);
+  testExpr(withComments(expr));
+}
+
 export function parseExpr(
   expr: string,
   options?: Partial<ParserOptions>
