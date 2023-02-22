@@ -16,6 +16,7 @@ export type AllExprNodes =
   | NamedArg
   | CastArg
   | CastFormat
+  | CastFormatTimezone
   | ExtractFrom
   | FilterArg
   | OverArg
@@ -200,6 +201,13 @@ export interface CastFormat extends BaseNode {
   type: "cast_format";
   formatKw: Keyword<"FORMAT">;
   string: Expr;
+  timezone?: CastFormatTimezone;
+}
+
+export interface CastFormatTimezone extends BaseNode {
+  type: "cast_format_timezone";
+  atTimeZoneKw: [Keyword<"AT">, Keyword<"TIME">, Keyword<"ZONE">];
+  timezone: StringLiteral;
 }
 
 export interface RaiseExpr extends BaseNode {

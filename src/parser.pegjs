@@ -3572,11 +3572,21 @@ cast_arg
   }
 
 cast_format
-  = &bigquery kw:(FORMAT __) e:expr {
+  = &bigquery kw:(FORMAT __) e:expr tz:(__ cast_format_timezone)? {
     return loc({
       type: "cast_format",
       formatKw: read(kw),
       string: e,
+      timezone: read(tz),
+    });
+  }
+
+cast_format_timezone
+  = kw:(AT __ TIME __ ZONE __) tz:string_literal {
+    return loc({
+      type: "cast_format_timezone",
+      atTimeZoneKw: read(kw),
+      timezone: tz,
     });
   }
 
@@ -4666,6 +4676,7 @@ AS                  = kw:"AS"i                  !ident_part { return loc(createK
 ASC                 = kw:"ASC"i                 !ident_part { return loc(createKeyword(kw)); }
 ASSERT              = kw:"ASSERT"i              !ident_part { return loc(createKeyword(kw)); }
 ASSIGNMENT          = kw:"ASSIGNMENT"i          !ident_part { return loc(createKeyword(kw)); }
+AT                  = kw:"AT"i                  !ident_part { return loc(createKeyword(kw)); }
 ATTACH              = kw:"ATTACH"i              !ident_part { return loc(createKeyword(kw)); }
 AUTO_INCREMENT      = kw:"AUTO_INCREMENT"i      !ident_part { return loc(createKeyword(kw)); }
 AUTOEXTEND_SIZE     = kw:"AUTOEXTEND_SIZE"i     !ident_part { return loc(createKeyword(kw)); }
@@ -5093,4 +5104,5 @@ XOR                 = kw:"XOR"i                 !ident_part { return loc(createK
 YEAR                = kw:"YEAR"i                !ident_part { return loc(createKeyword(kw)); }
 YEAR_MONTH          = kw:"YEAR_MONTH"           !ident_part { return loc(createKeyword(kw)); }
 ZEROFILL            = kw:"ZEROFILL"i            !ident_part { return loc(createKeyword(kw)); }
+ZONE                = kw:"ZONE"i                !ident_part { return loc(createKeyword(kw)); }
 /*! keywords:end */

@@ -17,6 +17,11 @@ describe("type cast", () => {
       testExpr(`CAST(1024 AS STRING FORMAT get_fmt(4))`);
       testExpr(`CAST(8 AS STRING /*c1*/ FORMAT /*c2*/ '$99' /*c3*/)`);
     });
+
+    it("supports CAST with FORMAT..AT TIME ZONE", () => {
+      testExpr(`CAST('12:11:08' AS TIME FORMAT 'HH:MI:SS' AT TIME ZONE 'Asia/Kolkata')`);
+      testExpr(`CAST(TIME '12:11:08' AS STRING FORMAT 'HH:MI:SS' AT TIME ZONE 'Asia/Kolkata')`);
+    });
   });
 
   // To make sure we don't parse it as normal function call
