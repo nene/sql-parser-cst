@@ -11,7 +11,8 @@ export type AllMergeNodes =
   | MergeWhenCondition
   | MergeActionDelete
   | MergeActionUpdate
-  | MergeActionInsert;
+  | MergeActionInsert
+  | MergeActionInsertRowClause;
 
 export interface MergeStmt extends BaseNode {
   type: "merge_stmt";
@@ -61,5 +62,10 @@ export interface MergeActionInsert extends BaseNode {
   type: "merge_action_insert";
   insertKw: Keyword<"INSERT">;
   columns?: ParenExpr<ListExpr<Identifier>>;
-  values: ValuesClause | Keyword<"ROW">;
+  values: ValuesClause | MergeActionInsertRowClause;
+}
+
+export interface MergeActionInsertRowClause extends BaseNode {
+  type: "merge_action_insert_row_clause";
+  rowKw: Keyword<"ROW">;
 }

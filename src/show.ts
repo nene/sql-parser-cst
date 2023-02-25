@@ -301,6 +301,7 @@ const showNode = cstTransformer<string>({
   merge_action_insert: (node) =>
     show([node.insertKw, node.columns, node.values]),
   merge_action_update: (node) => show([node.updateKw, node.set]),
+  merge_action_insert_row_clause: (node) => show(node.rowKw),
 
   // CREATE SCHEMA statement
   create_schema_stmt: (node) =>

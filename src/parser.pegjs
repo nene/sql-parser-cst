@@ -1118,13 +1118,18 @@ merge_action_update
   }
 
 merge_action_insert
-  = insertKw:(INSERT __) columns:(paren$list$column __)? values:(values_clause / ROW) {
+  = insertKw:(INSERT __) columns:(paren$list$column __)? values:(values_clause / merge_action_insert_row_clause) {
     return loc({
       type: "merge_action_insert",
       insertKw: read(insertKw),
       columns: read(columns),
       values,
     });
+  }
+
+merge_action_insert_row_clause
+  = rowKw:ROW {
+    return loc({ type: "merge_action_insert_row_clause", rowKw });
   }
 
 /**
