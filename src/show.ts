@@ -558,16 +558,17 @@ const showNode = cstTransformer<string>({
 
   // BigQuery-specific statements
   create_capacity_stmt: (node) =>
-    show([node.createKw, node.name, node.options]),
-  drop_capacity_stmt: (node) => show([node.dropKw, node.ifExistsKw, node.name]),
+    show([node.createKw, node.capacityKw, node.name, node.options]),
+  drop_capacity_stmt: (node) =>
+    show([node.dropKw, node.capacityKw, node.ifExistsKw, node.name]),
   create_reservation_stmt: (node) =>
-    show([node.createKw, node.name, node.options]),
+    show([node.createKw, node.reservationKw, node.name, node.options]),
   drop_reservation_stmt: (node) =>
-    show([node.dropKw, node.ifExistsKw, node.name]),
+    show([node.dropKw, node.reservationKw, node.ifExistsKw, node.name]),
   create_assignment_stmt: (node) =>
-    show([node.createKw, node.name, node.options]),
+    show([node.createKw, node.assignmentKw, node.name, node.options]),
   drop_assignment_stmt: (node) =>
-    show([node.dropKw, node.ifExistsKw, node.name]),
+    show([node.dropKw, node.assignmentKw, node.ifExistsKw, node.name]),
   create_row_access_policy_stmt: (node) =>
     show([
       node.createKw,

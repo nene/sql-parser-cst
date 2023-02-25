@@ -2541,17 +2541,17 @@ bigquery_statement
 // CREATE RESERVATION
 // CREATE ASSIGNMENT
 create_bigquery_entity_stmt
-  = kw:(CREATE __ bigquery_entity __) name:(entity_name __) options:bigquery_options {
-    const createKw = read(kw);
+  = createKw:(CREATE __) kw:(bigquery_entity __) name:(entity_name __) options:bigquery_options {
+    const entityKw = read(kw);
     const node = {
-      createKw,
+      createKw: read(createKw),
       name: read(name),
       options,
     };
-    switch (createKw[1].name) {
-      case "CAPACITY": return loc({ type: "create_capacity_stmt", ...node });
-      case "RESERVATION": return loc({ type: "create_reservation_stmt", ...node });
-      case "ASSIGNMENT": return loc({ type: "create_assignment_stmt", ...node });
+    switch (entityKw.name) {
+      case "CAPACITY": return loc({ type: "create_capacity_stmt", capacityKw: entityKw, ...node });
+      case "RESERVATION": return loc({ type: "create_reservation_stmt", reservationKw: entityKw, ...node });
+      case "ASSIGNMENT": return loc({ type: "create_assignment_stmt", assignmentKw: entityKw, ...node });
     }
   }
 
@@ -2559,17 +2559,17 @@ create_bigquery_entity_stmt
 // DROP RESERVATION
 // DROP ASSIGNMENT
 drop_bigquery_entity_stmt
-  = kw:(DROP __ bigquery_entity __) ifKw:(if_exists __)? name:entity_name {
-    const dropKw = read(kw);
+  = dropKw:(DROP __) kw:(bigquery_entity __) ifKw:(if_exists __)? name:entity_name {
+    const entityKw = read(kw);
     const node = {
-      dropKw,
+      dropKw: read(dropKw),
       ifExistsKw: read(ifKw),
       name,
     };
-    switch (dropKw[1].name) {
-      case "CAPACITY": return loc({ type: "drop_capacity_stmt", ...node });
-      case "RESERVATION": return loc({ type: "drop_reservation_stmt", ...node });
-      case "ASSIGNMENT": return loc({ type: "drop_assignment_stmt", ...node });
+    switch (entityKw.name) {
+      case "CAPACITY": return loc({ type: "drop_capacity_stmt", capacityKw: entityKw,...node });
+      case "RESERVATION": return loc({ type: "drop_reservation_stmt", reservationKw: entityKw,...node });
+      case "ASSIGNMENT": return loc({ type: "drop_assignment_stmt", assignmentKw: entityKw,...node });
     }
   }
 

@@ -50,42 +50,48 @@ export type AllBigqueryStatements =
 
 export interface CreateCapacityStmt extends BaseNode {
   type: "create_capacity_stmt";
-  createKw: [Keyword<"CREATE">, Keyword<"CAPACITY">];
+  createKw: Keyword<"CREATE">;
+  capacityKw: Keyword<"CAPACITY">;
   name: EntityName;
   options: BigqueryOptions;
 }
 
 export interface DropCapacityStmt extends BaseNode {
   type: "drop_capacity_stmt";
-  dropKw: [Keyword<"DROP">, Keyword<"CAPACITY">];
+  dropKw: Keyword<"DROP">;
+  capacityKw: Keyword<"CAPACITY">;
   ifExistsKw?: [Keyword<"IF">, Keyword<"EXISTS">];
   name: EntityName;
 }
 
 export interface CreateReservationStmt extends BaseNode {
   type: "create_reservation_stmt";
-  createKw: [Keyword<"CREATE">, Keyword<"RESERVATION">];
+  createKw: Keyword<"CREATE">;
+  reservationKw: Keyword<"RESERVATION">;
   name: EntityName;
   options: BigqueryOptions;
 }
 
 export interface DropReservationStmt extends BaseNode {
   type: "drop_reservation_stmt";
-  dropKw: [Keyword<"DROP">, Keyword<"RESERVATION">];
+  dropKw: Keyword<"DROP">;
+  reservationKw: Keyword<"RESERVATION">;
   ifExistsKw?: [Keyword<"IF">, Keyword<"EXISTS">];
   name: EntityName;
 }
 
 export interface CreateAssignmentStmt extends BaseNode {
   type: "create_assignment_stmt";
-  createKw: [Keyword<"CREATE">, Keyword<"ASSIGNMENT">];
+  createKw: Keyword<"CREATE">;
+  assignmentKw: Keyword<"ASSIGNMENT">;
   name: EntityName;
   options: BigqueryOptions;
 }
 
 export interface DropAssignmentStmt extends BaseNode {
   type: "drop_assignment_stmt";
-  dropKw: [Keyword<"DROP">, Keyword<"ASSIGNMENT">];
+  dropKw: Keyword<"DROP">;
+  assignmentKw: Keyword<"ASSIGNMENT">;
   ifExistsKw?: [Keyword<"IF">, Keyword<"EXISTS">];
   name: EntityName;
 }
