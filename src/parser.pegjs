@@ -2541,13 +2541,12 @@ bigquery_statement
 // CREATE RESERVATION
 // CREATE ASSIGNMENT
 create_bigquery_entity_stmt
-  = kw:(CREATE __ bigquery_entity __) name:(entity_name __) asKw:(AS __) json:json_literal {
+  = kw:(CREATE __ bigquery_entity __) name:(entity_name __) options:bigquery_options {
     const createKw = read(kw);
     const node = {
       createKw,
       name: read(name),
-      asKw: read(asKw),
-      json,
+      options,
     };
     switch (createKw[1].name) {
       case "CAPACITY": return loc({ type: "create_capacity_stmt", ...node });

@@ -9,7 +9,7 @@ import {
   ParenExpr,
   EntityName,
 } from "./Expr";
-import { JsonLiteral, StringLiteral } from "./Literal";
+import { StringLiteral } from "./Literal";
 import { AsClause, WithConnectionClause } from "./ProcClause";
 import { ClusterByClause, PartitionByClause, SubSelect } from "./Select";
 
@@ -52,8 +52,7 @@ export interface CreateCapacityStmt extends BaseNode {
   type: "create_capacity_stmt";
   createKw: [Keyword<"CREATE">, Keyword<"CAPACITY">];
   name: EntityName;
-  asKw: Keyword<"AS">;
-  json: JsonLiteral;
+  options: BigqueryOptions;
 }
 
 export interface DropCapacityStmt extends BaseNode {
@@ -67,8 +66,7 @@ export interface CreateReservationStmt extends BaseNode {
   type: "create_reservation_stmt";
   createKw: [Keyword<"CREATE">, Keyword<"RESERVATION">];
   name: EntityName;
-  asKw: Keyword<"AS">;
-  json: JsonLiteral;
+  options: BigqueryOptions;
 }
 
 export interface DropReservationStmt extends BaseNode {
@@ -82,8 +80,7 @@ export interface CreateAssignmentStmt extends BaseNode {
   type: "create_assignment_stmt";
   createKw: [Keyword<"CREATE">, Keyword<"ASSIGNMENT">];
   name: EntityName;
-  asKw: Keyword<"AS">;
-  json: JsonLiteral;
+  options: BigqueryOptions;
 }
 
 export interface DropAssignmentStmt extends BaseNode {

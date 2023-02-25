@@ -4,8 +4,8 @@ describe("BigQuery specific statements", () => {
   dialect("bigquery", () => {
     ["CAPACITY", "RESERVATION", "ASSIGNMENT"].forEach((keyword) => {
       it(`supports CREATE ${keyword}`, () => {
-        testWc(`CREATE ${keyword} project_id.location.commitment_id AS JSON '{}'`);
-        testWc(`CREATE ${keyword} \`admin_project.region-us.my-commitment\` AS JSON '{}'`);
+        testWc(`CREATE ${keyword} project_id.location.commitment_id OPTIONS (foo = 'bar')`);
+        testWc(`CREATE ${keyword} \`admin_project.region-us.my-commitment\` OPTIONS (foo = 'bar')`);
       });
 
       it(`supports DROP ${keyword}`, () => {
