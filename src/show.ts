@@ -578,11 +578,12 @@ const showNode = cstTransformer<string>({
       node.name,
       node.onKw,
       node.table,
-      node.grantTo,
-      node.filterUsingKw,
-      node.filterExpr,
+      node.clauses,
     ]),
-  row_access_policy_grant: (node) => show([node.grantToKw, node.grantees]),
+  row_access_policy_grant_clause: (node) =>
+    show([node.grantToKw, node.grantees]),
+  row_access_policy_filter_clause: (node) =>
+    show([node.filterUsingKw, node.expr]),
   drop_row_access_policy_stmt: (node) =>
     show([
       node.dropKw,

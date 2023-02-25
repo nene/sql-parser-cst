@@ -17,7 +17,8 @@ export type AllBigqueryNodes =
   | BigqueryOptions
   | BigqueryOptionDefaultCollate
   | AllBigqueryStatements
-  | RowAccessPolicyGrant
+  | RowAccessPolicyGrantClause
+  | RowAccessPolicyFilterClause
   | FromFilesOptions;
 
 export interface BigqueryOptions extends BaseNode {
@@ -105,15 +106,19 @@ export interface CreateRowAccessPolicyStmt extends BaseNode {
   name: Keyword;
   onKw: Keyword<"ON">;
   table: EntityName;
-  grantTo?: RowAccessPolicyGrant;
-  filterUsingKw: [Keyword<"FILTER">, Keyword<"USING">];
-  filterExpr: ParenExpr<Expr>;
+  clauses: (RowAccessPolicyGrantClause | RowAccessPolicyFilterClause)[];
 }
 
-export interface RowAccessPolicyGrant extends BaseNode {
-  type: "row_access_policy_grant";
+export interface RowAccessPolicyGrantClause extends BaseNode {
+  type: "row_access_policy_grant_clause";
   grantToKw: [Keyword<"GRANT">, Keyword<"TO">];
   grantees: ParenExpr<ListExpr<StringLiteral>>;
+}
+
+export interface RowAccessPolicyFilterClause extends BaseNode {
+  type: "row_access_policy_filter_clause";
+  filterUsingKw: [Keyword<"FILTER">, Keyword<"USING">];
+  expr: ParenExpr<Expr>;
 }
 
 export interface DropRowAccessPolicyStmt extends BaseNode {

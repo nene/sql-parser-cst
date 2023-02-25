@@ -2585,10 +2585,8 @@ create_row_access_policy_stmt
     ifKw:(if_not_exists __)?
     name:(ident __)
     onKw:(ON __)
-    table:(entity_name __)
-    grantTo:(row_access_policy_grant __)?
-    filterKw:(FILTER __ USING __)
-    filterExpr:paren$list$expr {
+    table:entity_name
+    clauses:(__ row_access_policy_clause)+ {
       return loc({
         type: "create_row_access_policy_stmt",
         createKw: read(kw),
@@ -2598,18 +2596,29 @@ create_row_access_policy_stmt
         name: read(name),
         onKw: read(onKw),
         table: read(table),
-        grantTo: read(grantTo),
-        filterUsingKw: read(filterKw),
-        filterExpr,
+        clauses: clauses.map(read),
       });
     }
 
-row_access_policy_grant
+row_access_policy_clause
+  = row_access_policy_grant_clause
+  / row_access_policy_filter_clause
+
+row_access_policy_grant_clause
   = kw:(GRANT __ TO __) list:paren$list$string_literal {
     return loc({
-      type: "row_access_policy_grant",
+      type: "row_access_policy_grant_clause",
       grantToKw: read(kw),
       grantees: list,
+    });
+  }
+
+row_access_policy_filter_clause
+  = kw:(FILTER __ USING __) expr:paren$list$expr {
+    return loc({
+      type: "row_access_policy_filter_clause",
+      filterUsingKw: read(kw),
+      expr,
     });
   }
 
