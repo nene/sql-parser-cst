@@ -12,7 +12,7 @@ export type AllPreparedStatements = ExecuteStmt;
 // EXECUTE
 export interface ExecuteStmt extends BaseNode {
   type: "execute_stmt";
-  executeKw: Keyword<"DECLARE">;
+  executeKw: Keyword<"EXECUTE">;
   immediateKw?: Keyword<"IMMEDIATE">;
   expr: Expr;
   into?: ExecuteIntoClause;
