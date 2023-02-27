@@ -2538,6 +2538,8 @@ bigquery_statement
   / alter_organization_stmt
   / alter_project_stmt
   / alter_bi_capacity_stmt
+  / alter_capacity_stmt
+  / alter_reservation_stmt
   / assert_stmt
   / export_data_stmt
   / load_data_stmt
@@ -2683,6 +2685,26 @@ alter_bi_capacity_stmt
     return loc({
       type: "alter_bi_capacity_stmt",
       alterBiCapacityKw: read(kw),
+      name: read(name),
+      actions: [action],
+    });
+  }
+
+alter_capacity_stmt
+  = kw:(ALTER __ CAPACITY __) name:(entity_name __) action:alter_action_set_options {
+    return loc({
+      type: "alter_capacity_stmt",
+      alterCapacityKw: read(kw),
+      name: read(name),
+      actions: [action],
+    });
+  }
+
+alter_reservation_stmt
+  = kw:(ALTER __ RESERVATION __) name:(entity_name __) action:alter_action_set_options {
+    return loc({
+      type: "alter_reservation_stmt",
+      alterReservationKw: read(kw),
       name: read(name),
       actions: [action],
     });

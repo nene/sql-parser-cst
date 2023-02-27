@@ -601,6 +601,10 @@ const showNode = cstTransformer<string>({
     show([node.alterProjectKw, node.name, node.actions]),
   alter_bi_capacity_stmt: (node) =>
     show([node.alterBiCapacityKw, node.name, node.actions]),
+  alter_capacity_stmt: (node) =>
+    show([node.alterCapacityKw, node.name, node.actions]),
+  alter_reservation_stmt: (node) =>
+    show([node.alterReservationKw, node.name, node.actions]),
   assert_stmt: (node) => show([node.assertKw, node.expr, node.as]),
   export_data_stmt: (node) =>
     show([node.exportDataKw, node.withConnection, node.options, node.as]),

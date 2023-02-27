@@ -45,6 +45,8 @@ export type AllBigqueryStatements =
   | AlterOrganizationStmt
   | AlterProjectStmt
   | AlterBiCapacityStmt
+  | AlterCapacityStmt
+  | AlterReservationStmt
   | AssertStmt
   | ExportDataStmt
   | LoadDataStmt;
@@ -155,6 +157,22 @@ export interface AlterProjectStmt extends BaseNode {
 export interface AlterBiCapacityStmt extends BaseNode {
   type: "alter_bi_capacity_stmt";
   alterBiCapacityKw: [Keyword<"ALTER">, Keyword<"BI_CAPACITY">];
+  name: EntityName;
+  actions: AlterActionSetOptions[];
+}
+
+// ALTER CAPACITY
+export interface AlterCapacityStmt extends BaseNode {
+  type: "alter_capacity_stmt";
+  alterCapacityKw: [Keyword<"ALTER">, Keyword<"CAPACITY">];
+  name: EntityName;
+  actions: AlterActionSetOptions[];
+}
+
+// ALTER RESERVATION
+export interface AlterReservationStmt extends BaseNode {
+  type: "alter_reservation_stmt";
+  alterReservationKw: [Keyword<"ALTER">, Keyword<"RESERVATION">];
   name: EntityName;
   actions: AlterActionSetOptions[];
 }

@@ -44,9 +44,11 @@ describe("BigQuery specific statements", () => {
       });
     });
 
-    describe("ALTER BI_CAPACITY", () => {
-      it("supports ALTER BI_CAPACITY SET OPTIONS(..)", () => {
-        testWc("ALTER BI_CAPACITY `my-project.region-us.default` SET OPTIONS(size_gb=28)");
+    ["BI_CAPACITY", "CAPACITY", "RESERVATION"].forEach((keyword) => {
+      describe(`ALTER ${keyword}`, () => {
+        it(`supports ALTER ${keyword} SET OPTIONS(..)`, () => {
+          testWc(`ALTER ${keyword} my_project.regionUS.default SET OPTIONS(size_gb=28)`);
+        });
       });
     });
   });
