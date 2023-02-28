@@ -212,7 +212,7 @@ Converts CST back to string.
 Important caveat: the CST has to contain whitespace data, meaning,
 it was generated with `includeComments`, `includeNewlines` and `includeSpaces` options enabled.
 
-For any valid SQL following assertion will always hold:
+For any valid SQL the following assertion will always hold:
 
 ```js
 const opts = {
