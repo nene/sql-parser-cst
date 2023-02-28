@@ -1,12 +1,16 @@
-import { Expectation, SyntaxError } from "./parser";
+import { Expectation, PeggySyntaxError } from "./parser";
 
 export class FormattedSyntaxError extends Error {
-  constructor(e: SyntaxError, sql: string, filename?: string) {
+  constructor(e: PeggySyntaxError, sql: string, filename?: string) {
     super(formatError(e, sql, filename));
   }
 }
 
-function formatError(e: SyntaxError, sql: string, filename?: string): string {
+function formatError(
+  e: PeggySyntaxError,
+  sql: string,
+  filename?: string
+): string {
   const lineNr = e.location.start.line;
   const colNr = e.location.start.column;
   const line = sql.split(/\r\n|\n|\r/)[lineNr - 1];

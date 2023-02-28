@@ -5,7 +5,7 @@ export { DialectName, ParserOptions } from "./ParserOptions";
 export { FormattedSyntaxError } from "./FormattedSyntaxError";
 
 import { Node, Program } from "./cst/Node";
-import { parse as parseSql, SyntaxError } from "./parser";
+import { parse as parseSql, PeggySyntaxError } from "./parser";
 import { show as showSql } from "./show";
 import { ParserOptions, validDialectNames } from "./ParserOptions";
 import { FormattedSyntaxError } from "./FormattedSyntaxError";
@@ -20,7 +20,7 @@ export function parse(sql: string, options: ParserOptions): Program {
   try {
     return parseSql(sql, options) as Program;
   } catch (e) {
-    if (e instanceof SyntaxError) {
+    if (e instanceof PeggySyntaxError) {
       throw new FormattedSyntaxError(e, sql, options.filename);
     }
     throw e;
