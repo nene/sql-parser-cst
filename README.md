@@ -175,6 +175,86 @@ Note the following conventions:
   (e.g. `{"type": "space", "text": " \t"}`). This has been left out from this
   example for the sake of simplicity.
 
+## API
+
+### parse(sql: string, options: ParserOptions): Program
+
+Parses SQL string and returns the CST tree. Takes the following options:
+
+- `dialect: 'sqlite' | 'bigquery' | 'mysql'` The SQL dialect to parse **(required)**.
+- `includeRange: boolean` When enabled adds `range: [number, number]` field to all CST nodes,
+  which contains the start and end locations of the node.
+- `includeComments: boolean` When enabled adds `leading: Whitespace[]` and/or `trailing: Whitespace[]`
+  to nodes which are preceded or followed by comments.
+- `includeNewlines: boolean` Like `includeComments`, but includes newlines info to the same fields.
+- `includeSpaces: boolean` Like `includeComments`, but includes horizontal whitespace info to the same fields.
+- `paramTypes: ("?" | "?nr" | ":name" | "$name" | "@name")[]`
+  Determines the types of bound parameters supported by the parser.
+  By default a query like `SELECT * FROM tbl WHERE id = ?` will result in parse error.
+  To fix it, use `paramTypes: ["?"]` config option.
+- `filename: string` Name of the SQL file. This is only used for error-reporting.
+
+### show(cst: Node): string
+
+Converts CST back to string.
+
+Important caveat: the CST has to contain whitespace data, meaning,
+it was generated with `includeComments`, `includeNewlines` and `includeSpaces` options enabled.
+
+For any valid SQL following assertion will always hold:
+
+```js
+const opts = {
+  dialect: "sqlite",
+  includeComments: true,
+  includeNewlines: true,
+  includeSpaces: true,
+};
+
+show(parse(sql, opts)) === sql; // always true
+```
+
+### cstVisitor(map: VisitorMap): (node: Node) => void
+
+Generates a function that walks through the whole CST tree and calls
+a function in `map` whenever it encounters a node with that type.
+
+For example the following code checks that all table and column aliases
+use the explicit `AS` keyword:
+
+```js
+const checkAliases = cstVisitor({
+  alias: (node) => {
+    if (!node.asKw) {
+      throw new Error("All alias definitions must use AS keyword!");
+    }
+  },
+});
+checkAliases(cst);
+```
+
+### cstTransformer\<T>(map: TransformMap\<T>): (node: Node) => T
+
+Transforms the whole CST into some other type `T`. The `map` object
+should contain an entry for each of the CST node types it expects to
+encounter (this generally means all of them).
+
+For example, the following implements a `toString()` function that
+serializes very basic SQL queries like `SELECT 1, 2, 3 + 4`:
+
+```js
+const toString = cstTransformer({
+  program: (node) => node.statements.map(toString).join(";"),
+  select_statement: (node) => node.clauses.map(toString).join(" "),
+  select_clause: (node) => "SELECT " + node.columns.map(toString).join(", "),
+  binary_expr: (node) =>
+    toString(node.left) + " " + node.operator + " " + toString(node.right),
+  number_literal: (node) => node.text,
+});
+```
+
+The builtin `show()` function is implemented as such a transform.
+
 ## Development
 
 `yarn generate` will generate parser.
