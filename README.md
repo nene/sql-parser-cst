@@ -181,18 +181,18 @@ Note the following conventions:
 
 Parses SQL string and returns the CST tree. Takes the following options:
 
-- `dialect: 'sqlite' | 'bigquery' | 'mysql'` The SQL dialect to parse **(required)**.
-- `includeRange: boolean` When enabled adds `range: [number, number]` field to all CST nodes,
+- **dialect**: `'sqlite' | 'bigquery' | 'mysql'` The SQL dialect to parse **(required)**.
+- **includeRange**: `boolean` When enabled adds `range: [number, number]` field to all CST nodes,
   which contains the start and end locations of the node.
-- `includeComments: boolean` When enabled adds `leading: Whitespace[]` and/or `trailing: Whitespace[]`
+- **includeComments**: `boolean` When enabled adds `leading: Whitespace[]` and/or `trailing: Whitespace[]`
   to nodes which are preceded or followed by comments.
-- `includeNewlines: boolean` Like `includeComments`, but includes newlines info to the same fields.
-- `includeSpaces: boolean` Like `includeComments`, but includes horizontal whitespace info to the same fields.
-- `paramTypes: ("?" | "?nr" | ":name" | "$name" | "@name")[]`
+- **includeNewlines**: `boolean` Like `includeComments`, but includes newlines info to the same fields.
+- **includeSpaces**: `boolean` Like `includeComments`, but includes horizontal whitespace info to the same fields.
+- **paramTypes**: `("?" | "?nr" | ":name" | "$name" | "@name")[]`
   Determines the types of bound parameters supported by the parser.
   By default a query like `SELECT * FROM tbl WHERE id = ?` will result in parse error.
   To fix it, use `paramTypes: ["?"]` config option.
-- `filename: string` Name of the SQL file. This is only used for error-reporting.
+- **filename**: `string` Name of the SQL file. This is only used for error-reporting.
 
 ### show(cst: Node): string
 
