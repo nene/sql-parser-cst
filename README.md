@@ -194,6 +194,17 @@ Parses SQL string and returns the CST tree. Takes the following options:
   To fix it, use `paramTypes: ["?"]` config option.
 - **filename**: `string` Name of the SQL file. This is only used for error-reporting.
 
+When parsing fails with syntax error, it throws `FormattedSyntaxError` which contains a message like:
+
+```
+Syntax Error: Unexpected "WHERE"
+Was expecting to see: "!", "$", "(", "-", ":", "?", "@", "CASE", ...
+--> my_db.sql:2:33
+  |
+2 | SELECT * FROM my_table ORDER BY WHERE
+  |                                 ^
+```
+
 ### show(cst: Node): string
 
 Converts CST back to string.
