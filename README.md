@@ -151,7 +151,7 @@ which preserves all of this information:
         }
       ]
     },
-    { "type": "empty_stmt" }
+    { "type": "empty" }
   ],
   "leading": [
     { "type": "block_comment", "text": "/* My query */" },
@@ -166,7 +166,7 @@ Note the following conventions:
   stored in fields named like `someNameKw`.
 - Parenthesis is represented by separate `type: paren_expr` node.
 - Comma-separated lists are represented by separate `type: list_expr` node.
-- Trailing semicolon is represented by `type: empty_stmt` node in the end.
+- Trailing semicolon is represented by `type: empty` node in the end.
 - The original source code representation of strings, identifiers, keywords, etc
   is preserved in `text` fields.
 - Each node can have `leading` and `trailing` fields,
