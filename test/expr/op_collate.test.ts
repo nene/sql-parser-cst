@@ -1,10 +1,9 @@
-import { dialect, parseExpr, testExpr } from "../test_utils";
+import { dialect, parseExpr, testExpr, testExprWc } from "../test_utils";
 
 describe("COLLATE operator", () => {
   dialect(["sqlite", "mysql"], () => {
     it("supports COLLATE operator", () => {
-      testExpr(`'foobar' COLLATE utf8`);
-      testExpr(`my_col /*c1*/ COLLATE /*c2*/ nocase`);
+      testExprWc(`'foobar' COLLATE utf8`);
     });
 
     it("parses COLLATE operator to syntax tree", () => {

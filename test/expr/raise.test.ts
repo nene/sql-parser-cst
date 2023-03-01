@@ -1,17 +1,15 @@
-import { dialect, parseExpr, testExpr } from "../test_utils";
+import { dialect, parseExpr, testExpr, testExprWc } from "../test_utils";
 
 describe("raise function", () => {
   dialect("sqlite", () => {
     it("supports RAISE(IGNORE)", () => {
-      testExpr(`RAISE(IGNORE)`);
-      testExpr(`RAISE /*c1*/ (/*c1*/ IGNORE /*c1*/)`);
+      testExprWc(`RAISE ( IGNORE )`);
     });
 
     it("supports RAISE() with error message", () => {
-      testExpr(`RAISE(ROLLBACK, 'My error')`);
-      testExpr(`RAISE(ABORT, 'My error')`);
-      testExpr(`RAISE(FAIL, 'My error')`);
-      testExpr(`RAISE(FAIL /*c1*/,/*c2*/ 'My error')`);
+      testExprWc(`RAISE(ROLLBACK, 'My error')`);
+      testExprWc(`RAISE(ABORT, 'My error')`);
+      testExprWc(`RAISE(FAIL, 'My error')`);
     });
 
     it("parses RAISE() as raise_expr containing raise_expr_type", () => {

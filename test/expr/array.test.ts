@@ -1,25 +1,22 @@
-import { dialect, parseExpr, testExpr } from "../test_utils";
+import { dialect, parseExpr, testExprWc } from "../test_utils";
 
 describe("array", () => {
   dialect("bigquery", () => {
     it("supports empty array", () => {
-      testExpr(`[]`);
-      testExpr(`[ /* comment */ ]`);
+      testExprWc(`[]`);
+      testExprWc(`[ ]`);
     });
 
     it("supports untyped array", () => {
-      testExpr(`[1, 2, 3]`);
-      testExpr(`[/*c1*/ 1 /*c2*/,/*c3*/ 2 /*c4*/]`);
+      testExprWc(`[ 1 , 2 , 3 ]`);
     });
 
     it("supports typed array", () => {
-      testExpr(`ARRAY['a', 'b', 'c']`);
-      testExpr(`ARRAY /*c1*/ []`);
+      testExprWc(`ARRAY ['a', 'b', 'c']`);
     });
 
     it("supports typed array (with type params)", () => {
-      testExpr(`ARRAY<INT64>[1, 2, 3]`);
-      testExpr(`ARRAY /*c1*/ <INT64> /*c2*/ [1, 2]`);
+      testExprWc(`ARRAY < INT64 > [1, 2, 3]`);
     });
 
     it("parses typed array", () => {

@@ -1,10 +1,9 @@
-import { dialect, parseExpr, testExpr } from "../test_utils";
+import { dialect, parseExpr, testExpr, testExprWc } from "../test_utils";
 
 describe("extract()", () => {
   dialect(["bigquery", "mysql"], () => {
     it("supports extract() expression", () => {
-      testExpr(`EXTRACT(DAY FROM col1)`);
-      testExpr(`EXTRACT /*c1*/ ( /*c2*/ HOUR /*c3*/ FROM /*c4*/ col1 /*c5*/)`);
+      testExprWc(`EXTRACT ( DAY FROM col1 )`);
     });
 
     function testExtractUnits(units: string[]) {
@@ -42,7 +41,7 @@ describe("extract()", () => {
         testExpr(`extract(WEEK(THURSDAY) from my_col)`);
         testExpr(`extract(WEEK(FRIDAY) from my_col)`);
         testExpr(`extract(WEEK(SATURDAY) from my_col)`);
-        testExpr(`extract(WEEK /*c1*/ ( /*c2*/ SUNDAY /*c3*/) /*c4*/ from my_col)`);
+        testExprWc(`extract(WEEK ( SUNDAY ) from my_col)`);
       });
     });
 

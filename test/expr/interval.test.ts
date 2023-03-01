@@ -1,10 +1,9 @@
-import { dialect, parseExpr, testExpr } from "../test_utils";
+import { dialect, parseExpr, testExpr, testExprWc } from "../test_utils";
 
 describe("temporal intervals", () => {
   dialect(["mysql", "bigquery"], () => {
     it("supports INTERVAL with number argument", () => {
-      testExpr(`INTERVAL 3 DAY`);
-      testExpr(`INTERVAL /*c1*/ 3 /*c2*/ DAY`);
+      testExprWc(`INTERVAL 3 DAY`);
     });
 
     it("supports INTERVAL with string argument", () => {
@@ -68,11 +67,10 @@ describe("temporal intervals", () => {
 
   dialect("bigquery", () => {
     it("supports BigQuery time range syntax", () => {
-      testExpr(`INTERVAL '11:25:58' HOUR TO SECOND`);
-      testExpr(`INTERVAL '8 11:25' DAY TO MINUTE`);
-      testExpr(`INTERVAL '8 11' MONTH TO DAY`);
-      testExpr(`INTERVAL '3-6' YEAR TO MONTH`);
-      testExpr(`INTERVAL /*c1*/ '3-6' /*c2*/ YEAR /*c3*/ TO /*c4*/ MONTH`);
+      testExprWc(`INTERVAL '11:25:58' HOUR TO SECOND`);
+      testExprWc(`INTERVAL '8 11:25' DAY TO MINUTE`);
+      testExprWc(`INTERVAL '8 11' MONTH TO DAY`);
+      testExprWc(`INTERVAL '3-6' YEAR TO MONTH`);
     });
 
     it("parses INTERVAL range to syntax node", () => {

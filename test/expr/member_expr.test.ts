@@ -1,9 +1,9 @@
-import { dialect, parseExpr, testExpr } from "../test_utils";
+import { dialect, parseExpr, testExpr, testExprWc } from "../test_utils";
 
 describe("member_expr", () => {
   it("supports simple member_expr (e.g. qualified column name)", () => {
     testExpr("foo.bar");
-    testExpr("foo /*c1*/./*c2*/ bar");
+    testExprWc("foo . bar");
   });
 
   it("supports nested member_expr (e.g. traversing JSON object)", () => {
@@ -70,7 +70,7 @@ describe("member_expr", () => {
     it("supports simple array subscript", () => {
       testExpr(`my_array[0]`);
       testExpr(`my_array[1+2]`);
-      testExpr(`my_array /*c1*/ [ /*c1*/ 8 /*c1*/]`);
+      testExprWc(`my_array [ 8 ]`);
     });
 
     it("supports array subscript specifiers", () => {
@@ -78,7 +78,7 @@ describe("member_expr", () => {
       testExpr(`my_array[SAFE_OFFSET(4-6)]`);
       testExpr(`my_array[ORDINAL(1)]`);
       testExpr(`my_array[SAFE_ORDINAL(1+2)]`);
-      testExpr(`my_array[/*c1*/ OFFSET /*c2*/ (/*c3*/ 2 /*c4*/) /*c5*/]`);
+      testExprWc(`my_array[ OFFSET ( 2 ) ]`);
     });
 
     it("supports array subscript on array literal", () => {

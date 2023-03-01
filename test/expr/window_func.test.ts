@@ -1,90 +1,67 @@
-import { dialect, parseExpr, test } from "../test_utils";
+import { dialect, parseExpr, testWc } from "../test_utils";
 
 describe("window functions", () => {
   it("supports referring to named window", () => {
-    test(`SELECT row_number() OVER my_win`);
-    test(`SELECT row_number() OVER /*c*/ my_win`);
+    testWc(`SELECT row_number() OVER my_win`);
   });
 
   it("supports empty window specification", () => {
-    test(`SELECT row_number() OVER ()`);
-    test(`SELECT row_number() OVER (/*c*/)`);
+    testWc(`SELECT row_number() OVER ( )`);
   });
 
   dialect("sqlite", () => {
     it("supports FILTER combined with OVER", () => {
-      test(`SELECT row_number() FILTER (WHERE true) OVER my_win`);
+      testWc(`SELECT row_number() FILTER (WHERE true) OVER my_win`);
     });
   });
 
   it("supports PARTITION BY", () => {
-    test(`SELECT sum(profit) OVER (PARTITION BY product)`);
-    test(
-      `SELECT sum(profit) /*c1*/ OVER /*c2*/ ( /*c3*/ PARTITION /*c4*/ BY /*c5*/ product /*c6*/ )`
-    );
+    testWc(`SELECT sum(profit) OVER (PARTITION BY product)`);
   });
 
   it("supports ORDER BY", () => {
-    test(`SELECT row_number() OVER (ORDER BY col)`);
-    test(`SELECT row_number() /*c1*/ OVER /*c2*/ ( /*c3*/ ORDER BY col /*c4*/ )`);
+    testWc(`SELECT row_number() OVER (ORDER BY col)`);
   });
 
   it("supports base window", () => {
-    test(`SELECT row_number() OVER (my_win)`);
-    test(`SELECT row_number() OVER (my_win PARTITION BY product)`);
-    test(`SELECT row_number() OVER (my_win PARTITION BY product ORDER BY price)`);
-    test(`SELECT row_number() OVER (/*c1*/ my_win /*c2*/)`);
+    testWc(`SELECT row_number() OVER (my_win)`);
+    testWc(`SELECT row_number() OVER (my_win PARTITION BY product)`);
+    testWc(`SELECT row_number() OVER (my_win PARTITION BY product ORDER BY price)`);
   });
 
   it("supports frame clause with single bound", () => {
-    test(`SELECT sum(price) OVER (ROWS UNBOUNDED PRECEDING) as running_total`);
-    test(
-      `SELECT sum(price) OVER (/*c1*/ ROWS /*c2*/ UNBOUNDED /*c3*/ PRECEDING /*c4*/) as running_total`
-    );
-    test(`SELECT sum(price) OVER (ROWS UNBOUNDED FOLLOWING) as running_total`);
-    test(
-      `SELECT sum(price) OVER (/*c1*/ ROWS /*c2*/ UNBOUNDED /*c3*/ FOLLOWING /*c4*/) as running_total`
-    );
-    test(`SELECT sum(price) OVER (ROWS CURRENT ROW)`);
-    test(`SELECT sum(price) OVER (/*c1*/ ROWS /*c2*/ CURRENT /*c3*/ ROW /*c4*/)`);
-    test(`SELECT sum(price) OVER (ROWS 15 PRECEDING)`);
-    test(`SELECT sum(price) OVER (/*c1*/ ROWS /*c2*/ 15 /*c3*/ PRECEDING /*c4*/)`);
-    test(`SELECT sum(price) OVER (ROWS 28 FOLLOWING)`);
-    test(`SELECT sum(price) OVER (/*c1*/ ROWS /*c2*/ 28 /*c3*/ FOLLOWING /*c4*/)`);
+    testWc(`SELECT sum(price) OVER (ROWS UNBOUNDED PRECEDING) as running_total`);
+    testWc(`SELECT sum(price) OVER (ROWS UNBOUNDED FOLLOWING) as running_total`);
+    testWc(`SELECT sum(price) OVER (ROWS CURRENT ROW)`);
+    testWc(`SELECT sum(price) OVER (ROWS 15 PRECEDING)`);
+    testWc(`SELECT sum(price) OVER (ROWS 28 FOLLOWING)`);
   });
 
   it("supports frame clause with BETWEEN", () => {
-    test(`SELECT sum(price) OVER (ROWS BETWEEN 1 PRECEDING AND 2 FOLLOWING)`);
-    test(`SELECT sum(price) OVER (ROWS BETWEEN 2 FOLLOWING AND 1 FOLLOWING)`);
-    test(`SELECT sum(price) OVER (ROWS BETWEEN UNBOUNDED PRECEDING AND 1 FOLLOWING)`);
-    test(`SELECT sum(price) OVER (ROWS BETWEEN 2 PRECEDING AND UNBOUNDED PRECEDING)`);
-    test(`SELECT sum(price) OVER (ROWS BETWEEN 7 FOLLOWING AND CURRENT ROW)`);
-    test(
-      `SELECT sum(price) OVER (ROWS BETWEEN /*c1*/ 1 /*c2*/ PRECEDING /*c3*/ AND /*c4*/ 2 /*c5*/ FOLLOWING)`
-    );
+    testWc(`SELECT sum(price) OVER (ROWS BETWEEN 1 PRECEDING AND 2 FOLLOWING)`);
+    testWc(`SELECT sum(price) OVER (ROWS BETWEEN 2 FOLLOWING AND 1 FOLLOWING)`);
+    testWc(`SELECT sum(price) OVER (ROWS BETWEEN UNBOUNDED PRECEDING AND 1 FOLLOWING)`);
+    testWc(`SELECT sum(price) OVER (ROWS BETWEEN 2 PRECEDING AND UNBOUNDED PRECEDING)`);
+    testWc(`SELECT sum(price) OVER (ROWS BETWEEN 7 FOLLOWING AND CURRENT ROW)`);
   });
 
   it("supports frame clause with RANGE unit", () => {
-    test(`SELECT sum(price) OVER (RANGE CURRENT ROW)`);
-    test(`SELECT sum(price) OVER (RANGE BETWEEN CURRENT ROW AND 1 FOLLOWING)`);
+    testWc(`SELECT sum(price) OVER (RANGE CURRENT ROW)`);
+    testWc(`SELECT sum(price) OVER (RANGE BETWEEN CURRENT ROW AND 1 FOLLOWING)`);
   });
 
   dialect("sqlite", () => {
     it("supports frame clause with GROUPS unit", () => {
-      test(`SELECT sum(price) OVER (GROUPS CURRENT ROW)`);
-      test(`SELECT sum(price) OVER (GROUPS BETWEEN CURRENT ROW AND 1 FOLLOWING)`);
+      testWc(`SELECT sum(price) OVER (GROUPS CURRENT ROW)`);
+      testWc(`SELECT sum(price) OVER (GROUPS BETWEEN CURRENT ROW AND 1 FOLLOWING)`);
     });
   });
 
   it("supports frame clause with exclusion", () => {
-    test(`SELECT sum(price) OVER (ROWS 1 PRECEDING EXCLUDE CURRENT ROW)`);
-    test(`SELECT sum(price) OVER (ROWS 1 PRECEDING /*c1*/ EXCLUDE /*c2*/ CURRENT /*c3*/ ROW)`);
-    test(`SELECT sum(price) OVER (ROWS 1 PRECEDING EXCLUDE NO OTHERS)`);
-    test(`SELECT sum(price) OVER (ROWS 1 PRECEDING /*c1*/ EXCLUDE /*c2*/ NO /*c3*/ OTHERS)`);
-    test(`SELECT sum(price) OVER (ROWS 1 PRECEDING EXCLUDE TIES)`);
-    test(`SELECT sum(price) OVER (ROWS 1 PRECEDING /*c1*/ EXCLUDE /*c2*/ TIES)`);
-    test(`SELECT sum(price) OVER (ROWS 1 PRECEDING EXCLUDE GROUP)`);
-    test(`SELECT sum(price) OVER (ROWS 1 PRECEDING /*c1*/ EXCLUDE /*c2*/ GROUP)`);
+    testWc(`SELECT sum(price) OVER (ROWS 1 PRECEDING EXCLUDE CURRENT ROW)`);
+    testWc(`SELECT sum(price) OVER (ROWS 1 PRECEDING EXCLUDE NO OTHERS)`);
+    testWc(`SELECT sum(price) OVER (ROWS 1 PRECEDING EXCLUDE TIES)`);
+    testWc(`SELECT sum(price) OVER (ROWS 1 PRECEDING EXCLUDE GROUP)`);
   });
 
   it("parses window function call to syntax tree", () => {

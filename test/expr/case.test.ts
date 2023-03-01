@@ -1,18 +1,12 @@
-import { parseExpr, testExpr } from "../test_utils";
+import { parseExpr, testExpr, testExprWc } from "../test_utils";
 
 describe("CASE expression", () => {
   it("supports simple CASE", () => {
-    testExpr(`
+    testExprWc(`
       CASE animal
         WHEN 1 THEN 'dog'
         WHEN 2 THEN 'cat'
         ELSE 'mouse'
-      END`);
-
-    testExpr(`
-      CASE /*c1*/ animal /*c2*/
-        WHEN /*c3*/ 1 /*c4*/ THEN /*c5*/ 'dog' /*c6*/
-        ELSE /*c7*/ 'mouse' /*c8*/
       END`);
   });
 

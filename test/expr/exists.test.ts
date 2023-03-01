@@ -1,13 +1,12 @@
-import { parseExpr, testExpr } from "../test_utils";
+import { parseExpr, testExprWc } from "../test_utils";
 
 describe("EXISTS expression", () => {
   it("supports EXISTS expression", () => {
-    testExpr(`EXISTS (SELECT 1)`);
-    testExpr(`EXISTS /*c1*/ (SELECT 1)`);
+    testExprWc(`EXISTS (SELECT 1)`);
   });
 
   it("supports NOT EXISTS expression", () => {
-    testExpr(`NOT EXISTS (SELECT 1)`);
+    testExprWc(`NOT EXISTS (SELECT 1)`);
   });
 
   // Check that we're using unary operators: NOT & EXISTS

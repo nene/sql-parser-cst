@@ -1,25 +1,23 @@
-import { dialect, parseExpr, testExpr } from "../test_utils";
+import { dialect, parseExpr, testExpr, testExprWc } from "../test_utils";
 
 describe("struct", () => {
   dialect("bigquery", () => {
     it("supports untyped struct", () => {
-      testExpr(`(25, 'foo', NULL)`);
-      testExpr(`(/*c1*/ 1 /*c2*/,/*c3*/ 'foo' /*c4*/)`);
+      testExprWc(`( 25 , 'foo' , NULL )`);
     });
 
     it("supports typed struct", () => {
       testExpr(`STRUCT('a', 'b')`);
-      testExpr(`STRUCT /*c1*/ (18)`);
+      testExprWc(`STRUCT (18)`);
     });
 
     it("supports struct with named fields", () => {
-      testExpr(`STRUCT(25 AS age, 'John' AS name)`);
-      testExpr(`STRUCT(25 /*c1*/ AS /*c2*/ age /*c3*/,/*c4*/ 'John' /*c5*/)`);
+      testExprWc(`STRUCT(25 AS age, 'John' AS name)`);
     });
 
     it("supports typed struct (with type params)", () => {
       testExpr(`STRUCT<age INT64, name STRING>(50, 'foo')`);
-      testExpr(`STRUCT /*c1*/ <INT64> /*c2*/ (2)`);
+      testExprWc(`STRUCT <INT64> (2)`);
     });
 
     // Regression test for #17
