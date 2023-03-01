@@ -1,11 +1,10 @@
-import { dialect, parse, test } from "../test_utils";
+import { dialect, parse, testWc } from "../test_utils";
 
 describe("truncate table", () => {
   dialect("bigquery", () => {
     it("supports TRUNCATE TABLE statement", () => {
-      test("TRUNCATE TABLE tbl");
-      test("TRUNCATE TABLE db.tbl");
-      test("TRUNCATE /*c1*/ TABLE /*c2*/ tbl");
+      testWc("TRUNCATE TABLE tbl");
+      testWc("TRUNCATE TABLE db.tbl");
     });
   });
 
