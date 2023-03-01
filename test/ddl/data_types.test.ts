@@ -1,10 +1,13 @@
 import { DialectName } from "../../src/ParserOptions";
-import { dialect, parse, includeAll, show } from "../test_utils";
+import { dialect, test, withComments } from "../test_utils";
 
 describe("data types", () => {
   function testType(type: string) {
-    const sql = `CREATE TABLE t (id ${type})`;
-    expect(show(parse(sql, includeAll))).toBe(sql);
+    test(`CREATE TABLE t (id ${withComments(type)})`);
+  }
+
+  function testTypeWc(type: string) {
+    testType(withComments(type));
   }
 
   function testTypeWithLength(type: string) {
@@ -156,7 +159,7 @@ describe("data types", () => {
       it("parameterized ARRAY type", () => {
         testType("ARRAY<INT64>");
         testType("ARRAY<BYTES(5)>");
-        testType("ARRAY /*c1*/ < /*c2*/ INT64 /*c3*/ >");
+        testTypeWc("ARRAY < INT64 >");
       });
 
       it("nested parameterized ARRAY type", () => {
@@ -166,13 +169,13 @@ describe("data types", () => {
       it("parameterized STRUCT type (unnamed parameter)", () => {
         testType("STRUCT<INT64>");
         testType("STRUCT<BYTES(5)>");
-        testType("STRUCT /*c1*/ < /*c2*/ INT64 /*c3*/ >");
+        testTypeWc("STRUCT < INT64 >");
       });
 
       it("parameterized STRUCT type (named parameters)", () => {
         testType("STRUCT<x INT64, y INT64>");
         testType("STRUCT<name STRING(15)>");
-        testType("STRUCT /*c1*/ < /*c2*/ name /*c3*/ STRING /*c4*/ >");
+        testTypeWc("STRUCT < name STRING >");
       });
 
       it("nested parameterized STRUCT type", () => {
