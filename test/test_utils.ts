@@ -60,7 +60,7 @@ export function testWc(sql: string, options?: Partial<ParserOptions>) {
   test(withComments(sql), options);
 }
 
-function withComments(sql: string): string {
+export function withComments(sql: string): string {
   let count = 0;
   return sql.replace(/ +/g, () => {
     count++;
