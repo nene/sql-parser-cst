@@ -1,17 +1,15 @@
-import { dialect, parse, includeAll, show } from "../test_utils";
+import { dialect, test, withComments } from "../test_utils";
 
 describe("table options", () => {
-  function testOpts(options: string) {
-    const sql = `CREATE TABLE t (id INT) ${options}`;
-    expect(show(parse(sql, includeAll))).toBe(sql);
+  function testOptsWc(options: string) {
+    test(`CREATE TABLE t (id INT) ${withComments(options)}`);
   }
 
   dialect("sqlite", () => {
     it("supports CREATE TABLE with STRICT & WITHOUT ROWID options", () => {
-      testOpts("STRICT");
-      testOpts("WITHOUT ROWID");
-      testOpts("STRICT, WITHOUT ROWID");
-      testOpts("/*c0*/ STRICT /*c1*/,/*c2*/ WITHOUT /*c3*/ ROWID");
+      testOptsWc("STRICT");
+      testOptsWc("WITHOUT ROWID");
+      testOptsWc("STRICT, WITHOUT ROWID");
     });
   });
 
@@ -50,16 +48,14 @@ describe("table options", () => {
     ).forEach(([name, values]) => {
       values.forEach((value) => {
         it(`${name} = ${value}`, () => {
-          testOpts(`${name} = ${value}`);
-          testOpts(`${name} ${value}`);
-          testOpts(`${name} /*c1*/ = /*c2*/ ${value}`);
+          testOptsWc(`${name} = ${value}`);
+          testOptsWc(`${name} ${value}`);
         });
       });
     });
 
     it("supports START TRANSACTION option", () => {
-      testOpts(`START TRANSACTION`);
-      testOpts(`START /*c1*/ TRANSACTION`);
+      testOptsWc(`START TRANSACTION`);
     });
 
     // TODO: TABLESPACE tablespace_name [STORAGE {DISK | MEMORY}]
@@ -68,23 +64,20 @@ describe("table options", () => {
 
   dialect("bigquery", () => {
     it("supports DEFAULT COLLATE option", () => {
-      testOpts(`DEFAULT COLLATE 'und:ci'`);
-      testOpts(`DEFAULT /*c1*/ COLLATE /*c2*/ 'und:ci'`);
+      testOptsWc(`DEFAULT COLLATE 'und:ci'`);
     });
 
     it("supports OPTIONS()", () => {
-      testOpts(`OPTIONS(description = 'Hello', friendly_name = 'Blah')`);
-      testOpts(`OPTIONS /*c1*/ (/*c2*/ description = 'Hello' /*c2*/)`);
+      testOptsWc(`OPTIONS(description = 'Hello', friendly_name = 'Blah')`);
     });
 
     it("supports PARTITION BY", () => {
-      testOpts(`PARTITION BY DATE(_PARTITIONTIME)`);
-      testOpts(`PARTITION /*c1*/ BY /*c2*/ _PARTITIONTIME`);
+      testOptsWc(`PARTITION BY DATE(_PARTITIONTIME)`);
+      testOptsWc(`PARTITION BY _PARTITIONTIME`);
     });
 
     it("supports CLUSTER BY", () => {
-      testOpts(`CLUSTER BY col1, col2, col3`);
-      testOpts(`CLUSTER /*c1*/ BY /*c2*/ col1 /*c3*/,/*c4*/ col2`);
+      testOptsWc(`CLUSTER BY col1, col2, col3`);
     });
   });
 });
