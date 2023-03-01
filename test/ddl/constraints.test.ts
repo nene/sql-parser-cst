@@ -1,4 +1,4 @@
-import { dialect, parse, includeAll, show, test } from "../test_utils";
+import { dialect, test, withComments } from "../test_utils";
 
 describe("constraints", () => {
   describe("column constraints", () => {
@@ -8,183 +8,162 @@ describe("constraints", () => {
       )`);
     });
 
-    function testColConst(constraint: string) {
-      const sql = `CREATE TABLE t (id INT ${constraint})`;
-      expect(show(parse(sql, includeAll))).toBe(sql);
+    function testColConstWc(constraint: string) {
+      test(`CREATE TABLE t (id INT ${withComments(constraint)})`);
     }
 
     dialect(["mysql", "sqlite"], () => {
       it("NULL", () => {
-        testColConst("NULL");
+        testColConstWc("NULL");
       });
     });
 
     it("NOT NULL", () => {
-      testColConst("NOT NULL");
-      testColConst("NOT /*c2*/ NULL");
+      testColConstWc("NOT NULL");
     });
 
     it("DEFAULT", () => {
-      testColConst("DEFAULT 10");
-      testColConst("DEFAULT (5 + 6 > 0 AND true)");
-      testColConst("DEFAULT /*c1*/ 10");
+      testColConstWc("DEFAULT 10");
+      testColConstWc("DEFAULT (5 + 6 > 0 AND true)");
     });
 
     dialect(["mysql", "sqlite"], () => {
       it("PRIMARY KEY", () => {
-        testColConst("PRIMARY KEY");
-        testColConst("PRIMARY /*c*/ KEY");
+        testColConstWc("PRIMARY KEY");
       });
 
       dialect("sqlite", () => {
         it("AUTOINCREMENT on PRIMARY KEY column", () => {
-          testColConst("PRIMARY KEY AUTOINCREMENT");
+          testColConstWc("PRIMARY KEY AUTOINCREMENT");
         });
 
         it("ASC / DESC on PRIMARY KEY column", () => {
-          testColConst("PRIMARY KEY ASC");
-          testColConst("PRIMARY KEY /*c*/ DESC");
+          testColConstWc("PRIMARY KEY ASC");
         });
       });
 
       it("UNIQUE", () => {
-        testColConst("UNIQUE");
-        testColConst("UNIQUE KEY");
-        testColConst("UNIQUE /*c*/ KEY");
+        testColConstWc("UNIQUE");
+        testColConstWc("UNIQUE KEY");
       });
 
       it("CHECK", () => {
-        testColConst("CHECK (col > 10)");
+        testColConstWc("CHECK (col > 10)");
       });
 
       it("REFERENCES", () => {
         // full syntax is tested under table constraints tests
-        testColConst("REFERENCES tbl2 (col1)");
+        testColConstWc("REFERENCES tbl2 (col1)");
       });
     });
 
     dialect("sqlite", () => {
       it("supports deferrability in references clause", () => {
-        testColConst("REFERENCES tbl2 (id) DEFERRABLE");
+        testColConstWc("REFERENCES tbl2 (id) DEFERRABLE");
       });
     });
 
     dialect(["mysql", "sqlite"], () => {
       it("COLLATE", () => {
-        testColConst("COLLATE utf8mb4_bin");
-        testColConst("COLLATE /*c1*/ utf8");
+        testColConstWc("COLLATE utf8mb4_bin");
       });
     });
     dialect("bigquery", () => {
       it("COLLATE", () => {
-        testColConst("COLLATE 'und:ci'");
-        testColConst("COLLATE /*c1*/ 'und:ci'");
+        testColConstWc("COLLATE 'und:ci'");
       });
     });
 
     dialect(["mysql", "sqlite"], () => {
       it("GENERATED ALWAYS", () => {
-        testColConst("GENERATED ALWAYS AS (col1 + col2)");
-        testColConst("AS (col1 + col2)");
-        testColConst("GENERATED ALWAYS AS (true) STORED");
-        testColConst("GENERATED ALWAYS AS (true) VIRTUAL");
-
-        testColConst("GENERATED /*c1*/ ALWAYS /*c2*/ AS /*c3*/ (/*c4*/ 5 /*c5*/) /*c6*/ STORED");
+        testColConstWc("GENERATED ALWAYS AS (col1 + col2)");
+        testColConstWc("AS (col1 + col2)");
+        testColConstWc("GENERATED ALWAYS AS (true) STORED");
+        testColConstWc("GENERATED ALWAYS AS ( true ) VIRTUAL");
       });
     });
 
     dialect("mysql", () => {
       it("AUTO_INCREMENT", () => {
-        testColConst("AUTO_INCREMENT");
-        testColConst("AUTO_increment");
+        testColConstWc("AUTO_INCREMENT");
+        testColConstWc("AUTO_increment");
       });
 
       it("COMMENT", () => {
-        testColConst("COMMENT 'Hello, world!'");
-        testColConst("COMMENT /*c*/ 'Hi'");
+        testColConstWc("COMMENT 'Hello, world!'");
       });
 
       it("KEY", () => {
-        testColConst("KEY");
+        testColConstWc("KEY");
       });
 
       it("VISIBLE / INVISIBLE", () => {
-        testColConst("VISIBLE");
-        testColConst("INVISIBLE");
+        testColConstWc("VISIBLE");
+        testColConstWc("INVISIBLE");
       });
 
       it("COLUMN_FORMAT", () => {
-        testColConst("COLUMN_FORMAT FIXED");
-        testColConst("COLUMN_FORMAT DYNAMIC");
-        testColConst("COLUMN_FORMAT DEFAULT");
-        testColConst("COLUMN_FORMAT /*c*/ DEFAULT");
+        testColConstWc("COLUMN_FORMAT FIXED");
+        testColConstWc("COLUMN_FORMAT DYNAMIC");
+        testColConstWc("COLUMN_FORMAT DEFAULT");
       });
 
       it("STORAGE", () => {
-        testColConst("STORAGE DISK");
-        testColConst("STORAGE MEMORY");
-        testColConst("STORAGE /*c*/ MEMORY");
+        testColConstWc("STORAGE DISK");
+        testColConstWc("STORAGE MEMORY");
       });
 
       it("engine attributes", () => {
-        testColConst("ENGINE_ATTRIBUTE = 'blah'");
-        testColConst("ENGINE_ATTRIBUTE 'blah'");
-        testColConst("SECONDARY_ENGINE_ATTRIBUTE = 'blah'");
-        testColConst("SECONDARY_ENGINE_ATTRIBUTE 'blah'");
-
-        testColConst("ENGINE_ATTRIBUTE /*c1*/ = /*c2*/ 'blah'");
-        testColConst("ENGINE_ATTRIBUTE /*c1*/ 'blah'");
+        testColConstWc("ENGINE_ATTRIBUTE = 'blah'");
+        testColConstWc("ENGINE_ATTRIBUTE 'blah'");
+        testColConstWc("SECONDARY_ENGINE_ATTRIBUTE = 'blah'");
+        testColConstWc("SECONDARY_ENGINE_ATTRIBUTE 'blah'");
       });
     });
 
     dialect("sqlite", () => {
       it("supports ON CONFLICT clause", () => {
-        testColConst("UNIQUE ON CONFLICT ROLLBACK");
-        testColConst("UNIQUE ON CONFLICT ABORT");
-        testColConst("UNIQUE ON CONFLICT FAIL");
-        testColConst("UNIQUE ON CONFLICT IGNORE");
-        testColConst("UNIQUE ON CONFLICT REPLACE");
-        testColConst("UNIQUE /*c1*/ ON /*c2*/ CONFLICT /*c3*/ REPLACE");
+        testColConstWc("UNIQUE ON CONFLICT ROLLBACK");
+        testColConstWc("UNIQUE ON CONFLICT ABORT");
+        testColConstWc("UNIQUE ON CONFLICT FAIL");
+        testColConstWc("UNIQUE ON CONFLICT IGNORE");
+        testColConstWc("UNIQUE ON CONFLICT REPLACE");
 
-        testColConst("PRIMARY KEY ON CONFLICT ABORT");
-        testColConst("NOT NULL ON CONFLICT ABORT");
-        testColConst("CHECK (x > 0) ON CONFLICT ABORT");
+        testColConstWc("PRIMARY KEY ON CONFLICT ABORT");
+        testColConstWc("NOT NULL ON CONFLICT ABORT");
+        testColConstWc("CHECK (x > 0) ON CONFLICT ABORT");
       });
     });
 
     dialect("bigquery", () => {
       it("supports OPTIONS(..)", () => {
-        testColConst("OPTIONS(description='this is a great column')");
+        testColConstWc("OPTIONS(description='this is a great column')");
       });
     });
 
     dialect(["mysql", "sqlite"], () => {
       it("supports CONSTRAINT keyword for column constraints", () => {
-        testColConst("CONSTRAINT NULL");
-        testColConst("CONSTRAINT NOT NULL");
-        testColConst("CONSTRAINT DEFAULT 10");
-        testColConst("CONSTRAINT PRIMARY KEY");
-        testColConst("CONSTRAINT UNIQUE");
-        testColConst("CONSTRAINT CHECK (true)");
-        testColConst("CONSTRAINT REFERENCES tbl2 (col)");
-        testColConst("CONSTRAINT COLLATE utf8");
-        testColConst("CONSTRAINT GENERATED ALWAYS AS (x + y)");
-
-        testColConst("CONSTRAINT /*c1*/ NULL");
+        testColConstWc("CONSTRAINT NULL");
+        testColConstWc("CONSTRAINT NOT NULL");
+        testColConstWc("CONSTRAINT DEFAULT 10");
+        testColConstWc("CONSTRAINT PRIMARY KEY");
+        testColConstWc("CONSTRAINT UNIQUE");
+        testColConstWc("CONSTRAINT CHECK (true)");
+        testColConstWc("CONSTRAINT REFERENCES tbl2 (col)");
+        testColConstWc("CONSTRAINT COLLATE utf8");
+        testColConstWc("CONSTRAINT GENERATED ALWAYS AS (x + y)");
       });
 
       it("supports named column constraints", () => {
-        testColConst("CONSTRAINT cname NULL");
-        testColConst("CONSTRAINT cname NOT NULL");
-        testColConst("CONSTRAINT cname DEFAULT 10");
-        testColConst("CONSTRAINT cname PRIMARY KEY");
-        testColConst("CONSTRAINT cname UNIQUE");
-        testColConst("CONSTRAINT cname CHECK (true)");
-        testColConst("CONSTRAINT cname REFERENCES tbl2 (col)");
-        testColConst("CONSTRAINT cname COLLATE utf8");
-        testColConst("CONSTRAINT cname GENERATED ALWAYS AS (x + y)");
-
-        testColConst("CONSTRAINT /*c1*/ cname /*c2*/ NULL");
+        testColConstWc("CONSTRAINT cname NULL");
+        testColConstWc("CONSTRAINT cname NOT NULL");
+        testColConstWc("CONSTRAINT cname DEFAULT 10");
+        testColConstWc("CONSTRAINT cname PRIMARY KEY");
+        testColConstWc("CONSTRAINT cname UNIQUE");
+        testColConstWc("CONSTRAINT cname CHECK (true)");
+        testColConstWc("CONSTRAINT cname REFERENCES tbl2 (col)");
+        testColConstWc("CONSTRAINT cname COLLATE utf8");
+        testColConstWc("CONSTRAINT cname GENERATED ALWAYS AS (x + y)");
       });
     });
   });
@@ -199,143 +178,119 @@ describe("constraints", () => {
         )`);
       });
 
-      function testTblConst(constraint: string) {
-        const sql = `CREATE TABLE t (${constraint})`;
-        expect(show(parse(sql, includeAll))).toBe(sql);
+      function testTblConstWc(constraint: string) {
+        test(`CREATE TABLE t (${withComments(constraint)})`);
       }
 
       it("PRIMARY KEY", () => {
-        testTblConst("PRIMARY KEY (id)");
-        testTblConst("PRIMARY KEY (id, name)");
-        testTblConst("PRIMARY /*c3*/ KEY /*c4*/ ( /*c5*/ id /*c6*/,/*c7*/ name /*c8*/ )");
+        testTblConstWc("PRIMARY KEY (id)");
+        testTblConstWc("PRIMARY KEY ( id, name )");
       });
 
       dialect("sqlite", () => {
         it("supports ASC/DESC in primary key columns", () => {
-          testTblConst("PRIMARY KEY (id ASC, name DESC)");
+          testTblConstWc("PRIMARY KEY (id ASC, name DESC)");
         });
         it("supports COLLATE in primary key columns", () => {
-          testTblConst("PRIMARY KEY (name COLLATE utf8)");
+          testTblConstWc("PRIMARY KEY (name COLLATE utf8)");
         });
       });
 
       it("UNIQUE", () => {
-        testTblConst("UNIQUE (id)");
-        testTblConst("UNIQUE KEY (id, name)");
-        testTblConst("UNIQUE INDEX (id)");
-        testTblConst("UNIQUE /*c3*/ KEY /*c4*/ ( /*c5*/ id /*c6*/,/*c7*/ name /*c8*/ )");
+        testTblConstWc("UNIQUE (id)");
+        testTblConstWc("UNIQUE KEY (id, name)");
+        testTblConstWc("UNIQUE INDEX (id)");
       });
 
       it("CHECK", () => {
-        testTblConst("CHECK (col > 10)");
-        testTblConst("CHECK /*c3*/ (/*c4*/ true /*c5*/)");
+        testTblConstWc("CHECK (col > 10)");
       });
 
       describe("FOREIGN KEY", () => {
         it("basic FOREIGN KEY", () => {
-          testTblConst("FOREIGN KEY (id) REFERENCES tbl2 (id)");
-          testTblConst("FOREIGN KEY (id, name) REFERENCES tbl2 (id, name)");
-          testTblConst(
-            `FOREIGN /*c3*/ KEY /*c4*/ (/*c5*/ id /*c6*/) /*c7*/
-            REFERENCES /*c8*/ tbl2 /*c9*/ (/*c10*/ t2id /*c11*/)`
-          );
+          testTblConstWc("FOREIGN KEY (id) REFERENCES tbl2 (id)");
+          testTblConstWc("FOREIGN KEY (id, name) REFERENCES tbl2 (id, name)");
         });
 
         dialect("sqlite", () => {
           it("column names are optional in REFERENCES-clause", () => {
-            testTblConst("FOREIGN KEY (id) REFERENCES tbl2");
+            testTblConstWc("FOREIGN KEY (id) REFERENCES tbl2");
           });
         });
 
         it("supports ON DELETE/UPDATE actions", () => {
-          testTblConst("FOREIGN KEY (id) REFERENCES tbl2 (id) ON UPDATE RESTRICT");
-          testTblConst("FOREIGN KEY (id) REFERENCES tbl2 (id) ON DELETE CASCADE");
-          testTblConst("FOREIGN KEY (id) REFERENCES tbl2 (id) ON UPDATE SET NULL");
-          testTblConst(
+          testTblConstWc("FOREIGN KEY (id) REFERENCES tbl2 (id) ON UPDATE RESTRICT");
+          testTblConstWc("FOREIGN KEY (id) REFERENCES tbl2 (id) ON DELETE CASCADE");
+          testTblConstWc("FOREIGN KEY (id) REFERENCES tbl2 (id) ON UPDATE SET NULL");
+          testTblConstWc(
             "FOREIGN KEY (id) REFERENCES tbl2 (id) ON DELETE SET DEFAULT ON UPDATE NO ACTION"
-          );
-          testTblConst(
-            `FOREIGN KEY (id) REFERENCES tbl2 (id)
-            ON /*c1*/ DELETE /*c2*/ SET /*c3*/ DEFAULT /*c4*/
-            ON /*c5*/ UPDATE /*c6*/ NO /*c7*/ ACTION`
           );
         });
 
         it("supports MATCH types", () => {
-          testTblConst("FOREIGN KEY (id) REFERENCES tbl2 (id) MATCH FULL");
-          testTblConst("FOREIGN KEY (id) REFERENCES tbl2 (id) MATCH PARTIAL");
-          testTblConst("FOREIGN KEY (id) REFERENCES tbl2 (id) MATCH SIMPLE");
-          testTblConst(`FOREIGN KEY (id) REFERENCES tbl2 (id) MATCH /*c1*/ FULL`);
+          testTblConstWc("FOREIGN KEY (id) REFERENCES tbl2 (id) MATCH FULL");
+          testTblConstWc("FOREIGN KEY (id) REFERENCES tbl2 (id) MATCH PARTIAL");
+          testTblConstWc("FOREIGN KEY (id) REFERENCES tbl2 (id) MATCH SIMPLE");
         });
 
         it("supports combining MATCH type and ON UPDATE/DELETE", () => {
-          testTblConst("FOREIGN KEY (id) REFERENCES tbl2 (id) MATCH FULL ON UPDATE CASCADE");
-          testTblConst("FOREIGN KEY (id) REFERENCES tbl2 (id) ON DELETE SET NULL MATCH SIMPLE");
+          testTblConstWc("FOREIGN KEY (id) REFERENCES tbl2 (id) MATCH FULL ON UPDATE CASCADE");
+          testTblConstWc("FOREIGN KEY (id) REFERENCES tbl2 (id) ON DELETE SET NULL MATCH SIMPLE");
         });
       });
 
       dialect("sqlite", () => {
         it("supports deferrability of foreign keys", () => {
-          testTblConst("FOREIGN KEY (id) REFERENCES tbl2 (id) DEFERRABLE");
-          testTblConst("FOREIGN KEY (id) REFERENCES tbl2 (id) NOT DEFERRABLE");
-          testTblConst("FOREIGN KEY (id) REFERENCES tbl2 (id) DEFERRABLE INITIALLY DEFERRED");
-          testTblConst("FOREIGN KEY (id) REFERENCES tbl2 (id) DEFERRABLE INITIALLY IMMEDIATE");
-          testTblConst(
-            `FOREIGN KEY (id) REFERENCES tbl2 (id)
-            /*c1*/ NOT /*c2*/ DEFERRABLE /*c3*/ INITIALLY /*c4*/ IMMEDIATE`
-          );
+          testTblConstWc("FOREIGN KEY (id) REFERENCES tbl2 (id) DEFERRABLE");
+          testTblConstWc("FOREIGN KEY (id) REFERENCES tbl2 (id) NOT DEFERRABLE");
+          testTblConstWc("FOREIGN KEY (id) REFERENCES tbl2 (id) DEFERRABLE INITIALLY DEFERRED");
+          testTblConstWc("FOREIGN KEY (id) REFERENCES tbl2 (id) DEFERRABLE INITIALLY IMMEDIATE");
         });
       });
 
       dialect("mysql", () => {
         it("INDEX / KEY", () => {
-          testTblConst("KEY (id)");
-          testTblConst("INDEX (id)");
-          testTblConst("KEY (id, name)");
-          testTblConst("KEY /*c1*/ (/*c2*/ id /*c3*/,/*c4*/ name /*c5*/)");
+          testTblConstWc("KEY (id)");
+          testTblConstWc("INDEX (id)");
+          testTblConstWc("KEY (id, name)");
         });
 
         it("FULLTEXT INDEX", () => {
-          testTblConst("FULLTEXT (name)");
-          testTblConst("SPATIAL (name)");
-          testTblConst("FULLTEXT INDEX (name)");
-          testTblConst("SPATIAL INDEX (name, name2)");
-          testTblConst("FULLTEXT KEY (name, name2)");
-          testTblConst("SPATIAL KEY (name)");
-
-          testTblConst("FULLTEXT /*c1*/ KEY /*c2*/ (/*c3*/ name /*c4*/)");
+          testTblConstWc("FULLTEXT (name)");
+          testTblConstWc("SPATIAL (name)");
+          testTblConstWc("FULLTEXT INDEX (name)");
+          testTblConstWc("SPATIAL INDEX (name, name2)");
+          testTblConstWc("FULLTEXT KEY (name, name2)");
+          testTblConstWc("SPATIAL KEY (name)");
         });
       });
 
       dialect("sqlite", () => {
         it("supports ON CONFLICT clause", () => {
-          testTblConst("PRIMARY KEY (id) ON CONFLICT ROLLBACK");
-          testTblConst("PRIMARY KEY (id) ON CONFLICT ABORT");
-          testTblConst("PRIMARY KEY (id) ON CONFLICT FAIL");
-          testTblConst("PRIMARY KEY (id) ON CONFLICT IGNORE");
-          testTblConst("PRIMARY KEY (id) ON CONFLICT REPLACE");
-          testTblConst("PRIMARY KEY (id) /*c1*/ ON /*c2*/ CONFLICT /*c3*/ REPLACE");
+          testTblConstWc("PRIMARY KEY (id) ON CONFLICT ROLLBACK");
+          testTblConstWc("PRIMARY KEY (id) ON CONFLICT ABORT");
+          testTblConstWc("PRIMARY KEY (id) ON CONFLICT FAIL");
+          testTblConstWc("PRIMARY KEY (id) ON CONFLICT IGNORE");
+          testTblConstWc("PRIMARY KEY (id) ON CONFLICT REPLACE");
 
-          testTblConst("UNIQUE (id) ON CONFLICT FAIL");
-          testTblConst("CHECK (id > 0) ON CONFLICT ROLLBACK");
+          testTblConstWc("UNIQUE (id) ON CONFLICT FAIL");
+          testTblConstWc("CHECK (id > 0) ON CONFLICT ROLLBACK");
         });
       });
 
       dialect(["mysql", "sqlite"], () => {
         it("supports CONSTRAINT keyword for table constraints", () => {
-          testTblConst("CONSTRAINT PRIMARY KEY (id)");
-          testTblConst("CONSTRAINT UNIQUE KEY (id)");
-          testTblConst("CONSTRAINT CHECK (false)");
-          testTblConst("CONSTRAINT FOREIGN KEY (id) REFERENCES tbl2 (id)");
-          testTblConst("CONSTRAINT /*c1*/ CHECK (true)");
+          testTblConstWc("CONSTRAINT PRIMARY KEY (id)");
+          testTblConstWc("CONSTRAINT UNIQUE KEY (id)");
+          testTblConstWc("CONSTRAINT CHECK (false)");
+          testTblConstWc("CONSTRAINT FOREIGN KEY (id) REFERENCES tbl2 (id)");
         });
 
         it("supports named table constraints", () => {
-          testTblConst("CONSTRAINT cname PRIMARY KEY (id)");
-          testTblConst("CONSTRAINT cname UNIQUE KEY (id)");
-          testTblConst("CONSTRAINT cname CHECK (false)");
-          testTblConst("CONSTRAINT cname FOREIGN KEY (id) REFERENCES tbl2 (id)");
-          testTblConst("CONSTRAINT /*c1*/ cname /*c2*/ CHECK (true)");
+          testTblConstWc("CONSTRAINT cname PRIMARY KEY (id)");
+          testTblConstWc("CONSTRAINT cname UNIQUE KEY (id)");
+          testTblConstWc("CONSTRAINT cname CHECK (false)");
+          testTblConstWc("CONSTRAINT cname FOREIGN KEY (id) REFERENCES tbl2 (id)");
         });
       });
     });
