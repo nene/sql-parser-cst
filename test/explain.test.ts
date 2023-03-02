@@ -1,10 +1,9 @@
-import { dialect, test } from "./test_utils";
+import { dialect, test, testWc } from "./test_utils";
 
 describe("explain", () => {
   dialect(["sqlite", "mysql"], () => {
     it("supports explaining of SELECT statement", () => {
-      test("EXPLAIN SELECT * FROM foo");
-      test("EXPLAIN /*c1*/ SELECT * FROM foo");
+      testWc("EXPLAIN SELECT * FROM foo");
     });
 
     it("supports explaining of INSERT/UPDATE/DELETE statements", () => {
@@ -16,20 +15,22 @@ describe("explain", () => {
 
   dialect("sqlite", () => {
     it("supports EXPLAIN QUERY PLAN", () => {
-      test("EXPLAIN QUERY PLAN SELECT 1");
-      test("EXPLAIN /*c1*/ QUERY /*c2*/ PLAN /*c3*/ SELECT 1");
+      testWc("EXPLAIN QUERY PLAN SELECT 1");
     });
   });
 
   dialect("mysql", () => {
     it("supports DESCRIBE/DESC instead of EXPLAIN", () => {
-      test("DESCRIBE SELECT 1");
-      test("DESC SELECT 1");
+      testWc("DESCRIBE SELECT 1");
+      testWc("DESC SELECT 1");
     });
 
     it("supports EXPLAIN ANALYZE", () => {
-      test("EXPLAIN ANALYZE SELECT 1");
-      test("DESCRIBE /*c1*/ ANALYZE /*c2*/ SELECT 1");
+      testWc("EXPLAIN ANALYZE SELECT 1");
+    });
+
+    it("supports DESCRIBE ANALYZE", () => {
+      testWc("DESCRIBE ANALYZE SELECT 1");
     });
   });
 
