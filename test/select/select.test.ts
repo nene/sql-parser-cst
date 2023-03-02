@@ -1,11 +1,11 @@
-import { dialect, parseStmt, test } from "../test_utils";
+import { dialect, parseStmt, test, testWc } from "../test_utils";
 
 describe("select", () => {
   it("parses simple SELECT", () => {
     test("SELECT 'hello'");
     test("SELECT 1, 2, 3");
     test("select 123");
-    test("SELECT /*c0*/ 1 /*c1*/, /*c2*/ 2");
+    testWc("SELECT 1 , 2");
   });
 
   it("parses SELECT with set quantifier", () => {
@@ -31,10 +31,8 @@ describe("select", () => {
   });
 
   it("parses column aliases", () => {
-    test("SELECT 'hello' AS foo");
-    test("SELECT 1 as bar, 2 baz");
-    test("SELECT 1 /*c1*/ as /*c2*/ bar");
-    test("SELECT 1 /*c*/ bar");
+    testWc("SELECT 'hello' AS foo");
+    testWc("SELECT 1 as bar, 2 baz");
   });
 
   it("supports string as column alias", () => {
@@ -45,17 +43,15 @@ describe("select", () => {
   });
 
   it("supports SELECT *", () => {
-    test("SELECT *");
-    test("SELECT *, foo, bar");
-    test("SELECT foo, *, bar");
-    test("SELECT /*c*/ *");
+    testWc("SELECT *");
+    testWc("SELECT *, foo, bar");
+    testWc("SELECT foo, *, bar");
   });
 
   it("supports qualified SELECT tbl.*", () => {
-    test("SELECT tbl.*");
-    test("SELECT tbl1.*, tbl2.*");
-    test("SELECT foo, tbl.*, bar");
-    test("SELECT tbl /*c1*/./*c2*/ *");
+    testWc("SELECT tbl.*");
+    testWc("SELECT tbl1.*, tbl2.*");
+    testWc("SELECT foo, tbl.*, bar");
   });
 
   it("supports parenthesized sub-select between WITH and ORDER BY", () => {
@@ -72,18 +68,15 @@ describe("select", () => {
 
   dialect("bigquery", () => {
     it("supports trailing commas in SELECT clause", () => {
-      test("SELECT foo, bar, FROM tbl");
-      test("SELECT foo /*c1*/, /*c2*/ FROM tbl");
+      testWc("SELECT foo, bar, FROM tbl");
     });
 
     it("supports SELECT AS STRUCT", () => {
-      test("SELECT AS STRUCT 1 a, 2 b");
-      test("SELECT /*c1*/ AS /*c2*/ STRUCT /*c3*/ 1 a, 2 b");
+      testWc("SELECT AS STRUCT 1 a, 2 b");
     });
 
     it("supports SELECT AS VALUE", () => {
-      test("SELECT AS VALUE STRUCT(1 AS a, 2 AS b)");
-      test("SELECT /*c1*/ AS /*c2*/ VALUE /*c3*/ STRUCT(1 AS a, 2 AS b)");
+      testWc("SELECT AS VALUE STRUCT(1 AS a, 2 AS b)");
     });
 
     it("supports SELECT {ALL | DISTINCT} AS {STRUCT | VALUE}", () => {
@@ -93,8 +86,7 @@ describe("select", () => {
 
     describe("EXCEPT()", () => {
       it("supports SELECT * EXCEPT()", () => {
-        test("SELECT * EXCEPT (col1, col2)");
-        test("SELECT /*c0*/ * /*c1*/ EXCEPT /*c2*/ (/*c3*/ col1 /*c4*/,/*c5*/ col2 /*c6*/)");
+        testWc("SELECT * EXCEPT ( col1, col2 )");
       });
 
       it("supports SELECT tbl.* EXCEPT()", () => {
@@ -108,12 +100,7 @@ describe("select", () => {
 
     describe("REPLACE()", () => {
       it("supports SELECT * REPLACE()", () => {
-        test("SELECT * REPLACE ('hello' AS col1, 10+5 col2)");
-        test(`
-          SELECT /*c0*/ * /*c1*/ REPLACE /*c2*/ (
-            /*c3*/ 'hello' /*c4*/ AS /*c5*/ col1 /*c6*/,
-            /*c7*/ 18 /*c8*/ col2 /*c9*/
-          )`);
+        testWc("SELECT * REPLACE ( 'hello' AS col1, 10+5 col2 )");
       });
 
       it("supports SELECT tbl.* REPLACE()", () => {

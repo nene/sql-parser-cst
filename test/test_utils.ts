@@ -108,8 +108,11 @@ export function parseExpr(
 }
 
 export function testClause(clause: string) {
-  const sql = `SELECT c FROM t ${clause}`;
-  expect(show(parse(sql, includeAll))).toBe(sql);
+  test(`SELECT c FROM t ${clause}`);
+}
+
+export function testClauseWc(clause: string) {
+  testClause(withComments(clause));
 }
 
 /**

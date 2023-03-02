@@ -2,15 +2,13 @@ import { dialect, test, testWc } from "../test_utils";
 
 describe("select FROM", () => {
   it("supports basic syntax", () => {
-    test("SELECT col FROM tbl");
-    test("SELECT col from tbl");
-    test("SELECT /*c1*/ col /*c2*/ FROM /*c3*/ tbl");
+    testWc("SELECT col FROM tbl");
+    testWc("SELECT col from tbl");
   });
 
   it("supports table alias", () => {
-    test("SELECT t.col FROM my_db.my_long_table_name AS t");
-    test("SELECT t.col FROM my_db.my_long_table_name t");
-    test("SELECT t.col FROM db.tbl /*c1*/ AS /*c2*/ t");
+    testWc("SELECT t.col FROM my_db.my_long_table_name AS t");
+    testWc("SELECT t.col FROM my_db.my_long_table_name t");
   });
 
   dialect("bigquery", () => {
@@ -43,7 +41,7 @@ describe("select FROM", () => {
     test("SELECT col FROM (tbl)");
     test("SELECT t.col FROM (db.tbl) AS t");
     test("SELECT t.col FROM (db.tbl) t");
-    test("SELECT t.col FROM (/*c1*/ db.tbl /*c2*/) /*c3*/ AS /*c4*/ t");
+    testWc("SELECT t.col FROM ( db.tbl ) AS t");
   });
 
   it("supports aliased table name in parenthesis", () => {
@@ -56,8 +54,7 @@ describe("select FROM", () => {
   });
 
   it("supports subselect in parenthesis", () => {
-    test("SELECT t.col FROM (SELECT x FROM tbl) AS t");
-    test("SELECT t.col FROM (/*c1*/ SELECT x FROM tbl /*c2*/) /*c3*/ AS /*c4*/ t");
+    testWc("SELECT t.col FROM ( SELECT x FROM tbl ) AS t");
   });
 
   it("supports comma-joined tables in parenthesis", () => {
@@ -82,15 +79,13 @@ describe("select FROM", () => {
 
   dialect("sqlite", () => {
     it("supports INDEXED BY modifier on referenced tables", () => {
-      test("SELECT * FROM my_table INDEXED BY my_idx");
-      test("SELECT * FROM schm.my_table AS t1 INDEXED BY my_idx");
-      test("SELECT * FROM my_table /*c1*/ INDEXED /*c2*/ BY /*c3*/ my_idx");
+      testWc("SELECT * FROM my_table INDEXED BY my_idx");
+      testWc("SELECT * FROM schm.my_table AS t1 INDEXED BY my_idx");
     });
 
     it("supports NOT INDEXED modifier on referenced tables", () => {
-      test("SELECT * FROM my_table NOT INDEXED");
-      test("SELECT * FROM schm.my_table AS t1 NOT INDEXED");
-      test("SELECT * FROM my_table /*c1*/ NOT /*c2*/ INDEXED");
+      testWc("SELECT * FROM my_table NOT INDEXED");
+      testWc("SELECT * FROM schm.my_table AS t1 NOT INDEXED");
     });
   });
 
@@ -99,7 +94,7 @@ describe("select FROM", () => {
       it("supports UNNEST of array literal", () => {
         test("SELECT * FROM UNNEST([1,2,3])");
         test("SELECT * FROM UNNEST(ARRAY[1,2,3])");
-        test("SELECT * FROM UNNEST /*c1*/ (/*c2*/ [1] /*c3*/)");
+        testWc("SELECT * FROM UNNEST ( [1] )");
       });
 
       it("supports UNNEST of array path", () => {
@@ -124,13 +119,8 @@ describe("select FROM", () => {
       });
 
       it("supports UNNEST .. WITH OFFSET+alias", () => {
-        test("SELECT * FROM UNNEST([1,2,3]) WITH OFFSET AS my_numbers");
-        test("SELECT * FROM UNNEST([1,2,3]) WITH OFFSET my_numbers");
-        test(`
-          SELECT * FROM
-            UNNEST([1,2,3]) /*c1*/ AS /*c2*/ my_nums /*c3*/
-            WITH /*c4*/ OFFSET /*c5*/ AS /*c6*/ my_numbers
-        `);
+        testWc("SELECT * FROM UNNEST([1,2,3]) WITH OFFSET AS my_numbers");
+        testWc("SELECT * FROM UNNEST([1,2,3]) WITH OFFSET my_numbers");
       });
 
       it("supports UNNEST comma-joined with other tables", () => {
@@ -150,27 +140,11 @@ describe("select FROM", () => {
 
     describe("PIVOT operator", () => {
       it("supports simple PIVOT", () => {
-        test("SELECT * FROM my_table PIVOT(sum(sales) FOR quarter IN ('Q1', 'Q2'))");
-        test(`
-          SELECT * FROM my_table /*c0*/
-          PIVOT /*c1*/ (/*c2*/
-            sum(sales) /*c3*/
-            FOR /*c4*/ quarter /*c5*/
-            IN /*c6*/
-            (/*c7*/ 'Q1', 'Q2' /*c8*/)
-          /*c9*/)
-        `);
+        testWc("SELECT * FROM my_table PIVOT ( sum(sales) FOR quarter IN ( 'Q1', 'Q2' ) )");
       });
 
       it("supports aliases in pivot columns list", () => {
-        test("SELECT * FROM my_table PIVOT(count(*) FOR quarter IN ('Q1' AS q1, 'Q2' q2))");
-        test(`
-          SELECT * FROM my_table
-          PIVOT(
-            count(*) FOR quarter IN
-            ('Q1' /*c1*/ AS /*c2*/ q1, 'Q2' /*c3*/ q2)
-          )
-        `);
+        testWc("SELECT * FROM my_table PIVOT(count(*) FOR quarter IN ('Q1' AS q1, 'Q2' q2))");
       });
 
       it("supports multiple aggregations", () => {
@@ -178,17 +152,9 @@ describe("select FROM", () => {
       });
 
       it("supports aggregations with aliases", () => {
-        test(
+        testWc(
           "SELECT * FROM my_table PIVOT(sum(sales) AS total_sales, count(*) total_cnt FOR quarter IN ('Q1'))"
         );
-        test(`
-          SELECT * FROM my_table
-          PIVOT(
-            sum(sales) /*c1*/ AS /*c2*/ total_sales /*c3*/,
-            /*c4*/ count(*) /*c5*/ total_cnt /*c6*/
-            FOR quarter IN ('Q1')
-          )
-        `);
       });
 
       it("supports PIVOT over subquery", () => {
@@ -202,27 +168,11 @@ describe("select FROM", () => {
 
     describe("UNPIVOT operator", () => {
       it("supports single-column UNPIVOT", () => {
-        test("SELECT * FROM my_table UNPIVOT(sales FOR quarter IN (Q1, Q2))");
-        test(`
-          SELECT * FROM my_table /*c0*/
-          UNPIVOT /*c1*/ (/*c2*/
-            sales /*c3*/
-            FOR /*c4*/ quarter /*c5*/
-            IN /*c6*/
-            (/*c7*/ Q1, Q2 /*c8*/)
-          /*c9*/)
-        `);
+        testWc("SELECT * FROM my_table UNPIVOT ( sales FOR quarter IN ( Q1 , Q2 ) )");
       });
 
       it("supports aliases in single-column unpivot columns list", () => {
-        test("SELECT * FROM my_table UNPIVOT(sales FOR quarter IN (Qrtr1 AS q1, Qrtr2 q2))");
-        test(`
-          SELECT * FROM my_table
-          UNPIVOT(
-            sales FOR quarter IN
-            (Qrtr1 /*c1*/ AS /*c2*/ q1, Qrtr2 /*c3*/ q2)
-          )
-        `);
+        testWc("SELECT * FROM my_table UNPIVOT(sales FOR quarter IN (Qrtr1 AS q1, Qrtr2 q2))");
       });
 
       it("supports multi-column UNPIVOT aggregations", () => {
@@ -232,26 +182,13 @@ describe("select FROM", () => {
       });
 
       it("supports multi-column unpivot with aliases", () => {
-        test(
-          "SELECT * FROM my_table UNPIVOT((first_half, second_half) FOR quarter IN ((Q1, Q2) as sem1, (Q3, Q4) sem2))"
+        testWc(
+          "SELECT * FROM my_table UNPIVOT( ( first_half, second_half ) FOR quarter IN ( ( Q1 , Q2 ) as sem1 , ( Q3 , Q4 ) sem2) )"
         );
-        test(`
-          SELECT * FROM my_table
-          UNPIVOT(
-            (/*c1*/ first_half /*c2*/,/*c3*/ second_half /*c4*/) /*c5*/
-            FOR quarter IN /*c6*/ (
-              /*c7*/ (/*cc*/ Q1, Q2 /*dd*/) /*c8*/ AS /*c9*/ sem1 /*c10*/,
-              /*c11*/ ( Q3 /*cc*/,/*dd*/ Q4 ) /*c12*/ sem2 /*c13*/
-            )/*c14*/
-          )
-        `);
       });
 
       it("supports unpivot with null handling modifiers", () => {
-        test("SELECT * FROM my_table UNPIVOT INCLUDE NULLS (sales FOR quarter IN (Q1, Q2))");
-        test(
-          "SELECT * FROM my_table UNPIVOT /*c1*/ EXCLUDE /*c2*/ NULLS /*c3*/ (sales FOR quarter IN (Q1, Q2))"
-        );
+        testWc("SELECT * FROM my_table UNPIVOT INCLUDE NULLS (sales FOR quarter IN (Q1, Q2))");
       });
 
       it("supports UNPIVOT between joins", () => {
@@ -261,10 +198,7 @@ describe("select FROM", () => {
 
     describe("TABLESAMPLE operator", () => {
       it("supports TABLESAMPLE", () => {
-        test("SELECT * FROM my_table TABLESAMPLE SYSTEM (10 PERCENT)");
-        test(
-          "SELECT * FROM my_table TABLESAMPLE /*c0*/ SYSTEM /*c1*/ (/*c*/ 25 /*c*/ PERCENT /*c*/)"
-        );
+        testWc("SELECT * FROM my_table TABLESAMPLE SYSTEM ( 10 PERCENT )");
       });
 
       it("supports TABLESAMPLE inside JOIN", () => {

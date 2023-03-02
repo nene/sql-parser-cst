@@ -1,20 +1,18 @@
-import { dialect, testClause } from "../test_utils";
+import { dialect, testClauseWc } from "../test_utils";
 
 describe("select GROUP BY", () => {
   it("parses group by with single expression", () => {
-    testClause("GROUP BY t.id");
-    testClause("/*c0*/ Group /*c1*/ By /*c2*/ t.id");
+    testClauseWc("GROUP BY t.id");
+    testClauseWc("Group By t.id");
   });
 
   it("parses group by with multiple expressions", () => {
-    testClause("GROUP BY id, name, age");
-    testClause("GROUP BY /*c1*/ id /*c2*/, /*c3*/ name");
+    testClauseWc("GROUP BY id, name, age");
   });
 
   dialect("bigquery", () => {
     it("supports GROUP BY ROLLUP()", () => {
-      testClause("GROUP BY ROLLUP (id, name + age)");
-      testClause("GROUP BY /*c1*/ ROLLUP /*c2*/ (/*c3*/ id /*c3*/,/*c4*/ name /*c5*/)");
+      testClauseWc("GROUP BY ROLLUP ( id, name + age )");
     });
   });
 });

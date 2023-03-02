@@ -1,10 +1,10 @@
-import { dialect, testClause } from "../test_utils";
+import { dialect, testClauseWc } from "../test_utils";
 
 describe("select QUALIFY", () => {
   dialect("bigquery", () => {
     it("parses qualify clause", () => {
-      testClause("QUALIFY x > 3");
-      testClause("/*c1*/ Qualify /*c2*/ x < 81");
+      testClauseWc("QUALIFY x > 3");
+      testClauseWc("Qualify x < 81");
     });
   });
 

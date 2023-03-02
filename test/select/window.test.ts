@@ -1,9 +1,8 @@
-import { testClause } from "../test_utils";
+import { testClause, testClauseWc } from "../test_utils";
 
 describe("select WINDOW", () => {
   it("supports named window definition", () => {
-    testClause("WINDOW my_win AS (ORDER BY col1)");
-    testClause("WINDOW /*c1*/ my_win /*c2*/ AS /*c3*/ (/*c4*/ ORDER /*c5*/ BY /*c6*/ col1 /*c7*/)");
+    testClauseWc("WINDOW my_win AS ( ORDER BY col1 )");
   });
 
   it("supports multiple named window definitions", () => {
