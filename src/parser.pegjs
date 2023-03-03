@@ -13,6 +13,7 @@
     createBinaryExprChain,
     createBinaryExpr,
     createCompoundSelectStmtChain,
+    createStringConcatExprChain,
     createJoinExprChain,
     createMemberExprChain,
     createFuncCall,
@@ -4332,9 +4333,16 @@ string_literal_plain
     / string_literal_double_quoted_bs
     / string_literal_raw) { return s; }
   / &sqlite s:string_literal_single_quoted_qq { return s; }
-  / &mysql s:(
-      string_literal_single_quoted_qq_bs
-    / string_literal_double_quoted_qq_bs) { return s; }
+  / &mysql s:mysql_string_literal_chain { return s; }
+
+mysql_string_literal_chain
+  = head:mysql_string_literal_plain tail:(__ mysql_string_literal_plain)* {
+    return createStringConcatExprChain(head, tail);
+  }
+
+mysql_string_literal_plain
+  = string_literal_single_quoted_qq_bs
+  / string_literal_double_quoted_qq_bs
 
 charset_introducer
   = "_" cs:charset_name !ident_part { return cs; }

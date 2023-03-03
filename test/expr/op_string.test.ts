@@ -1,4 +1,4 @@
-import { dialect, testExpr, testExprWc } from "../test_utils";
+import { dialect, parseExpr, testExpr, testExprWc } from "../test_utils";
 
 describe("string operators", () => {
   it("supports [NOT] LIKE operator", () => {
@@ -41,6 +41,41 @@ describe("string operators", () => {
   dialect(["sqlite", "bigquery"], () => {
     it("treats || as concatenation operator", () => {
       testExprWc(`'hello' || '_' || 'world'`);
+    });
+  });
+
+  dialect("mysql", () => {
+    it("supports string-concatenation with space", () => {
+      testExpr(`'foo' 'bar'`);
+      testExpr(`'foo' "bar" 'baz'`);
+      testExpr(`'foo' \n 'bar'`);
+      testExpr(`'foo' /* comment */ 'bar'`);
+    });
+
+    it("does not parse string-concatenation with space as alias", () => {
+      expect(parseExpr(`'foo' 'bar'`).type).toBe("binary_expr");
+      expect(parseExpr(`'foo' "bar" 'baz'`).type).toBe("binary_expr");
+      expect(parseExpr(`'foo' \n 'bar'`).type).toBe("binary_expr");
+      expect(parseExpr(`'foo' /* comment */ 'bar'`).type).toBe("binary_expr");
+    });
+
+    it("parses string-concatenation with space as ''-operator", () => {
+      expect(parseExpr(`'foo' 'bar'`)).toMatchInlineSnapshot(`
+        {
+          "left": {
+            "text": "'foo'",
+            "type": "string_literal",
+            "value": "foo",
+          },
+          "operator": "",
+          "right": {
+            "text": "'bar'",
+            "type": "string_literal",
+            "value": "bar",
+          },
+          "type": "binary_expr",
+        }
+      `);
     });
   });
 

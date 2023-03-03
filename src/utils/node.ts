@@ -37,6 +37,16 @@ const deriveLoc = <T extends { left: Node; right: Node }>(binExpr: T): T => {
   return { ...binExpr, range: [start, end] };
 };
 
+export function createStringConcatExprChain(
+  head: BinaryExpr["left"],
+  tail: [Whitespace[], BinaryExpr["right"]][]
+): Expr {
+  return tail.reduce(
+    (left, [c1, right]) => deriveLoc(createBinaryExpr(left, c1, "", [], right)),
+    head
+  );
+}
+
 export function createBinaryExprChain(
   head: BinaryExpr["left"],
   tail: [

@@ -99,6 +99,7 @@ type SymbolOperator =
   | "<=>" // MySQL
   // string concat
   | "||" // OR in MySQL
+  | "" // MySQL concatenation of adjecent string literals
   // Logic
   | "&&" // MySQL
   // JSON
