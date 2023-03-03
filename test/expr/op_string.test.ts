@@ -77,6 +77,14 @@ describe("string operators", () => {
         }
       `);
     });
+
+    it("supports concatenation of string with charset with another string", () => {
+      testExpr(`_utf8'foo' 'bar'`);
+    });
+
+    it("does not support concatenating of two strings with charset", () => {
+      expect(() => parseExpr(`_utf8'foo' _utf8'bar'`)).toThrowError();
+    });
   });
 
   dialect(["sqlite", "mysql"], () => {
