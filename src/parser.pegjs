@@ -4309,7 +4309,7 @@ string_literal "string"
 string_literal_mysql
   = string_literal_with_charset
   / string_literal_plain
-  / string_literal_natural_charset
+  / mysql_string_literal_natural_charset
 
 string_literal_with_charset // for MySQL only
   = charset:charset_introducer string:(__ string_literal_without_charset) {
@@ -4337,6 +4337,11 @@ string_literal_plain
 
 mysql_string_literal_chain
   = head:mysql_string_literal_plain tail:(__ mysql_string_literal_plain)* {
+    return createStringConcatExprChain(head, tail);
+  }
+
+mysql_string_literal_natural_charset
+  = head:string_literal_natural_charset tail:(__ mysql_string_literal_plain)* {
     return createStringConcatExprChain(head, tail);
   }
 

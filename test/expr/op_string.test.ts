@@ -85,6 +85,15 @@ describe("string operators", () => {
     it("does not support concatenating of two strings with charset", () => {
       expect(() => parseExpr(`_utf8'foo' _utf8'bar'`)).toThrowError();
     });
+
+    it("supports concatenation of natural charset string with plain string", () => {
+      testExpr(`N'foo' 'bar'`);
+      expect(parseExpr(`N'foo' 'bar'`).type).toBe("binary_expr");
+    });
+
+    it("does not support concatenating of two natural charset strings", () => {
+      expect(() => parseExpr(`N'foo' N'bar'`)).toThrowError();
+    });
   });
 
   dialect(["sqlite", "mysql"], () => {
