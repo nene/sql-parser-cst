@@ -70,6 +70,36 @@ describe("blob literal", () => {
   });
 
   dialect("mysql", () => {
+    describe("bit literal", () => {
+      it("parses as blob", () => {
+        expect(parseExpr(`0b0000110100001110`)).toMatchInlineSnapshot(`
+          {
+            "text": "0b0000110100001110",
+            "type": "blob_literal",
+            "value": [
+              13,
+              14,
+            ],
+          }
+        `);
+      });
+
+      it("supports bit literal with bit count not divisable by 8", () => {
+        testExpr(`0b1`);
+        expect(parseExpr(`0b1111`)).toMatchInlineSnapshot(`
+          {
+            "text": "0b1111",
+            "type": "blob_literal",
+            "value": [
+              15,
+            ],
+          }
+        `);
+      });
+    });
+  });
+
+  dialect("mysql", () => {
     describe("bit literal string", () => {
       it("parses as blob", () => {
         testExpr(`b'01010111'`);

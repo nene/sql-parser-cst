@@ -4576,6 +4576,7 @@ blob_literal
   = blob_literal_hex_string
   / &mysql n:blob_literal_bit_string { return n; }
   / &mysql n:blob_literal_hex { return n; }
+  / &mysql n:blob_literal_bit { return n; }
   / &bigquery n:blob_literal_raw_byte { return n; }
   / &bigquery n:blob_literal_byte { return n; }
 
@@ -4617,6 +4618,15 @@ blob_literal_hex
       type: "blob_literal",
       text: text(),
       value: parseHexBlob(chars.join("")),
+    });
+  }
+
+blob_literal_bit
+  = "0b" chars:[01]+ {
+    return loc({
+      type: "blob_literal",
+      text: text(),
+      value: parseBitBlob(chars.join("")),
     });
   }
 
