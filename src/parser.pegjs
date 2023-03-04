@@ -4202,33 +4202,33 @@ ident_part  = [A-Za-z0-9_]
  * ------------------------------------------------------------------------------------ *
  */
 variable
-  = "@" ident_name {
+  = "@" name:ident_name {
     return loc({
       type: "variable",
-      name: text(),
+      name: name,
       text: text(),
     });
   }
-  / "@" backticks_quoted_ident_qq {
+  / "@" ident:backticks_quoted_ident_qq {
     return loc({
       type: "variable",
-      name: text(),
+      name: ident.name,
       text: text(),
     });
   }
-  / "@" mysql_string_literal_plain {
+  / "@" str:mysql_string_literal_plain {
     return loc({
       type: "variable",
-      name: text(),
+      name: str.value,
       text: text(),
     });
   }
 
 system_variable
-  = "@@" ident_name {
+  = "@@" name:ident_name {
     return loc({
       type: "variable",
-      name: text(),
+      name: name,
       text: text(),
     });
   }

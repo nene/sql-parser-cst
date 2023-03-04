@@ -12,7 +12,7 @@ describe("variable", () => {
       expect(parseExpr("@@error.message")).toMatchInlineSnapshot(`
         {
           "object": {
-            "name": "@@error",
+            "name": "error",
             "text": "@@error",
             "type": "variable",
           },
@@ -52,7 +52,7 @@ describe("variable", () => {
     it("parses @var as variable", () => {
       expect(parseExpr("@var")).toMatchInlineSnapshot(`
         {
-          "name": "@var",
+          "name": "var",
           "text": "@var",
           "type": "variable",
         }
@@ -62,7 +62,7 @@ describe("variable", () => {
     it("parses backtick-quoted variable", () => {
       expect(parseExpr("@`var`")).toMatchInlineSnapshot(`
         {
-          "name": "@\`var\`",
+          "name": "var",
           "text": "@\`var\`",
           "type": "variable",
         }
@@ -72,7 +72,7 @@ describe("variable", () => {
     it("parses single-quoted variable", () => {
       expect(parseExpr("@'foo'")).toMatchInlineSnapshot(`
         {
-          "name": "@'foo'",
+          "name": "foo",
           "text": "@'foo'",
           "type": "variable",
         }
@@ -82,7 +82,7 @@ describe("variable", () => {
     it("parses double-quoted variable", () => {
       expect(parseExpr('@"foo"')).toMatchInlineSnapshot(`
         {
-          "name": "@"foo"",
+          "name": "foo",
           "text": "@"foo"",
           "type": "variable",
         }
