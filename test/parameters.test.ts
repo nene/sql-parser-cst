@@ -1,4 +1,4 @@
-import { includeAll, test } from "./test_utils";
+import { dialect, includeAll, test } from "./test_utils";
 
 describe("bound parameters", () => {
   describe("by default no parameters are supported", () => {
@@ -11,8 +11,11 @@ describe("bound parameters", () => {
     it("no support for :name parameters", () => {
       expect(() => test("SELECT * FROM foo WHERE x = :foo")).toThrowError();
     });
-    it("no support for @name parameters", () => {
-      expect(() => test("SELECT * FROM foo WHERE x = @foo")).toThrowError();
+    // In MySQL @name syntax is used for variables
+    dialect(["bigquery", "sqlite"], () => {
+      it("no support for @name parameters", () => {
+        expect(() => test("SELECT * FROM foo WHERE x = @foo")).toThrowError();
+      });
     });
     it("no support for $name parameters", () => {
       expect(() => test("SELECT * FROM foo WHERE x = $foo")).toThrowError();
@@ -40,11 +43,14 @@ describe("bound parameters", () => {
     });
   });
 
-  describe("when paramTypes includes '@name'", () => {
-    it("supports @name parameter placeholders", () => {
-      test("SELECT * FROM foo WHERE x = @foo AND y = @bar", {
-        paramTypes: ["@name"],
-        ...includeAll,
+  // In MySQL @name syntax is used for variables
+  dialect(["bigquery", "sqlite"], () => {
+    describe("when paramTypes includes '@name'", () => {
+      it("supports @name parameter placeholders", () => {
+        test("SELECT * FROM foo WHERE x = @foo AND y = @bar", {
+          paramTypes: ["@name"],
+          ...includeAll,
+        });
       });
     });
   });
