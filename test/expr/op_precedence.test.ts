@@ -145,6 +145,16 @@ describe("operator precedence", () => {
         `(((true OR false) || true) OR false)`
       );
     });
+
+    it("OR > :=", () => {
+      expect(showPrecedence(`@foo OR @bar := true OR false`)).toBe(
+        `((@foo OR @bar) := (true OR false))`
+      );
+    });
+
+    it(":= operator is right-associative", () => {
+      expect(showPrecedence(`@x := @y := @z`)).toBe(`(@x := (@y := @z))`);
+    });
   });
 
   dialect("bigquery", () => {

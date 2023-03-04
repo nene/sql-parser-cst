@@ -110,7 +110,9 @@ type SymbolOperator =
   | "|"
   | ">>"
   | "<<"
-  | "^"; // BigQuery, MySQL
+  | "^" // BigQuery, MySQL
+  // Assignment
+  | ":="; // MySQL
 
 type KeywordOperator =
   // arithmetic

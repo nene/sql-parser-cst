@@ -3331,6 +3331,7 @@ sqlite_type_name_part
  *
  * Operator precedence, as implemented currently
  * ---------------------------------------------------------------------------------------------------
+ * | :=                                                       | assignment                           |
  * | OR, ||                                                   | disjunction                          |
  * | XOR                                                      | exclusive or                         |
  * | AND, &&                                                  | conjunction                          |
@@ -3349,7 +3350,13 @@ sqlite_type_name_part
  */
 
 expr
-  = or_expr
+  = assign_expr
+
+assign_expr
+  = &mysql left:or_expr c1:__ op:":=" c2:__ right:assign_expr {
+    return loc(createBinaryExpr(left, c1, op, c2, right));
+  }
+  / or_expr
 
 or_expr
   = head:xor_expr tail:(__ or_op __ xor_expr)* {
