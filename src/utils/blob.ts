@@ -8,8 +8,7 @@
  *     "5A59" -> [90, 89]
  */
 export const parseHexBlob = (data: string): number[] => {
-  const allMatches = data.match(/..?/g) || [];
-  return allMatches.map((m) => parseInt(m, 16));
+  return chunksFromRight(data, 2).map((m) => parseInt(m, 16));
 };
 
 /**
@@ -18,8 +17,26 @@ export const parseHexBlob = (data: string): number[] => {
  *     "0101101001011001" -> [90, 89]
  */
 export const parseBitBlob = (data: string): number[] => {
-  const allMatches = data.match(/.{1,8}/g) || [];
-  return allMatches.map((m) => parseInt(m, 2));
+  return chunksFromRight(data, 8).map((m) => parseInt(m, 2));
+};
+
+/**
+ * Slices string to chunks of specified max size,
+ * starting the measurement from right, like so:
+ *
+ *     chunksFromRight("ABCDEFG", 3) -> ["A", "BCD", "EFG"]
+ */
+export const chunksFromRight = (text: string, chunkSize: number): string[] => {
+  let startIndex = text.length % chunkSize;
+  const chunks: string[] = [];
+  if (startIndex > 0) {
+    chunks.push(text.slice(0, startIndex));
+  }
+  while (startIndex < text.length) {
+    chunks.push(text.slice(startIndex, startIndex + chunkSize));
+    startIndex += chunkSize;
+  }
+  return chunks;
 };
 
 /**

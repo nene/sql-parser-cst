@@ -66,6 +66,20 @@ describe("blob literal", () => {
           }
         `);
       });
+
+      it("groups bytes to groups of two from right", () => {
+        testExpr(`0xF`);
+        expect(parseExpr(`0x1FF`)).toMatchInlineSnapshot(`
+          {
+            "text": "0x1FF",
+            "type": "blob_literal",
+            "value": [
+              1,
+              255,
+            ],
+          }
+        `);
+      });
     });
   });
 
@@ -91,6 +105,19 @@ describe("blob literal", () => {
             "text": "0b1111",
             "type": "blob_literal",
             "value": [
+              15,
+            ],
+          }
+        `);
+      });
+
+      it("groups bits to groups of 8 from right", () => {
+        expect(parseExpr(`0b100001111`)).toMatchInlineSnapshot(`
+          {
+            "text": "0b100001111",
+            "type": "blob_literal",
+            "value": [
+              1,
               15,
             ],
           }
@@ -122,6 +149,19 @@ describe("blob literal", () => {
             "type": "blob_literal",
             "value": [
               1,
+            ],
+          }
+        `);
+      });
+
+      it("groups bits to groups of 8 from right", () => {
+        expect(parseExpr(`B'100001111'`)).toMatchInlineSnapshot(`
+          {
+            "text": "B'100001111'",
+            "type": "blob_literal",
+            "value": [
+              1,
+              15,
             ],
           }
         `);
