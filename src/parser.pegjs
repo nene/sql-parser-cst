@@ -3578,7 +3578,8 @@ primary
   / exists_expr
   / ident
   / (&mysql / &bigquery) e:interval_expr { return e; }
-  / &bigquery e:variable { return e; }
+  / &mysql e:variable { return e; }
+  / &bigquery e:system_variable { return e; }
   / parameter
 
 cast_expr
@@ -4201,6 +4202,29 @@ ident_part  = [A-Za-z0-9_]
  * ------------------------------------------------------------------------------------ *
  */
 variable
+  = "@" ident_name {
+    return loc({
+      type: "variable",
+      name: text(),
+      text: text(),
+    });
+  }
+  / "@" backticks_quoted_ident_qq {
+    return loc({
+      type: "variable",
+      name: text(),
+      text: text(),
+    });
+  }
+  / "@" mysql_string_literal_plain {
+    return loc({
+      type: "variable",
+      name: text(),
+      text: text(),
+    });
+  }
+
+system_variable
   = "@@" ident_name {
     return loc({
       type: "variable",

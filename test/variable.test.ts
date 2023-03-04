@@ -27,6 +27,69 @@ describe("variable", () => {
     });
   });
 
+  dialect("mysql", () => {
+    it("supports @variables", () => {
+      testExpr("@foo");
+    });
+
+    it("supports quoted @variables", () => {
+      testExpr("@`foo`");
+      testExpr(`@'foo'`);
+      testExpr(`@"foo"`);
+    });
+
+    it("supports repeated-quote escapes inside variable names", () => {
+      testExpr("@`fo``o`");
+      testExpr(`@'fo''o'`);
+      testExpr(`@"fo""o"`);
+    });
+
+    it("supports backslash escapes inside variable names", () => {
+      testExpr(String.raw`@'fo\'o'`);
+      testExpr(String.raw`@"fo\"o"`);
+    });
+
+    it("parses @var as variable", () => {
+      expect(parseExpr("@var")).toMatchInlineSnapshot(`
+        {
+          "name": "@var",
+          "text": "@var",
+          "type": "variable",
+        }
+      `);
+    });
+
+    it("parses backtick-quoted variable", () => {
+      expect(parseExpr("@`var`")).toMatchInlineSnapshot(`
+        {
+          "name": "@\`var\`",
+          "text": "@\`var\`",
+          "type": "variable",
+        }
+      `);
+    });
+
+    it("parses single-quoted variable", () => {
+      expect(parseExpr("@'foo'")).toMatchInlineSnapshot(`
+        {
+          "name": "@'foo'",
+          "text": "@'foo'",
+          "type": "variable",
+        }
+      `);
+    });
+
+    it("parses double-quoted variable", () => {
+      expect(parseExpr('@"foo"')).toMatchInlineSnapshot(`
+        {
+          "name": "@"foo"",
+          "text": "@"foo"",
+          "type": "variable",
+        }
+      `);
+    });
+  });
+
   dialect(["sqlite", "mysql"], () => {
     it("does not support @@variables", () => {
       expect(() => parseExpr("@@my_var")).toThrowError();
