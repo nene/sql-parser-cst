@@ -3516,7 +3516,7 @@ mysql_bitwise_xor_expr
   / concat_or_json_expr
 
 concat_or_json_expr
-  = head:collate_expr tail:(__ concat_or_json_op  __ collate_expr)* {
+  = head:binary_expr tail:(__ concat_or_json_op  __ binary_expr)* {
       return createBinaryExprChain(head, tail);
     }
 
@@ -3525,12 +3525,15 @@ concat_or_json_op
   / op:"->>" (&sqlite / &mysql) { return op; }
   / op:"->" (&sqlite / &mysql) { return op; }
 
-collate_expr
-  = (&mysql / &sqlite) left:negation_expr c1:__ op:COLLATE c2:__ right:ident {
-    return loc(createBinaryExpr(left, c1, op, c2, right));
-  }
-  / &mysql op:BINARY right:(__ collate_expr) {
+binary_expr
+  = &mysql op:BINARY right:(__ binary_expr) {
     return loc(createPrefixOpExpr(op, read(right)));
+  }
+  / collate_expr
+
+collate_expr
+  = (&mysql / &sqlite) head:negation_expr tail:(__ COLLATE __ ident)* {
+    return createBinaryExprChain(head, tail);
   }
   / negation_expr
 

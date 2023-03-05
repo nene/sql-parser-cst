@@ -6,6 +6,10 @@ describe("COLLATE operator", () => {
       testExprWc(`'foobar' COLLATE utf8`);
     });
 
+    it("supports nested COLLATE operator", () => {
+      testExprWc(`'foobar' COLLATE utf8mb4_bin COLLATE utf8mb4_general_ci`);
+    });
+
     it("parses COLLATE operator to syntax tree", () => {
       expect(parseExpr("my_col COLLATE utf8")).toMatchInlineSnapshot(`
         {
