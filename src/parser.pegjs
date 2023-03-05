@@ -3344,7 +3344,7 @@ sqlite_type_name_part
  * | *, /, %, DIV, MOD                                        | multiplication, division, modulo     |
  * | ^                                                        | bitwise XOR                          |
  * | ||, ->, ->>                                              | concatenation and JSON               |
- * | COLLATE                                                  | collation                            |
+ * | COLLATE / BINARY                                         | collation/charset                    |
  * | -, ~, !                                                  | negation, bit inversion, logical not |
  * ---------------------------------------------------------------------------------------------------
  */
@@ -3528,6 +3528,9 @@ concat_or_json_op
 collate_expr
   = (&mysql / &sqlite) left:negation_expr c1:__ op:COLLATE c2:__ right:ident {
     return loc(createBinaryExpr(left, c1, op, c2, right));
+  }
+  / &mysql op:BINARY right:(__ collate_expr) {
+    return loc(createPrefixOpExpr(op, read(right)));
   }
   / negation_expr
 
