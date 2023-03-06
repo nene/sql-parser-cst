@@ -273,4 +273,88 @@ describe("comparison operators", () => {
       });
     });
   });
+
+  describe("full-text search", () => {
+    dialect("mysql", () => {
+      it("supports MATCH..AGAINST", () => {
+        testExprWc(`MATCH (a) AGAINST ('abc')`);
+        testExprWc(`MATCH (col1, col2, col3) AGAINST ('foo')`);
+      });
+
+      it("supports MATCH..AGAINST with modifiers", () => {
+        testExprWc(`MATCH (a) AGAINST ('abc' IN NATURAL LANGUAGE MODE)`);
+        testExprWc(`MATCH (a) AGAINST ('abc' IN NATURAL LANGUAGE MODE WITH QUERY EXPANSION)`);
+        testExprWc(`MATCH (a) AGAINST ('abc' IN BOOLEAN MODE)`);
+        testExprWc(`MATCH (a) AGAINST ('abc' WITH QUERY EXPANSION)`);
+      });
+
+      it("parses MATCH..AGAINST", () => {
+        expect(parseExpr(`MATCH (a) AGAINST ('abc' IN BOOLEAN MODE)`)).toMatchInlineSnapshot(`
+          [
+            undefined,
+            {
+              "againstKw": {
+                "name": "AGAINST",
+                "text": "AGAINST",
+                "type": "keyword",
+              },
+              "args": {
+                "expr": {
+                  "expr": {
+                    "text": "'abc'",
+                    "type": "string_literal",
+                    "value": "abc",
+                  },
+                  "modifier": [
+                    {
+                      "name": "IN",
+                      "text": "IN",
+                      "type": "keyword",
+                    },
+                    {
+                      "name": "BOOLEAN",
+                      "text": "BOOLEAN",
+                      "type": "keyword",
+                    },
+                    {
+                      "name": "MODE",
+                      "text": "MODE",
+                      "type": "keyword",
+                    },
+                  ],
+                  "type": "full_text_match_args",
+                },
+                "type": "paren_expr",
+              },
+              "columns": {
+                "expr": {
+                  "items": [
+                    {
+                      "name": "a",
+                      "text": "a",
+                      "type": "identifier",
+                    },
+                  ],
+                  "type": "list_expr",
+                },
+                "type": "paren_expr",
+              },
+              "matchKw": {
+                "name": "MATCH",
+                "text": "MATCH",
+                "type": "keyword",
+              },
+              "type": "full_text_match_expr",
+            },
+          ]
+        `);
+      });
+    });
+
+    dialect(["sqlite", "bigquery"], () => {
+      it("does not support MATCH..AGAINST operator", () => {
+        expect(() => parseExpr(`MATCH (col) AGAINST ('foo')`)).toThrowError();
+      });
+    });
+  });
 });

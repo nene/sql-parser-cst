@@ -659,6 +659,9 @@ const showNode = cstTransformer<string>({
   array_expr: (node) => show(["[", node.expr, "]"]),
   struct_expr: (node) => show(["(", node.expr, ")"]),
   quantifier_expr: (node) => show([node.quantifier, node.expr]),
+  full_text_match_expr: (node) =>
+    show([node.matchKw, node.columns, node.againstKw, node.args]),
+  full_text_match_args: (node) => show([node.expr, node.modifier]),
 
   // Data types
   data_type: (node) => show([node.nameKw, node.params]),

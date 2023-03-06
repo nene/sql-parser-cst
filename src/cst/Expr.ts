@@ -26,6 +26,7 @@ export type AllExprNodes =
   | IntervalUnitRange
   | PairExpr
   | WeekExpr
+  | FullTextMatchArgs
   | ArraySubscript
   | ArraySubscriptSpecifier;
 
@@ -44,6 +45,7 @@ export type Expr =
   | IntervalExpr
   | StringWithCharset
   | QuantifierExpr
+  | FullTextMatchExpr
   | Literal
   | MemberExpr
   | BigQueryQuotedMemberExpr
@@ -335,6 +337,32 @@ export interface QuantifierExpr extends BaseNode {
   type: "quantifier_expr";
   quantifier: Keyword<"ANY" | "SOME" | "ALL">;
   expr: ParenExpr<SubSelect>;
+}
+
+export interface FullTextMatchExpr extends BaseNode {
+  type: "full_text_match_expr";
+  matchKw: Keyword<"MATCH">;
+  columns: ParenExpr<ListExpr<Identifier>>;
+  againstKw: Keyword<"AGAINST">;
+  args: ParenExpr<FullTextMatchArgs>;
+}
+
+export interface FullTextMatchArgs extends BaseNode {
+  type: "full_text_match_args";
+  expr: Expr;
+  modifier?:
+    | [Keyword<"IN">, Keyword<"NATURAL">, Keyword<"LANGUAGE">, Keyword<"MODE">]
+    | [
+        Keyword<"IN">,
+        Keyword<"NATURAL">,
+        Keyword<"LANGUAGE">,
+        Keyword<"MODE">,
+        Keyword<"WITH">,
+        Keyword<"QUERY">,
+        Keyword<"EXPANSION">
+      ]
+    | [Keyword<"IN">, Keyword<"BOOLEAN">, Keyword<"MODE">]
+    | [Keyword<"WITH">, Keyword<"QUERY">, Keyword<"EXPANSION">];
 }
 
 export interface MemberExpr extends BaseNode {

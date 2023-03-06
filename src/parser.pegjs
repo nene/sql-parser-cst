@@ -3392,6 +3392,7 @@ comparison_expr
   = left:bitwise_or_expr rightFn:_comparison_expr_right {
     return loc(rightFn(left));
   }
+  / &mysql full_text_match_expr
   / bitwise_or_expr
 
 _comparison_expr_right
@@ -3478,6 +3479,34 @@ quantifier_expr
     });
   }
   / bitwise_or_expr
+
+full_text_match_expr
+  = mKw:MATCH cols:(__ paren$list$ident __) aKw:AGAINST args:(__ paren$full_text_match_args) {
+    return loc({
+      type: "full_text_match_expr",
+      matchKw: read(mKw),
+      columns: read(cols),
+      againstKw: read(aKw),
+      args: read(args),
+    });
+  }
+
+full_text_match_args
+  = expr:bitwise_or_expr mod:(__ full_text_modifier)? {
+    return loc({
+      type: "full_text_match_args",
+      expr,
+      modifier: read(mod),
+    });
+  }
+
+full_text_modifier
+  = mod:(IN __ NATURAL __ LANGUAGE __ MODE __ WITH __ QUERY __ EXPANSION
+  / IN __ NATURAL __ LANGUAGE __ MODE
+  / IN __ BOOLEAN __ MODE
+  / WITH __ QUERY __ EXPANSION) {
+    return read(mod);
+  }
 
 bitwise_or_expr
   = head:bitwise_xor_expr tail:(__ "|"  __ bitwise_xor_expr)* {
@@ -3994,6 +4023,7 @@ paren$compound_select_stmt = .
 paren$empty_list = .
 paren$expr = .
 paren$extract_from = .
+paren$full_text_match_args = .
 paren$func_args = .
 paren$join_expr = .
 paren$list$alias$column = .
