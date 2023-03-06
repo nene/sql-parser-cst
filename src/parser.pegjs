@@ -326,24 +326,25 @@ from_clause
 
 join_expr
   = head:table_or_subquery
-    tail:(__ (
+    tail:(
         join_expr_right
       / pivot_expr_right
       / unpivot_expr_right
       / tablesample_expr_right
       / for_system_time_as_of_expr_right
-    ))* {
+    )* {
       return createJoinExprChain(head, tail);
     }
 
 join_expr_right
-  = op:(join_op / ",") right:(__ table_or_subquery) spec:(__ join_specification)? {
-    return {
-      type: "join_expr_right",
+  = c1:__ op:(join_op / ",") right:(__ table_or_subquery) spec:(__ join_specification)? {
+    return (left: any) => ({
+      type: "join_expr",
+      left: trailing(left, c1),
       operator: op,
       right: read(right),
       specification: read(spec),
-    };
+    });
   }
 
 table_or_subquery
@@ -447,12 +448,13 @@ unnest_expr
 
 // PIVOT ........................................................
 pivot_expr_right
-  = &bigquery kw:(PIVOT __) args:paren$pivot_for_in {
-    return {
-      type: "pivot_expr_right",
+  = &bigquery c1:__ kw:(PIVOT __) args:paren$pivot_for_in {
+    return (left: any) => ({
+      type: "pivot_expr",
+      left: trailing(left, c1),
       pivotKw: read(kw),
       args,
-    };
+    });
   }
 
 pivot_for_in
@@ -469,15 +471,16 @@ pivot_for_in
 
 // UNPIVOT ......................................................
 unpivot_expr_right
-  = &bigquery kw:(UNPIVOT __)
+  = &bigquery c1:__ kw:(UNPIVOT __)
     nulls:((INCLUDE / EXCLUDE) __ NULLS __)?
     args:paren$unpivot_for_in {
-      return {
-        type: "unpivot_expr_right",
+      return (left: any) => ({
+        type: "unpivot_expr",
+        left: trailing(left, c1),
         unpivotKw: read(kw),
         nullHandlingKw: read(nulls),
         args,
-      };
+      });
     }
 
 unpivot_for_in
@@ -496,12 +499,13 @@ unpivot_for_in
 
 // TABLESAMPLE ........................................................
 tablesample_expr_right
-  = &bigquery kw:(TABLESAMPLE __ SYSTEM __) args:paren$tablesample_percent {
-    return {
-      type: "tablesample_expr_right",
+  = &bigquery c1:__ kw:(TABLESAMPLE __ SYSTEM __) args:paren$tablesample_percent {
+    return (left: any) => ({
+      type: "tablesample_expr",
+      left: trailing(left, c1),
       tablesampleKw: read(kw),
       args,
-    };
+    });
   }
 
 tablesample_percent
@@ -515,12 +519,13 @@ tablesample_percent
 
 // FOR SYSTEM_TIME AS OF ........................................................
 for_system_time_as_of_expr_right
-  = &bigquery kw:(FOR __ SYSTEM_TIME __ AS __ OF __) expr:expr {
-    return {
-      type: "for_system_time_as_of_expr_right",
+  = &bigquery c1:__ kw:(FOR __ SYSTEM_TIME __ AS __ OF __) expr:expr {
+    return (left: any) => ({
+      type: "for_system_time_as_of_expr",
+      left: trailing(left, c1),
       forSystemTimeAsOfKw: read(kw),
       expr,
-    };
+    });
   }
 
 /**

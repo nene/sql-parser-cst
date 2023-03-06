@@ -140,134 +140,32 @@ const deriveForSystemTimeLoc = (
   return { ...expr, range: [start, end] };
 };
 
-interface JoinExprRight {
-  type: "join_expr_right";
-  operator: JoinExpr["operator"];
-  right: JoinExpr["right"];
-  specification: JoinExpr["specification"];
-}
-
-interface PivotExprRight {
-  type: "pivot_expr_right";
-  pivotKw: PivotExpr["pivotKw"];
-  args: PivotExpr["args"];
-}
-
-interface UnpivotExprRight {
-  type: "unpivot_expr_right";
-  unpivotKw: UnpivotExpr["unpivotKw"];
-  nullHandlingKw: UnpivotExpr["nullHandlingKw"];
-  args: UnpivotExpr["args"];
-}
-
-interface TablesampleExprRight {
-  type: "tablesample_expr_right";
-  tablesampleKw: TablesampleExpr["tablesampleKw"];
-  args: TablesampleExpr["args"];
-}
-
-interface ForSystemTimeAsOfExprRight {
-  type: "for_system_time_as_of_expr_right";
-  forSystemTimeAsOfKw: ForSystemTimeAsOfExpr["forSystemTimeAsOfKw"];
-  expr: ForSystemTimeAsOfExpr["expr"];
-}
-
 export function createJoinExprChain(
   head: JoinExpr["left"],
-  tail: [
-    Whitespace[],
-    (
-      | JoinExprRight
-      | PivotExprRight
-      | UnpivotExprRight
-      | TablesampleExprRight
-      | ForSystemTimeAsOfExprRight
-    )
-  ][]
+  tail: ((
+    left: JoinExpr["left"]
+  ) =>
+    | JoinExpr
+    | PivotExpr
+    | UnpivotExpr
+    | TablesampleExpr
+    | ForSystemTimeAsOfExpr)[]
 ) {
-  return tail.reduce((left, [c1, right]) => {
-    switch (right.type) {
-      case "join_expr_right":
-        return deriveJoinLoc(createJoinExpr(left, c1, right));
-      case "pivot_expr_right":
-        return derivePivotlikeLoc(createPivotExpr(left, c1, right));
-      case "unpivot_expr_right":
-        return derivePivotlikeLoc(createUnpivotExpr(left, c1, right));
-      case "tablesample_expr_right":
-        return derivePivotlikeLoc(createTablesampleExpr(left, c1, right));
-      case "for_system_time_as_of_expr_right":
-        return deriveForSystemTimeLoc(
-          createForSystemTimeAsOfExpr(left, c1, right)
-        );
+  return tail.reduce((left, createNodeFn) => {
+    const node = createNodeFn(left);
+    switch (node.type) {
+      case "join_expr":
+        return deriveJoinLoc(node);
+      case "pivot_expr":
+        return derivePivotlikeLoc(node);
+      case "unpivot_expr":
+        return derivePivotlikeLoc(node);
+      case "tablesample_expr":
+        return derivePivotlikeLoc(node);
+      case "for_system_time_as_of_expr":
+        return deriveForSystemTimeLoc(node);
     }
   }, head);
-}
-
-function createJoinExpr(
-  left: JoinExpr["left"],
-  c1: Whitespace[],
-  right: JoinExprRight
-): JoinExpr {
-  return {
-    type: "join_expr",
-    left: trailing(left, c1) as JoinExpr["left"],
-    operator: right.operator,
-    right: right.right,
-    specification: right.specification,
-  };
-}
-
-function createPivotExpr(
-  left: PivotExpr["left"],
-  c1: Whitespace[],
-  right: PivotExprRight
-): PivotExpr {
-  return {
-    type: "pivot_expr",
-    left: trailing(left, c1) as PivotExpr["left"],
-    pivotKw: right.pivotKw,
-    args: right.args,
-  };
-}
-
-function createUnpivotExpr(
-  left: UnpivotExpr["left"],
-  c1: Whitespace[],
-  right: UnpivotExprRight
-): UnpivotExpr {
-  return {
-    type: "unpivot_expr",
-    left: trailing(left, c1) as UnpivotExpr["left"],
-    unpivotKw: right.unpivotKw,
-    nullHandlingKw: right.nullHandlingKw,
-    args: right.args,
-  };
-}
-
-function createTablesampleExpr(
-  left: TablesampleExpr["left"],
-  c1: Whitespace[],
-  right: TablesampleExprRight
-): TablesampleExpr {
-  return {
-    type: "tablesample_expr",
-    left: trailing(left, c1) as TablesampleExpr["left"],
-    tablesampleKw: right.tablesampleKw,
-    args: right.args,
-  };
-}
-
-function createForSystemTimeAsOfExpr(
-  left: ForSystemTimeAsOfExpr["left"],
-  c1: Whitespace[],
-  right: ForSystemTimeAsOfExprRight
-): ForSystemTimeAsOfExpr {
-  return {
-    type: "for_system_time_as_of_expr",
-    left: trailing(left, c1) as ForSystemTimeAsOfExpr["left"],
-    forSystemTimeAsOfKw: right.forSystemTimeAsOfKw,
-    expr: right.expr,
-  };
 }
 
 interface FuncCallRight {
