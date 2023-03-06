@@ -187,6 +187,12 @@ describe("comparison operators", () => {
     it("supports SOUNDS LIKE operator", () => {
       testExprWc(`'haha' SOUNDS LIKE 'hoho'`);
     });
+
+    it("supports ANY / SOME / ALL quantifiers", () => {
+      testExprWc(`col = ANY (SELECT c1 FROM tbl)`);
+      testExprWc(`col >= SOME (SELECT c1 FROM tbl)`);
+      testExprWc(`col < ALL (SELECT c1 FROM tbl)`);
+    });
   });
 
   dialect(["sqlite", "bigquery"], () => {
@@ -195,6 +201,9 @@ describe("comparison operators", () => {
     });
     it("does not support SOUNDS LIKE operator", () => {
       expect(() => parseExpr(`'sun' SOUNDS LIKE 'son'`)).toThrowError();
+    });
+    it("does not support quantifiers in comparison", () => {
+      expect(() => parseExpr(`x = ANY (SELECT 1)`)).toThrowError();
     });
   });
 });

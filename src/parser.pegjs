@@ -3398,7 +3398,7 @@ _comparison_expr_right
   = op:(__ unary_comparison_op) {
     return (expr: any) => createPostfixOpExpr(read(op), expr);
   }
-  / tail:(__ comparison_op __ bitwise_or_expr)+ {
+  / tail:(__ comparison_op __ quantifier_expr)+ {
     return (head: any) => createBinaryExprChain(head, tail);
   }
   / c1:__ op:(NOT __ IN / IN) c2:__ right:(paren$list$expr / bitwise_or_expr) {
@@ -3468,6 +3468,16 @@ escape_expr
 
 between_op
   = kws:(NOT __ BETWEEN / BETWEEN) { return read(kws); }
+
+quantifier_expr
+  = &mysql op:((ANY / SOME / ALL) __) expr:paren$compound_select_stmt {
+    return loc({
+      type: "quantifier_expr",
+      quantifier: read(op),
+      expr,
+    });
+  }
+  / bitwise_or_expr
 
 bitwise_or_expr
   = head:bitwise_xor_expr tail:(__ "|"  __ bitwise_xor_expr)* {
@@ -5125,6 +5135,7 @@ SIMPLE              = kw:"SIMPLE"i              !ident_part { return loc(createK
 SKIP                = kw:"SKIP"i                !ident_part { return loc(createKeyword(kw)); }
 SMALLINT            = kw:"SMALLINT"i            !ident_part { return loc(createKeyword(kw)); }
 SNAPSHOT            = kw:"SNAPSHOT"i            !ident_part { return loc(createKeyword(kw)); }
+SOME                = kw:"SOME"i                !ident_part { return loc(createKeyword(kw)); }
 SOUNDS              = kw:"SOUNDS"i              !ident_part { return loc(createKeyword(kw)); }
 SOURCE              = kw:"SOURCE"i              !ident_part { return loc(createKeyword(kw)); }
 SPATIAL             = kw:"SPATIAL"i             !ident_part { return loc(createKeyword(kw)); }

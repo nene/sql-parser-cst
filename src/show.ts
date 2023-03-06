@@ -658,6 +658,7 @@ const showNode = cstTransformer<string>({
   typed_expr: (node) => show([node.dataType, node.expr]),
   array_expr: (node) => show(["[", node.expr, "]"]),
   struct_expr: (node) => show(["(", node.expr, ")"]),
+  quantifier_expr: (node) => show([node.quantifier, node.expr]),
 
   // Data types
   data_type: (node) => show([node.nameKw, node.params]),

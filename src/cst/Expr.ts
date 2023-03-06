@@ -43,6 +43,7 @@ export type Expr =
   | CaseExpr
   | IntervalExpr
   | StringWithCharset
+  | QuantifierExpr
   | Literal
   | MemberExpr
   | BigQueryQuotedMemberExpr
@@ -328,6 +329,12 @@ export interface StringWithCharset extends BaseNode {
   type: "string_with_charset";
   charset: string;
   string: StringLiteral;
+}
+
+export interface QuantifierExpr extends BaseNode {
+  type: "quantifier_expr";
+  quantifier: Keyword<"ANY" | "SOME" | "ALL">;
+  expr: ParenExpr<SubSelect>;
 }
 
 export interface MemberExpr extends BaseNode {
