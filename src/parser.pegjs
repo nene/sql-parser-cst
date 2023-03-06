@@ -3389,13 +3389,10 @@ not_expr
   / comparison_expr
 
 comparison_expr
-  = left:bitwise_or_expr rightFn:_comparison_expr_right? {
-    if (rightFn) {
-      return loc(rightFn(left));
-    } else {
-      return left;
-    }
+  = left:bitwise_or_expr rightFn:_comparison_expr_right {
+    return loc(rightFn(left));
   }
+  / bitwise_or_expr
 
 _comparison_expr_right
   = op:(__ unary_comparison_op) {
