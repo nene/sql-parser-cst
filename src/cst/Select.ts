@@ -152,6 +152,7 @@ export interface GroupByClause extends BaseNode {
   type: "group_by_clause";
   groupByKw: [Keyword<"GROUP">, Keyword<"BY">];
   columns: ListExpr<Expr> | GroupByRollup;
+  withRollupKw?: [Keyword<"WITH">, Keyword<"ROLLUP">];
 }
 
 export interface GroupByRollup extends BaseNode {

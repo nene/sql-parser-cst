@@ -541,11 +541,12 @@ where_clause
  * --------------------------------------------------------------------------------------
  */
 group_by_clause
-  = kws:(GROUP __ BY __) list:(group_by_rollup / list$expr) {
+  = kws:(GROUP __ BY __) list:(group_by_rollup / list$expr) rolKw:(__ WITH __ ROLLUP)? {
     return loc({
       type: "group_by_clause",
       groupByKw: read(kws),
       columns: list,
+      withRollupKw: read(rolKw),
     });
   }
 

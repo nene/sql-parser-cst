@@ -15,4 +15,10 @@ describe("select GROUP BY", () => {
       testClauseWc("GROUP BY ROLLUP ( id, name + age )");
     });
   });
+
+  dialect("mysql", () => {
+    it("supports GROUP BY .. WITH ROLLUP", () => {
+      testClauseWc("GROUP BY id, name WITH ROLLUP");
+    });
+  });
 });
