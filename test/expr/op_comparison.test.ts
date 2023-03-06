@@ -199,14 +199,6 @@ describe("comparison operators", () => {
   });
 
   describe("quantifiers", () => {
-    function parseBinaryExpr(sql: string): BinaryExpr {
-      const expr = parseExpr(sql);
-      if (expr.type !== "binary_expr") {
-        throw new Error("Expected binary_expr");
-      }
-      return expr;
-    }
-
     dialect("mysql", () => {
       it("supports ANY / SOME / ALL quantifiers", () => {
         testExprWc(`col = ANY (SELECT c1 FROM tbl)`);
@@ -215,7 +207,7 @@ describe("comparison operators", () => {
       });
 
       it("parses quantifier_expr", () => {
-        expect(parseBinaryExpr(`col = ANY (SELECT 1)`)).toMatchInlineSnapshot(`
+        expect(parseExpr(`col = ANY (SELECT 1)`)).toMatchInlineSnapshot(`
           {
             "left": {
               "name": "col",
@@ -270,7 +262,10 @@ describe("comparison operators", () => {
       it("does not support quantifiers in comparison", () => {
         // The more complex test is needed because SQLite parses ANY(..) as function call
         expect(() => {
-          const expr = parseBinaryExpr(`x = ANY (SELECT 1)`);
+          const expr = parseExpr(`x = ANY (SELECT 1)`);
+          if (expr.type !== "binary_expr") {
+            throw new Error("Expected binary_expr");
+          }
           if (expr.right.type !== "quantifier_expr") {
             throw new Error("Expected quantifier_expr");
           }
