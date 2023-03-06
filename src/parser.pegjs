@@ -3410,6 +3410,9 @@ _comparison_expr_right
   / c1:__ op:(NOT __ LIKE / LIKE) c2:__ right:escape_expr {
     return (left: any) => createBinaryExpr(left, c1, read(op), c2, right);
   }
+  / &mysql c1:__ op:(MEMBER __ OF) c2:__ right:paren$string_literal {
+    return (left: any) => createBinaryExpr(left, c1, read(op), c2, right);
+  }
   / betweenKw:(__ between_op) begin:(__ bitwise_or_expr) andKw:(__ AND) end:(__ bitwise_or_expr) {
     return (left: any) => ({
       type: "between_expr",
@@ -4000,6 +4003,7 @@ paren$list$sort_specification = .
 paren$list$string_literal = .
 paren$pivot_for_in = .
 paren$pragma_value = .
+paren$string_literal = .
 paren$raise_args = .
 paren$tablesample_percent = .
 paren$unpivot_for_in = .
@@ -4998,6 +5002,7 @@ MAX_ROWS            = kw:"MAX_ROWS"i            !ident_part { return loc(createK
 MEDIUMBLOB          = kw:"MEDIUMBLOB"i          !ident_part { return loc(createKeyword(kw)); }
 MEDIUMINT           = kw:"MEDIUMINT"i           !ident_part { return loc(createKeyword(kw)); }
 MEDIUMTEXT          = kw:"MEDIUMTEXT"i          !ident_part { return loc(createKeyword(kw)); }
+MEMBER              = kw:"MEMBER"i              !ident_part { return loc(createKeyword(kw)); }
 MEMORY              = kw:"MEMORY"i              !ident_part { return loc(createKeyword(kw)); }
 MERGE               = kw:"MERGE"i               !ident_part { return loc(createKeyword(kw)); }
 MESSAGE             = kw:"MESSAGE"i             !ident_part { return loc(createKeyword(kw)); }

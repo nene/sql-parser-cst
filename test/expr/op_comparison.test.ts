@@ -178,4 +178,17 @@ describe("comparison operators", () => {
       `);
     });
   });
+
+  dialect("mysql", () => {
+    describe("MEMBER OF", () => {
+      it("supports MEMBER OF operator", () => {
+        testExprWc(`17 MEMBER OF ('[23, 17, 10]')`);
+      });
+    });
+  });
+  dialect(["sqlite", "bigquery"], () => {
+    it("does not support MEMBER OF operator", () => {
+      expect(() => parseExpr(`3 MEMBER OF ('[3]')`)).toThrowError();
+    });
+  });
 });
