@@ -180,15 +180,21 @@ describe("comparison operators", () => {
   });
 
   dialect("mysql", () => {
-    describe("MEMBER OF", () => {
-      it("supports MEMBER OF operator", () => {
-        testExprWc(`17 MEMBER OF ('[23, 17, 10]')`);
-      });
+    it("supports MEMBER OF operator", () => {
+      testExprWc(`17 MEMBER OF ('[23, 17, 10]')`);
+    });
+
+    it("supports SOUNDS LIKE operator", () => {
+      testExprWc(`'haha' SOUNDS LIKE 'hoho'`);
     });
   });
+
   dialect(["sqlite", "bigquery"], () => {
     it("does not support MEMBER OF operator", () => {
       expect(() => parseExpr(`3 MEMBER OF ('[3]')`)).toThrowError();
+    });
+    it("does not support SOUNDS LIKE operator", () => {
+      expect(() => parseExpr(`'sun' SOUNDS LIKE 'son'`)).toThrowError();
     });
   });
 });

@@ -3413,6 +3413,9 @@ _comparison_expr_right
   / &mysql c1:__ op:(MEMBER __ OF) c2:__ right:paren$string_literal {
     return (left: any) => createBinaryExpr(left, c1, read(op), c2, right);
   }
+  / &mysql c1:__ op:(SOUNDS __ LIKE) c2:__ right:bitwise_or_expr {
+    return (left: any) => createBinaryExpr(left, c1, read(op), c2, right);
+  }
   / betweenKw:(__ between_op) begin:(__ bitwise_or_expr) andKw:(__ AND) end:(__ bitwise_or_expr) {
     return (left: any) => ({
       type: "between_expr",
@@ -5125,6 +5128,7 @@ SIMPLE              = kw:"SIMPLE"i              !ident_part { return loc(createK
 SKIP                = kw:"SKIP"i                !ident_part { return loc(createKeyword(kw)); }
 SMALLINT            = kw:"SMALLINT"i            !ident_part { return loc(createKeyword(kw)); }
 SNAPSHOT            = kw:"SNAPSHOT"i            !ident_part { return loc(createKeyword(kw)); }
+SOUNDS              = kw:"SOUNDS"i              !ident_part { return loc(createKeyword(kw)); }
 SOURCE              = kw:"SOURCE"i              !ident_part { return loc(createKeyword(kw)); }
 SPATIAL             = kw:"SPATIAL"i             !ident_part { return loc(createKeyword(kw)); }
 SQL                 = kw:"SQL"i                 !ident_part { return loc(createKeyword(kw)); }

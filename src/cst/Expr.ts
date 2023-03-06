@@ -134,6 +134,7 @@ type KeywordOperator =
   | Keyword<"LIKE" | "RLIKE" | "GLOB" | "MATCH"> // RLIKE is MySQL, GLOB/MATCH are SQLite
   | [Keyword<"NOT">, Keyword<"LIKE" | "RLIKE" | "GLOB" | "MATCH">]
   | [Keyword<"MEMBER">, Keyword<"OF">] // MySQL
+  | [Keyword<"SOUNDS">, Keyword<"LIKE">] // MySQL
   | Keyword<"ESCAPE">; // SQLite, MySQL
 
 export interface PrefixOpExpr extends BaseNode {
