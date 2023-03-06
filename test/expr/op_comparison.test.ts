@@ -179,14 +179,6 @@ describe("comparison operators", () => {
     });
   });
 
-  function parseBinaryExpr(sql: string): BinaryExpr {
-    const expr = parseExpr(sql);
-    if (expr.type !== "binary_expr") {
-      throw new Error("Expected binary_expr");
-    }
-    return expr;
-  }
-
   dialect("mysql", () => {
     it("supports MEMBER OF operator", () => {
       testExprWc(`17 MEMBER OF ('[23, 17, 10]')`);
@@ -194,63 +186,6 @@ describe("comparison operators", () => {
 
     it("supports SOUNDS LIKE operator", () => {
       testExprWc(`'haha' SOUNDS LIKE 'hoho'`);
-    });
-
-    it("supports ANY / SOME / ALL quantifiers", () => {
-      testExprWc(`col = ANY (SELECT c1 FROM tbl)`);
-      testExprWc(`col >= SOME (SELECT c1 FROM tbl)`);
-      testExprWc(`col < ALL (SELECT c1 FROM tbl)`);
-    });
-
-    it("parses quantifier_expr", () => {
-      expect(parseBinaryExpr(`col = ANY (SELECT 1)`)).toMatchInlineSnapshot(`
-        {
-          "left": {
-            "name": "col",
-            "text": "col",
-            "type": "identifier",
-          },
-          "operator": "=",
-          "right": {
-            "expr": {
-              "expr": {
-                "clauses": [
-                  {
-                    "asStructOrValueKw": undefined,
-                    "columns": {
-                      "items": [
-                        {
-                          "text": "1",
-                          "type": "number_literal",
-                          "value": 1,
-                        },
-                      ],
-                      "type": "list_expr",
-                    },
-                    "distinctKw": undefined,
-                    "options": [],
-                    "selectKw": {
-                      "name": "SELECT",
-                      "text": "SELECT",
-                      "type": "keyword",
-                    },
-                    "type": "select_clause",
-                  },
-                ],
-                "type": "select_stmt",
-              },
-              "type": "paren_expr",
-            },
-            "quantifier": {
-              "name": "ANY",
-              "text": "ANY",
-              "type": "keyword",
-            },
-            "type": "quantifier_expr",
-          },
-          "type": "binary_expr",
-        }
-      `);
     });
   });
 
@@ -261,14 +196,86 @@ describe("comparison operators", () => {
     it("does not support SOUNDS LIKE operator", () => {
       expect(() => parseExpr(`'sun' SOUNDS LIKE 'son'`)).toThrowError();
     });
-    it("does not support quantifiers in comparison", () => {
-      // The more complex test is needed because SQLite parses ANY(..) as function call
-      expect(() => {
-        const expr = parseBinaryExpr(`x = ANY (SELECT 1)`);
-        if (expr.right.type !== "quantifier_expr") {
-          throw new Error("Expected quantifier_expr");
-        }
-      }).toThrowError();
+  });
+
+  describe("quantifiers", () => {
+    function parseBinaryExpr(sql: string): BinaryExpr {
+      const expr = parseExpr(sql);
+      if (expr.type !== "binary_expr") {
+        throw new Error("Expected binary_expr");
+      }
+      return expr;
+    }
+
+    dialect("mysql", () => {
+      it("supports ANY / SOME / ALL quantifiers", () => {
+        testExprWc(`col = ANY (SELECT c1 FROM tbl)`);
+        testExprWc(`col >= SOME (SELECT c1 FROM tbl)`);
+        testExprWc(`col < ALL (SELECT c1 FROM tbl)`);
+      });
+
+      it("parses quantifier_expr", () => {
+        expect(parseBinaryExpr(`col = ANY (SELECT 1)`)).toMatchInlineSnapshot(`
+          {
+            "left": {
+              "name": "col",
+              "text": "col",
+              "type": "identifier",
+            },
+            "operator": "=",
+            "right": {
+              "expr": {
+                "expr": {
+                  "clauses": [
+                    {
+                      "asStructOrValueKw": undefined,
+                      "columns": {
+                        "items": [
+                          {
+                            "text": "1",
+                            "type": "number_literal",
+                            "value": 1,
+                          },
+                        ],
+                        "type": "list_expr",
+                      },
+                      "distinctKw": undefined,
+                      "options": [],
+                      "selectKw": {
+                        "name": "SELECT",
+                        "text": "SELECT",
+                        "type": "keyword",
+                      },
+                      "type": "select_clause",
+                    },
+                  ],
+                  "type": "select_stmt",
+                },
+                "type": "paren_expr",
+              },
+              "quantifier": {
+                "name": "ANY",
+                "text": "ANY",
+                "type": "keyword",
+              },
+              "type": "quantifier_expr",
+            },
+            "type": "binary_expr",
+          }
+        `);
+      });
+    });
+
+    dialect(["sqlite", "bigquery"], () => {
+      it("does not support quantifiers in comparison", () => {
+        // The more complex test is needed because SQLite parses ANY(..) as function call
+        expect(() => {
+          const expr = parseBinaryExpr(`x = ANY (SELECT 1)`);
+          if (expr.right.type !== "quantifier_expr") {
+            throw new Error("Expected quantifier_expr");
+          }
+        }).toThrowError();
+      });
     });
   });
 });
