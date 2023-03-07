@@ -1,3 +1,4 @@
+import { JoinExpr } from "../../src/main";
 import { dialect, parseFrom, test, testWc } from "../test_utils";
 
 describe("select FROM", () => {
@@ -82,6 +83,36 @@ describe("select FROM", () => {
 
   it("supports joined tables in parenthesis", () => {
     test("SELECT t.col FROM (tbl1 JOIN tbl2) AS t");
+  });
+
+  dialect("mysql", () => {
+    it("supports list of table names in parenthesis", () => {
+      test("SELECT * FROM tbl1 JOIN (tbl2, tbl3, tbl4)");
+    });
+
+    it("parses list of table names as comma-joined tables", () => {
+      const join = parseFrom("tbl1 JOIN (tbl2, tbl3)") as JoinExpr;
+      expect(join.right.type).toBe("paren_expr");
+      if (join.right.type === "paren_expr") {
+        expect(join.right.expr).toMatchInlineSnapshot(`
+          {
+            "left": {
+              "name": "tbl2",
+              "text": "tbl2",
+              "type": "identifier",
+            },
+            "operator": ",",
+            "right": {
+              "name": "tbl3",
+              "text": "tbl3",
+              "type": "identifier",
+            },
+            "specification": undefined,
+            "type": "join_expr",
+          }
+        `);
+      }
+    });
   });
 
   describe("table functions", () => {
