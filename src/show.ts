@@ -61,6 +61,7 @@ const showNode = cstTransformer<string>({
   replace_columns: (node) => show([node.expr, node.replaceKw, node.columns]),
   // FROM
   from_clause: (node) => show([node.fromKw, node.expr]),
+  dual_table: (node) => show(node.dualKw),
   join_expr: (node) =>
     show([node.left, node.operator, node.right, node.specification]),
   join_on_specification: (node) => show([node.onKw, node.expr]),

@@ -33,6 +33,7 @@ export type AllSelectNodes =
   | PartitionByClause
   | ClusterByClause
   | LimitClause
+  | DualTable
   | JoinExpr
   | IndexedTable
   | NotIndexedTable
@@ -139,7 +140,7 @@ export interface ReplaceColumns extends BaseNode {
 export interface FromClause extends BaseNode {
   type: "from_clause";
   fromKw: Keyword<"FROM">;
-  expr: TableExpr;
+  expr: TableExpr | DualTable;
 }
 
 export interface WhereClause extends BaseNode {
@@ -213,6 +214,11 @@ export interface LimitClause extends BaseNode {
   count: Expr;
   offsetKw?: Keyword<"OFFSET">;
   offset?: Expr;
+}
+
+export interface DualTable extends BaseNode {
+  type: "dual_table";
+  dualKw: Keyword<"DUAL">;
 }
 
 type TableExpr =

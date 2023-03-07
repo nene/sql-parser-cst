@@ -316,11 +316,19 @@ implicit_alias
  * --------------------------------------------------------------------------------------
  */
 from_clause
-  = kw:(FROM __) expr:join_expr {
+  = kw:(FROM __) expr:(join_expr / dual_table) {
     return loc({
       type: "from_clause",
       fromKw: read(kw),
       expr,
+    });
+  }
+
+dual_table
+  = &mysql kw:DUAL {
+    return loc({
+      type: "dual_table",
+      dualKw: kw,
     });
   }
 

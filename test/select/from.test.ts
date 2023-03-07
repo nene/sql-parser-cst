@@ -1,4 +1,4 @@
-import { dialect, test, testWc } from "../test_utils";
+import { dialect, parseFrom, test, testWc } from "../test_utils";
 
 describe("select FROM", () => {
   it("supports basic syntax", () => {
@@ -9,6 +9,25 @@ describe("select FROM", () => {
   it("supports table alias", () => {
     testWc("SELECT t.col FROM my_db.my_long_table_name AS t");
     testWc("SELECT t.col FROM my_db.my_long_table_name t");
+  });
+
+  dialect("mysql", () => {
+    it("supports FROM DUAL", () => {
+      testWc("SELECT 1 FROM DUAL");
+    });
+
+    it("parses FROM DUAL", () => {
+      expect(parseFrom("DUAL")).toMatchInlineSnapshot(`
+        {
+          "dualKw": {
+            "name": "DUAL",
+            "text": "DUAL",
+            "type": "keyword",
+          },
+          "type": "dual_table",
+        }
+      `);
+    });
   });
 
   dialect("bigquery", () => {
