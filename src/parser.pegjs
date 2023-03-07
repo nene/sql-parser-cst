@@ -362,6 +362,7 @@ table_or_subquery
     / lateral_derived_table
     / paren$join_expr
     / paren$compound_select_stmt
+    / partitioned_table
   ) alias:(__ alias)? {
     return loc(createAlias(t, alias));
   }
@@ -373,6 +374,16 @@ lateral_derived_table
       type: "lateral_derived_table",
       lateralKw: read(kw),
       expr,
+    });
+  }
+
+partitioned_table
+  = &mysql table:(entity_name __) kw:(PARTITION __) partitions:paren$list$ident {
+    return loc({
+      type: "partitioned_table",
+      table: read(table),
+      partitionKw: read(kw),
+      partitions,
     });
   }
 

@@ -117,6 +117,11 @@ describe("select FROM", () => {
     it("supports LATERAL subquery", () => {
       testWc(`SELECT 8 FROM tbl JOIN LATERAL (SELECT * FROM foo WHERE id=tbl.id) AS t`);
     });
+
+    it("supports partitioned table", () => {
+      testWc(`SELECT * FROM tbl PARTITION (p0, p1)`);
+      testWc(`SELECT * FROM tbl PARTITION (p0, p1) AS t`);
+    });
   });
 
   describe("table functions", () => {

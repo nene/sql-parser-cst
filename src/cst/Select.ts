@@ -38,6 +38,7 @@ export type AllSelectNodes =
   | IndexedTable
   | NotIndexedTable
   | LateralDerivedTable
+  | PartitionedTable
   | UnnestWithOffsetExpr
   | UnnestExpr
   | PivotExpr
@@ -260,6 +261,7 @@ export type TableOrSubquery =
   | UnnestWithOffsetExpr
   | UnnestExpr
   | LateralDerivedTable
+  | PartitionedTable
   | Alias<TableOrSubquery>;
 
 // SQLite only
@@ -280,6 +282,13 @@ export interface LateralDerivedTable extends BaseNode {
   type: "lateral_derived_table";
   lateralKw: Keyword<"LATERAL">;
   expr: ParenExpr<SubSelect>;
+}
+
+export interface PartitionedTable extends BaseNode {
+  type: "partitioned_table";
+  table: EntityName;
+  partitionKw: Keyword<"PARTITION">;
+  partitions: ParenExpr<ListExpr<Identifier>>;
 }
 
 // BigQuery only
