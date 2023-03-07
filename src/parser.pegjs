@@ -356,10 +356,25 @@ join_expr_right
   }
 
 table_or_subquery
-  = t:(unnest_with_offset_expr / func_call / paren$join_expr / paren$compound_select_stmt) alias:(__ alias)? {
+  = t:(
+      unnest_with_offset_expr
+    / func_call
+    / lateral_derived_table
+    / paren$join_expr
+    / paren$compound_select_stmt
+  ) alias:(__ alias)? {
     return loc(createAlias(t, alias));
   }
   / table_or_alias
+
+lateral_derived_table
+  = &mysql kw:(LATERAL __) expr:paren$compound_select_stmt {
+    return loc({
+      type: "lateral_derived_table",
+      lateralKw: read(kw),
+      expr,
+    });
+  }
 
 table_or_alias
   = &sqlite table:(alias$entity_name __) kw:(INDEXED __ BY) id:(__ ident) {
@@ -5031,6 +5046,7 @@ LAG                 = kw:"LAG"i                 !ident_part { return loc(createK
 LANGUAGE            = kw:"LANGUAGE"i            !ident_part { return loc(createKeyword(kw)); }
 LAST                = kw:"LAST"i                !ident_part { return loc(createKeyword(kw)); }
 LAST_VALUE          = kw:"LAST_VALUE"i          !ident_part { return loc(createKeyword(kw)); }
+LATERAL             = kw:"LATERAL"i             !ident_part { return loc(createKeyword(kw)); }
 LEAD                = kw:"LEAD"i                !ident_part { return loc(createKeyword(kw)); }
 LEAVE               = kw:"LEAVE"i               !ident_part { return loc(createKeyword(kw)); }
 LEFT                = kw:"LEFT"i                !ident_part { return loc(createKeyword(kw)); }

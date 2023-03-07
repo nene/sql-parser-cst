@@ -113,6 +113,10 @@ describe("select FROM", () => {
         `);
       }
     });
+
+    it("supports LATERAL subquery", () => {
+      testWc(`SELECT 8 FROM tbl JOIN LATERAL (SELECT * FROM foo WHERE id=tbl.id) AS t`);
+    });
   });
 
   describe("table functions", () => {

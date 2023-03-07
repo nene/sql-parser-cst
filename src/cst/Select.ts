@@ -37,6 +37,7 @@ export type AllSelectNodes =
   | JoinExpr
   | IndexedTable
   | NotIndexedTable
+  | LateralDerivedTable
   | UnnestWithOffsetExpr
   | UnnestExpr
   | PivotExpr
@@ -258,6 +259,7 @@ export type TableOrSubquery =
   | ParenExpr<SubSelect | TableExpr>
   | UnnestWithOffsetExpr
   | UnnestExpr
+  | LateralDerivedTable
   | Alias<TableOrSubquery>;
 
 // SQLite only
@@ -271,6 +273,13 @@ export interface NotIndexedTable extends BaseNode {
   type: "not_indexed_table";
   table: EntityName | Alias<EntityName>;
   notIndexedKw: [Keyword<"NOT">, Keyword<"INDEXED">];
+}
+
+// MySQL only (SQL 99)
+export interface LateralDerivedTable extends BaseNode {
+  type: "lateral_derived_table";
+  lateralKw: Keyword<"LATERAL">;
+  expr: ParenExpr<SubSelect>;
 }
 
 // BigQuery only

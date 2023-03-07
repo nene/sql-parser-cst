@@ -62,6 +62,7 @@ const showNode = cstTransformer<string>({
   // FROM
   from_clause: (node) => show([node.fromKw, node.expr]),
   dual_table: (node) => show(node.dualKw),
+  lateral_derived_table: (node) => show([node.lateralKw, node.expr]),
   join_expr: (node) =>
     show([node.left, node.operator, node.right, node.specification]),
   join_on_specification: (node) => show([node.onKw, node.expr]),
