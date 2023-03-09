@@ -23,7 +23,7 @@ describe("select ORDER BY", () => {
     });
   });
 
-  dialect(["mysql", "mariadb"], () => {
+  dialect(["mysql"], () => {
     it("supports WITH ROLLUP", () => {
       testClauseWc("ORDER BY name, age WITH ROLLUP");
     });
