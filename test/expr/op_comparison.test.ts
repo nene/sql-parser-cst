@@ -179,11 +179,13 @@ describe("comparison operators", () => {
     });
   });
 
-  dialect(["mysql", "mariadb"], () => {
+  dialect(["mysql"], () => {
     it("supports MEMBER OF operator", () => {
       testExprWc(`17 MEMBER OF ('[23, 17, 10]')`);
     });
+  });
 
+  dialect(["mysql", "mariadb"], () => {
     it("supports SOUNDS LIKE operator", () => {
       testExprWc(`'haha' SOUNDS LIKE 'hoho'`);
     });

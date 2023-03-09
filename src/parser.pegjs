@@ -3449,7 +3449,7 @@ _comparison_expr_right
   / c1:__ op:(NOT __ LIKE / LIKE) c2:__ right:escape_expr {
     return (left: any) => createBinaryExpr(left, c1, read(op), c2, right);
   }
-  / &mysql c1:__ op:(MEMBER __ OF) c2:__ right:paren$string_literal {
+  / &only_mysql c1:__ op:(MEMBER __ OF) c2:__ right:paren$string_literal {
     return (left: any) => createBinaryExpr(left, c1, read(op), c2, right);
   }
   / &mysql c1:__ op:(SOUNDS __ LIKE) c2:__ right:bitwise_or_expr {
