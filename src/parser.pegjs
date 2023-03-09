@@ -3605,8 +3605,8 @@ concat_or_json_expr
 
 concat_or_json_op
   = op:"||" &sqlite { return op; }
-  / op:"->>" (&sqlite / &mysql) { return op; }
-  / op:"->" (&sqlite / &mysql) { return op; }
+  / op:"->>" (&sqlite / &only_mysql) { return op; }
+  / op:"->" (&sqlite / &only_mysql) { return op; }
 
 binary_expr
   = &mysql op:BINARY right:(__ binary_expr) {

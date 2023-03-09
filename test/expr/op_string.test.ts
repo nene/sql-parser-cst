@@ -96,7 +96,7 @@ describe("string operators", () => {
     });
   });
 
-  dialect(["mysql", "mariadb", "sqlite"], () => {
+  dialect(["mysql", "sqlite"], () => {
     it("supports JSON operators", () => {
       testExpr(`col->'items[0].id'`);
       testExprWc(`x -> 'op'`);
@@ -107,6 +107,11 @@ describe("string operators", () => {
 
     it("supports chain of JSON operators", () => {
       testExpr(`col->'items'->'[0]'->'id'`);
+    });
+  });
+  dialect(["mariadb", "bigquery"], () => {
+    it("does not support JSON operators", () => {
+      expect(() => parseExpr(`col->'op'`)).toThrowError();
     });
   });
 });

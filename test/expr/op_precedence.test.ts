@@ -75,14 +75,16 @@ describe("operator precedence", () => {
       expect(showPrecedence(`x * -y`)).toBe(`(x * (- y))`);
     });
 
-    it("COLLATE > JSON", () => {
-      expect(showPrecedence(`col COLLATE utf8 -> 'items[0]'`)).toBe(
-        `((col COLLATE utf8) -> 'items[0]')`
-      );
-    });
+    dialect("mysql", () => {
+      it("COLLATE > JSON", () => {
+        expect(showPrecedence(`col COLLATE utf8 -> 'items[0]'`)).toBe(
+          `((col COLLATE utf8) -> 'items[0]')`
+        );
+      });
 
-    it("JSON > bitwise XOR (^)", () => {
-      expect(showPrecedence(`col1 -> 'items[0]' ^ 10`)).toBe(`((col1 -> 'items[0]') ^ 10)`);
+      it("JSON > bitwise XOR (^)", () => {
+        expect(showPrecedence(`col1 -> 'items[0]' ^ 10`)).toBe(`((col1 -> 'items[0]') ^ 10)`);
+      });
     });
 
     it("bitwise XOR (^) > multiplication", () => {
