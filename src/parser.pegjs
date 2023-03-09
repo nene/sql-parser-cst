@@ -235,7 +235,7 @@ mysql_select_option
     HIGH_PRIORITY
   / STRAIGHT_JOIN
   / SQL_CALC_FOUND_ROWS
-  / SQL_CACHE
+  / k:SQL_CACHE &only_mariadb { return k }
   / SQL_NO_CACHE
   / SQL_BIG_RESULT
   / SQL_SMALL_RESULT
@@ -4834,8 +4834,10 @@ never
 
 // SQL Dialect assertion rules
 bigquery = &{ return isBigquery(); }
-mysql = &{ return isMysql() || isMariadb(); } // 99% of MariaDB and MySQL syntax is the same
 sqlite = &{ return isSqlite(); }
+mysql = &{ return isMysql() || isMariadb(); } // 99% of MariaDB and MySQL syntax is the same
+only_mysql = &{ return isMysql(); } // 99% of MariaDB and MySQL syntax is the same
+only_mariadb = &{ return isMariadb(); } // 99% of MariaDB and MySQL syntax is the same
 
 /**
  * Note: To add keyword rules to the list below use the command:

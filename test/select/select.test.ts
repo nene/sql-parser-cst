@@ -30,6 +30,18 @@ describe("select", () => {
     });
   });
 
+  dialect("mariadb", () => {
+    it("parses SELECT with MariaDB-specific options", () => {
+      test("SELECT SQL_CACHE foo AS x");
+    });
+  });
+
+  dialect("mysql", () => {
+    it("does not support MariaDB-specific SQL_CACHE option", () => {
+      expect(() => test("SELECT SQL_CACHE foo AS x")).toThrowError();
+    });
+  });
+
   it("parses column aliases", () => {
     testWc("SELECT 'hello' AS foo");
     testWc("SELECT 1 as bar, 2 baz");
