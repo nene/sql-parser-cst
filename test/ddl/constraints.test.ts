@@ -142,28 +142,36 @@ describe("constraints", () => {
     });
 
     dialect(["mysql", "mariadb", "sqlite"], () => {
+      it("supports CONSTRAINT keyword for keys and check()", () => {
+        testColConstWc("CONSTRAINT PRIMARY KEY");
+        testColConstWc("CONSTRAINT UNIQUE");
+        testColConstWc("CONSTRAINT CHECK (true)");
+      });
+
+      it("supports named column constraints for keys and check()", () => {
+        testColConstWc("CONSTRAINT cname PRIMARY KEY");
+        testColConstWc("CONSTRAINT cname UNIQUE");
+        testColConstWc("CONSTRAINT cname CHECK (true)");
+      });
+    });
+
+    dialect(["sqlite"], () => {
       it("supports CONSTRAINT keyword for column constraints", () => {
         testColConstWc("CONSTRAINT NULL");
         testColConstWc("CONSTRAINT NOT NULL");
         testColConstWc("CONSTRAINT DEFAULT 10");
-        testColConstWc("CONSTRAINT PRIMARY KEY");
-        testColConstWc("CONSTRAINT UNIQUE");
-        testColConstWc("CONSTRAINT CHECK (true)");
-        testColConstWc("CONSTRAINT REFERENCES tbl2 (col)");
         testColConstWc("CONSTRAINT COLLATE utf8");
         testColConstWc("CONSTRAINT GENERATED ALWAYS AS (x + y)");
+        testColConstWc("CONSTRAINT REFERENCES tbl2 (col)");
       });
 
       it("supports named column constraints", () => {
         testColConstWc("CONSTRAINT cname NULL");
         testColConstWc("CONSTRAINT cname NOT NULL");
         testColConstWc("CONSTRAINT cname DEFAULT 10");
-        testColConstWc("CONSTRAINT cname PRIMARY KEY");
-        testColConstWc("CONSTRAINT cname UNIQUE");
-        testColConstWc("CONSTRAINT cname CHECK (true)");
-        testColConstWc("CONSTRAINT cname REFERENCES tbl2 (col)");
         testColConstWc("CONSTRAINT cname COLLATE utf8");
         testColConstWc("CONSTRAINT cname GENERATED ALWAYS AS (x + y)");
+        testColConstWc("CONSTRAINT cname REFERENCES tbl2 (col)");
       });
     });
   });

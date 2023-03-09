@@ -1,13 +1,14 @@
 import { DialectName } from "src/ParserOptions";
 import { bigqueryKeywords } from "../keywords/bigquery.keywords";
 import { mysqlKeywords } from "../keywords/mysql.keywords";
+import { mariadbKeywords } from "../keywords/mariadb.keywords";
 import { sqliteKeywords } from "../keywords/sqlite.keywords";
 import { getDialect } from "./parserState";
 
 const keywordMap: Record<DialectName, Record<string, boolean>> = {
   bigquery: bigqueryKeywords,
   mysql: mysqlKeywords,
-  mariadb: mysqlKeywords,
+  mariadb: mariadbKeywords,
   sqlite: sqliteKeywords,
 };
 
