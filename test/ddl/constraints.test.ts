@@ -12,7 +12,7 @@ describe("constraints", () => {
       test(`CREATE TABLE t (id INT ${withComments(constraint)})`);
     }
 
-    dialect(["mysql", "sqlite"], () => {
+    dialect(["mysql", "mariadb", "sqlite"], () => {
       it("NULL", () => {
         testColConstWc("NULL");
       });
@@ -27,7 +27,7 @@ describe("constraints", () => {
       testColConstWc("DEFAULT (5 + 6 > 0 AND true)");
     });
 
-    dialect(["mysql", "sqlite"], () => {
+    dialect(["mysql", "mariadb", "sqlite"], () => {
       it("PRIMARY KEY", () => {
         testColConstWc("PRIMARY KEY");
       });
@@ -63,7 +63,7 @@ describe("constraints", () => {
       });
     });
 
-    dialect(["mysql", "sqlite"], () => {
+    dialect(["mysql", "mariadb", "sqlite"], () => {
       it("COLLATE", () => {
         testColConstWc("COLLATE utf8mb4_bin");
       });
@@ -74,7 +74,7 @@ describe("constraints", () => {
       });
     });
 
-    dialect(["mysql", "sqlite"], () => {
+    dialect(["mysql", "mariadb", "sqlite"], () => {
       it("GENERATED ALWAYS", () => {
         testColConstWc("GENERATED ALWAYS AS (col1 + col2)");
         testColConstWc("AS (col1 + col2)");
@@ -83,7 +83,7 @@ describe("constraints", () => {
       });
     });
 
-    dialect("mysql", () => {
+    dialect(["mysql", "mariadb"], () => {
       it("AUTO_INCREMENT", () => {
         testColConstWc("AUTO_INCREMENT");
         testColConstWc("AUTO_increment");
@@ -141,7 +141,7 @@ describe("constraints", () => {
       });
     });
 
-    dialect(["mysql", "sqlite"], () => {
+    dialect(["mysql", "mariadb", "sqlite"], () => {
       it("supports CONSTRAINT keyword for column constraints", () => {
         testColConstWc("CONSTRAINT NULL");
         testColConstWc("CONSTRAINT NOT NULL");
@@ -168,7 +168,7 @@ describe("constraints", () => {
     });
   });
 
-  dialect(["mysql", "sqlite"], () => {
+  dialect(["mysql", "mariadb", "sqlite"], () => {
     describe("table constraints", () => {
       it("supports multiple table constraints inside CREATE TABLE", () => {
         test(`CREATE TABLE tbl (
@@ -248,7 +248,7 @@ describe("constraints", () => {
         });
       });
 
-      dialect("mysql", () => {
+      dialect(["mysql", "mariadb"], () => {
         it("INDEX / KEY", () => {
           testTblConstWc("KEY (id)");
           testTblConstWc("INDEX (id)");
@@ -278,7 +278,7 @@ describe("constraints", () => {
         });
       });
 
-      dialect(["mysql", "sqlite"], () => {
+      dialect(["mysql", "mariadb", "sqlite"], () => {
         it("supports CONSTRAINT keyword for table constraints", () => {
           testTblConstWc("CONSTRAINT PRIMARY KEY (id)");
           testTblConstWc("CONSTRAINT UNIQUE KEY (id)");

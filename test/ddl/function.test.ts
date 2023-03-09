@@ -117,7 +117,7 @@ describe("function", () => {
     });
   });
 
-  dialect(["mysql", "sqlite"], () => {
+  dialect(["mysql", "mariadb", "sqlite"], () => {
     it("does not support CREATE FUNCTION", () => {
       expect(() => test("CREATE FUNCTION foo() AS (1 + 2)")).toThrowError();
     });

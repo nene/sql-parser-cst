@@ -103,7 +103,7 @@ describe("struct", () => {
     });
   });
 
-  dialect(["mysql", "sqlite"], () => {
+  dialect(["mysql", "mariadb", "sqlite"], () => {
     it("does not support structs", () => {
       expect(parseExpr("STRUCT(1, 2, 3)").type).toBe("func_call");
     });

@@ -28,7 +28,7 @@ describe("alter table", () => {
       testAlterWc("RENAME TO new_name");
     });
 
-    dialect("mysql", () => {
+    dialect(["mysql", "mariadb"], () => {
       it("supports RENAME AS", () => {
         testAlterWc("RENAME AS new_name");
       });
@@ -61,7 +61,7 @@ describe("alter table", () => {
       testAlterWc("ADD COLUMN col1 INT NOT NULL");
     });
 
-    dialect(["mysql", "sqlite"], () => {
+    dialect(["mysql", "mariadb", "sqlite"], () => {
       it("supports plain ADD", () => {
         testAlterWc("ADD col1 INT");
       });
@@ -79,7 +79,7 @@ describe("alter table", () => {
       testAlterWc("DROP COLUMN col1");
     });
 
-    dialect(["mysql", "sqlite"], () => {
+    dialect(["mysql", "mariadb", "sqlite"], () => {
       it("supports plain DROP", () => {
         testAlterWc("DROP col1");
       });
@@ -99,7 +99,7 @@ describe("alter table", () => {
       });
     });
 
-    dialect(["bigquery", "mysql"], () => {
+    dialect(["mysql", "mariadb", "bigquery"], () => {
       it("supports SET DEFAULT", () => {
         testAlterWc("ALTER COLUMN foo SET DEFAULT 125");
       });

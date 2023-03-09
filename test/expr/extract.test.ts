@@ -1,7 +1,7 @@
 import { dialect, parseExpr, testExpr, testExprWc } from "../test_utils";
 
 describe("extract()", () => {
-  dialect(["bigquery", "mysql"], () => {
+  dialect(["mysql", "mariadb", "bigquery"], () => {
     it("supports extract() expression", () => {
       testExprWc(`EXTRACT ( DAY FROM col1 )`);
     });
@@ -45,7 +45,7 @@ describe("extract()", () => {
       });
     });
 
-    dialect("mysql", () => {
+    dialect(["mysql", "mariadb"], () => {
       testExtractUnits([
         "MICROSECOND",
         "SECOND",

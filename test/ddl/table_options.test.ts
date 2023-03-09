@@ -13,7 +13,7 @@ describe("table options", () => {
     });
   });
 
-  dialect("mysql", () => {
+  dialect(["mysql", "mariadb"], () => {
     (
       [
         ["AUTOEXTEND_SIZE", ["15"]],

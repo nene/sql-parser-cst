@@ -12,7 +12,7 @@ describe("select FROM", () => {
     testWc("SELECT t.col FROM my_db.my_long_table_name t");
   });
 
-  dialect("mysql", () => {
+  dialect(["mysql", "mariadb"], () => {
     it("supports FROM DUAL", () => {
       testWc("SELECT 1 FROM DUAL");
     });
@@ -48,7 +48,7 @@ describe("select FROM", () => {
     });
   });
   // To ensure the BigQuery PIVOT/UNPIVOT handling doesn't interfere with other dialects
-  dialect(["mysql", "sqlite"], () => {
+  dialect(["mysql", "mariadb", "sqlite"], () => {
     it("supports PIVOT & UNPIVOT as aliases", () => {
       test("SELECT * FROM foo.col AS pivot");
       test("SELECT * FROM foo.col AS unpivot");
@@ -85,7 +85,7 @@ describe("select FROM", () => {
     test("SELECT t.col FROM (tbl1 JOIN tbl2) AS t");
   });
 
-  dialect("mysql", () => {
+  dialect(["mysql", "mariadb"], () => {
     it("supports list of table names in parenthesis", () => {
       test("SELECT * FROM tbl1 JOIN (tbl2, tbl3, tbl4)");
     });

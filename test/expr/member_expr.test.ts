@@ -30,7 +30,7 @@ describe("member_expr", () => {
     });
   });
 
-  dialect(["mysql", "bigquery"], () => {
+  dialect(["mysql", "mariadb", "bigquery"], () => {
     it("supports quoted field name", () => {
       testExpr("`my foo`.`my bar`");
     });
@@ -135,7 +135,7 @@ describe("member_expr", () => {
     });
   });
 
-  dialect(["mysql", "sqlite"], () => {
+  dialect(["mysql", "mariadb", "sqlite"], () => {
     it("does not support array subscripts", () => {
       expect(() => parseExpr("my_array[0]")).toThrowError();
     });

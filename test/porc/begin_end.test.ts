@@ -1,7 +1,7 @@
 import { dialect, parse, test, testWc } from "../test_utils";
 
 describe("BEGIN..END", () => {
-  dialect(["bigquery", "mysql"], () => {
+  dialect(["mysql", "mariadb", "bigquery"], () => {
     it("supports BEGIN..END block", () => {
       testWc(`
         BEGIN

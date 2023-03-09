@@ -6,14 +6,14 @@ describe("string operators", () => {
     testExprWc(`'foobar' NOT LIKE 'foo%'`);
   });
 
-  dialect(["mysql", "sqlite"], () => {
+  dialect(["mysql", "mariadb", "sqlite"], () => {
     it("supports LIKE with ESCAPE", () => {
       testExprWc(`'foobar' LIKE 'percentage|%' ESCAPE '|'`);
       testExprWc(`'foobar' NOT LIKE 'foo^_bar' ESCAPE '^'`);
     });
   });
 
-  dialect(["mysql", "sqlite"], () => {
+  dialect(["mysql", "mariadb", "sqlite"], () => {
     it("supports [NOT] REGEXP operator", () => {
       testExprWc(`'foooo' REGEXP 'fo*'`);
       testExprWc(`'foooo' NOT REGEXP 'fo*'`);
@@ -31,7 +31,7 @@ describe("string operators", () => {
     });
   });
 
-  dialect("mysql", () => {
+  dialect(["mysql", "mariadb"], () => {
     it("supports [NOT] RLIKE operator", () => {
       testExprWc(`'foooo' RLIKE 'fo*'`);
       testExprWc(`'foooo' NOT RLIKE 'fo*'`);
@@ -44,7 +44,7 @@ describe("string operators", () => {
     });
   });
 
-  dialect("mysql", () => {
+  dialect(["mysql", "mariadb"], () => {
     it("supports string-concatenation with space", () => {
       testExpr(`'foo' 'bar'`);
       testExpr(`'foo' "bar" 'baz'`);
@@ -96,7 +96,7 @@ describe("string operators", () => {
     });
   });
 
-  dialect(["sqlite", "mysql"], () => {
+  dialect(["mysql", "mariadb", "sqlite"], () => {
     it("supports JSON operators", () => {
       testExpr(`col->'items[0].id'`);
       testExprWc(`x -> 'op'`);

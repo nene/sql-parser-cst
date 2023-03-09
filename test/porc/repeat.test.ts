@@ -1,7 +1,7 @@
 import { dialect, parse, testWc } from "../test_utils";
 
 describe("REPEAT", () => {
-  dialect(["bigquery", "mysql"], () => {
+  dialect(["mysql", "mariadb", "bigquery"], () => {
     it("supports REPEAT statement", () => {
       testWc(`
         REPEAT

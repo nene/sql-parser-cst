@@ -1,7 +1,7 @@
 import { dialect, test, testWc } from "../test_utils";
 
 describe("schema", () => {
-  dialect(["bigquery", "mysql"], () => {
+  dialect(["mysql", "mariadb", "bigquery"], () => {
     describe("CREATE SCHEMA", () => {
       it("supports CREATE SCHEMA statement", () => {
         testWc("CREATE SCHEMA my_schema");
@@ -12,7 +12,7 @@ describe("schema", () => {
         testWc("CREATE SCHEMA IF NOT EXISTS my_schema");
       });
 
-      dialect("mysql", () => {
+      dialect(["mysql", "mariadb"], () => {
         it("supports CREATE DATABASE as alias to CREATE SCHEMA", () => {
           testWc("CREATE DATABASE my_schema");
         });
@@ -43,7 +43,7 @@ describe("schema", () => {
         testWc("DROP SCHEMA IF EXISTS my_schema");
       });
 
-      dialect("mysql", () => {
+      dialect(["mysql", "mariadb"], () => {
         it("supports DROP DATABASE as alias to DROP SCHEMA", () => {
           testWc("DROP DATABASE my_schema");
         });

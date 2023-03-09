@@ -78,7 +78,7 @@ describe("table names", () => {
     });
   });
 
-  dialect(["mysql", "bigquery"], () => {
+  dialect(["mysql", "mariadb", "bigquery"], () => {
     it("supports quoted qualified table name", () => {
       test("SELECT col FROM `my db`.`my tbl`");
     });

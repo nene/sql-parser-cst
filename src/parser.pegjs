@@ -35,6 +35,7 @@
     setOptionsFunction,
     isBigquery,
     isMysql,
+    isMariadb,
     isSqlite,
     hasParamType,
     isEnabledWhitespace,
@@ -4833,7 +4834,7 @@ never
 
 // SQL Dialect assertion rules
 bigquery = &{ return isBigquery(); }
-mysql = &{ return isMysql(); }
+mysql = &{ return isMysql() || isMariadb(); } // 99% of MariaDB and MySQL syntax is the same
 sqlite = &{ return isSqlite(); }
 
 /**

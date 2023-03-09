@@ -7,7 +7,7 @@ describe("RETURN", () => {
     });
   });
 
-  dialect("mysql", () => {
+  dialect(["mysql", "mariadb"], () => {
     it("supports RETURN statement with value", () => {
       testWc(`RETURN 5 + 5`);
     });

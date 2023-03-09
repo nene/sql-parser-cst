@@ -1,7 +1,7 @@
 import { dialect, parse, testWc } from "../test_utils";
 
 describe("LOOP", () => {
-  dialect(["bigquery", "mysql"], () => {
+  dialect(["mysql", "mariadb", "bigquery"], () => {
     it("supports basic infinite LOOP", () => {
       testWc(`
         LOOP

@@ -1,7 +1,7 @@
 import { dialect, parseExpr, testExpr, testExprWc } from "../test_utils";
 
 describe("temporal intervals", () => {
-  dialect(["mysql", "bigquery"], () => {
+  dialect(["mysql", "mariadb", "bigquery"], () => {
     it("supports INTERVAL with number argument", () => {
       testExprWc(`INTERVAL 3 DAY`);
     });
@@ -43,7 +43,7 @@ describe("temporal intervals", () => {
     });
   });
 
-  dialect("mysql", () => {
+  dialect(["mysql", "mariadb"], () => {
     it("supports additional MySQL time units", () => {
       testExpr(`INTERVAL 3 QUARTER`);
       testExpr(`INTERVAL 3 WEEK`);

@@ -65,7 +65,7 @@ describe("operator precedence", () => {
     });
   });
 
-  dialect("mysql", () => {
+  dialect(["mysql", "mariadb"], () => {
     it("member_expr > negation", () => {
       expect(showPrecedence(`-tbl.col`)).toBe(`(- tbl.col)`);
     });

@@ -11,7 +11,7 @@ describe("view", () => {
       testWc("CREATE VIEW my_view (col1, col2) AS SELECT 1, 2");
     });
 
-    dialect(["mysql", "bigquery"], () => {
+    dialect(["mysql", "mariadb", "bigquery"], () => {
       it("supports OR REPLACE", () => {
         testWc("CREATE OR REPLACE VIEW my_view AS SELECT 1");
       });
@@ -88,7 +88,7 @@ describe("view", () => {
       });
     });
 
-    dialect("mysql", () => {
+    dialect(["mysql", "mariadb"], () => {
       it("with CASCADE/RESTRICT behavior", () => {
         testWc("DROP VIEW v1 CASCADE");
         testWc("DROP VIEW v1 RESTRICT");

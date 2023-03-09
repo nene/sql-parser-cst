@@ -42,7 +42,7 @@ describe("raise function", () => {
     });
   });
 
-  dialect(["mysql", "bigquery"], () => {
+  dialect(["mysql", "mariadb", "bigquery"], () => {
     it("supports ordinary function named RAISE()", () => {
       testExpr(`RAISE(FAIL, 'blah')`);
     });

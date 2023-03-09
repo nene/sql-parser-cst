@@ -1,7 +1,7 @@
 import { dialect, parse, testWc } from "../test_utils";
 
 describe("WHILE", () => {
-  dialect(["bigquery", "mysql"], () => {
+  dialect(["mysql", "mariadb", "bigquery"], () => {
     it("supports WHILE statement", () => {
       testWc(`
         WHILE x < 10 DO

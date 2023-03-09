@@ -1,7 +1,7 @@
 import { dialect, test, testWc } from "../test_utils";
 
 describe("trigger", () => {
-  dialect(["mysql", "sqlite"], () => {
+  dialect(["mysql", "mariadb", "sqlite"], () => {
     describe("CREATE TRIGGER", () => {
       it("supports basic CREATE TRIGGER statement", () => {
         testWc(

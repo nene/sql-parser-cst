@@ -1,7 +1,7 @@
 import { dialect, testExprWc } from "../test_utils";
 
 describe("logic operators", () => {
-  dialect(["mysql", "sqlite"], () => {
+  dialect(["mysql", "mariadb", "sqlite"], () => {
     it("parses unary ! operator", () => {
       testExprWc(`!x OR y`);
       testExprWc(`!!!false`);
@@ -19,7 +19,7 @@ describe("logic operators", () => {
     testExprWc(`c < 2 AND y = 2 AND 3 > 2`);
   });
 
-  dialect("mysql", () => {
+  dialect(["mysql", "mariadb"], () => {
     it("parses XOR operator", () => {
       testExprWc(`true XOR false`);
       testExprWc(`x != 3 XOR y > 2 XOR z <> 4`);
@@ -31,7 +31,7 @@ describe("logic operators", () => {
     testExprWc(`x != 3 OR y > 2 OR z <> 4`);
   });
 
-  dialect("mysql", () => {
+  dialect(["mysql", "mariadb"], () => {
     it("parses && as equivalent to AND", () => {
       testExprWc(`x > 1 && false`);
       testExprWc(`c < 2 && y = 2 && 3 > 2`);

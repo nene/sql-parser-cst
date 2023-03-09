@@ -21,7 +21,7 @@ describe("GRANT", () => {
     });
   });
 
-  dialect(["sqlite", "mysql"], () => {
+  dialect(["mysql", "mariadb", "sqlite"], () => {
     it("does not support GRANT", () => {
       expect(() => parse("GRANT `role` ON TABLE foo TO 'user:blah'")).toThrowError();
     });

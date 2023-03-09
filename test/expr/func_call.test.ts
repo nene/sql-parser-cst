@@ -77,7 +77,7 @@ describe("function call", () => {
       });
     });
 
-    dialect("mysql", () => {
+    dialect(["mysql", "mariadb"], () => {
       it("supports additional special functions without parenthesis", () => {
         testIsFunction("CURRENT_USER");
         testIsFunction("LOCALTIME");
@@ -122,7 +122,7 @@ describe("function call", () => {
   });
 
   describe("functions with reserved keywords as names", () => {
-    dialect(["bigquery", "mysql"], () => {
+    dialect(["mysql", "mariadb", "bigquery"], () => {
       it("IF() function", () => {
         testExpr(`IF(x > 3, 'yes', 'no')`);
       });

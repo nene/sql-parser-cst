@@ -13,7 +13,7 @@ describe("select", () => {
     test("SELECT DISTINCT foo");
   });
 
-  dialect("mysql", () => {
+  dialect(["mysql", "mariadb"], () => {
     it("parses SELECT with MySQL-specific options", () => {
       test("SELECT DISTINCTROW foo AS x");
       test("SELECT HIGH_PRIORITY foo AS x");

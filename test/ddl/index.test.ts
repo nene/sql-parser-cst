@@ -2,7 +2,7 @@ import { dialect, testWc } from "../test_utils";
 
 describe("index", () => {
   describe("CREATE INDEX", () => {
-    dialect(["sqlite", "mysql"], () => {
+    dialect(["mysql", "mariadb", "sqlite"], () => {
       it("simple CREATE INDEX statement", () => {
         testWc("CREATE INDEX my_idx ON tbl ( col1 , col2 )");
         testWc("CREATE INDEX schm.my_idx ON schm.tbl (col)");
@@ -31,7 +31,7 @@ describe("index", () => {
       });
     });
 
-    dialect("mysql", () => {
+    dialect(["mysql", "mariadb"], () => {
       it("supports FULLTEXT & SPATIAL index", () => {
         testWc("CREATE FULLTEXT INDEX my_idx ON tbl (col)");
         testWc("CREATE SPATIAL INDEX my_idx ON tbl (col)");
@@ -70,7 +70,7 @@ describe("index", () => {
       });
     });
 
-    dialect("mysql", () => {
+    dialect(["mysql", "mariadb"], () => {
       it("supports DROP INDEX name ON table", () => {
         testWc("DROP INDEX my_idx ON tbl");
         testWc("DROP INDEX idx ON schm.tbl");

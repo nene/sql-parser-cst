@@ -12,7 +12,7 @@ describe("analyze", () => {
     });
   });
 
-  dialect("mysql", () => {
+  dialect(["mysql", "mariadb"], () => {
     it("supports ANALYZE TABLE table_name", () => {
       testWc("ANALYZE TABLE my_tbl");
       test("ANALYZE TABLE schm.my_tbl");

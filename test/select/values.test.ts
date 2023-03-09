@@ -12,7 +12,7 @@ describe("VALUES clause/statement", () => {
     });
   });
 
-  dialect("mysql", () => {
+  dialect(["mysql", "mariadb"], () => {
     it("parses separate VALUES statement with row-constructor list", () => {
       testWc("VALUES ROW(1, 'Hello', TRUE, NULL)");
       testWc("VALUES ROW (1, 'Hello'), ROW (2, 'World')");

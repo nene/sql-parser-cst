@@ -15,7 +15,7 @@ describe("identifier", () => {
     testExpr("_96");
   });
 
-  dialect(["mysql", "sqlite"], () => {
+  dialect(["mysql", "mariadb", "sqlite"], () => {
     it("allows identifier name to start with number", () => {
       expect(parseIdent("18foo")).toMatchInlineSnapshot(`
         {
@@ -94,7 +94,7 @@ describe("identifier", () => {
     });
   });
 
-  dialect(["mysql", "sqlite", "bigquery"], () => {
+  dialect(["mysql", "mariadb", "sqlite", "bigquery"], () => {
     it("supports backtick-quoted identifiers", () => {
       testExpr("`some special name`");
     });
@@ -109,7 +109,7 @@ describe("identifier", () => {
       `);
     });
 
-    dialect(["mysql", "sqlite"], () => {
+    dialect(["mysql", "mariadb", "sqlite"], () => {
       it("supports repeated-quote-escaped quotes in identifiers", () => {
         testExpr("`some `` name`");
       });

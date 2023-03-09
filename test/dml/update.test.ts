@@ -17,7 +17,7 @@ describe("update", () => {
     testWc("UPDATE tbl SET flag = col=1 OR col=2");
   });
 
-  dialect("mysql", () => {
+  dialect(["mysql", "mariadb"], () => {
     it("supports updating multiple tables", () => {
       testWc("UPDATE items, month SET items.price = month.price");
     });
@@ -35,13 +35,13 @@ describe("update", () => {
     });
   });
 
-  dialect("mysql", () => {
+  dialect(["mysql", "mariadb"], () => {
     it("supports setting explicit default values", () => {
       testWc("UPDATE person SET age = DEFAULT");
     });
   });
 
-  dialect("mysql", () => {
+  dialect(["mysql", "mariadb"], () => {
     it("supports LOW_PRIORITY option", () => {
       testWc("UPDATE LOW_PRIORITY tbl SET x=1");
     });
@@ -86,7 +86,7 @@ describe("update", () => {
     });
   });
 
-  dialect(["mysql", "sqlite"], () => {
+  dialect(["mysql", "mariadb", "sqlite"], () => {
     it("supports UPDATE ... ORDER BY ...", () => {
       testWc("UPDATE tbl SET col1 = 2 ORDER BY col1");
     });

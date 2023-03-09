@@ -13,7 +13,7 @@ describe("drop table", () => {
     testWc("DROP TABLE IF EXISTS my_tbl");
   });
 
-  dialect("mysql", () => {
+  dialect(["mysql", "mariadb"], () => {
     it("with TEMPORARY table", () => {
       testWc("DROP TEMPORARY TABLE my_tbl");
     });
@@ -33,7 +33,7 @@ describe("drop table", () => {
     testWc("DROP TABLE tbl1, tbl2, tbl3");
   });
 
-  dialect("mysql", () => {
+  dialect(["mysql", "mariadb"], () => {
     it("with CASCADE/RESTRICT behavior", () => {
       testWc("DROP TABLE tbl CASCADE");
       testWc("DROP TABLE tbl RESTRICT");

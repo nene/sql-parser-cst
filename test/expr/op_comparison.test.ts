@@ -14,7 +14,7 @@ describe("comparison operators", () => {
     });
   });
 
-  dialect("mysql", () => {
+  dialect(["mysql", "mariadb"], () => {
     it(`supports <=> operator`, () => {
       testExprWc(`5 <=> 7`);
     });
@@ -26,7 +26,7 @@ describe("comparison operators", () => {
       testExprWc(`col IS NOT NULL`);
     });
 
-    dialect(["bigquery", "mysql"], () => {
+    dialect(["mysql", "mariadb", "bigquery"], () => {
       it("supports IS [NOT] TRUE/FALSE operator", () => {
         testExprWc(`col IS TRUE`);
         testExprWc(`col IS NOT FALSE`);
@@ -179,7 +179,7 @@ describe("comparison operators", () => {
     });
   });
 
-  dialect("mysql", () => {
+  dialect(["mysql", "mariadb"], () => {
     it("supports MEMBER OF operator", () => {
       testExprWc(`17 MEMBER OF ('[23, 17, 10]')`);
     });
@@ -199,7 +199,7 @@ describe("comparison operators", () => {
   });
 
   describe("quantifiers", () => {
-    dialect("mysql", () => {
+    dialect(["mysql", "mariadb"], () => {
       it("supports ANY / SOME / ALL quantifiers", () => {
         testExprWc(`col = ANY (SELECT c1 FROM tbl)`);
         testExprWc(`col >= SOME (SELECT c1 FROM tbl)`);
@@ -275,7 +275,7 @@ describe("comparison operators", () => {
   });
 
   describe("full-text search", () => {
-    dialect("mysql", () => {
+    dialect(["mysql", "mariadb"], () => {
       it("supports MATCH..AGAINST", () => {
         testExprWc(`MATCH (a) AGAINST ('abc')`);
         testExprWc(`MATCH (col1, col2, col3) AGAINST ('foo')`);

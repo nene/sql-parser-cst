@@ -74,7 +74,7 @@ describe("array", () => {
     });
   });
 
-  dialect("mysql", () => {
+  dialect(["mysql", "mariadb"], () => {
     it("does not support arrays", () => {
       expect(() => parseExpr("[1, 2, 3]")).toThrowError();
     });

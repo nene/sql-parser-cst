@@ -6,25 +6,25 @@ describe("insert into", () => {
     testWc("INSERT INTO db.tbl VALUES (1, 2, 3)");
   });
 
-  dialect(["mysql", "sqlite"], () => {
+  dialect(["mysql", "mariadb", "sqlite"], () => {
     // The REPLACE syntax is otherwise exactly the same as INSERT
     it("supports REPLACE INTO", () => {
       testWc("REPLACE INTO tbl VALUES (1, 2, 3)");
     });
   });
 
-  dialect(["mysql", "bigquery"], () => {
+  dialect(["mysql", "mariadb", "bigquery"], () => {
     it("supports INSERT without INTO", () => {
       testWc("INSERT tbl VALUES (1, 2, 3)");
     });
   });
-  dialect("mysql", () => {
+  dialect(["mysql", "mariadb"], () => {
     it("supports REPLACE without INTO", () => {
       testWc("REPLACE tbl VALUES (1, 2, 3)");
     });
   });
 
-  dialect("mysql", () => {
+  dialect(["mysql", "mariadb"], () => {
     it("supports VALUE instead of VALUES", () => {
       testWc("INSERT INTO tbl VALUE (1, 2, 3)");
     });
@@ -50,25 +50,25 @@ describe("insert into", () => {
     testWc("INSERT INTO tbl (SELECT 1, 2, 3)");
   });
 
-  dialect(["mysql", "sqlite"], () => {
+  dialect(["mysql", "mariadb", "sqlite"], () => {
     it("supports insert of default values", () => {
       testWc("INSERT INTO tbl DEFAULT VALUES");
     });
   });
 
-  dialect(["mysql", "bigquery"], () => {
+  dialect(["mysql", "mariadb", "bigquery"], () => {
     it("supports explicit default values for columns", () => {
       testWc("INSERT INTO tbl VALUES (1, DEFAULT, 3)");
     });
   });
 
-  dialect("mysql", () => {
+  dialect(["mysql", "mariadb"], () => {
     it("supports inserting row constructor", () => {
       testWc("INSERT INTO tbl VALUES ROW (1, DEFAULT), ROW (2, DEFAULT)");
     });
   });
 
-  dialect("mysql", () => {
+  dialect(["mysql", "mariadb"], () => {
     it("supports priority options", () => {
       testWc("INSERT LOW_PRIORITY INTO tbl VALUES (1)");
       testWc("INSERT DELAYED INTO tbl VALUES (1)");

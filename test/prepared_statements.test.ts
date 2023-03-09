@@ -1,7 +1,7 @@
 import { dialect, parse, testWc, test } from "./test_utils";
 
 describe("prepared statements", () => {
-  dialect("mysql", () => {
+  dialect(["mysql", "mariadb"], () => {
     it("supports EXECUTE", () => {
       testWc(`EXECUTE my_stmt`);
     });

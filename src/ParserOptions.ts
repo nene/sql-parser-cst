@@ -1,6 +1,7 @@
 export const validDialectNames = {
   sqlite: true,
   mysql: true,
+  mariadb: true,
   bigquery: true,
 };
 

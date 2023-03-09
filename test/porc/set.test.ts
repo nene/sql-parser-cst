@@ -1,7 +1,7 @@
 import { dialect, parse, testWc } from "../test_utils";
 
 describe("SET", () => {
-  dialect(["bigquery", "mysql"], () => {
+  dialect(["mysql", "mariadb", "bigquery"], () => {
     it("supports SET statement", () => {
       testWc("SET x = 10");
     });
@@ -12,7 +12,7 @@ describe("SET", () => {
       });
     });
 
-    dialect("mysql", () => {
+    dialect(["mysql", "mariadb"], () => {
       it("supports multiple assignments", () => {
         testWc("SET x = 1, y = 'foo', z = false");
       });

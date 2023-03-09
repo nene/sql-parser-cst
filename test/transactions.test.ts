@@ -3,7 +3,7 @@ import { dialect, testWc } from "./test_utils";
 describe("transactions", () => {
   describe("starting transaction", () => {
     // standard syntax
-    dialect("mysql", () => {
+    dialect(["mysql", "mariadb"], () => {
       it("supports START TRANSACTION", () => {
         testWc("START TRANSACTION");
       });
@@ -27,7 +27,7 @@ describe("transactions", () => {
       });
     });
 
-    dialect("mysql", () => {
+    dialect(["mysql", "mariadb"], () => {
       it("supports BEGIN WORK", () => {
         testWc("BEGIN WORK");
       });
@@ -53,7 +53,7 @@ describe("transactions", () => {
       });
     });
 
-    dialect("mysql", () => {
+    dialect(["mysql", "mariadb"], () => {
       it("supports COMMIT WORK", () => {
         testWc("COMMIT WORK");
       });
@@ -72,14 +72,14 @@ describe("transactions", () => {
       });
     });
 
-    dialect("mysql", () => {
+    dialect(["mysql", "mariadb"], () => {
       it("supports ROLLBACK WORK", () => {
         testWc("ROLLBACK WORK");
       });
     });
   });
 
-  dialect(["mysql", "sqlite"], () => {
+  dialect(["mysql", "mariadb", "sqlite"], () => {
     describe("creating savepoints", () => {
       it("supports SAVEPOINT", () => {
         testWc("SAVEPOINT my_sp");
@@ -111,7 +111,7 @@ describe("transactions", () => {
         });
       });
 
-      dialect("mysql", () => {
+      dialect(["mysql", "mariadb"], () => {
         it("supports ROLLBACK WORK TO [SAVEPOINT]", () => {
           testWc("ROLLBACK WORK TO SAVEPOINT my_savepoint");
           testWc("ROLLBACK WORK TO my_savepoint");

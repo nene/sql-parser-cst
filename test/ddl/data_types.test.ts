@@ -140,7 +140,7 @@ describe("data types", () => {
     );
   });
 
-  dialect("mysql", () => {
+  dialect(["mysql", "mariadb"], () => {
     it("ENUM and SET types", () => {
       testType("ENUM('foo', 'bar', 'baz')");
       testType("SET('foo', 'bar', 'baz')");

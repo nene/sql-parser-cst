@@ -34,7 +34,7 @@ describe("blob literal", () => {
     });
   });
 
-  dialect("mysql", () => {
+  dialect(["mysql", "mariadb"], () => {
     describe("hex literal", () => {
       it("parses as blob", () => {
         expect(parseExpr(`0x3132332D414243`)).toMatchInlineSnapshot(`
@@ -83,7 +83,7 @@ describe("blob literal", () => {
     });
   });
 
-  dialect("mysql", () => {
+  dialect(["mysql", "mariadb"], () => {
     describe("bit literal", () => {
       it("parses as blob", () => {
         expect(parseExpr(`0b0000110100001110`)).toMatchInlineSnapshot(`
@@ -126,7 +126,7 @@ describe("blob literal", () => {
     });
   });
 
-  dialect("mysql", () => {
+  dialect(["mysql", "mariadb"], () => {
     describe("bit literal string", () => {
       it("parses as blob", () => {
         testExpr(`b'01010111'`);

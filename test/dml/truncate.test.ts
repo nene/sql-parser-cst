@@ -8,7 +8,7 @@ describe("truncate table", () => {
     });
   });
 
-  dialect(["sqlite", "mysql"], () => {
+  dialect(["mysql", "mariadb", "sqlite"], () => {
     it("does not support TRUNCATE TABLE", () => {
       expect(() => parse("TRUNCATE TABLE foo")).toThrowError();
     });

@@ -9,7 +9,7 @@ describe("select ORDER BY", () => {
     testClauseWc("ORDER BY name DESC , age ASC, salary");
   });
 
-  dialect(["sqlite", "mysql"], () => {
+  dialect(["mysql", "mariadb", "sqlite"], () => {
     it("supports ORDER BY with collation", () => {
       testClauseWc("ORDER BY name COLLATE utf8 DESC");
     });
@@ -23,7 +23,7 @@ describe("select ORDER BY", () => {
     });
   });
 
-  dialect("mysql", () => {
+  dialect(["mysql", "mariadb"], () => {
     it("supports WITH ROLLUP", () => {
       testClauseWc("ORDER BY name, age WITH ROLLUP");
     });

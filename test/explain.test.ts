@@ -1,7 +1,7 @@
 import { dialect, test, testWc } from "./test_utils";
 
 describe("explain", () => {
-  dialect(["sqlite", "mysql"], () => {
+  dialect(["mysql", "mariadb", "sqlite"], () => {
     it("supports explaining of SELECT statement", () => {
       testWc("EXPLAIN SELECT * FROM foo");
     });
@@ -19,7 +19,7 @@ describe("explain", () => {
     });
   });
 
-  dialect("mysql", () => {
+  dialect(["mysql", "mariadb"], () => {
     it("supports DESCRIBE/DESC instead of EXPLAIN", () => {
       testWc("DESCRIBE SELECT 1");
       testWc("DESC SELECT 1");

@@ -7,7 +7,7 @@ describe("binary operators", () => {
     });
   });
 
-  dialect(["bigquery", "mysql"], () => {
+  dialect(["mysql", "mariadb", "bigquery"], () => {
     it("parses bitwise XOR operator", () => {
       testExprWc(`x ^ y`);
     });

@@ -1,7 +1,7 @@
 import { dialect, parseExpr, testExprWc } from "../test_utils";
 
 describe("COLLATE operator", () => {
-  dialect(["sqlite", "mysql"], () => {
+  dialect(["mysql", "mariadb", "sqlite"], () => {
     it("supports COLLATE operator", () => {
       testExprWc(`'foobar' COLLATE utf8`);
     });
@@ -34,7 +34,7 @@ describe("COLLATE operator", () => {
     });
   });
 
-  dialect("mysql", () => {
+  dialect(["mysql", "mariadb"], () => {
     it("supports BINARY operator", () => {
       testExprWc(`BINARY 'foobar'`);
     });

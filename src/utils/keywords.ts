@@ -7,6 +7,7 @@ import { getDialect } from "./parserState";
 const keywordMap: Record<DialectName, Record<string, boolean>> = {
   bigquery: bigqueryKeywords,
   mysql: mysqlKeywords,
+  mariadb: mysqlKeywords,
   sqlite: sqliteKeywords,
 };
 

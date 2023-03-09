@@ -60,7 +60,7 @@ describe("string literal", () => {
       `);
     });
 
-    dialect(["mysql", "sqlite"], () => {
+    dialect(["mysql", "mariadb", "sqlite"], () => {
       it("supports repeated-quote escapes", () => {
         testExpr(`'hel''lo'`);
       });
@@ -81,7 +81,7 @@ describe("string literal", () => {
       });
     });
 
-    dialect("mysql", () => {
+    dialect(["mysql", "mariadb"], () => {
       testStringEscaping("'", mysqlBackslashEscaping);
     });
     dialect("bigquery", () => {
@@ -90,7 +90,7 @@ describe("string literal", () => {
   });
 
   describe("double-quoted string", () => {
-    dialect(["mysql", "bigquery"], () => {
+    dialect(["mysql", "mariadb", "bigquery"], () => {
       it("parses simple string", () => {
         expect(parseExpr(`"hello"`)).toMatchInlineSnapshot(`
           {
@@ -102,7 +102,7 @@ describe("string literal", () => {
       });
     });
 
-    dialect("mysql", () => {
+    dialect(["mysql", "mariadb"], () => {
       it("supports repeated-quote escapes", () => {
         testExpr(`"hel""lo"`);
       });
@@ -123,7 +123,7 @@ describe("string literal", () => {
       });
     });
 
-    dialect("mysql", () => {
+    dialect(["mysql", "mariadb"], () => {
       testStringEscaping('"', mysqlBackslashEscaping);
     });
     dialect("bigquery", () => {
@@ -205,7 +205,7 @@ describe("string literal", () => {
     });
   });
 
-  dialect("mysql", () => {
+  dialect(["mysql", "mariadb"], () => {
     describe("string with charset", () => {
       it("parses single-quoted string with charset to syntax tree", () => {
         expect(parseExpr(`_binary 'hello'`)).toMatchInlineSnapshot(`
@@ -239,7 +239,7 @@ describe("string literal", () => {
     });
   });
 
-  dialect("mysql", () => {
+  dialect(["mysql", "mariadb"], () => {
     it("natural character set string", () => {
       expect(parseExpr(`N'hello'`)).toMatchInlineSnapshot(`
         {

@@ -78,7 +78,7 @@ describe("date/time literal", () => {
     `);
   });
 
-  dialect(["mysql", "bigquery"], () => {
+  dialect(["mysql", "mariadb", "bigquery"], () => {
     it("datetime with double-quoted string", () => {
       testExpr(`TIME "20:15:00"`);
       testExpr(`DATE "1995-06-01"`);

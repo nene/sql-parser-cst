@@ -27,7 +27,7 @@ describe("variable", () => {
     });
   });
 
-  dialect("mysql", () => {
+  dialect(["mysql", "mariadb"], () => {
     it("supports @variables", () => {
       testExpr("@foo");
     });
@@ -90,7 +90,7 @@ describe("variable", () => {
     });
   });
 
-  dialect(["sqlite", "mysql"], () => {
+  dialect(["mysql", "mariadb", "sqlite"], () => {
     it("does not support @@variables", () => {
       expect(() => parseExpr("@@my_var")).toThrowError();
     });

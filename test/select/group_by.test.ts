@@ -16,7 +16,7 @@ describe("select GROUP BY", () => {
     });
   });
 
-  dialect("mysql", () => {
+  dialect(["mysql", "mariadb"], () => {
     it("supports GROUP BY .. WITH ROLLUP", () => {
       testClauseWc("GROUP BY id, name WITH ROLLUP");
     });
