@@ -35,14 +35,12 @@ export const transformMap: FullTransformMap<string> = {
 
   // SELECT, INSERT, UPDATE, DELETE, TRUNCATE, MERGE
   ...selectMap,
+  ...frameMap, // window frame
   ...insertMap,
   ...updateMap,
   ...deleteMap,
   ...truncateMap,
   ...mergeMap,
-
-  // Window frame
-  ...frameMap,
 
   // CREATE/ALTER/DROP TABLE
   ...createTableMap,
@@ -62,20 +60,12 @@ export const transformMap: FullTransformMap<string> = {
   ...procedureMap,
   ...procClauseMap,
 
-  // ANALYZE/EXPLAIN
+  // Other
   ...analyzeMap,
   ...explainMap,
-
-  // Transactions
   ...transactionMap,
-
-  // GRANT & REVOKE
   ...dclMap,
-
-  // Procedural language
   ...proceduralLanguageMap,
-
-  // Prepared statements
   ...preparedStatementsMap,
 
   // DB-specific statements
@@ -84,9 +74,5 @@ export const transformMap: FullTransformMap<string> = {
 
   // Expressions
   ...exprMap,
-
-  // Data types
   ...dataTypeMap,
-
-  // Cast to FullTransformMap, so TypeScript ensures all node types are covered
 };
