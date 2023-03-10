@@ -1,6 +1,11 @@
 import { Whitespace, Node } from "./cst/Node";
 import { cstTransformer, FullTransformMap } from "./cstTransformer";
+import { deleteMap } from "./showNode/delete";
+import { insertMap } from "./showNode/insert";
+import { mergeMap } from "./showNode/merge";
 import { selectMap } from "./showNode/select";
+import { truncateMap } from "./showNode/truncate";
+import { updateMap } from "./showNode/update";
 import { isDefined, isString } from "./utils/generic";
 
 type NodeArray = (Node | NodeArray | string | undefined)[];
@@ -41,12 +46,13 @@ const showNode = cstTransformer<string>({
   program: (node) => show(node.statements, ";"),
   empty: () => "",
 
-  // SELECT statement
+  // SELECT, INSERT, UPDATE, DELETE, TRUNCATE, MERGE
   ...selectMap,
-
-  // VALUES
-  values_clause: (node) => show([node.valuesKw, node.values]),
-  row_constructor: (node) => show([node.rowKw, node.row]),
+  ...insertMap,
+  ...updateMap,
+  ...deleteMap,
+  ...truncateMap,
+  ...mergeMap,
 
   // Window frame
   frame_clause: (node) => show([node.unitKw, node.extent, node.exclusion]),
@@ -165,68 +171,6 @@ const showNode = cstTransformer<string>({
       node.tables,
       node.behaviorKw,
     ]),
-
-  // INSERT INTO statement
-  insert_stmt: (node) => show(node.clauses),
-  insert_clause: (node) =>
-    show([
-      node.insertKw,
-      node.options,
-      node.orAction,
-      node.intoKw,
-      node.table,
-      node.columns,
-    ]),
-  mysql_upsert_option: (node) => show(node.optionKw),
-  or_alternate_action: (node) => show([node.orKw, node.actionKw]),
-  default_values: (node) => show(node.defaultValuesKw),
-  default: (node) => show(node.defaultKw),
-  upsert_clause: (node) =>
-    show([node.onConflictKw, node.columns, node.where, node.doKw, node.action]),
-  upsert_action_nothing: (node) => show(node.nothingKw),
-  upsert_action_update: (node) => show([node.updateKw, node.set, node.where]),
-
-  // UPDATE statement
-  update_stmt: (node) => show(node.clauses),
-  update_clause: (node) =>
-    show([node.updateKw, node.options, node.orAction, node.tables]),
-  set_clause: (node) => show([node.setKw, node.assignments]),
-  column_assignment: (node) => show([node.column, "=", node.expr]),
-
-  // DELETE FROM statement
-  delete_stmt: (node) => show(node.clauses),
-  delete_clause: (node) => show([node.deleteKw, node.fromKw, node.table]),
-
-  // TRUNCATE TABLE statement
-  truncate_stmt: (node) => show([node.truncateTableKw, node.table]),
-
-  // MERGE statement
-  merge_stmt: (node) =>
-    show([
-      node.mergeKw,
-      node.intoKw,
-      node.target,
-      node.usingKw,
-      node.source,
-      node.onKw,
-      node.condition,
-      node.clauses,
-    ]),
-  merge_when_clause: (node) =>
-    show([
-      node.whenKw,
-      node.matchedKw,
-      node.byKw,
-      node.condition,
-      node.thenKw,
-      node.action,
-    ]),
-  merge_when_condition: (node) => show([node.andKw, node.expr]),
-  merge_action_delete: (node) => show([node.deleteKw]),
-  merge_action_insert: (node) =>
-    show([node.insertKw, node.columns, node.values]),
-  merge_action_update: (node) => show([node.updateKw, node.set]),
-  merge_action_insert_row_clause: (node) => show(node.rowKw),
 
   // CREATE SCHEMA statement
   create_schema_stmt: (node) =>
