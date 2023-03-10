@@ -1,0 +1,109 @@
+import { show } from "../show";
+import { AllSelectNodes } from "../cst/Node";
+import { FullTransformMap } from "../cstTransformer";
+
+export const selectMap: FullTransformMap<string, AllSelectNodes> = {
+  compound_select_stmt: (node) => show([node.left, node.operator, node.right]),
+  select_stmt: (node) => show(node.clauses),
+  // WITH
+  with_clause: (node) => show([node.withKw, node.recursiveKw, node.tables]),
+  common_table_expression: (node) =>
+    show([node.table, node.columns, node.asKw, node.materializedKw, node.expr]),
+  // SELECT
+  select_clause: (node) =>
+    show([
+      node.selectKw,
+      node.distinctKw,
+      node.options,
+      node.asStructOrValueKw,
+      node.columns,
+    ]),
+  mysql_select_option: (node) => show(node.optionKw),
+  except_columns: (node) => show([node.expr, node.exceptKw, node.columns]),
+  replace_columns: (node) => show([node.expr, node.replaceKw, node.columns]),
+  // FROM
+  from_clause: (node) => show([node.fromKw, node.expr]),
+  dual_table: (node) => show(node.dualKw),
+  lateral_derived_table: (node) => show([node.lateralKw, node.expr]),
+  partitioned_table: (node) =>
+    show([node.table, node.partitionKw, node.partitions]),
+  indexed_table: (node) => show([node.table, node.indexedByKw, node.index]),
+  not_indexed_table: (node) => show([node.table, node.notIndexedKw]),
+  unnest_expr: (node) => show([node.unnestKw, node.expr]),
+  unnest_with_offset_expr: (node) => show([node.unnest, node.withOffsetKw]),
+  join_expr: (node) =>
+    show([node.left, node.operator, node.right, node.specification]),
+  join_on_specification: (node) => show([node.onKw, node.expr]),
+  join_using_specification: (node) => show([node.usingKw, node.expr]),
+  pivot_expr: (node) => show([node.left, node.pivotKw, node.args]),
+  pivot_for_in: (node) =>
+    show([
+      node.aggregations,
+      node.forKw,
+      node.inputColumn,
+      node.inKw,
+      node.pivotColumns,
+    ]),
+  unpivot_expr: (node) =>
+    show([node.left, node.unpivotKw, node.nullHandlingKw, node.args]),
+  unpivot_for_in: (node) =>
+    show([
+      node.valuesColumn,
+      node.forKw,
+      node.nameColumn,
+      node.inKw,
+      node.unpivotColumns,
+    ]),
+  tablesample_expr: (node) => show([node.left, node.tablesampleKw, node.args]),
+  tablesample_percent: (node) => show([node.percent, node.percentKw]),
+  for_system_time_as_of_expr: (node) =>
+    show([node.left, node.forSystemTimeAsOfKw, node.expr]),
+  sort_specification: (node) =>
+    show([node.expr, node.orderKw, node.nullHandlingKw]),
+  // WHERE .. GROUP BY .. HAVING .. QUALIFY ... ORDER BY .. PARTITION BY .. CLUSTER BY
+  where_clause: (node) => show([node.whereKw, node.expr]),
+  group_by_clause: (node) =>
+    show([node.groupByKw, node.columns, node.withRollupKw]),
+  group_by_rollup: (node) => show([node.rollupKw, node.columns]),
+  having_clause: (node) => show([node.havingKw, node.expr]),
+  qualify_clause: (node) => show([node.qualifyKw, node.expr]),
+  order_by_clause: (node) =>
+    show([node.orderByKw, node.specifications, node.withRollupKw]),
+  partition_by_clause: (node) =>
+    show([node.partitionByKw, node.specifications]),
+  cluster_by_clause: (node) => show([node.clusterByKw, node.columns]),
+  // WINDOW
+  window_clause: (node) => show([node.windowKw, node.namedWindows]),
+  named_window: (node) => show([node.name, node.asKw, node.window]),
+  window_definition: (node) =>
+    show([node.baseWindowName, node.partitionBy, node.orderBy, node.frame]),
+  // LIMIT
+  limit_clause: (node) => {
+    if (node.offsetKw) {
+      return show([
+        node.limitKw,
+        node.count,
+        node.offsetKw,
+        node.offset,
+        node.rowsExamined,
+      ]);
+    } else if (node.offset) {
+      return show([
+        node.limitKw,
+        node.offset,
+        ",",
+        node.count,
+        node.rowsExamined,
+      ]);
+    } else {
+      return show([node.limitKw, node.count, node.rowsExamined]);
+    }
+  },
+  limit_rows_examined: (node) => show([node.rowsExaminedKw, node.count]),
+  // OFFSET + FETCH
+  offset_clause: (node) => show([node.offsetKw, node.offset, node.rowsKw]),
+  fetch_clause: (node) =>
+    show([node.fetchKw, node.count, node.rowsKw, node.withTiesKw]),
+  // returning clause
+  returning_clause: (node) => show([node.returningKw, node.columns]),
+};
