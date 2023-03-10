@@ -114,13 +114,26 @@ const showNode = cstTransformer<string>({
   // LIMIT
   limit_clause: (node) => {
     if (node.offsetKw) {
-      return show([node.limitKw, node.count, node.offsetKw, node.offset]);
+      return show([
+        node.limitKw,
+        node.count,
+        node.offsetKw,
+        node.offset,
+        node.rowsExamined,
+      ]);
     } else if (node.offset) {
-      return show([node.limitKw, node.offset, ",", node.count]);
+      return show([
+        node.limitKw,
+        node.offset,
+        ",",
+        node.count,
+        node.rowsExamined,
+      ]);
     } else {
-      return show([node.limitKw, node.count]);
+      return show([node.limitKw, node.count, node.rowsExamined]);
     }
   },
+  limit_rows_examined: (node) => show([node.rowsExaminedKw, node.count]),
   // OFFSET + FETCH
   offset_clause: (node) => show([node.offsetKw, node.offset, node.rowsKw]),
   fetch_clause: (node) =>

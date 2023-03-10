@@ -680,25 +680,44 @@ sort_specification_nulls
  * --------------------------------------------------------------------------------------
  */
 limit_clause
-  = kw:LIMIT count:(__ expr __) offkw:OFFSET offset:(__ expr)  {
+  = kw:LIMIT count:(__ expr __) offkw:OFFSET offset:(__ expr) ex:(__ limit_rows_examined)? {
     return loc({
       type: "limit_clause",
       limitKw: kw,
       count: read(count),
       offsetKw: offkw,
       offset: read(offset),
+      rowsExamined: read(ex),
     });
   }
-  / kw:LIMIT offset:(__ expr __) "," count:(__ expr)  {
+  / kw:LIMIT offset:(__ expr __) "," count:(__ expr) ex:(__ limit_rows_examined)? {
     return loc({
       type: "limit_clause",
       limitKw: kw,
       offset: read(offset),
       count: read(count),
+      rowsExamined: read(ex),
     });
   }
-  / kw:LIMIT count:(__ expr) {
-    return loc({ type: "limit_clause", limitKw: kw, count: read(count) });
+  / kw:LIMIT count:(__ expr) ex:(__ limit_rows_examined)? {
+    return loc({
+      type: "limit_clause",
+      limitKw: kw,
+      count: read(count),
+      rowsExamined: read(ex),
+    });
+  }
+  / kw:LIMIT ex:(__ limit_rows_examined) {
+    return loc({
+      type: "limit_clause",
+      limitKw: kw,
+      rowsExamined: read(ex),
+    });
+  }
+
+limit_rows_examined
+  = &only_mariadb kw:(ROWS __ EXAMINED __) count:number_literal {
+    return loc({ type: "limit_rows_examined", rowsExaminedKw: read(kw), count });
   }
 
 /**
@@ -5005,6 +5024,7 @@ ENUM                = kw:"ENUM"i                !ident_part { return loc(createK
 ERROR               = kw:"ERROR"i               !ident_part { return loc(createKeyword(kw)); }
 ESCAPE              = kw:"ESCAPE"i              !ident_part { return loc(createKeyword(kw)); }
 EVENTS              = kw:"EVENTS"i              !ident_part { return loc(createKeyword(kw)); }
+EXAMINED            = kw:"EXAMINED"i            !ident_part { return loc(createKeyword(kw)); }
 EXCEPT              = kw:"EXCEPT"i              !ident_part { return loc(createKeyword(kw)); }
 EXCEPTION           = kw:"EXCEPTION"i           !ident_part { return loc(createKeyword(kw)); }
 EXCLUDE             = kw:"EXCLUDE"i             !ident_part { return loc(createKeyword(kw)); }

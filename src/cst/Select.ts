@@ -33,6 +33,7 @@ export type AllSelectNodes =
   | PartitionByClause
   | ClusterByClause
   | LimitClause
+  | LimitRowsExamined
   | OffsetClause
   | FetchClause
   | DualTable
@@ -217,9 +218,16 @@ export interface ClusterByClause extends BaseNode {
 export interface LimitClause extends BaseNode {
   type: "limit_clause";
   limitKw: Keyword<"LIMIT">;
-  count: Expr;
+  count?: Expr;
   offsetKw?: Keyword<"OFFSET">;
   offset?: Expr;
+  rowsExamined?: LimitRowsExamined;
+}
+
+export interface LimitRowsExamined extends BaseNode {
+  type: "limit_rows_examined";
+  rowsExaminedKw: [Keyword<"ROWS">, Keyword<"EXAMINED">];
+  count: Expr;
 }
 
 export interface OffsetClause extends BaseNode {

@@ -13,6 +13,15 @@ describe("select limiting", () => {
     it("parses LIMIT..OFFSET clause", () => {
       testClauseWc("LIMIT 25 OFFSET 100");
     });
+
+    dialect("mariadb", () => {
+      it("parses LIMIT ROWS EXAMINED", () => {
+        testClauseWc("LIMIT 25 OFFSET 100 ROWS EXAMINED 1000");
+        testClauseWc("LIMIT 100, 8 ROWS EXAMINED 1000");
+        testClauseWc("LIMIT 25 ROWS EXAMINED 1000");
+        testClauseWc("LIMIT ROWS EXAMINED 1000");
+      });
+    });
   });
 
   dialect("mariadb", () => {
