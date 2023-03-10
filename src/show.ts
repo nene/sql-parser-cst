@@ -2,12 +2,16 @@ import { Whitespace, Node } from "./cst/Node";
 import { cstTransformer, FullTransformMap } from "./cstTransformer";
 import { alterActionMap } from "./showNode/alter_action";
 import { alterTableMap } from "./showNode/alter_table";
+import { analyzeMap } from "./showNode/analyze";
+import { baseMap } from "./showNode/base";
 import { bigqueryMap } from "./showNode/bigquery";
 import { constraintMap } from "./showNode/constraint";
 import { createTableMap } from "./showNode/create_table";
+import { dataTypeMap } from "./showNode/data_type";
 import { dclMap } from "./showNode/dcl";
 import { deleteMap } from "./showNode/delete";
 import { dropTableMap } from "./showNode/drop_table";
+import { explainMap } from "./showNode/explain";
 import { exprMap } from "./showNode/expr";
 import { functionMap } from "./showNode/function";
 import { indexMap } from "./showNode/index";
@@ -63,8 +67,7 @@ const showWhitespace = (ws?: Whitespace[]): string | undefined => {
 const showWhitespaceItem = (ws: Whitespace): string => ws.text;
 
 const showNode = cstTransformer<string>({
-  program: (node) => show(node.statements, ";"),
-  empty: () => "",
+  ...baseMap,
 
   // SELECT, INSERT, UPDATE, DELETE, TRUNCATE, MERGE
   ...selectMap,
@@ -95,12 +98,9 @@ const showNode = cstTransformer<string>({
   ...procedureMap,
   ...procClauseMap,
 
-  // ANALYZE statement
-  analyze_stmt: (node) => show([node.analyzeKw, node.tableKw, node.tables]),
-
-  // EXPLAIN statement
-  explain_stmt: (node) =>
-    show([node.explainKw, node.analyzeKw, node.queryPlanKw, node.statement]),
+  // ANALYZE/EXPLAIN
+  ...analyzeMap,
+  ...explainMap,
 
   // Transactions
   ...transactionMap,
@@ -122,17 +122,7 @@ const showNode = cstTransformer<string>({
   ...exprMap,
 
   // Data types
-  data_type: (node) => show([node.nameKw, node.params]),
-  generic_type_params: (node) => show(["<", node.params, ">"]),
-  array_type_param: (node) => show([node.dataType, node.constraints]),
-  struct_type_param: (node) =>
-    show([node.name, node.dataType, node.constraints]),
-
-  alias: (node) => show([node.expr, node.asKw, node.alias]),
-
-  // Basic language elements
-  keyword: (node) => node.text,
-  all_columns: () => "*",
+  ...dataTypeMap,
 
   // Cast to FullTransformMap, so TypeScript ensures all node types are covered
 } as FullTransformMap<string>);
