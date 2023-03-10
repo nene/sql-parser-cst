@@ -4,16 +4,20 @@ import { alterActionMap } from "./showNode/alter_action";
 import { alterTableMap } from "./showNode/alter_table";
 import { constraintMap } from "./showNode/constraint";
 import { createTableMap } from "./showNode/create_table";
+import { dclMap } from "./showNode/dcl";
 import { deleteMap } from "./showNode/delete";
 import { dropTableMap } from "./showNode/drop_table";
 import { functionMap } from "./showNode/function";
 import { indexMap } from "./showNode/index";
 import { insertMap } from "./showNode/insert";
 import { mergeMap } from "./showNode/merge";
+import { preparedStatementsMap } from "./showNode/prepared_statements";
+import { proceduralLanguageMap } from "./showNode/procedural_language";
 import { procedureMap } from "./showNode/procedure";
 import { procClauseMap } from "./showNode/proc_clause";
 import { schemaMap } from "./showNode/schema";
 import { selectMap } from "./showNode/select";
+import { transactionMap } from "./showNode/transaction";
 import { triggerMap } from "./showNode/trigger";
 import { truncateMap } from "./showNode/truncate";
 import { updateMap } from "./showNode/update";
@@ -100,98 +104,16 @@ const showNode = cstTransformer<string>({
     show([node.explainKw, node.analyzeKw, node.queryPlanKw, node.statement]),
 
   // Transactions
-  start_transaction_stmt: (node) =>
-    show([node.startKw, node.behaviorKw, node.transactionKw]),
-  commit_transaction_stmt: (node) => show([node.commitKw, node.transactionKw]),
-  rollback_transaction_stmt: (node) =>
-    show([node.rollbackKw, node.transactionKw, node.savepoint]),
-  rollback_to_savepoint: (node) =>
-    show([node.toKw, node.savepointKw, node.savepoint]),
-  savepoint_stmt: (node) => show([node.savepointKw, node.savepoint]),
-  release_savepoint_stmt: (node) =>
-    show([node.releaseKw, node.savepointKw, node.savepoint]),
+  ...transactionMap,
 
   // GRANT & REVOKE
-  grant_stmt: (node) =>
-    show([
-      node.grantKw,
-      node.roles,
-      node.onKw,
-      node.resourceType,
-      node.resourceName,
-      node.toKw,
-      node.users,
-    ]),
-  revoke_stmt: (node) =>
-    show([
-      node.revokeKw,
-      node.roles,
-      node.onKw,
-      node.resourceType,
-      node.resourceName,
-      node.fromKw,
-      node.users,
-    ]),
+  ...dclMap,
 
   // Procedural language
-  labeled_stmt: (node) =>
-    show([node.beginLabel, ":", node.statement, node.endLabel]),
-  block_stmt: (node) =>
-    show([node.beginKw, node.program, node.exception, node.endKw]),
-  exception_clause: (node) =>
-    show([
-      node.exceptionKw,
-      node.whenKw,
-      node.condition,
-      node.thenKw,
-      node.program,
-    ]),
-  error_category: (node) => show(node.errorKw),
-  declare_stmt: (node) =>
-    show([node.declareKw, node.names, node.dataType, node.default]),
-  declare_default: (node) => show([node.defaultKw, node.expr]),
-  set_stmt: (node) => show([node.setKw, node.assignments]),
-  if_stmt: (node) => show([node.clauses, node.endIfKw]),
-  if_clause: (node) =>
-    show([node.ifKw, node.condition, node.thenKw, node.consequent]),
-  elseif_clause: (node) =>
-    show([node.elseifKw, node.condition, node.thenKw, node.consequent]),
-  else_clause: (node) => show([node.elseKw, node.consequent]),
-  case_stmt: (node) =>
-    show([node.caseKw, node.expr, node.clauses, node.endCaseKw]),
-  loop_stmt: (node) => show([node.loopKw, node.body, node.endLoopKw]),
-  repeat_stmt: (node) =>
-    show([
-      node.repeatKw,
-      node.body,
-      node.untilKw,
-      node.condition,
-      node.endRepeatKw,
-    ]),
-  while_stmt: (node) =>
-    show([node.whileKw, node.condition, node.doKw, node.body, node.endWhileKw]),
-  for_stmt: (node) =>
-    show([
-      node.forKw,
-      node.left,
-      node.inKw,
-      node.right,
-      node.doKw,
-      node.body,
-      node.endForKw,
-    ]),
-  break_stmt: (node) => show([node.breakKw, node.label]),
-  continue_stmt: (node) => show([node.continueKw, node.label]),
-  call_stmt: (node) => show([node.callKw, node.func]),
-  return_stmt: (node) => show([node.returnKw, node.expr]),
-  raise_stmt: (node) => show([node.raiseKw, node.message]),
-  raise_message: (node) => show([node.usingMessageKw, "=", node.string]),
+  ...proceduralLanguageMap,
 
   // Prepared statements
-  execute_stmt: (node) =>
-    show([node.executeKw, node.immediateKw, node.expr, node.into, node.using]),
-  execute_into_clause: (node) => show([node.intoKw, node.variables]),
-  execute_using_clause: (node) => show([node.usingKw, node.values]),
+  ...preparedStatementsMap,
 
   // SQLite-specific statements
   attach_database_stmt: (node) =>
