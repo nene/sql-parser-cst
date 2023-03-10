@@ -6,11 +6,18 @@ import { constraintMap } from "./showNode/constraint";
 import { createTableMap } from "./showNode/create_table";
 import { deleteMap } from "./showNode/delete";
 import { dropTableMap } from "./showNode/drop_table";
+import { functionMap } from "./showNode/function";
+import { indexMap } from "./showNode/index";
 import { insertMap } from "./showNode/insert";
 import { mergeMap } from "./showNode/merge";
+import { procedureMap } from "./showNode/procedure";
+import { procClauseMap } from "./showNode/proc_clause";
+import { schemaMap } from "./showNode/schema";
 import { selectMap } from "./showNode/select";
+import { triggerMap } from "./showNode/trigger";
 import { truncateMap } from "./showNode/truncate";
 import { updateMap } from "./showNode/update";
+import { viewMap } from "./showNode/view";
 import { frameMap } from "./showNode/window_frame";
 import { isDefined, isString } from "./utils/generic";
 
@@ -74,146 +81,16 @@ const showNode = cstTransformer<string>({
   bigquery_option_default_collate: (node) =>
     show([node.defaultCollateKw, node.collation]),
 
-  // CREATE SCHEMA statement
-  create_schema_stmt: (node) =>
-    show([node.createSchemaKw, node.ifNotExistsKw, node.name, node.options]),
-  // DROP SCHEMA statement
-  drop_schema_stmt: (node) =>
-    show([node.dropSchemaKw, node.ifExistsKw, node.name, node.behaviorKw]),
-  alter_schema_stmt: (node) =>
-    show([node.alterSchemaKw, node.ifExistsKw, node.name, node.actions]),
+  // CREATE/DROP/ALTER SCHEMA/VIEW/INDEX/TRIGGER
+  ...schemaMap,
+  ...viewMap,
+  ...indexMap,
+  ...triggerMap,
 
-  // CREATE VIEW statement
-  create_view_stmt: (node) =>
-    show([
-      node.createKw,
-      node.orReplaceKw,
-      node.temporaryKw,
-      node.materializedKw,
-      node.viewKw,
-      node.ifNotExistsKw,
-      node.name,
-      node.columns,
-      node.clauses,
-    ]),
-  // DROP VIEW statement
-  drop_view_stmt: (node) =>
-    show([
-      node.dropKw,
-      node.materializedKw,
-      node.viewKw,
-      node.ifExistsKw,
-      node.views,
-      node.behaviorKw,
-    ]),
-  alter_view_stmt: (node) =>
-    show([
-      node.alterKw,
-      node.materializedKw,
-      node.viewKw,
-      node.ifExistsKw,
-      node.name,
-      node.actions,
-    ]),
-
-  // CREATE INDEX statement
-  create_index_stmt: (node) =>
-    show([
-      node.createKw,
-      node.indexTypeKw,
-      node.indexKw,
-      node.ifNotExistsKw,
-      node.name,
-      node.onKw,
-      node.table,
-      node.columns,
-      node.clauses,
-    ]),
-  verbose_all_columns: (node) => show(node.allColumnsKw),
-  // DROP INDEX
-  drop_index_stmt: (node) =>
-    show([
-      node.dropKw,
-      node.indexTypeKw,
-      node.indexKw,
-      node.ifExistsKw,
-      node.indexes,
-      node.onKw,
-      node.table,
-    ]),
-
-  // CREATE FUNCTION
-  create_function_stmt: (node) =>
-    show([
-      node.createKw,
-      node.orReplaceKw,
-      node.temporaryKw,
-      node.tableKw,
-      node.functionKw,
-      node.ifNotExistsKw,
-      node.name,
-      node.params,
-      node.clauses,
-    ]),
-  function_param: (node) => show([node.name, node.dataType]),
-  returns_clause: (node) => show([node.returnsKw, node.dataType]),
-  determinism_clause: (node) => show([node.deterministicKw]),
-  language_clause: (node) => show([node.languageKw, node.name]),
-  as_clause: (node) => show([node.asKw, node.expr]),
-  with_connection_clause: (node) =>
-    show([node.withConnectionKw, node.connection]),
-  // DROP FUNCTION
-  drop_function_stmt: (node) =>
-    show([
-      node.dropKw,
-      node.tableKw,
-      node.functionKw,
-      node.ifExistsKw,
-      node.name,
-    ]),
-
-  // CREATE PROCEDURE
-  create_procedure_stmt: (node) =>
-    show([
-      node.createKw,
-      node.orReplaceKw,
-      node.procedureKw,
-      node.ifNotExistsKw,
-      node.name,
-      node.params,
-      node.clauses,
-    ]),
-  procedure_param: (node) => show([node.mode, node.name, node.dataType]),
-  // DROP PROCEDURE
-  drop_procedure_stmt: (node) =>
-    show([node.dropKw, node.procedureKw, node.ifExistsKw, node.name]),
-
-  // CREATE TRIGGER statement
-  create_trigger_stmt: (node) =>
-    show([
-      node.createKw,
-      node.temporaryKw,
-      node.triggerKw,
-      node.ifNotExistsKw,
-      node.name,
-      node.event,
-      node.forEachRowKw,
-      node.condition,
-      node.body,
-    ]),
-  trigger_event: (node) =>
-    show([
-      node.timeKw,
-      node.eventKw,
-      node.ofKw,
-      node.columns,
-      node.onKw,
-      node.table,
-    ]),
-  trigger_condition: (node) => show([node.whenKw, node.expr]),
-  // DROP TRIGGER
-  drop_trigger_stmt: (node) =>
-    show([node.dropTriggerKw, node.ifExistsKw, node.trigger]),
+  // CREATE/DROP FUNCTION/PROCEDURE
+  ...functionMap,
+  ...procedureMap,
+  ...procClauseMap,
 
   // ANALYZE statement
   analyze_stmt: (node) => show([node.analyzeKw, node.tableKw, node.tables]),
