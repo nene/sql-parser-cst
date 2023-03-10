@@ -121,6 +121,10 @@ const showNode = cstTransformer<string>({
       return show([node.limitKw, node.count]);
     }
   },
+  // OFFSET + FETCH
+  offset_clause: (node) => show([node.offsetKw, node.offset, node.rowsKw]),
+  fetch_clause: (node) =>
+    show([node.fetchKw, node.count, node.rowsKw, node.withTiesKw]),
   // VALUES
   values_clause: (node) => show([node.valuesKw, node.values]),
   row_constructor: (node) => show([node.rowKw, node.row]),

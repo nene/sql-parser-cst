@@ -204,6 +204,8 @@ other_clause
   / limit_clause
   / window_clause
   / &bigquery x:qualify_clause { return x; }
+  / &only_mariadb x:offset_clause { return x; }
+  / &only_mariadb x:fetch_clause { return x; }
 
 /**
  * SELECT .. columns
@@ -697,6 +699,31 @@ limit_clause
   }
   / kw:LIMIT count:(__ expr) {
     return loc({ type: "limit_clause", limitKw: kw, count: read(count) });
+  }
+
+/**
+ * SELECT .. OFFSET .. FETCH
+ * --------------------------------------------------------------------------------------
+ */
+offset_clause
+  = kw:(OFFSET __) offset:expr rowsKw:(__ (ROW / ROWS))? {
+    return loc({
+      type: "offset_clause",
+      offsetKw: read(kw),
+      offset: read(offset),
+      rowsKw: read(rowsKw),
+    });
+  }
+
+fetch_clause
+  = kw:(FETCH __ (FIRST / NEXT) __) count:(number_literal __)? rowsKw:((ROW / ROWS) __) tiesKw:(ONLY / WITH __ TIES) {
+    return loc({
+      type: "fetch_clause",
+      fetchKw: read(kw),
+      count: read(count),
+      rowsKw: read(rowsKw),
+      withTiesKw: read(tiesKw),
+    });
   }
 
 /**
@@ -4991,6 +5018,7 @@ EXTERNAL            = kw:"EXTERNAL"i            !ident_part { return loc(createK
 EXTRACT             = kw:"EXTRACT"i             !ident_part { return loc(createKeyword(kw)); }
 FAIL                = kw:"FAIL"i                !ident_part { return loc(createKeyword(kw)); }
 FALSE               = kw:"FALSE"i               !ident_part { return loc(createKeyword(kw)); }
+FETCH               = kw:"FETCH"i               !ident_part { return loc(createKeyword(kw)); }
 FILES               = kw:"FILES"i               !ident_part { return loc(createKeyword(kw)); }
 FILTER              = kw:"FILTER"i              !ident_part { return loc(createKeyword(kw)); }
 FIRST               = kw:"FIRST"i               !ident_part { return loc(createKeyword(kw)); }
@@ -5104,6 +5132,7 @@ MONTH               = kw:"MONTH"i               !ident_part { return loc(createK
 NATIVE              = kw:"NATIVE"i              !ident_part { return loc(createKeyword(kw)); }
 NATURAL             = kw:"NATURAL"i             !ident_part { return loc(createKeyword(kw)); }
 NCHAR               = kw:"NCHAR"i               !ident_part { return loc(createKeyword(kw)); }
+NEXT                = kw:"NEXT"i                !ident_part { return loc(createKeyword(kw)); }
 NO                  = kw:"NO"i                  !ident_part { return loc(createKeyword(kw)); }
 NOCHECK             = kw:"NOCHECK"i             !ident_part { return loc(createKeyword(kw)); }
 NONE                = kw:"NONE"i                !ident_part { return loc(createKeyword(kw)); }
@@ -5120,6 +5149,7 @@ NVARCHAR            = kw:"NVARCHAR"i            !ident_part { return loc(createK
 OF                  = kw:"OF"i                  !ident_part { return loc(createKeyword(kw)); }
 OFFSET              = kw:"OFFSET"i              !ident_part { return loc(createKeyword(kw)); }
 ON                  = kw:"ON"i                  !ident_part { return loc(createKeyword(kw)); }
+ONLY                = kw:"ONLY"i                !ident_part { return loc(createKeyword(kw)); }
 OPTION              = kw:"OPTION"i              !ident_part { return loc(createKeyword(kw)); }
 OPTIONS             = kw:"OPTIONS"i             !ident_part { return loc(createKeyword(kw)); }
 OR                  = kw:"OR"i                  !ident_part { return loc(createKeyword(kw)); }

@@ -33,6 +33,8 @@ export type AllSelectNodes =
   | PartitionByClause
   | ClusterByClause
   | LimitClause
+  | OffsetClause
+  | FetchClause
   | DualTable
   | JoinExpr
   | IndexedTable
@@ -78,6 +80,8 @@ export interface SelectStmt extends BaseNode {
     | QualifyClause
     | OrderByClause
     | LimitClause
+    | OffsetClause
+    | FetchClause
     | ParenExpr<SelectStmt>
   )[];
 }
@@ -216,6 +220,21 @@ export interface LimitClause extends BaseNode {
   count: Expr;
   offsetKw?: Keyword<"OFFSET">;
   offset?: Expr;
+}
+
+export interface OffsetClause extends BaseNode {
+  type: "offset_clause";
+  offsetKw: Keyword<"OFFSET">;
+  offset: Expr;
+  rowsKw?: Keyword<"ROWS" | "ROW">;
+}
+
+export interface FetchClause extends BaseNode {
+  type: "fetch_clause";
+  fetchKw: [Keyword<"FETCH">, Keyword<"FIRST" | "NEXT">];
+  count?: Expr;
+  rowsKw?: Keyword<"ROWS" | "ROW">;
+  withTiesKw: Keyword<"ONLY"> | [Keyword<"WITH">, Keyword<"TIES">];
 }
 
 export interface DualTable extends BaseNode {

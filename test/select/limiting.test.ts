@@ -1,15 +1,38 @@
-import { testClauseWc } from "../test_utils";
+import { dialect, testClauseWc } from "../test_utils";
 
 describe("select limiting", () => {
-  it("parses basic LIMIT clause", () => {
-    testClauseWc("LIMIT 25");
+  describe("LIMIT clause", () => {
+    it("parses basic LIMIT clause", () => {
+      testClauseWc("LIMIT 25");
+    });
+
+    it("parses LIMIT offset,count clause", () => {
+      testClauseWc("LIMIT 100, 25");
+    });
+
+    it("parses LIMIT..OFFSET clause", () => {
+      testClauseWc("LIMIT 25 OFFSET 100");
+    });
   });
 
-  it("parses LIMIT offset,count clause", () => {
-    testClauseWc("LIMIT 100, 25");
-  });
+  dialect("mariadb", () => {
+    describe("OFFSET and FETCH clauses", () => {
+      it("supports OFFSET", () => {
+        testClauseWc(`OFFSET 10 ROWS`);
+        testClauseWc(`OFFSET 1 ROW`);
+        testClauseWc(`OFFSET 15`);
+      });
 
-  it("parses LIMIT..OFFSET clause", () => {
-    testClauseWc("LIMIT 25 OFFSET 100");
+      it("supports FETCH..ROWS", () => {
+        testClauseWc(`FETCH FIRST 10 ROWS ONLY`);
+        testClauseWc(`FETCH NEXT 1 ROW WITH TIES`);
+        testClauseWc(`FETCH NEXT ROW ONLY`);
+      });
+
+      it("supports OFFSET & FETCH together", () => {
+        testClauseWc(`OFFSET 25 ROWS FETCH FIRST 10 ROWS ONLY`);
+        testClauseWc(`OFFSET 28 FETCH NEXT ROW ONLY`);
+      });
+    });
   });
 });
