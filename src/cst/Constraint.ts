@@ -6,8 +6,27 @@ import { BigqueryOptions } from "./Bigquery";
 
 export type AllConstraintNodes =
   | Constraint<ColumnConstraint | TableConstraint>
-  | ColumnConstraint
-  | TableConstraint
+  | ConstraintNull
+  | ConstraintNotNull
+  | ConstraintDefault
+  | ConstraintAutoIncrement
+  | ConstraintUnique
+  | ConstraintPrimaryKey
+  | ReferencesSpecification
+  | ConstraintComment
+  | ConstraintCheck
+  | ConstraintIndex
+  | ConstraintGenerated
+  | ConstraintCollate
+  | ConstraintVisible
+  | ConstraintColumnFormat
+  | ConstraintStorage
+  | ConstraintEngineAttribute
+  | ConstraintPrimaryKey
+  | ConstraintForeignKey
+  | ConstraintUnique
+  | ConstraintCheck
+  | ConstraintIndex
   | ConstraintName
   | ConstraintDeferrable
   | ReferencesSpecification

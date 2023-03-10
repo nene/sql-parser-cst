@@ -34,6 +34,4 @@ export const constraintMap: FullTransformMap<string, AllConstraintNodes> = {
   constraint_engine_attribute: (node) =>
     show([node.engineAttributeKw, node.hasEq ? "=" : undefined, node.value]),
   on_conflict_clause: (node) => show([node.onConflictKw, node.resolutionKw]),
-
-  bigquery_options: (node) => show([node.optionsKw, node.options]),
 };

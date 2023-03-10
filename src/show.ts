@@ -2,6 +2,7 @@ import { Whitespace, Node } from "./cst/Node";
 import { cstTransformer, FullTransformMap } from "./cstTransformer";
 import { alterActionMap } from "./showNode/alter_action";
 import { alterTableMap } from "./showNode/alter_table";
+import { bigqueryMap } from "./showNode/bigquery";
 import { constraintMap } from "./showNode/constraint";
 import { createTableMap } from "./showNode/create_table";
 import { dclMap } from "./showNode/dcl";
@@ -17,6 +18,7 @@ import { procedureMap } from "./showNode/procedure";
 import { procClauseMap } from "./showNode/proc_clause";
 import { schemaMap } from "./showNode/schema";
 import { selectMap } from "./showNode/select";
+import { sqliteMap } from "./showNode/sqlite";
 import { transactionMap } from "./showNode/transaction";
 import { triggerMap } from "./showNode/trigger";
 import { truncateMap } from "./showNode/truncate";
@@ -81,10 +83,6 @@ const showNode = cstTransformer<string>({
   ...alterActionMap,
   ...dropTableMap,
 
-  // additional clauses
-  bigquery_option_default_collate: (node) =>
-    show([node.defaultCollateKw, node.collation]),
-
   // CREATE/DROP/ALTER SCHEMA/VIEW/INDEX/TRIGGER
   ...schemaMap,
   ...viewMap,
@@ -115,78 +113,9 @@ const showNode = cstTransformer<string>({
   // Prepared statements
   ...preparedStatementsMap,
 
-  // SQLite-specific statements
-  attach_database_stmt: (node) =>
-    show([node.attachKw, node.databaseKw, node.file, node.asKw, node.schema]),
-  detach_database_stmt: (node) =>
-    show([node.detachKw, node.databaseKw, node.schema]),
-  vacuum_stmt: (node) =>
-    show([node.vacuumKw, node.schema, node.intoKw, node.file]),
-  reindex_stmt: (node) => show([node.reindexKw, node.table]),
-  pragma_stmt: (node) => show([node.pragmaKw, node.pragma]),
-  pragma_assignment: (node) => show([node.name, "=", node.value]),
-  pragma_func_call: (node) => show([node.name, node.args]),
-
-  // BigQuery-specific statements
-  create_capacity_stmt: (node) =>
-    show([node.createKw, node.capacityKw, node.name, node.options]),
-  drop_capacity_stmt: (node) =>
-    show([node.dropKw, node.capacityKw, node.ifExistsKw, node.name]),
-  create_reservation_stmt: (node) =>
-    show([node.createKw, node.reservationKw, node.name, node.options]),
-  drop_reservation_stmt: (node) =>
-    show([node.dropKw, node.reservationKw, node.ifExistsKw, node.name]),
-  create_assignment_stmt: (node) =>
-    show([node.createKw, node.assignmentKw, node.name, node.options]),
-  drop_assignment_stmt: (node) =>
-    show([node.dropKw, node.assignmentKw, node.ifExistsKw, node.name]),
-  create_row_access_policy_stmt: (node) =>
-    show([
-      node.createKw,
-      node.orReplaceKw,
-      node.rowAccessPolicyKw,
-      node.ifNotExistsKw,
-      node.name,
-      node.onKw,
-      node.table,
-      node.clauses,
-    ]),
-  row_access_policy_grant_clause: (node) =>
-    show([node.grantToKw, node.grantees]),
-  row_access_policy_filter_clause: (node) =>
-    show([node.filterUsingKw, node.expr]),
-  drop_row_access_policy_stmt: (node) =>
-    show([
-      node.dropKw,
-      node.allKw,
-      node.rowAccessPolicyKw,
-      node.ifExistsKw,
-      node.name,
-      node.onKw,
-      node.table,
-    ]),
-  alter_organization_stmt: (node) =>
-    show([node.alterOrganizationKw, node.actions]),
-  alter_project_stmt: (node) =>
-    show([node.alterProjectKw, node.name, node.actions]),
-  alter_bi_capacity_stmt: (node) =>
-    show([node.alterBiCapacityKw, node.name, node.actions]),
-  alter_capacity_stmt: (node) =>
-    show([node.alterCapacityKw, node.name, node.actions]),
-  alter_reservation_stmt: (node) =>
-    show([node.alterReservationKw, node.name, node.actions]),
-  assert_stmt: (node) => show([node.assertKw, node.expr, node.as]),
-  export_data_stmt: (node) =>
-    show([node.exportDataKw, node.withConnection, node.options, node.as]),
-  load_data_stmt: (node) =>
-    show([
-      node.loadDataKw,
-      node.intoKw,
-      node.table,
-      node.columns,
-      node.clauses,
-    ]),
-  from_files_options: (node) => show([node.fromFilesKw, node.options]),
+  // DB-specific statements
+  ...sqliteMap,
+  ...bigqueryMap,
 
   // Expressions
   list_expr: (node) => show(node.items, ","),
