@@ -1,11 +1,17 @@
 import { Whitespace, Node } from "./cst/Node";
 import { cstTransformer, FullTransformMap } from "./cstTransformer";
+import { alterActionMap } from "./showNode/alter_action";
+import { alterTableMap } from "./showNode/alter_table";
+import { constraintMap } from "./showNode/constraint";
+import { createTableMap } from "./showNode/create_table";
 import { deleteMap } from "./showNode/delete";
+import { dropTableMap } from "./showNode/drop_table";
 import { insertMap } from "./showNode/insert";
 import { mergeMap } from "./showNode/merge";
 import { selectMap } from "./showNode/select";
 import { truncateMap } from "./showNode/truncate";
 import { updateMap } from "./showNode/update";
+import { frameMap } from "./showNode/window_frame";
 import { isDefined, isString } from "./utils/generic";
 
 type NodeArray = (Node | NodeArray | string | undefined)[];
@@ -55,122 +61,18 @@ const showNode = cstTransformer<string>({
   ...mergeMap,
 
   // Window frame
-  frame_clause: (node) => show([node.unitKw, node.extent, node.exclusion]),
-  frame_between: (node) =>
-    show([node.betweenKw, node.begin, node.andKw, node.end]),
-  frame_bound_current_row: (node) => show(node.currentRowKw),
-  frame_bound_preceding: (node) => show([node.expr, node.precedingKw]),
-  frame_bound_following: (node) => show([node.expr, node.followingKw]),
-  frame_unbounded: (node) => show(node.unboundedKw),
-  frame_exclusion: (node) => show([node.excludeKw, node.kindKw]),
+  ...frameMap,
 
-  // CREATE TABLE statement
-  create_table_stmt: (node) =>
-    show([
-      node.createKw,
-      node.orReplaceKw,
-      node.temporaryKw,
-      node.externalKw,
-      node.snapshotKw,
-      node.virtualKw,
-      node.tableKw,
-      node.ifNotExistsKw,
-      node.name,
-      node.columns,
-      node.options,
-      node.clauses,
-    ]),
-  column_definition: (node) =>
-    show([
-      node.name,
-      node.dataType,
-      node.constraints.length > 0 ? node.constraints : undefined,
-    ]),
-  // constraints
-  constraint: (node) => show([node.name, node.constraint, node.deferrable]),
-  constraint_name: (node) => show([node.constraintKw, node.name]),
-  constraint_deferrable: (node) => show([node.deferrableKw, node.initiallyKw]),
-  constraint_null: (node) => show(node.nullKw),
-  constraint_not_null: (node) => show([node.notNullKw, node.onConflict]),
-  constraint_auto_increment: (node) => show(node.autoIncrementKw),
-  constraint_default: (node) => show([node.defaultKw, node.expr]),
-  constraint_comment: (node) => show([node.commentKw, node.value]),
-  constraint_primary_key: (node) =>
-    show([node.primaryKeyKw, node.orderKw, node.columns, node.onConflict]),
-  constraint_foreign_key: (node) =>
-    show([node.foreignKeyKw, node.columns, node.references]),
-  references_specification: (node) =>
-    show([node.referencesKw, node.table, node.columns, node.options]),
-  referential_action: (node) => show([node.onKw, node.eventKw, node.actionKw]),
-  referential_match: (node) => show([node.matchKw, node.typeKw]),
-  constraint_unique: (node) =>
-    show([node.uniqueKw, node.columns, node.onConflict]),
-  constraint_check: (node) => show([node.checkKw, node.expr, node.onConflict]),
-  constraint_index: (node) =>
-    show([node.indexTypeKw, node.indexKw, node.columns]),
-  constraint_generated: (node) =>
-    show([node.generatedKw, node.asKw, node.expr, node.storageKw]),
-  constraint_collate: (node) => show([node.collateKw, node.collation]),
-  constraint_visible: (node) => show(node.visibleKw),
-  constraint_column_format: (node) =>
-    show([node.columnFormatKw, node.formatKw]),
-  constraint_storage: (node) => show([node.storageKw, node.typeKw]),
-  constraint_engine_attribute: (node) =>
-    show([node.engineAttributeKw, node.hasEq ? "=" : undefined, node.value]),
-  on_conflict_clause: (node) => show([node.onConflictKw, node.resolutionKw]),
-  // options
-  table_option: (node) =>
-    show([node.name, node.hasEq ? "=" : undefined, node.value]),
+  // CREATE/ALTER/DROP TABLE
+  ...createTableMap,
+  ...constraintMap,
+  ...alterTableMap,
+  ...alterActionMap,
+  ...dropTableMap,
+
   // additional clauses
-  create_table_like_clause: (node) => show([node.likeKw, node.name]),
-  create_table_copy_clause: (node) => show([node.copyKw, node.name]),
-  create_table_clone_clause: (node) => show([node.cloneKw, node.table]),
-  with_partition_columns_clause: (node) =>
-    show([node.withPartitionColumnsKw, node.columns]),
-  create_table_using_clause: (node) => show([node.usingKw, node.module]),
-  bigquery_options: (node) => show([node.optionsKw, node.options]),
   bigquery_option_default_collate: (node) =>
     show([node.defaultCollateKw, node.collation]),
-
-  // ALTER TABLE statement
-  alter_table_stmt: (node) =>
-    show([node.alterTableKw, node.ifExistsKw, node.table, node.actions]),
-  alter_action_rename_table: (node) => show([node.renameKw, node.newName]),
-  alter_action_rename_column: (node) =>
-    show([
-      node.renameKw,
-      node.ifExistsKw,
-      node.oldName,
-      node.toKw,
-      node.newName,
-    ]),
-  alter_action_add_column: (node) =>
-    show([node.addKw, node.ifNotExistsKw, node.column]),
-  alter_action_drop_column: (node) =>
-    show([node.dropKw, node.ifExistsKw, node.column]),
-  alter_action_alter_column: (node) =>
-    show([node.alterKw, node.ifExistsKw, node.column, node.action]),
-  alter_action_set_default_collate: (node) =>
-    show([node.setDefaultCollateKw, node.collation]),
-  alter_action_set_options: (node) => show([node.setKw, node.options]),
-  alter_action_set_default: (node) => show([node.setDefaultKw, node.expr]),
-  alter_action_drop_default: (node) => show([node.dropDefaultKw]),
-  alter_action_drop_not_null: (node) => show([node.dropNotNullKw]),
-  alter_action_set_data_type: (node) =>
-    show([node.setDataTypeKw, node.dataType]),
-
-  // DROP TABLE statement
-  drop_table_stmt: (node) =>
-    show([
-      node.dropKw,
-      node.temporaryKw,
-      node.snapshotKw,
-      node.externalKw,
-      node.tableKw,
-      node.ifExistsKw,
-      node.tables,
-      node.behaviorKw,
-    ]),
 
   // CREATE SCHEMA statement
   create_schema_stmt: (node) =>
