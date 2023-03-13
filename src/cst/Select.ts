@@ -7,9 +7,11 @@ import {
   MemberExpr,
   ParenExpr,
   EntityName,
+  Variable,
 } from "./Expr";
 import { Alias } from "./Alias";
 import { FrameClause } from "./WindowFrame";
+import { StringLiteral } from "./Literal";
 
 export type AllSelectNodes =
   | CompoundSelectStmt
@@ -54,7 +56,17 @@ export type AllSelectNodes =
   | JoinOnSpecification
   | JoinUsingSpecification
   | SortSpecification
-  | ReturningClause;
+  | ReturningClause
+  | IntoVariablesClause
+  | IntoDumpfileClause
+  | IntoOutfileClause
+  | OutfileFields
+  | OutfileLines
+  | OutfileOptionTerminatedBy
+  | OutfileOptionEscapedBy
+  | OutfileOptionStartingBy
+  | OutfileOptionEnclosedBy
+  | OutfileOptionCharacterSet;
 
 // SELECT
 export interface CompoundSelectStmt extends BaseNode {
@@ -83,6 +95,9 @@ export interface SelectStmt extends BaseNode {
     | LimitClause
     | OffsetClause
     | FetchClause
+    | IntoVariablesClause
+    | IntoDumpfileClause
+    | IntoOutfileClause
     | ParenExpr<SelectStmt>
   )[];
 }
@@ -425,4 +440,72 @@ export interface ReturningClause extends BaseNode {
   type: "returning_clause";
   returningKw: Keyword<"RETURNING">;
   columns: ListExpr<Expr | Alias<Expr>>;
+}
+
+export interface IntoVariablesClause extends BaseNode {
+  type: "into_variables_clause";
+  intoKw: Keyword<"INTO">;
+  variables: ListExpr<Variable>;
+}
+
+export interface IntoDumpfileClause extends BaseNode {
+  type: "into_dumpfile_clause";
+  intoDumpfileKw: [Keyword<"INTO">, Keyword<"DUMPFILE">];
+  filename: StringLiteral;
+}
+
+export interface IntoOutfileClause extends BaseNode {
+  type: "into_outfile_clause";
+  intoOutfileKw: [Keyword<"INTO">, Keyword<"OUTFILE">];
+  filename: StringLiteral;
+  charset?: OutfileOptionCharacterSet;
+  fields?: OutfileFields;
+  lines?: OutfileLines;
+}
+
+export interface OutfileFields extends BaseNode {
+  type: "outfile_fields";
+  fieldsKw: Keyword<"FIELDS" | "COLUMNS">;
+  options: (
+    | OutfileOptionTerminatedBy
+    | OutfileOptionEnclosedBy
+    | OutfileOptionEscapedBy
+  )[];
+}
+
+export interface OutfileLines extends BaseNode {
+  type: "outfile_lines";
+  linesKw: Keyword<"LINES">;
+  options: (OutfileOptionStartingBy | OutfileOptionTerminatedBy)[];
+}
+
+export interface OutfileOptionTerminatedBy extends BaseNode {
+  type: "outfile_option_terminated_by";
+  terminatedByKw: [Keyword<"TERMINATED">, Keyword<"BY">];
+  value: StringLiteral;
+}
+
+export interface OutfileOptionEscapedBy extends BaseNode {
+  type: "outfile_option_escaped_by";
+  escapedByKw: [Keyword<"ESCAPED">, Keyword<"BY">];
+  value: StringLiteral;
+}
+
+export interface OutfileOptionStartingBy extends BaseNode {
+  type: "outfile_option_starting_by";
+  startingByKw: [Keyword<"STARTING">, Keyword<"BY">];
+  value: StringLiteral;
+}
+
+export interface OutfileOptionEnclosedBy extends BaseNode {
+  type: "outfile_option_enclosed_by";
+  optionallyKw?: Keyword<"OPTIONALLY">;
+  enclosedByKw: [Keyword<"ENCLOSED">, Keyword<"BY">];
+  value: StringLiteral;
+}
+
+export interface OutfileOptionCharacterSet extends BaseNode {
+  type: "outfile_option_character_set";
+  characterSetKw: [Keyword<"CHARACTER">, Keyword<"SET">];
+  value: Identifier;
 }

@@ -206,6 +206,7 @@ other_clause
   / &bigquery x:qualify_clause { return x; }
   / &only_mariadb x:offset_clause { return x; }
   / &only_mariadb x:fetch_clause { return x; }
+  / &mysql x:into_clause { return x; }
 
 /**
  * SELECT .. columns
@@ -860,6 +861,121 @@ returning_clause
       type: "returning_clause",
       returningKw: kw,
       columns: read(cols),
+    });
+  }
+
+/**
+ * SELECT .. INTO
+ * --------------------------------------------------------------------------------------
+ */
+into_clause
+  = into_variables_clause
+  / into_dumpfile_clause
+  / into_outfile_clause
+
+into_variables_clause
+  = kw:(INTO __) vars:list$variable {
+    return loc({
+      type: "into_variables_clause",
+      intoKw: read(kw),
+      variables: vars,
+    });
+  }
+
+into_dumpfile_clause
+  = kw:(INTO __ DUMPFILE __) filename:string_literal {
+    return loc({
+      type: "into_dumpfile_clause",
+      intoDumpfileKw: read(kw),
+      filename: read(filename),
+    });
+  }
+
+into_outfile_clause
+  = kw:(INTO __ OUTFILE __) filename:string_literal
+    charset:(__ outfile_option_character_set)?
+    fields:(__ outfile_fields)?
+    lines:(__ outfile_lines)? {
+      return loc({
+        type: "into_outfile_clause",
+        intoOutfileKw: read(kw),
+        filename: read(filename),
+        charset: read(charset),
+        fields: read(fields),
+        lines: read(lines),
+      });
+    }
+
+outfile_option_character_set
+  = kw:(CHARACTER __ SET __) value:ident {
+    return loc({
+      type: "outfile_option_character_set",
+      characterSetKw: read(kw),
+      value,
+    });
+  }
+
+outfile_fields
+  = kw:(FIELDS / COLUMNS) opts:(__ outfile_fields_option)+ {
+    return loc({
+      type: "outfile_fields",
+      fieldsKw: read(kw),
+      options: opts.map(read),
+    });
+  }
+
+outfile_fields_option
+  = outfile_option_terminated_by
+  / outfile_option_enclosed_by
+  / outfile_option_escaped_by
+
+outfile_lines
+  = kw:(LINES) opts:(__ outfile_lines_option)+ {
+    return loc({
+      type: "outfile_lines",
+      linesKw: read(kw),
+      options: opts.map(read),
+    });
+  }
+
+outfile_lines_option
+  = outfile_option_starting_by
+  / outfile_option_terminated_by
+
+outfile_option_terminated_by
+  = kw:(TERMINATED __ BY __) value:string_literal {
+    return loc({
+      type: "outfile_option_terminated_by",
+      terminatedByKw: read(kw),
+      value,
+    });
+  }
+
+outfile_option_enclosed_by
+  = opt:(OPTIONALLY __)? kw:(ENCLOSED __ BY __) value:string_literal {
+    return loc({
+      type: "outfile_option_enclosed_by",
+      optionallyKw: read(opt),
+      enclosedByKw: read(kw),
+      value,
+    });
+  }
+
+outfile_option_starting_by
+  = kw:(STARTING __ BY __) value:string_literal {
+    return loc({
+      type: "outfile_option_starting_by",
+      startingByKw: read(kw),
+      value,
+    });
+  }
+
+outfile_option_escaped_by
+  = kw:(ESCAPED __ BY __) value:string_literal {
+    return loc({
+      type: "outfile_option_escaped_by",
+      escapedByKw: read(kw),
+      value,
     });
   }
 
@@ -4178,6 +4294,7 @@ list$string_literal = .
 list$table_or_alias = .
 list$type_param = .
 list$values_row = .
+list$variable = .
 
 empty_list
   = &. {
@@ -5015,6 +5132,7 @@ DYNAMIC             = kw:"DYNAMIC"i             !ident_part { return loc(createK
 EACH                = kw:"EACH"i                !ident_part { return loc(createKeyword(kw)); }
 ELSE                = kw:"ELSE"i                !ident_part { return loc(createKeyword(kw)); }
 ELSEIF              = kw:"ELSEIF"i              !ident_part { return loc(createKeyword(kw)); }
+ENCLOSED            = kw:"ENCLOSED"i            !ident_part { return loc(createKeyword(kw)); }
 ENCRYPTION          = kw:"ENCRYPTION"i          !ident_part { return loc(createKeyword(kw)); }
 END                 = kw:"END"i                 !ident_part { return loc(createKeyword(kw)); }
 ENFORCED            = kw:"ENFORCED"i            !ident_part { return loc(createKeyword(kw)); }
@@ -5023,6 +5141,7 @@ ENGINE_ATTRIBUTE    = kw:"ENGINE_ATTRIBUTE"i    !ident_part { return loc(createK
 ENUM                = kw:"ENUM"i                !ident_part { return loc(createKeyword(kw)); }
 ERROR               = kw:"ERROR"i               !ident_part { return loc(createKeyword(kw)); }
 ESCAPE              = kw:"ESCAPE"i              !ident_part { return loc(createKeyword(kw)); }
+ESCAPED             = kw:"ESCAPED"i             !ident_part { return loc(createKeyword(kw)); }
 EVENTS              = kw:"EVENTS"i              !ident_part { return loc(createKeyword(kw)); }
 EXAMINED            = kw:"EXAMINED"i            !ident_part { return loc(createKeyword(kw)); }
 EXCEPT              = kw:"EXCEPT"i              !ident_part { return loc(createKeyword(kw)); }
@@ -5039,6 +5158,7 @@ EXTRACT             = kw:"EXTRACT"i             !ident_part { return loc(createK
 FAIL                = kw:"FAIL"i                !ident_part { return loc(createKeyword(kw)); }
 FALSE               = kw:"FALSE"i               !ident_part { return loc(createKeyword(kw)); }
 FETCH               = kw:"FETCH"i               !ident_part { return loc(createKeyword(kw)); }
+FIELDS              = kw:"FIELDS"i              !ident_part { return loc(createKeyword(kw)); }
 FILES               = kw:"FILES"i               !ident_part { return loc(createKeyword(kw)); }
 FILTER              = kw:"FILTER"i              !ident_part { return loc(createKeyword(kw)); }
 FIRST               = kw:"FIRST"i               !ident_part { return loc(createKeyword(kw)); }
@@ -5114,6 +5234,7 @@ LEAVE               = kw:"LEAVE"i               !ident_part { return loc(createK
 LEFT                = kw:"LEFT"i                !ident_part { return loc(createKeyword(kw)); }
 LIKE                = kw:"LIKE"i                !ident_part { return loc(createKeyword(kw)); }
 LIMIT               = kw:"LIMIT"i               !ident_part { return loc(createKeyword(kw)); }
+LINES               = kw:"LINES"i               !ident_part { return loc(createKeyword(kw)); }
 LOAD                = kw:"LOAD"i                !ident_part { return loc(createKeyword(kw)); }
 LOCAL               = kw:"LOCAL"i               !ident_part { return loc(createKeyword(kw)); }
 LOCALTIME           = kw:"LOCALTIME"i           !ident_part { return loc(createKeyword(kw)); }
@@ -5171,6 +5292,7 @@ OFFSET              = kw:"OFFSET"i              !ident_part { return loc(createK
 ON                  = kw:"ON"i                  !ident_part { return loc(createKeyword(kw)); }
 ONLY                = kw:"ONLY"i                !ident_part { return loc(createKeyword(kw)); }
 OPTION              = kw:"OPTION"i              !ident_part { return loc(createKeyword(kw)); }
+OPTIONALLY          = kw:"OPTIONALLY"i          !ident_part { return loc(createKeyword(kw)); }
 OPTIONS             = kw:"OPTIONS"i             !ident_part { return loc(createKeyword(kw)); }
 OR                  = kw:"OR"i                  !ident_part { return loc(createKeyword(kw)); }
 ORDER               = kw:"ORDER"i               !ident_part { return loc(createKeyword(kw)); }
@@ -5271,6 +5393,7 @@ SQL_CALC_FOUND_ROWS = kw:"SQL_CALC_FOUND_ROWS"i !ident_part { return loc(createK
 SQL_NO_CACHE        = kw:"SQL_NO_CACHE"i        !ident_part { return loc(createKeyword(kw)); }
 SQL_SMALL_RESULT    = kw:"SQL_SMALL_RESULT"i    !ident_part { return loc(createKeyword(kw)); }
 START               = kw:"START"i               !ident_part { return loc(createKeyword(kw)); }
+STARTING            = kw:"STARTING"i            !ident_part { return loc(createKeyword(kw)); }
 STATS_AUTO_RECALC   = kw:"STATS_AUTO_RECALC"i   !ident_part { return loc(createKeyword(kw)); }
 STATS_PERSISTENT    = kw:"STATS_PERSISTENT"i    !ident_part { return loc(createKeyword(kw)); }
 STATS_SAMPLE_PAGES  = kw:"STATS_SAMPLE_PAGES"i  !ident_part { return loc(createKeyword(kw)); }
@@ -5292,6 +5415,7 @@ TARGET              = kw:"TARGET"i              !ident_part { return loc(createK
 TEMP                = kw:"TEMP"i                !ident_part { return loc(createKeyword(kw)); }
 TEMPORARY           = kw:"TEMPORARY"i           !ident_part { return loc(createKeyword(kw)); }
 TEMPTABLE           = kw:"TEMPTABLE"i           !ident_part { return loc(createKeyword(kw)); }
+TERMINATED          = kw:"TERMINATED"i          !ident_part { return loc(createKeyword(kw)); }
 TEXT                = kw:"TEXT"i                !ident_part { return loc(createKeyword(kw)); }
 THEN                = kw:"THEN"i                !ident_part { return loc(createKeyword(kw)); }
 THURSDAY            = kw:"THURSDAY"i            !ident_part { return loc(createKeyword(kw)); }

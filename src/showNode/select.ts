@@ -106,4 +106,25 @@ export const selectMap: FullTransformMap<string, AllSelectNodes> = {
     show([node.fetchKw, node.count, node.rowsKw, node.withTiesKw]),
   // returning clause
   returning_clause: (node) => show([node.returningKw, node.columns]),
+  // INTO ...
+  into_variables_clause: (node) => show([node.intoKw, node.variables]),
+  into_dumpfile_clause: (node) => show([node.intoDumpfileKw, node.filename]),
+  into_outfile_clause: (node) =>
+    show([
+      node.intoOutfileKw,
+      node.filename,
+      node.charset,
+      node.fields,
+      node.lines,
+    ]),
+  outfile_fields: (node) => show([node.fieldsKw, node.options]),
+  outfile_lines: (node) => show([node.linesKw, node.options]),
+  outfile_option_character_set: (node) =>
+    show([node.characterSetKw, node.value]),
+  outfile_option_enclosed_by: (node) =>
+    show([node.optionallyKw, node.enclosedByKw, node.value]),
+  outfile_option_escaped_by: (node) => show([node.escapedByKw, node.value]),
+  outfile_option_starting_by: (node) => show([node.startingByKw, node.value]),
+  outfile_option_terminated_by: (node) =>
+    show([node.terminatedByKw, node.value]),
 };
