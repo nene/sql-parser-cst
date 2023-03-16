@@ -157,6 +157,7 @@ describe("function call", () => {
   dialect("bigquery", () => {
     it("supports INGORE|RESPECT NULLS", () => {
       testExprWc(`my_func(arg1, arg2 IGNORE NULLS)`);
+      testExprWc(`my_func(arg1, arg2 RESPECT NULLS)`);
     });
 
     it("supports ORDER BY clause", () => {
