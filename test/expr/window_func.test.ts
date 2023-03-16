@@ -82,6 +82,7 @@ describe("window functions", () => {
               "type": "list_expr",
             },
             "distinctKw": undefined,
+            "having": undefined,
             "limit": undefined,
             "nullHandlingKw": undefined,
             "orderBy": undefined,

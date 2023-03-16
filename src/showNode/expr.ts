@@ -17,6 +17,7 @@ export const exprMap: FullTransformMap<string, AllExprNodes> = {
       node.nullHandlingKw,
       node.orderBy,
       node.limit,
+      node.having,
     ]),
   named_arg: (node) => show([node.name, "=>", node.value]),
   cast_expr: (node) => show([node.castKw, node.args]),
@@ -30,6 +31,7 @@ export const exprMap: FullTransformMap<string, AllExprNodes> = {
   week_expr: (node) => show([node.weekKw, node.args]),
   filter_arg: (node) => show([node.filterKw, node.where]),
   over_arg: (node) => show([node.overKw, node.window]),
+  having_arg: (node) => show([node.havingKw, node.minMaxKw, node.expr]),
   between_expr: (node) =>
     show([node.left, node.betweenKw, node.begin, node.andKw, node.end]),
   case_expr: (node) => show([node.caseKw, node.expr, node.clauses, node.endKw]),

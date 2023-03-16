@@ -21,6 +21,7 @@ export type AllExprNodes =
   | ExtractFrom
   | FilterArg
   | OverArg
+  | HavingArg
   | CaseWhen<Expr | Program>
   | CaseElse<Expr | Program>
   | IntervalUnitRange
@@ -172,6 +173,7 @@ export interface FuncArgs extends BaseNode {
   nullHandlingKw?: [Keyword<"IGNORE" | "RESPECT">, Keyword<"NULLS">];
   orderBy?: OrderByClause;
   limit?: LimitClause;
+  having?: HavingArg;
 }
 
 export interface FilterArg extends BaseNode {
@@ -190,6 +192,13 @@ export interface NamedArg extends BaseNode {
   type: "named_arg";
   name: Identifier;
   value: Expr;
+}
+
+export interface HavingArg extends BaseNode {
+  type: "having_arg";
+  havingKw: Keyword<"HAVING">;
+  minMaxKw: Keyword<"MIN" | "MAX">;
+  expr: Expr;
 }
 
 export interface CastExpr extends BaseNode {

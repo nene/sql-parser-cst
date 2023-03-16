@@ -38,6 +38,7 @@ describe("function call", () => {
               "type": "list_expr",
             },
             "distinctKw": undefined,
+            "having": undefined,
             "limit": undefined,
             "nullHandlingKw": undefined,
             "orderBy": undefined,
@@ -170,6 +171,12 @@ describe("function call", () => {
 
     it("supports combination of DISTINCT, NULLS, ORDER BY, LIMIT", () => {
       testExprWc(`my_func(DISTINCT arg1, arg2 IGNORE NULLS ORDER BY foo LIMIT 10)`);
+    });
+
+    it("supports HAVING in ANY_VALUE()", () => {
+      testExprWc(`any_value(fruit)`);
+      testExprWc(`any_value(fruit HAVING MAX sold)`);
+      testExprWc(`any_value(fruit HAVING MIN sold)`);
     });
   });
 });
