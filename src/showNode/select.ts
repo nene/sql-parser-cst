@@ -14,11 +14,10 @@ export const selectMap: FullTransformMap<string, AllSelectNodes> = {
     show([
       node.selectKw,
       node.distinctKw,
-      node.options,
+      node.hints,
       node.asStructOrValueKw,
       node.columns,
     ]),
-  mysql_select_option: (node) => show(node.optionKw),
   except_columns: (node) => show([node.expr, node.exceptKw, node.columns]),
   replace_columns: (node) => show([node.expr, node.replaceKw, node.columns]),
   // FROM

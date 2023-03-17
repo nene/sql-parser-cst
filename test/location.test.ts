@@ -56,7 +56,7 @@ describe("location", () => {
                   "type": "list_expr",
                 },
                 "distinctKw": undefined,
-                "options": [],
+                "hints": [],
                 "range": [
                   0,
                   16,
@@ -168,7 +168,7 @@ describe("location", () => {
                   "type": "list_expr",
                 },
                 "distinctKw": undefined,
-                "options": [],
+                "hints": [],
                 "range": [
                   0,
                   17,

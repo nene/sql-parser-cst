@@ -215,14 +215,14 @@ other_clause
 select_clause
   = selectKw:SELECT
     distinctKw:(__ distinct_kw)?
-    options:(__ mysql_select_option)*
+    hints:(__ mysql_select_hint)*
     asKw:(__ AS __ (STRUCT / VALUE))?
     columns:(__ select_columns) {
       return loc({
         type: "select_clause",
         selectKw,
         distinctKw: read(distinctKw),
-        options: options.map(read),
+        hints: hints.map(read),
         asStructOrValueKw: read(asKw),
         columns: read(columns),
       });
@@ -233,7 +233,7 @@ distinct_kw
   / DISTINCT
   / &mysql kw:DISTINCTROW { return kw; }
 
-mysql_select_option
+mysql_select_hint
   = &mysql kw:(
     HIGH_PRIORITY
   / STRAIGHT_JOIN
@@ -244,8 +244,8 @@ mysql_select_option
   / SQL_SMALL_RESULT
   / SQL_BUFFER_RESULT) {
     return loc({
-      type: "mysql_select_option",
-      optionKw: kw,
+      type: "hint",
+      hintKw: kw,
     });
   }
 
@@ -1214,7 +1214,7 @@ delete_stmt
     }
 
 delete_clause
-  = delKw:(DELETE __) hints:(mysql_hint __)* fromKw:(FROM __)? tbl:table_or_alias {
+  = delKw:(DELETE __) hints:(mysql_delete_hint __)* fromKw:(FROM __)? tbl:table_or_alias {
     return loc({
       type: "delete_clause",
       deleteKw: read(delKw),
@@ -1224,7 +1224,7 @@ delete_clause
     });
   }
 
-mysql_hint
+mysql_delete_hint
   = &mysql kw:(LOW_PRIORITY / QUICK / IGNORE) {
     return loc({ type: "hint", hintKw: kw });
   }

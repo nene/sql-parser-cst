@@ -153,7 +153,7 @@ describe("select", () => {
                 "type": "list_expr",
               },
               "distinctKw": undefined,
-              "options": [],
+              "hints": [],
               "selectKw": {
                 "name": "SELECT",
                 "text": "SELECT",
@@ -218,7 +218,7 @@ describe("select", () => {
                 "type": "list_expr",
               },
               "distinctKw": undefined,
-              "options": [],
+              "hints": [],
               "selectKw": {
                 "name": "SELECT",
                 "text": "SELECT",
@@ -257,7 +257,7 @@ describe("select", () => {
                 "type": "list_expr",
               },
               "distinctKw": undefined,
-              "options": [],
+              "hints": [],
               "selectKw": {
                 "name": "SELECT",
                 "text": "SELECT",
