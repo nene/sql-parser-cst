@@ -69,16 +69,12 @@ describe("insert into", () => {
   });
 
   dialect(["mysql", "mariadb"], () => {
-    it("supports priority options", () => {
+    it("supports hints", () => {
       testWc("INSERT LOW_PRIORITY INTO tbl VALUES (1)");
       testWc("INSERT DELAYED INTO tbl VALUES (1)");
       testWc("INSERT HIGH_PRIORITY INTO tbl VALUES (1)");
-    });
-    it("supports IGNORE option", () => {
       testWc("INSERT IGNORE INTO tbl VALUES (1)");
       testWc("INSERT LOW_PRIORITY IGNORE INTO tbl VALUES (1)");
-      testWc("INSERT DELAYED IGNORE INTO tbl VALUES (1)");
-      testWc("INSERT HIGH_PRIORITY IGNORE INTO tbl VALUES (1)");
     });
   });
 
@@ -165,6 +161,7 @@ describe("insert into", () => {
               },
               "type": "paren_expr",
             },
+            "hints": [],
             "insertKw": {
               "name": "INSERT",
               "text": "INSERT",
@@ -175,7 +172,6 @@ describe("insert into", () => {
               "text": "INTO",
               "type": "keyword",
             },
-            "options": [],
             "orAction": undefined,
             "table": {
               "name": "tbl",

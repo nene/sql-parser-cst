@@ -14,7 +14,7 @@ describe("select", () => {
   });
 
   dialect(["mysql", "mariadb"], () => {
-    it("parses SELECT with MySQL-specific options", () => {
+    it("parses SELECT with MySQL-specific hints", () => {
       test("SELECT DISTINCTROW foo AS x");
       test("SELECT HIGH_PRIORITY foo AS x");
       test("SELECT STRAIGHT_JOIN foo AS x");
@@ -25,13 +25,13 @@ describe("select", () => {
       test("SELECT SQL_CALC_FOUND_ROWS foo AS x");
     });
 
-    it("parses SELECT with multiple options", () => {
+    it("parses SELECT with multiple hints", () => {
       test("SELECT DISTINCT STRAIGHT_JOIN SQL_NO_CACHE foo");
     });
   });
 
   dialect("mariadb", () => {
-    it("parses SELECT with MariaDB-specific options", () => {
+    it("parses SELECT with MariaDB-specific hint", () => {
       test("SELECT SQL_CACHE foo AS x");
     });
   });

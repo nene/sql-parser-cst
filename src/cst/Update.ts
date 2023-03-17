@@ -8,7 +8,8 @@ import {
   ParenExpr,
   EntityName,
 } from "./Expr";
-import { Default, OrAlternateAction, MysqlUpsertOption } from "./Insert";
+import { Default, OrAlternateAction } from "./Insert";
+import { MysqlHint } from "./Mysql";
 import {
   FromClause,
   LimitClause,
@@ -42,7 +43,7 @@ export interface UpdateStmt extends BaseNode {
 export interface UpdateClause extends BaseNode {
   type: "update_clause";
   updateKw: Keyword<"UPDATE">;
-  options: MysqlUpsertOption[];
+  hints: MysqlHint[];
   orAction?: OrAlternateAction;
   tables: ListExpr<EntityName | Alias<EntityName>>;
 }

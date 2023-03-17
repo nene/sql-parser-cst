@@ -9,6 +9,7 @@ export interface MysqlHint extends BaseNode {
     | "HIGH_PRIORITY"
     | "QUICK"
     | "IGNORE"
+    | "DELAYED"
     | "STRAIGHT_JOIN"
     | "SQL_CALC_FOUND_ROWS"
     | "SQL_CACHE"

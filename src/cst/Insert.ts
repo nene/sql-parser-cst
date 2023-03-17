@@ -9,11 +9,11 @@ import {
   WithClause,
 } from "./Select";
 import { SetClause } from "./Update";
+import { MysqlHint } from "./Mysql";
 
 export type AllInsertNodes =
   | InsertStmt
   | InsertClause
-  | MysqlUpsertOption
   | OrAlternateAction
   | ValuesClause
   | RowConstructor
@@ -38,17 +38,11 @@ export interface InsertStmt extends BaseNode {
 export interface InsertClause extends BaseNode {
   type: "insert_clause";
   insertKw: Keyword<"INSERT" | "REPLACE">;
-  options: MysqlUpsertOption[];
+  hints: MysqlHint[];
   orAction?: OrAlternateAction;
   intoKw?: Keyword<"INTO">;
   table: EntityName | Alias<EntityName>;
   columns?: ParenExpr<ListExpr<Identifier>>;
-}
-
-// Only in MySQL INSERT & UPDATE clauses
-export interface MysqlUpsertOption extends BaseNode {
-  type: "mysql_upsert_option";
-  optionKw: Keyword<"LOW_PRIORITY" | "DELAYED" | "HIGH_PRIORITY" | "IGNORE">;
 }
 
 // Only in SQLite

@@ -7,13 +7,12 @@ export const insertMap: FullTransformMap<string, AllInsertNodes> = {
   insert_clause: (node) =>
     show([
       node.insertKw,
-      node.options,
+      node.hints,
       node.orAction,
       node.intoKw,
       node.table,
       node.columns,
     ]),
-  mysql_upsert_option: (node) => show(node.optionKw),
   or_alternate_action: (node) => show([node.orKw, node.actionKw]),
   // VALUES
   values_clause: (node) => show([node.valuesKw, node.values]),

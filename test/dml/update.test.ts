@@ -42,10 +42,8 @@ describe("update", () => {
   });
 
   dialect(["mysql", "mariadb"], () => {
-    it("supports LOW_PRIORITY option", () => {
+    it("supports hints", () => {
       testWc("UPDATE LOW_PRIORITY tbl SET x=1");
-    });
-    it("supports IGNORE option", () => {
       testWc("UPDATE IGNORE tbl SET x=1");
     });
   });
