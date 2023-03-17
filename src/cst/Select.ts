@@ -12,7 +12,7 @@ import {
 import { Alias } from "./Alias";
 import { FrameClause } from "./WindowFrame";
 import { StringLiteral } from "./Literal";
-import { Hint } from "./Mysql";
+import { MysqlHint } from "./Mysql";
 
 export type AllSelectNodes =
   | CompoundSelectStmt
@@ -124,7 +124,7 @@ export interface SelectClause extends BaseNode {
   type: "select_clause";
   selectKw: Keyword<"SELECT">;
   distinctKw?: Keyword<"ALL" | "DISTINCT" | "DISTINCTROW">;
-  hints: Hint[];
+  hints: MysqlHint[];
   asStructOrValueKw?: [Keyword<"AS">, Keyword<"STRUCT" | "VALUE">];
   columns: ListExpr<
     AllColumns | ExceptColumns | ReplaceColumns | Expr | Alias<Expr> | Empty

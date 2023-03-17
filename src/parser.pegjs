@@ -244,7 +244,7 @@ mysql_select_hint
   / SQL_SMALL_RESULT
   / SQL_BUFFER_RESULT) {
     return loc({
-      type: "hint",
+      type: "mysql_hint",
       hintKw: kw,
     });
   }
@@ -1226,7 +1226,7 @@ delete_clause
 
 mysql_delete_hint
   = &mysql kw:(LOW_PRIORITY / QUICK / IGNORE) {
-    return loc({ type: "hint", hintKw: kw });
+    return loc({ type: "mysql_hint", hintKw: kw });
   }
 
 other_delete_clause_list

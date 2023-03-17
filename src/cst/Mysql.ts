@@ -1,9 +1,9 @@
 import { BaseNode, Keyword } from "./Base";
 
-export type AllMysqlNodes = Hint;
+export type AllMysqlNodes = MysqlHint;
 
-export interface Hint extends BaseNode {
-  type: "hint";
+export interface MysqlHint extends BaseNode {
+  type: "mysql_hint";
   hintKw: Keyword<
     | "LOW_PRIORITY"
     | "HIGH_PRIORITY"
