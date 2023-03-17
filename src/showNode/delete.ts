@@ -4,5 +4,6 @@ import { FullTransformMap } from "../cstTransformer";
 
 export const deleteMap: FullTransformMap<string, AllDeleteNodes> = {
   delete_stmt: (node) => show(node.clauses),
-  delete_clause: (node) => show([node.deleteKw, node.fromKw, node.table]),
+  delete_clause: (node) =>
+    show([node.deleteKw, node.hints, node.fromKw, node.table]),
 };

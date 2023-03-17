@@ -29,6 +29,7 @@ import { updateMap } from "./update";
 import { viewMap } from "./view";
 import { frameMap } from "./window_frame";
 import { FullTransformMap } from "../cstTransformer";
+import { mysqlMap } from "./mysql";
 
 export const transformMap: FullTransformMap<string> = {
   ...baseMap,
@@ -71,6 +72,7 @@ export const transformMap: FullTransformMap<string> = {
   // DB-specific statements
   ...sqliteMap,
   ...bigqueryMap,
+  ...mysqlMap,
 
   // Expressions
   ...exprMap,

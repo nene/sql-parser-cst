@@ -1214,13 +1214,19 @@ delete_stmt
     }
 
 delete_clause
-  = delKw:(DELETE __) fromKw:(FROM __)? tbl:table_or_alias {
+  = delKw:(DELETE __) hints:(mysql_hint __)* fromKw:(FROM __)? tbl:table_or_alias {
     return loc({
       type: "delete_clause",
       deleteKw: read(delKw),
+      hints: hints.map(read),
       fromKw: read(fromKw),
       table: tbl,
     });
+  }
+
+mysql_hint
+  = &mysql kw:(LOW_PRIORITY / QUICK / IGNORE) {
+    return loc({ type: "hint", hintKw: kw });
   }
 
 other_delete_clause_list
@@ -5338,6 +5344,7 @@ PROJECT             = kw:"PROJECT"i             !ident_part { return loc(createK
 QUALIFY             = kw:"QUALIFY"i             !ident_part { return loc(createKeyword(kw)); }
 QUARTER             = kw:"QUARTER"i             !ident_part { return loc(createKeyword(kw)); }
 QUERY               = kw:"QUERY"i               !ident_part { return loc(createKeyword(kw)); }
+QUICK               = kw:"QUICK"i               !ident_part { return loc(createKeyword(kw)); }
 RAISE               = kw:"RAISE"i               !ident_part { return loc(createKeyword(kw)); }
 RANGE               = kw:"RANGE"i               !ident_part { return loc(createKeyword(kw)); }
 RANK                = kw:"RANK"i                !ident_part { return loc(createKeyword(kw)); }

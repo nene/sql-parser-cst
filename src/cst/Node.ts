@@ -17,6 +17,7 @@ export * from "./Index";
 export * from "./Insert";
 export * from "./Literal";
 export * from "./Merge";
+export * from "./Mysql";
 export * from "./PreparedStatements";
 export * from "./ProcClause";
 export * from "./Procedure";
@@ -47,6 +48,7 @@ import { AllFunctionNodes } from "./Function";
 import { AllIndexNodes } from "./Index";
 import { AllInsertNodes } from "./Insert";
 import { AllMergeNodes } from "./Merge";
+import { AllMysqlNodes } from "./Mysql";
 import { AllPreparedStatementNodes } from "./PreparedStatements";
 import { AllProcClauseNodes } from "./ProcClause";
 import { AllProceduralNodes } from "./ProceduralLanguage";
@@ -74,6 +76,7 @@ export type Node =
   | AllIndexNodes
   | AllInsertNodes
   | AllMergeNodes
+  | AllMysqlNodes
   | AllPreparedStatementNodes
   | AllProcClauseNodes
   | AllProceduralNodes

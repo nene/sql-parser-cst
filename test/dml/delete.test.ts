@@ -21,6 +21,13 @@ describe("delete from", () => {
     testWc("DELETE FROM tbl t");
   });
 
+  dialect(["mysql", "mariadb"], () => {
+    it("supports hints", () => {
+      testWc("DELETE LOW_PRIORITY FROM tbl");
+      testWc("DELETE QUICK IGNORE FROM tbl");
+    });
+  });
+
   dialect("sqlite", () => {
     it("supports INDEXED BY & NOT INDEXED modifiers on table name", () => {
       testWc("DELETE FROM my_table INDEXED BY my_idx");
