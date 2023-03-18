@@ -629,6 +629,19 @@ partition_by_clause
   }
 
 /**
+ * SELECT .. FROM .. PARTITION (part1, part2)
+ * --------------------------------------------------------------------------------------
+ */
+partition_clause
+  = kw:(PARTITION __) partitions:paren$list$ident {
+    return loc({
+      type: "partition_clause",
+      partitionKw: read(kw),
+      partitions,
+    });
+  }
+
+/**
  * SELECT? .. PARTITION BY
  * --------------------------------------------------------------------------------------
  */
@@ -1234,6 +1247,7 @@ other_delete_clause
   / returning_clause
   / order_by_clause
   / limit_clause
+  / &mysql x:partition_clause { return x; }
 
 /**
  * ------------------------------------------------------------------------------------ *

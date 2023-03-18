@@ -33,6 +33,7 @@ export type AllSelectNodes =
   | WindowDefinition
   | OrderByClause
   | PartitionByClause
+  | PartitionClause
   | ClusterByClause
   | LimitClause
   | LimitRowsExamined
@@ -208,6 +209,14 @@ export interface PartitionByClause extends BaseNode {
   type: "partition_by_clause";
   partitionByKw: [Keyword<"PARTITION">, Keyword<"BY">];
   specifications: ListExpr<Expr>;
+}
+
+// TODO: Should this be a clause?
+// Or should it be an expression that modifies a table?
+export interface PartitionClause extends BaseNode {
+  type: "partition_clause";
+  partitionKw: Keyword<"PARTITION">;
+  partitions: ParenExpr<ListExpr<Identifier>>;
 }
 
 export interface ClusterByClause extends BaseNode {

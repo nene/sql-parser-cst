@@ -5,6 +5,7 @@ import { MysqlHint } from "./Mysql";
 import {
   LimitClause,
   OrderByClause,
+  PartitionClause,
   ReturningClause,
   WhereClause,
   WithClause,
@@ -19,6 +20,7 @@ export interface DeleteStmt extends BaseNode {
     | WithClause
     | DeleteClause
     | WhereClause
+    | PartitionClause
     | ReturningClause
     | OrderByClause
     | LimitClause

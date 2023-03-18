@@ -55,4 +55,10 @@ describe("delete from", () => {
       testWc("DELETE FROM tbl ORDER BY name LIMIT 10, 100");
     });
   });
+
+  dialect(["mysql", "mariadb"], () => {
+    it("supports PARTITION clause", () => {
+      testWc("DELETE FROM tbl PARTITION (foo, bar) WHERE id = 2");
+    });
+  });
 });
