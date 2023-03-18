@@ -274,10 +274,11 @@ column_list_item
   }
 
 star_or_qualified_star
-  = star:star {
-    return star;
-  }
-  / table:(ident __) "." star:(__ star) {
+  = star
+  / qualified_star
+
+qualified_star
+  = table:(ident __) "." star:(__ star) {
     return loc({
       type: "member_expr",
       object: read(table),
@@ -1225,20 +1226,25 @@ delete_stmt
     }
 
 delete_clause
-  = delKw:(DELETE __) hints:(mysql_delete_hint __)* fromKw:(FROM __)? tables:list$table_or_alias {
-    return loc({
-      type: "delete_clause",
-      deleteKw: read(delKw),
-      hints: hints.map(read),
-      fromKw: read(fromKw),
-      tables,
-    });
-  }
+  = delKw:(DELETE __) hints:(mysql_delete_hint __)* fromKw:(FROM __)?
+    tables:(list$table_or_alias_or_qualified_star) {
+      return loc({
+        type: "delete_clause",
+        deleteKw: read(delKw),
+        hints: hints.map(read),
+        fromKw: read(fromKw),
+        tables,
+      });
+    }
 
 mysql_delete_hint
   = &mysql kw:(LOW_PRIORITY / QUICK / IGNORE) {
     return loc({ type: "mysql_hint", hintKw: kw });
   }
+
+table_or_alias_or_qualified_star
+  = &mysql x:qualified_star { return x; }
+  / table_or_alias
 
 other_delete_clause
   = where_clause
@@ -4312,6 +4318,7 @@ list$set_assignment = .
 list$sort_specification = .
 list$string_literal = .
 list$table_or_alias = .
+list$table_or_alias_or_qualified_star = .
 list$type_param = .
 list$values_row = .
 list$variable = .
