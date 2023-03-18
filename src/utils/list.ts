@@ -17,14 +17,3 @@ export const readCommaSepList = <T extends Node>(
   }
   return items;
 };
-
-export const readSpaceSepList = <T extends Node>(
-  head: T,
-  tail: [Whitespace[], T][]
-): T[] => {
-  const items = [head];
-  for (const [c, expr] of tail) {
-    items.push(leading(expr, c) as T);
-  }
-  return items;
-};

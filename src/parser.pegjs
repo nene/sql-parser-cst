@@ -1,9 +1,6 @@
 {
   import { identity } from "./utils/generic";
-  import {
-    readCommaSepList,
-    readSpaceSepList,
-  } from "./utils/list";
+  import { readCommaSepList } from "./utils/list";
   import {
     parseHexBlob,
     parseBitBlob,
@@ -3521,7 +3518,7 @@ type_name_sqlite
     if (tail.length === 0) {
       return head;
     }
-    return readSpaceSepList(head, tail);
+    return [head, ...tail.map(read)];
   }
 
 sqlite_type_name_part
