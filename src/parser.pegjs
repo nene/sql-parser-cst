@@ -1210,13 +1210,13 @@ column_value
 delete_stmt
   = withClause:(with_clause __)?
     deleteClause:delete_clause
-    clauses:(__ other_delete_clause_list)? {
+    clauses:(__ other_delete_clause)* {
       return loc({
         type: "delete_stmt",
         clauses: [
           read(withClause),
           read(deleteClause),
-          ...(read(clauses) || []),
+          ...clauses.map(read),
         ].filter(identity),
       });
     }
@@ -1235,11 +1235,6 @@ delete_clause
 mysql_delete_hint
   = &mysql kw:(LOW_PRIORITY / QUICK / IGNORE) {
     return loc({ type: "mysql_hint", hintKw: kw });
-  }
-
-other_delete_clause_list
-  = head:other_delete_clause tail:(__ other_delete_clause)* {
-    return readSpaceSepList(head, tail);
   }
 
 other_delete_clause
