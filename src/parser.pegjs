@@ -1140,14 +1140,14 @@ update_stmt
   = withClause:(with_clause __)?
     updateClause:(update_clause __)
     setClause:set_clause
-    clauses:(__ other_update_clause_list)? {
+    clauses:(__ other_update_clause)* {
       return loc({
         type: "update_stmt",
         clauses: [
           read(withClause),
           read(updateClause),
           read(setClause),
-          ...(read(clauses) || []),
+          ...clauses.map(read),
         ].filter(identity),
       });
     }
@@ -1173,11 +1173,6 @@ set_clause
       setKw: read(kw),
       assignments: set,
     });
-  }
-
-other_update_clause_list
-  = head:other_update_clause tail:(__ other_update_clause)* {
-    return readSpaceSepList(head, tail);
   }
 
 other_update_clause
@@ -1554,19 +1549,14 @@ create_definition
 column_definition
   = name:(ident __)
     type:data_type?
-    constraints:(__ column_constraint_list)? {
+    constraints:(__ column_constraint)* {
       return loc({
         type: "column_definition",
         name: read(name),
         dataType: read(type),
-        constraints: read(constraints) || [],
+        constraints: constraints.map(read),
       });
     }
-
-column_constraint_list
-  = head:column_constraint tail:(__ column_constraint)* {
-    return readSpaceSepList(head, tail);
-  }
 
 create_table_clause
   = as_clause$compound_select_stmt
