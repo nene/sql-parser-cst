@@ -41,7 +41,7 @@ describe("delete from", () => {
     });
   });
 
-  dialect("sqlite", () => {
+  dialect(["sqlite", "mysql", "mariadb"], () => {
     it("supports DELETE ... RETURNING ...", () => {
       testWc("DELETE FROM tbl WHERE x > 0 RETURNING col1, col2");
       testWc("DELETE FROM tbl WHERE x > 0 RETURNING *");
