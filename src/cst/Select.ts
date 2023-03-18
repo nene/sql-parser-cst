@@ -148,7 +148,7 @@ export interface ReplaceColumns extends BaseNode {
 
 export interface FromClause extends BaseNode {
   type: "from_clause";
-  fromKw: Keyword<"FROM">;
+  fromKw: Keyword<"FROM" | "USING">; // The USING keyword is used in MySQL/MariaDB DELETE statement
   expr: TableExpr | DualTable;
 }
 

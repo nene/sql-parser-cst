@@ -1,8 +1,9 @@
 import { Alias } from "./Alias";
 import { BaseNode, Keyword } from "./Base";
-import { EntityName } from "./Expr";
+import { EntityName, ListExpr } from "./Expr";
 import { MysqlHint } from "./Mysql";
 import {
+  FromClause,
   LimitClause,
   OrderByClause,
   PartitionClause,
@@ -24,6 +25,7 @@ export interface DeleteStmt extends BaseNode {
     | ReturningClause
     | OrderByClause
     | LimitClause
+    | FromClause
   )[];
 }
 
@@ -32,5 +34,5 @@ export interface DeleteClause extends BaseNode {
   deleteKw: Keyword<"DELETE">;
   hints: MysqlHint[];
   fromKw?: Keyword<"FROM">;
-  table: EntityName | Alias<EntityName>;
+  tables: ListExpr<EntityName | Alias<EntityName>>;
 }

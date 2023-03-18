@@ -325,6 +325,17 @@ from_clause
     });
   }
 
+// Exactly like FROM clause, but instead of FROM keyword the USING keyword is used.
+// Used by MySQL DELETE statement.
+from_using_clause
+  = kw:(USING __) expr:(join_expr / dual_table) {
+    return loc({
+      type: "from_clause",
+      fromKw: read(kw),
+      expr,
+    });
+  }
+
 dual_table
   = &mysql kw:DUAL {
     return loc({
@@ -1214,13 +1225,13 @@ delete_stmt
     }
 
 delete_clause
-  = delKw:(DELETE __) hints:(mysql_delete_hint __)* fromKw:(FROM __)? tbl:table_or_alias {
+  = delKw:(DELETE __) hints:(mysql_delete_hint __)* fromKw:(FROM __)? tables:list$table_or_alias {
     return loc({
       type: "delete_clause",
       deleteKw: read(delKw),
       hints: hints.map(read),
       fromKw: read(fromKw),
-      table: tbl,
+      tables,
     });
   }
 
@@ -1234,7 +1245,7 @@ other_delete_clause
   / returning_clause
   / order_by_clause
   / limit_clause
-  / &mysql x:partition_clause { return x; }
+  / &mysql x:(from_clause / from_using_clause / partition_clause) { return x; }
 
 /**
  * ------------------------------------------------------------------------------------ *
