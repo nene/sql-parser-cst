@@ -34,9 +34,12 @@ describe("temporal intervals", () => {
           },
           "type": "interval_expr",
           "unit": {
-            "name": "DAY",
-            "text": "DAY",
-            "type": "keyword",
+            "type": "interval_unit",
+            "unitKw": {
+              "name": "DAY",
+              "text": "DAY",
+              "type": "keyword",
+            },
           },
         }
       `);
@@ -88,20 +91,26 @@ describe("temporal intervals", () => {
           },
           "type": "interval_expr",
           "unit": {
-            "fromUnitKw": {
-              "name": "YEAR",
-              "text": "YEAR",
-              "type": "keyword",
+            "fromUnit": {
+              "type": "interval_unit",
+              "unitKw": {
+                "name": "YEAR",
+                "text": "YEAR",
+                "type": "keyword",
+              },
             },
             "toKw": {
               "name": "TO",
               "text": "TO",
               "type": "keyword",
             },
-            "toUnitKw": {
-              "name": "MONTH",
-              "text": "MONTH",
-              "type": "keyword",
+            "toUnit": {
+              "type": "interval_unit",
+              "unitKw": {
+                "name": "MONTH",
+                "text": "MONTH",
+                "type": "keyword",
+              },
             },
             "type": "interval_unit_range",
           },

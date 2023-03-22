@@ -3943,6 +3943,12 @@ extract_unit
   / &bigquery x:extract_unit_bigquery { return x; }
 
 extract_unit_bigquery
+  = week_expr
+  / kw:extract_unit_kw_bigquery {
+    return loc({ type: "interval_unit", unitKw: kw });
+  }
+
+extract_unit_kw_bigquery
   = MICROSECOND
   / MILLISECOND
   / SECOND
@@ -3958,7 +3964,6 @@ extract_unit_bigquery
   / ISOYEAR
   / DATE
   / TIME
-  / week_expr
   / WEEK
 
 week_expr
@@ -4177,25 +4182,30 @@ interval_expr
   }
 
 interval_unit_range
-  = fromUnitKw:interval_unit toKw:(__ TO __) toUnitKw:interval_unit {
+  = fromUnit:interval_unit toKw:(__ TO __) toUnit:interval_unit {
     return loc({
       type: "interval_unit_range",
-      fromUnitKw,
+      fromUnit,
       toKw: read(toKw),
-      toUnitKw,
+      toUnit,
     });
   }
 
 interval_unit
+  = kw:interval_unit_kw {
+    return loc({ type: "interval_unit", unitKw: kw })
+  }
+
+interval_unit_kw
   = YEAR
   / MONTH
   / DAY
   / HOUR
   / MINUTE
   / SECOND
-  / x:interval_unit_mysql &mysql { return x; }
+  / x:interval_unit_kw_mysql &mysql { return x; }
 
-interval_unit_mysql
+interval_unit_kw_mysql
   = QUARTER
   / WEEK
   / MICROSECOND

@@ -87,9 +87,12 @@ describe("extract()", () => {
               },
               "type": "extract_from",
               "unit": {
-                "name": "SECOND",
-                "text": "SECOND",
-                "type": "keyword",
+                "type": "interval_unit",
+                "unitKw": {
+                  "name": "SECOND",
+                  "text": "SECOND",
+                  "type": "keyword",
+                },
               },
             },
             "type": "paren_expr",

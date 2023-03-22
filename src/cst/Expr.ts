@@ -25,6 +25,7 @@ export type AllExprNodes =
   | CaseWhen<Expr | Program>
   | CaseElse<Expr | Program>
   | IntervalUnitRange
+  | IntervalUnit
   | PairExpr
   | WeekExpr
   | FullTextMatchArgs
@@ -247,7 +248,7 @@ export interface ExtractExpr extends BaseNode {
 
 export interface ExtractFrom extends BaseNode {
   type: "extract_from";
-  unit: IntervalUnitKeyword | WeekExpr;
+  unit: IntervalUnit | WeekExpr;
   fromKw: Keyword<"FROM">;
   expr: Expr;
 }
@@ -303,38 +304,41 @@ export interface IntervalExpr extends BaseNode {
   type: "interval_expr";
   intervalKw: Keyword<"INTERVAL">;
   expr: Expr;
-  unit: IntervalUnitKeyword | IntervalUnitRange;
+  unit: IntervalUnit | IntervalUnitRange;
 }
 
 export interface IntervalUnitRange extends BaseNode {
   type: "interval_unit_range";
-  fromUnitKw: IntervalUnitKeyword;
+  fromUnit: IntervalUnit;
   toKw: Keyword<"TO">;
-  toUnitKw: IntervalUnitKeyword;
+  toUnit: IntervalUnit;
 }
 
-type IntervalUnitKeyword = Keyword<
-  | "YEAR"
-  | "QUARTER"
-  | "MONTH"
-  | "WEEK"
-  | "DAY"
-  | "HOUR"
-  | "MINUTE"
-  | "SECOND"
-  | "MICROSECOND"
-  | "SECOND_MICROSECOND"
-  | "MINUTE_MICROSECOND"
-  | "MINUTE_SECOND"
-  | "HOUR_MICROSECOND"
-  | "HOUR_SECOND"
-  | "HOUR_MINUTE"
-  | "DAY_MICROSECOND"
-  | "DAY_SECOND"
-  | "DAY_MINUTE"
-  | "DAY_HOUR"
-  | "YEAR_MONTH"
->;
+export interface IntervalUnit extends BaseNode {
+  type: "interval_unit";
+  unitKw: Keyword<
+    | "YEAR"
+    | "QUARTER"
+    | "MONTH"
+    | "WEEK"
+    | "DAY"
+    | "HOUR"
+    | "MINUTE"
+    | "SECOND"
+    | "MICROSECOND"
+    | "SECOND_MICROSECOND"
+    | "MINUTE_MICROSECOND"
+    | "MINUTE_SECOND"
+    | "HOUR_MICROSECOND"
+    | "HOUR_SECOND"
+    | "HOUR_MINUTE"
+    | "DAY_MICROSECOND"
+    | "DAY_SECOND"
+    | "DAY_MINUTE"
+    | "DAY_HOUR"
+    | "YEAR_MONTH"
+  >;
+}
 
 export interface StringWithCharset extends BaseNode {
   type: "string_with_charset";
