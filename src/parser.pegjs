@@ -3619,7 +3619,7 @@ _comparison_expr_right
   / tail:(__ comparison_op __ quantifier_expr)+ {
     return (head: any) => createBinaryExprChain(head, tail);
   }
-  / c1:__ op:(NOT __ IN / IN) c2:__ right:(paren$list$expr / bitwise_or_expr) {
+  / c1:__ op:(NOT __ IN / IN) c2:__ right:(paren$list$expr / bitwise_or_expr / &bigquery e:unnest_expr { return e; }) {
     return (left: any) => createBinaryExpr(left, c1, read(op), c2, right);
   }
   / c1:__ op:(NOT __ LIKE / LIKE) c2:__ right:escape_expr {

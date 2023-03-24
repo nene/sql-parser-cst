@@ -136,6 +136,13 @@ describe("comparison operators", () => {
       testExprWc(`7 IN (SELECT * FROM numbers)`);
       testExprWc(`7 NOT IN (SELECT 1)`);
     });
+
+    dialect("bigquery", () => {
+      it("supports IN UNNEST (array) operator", () => {
+        testExprWc(`7 IN UNNEST ([1, 2, 3])`);
+        testExprWc(`7 NOT IN UNNEST ([42])`);
+      });
+    });
   });
 
   describe("BETWEEN", () => {
