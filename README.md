@@ -190,7 +190,7 @@ Parses SQL string and returns the CST tree. Takes the following options:
   to nodes which are preceded or followed by comments.
 - **includeNewlines**: `boolean` Like `includeComments`, but includes newlines info to the same fields.
 - **includeSpaces**: `boolean` Like `includeComments`, but includes horizontal whitespace info to the same fields.
-- **paramTypes**: `("?" | "?nr" | ":name" | "$name" | "@name")[]`
+- **paramTypes**: `` ("?" | "?nr" | ":name" | "$name" | "@name" | "`@name`")[] ``
   Determines the types of bound parameters supported by the parser.
   By default a query like `SELECT * FROM tbl WHERE id = ?` will result in parse error.
   To fix it, use `paramTypes: ["?"]` config option.

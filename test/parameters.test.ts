@@ -53,6 +53,15 @@ describe("bound parameters", () => {
         });
       });
     });
+
+    describe("when paramTypes includes '@`name`'", () => {
+      it("supports quoted @`name` parameter placeholders", () => {
+        test("SELECT * FROM foo WHERE x = @`foo bar` AND y = @`baz`", {
+          paramTypes: ["@`name`"],
+          ...includeAll,
+        });
+      });
+    });
   });
 
   describe("when paramTypes includes '$name'", () => {

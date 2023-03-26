@@ -4240,6 +4240,7 @@ parameter
     / ":" ident_name &{ return hasParamType(":name"); }
     / "$" ident_name &{ return hasParamType("$name"); }
     / "@" ident_name &{ return hasParamType("@name"); }
+    / "@" backticks_quoted_ident_bs &{ return hasParamType("@`name`"); }
   ) {
     return loc({ type: "parameter", text: text() });
   }
