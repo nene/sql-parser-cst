@@ -32,6 +32,7 @@
     "test": "yarn generate && yarn test:sqlite && yarn test:bigquery && yarn test:mysql && yarn test:mariadb",
     "perf:big": "yarn ts-node perf/perf-test.ts big",
     "perf:func": "yarn ts-node perf/perf-test.ts func",
+    "perf:paren": "yarn ts-node perf/perf-test.ts paren",
     "perf:select": "yarn ts-node perf/perf-test.ts select",
     "lint": "eslint src test scripts perf"
   },

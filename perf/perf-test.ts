@@ -19,6 +19,12 @@ function createTestData(variant: string) {
       mysql: "SELECT foo(bar(baz()))",
       bigquery: "SELECT foo(bar(baz()))",
     };
+  } else if (variant === "paren") {
+    return {
+      sqlite: "SELECT (((1)))",
+      mysql: "SELECT (((1)))",
+      bigquery: "SELECT (((1)))",
+    };
   } else if (variant === "big") {
     return {
       sqlite: getTestData("sqlite"),
