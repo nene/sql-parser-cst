@@ -25,6 +25,13 @@ function createTestData(variant: string) {
       mysql: "SELECT (((1)))",
       bigquery: "SELECT (((1)))",
     };
+  } else if (variant === "list") {
+    const sql = "SELECT ((1, 2, 3), (4, 5, 6), (7, 8, 9))";
+    return {
+      sqlite: sql,
+      mysql: sql,
+      bigquery: sql,
+    };
   } else if (variant === "big") {
     return {
       sqlite: getTestData("sqlite"),
