@@ -14,16 +14,18 @@ function getTestData(dialect: string) {
 
 function createTestData(variant: string) {
   if (variant === "func") {
+    const sql = "SELECT foo(bar(baz()))";
     return {
-      sqlite: "SELECT foo(bar(baz()))",
-      mysql: "SELECT foo(bar(baz()))",
-      bigquery: "SELECT foo(bar(baz()))",
+      sqlite: sql,
+      mysql: sql,
+      bigquery: sql,
     };
   } else if (variant === "paren") {
+    const sql = "SELECT (((1)))";
     return {
-      sqlite: "SELECT (((1)))",
-      mysql: "SELECT (((1)))",
-      bigquery: "SELECT (((1)))",
+      sqlite: sql,
+      mysql: sql,
+      bigquery: sql,
     };
   } else if (variant === "list") {
     const sql = "SELECT ((1, 2, 3), (4, 5, 6), (7, 8, 9))";
