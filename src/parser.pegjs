@@ -3582,7 +3582,7 @@ or_expr
 
 or_op
   = OR
-  / op:"||" & mysql { return op; }
+  / op:"||" &mysql { return op; }
 
 xor_expr
   = &mysql head:and_expr tail:(__ XOR __ and_expr)* {
