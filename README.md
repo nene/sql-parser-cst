@@ -227,7 +227,7 @@ const opts = {
 show(parse(sql, opts)) === sql; // always true
 ```
 
-### cstVisitor(map: VisitorMap): (node: Node) => void
+### cstVisitor(map: VisitorMap): (node: Node) => SKIP | void
 
 Generates a function that walks through the whole CST tree and calls
 a function in `map` whenever it encounters a node with that type.
@@ -244,6 +244,19 @@ const checkAliases = cstVisitor({
   },
 });
 checkAliases(cst);
+```
+
+You can return `VisitorAction.SKIP` to avoid visiting all child nodes of a specific node:
+
+```js
+let topLevelSelects = 0;
+const countTopLevelSelects = cstVisitor({
+  select_stmt: (node) => {
+    topLevelSelects++;
+    return VisitorAction.SKIP;
+  },
+});
+countTopLevelSelects(cst);
 ```
 
 ### cstTransformer\<T>(map: TransformMap\<T>): (node: Node) => T

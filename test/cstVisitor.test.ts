@@ -1,4 +1,4 @@
-import { cstVisitor } from "../src/main";
+import { cstVisitor, VisitorAction } from "../src/main";
 import { parse, includeAll, show } from "./test_utils";
 
 describe("cstVisitor", () => {
@@ -54,10 +54,25 @@ describe("cstVisitor", () => {
   it("allows visiting null_literal", () => {
     const nulls: string[] = [];
     const visit = cstVisitor({
-      null_literal: (node) => nulls.push(node.nullKw.text),
+      null_literal: (node) => {
+        nulls.push(node.nullKw.text);
+      },
     });
 
     visit(parse("SELECT * FROM employees WHERE id IS NULL"));
     expect(nulls).toEqual(["NULL"]);
+  });
+
+  it("allows skipping child nodes", () => {
+    let topLevelSelects = 0;
+    const visit = cstVisitor({
+      select_stmt: () => {
+        topLevelSelects++;
+        return VisitorAction.SKIP;
+      },
+    });
+
+    visit(parse("SELECT (SELECT (SELECT 1)); SELECT 2;"));
+    expect(topLevelSelects).toBe(2);
   });
 });

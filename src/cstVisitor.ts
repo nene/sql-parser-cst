@@ -1,6 +1,11 @@
 import { Node } from "./cst/Node";
 import { isObject, isString } from "./utils/generic";
 
+export enum VisitorAction {
+  /** Return from visitor function to skip iterating over child nodes. */
+  SKIP = 1,
+}
+
 /**
  * A map with a visitor function for each Node type, like:
  *
@@ -10,7 +15,9 @@ import { isObject, isString } from "./utils/generic";
  *       ... }
  */
 export type FullVisitorMap = {
-  [K in Node["type"]]: (node: Extract<Node, { type: K }>) => void;
+  [K in Node["type"]]: (
+    node: Extract<Node, { type: K }>
+  ) => VisitorAction | void;
 };
 
 /**
@@ -21,19 +28,19 @@ export function cstVisitor(map: Partial<FullVisitorMap>): (node: Node) => void {
   const visit = (node: Node) => {
     const visitType = map[node.type] as (
       e: Extract<Node, { type: typeof node["type"] }>
-    ) => void;
+    ) => VisitorAction | void;
 
     // Visit the node itself
-    if (visitType) {
-      visitType(node);
-    }
+    const action = visitType?.(node);
 
-    // Visit all children
-    for (const child of Object.values(node)) {
-      if (isNode(child)) {
-        visit(child);
-      } else if (child instanceof Array) {
-        child.filter(isNode).forEach((childNode) => visit(childNode));
+    if (action !== VisitorAction.SKIP) {
+      // Visit all children
+      for (const child of Object.values(node)) {
+        if (isNode(child)) {
+          visit(child);
+        } else if (child instanceof Array) {
+          child.filter(isNode).forEach((childNode) => visit(childNode));
+        }
       }
     }
   };
