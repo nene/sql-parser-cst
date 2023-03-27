@@ -3570,10 +3570,19 @@ expr
   = assign_expr
 
 assign_expr
-  = &mysql left:or_expr c1:__ op:":=" c2:__ right:assign_expr {
-    return loc(createBinaryExpr(left, c1, op, c2, right));
+  = &mysql left:or_expr createAssignOp:_assign_expr_right? {
+    if (createAssignOp) {
+      return loc(createAssignOp(left));
+    } else {
+      return left;
+    }
   }
   / or_expr
+
+_assign_expr_right
+  = c1:__ op:":=" c2:__ right:assign_expr {
+    return (left: any) => createBinaryExpr(left, c1, op, c2, right);
+  }
 
 or_expr
   = head:xor_expr tail:(__ or_op __ xor_expr)* {
