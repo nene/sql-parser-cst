@@ -48,11 +48,13 @@ export const trailing = (
 };
 
 /** Shorthand for attaching both trailing or leading whitespace */
-export const surrounding = (
+export function surrounding<T extends Node | Node[]>(
   leadingWs: Whitespace[],
-  node: Node | Node[],
+  node: T,
   trailingWs: Whitespace[]
-) => trailing(leading(node, leadingWs), trailingWs);
+): T {
+  return trailing(leading(node, leadingWs), trailingWs) as T;
+}
 
 // Creates new array with first item replaced by value
 const setFirst = <T>([_oldFirst, ...rest]: T[], value: T): T[] => {

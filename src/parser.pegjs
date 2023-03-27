@@ -3570,10 +3570,19 @@ expr
   = assign_expr
 
 assign_expr
-  = &mysql left:or_expr c1:__ op:":=" c2:__ right:assign_expr {
-    return loc(createBinaryExpr(left, c1, op, c2, right));
+  = &mysql left:or_expr createAssignOp:_assign_expr_right? {
+    if (createAssignOp) {
+      return loc(createAssignOp(left));
+    } else {
+      return left;
+    }
   }
   / or_expr
+
+_assign_expr_right
+  = c1:__ op:":=" c2:__ right:assign_expr {
+    return (left: any) => createBinaryExpr(left, c1, op, c2, right);
+  }
 
 or_expr
   = head:xor_expr tail:(__ or_op __ xor_expr)* {
@@ -3582,7 +3591,7 @@ or_expr
 
 or_op
   = OR
-  / op:"||" & mysql { return op; }
+  / op:"||" &mysql { return op; }
 
 xor_expr
   = &mysql head:and_expr tail:(__ XOR __ and_expr)* {
@@ -3839,10 +3848,9 @@ array_subscript_specifier
 
 primary
   = literal
-  / &bigquery x:(typed_array_expr / typed_struct_expr) { return x; }
-  / paren$expr
+  / primary_paren_expr
   / paren$compound_select_stmt
-  / paren$list$expr
+  / &bigquery x:(typed_array_expr / array_expr / typed_struct_expr) { return x; }
   / cast_expr
   / &sqlite e:raise_expr { return e; }
   / (&mysql / &bigquery) e:extract_expr { return e; }
@@ -3853,6 +3861,25 @@ primary
   / &mysql e:variable { return e; }
   / &bigquery e:system_variable { return e; }
   / parameter
+
+// Optimized parsing of parenthesized lists.
+// - first try matching a list
+// - when it's multi-element list, treat it as parenthesized list
+//   (when parsing BigQuery, treat it as untyped struct)
+// - when it's single-element list, treat it as parenthesized single expression
+primary_paren_expr
+  = "(" c1:__ list:list$expr c2:__ ")" {
+    if (list.items.length > 1) {
+      if (isBigquery()) {
+        // Untyped struct expression must have at least 2 elements in it
+        return loc({ type: "struct_expr", expr: surrounding(c1, list, c2) });
+      } else {
+        return loc({ type: "paren_expr", expr: surrounding(c1, list, c2) });
+      }
+    } else {
+      return loc({ type: "paren_expr", expr: surrounding(c1, list.items[0], c2) });
+    }
+  }
 
 cast_expr
   = kw:cast_kw args:(__ paren$cast_arg)  {
@@ -4547,7 +4574,6 @@ typed_array_expr
       expr,
     });
   }
-  / array_expr
 
 array_expr
   = "[" items:(__ (list$expr / empty_list) __) "]" {
@@ -4565,7 +4591,6 @@ typed_struct_expr
       expr,
     });
   }
-  / untyped_struct_expr
 
 struct_expr
   = "(" expr:(__ list$expr_or_explicit_alias __) ")" {
@@ -4573,20 +4598,6 @@ struct_expr
       type: "struct_expr",
       expr: read(expr),
     });
-  }
-
-// untyped struct must have at least 2 elements in it
-untyped_struct_expr
-  = "(" expr:(__ at_least_two_element_list_expr __) ")" {
-    return loc({
-      type: "struct_expr",
-      expr: read(expr),
-    });
-  }
-
-at_least_two_element_list_expr
-  = e:list$expr &{ return e.items.length > 1; } {
-    return e;
   }
 
 expr_or_explicit_alias
