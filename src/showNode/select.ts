@@ -7,7 +7,7 @@ export const selectMap: FullTransformMap<string, AllSelectNodes> = {
   select_stmt: (node) => show(node.clauses),
   // WITH
   with_clause: (node) => show([node.withKw, node.recursiveKw, node.tables]),
-  common_table_expression: (node) =>
+  common_table_expr: (node) =>
     show([node.table, node.columns, node.asKw, node.materializedKw, node.expr]),
   // SELECT
   select_clause: (node) =>

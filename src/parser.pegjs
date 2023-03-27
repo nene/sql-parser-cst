@@ -163,7 +163,7 @@ select_main_clause
 with_clause
   = withKw:WITH
     recursiveKw:(__ RECURSIVE)?
-    tables:(__ list$common_table_expression) {
+    tables:(__ list$common_table_expr) {
       return loc({
         type: "with_clause",
         withKw,
@@ -172,14 +172,14 @@ with_clause
       });
     }
 
-common_table_expression
+common_table_expr
   = table:ident
     columns:(__ paren$list$column)?
     asKw:(__ AS)
     materialized:(__ cte_materialized)?
     select:(__ paren$compound_select_stmt) {
       return loc({
-        type: "common_table_expression",
+        type: "common_table_expr",
         table: table,
         columns: read(columns),
         asKw: read(asKw),
@@ -4313,7 +4313,7 @@ list$alter_action = .
 list$column = .
 list$column_assignment = .
 list$column_definition = .
-list$common_table_expression = .
+list$common_table_expr = .
 list$create_definition = .
 list$entity_name = .
 list$equals_expr = .

@@ -18,7 +18,7 @@ export type AllSelectNodes =
   | CompoundSelectStmt
   | SelectStmt
   | WithClause
-  | CommonTableExpression
+  | CommonTableExpr
   | SelectClause
   | ExceptColumns
   | ReplaceColumns
@@ -107,11 +107,11 @@ export interface WithClause extends BaseNode {
   type: "with_clause";
   withKw: Keyword<"WITH">;
   recursiveKw?: Keyword<"RECURSIVE">;
-  tables: ListExpr<CommonTableExpression>;
+  tables: ListExpr<CommonTableExpr>;
 }
 
-export interface CommonTableExpression extends BaseNode {
-  type: "common_table_expression";
+export interface CommonTableExpr extends BaseNode {
+  type: "common_table_expr";
   table: Identifier;
   columns?: ParenExpr<ListExpr<Identifier>>;
   asKw: Keyword<"AS">;
