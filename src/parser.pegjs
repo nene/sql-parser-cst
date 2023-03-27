@@ -3841,7 +3841,7 @@ primary
   = literal
   / primary_paren_expr
   / paren$compound_select_stmt
-  / &bigquery x:(typed_array_expr / typed_struct_expr) { return x; }
+  / &bigquery x:(typed_array_expr / array_expr / typed_struct_expr) { return x; }
   / cast_expr
   / &sqlite e:raise_expr { return e; }
   / (&mysql / &bigquery) e:extract_expr { return e; }
@@ -4565,7 +4565,6 @@ typed_array_expr
       expr,
     });
   }
-  / array_expr
 
 array_expr
   = "[" items:(__ (list$expr / empty_list) __) "]" {
