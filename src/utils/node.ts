@@ -329,7 +329,7 @@ export const createParenExpr = (
 ): ParenExpr => {
   return {
     type: "paren_expr",
-    expr: surrounding(c1, expr, c2) as Expr,
+    expr: surrounding(c1, expr, c2),
   };
 };
 
