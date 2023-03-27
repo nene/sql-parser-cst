@@ -21,7 +21,7 @@ function createTestData(variant: string) {
       bigquery: sql,
     };
   } else if (variant === "paren") {
-    const sql = "SELECT (((1)))";
+    const sql = "SELECT ((((((1))))))";
     return {
       sqlite: sql,
       mysql: sql,
