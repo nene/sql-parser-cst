@@ -1011,6 +1011,7 @@ outfile_option_escaped_by
 insert_stmt
   = withCls:(with_clause __)?
     insertCls:insert_clause
+    partitionCls:(__ (&mysql p:partition_clause { return p; } ))?
     columnsCls:(__ insert_columns_clause)?
     source:(__ insert_source)
     upsert:(__ upsert_clause)*
@@ -1020,6 +1021,7 @@ insert_stmt
         clauses: [
           read(withCls),
           insertCls,
+          read(partitionCls),
           read(columnsCls),
           read(source),
           ...upsert.map(read),

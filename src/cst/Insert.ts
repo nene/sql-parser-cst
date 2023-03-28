@@ -2,6 +2,7 @@ import { BaseNode, Keyword } from "./Base";
 import { Expr, Identifier, ListExpr, ParenExpr, EntityName } from "./Expr";
 import { Alias } from "./Alias";
 import {
+  PartitionClause,
   ReturningClause,
   SortSpecification,
   SubSelect,
@@ -30,6 +31,7 @@ export interface InsertStmt extends BaseNode {
   clauses: (
     | WithClause
     | InsertClause
+    | PartitionClause
     | InsertColumnsClause
     | (ValuesClause | SubSelect | DefaultValues | SetClause)
     | UpsertClause

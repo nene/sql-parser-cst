@@ -100,6 +100,12 @@ describe("insert into", () => {
     });
   });
 
+  dialect(["mysql", "mariadb"], () => {
+    it("supports PARTITION clause", () => {
+      testWc("INSERT INTO tbl PARTITION (foo, bar) (col1, col2) VALUES (1, 2)");
+    });
+  });
+
   dialect("sqlite", () => {
     describe("upsert clause", () => {
       it("supports ON CONFLICT DO NOTHING", () => {
