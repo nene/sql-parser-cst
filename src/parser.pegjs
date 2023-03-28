@@ -151,10 +151,29 @@ select_stmt
         clauses: [read(cte), read(select), ...otherClauses.map(read)].filter(identity),
       });
   }
+  / &mysql cls:table_clause orderCls:(__ order_by_clause)? limitCls:(__ limit_clause)? {
+    return loc({
+      type: "select_stmt",
+      clauses: [
+        cls,
+        read(orderCls),
+        read(limitCls),
+      ].filter(identity),
+    });
+  }
 
 select_main_clause
   = select_clause
   / v:values_clause !bigquery { return v; }
+
+table_clause
+  = kw:(TABLE __) table:ident {
+    return loc({
+      type: "table_clause",
+      tableKw: read(kw),
+      table,
+    });
+  }
 
 /**
  * SELECT .. WITH

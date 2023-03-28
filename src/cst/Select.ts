@@ -67,7 +67,8 @@ export type AllSelectNodes =
   | OutfileOptionEscapedBy
   | OutfileOptionStartingBy
   | OutfileOptionEnclosedBy
-  | OutfileOptionCharacterSet;
+  | OutfileOptionCharacterSet
+  | TableClause;
 
 // SELECT
 export interface CompoundSelectStmt extends BaseNode {
@@ -99,6 +100,7 @@ export interface SelectStmt extends BaseNode {
     | IntoVariablesClause
     | IntoDumpfileClause
     | IntoOutfileClause
+    | TableClause
     | ParenExpr<SelectStmt>
   )[];
 }
@@ -503,4 +505,10 @@ export interface OutfileOptionCharacterSet extends BaseNode {
   type: "outfile_option_character_set";
   characterSetKw: [Keyword<"CHARACTER">, Keyword<"SET">];
   value: Identifier;
+}
+
+export interface TableClause extends BaseNode {
+  type: "table_clause";
+  tableKw: Keyword<"TABLE">;
+  table: EntityName;
 }
