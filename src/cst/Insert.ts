@@ -29,7 +29,7 @@ export interface InsertStmt extends BaseNode {
   clauses: (
     | WithClause
     | InsertClause
-    | (ValuesClause | SubSelect | DefaultValues)
+    | (ValuesClause | SubSelect | DefaultValues | SetClause)
     | UpsertClause
     | ReturningClause
   )[];

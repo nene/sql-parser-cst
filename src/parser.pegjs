@@ -1067,6 +1067,7 @@ insert_source
   = values_clause
   / compound_select_stmt
   / default_values
+  / &mysql x:set_clause { return x; }
 
 values_clause
   = kw:values_kw values:(__ list$values_row) {

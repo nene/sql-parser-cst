@@ -94,6 +94,12 @@ describe("insert into", () => {
     });
   });
 
+  dialect(["mysql", "mariadb"], () => {
+    it("supports SET clause", () => {
+      testWc("INSERT INTO tbl SET id = 1, age = 28, priority = DEFAULT");
+    });
+  });
+
   dialect("sqlite", () => {
     describe("upsert clause", () => {
       it("supports ON CONFLICT DO NOTHING", () => {
