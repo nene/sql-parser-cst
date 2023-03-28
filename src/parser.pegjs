@@ -1011,6 +1011,7 @@ outfile_option_escaped_by
 insert_stmt
   = withCls:(with_clause __)?
     insertCls:insert_clause
+    columnsCls:(__ insert_columns_clause)?
     source:(__ insert_source)
     upsert:(__ upsert_clause)*
     returning:(__ returning_clause)? {
@@ -1019,6 +1020,7 @@ insert_stmt
         clauses: [
           read(withCls),
           insertCls,
+          read(columnsCls),
           read(source),
           ...upsert.map(read),
           read(returning),
@@ -1031,8 +1033,7 @@ insert_clause
     hints:(__ mysql_upsert_hint)*
     orAction:(__ or_alternate_action)?
     intoKw:(__ INTO)?
-    table:(__ table_or_explicit_alias)
-    columns:(__ paren$list$column)? {
+    table:(__ table_or_explicit_alias) {
       return loc({
         type: "insert_clause",
         insertKw,
@@ -1040,9 +1041,13 @@ insert_clause
         orAction: read(orAction),
         intoKw: read(intoKw),
         table: read(table),
-        columns: read(columns),
       });
     }
+
+insert_columns_clause
+  = columns:paren$list$column {
+    return loc({ type: "insert_columns_clause", columns });
+  }
 
 mysql_upsert_hint
   = kw:(LOW_PRIORITY / DELAYED / HIGH_PRIORITY / IGNORE) &mysql {

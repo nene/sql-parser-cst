@@ -149,24 +149,6 @@ describe("insert into", () => {
       {
         "clauses": [
           {
-            "columns": {
-              "expr": {
-                "items": [
-                  {
-                    "name": "col1",
-                    "text": "col1",
-                    "type": "identifier",
-                  },
-                  {
-                    "name": "col2",
-                    "text": "col2",
-                    "type": "identifier",
-                  },
-                ],
-                "type": "list_expr",
-              },
-              "type": "paren_expr",
-            },
             "hints": [],
             "insertKw": {
               "name": "INSERT",
@@ -185,6 +167,27 @@ describe("insert into", () => {
               "type": "identifier",
             },
             "type": "insert_clause",
+          },
+          {
+            "columns": {
+              "expr": {
+                "items": [
+                  {
+                    "name": "col1",
+                    "text": "col1",
+                    "type": "identifier",
+                  },
+                  {
+                    "name": "col2",
+                    "text": "col2",
+                    "type": "identifier",
+                  },
+                ],
+                "type": "list_expr",
+              },
+              "type": "paren_expr",
+            },
+            "type": "insert_columns_clause",
           },
           {
             "type": "values_clause",

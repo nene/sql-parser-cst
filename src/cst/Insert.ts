@@ -14,6 +14,7 @@ import { MysqlHint } from "./Mysql";
 export type AllInsertNodes =
   | InsertStmt
   | InsertClause
+  | InsertColumnsClause
   | OrAlternateAction
   | ValuesClause
   | RowConstructor
@@ -29,6 +30,7 @@ export interface InsertStmt extends BaseNode {
   clauses: (
     | WithClause
     | InsertClause
+    | InsertColumnsClause
     | (ValuesClause | SubSelect | DefaultValues | SetClause)
     | UpsertClause
     | ReturningClause
@@ -42,7 +44,11 @@ export interface InsertClause extends BaseNode {
   orAction?: OrAlternateAction;
   intoKw?: Keyword<"INTO">;
   table: EntityName | Alias<EntityName>;
-  columns?: ParenExpr<ListExpr<Identifier>>;
+}
+
+export interface InsertColumnsClause extends BaseNode {
+  type: "insert_columns_clause";
+  columns: ParenExpr<ListExpr<Identifier>>;
 }
 
 // Only in SQLite
