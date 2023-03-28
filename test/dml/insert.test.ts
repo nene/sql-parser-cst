@@ -132,7 +132,7 @@ describe("insert into", () => {
     });
   });
 
-  dialect("sqlite", () => {
+  dialect(["sqlite", "mariadb"], () => {
     it("supports INSERT ... RETURNING ...", () => {
       testWc("INSERT INTO tbl (col) VALUES (1) RETURNING col");
     });
