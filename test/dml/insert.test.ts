@@ -149,6 +149,11 @@ describe("insert into", () => {
       testWc("INSERT INTO tbl (col1) VALUES (1) ON DUPLICATE KEY UPDATE col1 = 2, col2 = DEFAULT");
     });
 
+    // deprecated since MySQL 8.0.20
+    it("supports VALUES() function in ON DUPLICATE KEY UPDATE", () => {
+      testWc("INSERT INTO tbl (x) VALUES (1) ON DUPLICATE KEY UPDATE x = VALUES(x) + 1");
+    });
+
     it("supports row alias", () => {
       testWc(`
         INSERT INTO tbl (x) VALUES (1) AS new

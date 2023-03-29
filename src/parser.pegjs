@@ -4081,16 +4081,17 @@ func_name
   = member_expr / ident / func_name_kw
 
 func_name_kw
-  = &mysql kw:mysql_window_func_keyword {
+  = &mysql kw:mysql_func_keyword {
     return loc(createIdentifier(kw.text, kw.text));
   }
   / &bigquery kw:bigquery_func_keyword {
     return loc(createIdentifier(kw.text, kw.text));
   }
 
-// In MySQL, window functions are reserved keywords
-mysql_window_func_keyword
-  = CUME_DIST
+mysql_func_keyword
+  = VALUES
+  // In MySQL, window functions are reserved keywords
+  / CUME_DIST
   / DENSE_RANK
   / FIRST_VALUE
   / LAG
