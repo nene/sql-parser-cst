@@ -23,6 +23,7 @@ export * from "./ProcClause";
 export * from "./Procedure";
 export * from "./ProceduralLanguage";
 export * from "./Program";
+export * from "./RenameTable";
 export * from "./Schema";
 export * from "./Select";
 export * from "./Sqlite";
@@ -53,6 +54,7 @@ import { AllPreparedStatementNodes } from "./PreparedStatements";
 import { AllProcClauseNodes } from "./ProcClause";
 import { AllProceduralNodes } from "./ProceduralLanguage";
 import { AllProcedureNodes } from "./Procedure";
+import { AllRenameTableNodes } from "./RenameTable";
 import { AllSelectNodes } from "./Select";
 import { AllSqliteNodes } from "./Sqlite";
 import { AllTransactionNodes } from "./Transaction";
@@ -81,6 +83,7 @@ export type Node =
   | AllProcClauseNodes
   | AllProceduralNodes
   | AllProcedureNodes
+  | AllRenameTableNodes
   | AllSelectNodes
   | AllSqliteNodes
   | AllTransactionNodes

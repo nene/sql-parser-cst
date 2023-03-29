@@ -81,6 +81,7 @@ ddl_statement
   / create_table_stmt
   / drop_table_stmt
   / alter_table_stmt
+  / x:rename_table_stmt &mysql { return x; }
   / x:create_trigger_stmt (&mysql / &sqlite) { return x; }
   / x:drop_trigger_stmt (&mysql / &sqlite) { return x; }
   / x:(create_schema_stmt / drop_schema_stmt / alter_schema_stmt) (&mysql / &bigquery) { return x; }
@@ -1893,6 +1894,33 @@ alter_action_drop_not_null
 alter_action_set_data_type
   = kw:(SET __ DATA __ TYPE __) type:data_type {
     return loc({ type: "alter_action_set_data_type", setDataTypeKw: read(kw), dataType: type });
+  }
+
+/**
+ * ------------------------------------------------------------------------------------ *
+ *                                                                                      *
+ * RENAME TABLE                                                                         *
+ *                                                                                      *
+ * ------------------------------------------------------------------------------------ *
+ */
+rename_table_stmt
+  = kw:(RENAME __) tkw:(TABLE __) actions:list$rename_action {
+    return loc({
+      type: "rename_table_stmt",
+      renameKw: read(kw),
+      tableKw: read(tkw),
+      actions,
+    });
+  }
+
+rename_action
+  = from:entity_name kw:(__ TO __) to:entity_name {
+    return loc({
+      type: "rename_action",
+      from,
+      toKw: read(kw),
+      to,
+    });
   }
 
 /**
@@ -4404,6 +4432,7 @@ list$ident = .
 list$literal = .
 list$named_window = .
 list$procedure_param = .
+list$rename_action = .
 list$set_assignment = .
 list$sort_specification = .
 list$string_literal = .

@@ -30,6 +30,7 @@ import { viewMap } from "./view";
 import { frameMap } from "./window_frame";
 import { FullTransformMap } from "../cstTransformer";
 import { mysqlMap } from "./mysql";
+import { renameTableMap } from "./rename_table";
 
 export const transformMap: FullTransformMap<string> = {
   ...baseMap,
@@ -49,6 +50,7 @@ export const transformMap: FullTransformMap<string> = {
   ...alterTableMap,
   ...alterActionMap,
   ...dropTableMap,
+  ...renameTableMap,
 
   // CREATE/DROP/ALTER SCHEMA/VIEW/INDEX/TRIGGER
   ...schemaMap,
