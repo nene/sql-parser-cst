@@ -21,6 +21,7 @@ export type AllInsertNodes =
   | RowConstructor
   | DefaultValues
   | Default
+  | RowAliasClause
   | UpsertClause
   | UpsertActionNothing
   | UpsertActionUpdate
@@ -35,6 +36,7 @@ export interface InsertStmt extends BaseNode {
     | PartitionClause
     | InsertColumnsClause
     | (ValuesClause | SubSelect | DefaultValues | SetClause)
+    | RowAliasClause
     | UpsertClause
     | OnDuplicateKeyUpdateClause
     | ReturningClause
@@ -108,6 +110,12 @@ export interface UpsertActionUpdate extends BaseNode {
 }
 
 // only in MySQL
+export interface RowAliasClause extends BaseNode {
+  type: "row_alias_clause";
+  asKw: Keyword<"AS">;
+  rowAlias: Identifier;
+  columnAliases?: ParenExpr<ListExpr<Identifier>>;
+}
 export interface OnDuplicateKeyUpdateClause extends BaseNode {
   type: "on_duplicate_key_update_clause";
   onDuplicateKeyUpdateKw: [

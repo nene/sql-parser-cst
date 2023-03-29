@@ -1033,8 +1033,9 @@ insert_stmt
     partitionCls:(__ (&mysql p:partition_clause { return p; } ))?
     columnsCls:(__ insert_columns_clause)?
     source:(__ insert_source)
-    upsert:(__ upsert_clause)*
+    aliasCls:(__ row_alias_clause)?
     updateCls:(__ on_duplicate_key_update_clause)?
+    upsert:(__ upsert_clause)*
     returning:(__ returning_clause)? {
       return loc({
         type: "insert_stmt",
@@ -1044,8 +1045,9 @@ insert_stmt
           read(partitionCls),
           read(columnsCls),
           read(source),
-          ...upsert.map(read),
+          read(aliasCls),
           read(updateCls),
+          ...upsert.map(read),
           read(returning),
         ].filter(identity),
       });
@@ -1164,6 +1166,16 @@ upsert_action
       updateKw: kw,
       set: read(set),
       where: read(where),
+    });
+  }
+
+row_alias_clause
+  = &mysql kw:(AS __) row:ident cols:(__ paren$list$ident)? {
+    return loc({
+      type: "row_alias_clause",
+      asKw: read(kw),
+      rowAlias: read(row),
+      columnAliases: read(cols),
     });
   }
 

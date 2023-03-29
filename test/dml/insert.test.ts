@@ -148,6 +148,20 @@ describe("insert into", () => {
     it("supports ON DUPLICATE KEY UPDATE", () => {
       testWc("INSERT INTO tbl (col1) VALUES (1) ON DUPLICATE KEY UPDATE col1 = 2, col2 = DEFAULT");
     });
+
+    it("supports row alias", () => {
+      testWc(`
+        INSERT INTO tbl (x) VALUES (1) AS new
+        ON DUPLICATE KEY UPDATE x = new.x + 1
+      `);
+    });
+
+    it("supports columns aliases", () => {
+      testWc(`
+        INSERT INTO tbl (x, y) VALUES (1) AS new_row (id, fname)
+        ON DUPLICATE KEY UPDATE x = new_row.id + 1, y = ''
+      `);
+    });
   });
 
   dialect(["sqlite", "mariadb"], () => {
