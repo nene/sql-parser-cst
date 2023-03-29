@@ -144,6 +144,12 @@ describe("insert into", () => {
     });
   });
 
+  dialect(["mysql", "mariadb"], () => {
+    it("supports ON DUPLICATE KEY UPDATE", () => {
+      testWc("INSERT INTO tbl (col1) VALUES (1) ON DUPLICATE KEY UPDATE col1 = 2, col2 = DEFAULT");
+    });
+  });
+
   dialect(["sqlite", "mariadb"], () => {
     it("supports INSERT ... RETURNING ...", () => {
       testWc("INSERT INTO tbl (col) VALUES (1) RETURNING col");

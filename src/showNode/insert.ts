@@ -18,4 +18,7 @@ export const insertMap: FullTransformMap<string, AllInsertNodes> = {
     show([node.onConflictKw, node.columns, node.where, node.doKw, node.action]),
   upsert_action_nothing: (node) => show(node.nothingKw),
   upsert_action_update: (node) => show([node.updateKw, node.set, node.where]),
+
+  on_duplicate_key_update_clause: (node) =>
+    show([node.onDuplicateKeyUpdateKw, node.assignments]),
 };

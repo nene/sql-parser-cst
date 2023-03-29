@@ -1034,6 +1034,7 @@ insert_stmt
     columnsCls:(__ insert_columns_clause)?
     source:(__ insert_source)
     upsert:(__ upsert_clause)*
+    updateCls:(__ on_duplicate_key_update_clause)?
     returning:(__ returning_clause)? {
       return loc({
         type: "insert_stmt",
@@ -1044,6 +1045,7 @@ insert_stmt
           read(columnsCls),
           read(source),
           ...upsert.map(read),
+          read(updateCls),
           read(returning),
         ].filter(identity),
       });
@@ -1162,6 +1164,15 @@ upsert_action
       updateKw: kw,
       set: read(set),
       where: read(where),
+    });
+  }
+
+on_duplicate_key_update_clause
+  = &mysql kw:(ON __ DUPLICATE __ KEY __ UPDATE __) assignments:list$column_assignment {
+    return loc({
+      type: "on_duplicate_key_update_clause",
+      onDuplicateKeyUpdateKw: read(kw),
+      assignments,
     });
   }
 

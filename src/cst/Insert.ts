@@ -9,7 +9,7 @@ import {
   WhereClause,
   WithClause,
 } from "./Select";
-import { SetClause } from "./Update";
+import { ColumnAssignment, SetClause } from "./Update";
 import { MysqlHint } from "./Mysql";
 
 export type AllInsertNodes =
@@ -23,7 +23,8 @@ export type AllInsertNodes =
   | Default
   | UpsertClause
   | UpsertActionNothing
-  | UpsertActionUpdate;
+  | UpsertActionUpdate
+  | OnDuplicateKeyUpdateClause;
 
 // INSERT INTO
 export interface InsertStmt extends BaseNode {
@@ -35,6 +36,7 @@ export interface InsertStmt extends BaseNode {
     | InsertColumnsClause
     | (ValuesClause | SubSelect | DefaultValues | SetClause)
     | UpsertClause
+    | OnDuplicateKeyUpdateClause
     | ReturningClause
   )[];
 }
@@ -103,4 +105,16 @@ export interface UpsertActionUpdate extends BaseNode {
   updateKw: Keyword<"UPDATE">;
   set: SetClause;
   where?: WhereClause;
+}
+
+// only in MySQL
+export interface OnDuplicateKeyUpdateClause extends BaseNode {
+  type: "on_duplicate_key_update_clause";
+  onDuplicateKeyUpdateKw: [
+    Keyword<"ON">,
+    Keyword<"DUPLICATE">,
+    Keyword<"KEY">,
+    Keyword<"UPDATE">
+  ];
+  assignments: ListExpr<ColumnAssignment>;
 }
