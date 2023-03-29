@@ -4,6 +4,7 @@ import { EntityName } from "./Expr";
 // TRUNCATE TABLE
 export interface TruncateStmt extends BaseNode {
   type: "truncate_stmt";
-  truncateTableKw: [Keyword<"TRUNCATE">, Keyword<"TABLE">];
+  truncateKw: Keyword<"TRUNCATE">;
+  tableKw?: Keyword<"TABLE">;
   table: EntityName;
 }

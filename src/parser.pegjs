@@ -90,7 +90,7 @@ dml_statement
   / insert_stmt
   / update_stmt
   / delete_stmt
-  / x:truncate_stmt &bigquery { return x; }
+  / x:truncate_stmt (&bigquery / &mysql) { return x; }
   / x:merge_stmt &bigquery { return x; }
 
 empty
@@ -1311,10 +1311,11 @@ other_delete_clause
  * ------------------------------------------------------------------------------------ *
  */
 truncate_stmt
-  = kws:(TRUNCATE __ TABLE __) tbl:entity_name {
+  = kw:(TRUNCATE __) tableKw:(TABLE __)? tbl:entity_name {
     return loc({
       type: "truncate_stmt",
-      truncateTableKw: read(kws),
+      truncateKw: read(kw),
+      tableKw: read(tableKw),
       table: tbl,
     });
   }
