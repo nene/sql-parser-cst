@@ -24,7 +24,7 @@ describe("view", () => {
       });
     });
 
-    dialect(["sqlite", "bigquery"], () => {
+    dialect(["sqlite", "bigquery", "mariadb"], () => {
       it("supports IF NOT EXISTS", () => {
         testWc("CREATE VIEW IF NOT EXISTS my_view AS SELECT 1");
       });
