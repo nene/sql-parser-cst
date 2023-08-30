@@ -46,5 +46,6 @@ export interface AlterViewStmt extends BaseNode {
   viewKw: Keyword<"VIEW">;
   ifExistsKw?: [Keyword<"IF">, Keyword<"EXISTS">];
   name: EntityName;
-  actions: AlterActionSetOptions[];
+  columns?: ParenExpr<ListExpr<Identifier>>;
+  actions: (AlterActionSetOptions | AsClause<SubSelect>)[];
 }

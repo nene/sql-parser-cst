@@ -32,6 +32,7 @@ export const viewMap: FullTransformMap<string, AllViewStatements> = {
       node.viewKw,
       node.ifExistsKw,
       node.name,
+      node.columns,
       node.actions,
     ]),
 };

@@ -108,5 +108,15 @@ describe("view", () => {
         testWc("ALTER MATERIALIZED VIEW IF EXISTS my_view SET OPTIONS(description='blah')");
       });
     });
+
+    dialect(["mysql", "mariadb"], () => {
+      it("basic ALTER VIEW with new AS SELECT", () => {
+        testWc("ALTER VIEW my_view AS SELECT 1");
+      });
+
+      it("supports columns list", () => {
+        testWc("ALTER VIEW my_view (col1, col2) AS SELECT 2");
+      });
+    });
   });
 });

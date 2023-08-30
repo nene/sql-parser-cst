@@ -73,7 +73,7 @@ statement
 ddl_statement
   = create_view_stmt
   / drop_view_stmt
-  / x:alter_view_stmt &bigquery { return x; }
+  / x:alter_view_stmt (&bigquery / &mysql) { return x; }
   / create_index_stmt
   / drop_index_stmt
   / x:(create_function_stmt / drop_function_stmt) &bigquery { return x; }
@@ -1471,6 +1471,7 @@ alter_view_stmt
     viewKw:(__ VIEW)
     ifKw:(__ if_exists)?
     name:(__ entity_name)
+    cols:(__ paren$list$column)?
     actions:(__ alter_view_action)+ {
       return loc({
         type: "alter_view_stmt",
@@ -1479,12 +1480,14 @@ alter_view_stmt
         viewKw: read(viewKw),
         ifExistsKw: read(ifKw),
         name: read(name),
+        columns: read(cols),
         actions: actions.map(read),
       });
     }
 
 alter_view_action
   = &bigquery ac:alter_action_set_options { return ac; }
+  / &mysql ac:as_clause$compound_select_stmt { return ac; }
 
 /**
  * ------------------------------------------------------------------------------------ *
