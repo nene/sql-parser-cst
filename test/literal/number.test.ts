@@ -56,4 +56,16 @@ describe("number literal", () => {
       `);
     });
   });
+
+  dialect("postgresql", () => {
+    it("parses 0b01101010 as binary number", () => {
+      expect(parseExpr(`0b01101010`)).toMatchInlineSnapshot(`
+        {
+          "text": "0b01101010",
+          "type": "number_literal",
+          "value": 106,
+        }
+      `);
+    });
+  });
 });

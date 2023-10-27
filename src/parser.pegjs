@@ -5037,6 +5037,7 @@ blob_literal_bit_string
 number_literal "number"
   = number_literal_decimal
   / n:number_literal_hex (&sqlite / &bigquery / &postgres) { return n; }
+  / n:number_literal_bit &postgres { return n; }
 
 number_literal_hex
   = "0x" hex_digit+ {
@@ -5057,6 +5058,16 @@ blob_literal_hex
     });
   }
 
+number_literal_bit
+  = "0b" chars:[01]+ {
+    return loc({
+      type: "number_literal",
+      text: text(),
+      value: parseInt(chars.join(""), 2),
+    });
+  }
+
+// The exact same syntax as above, but treated as blob
 blob_literal_bit
   = "0b" chars:[01]+ {
     return loc({
