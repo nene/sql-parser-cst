@@ -3540,7 +3540,7 @@ array_type_param
 type_name
   = &bigquery t:type_name_bigquery { return t; }
   / &mysql t:type_name_mysql { return t; }
-  / &sqlite t:type_name_sqlite { return t; }
+  / (&sqlite / &postgres) t:type_name_sqlite { return t; }
 
 type_name_bigquery
   = BOOL
