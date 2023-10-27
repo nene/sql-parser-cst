@@ -4723,7 +4723,7 @@ boolean_literal
 
 string_literal "string"
   = &mysql s:string_literal_mysql { return s; }
-  / (&sqlite / &bigquery) s:string_literal_plain { return s; }
+  / (&sqlite / &bigquery / &postgres) s:string_literal_plain { return s; }
 
 string_literal_mysql
   = string_literal_with_charset
@@ -4751,7 +4751,7 @@ string_literal_plain
     / string_literal_single_quoted_bs
     / string_literal_double_quoted_bs
     / string_literal_raw) { return s; }
-  / &sqlite s:string_literal_single_quoted_qq { return s; }
+  / (&sqlite / &postgres) s:string_literal_single_quoted_qq { return s; }
   / &mysql s:mysql_string_literal_chain { return s; }
 
 mysql_string_literal_chain
