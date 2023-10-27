@@ -44,9 +44,21 @@ export function parseStmt(
   return statements[0];
 }
 
+/** Runs the tests when active dialect is in specified dialects list */
 export function dialect(lang: DialectName | DialectName[], block: () => void) {
   lang = isString(lang) ? [lang] : lang;
   if (lang.includes(__SQL_DIALECT__)) {
+    describe(__SQL_DIALECT__, block);
+  }
+}
+
+/** Runs the tests when active dialect is NOT in specified dialects list */
+export function notDialect(
+  lang: DialectName | DialectName[],
+  block: () => void
+) {
+  lang = isString(lang) ? [lang] : lang;
+  if (!lang.includes(__SQL_DIALECT__)) {
     describe(__SQL_DIALECT__, block);
   }
 }
