@@ -5134,6 +5134,7 @@ sqlite = &{ return isSqlite(); }
 mysql = &{ return isMysql() || isMariadb(); } // 99% of MariaDB and MySQL syntax is the same
 only_mysql = &{ return isMysql(); } // 99% of MariaDB and MySQL syntax is the same
 only_mariadb = &{ return isMariadb(); } // 99% of MariaDB and MySQL syntax is the same
+postgres = &{ return isPostgresql(); }
 
 /**
  * Note: To add keyword rules to the list below use the command:

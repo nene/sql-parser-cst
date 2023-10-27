@@ -26,6 +26,8 @@ Supports the following SQL dialects:
   and [#7](https://github.com/nene/sql-parser-cst/issues/7) for implementation progress).
 - **MariaDB** - experimental
   (see [#32](https://github.com/nene/sql-parser-cst/issues/32) for implementation progress).
+- **PostgreSQL** - experimental
+  (see [#42](https://github.com/nene/sql-parser-cst/issues/42) for implementation progress).
 
 **Note:** This software is in very active development.
 The syntax tree structure is mostly stable now,
@@ -183,7 +185,7 @@ Note the following conventions:
 
 Parses SQL string and returns the CST tree. Takes the following options:
 
-- **dialect**: `'sqlite' | 'bigquery' | 'mysql' | 'mariadb'` The SQL dialect to parse **(required)**.
+- **dialect**: `'sqlite' | 'bigquery' | 'mysql' | 'mariadb' | 'postgresql'` The SQL dialect to parse **(required)**.
 - **includeRange**: `boolean` When enabled adds `range: [number, number]` field to all CST nodes,
   which contains the start and end locations of the node.
 - **includeComments**: `boolean` When enabled adds `leading: Whitespace[]` and/or `trailing: Whitespace[]`

@@ -20,6 +20,7 @@ export const getDialect = (): DialectName => getOptions().dialect;
 export const isBigquery = () => getDialect() === "bigquery";
 export const isMysql = () => getDialect() === "mysql";
 export const isMariadb = () => getDialect() === "mariadb";
+export const isPostgresql = () => getDialect() === "postgresql";
 export const isSqlite = () => getDialect() === "sqlite";
 
 export const hasParamType = (name: ParamType) => {

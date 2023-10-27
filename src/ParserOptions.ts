@@ -3,6 +3,7 @@ export const validDialectNames = {
   mysql: true,
   mariadb: true,
   bigquery: true,
+  postgresql: true,
 };
 
 export type DialectName = keyof typeof validDialectNames;
