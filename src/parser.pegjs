@@ -4614,8 +4614,9 @@ ident_start
   / &mysql (unicode_letter / "$")
 
 ident_part
-  = ascii_letter / digit
-  / (&postgres / &mysql) (unicode_letter / digit / "$")
+  = ascii_letter
+  / digit
+  / (&postgres / &mysql) (unicode_letter / "$")
 
 ascii_letter   = [A-Za-z_]
 
