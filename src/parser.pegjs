@@ -5019,7 +5019,7 @@ blob_literal_bit_string
 
 number_literal "number"
   = number_literal_decimal
-  / n:number_literal_hex (&sqlite / &bigquery) { return n; }
+  / n:number_literal_hex (&sqlite / &bigquery / &postgres) { return n; }
 
 number_literal_hex
   = "0x" hex_digit+ {
