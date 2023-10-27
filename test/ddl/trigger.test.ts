@@ -91,4 +91,10 @@ describe("trigger", () => {
       expect(() => test("DROP TRIGGER my_trg")).toThrowError();
     });
   });
+
+  dialect("postgresql", () => {
+    it("TODO:postgres", () => {
+      expect(true).toBe(true);
+    });
+  });
 });

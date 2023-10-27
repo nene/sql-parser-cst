@@ -58,4 +58,10 @@ describe("rename table", () => {
       expect(() => parseStmt("RENAME TABLE foo TO bar")).toThrowError();
     });
   });
+
+  dialect("postgresql", () => {
+    it("TODO:postgres", () => {
+      expect(true).toBe(true);
+    });
+  });
 });

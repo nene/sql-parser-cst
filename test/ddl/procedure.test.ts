@@ -109,4 +109,10 @@ describe("procedure", () => {
       expect(() => test("CREATE PROCEDURE foo() BEGIN SELECT 1; END")).toThrowError();
     });
   });
+
+  dialect("postgresql", () => {
+    it("TODO:postgres", () => {
+      expect(true).toBe(true);
+    });
+  });
 });

@@ -171,4 +171,10 @@ describe("BEGIN..END", () => {
       expect(() => parse("BEGIN SELECT 1; END")).toThrowError();
     });
   });
+
+  dialect("postgresql", () => {
+    it("TODO:postgres", () => {
+      expect(true).toBe(true);
+    });
+  });
 });

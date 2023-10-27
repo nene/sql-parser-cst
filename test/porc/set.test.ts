@@ -24,4 +24,10 @@ describe("SET", () => {
       expect(() => parse("SET x = 1")).toThrowError();
     });
   });
+
+  dialect("postgresql", () => {
+    it("TODO:postgres", () => {
+      expect(true).toBe(true);
+    });
+  });
 });

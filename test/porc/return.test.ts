@@ -18,4 +18,10 @@ describe("RETURN", () => {
       expect(() => parse("RETURN")).toThrowError();
     });
   });
+
+  dialect("postgresql", () => {
+    it("TODO:postgres", () => {
+      expect(true).toBe(true);
+    });
+  });
 });

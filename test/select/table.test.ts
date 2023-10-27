@@ -47,4 +47,10 @@ describe("table", () => {
       expect(() => parseStmt("TABLE foo")).toThrowError();
     });
   });
+
+  dialect("postgresql", () => {
+    it("TODO:postgres", () => {
+      expect(true).toBe(true);
+    });
+  });
 });

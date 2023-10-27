@@ -95,4 +95,10 @@ describe("variable", () => {
       expect(() => parseExpr("@@my_var")).toThrowError();
     });
   });
+
+  dialect("postgresql", () => {
+    it("TODO:postgres", () => {
+      expect(true).toBe(true);
+    });
+  });
 });

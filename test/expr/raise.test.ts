@@ -51,4 +51,10 @@ describe("raise function", () => {
       expect(parseExpr(`RAISE(FAIL, 'blah')`).type).toBe("func_call");
     });
   });
+
+  dialect("postgresql", () => {
+    it("TODO:postgres", () => {
+      expect(true).toBe(true);
+    });
+  });
 });

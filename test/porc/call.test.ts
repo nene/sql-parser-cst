@@ -12,4 +12,10 @@ describe("CALL", () => {
       expect(() => parse("CALL foo()")).toThrowError();
     });
   });
+
+  dialect("postgresql", () => {
+    it("TODO:postgres", () => {
+      expect(true).toBe(true);
+    });
+  });
 });

@@ -80,4 +80,10 @@ describe("table options", () => {
       testOptsWc(`CLUSTER BY col1, col2, col3`);
     });
   });
+
+  dialect("postgresql", () => {
+    it("TODO:postgres", () => {
+      expect(true).toBe(true);
+    });
+  });
 });

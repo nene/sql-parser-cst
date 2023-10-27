@@ -47,4 +47,10 @@ describe("select INTO", () => {
       expect(() => testWc("SELECT 1 INTO @varname")).toThrowError();
     });
   });
+
+  dialect("postgresql", () => {
+    it("TODO:postgres", () => {
+      expect(true).toBe(true);
+    });
+  });
 });

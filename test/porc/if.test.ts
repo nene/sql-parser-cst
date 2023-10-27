@@ -50,4 +50,10 @@ describe("IF", () => {
       expect(() => parse("IF true THEN SELECT 1; END IF")).toThrowError();
     });
   });
+
+  dialect("postgresql", () => {
+    it("TODO:postgres", () => {
+      expect(true).toBe(true);
+    });
+  });
 });

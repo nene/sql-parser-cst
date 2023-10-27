@@ -28,4 +28,10 @@ describe("DECLARE", () => {
       expect(() => parse("DECLARE x INT")).toThrowError();
     });
   });
+
+  dialect("postgresql", () => {
+    it("TODO:postgres", () => {
+      expect(true).toBe(true);
+    });
+  });
 });

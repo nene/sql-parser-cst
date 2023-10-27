@@ -108,4 +108,10 @@ describe("struct", () => {
       expect(parseExpr("STRUCT(1, 2, 3)").type).toBe("func_call");
     });
   });
+
+  dialect("postgresql", () => {
+    it("TODO:postgres", () => {
+      expect(true).toBe(true);
+    });
+  });
 });

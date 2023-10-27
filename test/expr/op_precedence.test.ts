@@ -213,4 +213,10 @@ describe("operator precedence", () => {
       expect(showPrecedence(`true OR false AND true`)).toBe(`(true OR (false AND true))`);
     });
   });
+
+  dialect("postgresql", () => {
+    it("TODO:postgres", () => {
+      expect(true).toBe(true);
+    });
+  });
 });

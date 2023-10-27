@@ -122,4 +122,10 @@ describe("function", () => {
       expect(() => test("CREATE FUNCTION foo() AS (1 + 2)")).toThrowError();
     });
   });
+
+  dialect("postgresql", () => {
+    it("TODO:postgres", () => {
+      expect(true).toBe(true);
+    });
+  });
 });

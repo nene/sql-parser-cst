@@ -34,4 +34,10 @@ describe("REPEAT", () => {
       expect(() => parse("REPEAT SELECT 1; UNTIL true END REPEAT")).toThrowError();
     });
   });
+
+  dialect("postgresql", () => {
+    it("TODO:postgres", () => {
+      expect(true).toBe(true);
+    });
+  });
 });

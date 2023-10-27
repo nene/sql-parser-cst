@@ -26,4 +26,10 @@ describe("GRANT", () => {
       expect(() => parse("GRANT `role` ON TABLE foo TO 'user:blah'")).toThrowError();
     });
   });
+
+  dialect("postgresql", () => {
+    it("TODO:postgres", () => {
+      expect(true).toBe(true);
+    });
+  });
 });

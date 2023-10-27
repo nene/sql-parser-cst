@@ -39,4 +39,10 @@ describe("explain", () => {
       expect(() => test("EXPLAIN SELECT * FROM foo")).toThrowError();
     });
   });
+
+  dialect("postgresql", () => {
+    it("TODO:postgres", () => {
+      expect(true).toBe(true);
+    });
+  });
 });
