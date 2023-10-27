@@ -68,4 +68,16 @@ describe("number literal", () => {
       `);
     });
   });
+
+  dialect("postgresql", () => {
+    it("parses 0o755 as octal number", () => {
+      expect(parseExpr(`0o755`)).toMatchInlineSnapshot(`
+        {
+          "text": "0o755",
+          "type": "number_literal",
+          "value": 493,
+        }
+      `);
+    });
+  });
 });

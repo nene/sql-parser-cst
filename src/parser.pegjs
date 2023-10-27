@@ -5038,6 +5038,7 @@ number_literal "number"
   = number_literal_decimal
   / n:number_literal_hex (&sqlite / &bigquery / &postgres) { return n; }
   / n:number_literal_bit &postgres { return n; }
+  / n:number_literal_oct &postgres { return n; }
 
 number_literal_hex
   = "0x" hex_digit+ {
@@ -5074,6 +5075,15 @@ blob_literal_bit
       type: "blob_literal",
       text: text(),
       value: parseBitBlob(chars.join("")),
+    });
+  }
+
+number_literal_oct
+  = "0o" chars:[0-7]+ {
+    return loc({
+      type: "number_literal",
+      text: text(),
+      value: parseInt(chars.join(""), 8),
     });
   }
 
