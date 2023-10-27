@@ -15,6 +15,12 @@ describe("identifier", () => {
     testExpr("_96");
   });
 
+  dialect(["postgresql"], () => {
+    it("supports $-character in identifiers", () => {
+      testExpr("foo$bar");
+    });
+  });
+
   dialect(["mysql", "mariadb", "sqlite"], () => {
     it("allows identifier name to start with number", () => {
       expect(parseIdent("18foo")).toMatchInlineSnapshot(`
