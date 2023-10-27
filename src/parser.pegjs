@@ -2293,6 +2293,13 @@ start_transaction_stmt
       transactionKw: read(tKw),
     });
   }
+  / &postgres kw:BEGIN tKw:(__ (TRANSACTION / WORK))? {
+    return loc({
+      type: "start_transaction_stmt",
+      startKw: kw,
+      transactionKw: read(tKw),
+    });
+  }
   / &mysql kw:BEGIN tKw:(__ WORK)? {
     return loc({
       type: "start_transaction_stmt",
@@ -2300,7 +2307,7 @@ start_transaction_stmt
       transactionKw: read(tKw),
     });
   }
-  / &mysql kw:START tKw:(__ TRANSACTION) {
+  / (&mysql / &postgres) kw:START tKw:(__ TRANSACTION) {
     return loc({
       type: "start_transaction_stmt",
       startKw: kw,
