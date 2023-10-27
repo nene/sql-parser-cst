@@ -27,6 +27,12 @@ describe("identifier", () => {
     });
   });
 
+  dialect(["mysql", "mariadb"], () => {
+    it("supports $-character at the start of an identifier", () => {
+      testExpr("$foo");
+    });
+  });
+
   dialect(["mysql", "mariadb", "sqlite"], () => {
     it("allows identifier name to start with number", () => {
       expect(parseIdent("18foo")).toMatchInlineSnapshot(`
