@@ -26,4 +26,10 @@ describe("REVOKE", () => {
       expect(() => parse("REVOKE `role` ON TABLE foo FROM 'user:blah'")).toThrowError();
     });
   });
+
+  dialect("postgresql", () => {
+    it("TODO:postgres", () => {
+      expect(true).toBe(true);
+    });
+  });
 });

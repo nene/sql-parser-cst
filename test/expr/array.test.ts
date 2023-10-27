@@ -84,4 +84,10 @@ describe("array", () => {
       expect(parseExpr("[1, 2, 3]").type).toBe("identifier");
     });
   });
+
+  dialect("postgresql", () => {
+    it("TODO:postgres", () => {
+      expect(true).toBe(true);
+    });
+  });
 });

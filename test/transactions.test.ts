@@ -3,7 +3,7 @@ import { dialect, testWc } from "./test_utils";
 describe("transactions", () => {
   describe("starting transaction", () => {
     // standard syntax
-    dialect(["mysql", "mariadb"], () => {
+    dialect(["mysql", "mariadb", "postgresql"], () => {
       it("supports START TRANSACTION", () => {
         testWc("START TRANSACTION");
       });
@@ -13,7 +13,7 @@ describe("transactions", () => {
       testWc("BEGIN");
     });
 
-    dialect(["sqlite", "bigquery"], () => {
+    dialect(["sqlite", "bigquery", "postgresql"], () => {
       it("supports BEGIN TRANSACTION", () => {
         testWc("BEGIN TRANSACTION");
       });
@@ -27,7 +27,7 @@ describe("transactions", () => {
       });
     });
 
-    dialect(["mysql", "mariadb"], () => {
+    dialect(["mysql", "mariadb", "postgresql"], () => {
       it("supports BEGIN WORK", () => {
         testWc("BEGIN WORK");
       });

@@ -113,4 +113,10 @@ describe("extract()", () => {
       expect(() => parseExpr("EXTRACT(DAY FROM col)")).toThrowError();
     });
   });
+
+  dialect("postgresql", () => {
+    it("TODO:postgres", () => {
+      expect(true).toBe(true);
+    });
+  });
 });

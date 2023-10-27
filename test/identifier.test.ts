@@ -64,7 +64,7 @@ describe("identifier", () => {
     });
   });
 
-  dialect("sqlite", () => {
+  dialect(["sqlite", "postgresql"], () => {
     it("supports double-quoted identifiers", () => {
       testExpr(`"some special name"`);
     });

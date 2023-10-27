@@ -98,4 +98,10 @@ describe("merge into", () => {
       expect(() => parse("MERGE foo USING bar ON x = y WHEN MATCHED THEN DELETE")).toThrowError();
     });
   });
+
+  dialect("postgresql", () => {
+    it("TODO:postgres", () => {
+      expect(true).toBe(true);
+    });
+  });
 });

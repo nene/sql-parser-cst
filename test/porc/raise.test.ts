@@ -16,4 +16,10 @@ describe("RAISE", () => {
       expect(() => parse("RAISE")).toThrowError();
     });
   });
+
+  dialect("postgresql", () => {
+    it("TODO:postgres", () => {
+      expect(true).toBe(true);
+    });
+  });
 });

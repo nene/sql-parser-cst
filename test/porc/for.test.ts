@@ -40,4 +40,10 @@ describe("FOR..IN", () => {
       expect(() => parse("FOR x IN (SELECT 1) DO SELECT x; END FOR")).toThrowError();
     });
   });
+
+  dialect("postgresql", () => {
+    it("TODO:postgres", () => {
+      expect(true).toBe(true);
+    });
+  });
 });

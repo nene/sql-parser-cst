@@ -42,4 +42,10 @@ describe("prepared statements", () => {
       expect(() => parse(`EXECUTE my_stmt`)).toThrowError();
     });
   });
+
+  dialect("postgresql", () => {
+    it("TODO:postgres", () => {
+      expect(true).toBe(true);
+    });
+  });
 });

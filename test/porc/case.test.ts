@@ -44,4 +44,10 @@ describe("CASE", () => {
       expect(() => parse("CASE foo WHEN 1 THEN SELECT 1; END CASE")).toThrowError();
     });
   });
+
+  dialect("postgresql", () => {
+    it("TODO:postgres", () => {
+      expect(true).toBe(true);
+    });
+  });
 });

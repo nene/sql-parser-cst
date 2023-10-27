@@ -124,4 +124,10 @@ describe("temporal intervals", () => {
       expect(() => testExpr(`INTERVAL 1 DAY`)).toThrowError();
     });
   });
+
+  dialect("postgresql", () => {
+    it("TODO:postgres", () => {
+      expect(true).toBe(true);
+    });
+  });
 });

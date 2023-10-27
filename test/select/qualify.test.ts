@@ -13,4 +13,10 @@ describe("select QUALIFY", () => {
       expect(true).toBeTruthy();
     });
   });
+
+  dialect("postgresql", () => {
+    it("TODO:postgres", () => {
+      expect(true).toBe(true);
+    });
+  });
 });

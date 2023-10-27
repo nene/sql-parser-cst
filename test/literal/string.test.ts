@@ -60,7 +60,7 @@ describe("string literal", () => {
       `);
     });
 
-    dialect(["mysql", "mariadb", "sqlite"], () => {
+    dialect(["mysql", "mariadb", "sqlite", "postgresql"], () => {
       it("supports repeated-quote escapes", () => {
         testExpr(`'hel''lo'`);
       });

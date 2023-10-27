@@ -28,4 +28,10 @@ describe("analyze", () => {
       expect(() => test("ANALYZE my_tbl")).toThrowError();
     });
   });
+
+  dialect("postgresql", () => {
+    it("TODO:postgres", () => {
+      expect(true).toBe(true);
+    });
+  });
 });

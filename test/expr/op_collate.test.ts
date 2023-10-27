@@ -71,4 +71,10 @@ describe("COLLATE operator", () => {
       expect(() => parseExpr(`BINARY 'foobar'`)).toThrowError();
     });
   });
+
+  dialect("postgresql", () => {
+    it("TODO:postgres", () => {
+      expect(true).toBe(true);
+    });
+  });
 });

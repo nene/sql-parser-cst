@@ -88,4 +88,10 @@ describe("index", () => {
       });
     });
   });
+
+  dialect("postgresql", () => {
+    it("TODO:postgres", () => {
+      expect(true).toBe(true);
+    });
+  });
 });

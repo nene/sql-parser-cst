@@ -34,6 +34,7 @@
     isMysql,
     isMariadb,
     isSqlite,
+    isPostgresql,
     hasParamType,
     isEnabledWhitespace,
   } from "./utils/parserState";
@@ -1114,7 +1115,7 @@ values_kw
   / kw:VALUE &mysql { return kw; }
 
 values_row
-  = &sqlite list:paren$list$expr { return list; }
+  = (&sqlite / &postgres) list:paren$list$expr { return list; }
   / &bigquery list:paren$list$expr_or_default { return list; }
   / &mysql list:(paren$list$expr_or_default / row_constructor) { return list; }
 
@@ -2292,6 +2293,13 @@ start_transaction_stmt
       transactionKw: read(tKw),
     });
   }
+  / &postgres kw:BEGIN tKw:(__ (TRANSACTION / WORK))? {
+    return loc({
+      type: "start_transaction_stmt",
+      startKw: kw,
+      transactionKw: read(tKw),
+    });
+  }
   / &mysql kw:BEGIN tKw:(__ WORK)? {
     return loc({
       type: "start_transaction_stmt",
@@ -2299,7 +2307,7 @@ start_transaction_stmt
       transactionKw: read(tKw),
     });
   }
-  / &mysql kw:START tKw:(__ TRANSACTION) {
+  / (&mysql / &postgres) kw:START tKw:(__ TRANSACTION) {
     return loc({
       type: "start_transaction_stmt",
       startKw: kw,
@@ -3539,7 +3547,7 @@ array_type_param
 type_name
   = &bigquery t:type_name_bigquery { return t; }
   / &mysql t:type_name_mysql { return t; }
-  / &sqlite t:type_name_sqlite { return t; }
+  / (&sqlite / &postgres) t:type_name_sqlite { return t; }
 
 type_name_bigquery
   = BOOL
@@ -4553,7 +4561,7 @@ quoted_ident
   = &sqlite ident:bracket_quoted_ident { return ident; }
   / (&sqlite / &mysql) ident:backticks_quoted_ident_qq { return ident; }
   / &bigquery ident:(bigquery_quoted_member_expr / backticks_quoted_ident_bs) { return ident; }
-  / &sqlite str:string_literal_double_quoted_qq { return loc(createIdentifier(str.text, str.value)); }
+  / (&sqlite / &postgres) str:string_literal_double_quoted_qq { return loc(createIdentifier(str.text, str.value)); }
 
 backticks_quoted_ident_qq
   = "`" chars:([^`] / escaped_backtick_qq)+ "`" { return loc(createIdentifier(text(), chars.join(""))); }
@@ -4722,7 +4730,7 @@ boolean_literal
 
 string_literal "string"
   = &mysql s:string_literal_mysql { return s; }
-  / (&sqlite / &bigquery) s:string_literal_plain { return s; }
+  / (&sqlite / &bigquery / &postgres) s:string_literal_plain { return s; }
 
 string_literal_mysql
   = string_literal_with_charset
@@ -4750,7 +4758,7 @@ string_literal_plain
     / string_literal_single_quoted_bs
     / string_literal_double_quoted_bs
     / string_literal_raw) { return s; }
-  / &sqlite s:string_literal_single_quoted_qq { return s; }
+  / (&sqlite / &postgres) s:string_literal_single_quoted_qq { return s; }
   / &mysql s:mysql_string_literal_chain { return s; }
 
 mysql_string_literal_chain
@@ -5018,7 +5026,7 @@ blob_literal_bit_string
 
 number_literal "number"
   = number_literal_decimal
-  / n:number_literal_hex (&sqlite / &bigquery) { return n; }
+  / n:number_literal_hex (&sqlite / &bigquery / &postgres) { return n; }
 
 number_literal_hex
   = "0x" hex_digit+ {
@@ -5134,6 +5142,7 @@ sqlite = &{ return isSqlite(); }
 mysql = &{ return isMysql() || isMariadb(); } // 99% of MariaDB and MySQL syntax is the same
 only_mysql = &{ return isMysql(); } // 99% of MariaDB and MySQL syntax is the same
 only_mariadb = &{ return isMariadb(); } // 99% of MariaDB and MySQL syntax is the same
+postgres = &{ return isPostgresql(); }
 
 /**
  * Note: To add keyword rules to the list below use the command:

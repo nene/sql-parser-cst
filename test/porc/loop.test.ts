@@ -32,4 +32,10 @@ describe("LOOP", () => {
       expect(() => parse("LOOP SELECT 1; END LOOP")).toThrowError();
     });
   });
+
+  dialect("postgresql", () => {
+    it("TODO:postgres", () => {
+      expect(true).toBe(true);
+    });
+  });
 });

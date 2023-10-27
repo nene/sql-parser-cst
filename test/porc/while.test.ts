@@ -33,4 +33,10 @@ describe("WHILE", () => {
       expect(() => parse("WHILE true DO SELECT 1; END WHILE")).toThrowError();
     });
   });
+
+  dialect("postgresql", () => {
+    it("TODO:postgres", () => {
+      expect(true).toBe(true);
+    });
+  });
 });

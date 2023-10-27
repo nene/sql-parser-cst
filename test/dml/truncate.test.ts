@@ -19,4 +19,10 @@ describe("truncate table", () => {
       expect(() => parse("TRUNCATE TABLE foo")).toThrowError();
     });
   });
+
+  dialect("postgresql", () => {
+    it("TODO:postgres", () => {
+      expect(true).toBe(true);
+    });
+  });
 });

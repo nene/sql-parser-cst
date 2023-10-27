@@ -79,4 +79,10 @@ describe("schema", () => {
       expect(() => test("DROP SCHEMA my_schema")).toThrowError();
     });
   });
+
+  dialect("postgresql", () => {
+    it("TODO:postgres", () => {
+      expect(true).toBe(true);
+    });
+  });
 });
