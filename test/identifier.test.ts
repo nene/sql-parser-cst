@@ -15,13 +15,13 @@ describe("identifier", () => {
     testExpr("_96");
   });
 
-  dialect(["postgresql"], () => {
+  dialect(["postgresql", "mysql", "mariadb"], () => {
     it("supports unicode letters in identifiers", () => {
       testExpr("õllevägilane");
     });
   });
 
-  dialect(["postgresql"], () => {
+  dialect(["postgresql", "mysql", "mariadb"], () => {
     it("supports $-character in identifiers", () => {
       testExpr("foo$bar");
     });

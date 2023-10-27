@@ -4610,11 +4610,11 @@ ident_name_basic
 
 ident_start
   = ascii_letter
-  / &postgres unicode_letter
+  / (&postgres / &mysql) unicode_letter
 
 ident_part
   = ascii_letter / digit
-  / &postgres (unicode_letter / digit / "$")
+  / (&postgres / &mysql) (unicode_letter / digit / "$")
 
 ascii_letter   = [A-Za-z_]
 
