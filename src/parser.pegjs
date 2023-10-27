@@ -34,6 +34,7 @@
     isMysql,
     isMariadb,
     isSqlite,
+    isPostgresql,
     hasParamType,
     isEnabledWhitespace,
   } from "./utils/parserState";
@@ -4553,7 +4554,7 @@ quoted_ident
   = &sqlite ident:bracket_quoted_ident { return ident; }
   / (&sqlite / &mysql) ident:backticks_quoted_ident_qq { return ident; }
   / &bigquery ident:(bigquery_quoted_member_expr / backticks_quoted_ident_bs) { return ident; }
-  / &sqlite str:string_literal_double_quoted_qq { return loc(createIdentifier(str.text, str.value)); }
+  / (&sqlite / &postgres) str:string_literal_double_quoted_qq { return loc(createIdentifier(str.text, str.value)); }
 
 backticks_quoted_ident_qq
   = "`" chars:([^`] / escaped_backtick_qq)+ "`" { return loc(createIdentifier(text(), chars.join(""))); }
