@@ -12,13 +12,16 @@ describe("bound parameters", () => {
       expect(() => test("SELECT * FROM foo WHERE x = :foo")).toThrowError();
     });
     // In MySQL @name syntax is used for variables
-    dialect(["bigquery", "sqlite"], () => {
+    dialect(["bigquery", "sqlite", "postgresql"], () => {
       it("no support for @name parameters", () => {
         expect(() => test("SELECT * FROM foo WHERE x = @foo")).toThrowError();
       });
     });
-    it("no support for $name parameters", () => {
-      expect(() => test("SELECT * FROM foo WHERE x = $foo")).toThrowError();
+    // In MySQL identifiers can begin with $
+    dialect(["bigquery", "sqlite", "postgresql"], () => {
+      it("no support for $name parameters", () => {
+        expect(() => test("SELECT * FROM foo WHERE x = $foo")).toThrowError();
+      });
     });
   });
 
