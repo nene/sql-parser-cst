@@ -74,6 +74,16 @@ describe("array", () => {
     });
   });
 
+  dialect("postgresql", () => {
+    it("supports ARRAY[]", () => {
+      testExprWc(`ARRAY ['a', 'b', 'c']`);
+    });
+
+    it("supports empty ARRAY[]", () => {
+      testExprWc(`ARRAY[]`);
+    });
+  });
+
   dialect(["mysql", "mariadb"], () => {
     it("does not support arrays", () => {
       expect(() => parseExpr("[1, 2, 3]")).toThrowError();
@@ -82,12 +92,6 @@ describe("array", () => {
   dialect("sqlite", () => {
     it("does not support arrays", () => {
       expect(parseExpr("[1, 2, 3]").type).toBe("identifier");
-    });
-  });
-
-  dialect("postgresql", () => {
-    it("TODO:postgres", () => {
-      expect(true).toBe(true);
     });
   });
 });
