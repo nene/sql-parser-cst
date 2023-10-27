@@ -4599,9 +4599,8 @@ escaped_bracket
 
 ident_name
   = &bigquery ident_name_bigquery { return text(); }
-  / &postgres ident_name_pg { return text(); }
-  / (&mysql / &sqlite) ident_name_basic { return text(); }
-  / (&mysql / &sqlite) digits ident_name_basic { return text(); }
+  / &postgres ident_name_basic { return text(); }
+  / (&mysql / &sqlite) digits? ident_name_basic { return text(); }
 
 ident_name_bigquery
   = ident_name_basic ("-" (ident_name_basic / digits))*
@@ -4609,15 +4608,17 @@ ident_name_bigquery
 ident_name_basic
   = ident_start ident_part*
 
-ident_start = [A-Za-z_]
+ident_start
+  = ascii_letter
+  / &postgres unicode_letter
 
-ident_part  = [A-Za-z0-9_]
+ident_part
+  = ascii_letter / digit
+  / &postgres (unicode_letter / digit / "$")
 
-ident_name_pg
-  = ident_start_pg ident_part_pg*
+ascii_letter   = [A-Za-z_]
 
-ident_start_pg = [A-Za-z_]
-ident_part_pg  = [A-Za-z0-9_$]
+unicode_letter = [A-Za-z_\u0080-\uFFFF]
 
 /**
  * ------------------------------------------------------------------------------------ *
@@ -5083,7 +5084,10 @@ exp
   = [eE] [+-]? digits
 
 digits
-  = [0-9]+ { return text(); }
+  = digit+ { return text(); }
+
+digit
+  = [0-9]
 
 hex_digit
   = [0-9a-fA-F]

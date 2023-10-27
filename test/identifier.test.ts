@@ -16,6 +16,12 @@ describe("identifier", () => {
   });
 
   dialect(["postgresql"], () => {
+    it("supports unicode letters in identifiers", () => {
+      testExpr("õllevägilane");
+    });
+  });
+
+  dialect(["postgresql"], () => {
     it("supports $-character in identifiers", () => {
       testExpr("foo$bar");
     });
