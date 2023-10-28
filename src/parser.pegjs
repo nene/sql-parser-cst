@@ -4771,6 +4771,7 @@ string_literal_plain
     / string_literal_raw) { return s; }
   / (&sqlite / &postgres) s:string_literal_single_quoted_qq { return s; }
   / &mysql s:mysql_string_literal_chain { return s; }
+  / &postgres s:string_literal_dollar_quoted { return s; }
 
 mysql_string_literal_chain
   = head:mysql_string_literal_plain tail:(__ mysql_string_literal_plain)* {
@@ -4938,6 +4939,15 @@ string_literal_raw_chars
   / '"""' cs:([^"] / double_quote_in_3quote)* '"""' { return cs; }
   / "'" cs:[^']* "'" { return cs; }
   / '"' cs:[^"]* '"' { return cs; }
+
+string_literal_dollar_quoted
+  = "$$" value:$(!"$$" .)* "$$" {
+    return loc({
+      type: "string_literal",
+      text: text(),
+      value: value,
+    });
+  }
 
 blob_literal_byte
   = "B"i str:(

@@ -256,4 +256,26 @@ describe("string literal", () => {
       testExpr(`n'hel\\'lo'`);
     });
   });
+
+  dialect("postgresql", () => {
+    it("dollar-quoted strings", () => {
+      expect(parseExpr(`$$my string$$`)).toMatchInlineSnapshot(`
+        {
+          "text": "$$my string$$",
+          "type": "string_literal",
+          "value": "my string",
+        }
+      `);
+    });
+
+    it.skip("tagged dollar-quoted strings", () => {
+      expect(parseExpr(`$foo$my $string$ in here$foo$`)).toMatchInlineSnapshot(`
+        {
+          "text": "$foo$my $string$ in here$foo$",
+          "type": "string_literal",
+          "value": "my $string$ in here",
+        }
+      `);
+    });
+  });
 });
