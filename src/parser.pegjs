@@ -4885,21 +4885,21 @@ backslash_escape
   / "\\f" &bigquery { return "\f"; }
   / "\\v" &bigquery { return "\v"; }
   / "\\a" &bigquery { return "\x07"; /* BELL, ASCII code 7 */ }
-  / "\\" oct:([0-7] [0-7] [0-7]) &bigquery {
+  / "\\" oct:$([0-7] [0-7] [0-7]) &bigquery {
     // 3-digit octal escape
-    return String.fromCodePoint(parseInt(oct.join(""), 8));
+    return String.fromCodePoint(parseInt(oct, 8));
   }
-  / "\\" "x"i hex:(hex_digit hex_digit) &bigquery {
+  / "\\" "x"i hex:$(hex_digit hex_digit) &bigquery {
     // 2-digit unicode escape
-    return String.fromCodePoint(parseInt(hex.join(""), 16));
+    return String.fromCodePoint(parseInt(hex, 16));
   }
-  / "\\" "u" hex:(hex_digit hex_digit hex_digit hex_digit) &bigquery {
+  / "\\" "u" hex:$(hex_digit hex_digit hex_digit hex_digit) &bigquery {
     // 4-digit unicode escape
-    return String.fromCodePoint(parseInt(hex.join(""), 16));
+    return String.fromCodePoint(parseInt(hex, 16));
   }
-  / "\\" "U" hex:(hex_digit hex_digit hex_digit hex_digit hex_digit hex_digit hex_digit hex_digit) &bigquery {
+  / "\\" "U" hex:$(hex_digit hex_digit hex_digit hex_digit hex_digit hex_digit hex_digit hex_digit) &bigquery {
     // 8-digit unicode escape
-    return String.fromCodePoint(parseInt(hex.join(""), 16));
+    return String.fromCodePoint(parseInt(hex, 16));
   }
   / "\\%" &mysql { return "\\%"; }
   / "\\_" &mysql { return "\\_"; }
@@ -4921,7 +4921,7 @@ string_literal_raw
     return loc({
       type: "string_literal",
       text: text(),
-      value: cs.join(""),
+      value: cs,
     });
   }
 
@@ -4930,15 +4930,15 @@ blob_literal_raw_byte
     return loc({
       type: "blob_literal",
       text: text(),
-      value: parseTextBlob(cs.join("")),
+      value: parseTextBlob(cs),
     });
   }
 
 string_literal_raw_chars
-  = "'''" cs:([^'] / single_quote_in_3quote)* "'''" { return cs; }
-  / '"""' cs:([^"] / double_quote_in_3quote)* '"""' { return cs; }
-  / "'" cs:[^']* "'" { return cs; }
-  / '"' cs:[^"]* '"' { return cs; }
+  = "'''" cs:$([^'] / single_quote_in_3quote)* "'''" { return cs; }
+  / '"""' cs:$([^"] / double_quote_in_3quote)* '"""' { return cs; }
+  / "'" cs:$[^']* "'" { return cs; }
+  / '"' cs:$[^"]* '"' { return cs; }
 
 string_literal_dollar_quoted
   = "$$" value:$(!"$$" .)* "$$" {
@@ -5040,20 +5040,20 @@ blob_literal
   / &bigquery n:blob_literal_byte { return n; }
 
 blob_literal_hex_string
-  = "X"i "'" chars:hex_digit* "'" {
+  = "X"i "'" chars:$hex_digit* "'" {
     return loc({
       type: "blob_literal",
       text: text(),
-      value: parseHexBlob(chars.join("")),
+      value: parseHexBlob(chars),
     });
   }
 
 blob_literal_bit_string
-  = "b"i "'" chars:[01]* "'" {
+  = "b"i "'" chars:$[01]* "'" {
     return loc({
       type: "blob_literal",
       text: text(),
-      value: parseBitBlob(chars.join("")),
+      value: parseBitBlob(chars),
     });
   }
 
@@ -5074,39 +5074,39 @@ number_literal_hex
 
 // The exact same syntax as above, but treated as blob
 blob_literal_hex
-  = "0x" chars:hex_digit+ {
+  = "0x" chars:$hex_digit+ {
     return loc({
       type: "blob_literal",
       text: text(),
-      value: parseHexBlob(chars.join("")),
+      value: parseHexBlob(chars),
     });
   }
 
 number_literal_bit
-  = "0b" chars:[01]+ {
+  = "0b" chars:$[01]+ {
     return loc({
       type: "number_literal",
       text: text(),
-      value: parseInt(chars.join(""), 2),
+      value: parseInt(chars, 2),
     });
   }
 
 // The exact same syntax as above, but treated as blob
 blob_literal_bit
-  = "0b" chars:[01]+ {
+  = "0b" chars:$[01]+ {
     return loc({
       type: "blob_literal",
       text: text(),
-      value: parseBitBlob(chars.join("")),
+      value: parseBitBlob(chars),
     });
   }
 
 number_literal_oct
-  = "0o" chars:[0-7]+ {
+  = "0o" chars:$[0-7]+ {
     return loc({
       type: "number_literal",
       text: text(),
-      value: parseInt(chars.join(""), 8),
+      value: parseInt(chars, 8),
     });
   }
 
