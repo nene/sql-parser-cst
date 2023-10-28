@@ -18,15 +18,15 @@ describe("operators", () => {
 
   dialect(["mysql", "mariadb", "sqlite"], () => {
     it("requires space around keyword operators", () => {
-      // this does not get parsed as DIV expression
-      expect(parseExpr(`8DIV4`).type).toBe("identifier");
+      // this does not get parsed as AND expression
+      expect(parseExpr(`8AND4`).type).toBe("identifier");
     });
   });
 
-  dialect(["bigquery"], () => {
+  dialect(["bigquery", "postgresql"], () => {
     it("requires space around keyword operators", () => {
-      // In BigQuery identifiers can't start with number (as in above test)
-      expect(() => parseExpr(`8DIV4`)).toThrowError();
+      // In BigQuery & PostgreSQL identifiers can't start with number (as in above test)
+      expect(() => parseExpr(`8AND4`)).toThrowError();
     });
   });
 });
