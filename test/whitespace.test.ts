@@ -1,4 +1,4 @@
-import { parse, parseExpr, show, test } from "./test_utils";
+import { dialect, parse, parseExpr, show, test } from "./test_utils";
 
 describe("whitespace", () => {
   it("by default does not include any whitespace to syntax tree", () => {
@@ -185,6 +185,12 @@ describe("whitespace", () => {
 
     it("parses block comments", () => {
       test("SELECT 1 + /* comment 1 */ /* comment 2 */ 2");
+    });
+
+    dialect("postgresql", () => {
+      it("parses nested block-comments", () => {
+        test("SELECT 1 + /* com1 /*com2*/ com3 */ 2");
+      });
     });
 
     it("discards comments when includeComments option is not set", () => {

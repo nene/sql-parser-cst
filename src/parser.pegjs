@@ -5125,12 +5125,21 @@ __ "whitespace"
 
 // Comments
 comment
-  = block_comment
-  / line_comment
+  = line_comment
   / pound_sign_comment
+  / !postgres x:block_comment { return x; }
+  / &postgres x:nested_block_comment { return x; }
 
 block_comment
   = "/*" (!"*/" .)* "*/" {
+    return loc({
+      type: "block_comment",
+      text: text(),
+    });
+  }
+
+nested_block_comment
+  = "/*" (nested_block_comment / !"*/" .)* "*/" {
     return loc({
       type: "block_comment",
       text: text(),
