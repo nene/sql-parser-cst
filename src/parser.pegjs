@@ -4948,6 +4948,18 @@ string_literal_dollar_quoted
       value: value,
     });
   }
+  / "$" x:tag "$"
+    value:$(!("$" y:tag "$" &{ return x === y; }) .)*
+    "$" z:tag "$" &{ return x === z; } {
+      return loc({
+        type: "string_literal",
+        text: text(),
+        value: value,
+      });
+    }
+
+// Like PostgreSQL identifier, but cannot contain $-chars
+tag = unicode_letter (unicode_letter / digit)* { return text(); }
 
 blob_literal_byte
   = "B"i str:(

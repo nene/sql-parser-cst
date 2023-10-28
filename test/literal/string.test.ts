@@ -268,12 +268,12 @@ describe("string literal", () => {
       `);
     });
 
-    it.skip("tagged dollar-quoted strings", () => {
-      expect(parseExpr(`$foo$my $string$ in here$foo$`)).toMatchInlineSnapshot(`
+    it("tagged dollar-quoted strings", () => {
+      expect(parseExpr(`$foo$my $string$ in $ here$foo$`)).toMatchInlineSnapshot(`
         {
-          "text": "$foo$my $string$ in here$foo$",
+          "text": "$foo$my $string$ in $ here$foo$",
           "type": "string_literal",
-          "value": "my $string$ in here",
+          "value": "my $string$ in $ here",
         }
       `);
     });
