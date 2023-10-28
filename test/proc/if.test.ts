@@ -52,7 +52,7 @@ describe("IF", () => {
   });
 
   dialect("postgresql", () => {
-    it("TODO:postgres", () => {
+    it.skip("TODO:postgres", () => {
       expect(true).toBe(true);
     });
   });
