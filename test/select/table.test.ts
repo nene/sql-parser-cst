@@ -6,8 +6,18 @@ describe("table", () => {
       testWc("TABLE my_tbl");
     });
 
+    it("supports WITH ... TABLE", () => {
+      testWc("WITH p AS (TABLE person) TABLE p");
+    });
+
     it("supports ORDER BY & LIMIT clauses", () => {
       testWc("TABLE my_tbl ORDER BY col1 LIMIT 8");
+    });
+
+    dialect("postgresql", () => {
+      it("supports OFFSET & FETCH clauses", () => {
+        testWc("TABLE my_tbl OFFSET 100 FETCH FIRST 25 ROWS ONLY");
+      });
     });
 
     it("supports UNION of TABLE statements", () => {

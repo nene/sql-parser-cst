@@ -153,20 +153,11 @@ select_stmt
         clauses: [read(cte), read(select), ...otherClauses.map(read)].filter(identity),
       });
   }
-  / (&mysql / &postgres) cls:table_clause orderCls:(__ order_by_clause)? limitCls:(__ limit_clause)? {
-    return loc({
-      type: "select_stmt",
-      clauses: [
-        cls,
-        read(orderCls),
-        read(limitCls),
-      ].filter(identity),
-    });
-  }
 
 select_main_clause
   = select_clause
   / v:values_clause !bigquery { return v; }
+  / t:table_clause (&mysql / &postgres) { return t; }
 
 table_clause
   = kw:(TABLE __) table:ident {
