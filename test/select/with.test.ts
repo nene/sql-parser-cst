@@ -17,7 +17,7 @@ describe("select WITH", () => {
     testWc("WITH t1 AS (SELECT 1), t2 AS (SELECT 2) SELECT t1.name");
   });
 
-  dialect("sqlite", () => {
+  dialect(["sqlite", "postgresql"], () => {
     it("supports MATERIALIZED & NOT MATERIALIZED options", () => {
       testWc("WITH t1 AS MATERIALIZED (SELECT 1) SELECT t1.name");
       testWc("WITH t1 AS NOT MATERIALIZED (SELECT 1) SELECT t1.name");
