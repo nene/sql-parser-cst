@@ -88,7 +88,7 @@ describe("insert into", () => {
     });
   });
 
-  dialect("sqlite", () => {
+  dialect(["sqlite", "postgresql"], () => {
     it("supports WITH ... INSERT ...", () => {
       testWc("WITH subsel AS (SELECT 1) INSERT INTO tbl VALUES (1)");
     });

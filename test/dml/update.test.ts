@@ -64,7 +64,7 @@ describe("update", () => {
     });
   });
 
-  dialect("sqlite", () => {
+  dialect(["sqlite", "postgresql"], () => {
     it("supports WITH ... UPDATE ...", () => {
       testWc("WITH subsel AS (SELECT 1) UPDATE tbl SET col1 = 2");
       testWc("WITH subsel AS (SELECT 1) /*c*/ UPDATE tbl SET col1 = 2");

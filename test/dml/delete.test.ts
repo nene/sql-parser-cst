@@ -35,7 +35,7 @@ describe("delete from", () => {
     });
   });
 
-  dialect(["sqlite", "mysql"], () => {
+  dialect(["sqlite", "mysql", "postgresql"], () => {
     it("supports WITH ... DELETE FROM ..", () => {
       testWc("WITH subsel AS (SELECT 1) DELETE FROM tbl");
     });
