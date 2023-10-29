@@ -4896,6 +4896,10 @@ backslash_escape
   / "\\f" (&bigquery / &postgres) { return "\f"; }
   / "\\v" &bigquery { return "\v"; }
   / "\\a" &bigquery { return "\x07"; /* BELL, ASCII code 7 */ }
+  / "\\" oct:$([0-7][0-7][0-7] / [0-7][0-7] / [0-7]) &postgres {
+    // 1..3-digit octal escape
+    return String.fromCodePoint(parseInt(oct, 8));
+  }
   / "\\" oct:$([0-7] [0-7] [0-7]) &bigquery {
     // 3-digit octal escape
     return String.fromCodePoint(parseInt(oct, 8));

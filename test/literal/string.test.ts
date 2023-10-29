@@ -52,6 +52,10 @@ const bigqueryBackslashEscaping: StringTest[] = [
 const postgresqlBackslashEscaping: StringTest[] = [
   ...stdBackslashEscaping,
   { text: String.raw`\f`, value: `\f`, visible: "<FORM FEED>" },
+  // Octal escapes
+  { text: String.raw`\7`, value: "\x07", visible: "<BELL>" },
+  { text: String.raw`\61\62\63`, value: "123" },
+  { text: String.raw`\101\105`, value: "AE" },
 ];
 
 describe("string literal", () => {
