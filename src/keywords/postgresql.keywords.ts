@@ -52,6 +52,7 @@ export const postgresqlKeywords: Record<string, boolean> = {
   EXISTS: true,
   EXPLAIN: true,
   FAIL: true,
+  FETCH: true,
   FILTER: true,
   FIRST: true,
   FOLLOWING: true,

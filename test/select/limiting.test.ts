@@ -26,7 +26,7 @@ describe("select limiting", () => {
     });
   });
 
-  dialect("mariadb", () => {
+  dialect(["mariadb", "postgresql"], () => {
     describe("OFFSET and FETCH clauses", () => {
       it("supports OFFSET", () => {
         testClauseWc(`OFFSET 10 ROWS`);

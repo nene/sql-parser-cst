@@ -222,8 +222,8 @@ other_clause
   / limit_clause
   / window_clause
   / &bigquery x:qualify_clause { return x; }
-  / &only_mariadb x:offset_clause { return x; }
-  / &only_mariadb x:fetch_clause { return x; }
+  / (&postgres / &only_mariadb) x:offset_clause { return x; }
+  / (&postgres / &only_mariadb) x:fetch_clause { return x; }
   / &mysql x:into_clause { return x; }
 
 /**
