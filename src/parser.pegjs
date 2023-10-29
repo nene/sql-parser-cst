@@ -4772,6 +4772,7 @@ string_literal_plain
   / (&sqlite / &postgres) s:string_literal_single_quoted_qq { return s; }
   / &mysql s:mysql_string_literal_chain { return s; }
   / &postgres s:string_literal_dollar_quoted { return s; }
+  / &postgres s:string_literal_e_single_quoted_bs { return s; }
 
 mysql_string_literal_chain
   = head:mysql_string_literal_plain tail:(__ mysql_string_literal_plain)* {
@@ -4799,6 +4800,16 @@ string_literal_single_quoted_qq_bs // with repeated quote or backslash for escap
       type: "string_literal",
       text: text(),
       value: chars.join(""),
+    });
+  }
+
+// Postgres string with C-style escapes
+string_literal_e_single_quoted_bs
+  = "E" str:string_literal_single_quoted_bs {
+    return loc({
+      type: "string_literal",
+      text: text(),
+      value: str.value
     });
   }
 
@@ -4882,7 +4893,7 @@ backslash_escape
   / "\\r" { return "\r"; }
   / "\\t" { return "\t"; }
   / "\\b" { return "\b"; }
-  / "\\f" &bigquery { return "\f"; }
+  / "\\f" (&bigquery / &postgres) { return "\f"; }
   / "\\v" &bigquery { return "\v"; }
   / "\\a" &bigquery { return "\x07"; /* BELL, ASCII code 7 */ }
   / "\\" oct:$([0-7] [0-7] [0-7]) &bigquery {

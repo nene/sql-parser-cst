@@ -1,11 +1,12 @@
 import { dialect, parseExpr, testExpr } from "../test_utils";
 
 type StringTest = { text: string; value: string; visible?: string };
-type Quote = '"' | "'" | '"""' | "'''";
+type Quote = '"' | "'" | '"""' | "'''" | "E'";
 
-function testStringEscaping(q: Quote, tests: StringTest[]) {
+function testStringEscaping(q: Quote | [Quote, Quote], tests: StringTest[]) {
   tests.forEach(({ text, value, visible }) => {
-    const quotedText = q + text + q;
+    const [q1, q2] = q instanceof Array ? q : [q, q];
+    const quotedText = q1 + text + q2;
     it(`${quotedText} evaluates to: ${visible || value}`, () => {
       expect(parseExpr(quotedText)).toEqual({
         type: "string_literal",
@@ -46,6 +47,11 @@ const bigqueryBackslashEscaping: StringTest[] = [
   { text: String.raw`\x41\X45`, value: "AE" },
   { text: String.raw`\u03B1\u03b2\u03B3`, value: "αβγ" },
   { text: String.raw`\U00000041\U0001F600`, value: "A😀" },
+];
+
+const postgresqlBackslashEscaping: StringTest[] = [
+  ...stdBackslashEscaping,
+  { text: String.raw`\f`, value: `\f`, visible: "<FORM FEED>" },
 ];
 
 describe("string literal", () => {
@@ -277,5 +283,20 @@ describe("string literal", () => {
         }
       `);
     });
+  });
+
+  dialect("postgresql", () => {
+    it("single-quoted string with C-style escapes", () => {
+      expect(parseExpr(`E'my\\nstring'`)).toMatchInlineSnapshot(`
+        {
+          "text": "E'my\\nstring'",
+          "type": "string_literal",
+          "value": "my
+        string",
+        }
+      `);
+    });
+
+    testStringEscaping(["E'", "'"], postgresqlBackslashEscaping);
   });
 });
