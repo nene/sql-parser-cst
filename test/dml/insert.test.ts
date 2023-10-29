@@ -56,7 +56,7 @@ describe("insert into", () => {
     });
   });
 
-  dialect(["mysql", "mariadb", "bigquery"], () => {
+  dialect(["mysql", "mariadb", "bigquery", "postgresql"], () => {
     it("supports explicit default values for columns", () => {
       testWc("INSERT INTO tbl VALUES (1, DEFAULT, 3)");
     });

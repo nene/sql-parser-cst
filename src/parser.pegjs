@@ -1115,8 +1115,8 @@ values_kw
   / kw:VALUE &mysql { return kw; }
 
 values_row
-  = (&sqlite / &postgres) list:paren$list$expr { return list; }
-  / &bigquery list:paren$list$expr_or_default { return list; }
+  = &sqlite list:paren$list$expr { return list; }
+  / (&bigquery / &postgres) list:paren$list$expr_or_default { return list; }
   / &mysql list:(paren$list$expr_or_default / row_constructor) { return list; }
 
 row_constructor
