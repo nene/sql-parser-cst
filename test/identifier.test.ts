@@ -200,4 +200,20 @@ describe("identifier", () => {
       `);
     });
   });
+
+  dialect("postgresql", () => {
+    it("parses unicode identifier", () => {
+      expect(parseExpr(`U&"d\\0061t\\+000061"`)).toMatchInlineSnapshot(`
+        {
+          "name": "data",
+          "text": "U&"d\\0061t\\+000061"",
+          "type": "identifier",
+        }
+      `);
+    });
+
+    it(`supports ""-escaping in unicode identifer`, () => {
+      testExpr(`U&"my "" why"`);
+    });
+  });
 });

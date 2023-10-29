@@ -4554,16 +4554,17 @@ alias_ident
   }
 
 ident "identifier"
-  = name:ident_name !{ return isReservedKeyword(name); } {
+  = quoted_ident
+  / name:ident_name !{ return isReservedKeyword(name); } {
     return loc(createIdentifier(name, name));
   }
-  / quoted_ident
 
 quoted_ident
   = &sqlite ident:bracket_quoted_ident { return ident; }
   / (&sqlite / &mysql) ident:backticks_quoted_ident_qq { return ident; }
   / &bigquery ident:(bigquery_quoted_member_expr / backticks_quoted_ident_bs) { return ident; }
   / (&sqlite / &postgres) str:string_literal_double_quoted_qq { return loc(createIdentifier(str.text, str.value)); }
+  / &postgres str:string_literal_unicode_double_quoted_qq { return loc(createIdentifier(str.text, str.value)); }
 
 backticks_quoted_ident_qq
   = "`" chars:([^`] / escaped_backtick_qq)+ "`" { return loc(createIdentifier(text(), chars.join(""))); }
@@ -4819,6 +4820,15 @@ string_literal_e_single_quoted_bs
 
 string_literal_unicode_single_quoted_qq
   = "U&" str:string_literal_single_quoted_qq {
+    return loc({
+      type: "string_literal",
+      text: text(),
+      value: parseUnicodeEscapes(str.value),
+    });
+  }
+
+string_literal_unicode_double_quoted_qq
+  = "U&" str:string_literal_double_quoted_qq {
     return loc({
       type: "string_literal",
       text: text(),
