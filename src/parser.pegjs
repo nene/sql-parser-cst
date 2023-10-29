@@ -4904,8 +4904,12 @@ backslash_escape
     // 3-digit octal escape
     return String.fromCodePoint(parseInt(oct, 8));
   }
+  / "\\" "x" hex:$(hex_digit hex_digit / hex_digit) &postgres {
+    // 1..2-digit hex escape
+    return String.fromCodePoint(parseInt(hex, 16));
+  }
   / "\\" "x"i hex:$(hex_digit hex_digit) &bigquery {
-    // 2-digit unicode escape
+    // 2-digit hex escape
     return String.fromCodePoint(parseInt(hex, 16));
   }
   / "\\" "u" hex:$(hex_digit hex_digit hex_digit hex_digit) &bigquery {
