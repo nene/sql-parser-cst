@@ -51,7 +51,7 @@ describe("parse()", () => {
       parse("INSERT TODAYS PUZZLE 123;", { dialect: "sqlite", filename: "prod-database.sql" })
     ).toThrowErrorMatchingInlineSnapshot(`
       "Syntax Error: Unexpected "PUZZLE"
-      Was expecting to see: "(", ".", "AS", "DEFAULT", "SELECT", "VALUE", "VALUES", or "WITH"
+      Was expecting to see: "(", ".", "AS", "DEFAULT", "SELECT", "TABLE", "VALUE", "VALUES", or "WITH"
       --> prod-database.sql:1:15
         |
       1 | INSERT TODAYS PUZZLE 123;
