@@ -286,7 +286,7 @@ The builtin `show()` function is implemented as such a transform.
 ### xKeywords: Record\<string, boolean>
 
 Additionally the parser exports lists of **reserved keywords** for each supported SQL dialect:
-`sqliteKeywords`, `bigqueryKeywords`, `mysqlKeywords`, `mariadbKeywords`.
+`sqliteKeywords`, `bigqueryKeywords`, `mysqlKeywords`, `mariadbKeywords`, `postgresqlKeywords`.
 These are simple JavaScript objects, useful for doing lookups:
 
 ```js
