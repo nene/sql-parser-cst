@@ -32,6 +32,10 @@ describe("blob literal", () => {
         }
       `);
     });
+
+    it("parses uppercase X'FF' blob", () => {
+      testExpr(`X'FF'`);
+    });
   });
 
   dialect(["mysql", "mariadb"], () => {
