@@ -309,4 +309,26 @@ describe("string literal", () => {
 
     testStringEscaping(["E'", "'"], postgresqlBackslashEscaping);
   });
+
+  dialect("postgresql", () => {
+    it("string with unicode escapes", () => {
+      expect(parseExpr(`U&'d\\0061t\\+000061'`)).toMatchInlineSnapshot(`
+        {
+          "text": "U&'d\\0061t\\+000061'",
+          "type": "string_literal",
+          "value": "data",
+        }
+      `);
+    });
+
+    it("string with unicode escapes supports double-quote escaping", () => {
+      expect(parseExpr(`U&'my '' why'`)).toMatchInlineSnapshot(`
+        {
+          "text": "U&'my '' why'",
+          "type": "string_literal",
+          "value": "my ' why",
+        }
+      `);
+    });
+  });
 });
