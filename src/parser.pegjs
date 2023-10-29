@@ -714,7 +714,7 @@ sort_specification
   }
 
 sort_specification_nulls
-  = kws:(NULLS __ (FIRST / LAST)) &sqlite {
+  = kws:(NULLS __ (FIRST / LAST)) (&sqlite / &postgres) {
     return read(kws);
   }
 

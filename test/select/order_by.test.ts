@@ -15,7 +15,7 @@ describe("select ORDER BY", () => {
     });
   });
 
-  dialect("sqlite", () => {
+  dialect(["sqlite", "postgresql"], () => {
     it("supports null handling specifiers", () => {
       testClauseWc("ORDER BY name NULLS FIRST");
       testClauseWc("ORDER BY name DESC NULLS FIRST");
