@@ -30,7 +30,7 @@ describe("insert into", () => {
     });
   });
 
-  dialect("sqlite", () => {
+  dialect(["sqlite", "postgresql"], () => {
     it("supports INSERT with aliased table", () => {
       testWc("INSERT INTO tbl AS t VALUES (1, 2, 3)");
     });
