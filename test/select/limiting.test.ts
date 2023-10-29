@@ -6,8 +6,10 @@ describe("select limiting", () => {
       testClauseWc("LIMIT 25");
     });
 
-    it("parses LIMIT offset,count clause", () => {
-      testClauseWc("LIMIT 100, 25");
+    dialect(["bigquery", "sqlite", "mysql", "mariadb"], () => {
+      it("parses LIMIT offset,count clause", () => {
+        testClauseWc("LIMIT 100, 25");
+      });
     });
 
     it("parses LIMIT..OFFSET clause", () => {

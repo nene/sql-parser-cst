@@ -734,7 +734,7 @@ limit_clause
       rowsExamined: read(ex),
     });
   }
-  / kw:LIMIT offset:(__ expr __) "," count:(__ expr) ex:(__ limit_rows_examined)? {
+  / kw:LIMIT offset:(__ expr __) "," count:(__ expr) ex:(__ limit_rows_examined)? (&sqlite / &mysql / &bigquery) {
     return loc({
       type: "limit_clause",
       limitKw: kw,
