@@ -130,7 +130,7 @@ describe("blob literal", () => {
     });
   });
 
-  dialect(["mysql", "mariadb"], () => {
+  dialect(["mysql", "mariadb", "postgresql"], () => {
     describe("bit literal string", () => {
       it("parses as blob", () => {
         testExpr(`b'01010111'`);

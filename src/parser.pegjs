@@ -5052,7 +5052,7 @@ bignumeric_literal
 
 blob_literal
   = blob_literal_hex_string
-  / &mysql n:blob_literal_bit_string { return n; }
+  / (&mysql / &postgres) n:blob_literal_bit_string { return n; }
   / &mysql n:blob_literal_hex { return n; }
   / &mysql n:blob_literal_bit { return n; }
   / &bigquery n:blob_literal_raw_byte { return n; }
