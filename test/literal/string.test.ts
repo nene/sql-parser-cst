@@ -59,6 +59,9 @@ const postgresqlBackslashEscaping: StringTest[] = [
   // Hex escapes
   { text: `\\xA`, value: "\n", visible: "<NEWliNE>" },
   { text: String.raw`\x41\x45`, value: "AE" },
+  // Unicode escapes
+  { text: String.raw`\u03B1\u03b2\u03B3`, value: "αβγ" },
+  { text: String.raw`\U00000041\U0001F600`, value: "A😀" },
 ];
 
 describe("string literal", () => {

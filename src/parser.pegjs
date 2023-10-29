@@ -4912,11 +4912,11 @@ backslash_escape
     // 2-digit hex escape
     return String.fromCodePoint(parseInt(hex, 16));
   }
-  / "\\" "u" hex:$(hex_digit hex_digit hex_digit hex_digit) &bigquery {
+  / "\\" "u" hex:$(hex_digit hex_digit hex_digit hex_digit) (&bigquery / &postgres) {
     // 4-digit unicode escape
     return String.fromCodePoint(parseInt(hex, 16));
   }
-  / "\\" "U" hex:$(hex_digit hex_digit hex_digit hex_digit hex_digit hex_digit hex_digit hex_digit) &bigquery {
+  / "\\" "U" hex:$(hex_digit hex_digit hex_digit hex_digit hex_digit hex_digit hex_digit hex_digit) (&bigquery / &postgres) {
     // 8-digit unicode escape
     return String.fromCodePoint(parseInt(hex, 16));
   }
