@@ -166,7 +166,4 @@ export const postgresqlKeywords: Record<string, boolean> = {
 
   // TODO: Temporarily including these actually non-reserved words
   SET: true,
-  PARTITION: true,
-  ROWS: true,
-  RANGE: true,
 };

@@ -813,7 +813,7 @@ named_window
   }
 
 window_definition
-  = name:ident?
+  = name:window_name?
     partitionBy:(__ partition_by_clause)?
     orderBy:(__ order_by_clause)?
     frame:(__ frame_clause)? {
@@ -825,6 +825,13 @@ window_definition
         frame: read(frame),
       });
     }
+
+// In Postgres PARTITION, ROWS and RANGE are not reserved keywords,
+// so we have to do an extra check to ensure that they aren't used as a window name.
+window_name
+  = id:ident !{ return ["PARTITION", "ROWS", "RANGE"].includes(id.name.toUpperCase()); } {
+    return id;
+  }
 
 frame_clause
   = kw:frame_unit extent:(__ (frame_bound / frame_between))
