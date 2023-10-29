@@ -1,7 +1,7 @@
 import { dialect, parseStmt, testWc } from "../test_utils";
 
 describe("table", () => {
-  dialect(["mysql", "mariadb"], () => {
+  dialect(["mysql", "mariadb", "postgresql"], () => {
     it("supports TABLE statement", () => {
       testWc("TABLE my_tbl");
     });
@@ -45,12 +45,6 @@ describe("table", () => {
   dialect(["sqlite", "bigquery"], () => {
     it("does not support TABLE statement", () => {
       expect(() => parseStmt("TABLE foo")).toThrowError();
-    });
-  });
-
-  dialect("postgresql", () => {
-    it.skip("TODO:postgres", () => {
-      expect(true).toBe(true);
     });
   });
 });

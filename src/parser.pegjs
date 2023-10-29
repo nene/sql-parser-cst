@@ -153,7 +153,7 @@ select_stmt
         clauses: [read(cte), read(select), ...otherClauses.map(read)].filter(identity),
       });
   }
-  / &mysql cls:table_clause orderCls:(__ order_by_clause)? limitCls:(__ limit_clause)? {
+  / (&mysql / &postgres) cls:table_clause orderCls:(__ order_by_clause)? limitCls:(__ limit_clause)? {
     return loc({
       type: "select_stmt",
       clauses: [
