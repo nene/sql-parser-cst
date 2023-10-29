@@ -4770,11 +4770,13 @@ string_literal_plain
     / string_literal_single_quoted_bs
     / string_literal_double_quoted_bs
     / string_literal_raw) { return s; }
-  / (&sqlite / &postgres) s:string_literal_single_quoted_qq { return s; }
+  / &sqlite s:string_literal_single_quoted_qq { return s; }
   / &mysql s:mysql_string_literal_chain { return s; }
-  / &postgres s:string_literal_dollar_quoted { return s; }
-  / &postgres s:string_literal_e_single_quoted_bs { return s; }
-  / &postgres s:string_literal_unicode_single_quoted_qq { return s; }
+  / &postgres s:(
+      string_literal_single_quoted_qq
+    / string_literal_dollar_quoted
+    / string_literal_e_single_quoted_bs
+    / string_literal_unicode_single_quoted_qq) { return s; }
 
 mysql_string_literal_chain
   = head:mysql_string_literal_plain tail:(__ mysql_string_literal_plain)* {
