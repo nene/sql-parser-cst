@@ -47,11 +47,18 @@ describe("select", () => {
     testWc("SELECT 1 as bar, 2 baz");
   });
 
-  it("supports string as column alias", () => {
-    test(`SELECT col AS 'foo'`);
-    test(`SELECT col AS "foo"`);
-    test(`SELECT col 'foo'`);
-    test(`SELECT col "foo"`);
+  dialect(["bigquery", "sqlite", "mysql", "mariadb"], () => {
+    it("supports string as column alias", () => {
+      test(`SELECT col AS 'foo'`);
+      test(`SELECT col AS "foo"`);
+      test(`SELECT col 'foo'`);
+      test(`SELECT col "foo"`);
+    });
+  });
+  dialect(["postgresql"], () => {
+    it("does not support string as column alias", () => {
+      expect(() => test(`SELECT col AS 'foo'`)).toThrowError();
+    });
   });
 
   it("supports SELECT *", () => {
@@ -232,43 +239,45 @@ describe("select", () => {
       `);
     });
 
-    it("parses string alias as identifier", () => {
-      expect(parseStmt(`SELECT col 'foo'`)).toMatchInlineSnapshot(`
-        {
-          "clauses": [
-            {
-              "asStructOrValueKw": undefined,
-              "columns": {
-                "items": [
-                  {
-                    "alias": {
-                      "name": "foo",
-                      "text": "'foo'",
-                      "type": "identifier",
+    dialect(["bigquery", "sqlite", "mysql", "mariadb"], () => {
+      it("parses string alias as identifier", () => {
+        expect(parseStmt(`SELECT col 'foo'`)).toMatchInlineSnapshot(`
+          {
+            "clauses": [
+              {
+                "asStructOrValueKw": undefined,
+                "columns": {
+                  "items": [
+                    {
+                      "alias": {
+                        "name": "foo",
+                        "text": "'foo'",
+                        "type": "identifier",
+                      },
+                      "expr": {
+                        "name": "col",
+                        "text": "col",
+                        "type": "identifier",
+                      },
+                      "type": "alias",
                     },
-                    "expr": {
-                      "name": "col",
-                      "text": "col",
-                      "type": "identifier",
-                    },
-                    "type": "alias",
-                  },
-                ],
-                "type": "list_expr",
+                  ],
+                  "type": "list_expr",
+                },
+                "distinctKw": undefined,
+                "hints": [],
+                "selectKw": {
+                  "name": "SELECT",
+                  "text": "SELECT",
+                  "type": "keyword",
+                },
+                "type": "select_clause",
               },
-              "distinctKw": undefined,
-              "hints": [],
-              "selectKw": {
-                "name": "SELECT",
-                "text": "SELECT",
-                "type": "keyword",
-              },
-              "type": "select_clause",
-            },
-          ],
-          "type": "select_stmt",
-        }
-      `);
+            ],
+            "type": "select_stmt",
+          }
+        `);
+      });
     });
   });
 });

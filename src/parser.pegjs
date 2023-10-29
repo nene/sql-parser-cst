@@ -4550,7 +4550,9 @@ column
  */
 alias_ident
   = ident
-  / s:string_literal_plain { return loc(createIdentifier(s.text, s.value)); }
+  / s:string_literal_plain (&sqlite / &bigquery / &mysql) {
+    return loc(createIdentifier(s.text, s.value));
+  }
 
 ident "identifier"
   = name:ident_name !{ return isReservedKeyword(name); } {
