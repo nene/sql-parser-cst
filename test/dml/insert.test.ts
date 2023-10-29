@@ -50,7 +50,7 @@ describe("insert into", () => {
     testWc("INSERT INTO tbl (SELECT 1, 2, 3)");
   });
 
-  dialect(["mysql", "mariadb", "sqlite"], () => {
+  dialect(["mysql", "mariadb", "sqlite", "postgresql"], () => {
     it("supports insert of default values", () => {
       testWc("INSERT INTO tbl DEFAULT VALUES");
     });
