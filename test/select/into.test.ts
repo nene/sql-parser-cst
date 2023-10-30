@@ -42,7 +42,25 @@ describe("select INTO", () => {
     });
   });
 
-  dialect(["bigquery", "sqlite", "postgresql"], () => {
+  dialect("postgresql", () => {
+    it("supports INTO [TABLE] tablename", () => {
+      testWc("SELECT col INTO new_table FROM source_table");
+      testWc("SELECT 1,2,3 INTO TABLE my_table");
+    });
+
+    it("supports INTO TEMPORARY TABLE", () => {
+      testWc("SELECT col INTO TEMP my_table FROM source_table");
+      testWc("SELECT col INTO TEMPORARY my_table FROM source_table");
+      testWc("SELECT col INTO TEMPORARY TABLE my_table FROM source_table");
+    });
+
+    it("supports INTO UNLOGGED TABLE", () => {
+      testWc("SELECT col INTO UNLOGGED my_table FROM source_table");
+      testWc("SELECT col INTO UNLOGGED TABLE my_table FROM source_table");
+    });
+  });
+
+  dialect(["bigquery", "sqlite"], () => {
     it("does not support INTO clause", () => {
       expect(() => testWc("SELECT 1 INTO @varname")).toThrowError();
     });

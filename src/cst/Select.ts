@@ -58,6 +58,7 @@ export type AllSelectNodes =
   | JoinUsingSpecification
   | SortSpecification
   | ReturningClause
+  | IntoTableClause
   | IntoVariablesClause
   | IntoDumpfileClause
   | IntoOutfileClause
@@ -100,6 +101,7 @@ export interface SelectStmt extends BaseNode {
     | LimitClause
     | OffsetClause
     | FetchClause
+    | IntoTableClause
     | IntoVariablesClause
     | IntoDumpfileClause
     | IntoOutfileClause
@@ -442,6 +444,15 @@ export interface ReturningClause extends BaseNode {
   type: "returning_clause";
   returningKw: Keyword<"RETURNING">;
   columns: ListExpr<Expr | Alias<Expr>>;
+}
+
+export interface IntoTableClause extends BaseNode {
+  type: "into_table_clause";
+  intoKw: Keyword<"INTO">;
+  temporaryKw?: Keyword<"TEMP" | "TEMPORARY">;
+  unloggedKw?: Keyword<"UNLOGGED">;
+  tableKw?: Keyword<"TABLE">;
+  name: EntityName;
 }
 
 export interface IntoVariablesClause extends BaseNode {

@@ -216,7 +216,8 @@ other_clause
   / &bigquery x:qualify_clause { return x; }
   / (&postgres / &only_mariadb) x:offset_clause { return x; }
   / (&postgres / &only_mariadb) x:fetch_clause { return x; }
-  / &mysql x:into_clause { return x; }
+  / &mysql x:(into_variables_clause / into_dumpfile_clause / into_outfile_clause) { return x; }
+  / &postgres x:into_table_clause { return x; }
   / (&postgres / &mysql) x:for_clause { return x; }
   / &mysql x:lock_in_share_mode_clause { return x; }
 
@@ -912,10 +913,17 @@ returning_clause
  * SELECT .. INTO
  * --------------------------------------------------------------------------------------
  */
-into_clause
-  = into_variables_clause
-  / into_dumpfile_clause
-  / into_outfile_clause
+into_table_clause
+  = kw:(INTO __) temp:((TEMPORARY / TEMP) __)? unlogged:(UNLOGGED __)? tableKw:(TABLE __)? name:ident {
+    return loc({
+      type: "into_table_clause",
+      intoKw: read(kw),
+      temporaryKw: read(temp),
+      unloggedKw: read(unlogged),
+      tableKw: read(tableKw),
+      name,
+    });
+  }
 
 into_variables_clause
   = kw:(INTO __) vars:list$variable {
@@ -5751,6 +5759,7 @@ UNION               = kw:"UNION"i               !ident_part { return loc(createK
 UNIQUE              = kw:"UNIQUE"i              !ident_part { return loc(createKeyword(kw)); }
 UNKNOWN             = kw:"UNKNOWN"i             !ident_part { return loc(createKeyword(kw)); }
 UNLOCK              = kw:"UNLOCK"i              !ident_part { return loc(createKeyword(kw)); }
+UNLOGGED            = kw:"UNLOGGED"i            !ident_part { return loc(createKeyword(kw)); }
 UNNEST              = kw:"UNNEST"i              !ident_part { return loc(createKeyword(kw)); }
 UNPIVOT             = kw:"UNPIVOT"              !ident_part { return loc(createKeyword(kw)); }
 UNSIGNED            = kw:"UNSIGNED"i            !ident_part { return loc(createKeyword(kw)); }
