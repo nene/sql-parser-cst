@@ -68,6 +68,8 @@ export type AllSelectNodes =
   | OutfileOptionStartingBy
   | OutfileOptionEnclosedBy
   | OutfileOptionCharacterSet
+  | ForClause
+  | ForClauseTables
   | TableClause;
 
 // SELECT
@@ -100,6 +102,7 @@ export interface SelectStmt extends BaseNode {
     | IntoVariablesClause
     | IntoDumpfileClause
     | IntoOutfileClause
+    | ForClause
     | TableClause
     | ParenExpr<SelectStmt>
   )[];
@@ -505,6 +508,25 @@ export interface OutfileOptionCharacterSet extends BaseNode {
   type: "outfile_option_character_set";
   characterSetKw: [Keyword<"CHARACTER">, Keyword<"SET">];
   value: Identifier;
+}
+
+// Referred to as the Locking Clause in PostgreSQL documentation
+export interface ForClause extends BaseNode {
+  type: "for_clause";
+  forKw: Keyword<"FOR">;
+  lockStrengthKw:
+    | Keyword<"UPDATE">
+    | [Keyword<"NO">, Keyword<"KEY">, Keyword<"UPDATE">]
+    | Keyword<"SHARE">
+    | [Keyword<"KEY">, Keyword<"SHARE">];
+  tables?: ForClauseTables;
+  waitingKw?: Keyword<"NOWAIT"> | [Keyword<"SKIP">, Keyword<"LOCKED">];
+}
+
+export interface ForClauseTables extends BaseNode {
+  type: "for_clause_tables";
+  ofKw: Keyword<"OF">;
+  tables: ListExpr<Identifier>;
 }
 
 export interface TableClause extends BaseNode {

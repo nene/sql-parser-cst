@@ -217,6 +217,7 @@ other_clause
   / (&postgres / &only_mariadb) x:offset_clause { return x; }
   / (&postgres / &only_mariadb) x:fetch_clause { return x; }
   / &mysql x:into_clause { return x; }
+  / &postgres x:for_clause { return x; }
 
 /**
  * SELECT .. columns
@@ -1018,6 +1019,33 @@ outfile_option_escaped_by
       type: "outfile_option_escaped_by",
       escapedByKw: read(kw),
       value,
+    });
+  }
+
+/**
+ * SELECT .. FOR
+ * --------------------------------------------------------------------------------------
+ */
+for_clause
+  = kw:(FOR __) strength:lock_strength tables:(__ for_clause_tables)? waitingKw:(__ NOWAIT / __ SKIP __ LOCKED)? {
+    return loc({
+      type: "for_clause",
+      forKw: read(kw),
+      lockStrengthKw: read(strength),
+      tables: read(tables),
+      waitingKw: read(waitingKw),
+    });
+  }
+
+lock_strength
+  = UPDATE / NO __ KEY __ UPDATE / SHARE / KEY __ SHARE
+
+for_clause_tables
+  = kw:(OF __) tables:list$ident {
+    return loc({
+      type: "for_clause_tables",
+      ofKw: read(kw),
+      tables,
     });
   }
 

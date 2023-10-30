@@ -127,5 +127,10 @@ export const selectMap: FullTransformMap<string, AllSelectNodes> = {
   outfile_option_starting_by: (node) => show([node.startingByKw, node.value]),
   outfile_option_terminated_by: (node) =>
     show([node.terminatedByKw, node.value]),
+  // FOR
+  for_clause: (node) =>
+    show([node.forKw, node.lockStrengthKw, node.tables, node.waitingKw]),
+  for_clause_tables: (node) => show([node.ofKw, node.tables]),
+  // TABLE
   table_clause: (node) => show([node.tableKw, node.table]),
 };
