@@ -218,6 +218,7 @@ other_clause
   / (&postgres / &only_mariadb) x:fetch_clause { return x; }
   / &mysql x:into_clause { return x; }
   / (&postgres / &mysql) x:for_clause { return x; }
+  / &mysql x:lock_in_share_mode_clause { return x; }
 
 /**
  * SELECT .. columns
@@ -1046,6 +1047,18 @@ for_clause_tables
       type: "for_clause_tables",
       ofKw: read(kw),
       tables,
+    });
+  }
+
+/**
+ * SELECT .. LOCK IN SHARE MODE
+ * --------------------------------------------------------------------------------------
+ */
+lock_in_share_mode_clause
+  = kw:(LOCK __ IN __ SHARE __ MODE) {
+    return loc({
+      type: "lock_in_share_mode_clause",
+      lockInShareModeKw: read(kw),
     });
   }
 

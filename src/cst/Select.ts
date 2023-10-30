@@ -70,6 +70,7 @@ export type AllSelectNodes =
   | OutfileOptionCharacterSet
   | ForClause
   | ForClauseTables
+  | LockInShareModeClause
   | TableClause;
 
 // SELECT
@@ -103,6 +104,7 @@ export interface SelectStmt extends BaseNode {
     | IntoDumpfileClause
     | IntoOutfileClause
     | ForClause
+    | LockInShareModeClause
     | TableClause
     | ParenExpr<SelectStmt>
   )[];
@@ -527,6 +529,16 @@ export interface ForClauseTables extends BaseNode {
   type: "for_clause_tables";
   ofKw: Keyword<"OF">;
   tables: ListExpr<Identifier>;
+}
+
+export interface LockInShareModeClause extends BaseNode {
+  type: "lock_in_share_mode_clause";
+  lockInShareModeKw: [
+    Keyword<"LOCK">,
+    Keyword<"IN">,
+    Keyword<"SHARE">,
+    Keyword<"MODE">
+  ];
 }
 
 export interface TableClause extends BaseNode {

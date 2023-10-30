@@ -131,6 +131,8 @@ export const selectMap: FullTransformMap<string, AllSelectNodes> = {
   for_clause: (node) =>
     show([node.forKw, node.lockStrengthKw, node.tables, node.waitingKw]),
   for_clause_tables: (node) => show([node.ofKw, node.tables]),
+  // LOCK IN SHARE MODE
+  lock_in_share_mode_clause: (node) => show(node.lockInShareModeKw),
   // TABLE
   table_clause: (node) => show([node.tableKw, node.table]),
 };
