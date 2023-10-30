@@ -914,7 +914,7 @@ returning_clause
  * --------------------------------------------------------------------------------------
  */
 into_table_clause
-  = kw:(INTO __) temp:((TEMPORARY / TEMP) __)? unlogged:(UNLOGGED __)? tableKw:(TABLE __)? name:ident {
+  = kw:(INTO __) temp:((TEMPORARY / TEMP) __)? unlogged:(UNLOGGED __)? tableKw:(TABLE __)? name:entity_name {
     return loc({
       type: "into_table_clause",
       intoKw: read(kw),
