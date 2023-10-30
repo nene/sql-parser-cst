@@ -12,7 +12,8 @@ export type Literal =
   | TimestampLiteral
   | JsonLiteral
   | NumericLiteral
-  | BignumericLiteral;
+  | BignumericLiteral
+  | IntervalLiteral;
 
 export interface StringLiteral extends BaseNode {
   type: "string_literal";
@@ -83,5 +84,11 @@ export interface NumericLiteral extends BaseNode {
 export interface BignumericLiteral extends BaseNode {
   type: "bignumeric_literal";
   bignumericKw: Keyword<"BIGNUMERIC">;
+  string: StringLiteral;
+}
+
+export interface IntervalLiteral extends BaseNode {
+  type: "interval_literal";
+  intervalKw: Keyword<"INTERVAL">;
   string: StringLiteral;
 }

@@ -4755,6 +4755,7 @@ literal
   / json_literal
   / numeric_literal
   / bignumeric_literal
+  / interval_literal
 
 null_literal
   = kw:NULL {
@@ -5097,6 +5098,15 @@ bignumeric_literal
     return loc({
       type: "bignumeric_literal",
       bignumericKw: kw,
+      string: read(str),
+    });
+  }
+
+interval_literal
+  = &postgres kw:INTERVAL str:(__ string_literal_plain) {
+    return loc({
+      type: "interval_literal",
+      intervalKw: kw,
       string: read(str),
     });
   }

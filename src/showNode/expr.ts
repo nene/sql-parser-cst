@@ -68,6 +68,7 @@ export const exprMap: FullTransformMap<string, AllExprNodes> = {
   json_literal: (node) => show([node.jsonKw, node.string]),
   numeric_literal: (node) => show([node.numericKw, node.string]),
   bignumeric_literal: (node) => show([node.bignumericKw, node.string]),
+  interval_literal: (node) => show([node.intervalKw, node.string]),
 
   // Basic language elements
   identifier: (node) => node.text,
