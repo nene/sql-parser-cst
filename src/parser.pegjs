@@ -5075,7 +5075,7 @@ datetime_literal
     }
 
 json_literal
-  = &bigquery kw:JSON str:(__ string_literal_plain) {
+  = (&bigquery / &postgres) kw:JSON str:(__ string_literal_plain) {
     return loc({
       type: "json_literal",
       jsonKw: kw,

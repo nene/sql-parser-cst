@@ -1,12 +1,9 @@
-import { dialect, parseExpr, testExpr } from "../test_utils";
+import { dialect, notDialect, parseExpr, testExpr } from "../test_utils";
 
 describe("JSON literal", () => {
-  dialect("bigquery", () => {
-    it("supports JSON literal with all kinds of strings", () => {
-      testExpr(`JSON "{}"`);
+  dialect(["bigquery", "postgresql"], () => {
+    it("supports JSON literal", () => {
       testExpr(`JSON '{"foo": 10, bar: [1, 2, 3]}'`);
-      testExpr(`json '''[1, 2, 3]'''`);
-      testExpr(`JSON /*c1*/ """{ "scores": [1, 2, 3] }"""`);
     });
 
     it("parses JSON literal", () => {
@@ -28,8 +25,25 @@ describe("JSON literal", () => {
     });
   });
 
-  // For the non-BigQuery case
-  it("ignore empty testsuite", () => {
-    expect(true).toBeTruthy();
+  dialect("bigquery", () => {
+    it("supports JSON literal with various BigQuery string types", () => {
+      testExpr(`JSON "{}"`);
+      testExpr(`json '''[1, 2, 3]'''`);
+      testExpr(`JSON /*c1*/ """{ "scores": [1, 2, 3] }"""`);
+    });
+  });
+
+  dialect("postgresql", () => {
+    it("supports JSON literal with various PostgreSQL string types", () => {
+      testExpr(`JSON U&'{}'`);
+      testExpr(`JSON E'{}'`);
+      testExpr("JSON $${}$$");
+    });
+  });
+
+  notDialect(["bigquery", "postgresql"], () => {
+    it("does not support JSON literals", () => {
+      expect(() => testExpr(`(JSON '{}')`)).toThrowError();
+    });
   });
 });
