@@ -42,15 +42,9 @@ describe("select INTO", () => {
     });
   });
 
-  dialect(["bigquery", "sqlite"], () => {
+  dialect(["bigquery", "sqlite", "postgresql"], () => {
     it("does not support INTO clause", () => {
       expect(() => testWc("SELECT 1 INTO @varname")).toThrowError();
-    });
-  });
-
-  dialect("postgresql", () => {
-    it.skip("TODO:postgres", () => {
-      expect(true).toBe(true);
     });
   });
 });
