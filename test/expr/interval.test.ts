@@ -119,15 +119,9 @@ describe("temporal intervals", () => {
     });
   });
 
-  dialect("sqlite", () => {
+  dialect(["sqlite", "postgresql"], () => {
     it("does not support INTERVAL expressions", () => {
       expect(() => testExpr(`INTERVAL 1 DAY`)).toThrowError();
-    });
-  });
-
-  dialect("postgresql", () => {
-    it.skip("TODO:postgres", () => {
-      expect(true).toBe(true);
     });
   });
 });
