@@ -123,16 +123,6 @@ describe("select FROM", () => {
   });
 
   dialect("bigquery", () => {
-    describe("TABLESAMPLE operator", () => {
-      it("supports TABLESAMPLE", () => {
-        testWc("SELECT * FROM my_table TABLESAMPLE SYSTEM ( 10 PERCENT )");
-      });
-
-      it("supports TABLESAMPLE inside JOIN", () => {
-        test("SELECT * FROM tbl1 TABLESAMPLE SYSTEM (1 percent) JOIN tbl2");
-      });
-    });
-
     describe("FOR SYSTEM_TIME AS OF operator", () => {
       it("supports FOR SYSTEM_TIME AS OF", () => {
         testWc("SELECT * FROM my_table FOR SYSTEM_TIME AS OF my_timestamp");
