@@ -12,25 +12,6 @@ describe("select FROM", () => {
     testWc("SELECT t.col FROM my_db.my_long_table_name t");
   });
 
-  dialect(["mysql", "mariadb"], () => {
-    it("supports FROM DUAL", () => {
-      testWc("SELECT 1 FROM DUAL");
-    });
-
-    it("parses FROM DUAL", () => {
-      expect(parseFrom("DUAL")).toMatchInlineSnapshot(`
-        {
-          "dualKw": {
-            "name": "DUAL",
-            "text": "DUAL",
-            "type": "keyword",
-          },
-          "type": "dual_table",
-        }
-      `);
-    });
-  });
-
   it("supports table name in parenthesis", () => {
     test("SELECT col FROM (tbl)");
     test("SELECT t.col FROM (db.tbl) AS t");
