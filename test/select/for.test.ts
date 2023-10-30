@@ -1,7 +1,7 @@
 import { dialect, testClauseWc } from "../test_utils";
 
 describe("select FOR", () => {
-  dialect("postgresql", () => {
+  dialect(["postgresql", "mysql"], () => {
     it("supports FOR clause with different lock strengths", () => {
       testClauseWc("FOR UPDATE");
       testClauseWc("FOR NO KEY UPDATE");
@@ -24,9 +24,16 @@ describe("select FOR", () => {
     });
   });
 
-  dialect(["mysql", "mariadb", "sqlite", "bigquery"], () => {
-    it("ignore empty testsuite", () => {
-      expect(true).toBeTruthy();
+  // MariaDB only supports a small subset of the syntax
+  dialect(["mariadb"], () => {
+    it("supports FOR UPDATE clause", () => {
+      testClauseWc("FOR UPDATE");
+    });
+  });
+
+  dialect(["sqlite", "bigquery"], () => {
+    it("does not suppprt FOR clause", () => {
+      expect(() => testClauseWc("FOR UPDATE")).toThrowError();
     });
   });
 });

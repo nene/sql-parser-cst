@@ -217,7 +217,7 @@ other_clause
   / (&postgres / &only_mariadb) x:offset_clause { return x; }
   / (&postgres / &only_mariadb) x:fetch_clause { return x; }
   / &mysql x:into_clause { return x; }
-  / &postgres x:for_clause { return x; }
+  / (&postgres / &mysql) x:for_clause { return x; }
 
 /**
  * SELECT .. columns
