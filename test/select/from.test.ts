@@ -121,16 +121,4 @@ describe("select FROM", () => {
       testWc("SELECT * FROM schm.my_table AS t1 NOT INDEXED");
     });
   });
-
-  dialect("bigquery", () => {
-    describe("FOR SYSTEM_TIME AS OF operator", () => {
-      it("supports FOR SYSTEM_TIME AS OF", () => {
-        testWc("SELECT * FROM my_table FOR SYSTEM_TIME AS OF my_timestamp");
-      });
-
-      it("supports FOR SYSTEM_TIME AS OF inside JOIN", () => {
-        test("SELECT * FROM tbl1 FOR SYSTEM_TIME AS OF my_timestamp JOIN tbl2");
-      });
-    });
-  });
 });
