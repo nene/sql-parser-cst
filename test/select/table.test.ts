@@ -18,6 +18,10 @@ describe("table", () => {
       it("supports OFFSET & FETCH clauses", () => {
         testWc("TABLE my_tbl OFFSET 100 FETCH FIRST 25 ROWS ONLY");
       });
+
+      it("supports FOR clause", () => {
+        testWc("TABLE my_tbl FOR UPDATE");
+      });
     });
 
     it("supports UNION of TABLE statements", () => {
