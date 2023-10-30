@@ -66,6 +66,7 @@ export const exprMap: FullTransformMap<string, AllExprNodes> = {
   time_literal: (node) => show([node.timeKw, node.string]),
   timestamp_literal: (node) => show([node.timestampKw, node.string]),
   json_literal: (node) => show([node.jsonKw, node.string]),
+  jsonb_literal: (node) => show([node.jsonbKw, node.string]),
   numeric_literal: (node) => show([node.numericKw, node.string]),
   bignumeric_literal: (node) => show([node.bignumericKw, node.string]),
   interval_literal: (node) => show([node.intervalKw, node.string]),

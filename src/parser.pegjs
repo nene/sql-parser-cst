@@ -4753,6 +4753,7 @@ literal
   / null_literal
   / datetime_literal
   / json_literal
+  / jsonb_literal
   / numeric_literal
   / bignumeric_literal
   / interval_literal
@@ -5080,6 +5081,15 @@ json_literal
     return loc({
       type: "json_literal",
       jsonKw: kw,
+      string: read(str),
+    });
+  }
+
+jsonb_literal
+  = &postgres kw:JSONB str:(__ string_literal_plain) {
+    return loc({
+      type: "jsonb_literal",
+      jsonbKw: kw,
       string: read(str),
     });
   }
@@ -5510,6 +5520,7 @@ ISOYEAR             = kw:"ISOYEAR"i             !ident_part { return loc(createK
 ITERATE             = kw:"ITERATE"i             !ident_part { return loc(createKeyword(kw)); }
 JOIN                = kw:"JOIN"i                !ident_part { return loc(createKeyword(kw)); }
 JSON                = kw:"JSON"i                !ident_part { return loc(createKeyword(kw)); }
+JSONB               = kw:"JSONB"i               !ident_part { return loc(createKeyword(kw)); }
 KEY                 = kw:"KEY"i                 !ident_part { return loc(createKeyword(kw)); }
 KEY_BLOCK_SIZE      = kw:"KEY_BLOCK_SIZE"i      !ident_part { return loc(createKeyword(kw)); }
 LAG                 = kw:"LAG"i                 !ident_part { return loc(createKeyword(kw)); }

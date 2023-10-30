@@ -11,6 +11,7 @@ export type Literal =
   | DateLiteral
   | TimestampLiteral
   | JsonLiteral
+  | JsonbLiteral
   | NumericLiteral
   | BignumericLiteral
   | IntervalLiteral;
@@ -72,6 +73,12 @@ export interface TimestampLiteral extends BaseNode {
 export interface JsonLiteral extends BaseNode {
   type: "json_literal";
   jsonKw: Keyword<"JSON">;
+  string: StringLiteral;
+}
+
+export interface JsonbLiteral extends BaseNode {
+  type: "jsonb_literal";
+  jsonbKw: Keyword<"JSONB">;
   string: StringLiteral;
 }
 
