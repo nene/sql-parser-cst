@@ -758,7 +758,14 @@ sort_specification_nulls
  * --------------------------------------------------------------------------------------
  */
 limit_clause
-  = kw:LIMIT count:(__ expr __) offkw:OFFSET offset:(__ expr) ex:(__ limit_rows_examined)? {
+  = kw:LIMIT all:(__ limit_all) &postgres {
+    return loc({
+      type: "limit_clause",
+      limitKw: kw,
+      count: read(all),
+    });
+  }
+  / kw:LIMIT count:(__ expr __) offkw:OFFSET offset:(__ expr) ex:(__ limit_rows_examined)? {
     return loc({
       type: "limit_clause",
       limitKw: kw,
@@ -791,6 +798,11 @@ limit_clause
       limitKw: kw,
       rowsExamined: read(ex),
     });
+  }
+
+limit_all
+  = allKw:ALL {
+    return loc({ type: "limit_all", allKw });
   }
 
 limit_rows_examined

@@ -24,6 +24,12 @@ describe("select limiting", () => {
         testClauseWc("LIMIT ROWS EXAMINED 1000");
       });
     });
+
+    dialect("postgresql", () => {
+      it("supports LIMIT ALL", () => {
+        testClauseWc("LIMIT ALL");
+      });
+    });
   });
 
   dialect(["mariadb", "postgresql"], () => {

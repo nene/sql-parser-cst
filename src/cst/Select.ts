@@ -36,6 +36,7 @@ export type AllSelectNodes =
   | PartitionClause
   | ClusterByClause
   | LimitClause
+  | LimitAll
   | LimitRowsExamined
   | OffsetClause
   | FetchClause
@@ -238,10 +239,15 @@ export interface ClusterByClause extends BaseNode {
 export interface LimitClause extends BaseNode {
   type: "limit_clause";
   limitKw: Keyword<"LIMIT">;
-  count?: Expr;
+  count?: Expr | LimitAll;
   offsetKw?: Keyword<"OFFSET">;
   offset?: Expr;
   rowsExamined?: LimitRowsExamined;
+}
+
+export interface LimitAll extends BaseNode {
+  type: "limit_all";
+  allKw: Keyword<"ALL">;
 }
 
 export interface LimitRowsExamined extends BaseNode {

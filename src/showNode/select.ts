@@ -99,6 +99,7 @@ export const selectMap: FullTransformMap<string, AllSelectNodes> = {
       return show([node.limitKw, node.count, node.rowsExamined]);
     }
   },
+  limit_all: (node) => show(node.allKw),
   limit_rows_examined: (node) => show([node.rowsExaminedKw, node.count]),
   // OFFSET + FETCH
   offset_clause: (node) => show([node.offsetKw, node.offset, node.rowsKw]),
