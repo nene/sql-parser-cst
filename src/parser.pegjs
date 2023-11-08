@@ -3841,7 +3841,10 @@ _comparison_expr_right
   }
 
 unary_comparison_op
-  = kws:(NOT __ NULL / NOTNULL / ISNULL) &sqlite {
+  = kw:(NOTNULL / ISNULL) (&sqlite / &postgres) {
+    return kw;
+  }
+  / kws:(NOT __ NULL) &sqlite {
     return read(kws);
   }
   / kws:(IS __ UNKNOWN / IS __ NOT __ UNKNOWN) (&mysql / &bigquery / &postgres) {

@@ -88,14 +88,19 @@ describe("comparison operators", () => {
     });
   });
 
-  dialect("sqlite", () => {
+  dialect(["sqlite", "postgresql"], () => {
     it("supports unary null-check operators", () => {
       testExprWc("col ISNULL");
       testExprWc("col NOTNULL");
+    });
+  });
+
+  dialect("sqlite", () => {
+    it("supports unary NOT NULL operator", () => {
       testExprWc("col NOT NULL");
     });
 
-    it("parses unary null-check operators as postfix operators", () => {
+    it("parses unary NOT NULL operator as postfix operator", () => {
       expect(parseExpr("col NOT NULL")).toMatchInlineSnapshot(`
         {
           "expr": {
