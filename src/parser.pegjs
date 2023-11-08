@@ -4861,7 +4861,7 @@ string_literal_single_quoted_qq_bs // with repeated quote or backslash for escap
 
 // Postgres string with C-style escapes
 string_literal_e_single_quoted_bs
-  = "E" str:string_literal_single_quoted_bs {
+  = "E" str:string_literal_single_quoted_qq_bs {
     return loc({
       type: "string_literal",
       text: text(),

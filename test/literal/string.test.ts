@@ -307,6 +307,16 @@ describe("string literal", () => {
       `);
     });
 
+    it("C-style escaped string supports repeated-quote escaping", () => {
+      expect(parseExpr(`E'my '' why'`)).toMatchInlineSnapshot(`
+        {
+          "text": "E'my '' why'",
+          "type": "string_literal",
+          "value": "my ' why",
+        }
+      `);
+    });
+
     testStringEscaping(["E'", "'"], postgresqlBackslashEscaping);
   });
 
