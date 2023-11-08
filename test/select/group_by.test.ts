@@ -26,4 +26,11 @@ describe("select GROUP BY", () => {
       testClauseWc("GROUP BY id, name WITH ROLLUP");
     });
   });
+
+  dialect("postgresql", () => {
+    it("supports GROUP BY {ALL | DISTINCT}", () => {
+      testClauseWc("GROUP BY ALL id");
+      testClauseWc("GROUP BY DISTINCT name, age");
+    });
+  });
 });
