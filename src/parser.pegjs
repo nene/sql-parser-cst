@@ -3862,8 +3862,8 @@ comparison_op
   / regexp_op
 
 is_op
-  = kws:(IS __ NOT __ DISTINCT __ FROM) (&sqlite / &bigquery) { return read(kws); }
-  / kws:(IS __ DISTINCT __ FROM) (&sqlite / &bigquery) { return read(kws); }
+  = kws:(IS __ NOT __ DISTINCT __ FROM) (&sqlite / &bigquery / &postgres) { return read(kws); }
+  / kws:(IS __ DISTINCT __ FROM) (&sqlite / &bigquery / &postgres) { return read(kws); }
   / kws:(IS __ NOT) { return read(kws); }
   / kws:(IS) { return read(kws); }
 

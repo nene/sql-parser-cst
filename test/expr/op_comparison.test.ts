@@ -63,7 +63,7 @@ describe("comparison operators", () => {
       });
     });
 
-    dialect(["sqlite", "bigquery"], () => {
+    dialect(["sqlite", "bigquery", "postgresql"], () => {
       it("supports IS [NOT] DISTINCT FROM as alternative spelling for IS [NOT]", () => {
         testExprWc(`col IS DISTINCT FROM NULL`);
         testExprWc(`col IS NOT DISTINCT FROM NULL`);
