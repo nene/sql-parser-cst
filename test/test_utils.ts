@@ -101,9 +101,9 @@ export function parseExpr(
   if (clause.type !== "select_clause") {
     throw new Error(`Expected select_clause, instead got ${clause.type}`);
   }
-  if (clause.columns.items.length !== 1) {
+  if (clause.columns?.items.length !== 1) {
     throw new Error(
-      `Expected 1 column, instead got ${clause.columns.items.length}`
+      `Expected 1 column, instead got ${clause.columns?.items.length ?? 0}`
     );
   }
   const result = clause.columns.items[0];

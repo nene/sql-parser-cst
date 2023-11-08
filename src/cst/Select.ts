@@ -136,7 +136,7 @@ export interface SelectClause extends BaseNode {
   distinctKw?: Keyword<"ALL" | "DISTINCT" | "DISTINCTROW">;
   hints: MysqlHint[];
   asStructOrValueKw?: [Keyword<"AS">, Keyword<"STRUCT" | "VALUE">];
-  columns: ListExpr<
+  columns?: ListExpr<
     AllColumns | ExceptColumns | ReplaceColumns | Expr | Alias<Expr> | Empty
   >;
 }

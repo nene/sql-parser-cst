@@ -90,6 +90,28 @@ describe("select", () => {
       test(`SELECT FROM tbl;`);
       test(`SELECT;`);
     });
+
+    it("parses empty select into undefined columns field", () => {
+      expect(parseStmt(`SELECT`)).toMatchInlineSnapshot(`
+        {
+          "clauses": [
+            {
+              "asStructOrValueKw": undefined,
+              "columns": undefined,
+              "distinctKw": undefined,
+              "hints": [],
+              "selectKw": {
+                "name": "SELECT",
+                "text": "SELECT",
+                "type": "keyword",
+              },
+              "type": "select_clause",
+            },
+          ],
+          "type": "select_stmt",
+        }
+      `);
+    });
   });
 
   dialect("bigquery", () => {
