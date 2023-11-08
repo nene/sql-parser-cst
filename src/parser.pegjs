@@ -3957,7 +3957,7 @@ additive_operator
   = "+" / "-"
 
 multiplicative_expr
-  = head:mysql_bitwise_xor_expr tail:(__ multiplicative_operator  __ mysql_bitwise_xor_expr)* {
+  = head:bitwise_xor_or_exponent_expr tail:(__ multiplicative_operator  __ bitwise_xor_or_exponent_expr)* {
       return createBinaryExprChain(head, tail);
     }
 
@@ -3969,8 +3969,8 @@ multiplicative_operator
   / op:MOD (&mysql / &sqlite) { return op; }
   / op:"||" &bigquery { return op; }
 
-mysql_bitwise_xor_expr
-  = &mysql head:concat_or_json_expr tail:(__ "^"  __ concat_or_json_expr)* {
+bitwise_xor_or_exponent_expr
+  = (&mysql / &postgres) head:concat_or_json_expr tail:(__ "^"  __ concat_or_json_expr)* {
     return createBinaryExprChain(head, tail);
   }
   / concat_or_json_expr

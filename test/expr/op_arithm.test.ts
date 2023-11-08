@@ -25,6 +25,12 @@ describe("arithmetic operators", () => {
     });
   });
 
+  dialect(["postgresql"], () => {
+    it("supports ^ operator", () => {
+      testExprWc(`10 ^ 2`);
+    });
+  });
+
   it("supports unary negation operator", () => {
     testExprWc(`x + -y`);
   });
