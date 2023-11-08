@@ -10,6 +10,10 @@ describe("select GROUP BY", () => {
     testClauseWc("GROUP BY id, name, age");
   });
 
+  it("supports GROUP BY with list expression", () => {
+    testClauseWc("GROUP BY (id, name), age");
+  });
+
   dialect(["bigquery", "postgresql"], () => {
     it("supports GROUP BY ROLLUP()", () => {
       testClauseWc("GROUP BY ROLLUP ( id, name + age )");
