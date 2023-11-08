@@ -7,11 +7,13 @@ describe("arithmetic operators", () => {
     });
   });
 
-  dialect(["mysql", "mariadb", "sqlite"], () => {
+  dialect(["mysql", "mariadb", "sqlite", "postgresql"], () => {
     it("supports % operator", () => {
       testExprWc(`8 % 4`);
     });
+  });
 
+  dialect(["mysql", "mariadb", "sqlite"], () => {
     it("supports DIV operator", () => {
       testExprWc(`8 DIV 4`);
       testExprWc(`8 div 4`);

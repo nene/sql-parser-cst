@@ -3964,7 +3964,7 @@ multiplicative_expr
 multiplicative_operator
   = "*"
   / "/"
-  / op:"%" (&mysql / &sqlite) { return op; }
+  / op:"%" (&mysql / &sqlite / &postgres) { return op; }
   / op:DIV (&mysql / &sqlite) { return op; }
   / op:MOD (&mysql / &sqlite) { return op; }
   / op:"||" &bigquery { return op; }
