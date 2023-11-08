@@ -1,12 +1,12 @@
 import { dialect, testClauseWc } from "../test_utils";
 
 describe("select GROUP BY", () => {
-  it("parses group by with single expression", () => {
+  it("supports GROUP BY with single expression", () => {
     testClauseWc("GROUP BY t.id");
     testClauseWc("Group By t.id");
   });
 
-  it("parses group by with multiple expressions", () => {
+  it("supports GROUP BY with multiple expressions", () => {
     testClauseWc("GROUP BY id, name, age");
   });
 
