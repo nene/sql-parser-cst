@@ -26,7 +26,7 @@ describe("comparison operators", () => {
       testExprWc(`col IS NOT NULL`);
     });
 
-    dialect(["mysql", "mariadb", "bigquery"], () => {
+    dialect(["mysql", "mariadb", "bigquery", "postgresql"], () => {
       it("supports IS [NOT] TRUE/FALSE operator", () => {
         testExprWc(`col IS TRUE`);
         testExprWc(`col IS NOT FALSE`);
