@@ -91,7 +91,7 @@ type SymbolOperator =
   | "-"
   | "*"
   | "/"
-  | "%" // SQLite, MySQL
+  | "%" // SQLite, MySQL, PostgreSQL
   // comparison
   | "="
   | "==" // SQLite
@@ -115,7 +115,7 @@ type SymbolOperator =
   | "|"
   | ">>"
   | "<<"
-  | "^" // BigQuery, MySQL
+  | "^" // BigQuery, MySQL, PostgreSQL (exp)
   // Assignment
   | ":="; // MySQL
 
@@ -132,15 +132,15 @@ type KeywordOperator =
   // Comparison
   | Keyword<"IS">
   | [Keyword<"IS">, Keyword<"NOT">]
-  | [Keyword<"IS">, Keyword<"DISTINCT">, Keyword<"FROM">] // SQLite, BigQuery
-  | [Keyword<"IS">, Keyword<"NOT">, Keyword<"DISTINCT">, Keyword<"FROM">] // SQLite, BigQuery
+  | [Keyword<"IS">, Keyword<"DISTINCT">, Keyword<"FROM">] // SQLite, BigQuery, PostgreSQL
+  | [Keyword<"IS">, Keyword<"NOT">, Keyword<"DISTINCT">, Keyword<"FROM">] // SQLite, BigQuery, PostgreSQL
   | Keyword<"IN">
   | [Keyword<"NOT">, Keyword<"IN">]
-  | Keyword<"LIKE" | "RLIKE" | "GLOB" | "MATCH"> // RLIKE is MySQL, GLOB/MATCH are SQLite
-  | [Keyword<"NOT">, Keyword<"LIKE" | "RLIKE" | "GLOB" | "MATCH">]
+  | Keyword<"LIKE" | "RLIKE" | "ILIKE" | "GLOB" | "MATCH"> // RLIKE is MySQL, GLOB/MATCH are SQLite, ILIKE in PostgreSQL
+  | [Keyword<"NOT">, Keyword<"LIKE" | "RLIKE" | "ILIKE" | "GLOB" | "MATCH">]
   | [Keyword<"MEMBER">, Keyword<"OF">] // MySQL
   | [Keyword<"SOUNDS">, Keyword<"LIKE">] // MySQL
-  | Keyword<"ESCAPE">; // SQLite, MySQL
+  | Keyword<"ESCAPE">; // SQLite, MySQL, PostgreSQL
 
 export interface PrefixOpExpr extends BaseNode {
   type: "prefix_op_expr";
@@ -151,11 +151,11 @@ export interface PrefixOpExpr extends BaseNode {
 export interface PostfixOpExpr extends BaseNode {
   type: "postfix_op_expr";
   operator:
-    | Keyword<"ISNULL"> // SQLite
-    | Keyword<"NOTNULL"> // SQLite
+    | Keyword<"ISNULL"> // SQLite, PostgreSQL
+    | Keyword<"NOTNULL"> // SQLite, PostgreSQL
     | [Keyword<"NOT">, Keyword<"NULL">] // SQLite
-    | [Keyword<"IS">, Keyword<"UNKNOWN">] // BigQuery, MySQL
-    | [Keyword<"IS">, Keyword<"NOT">, Keyword<"UNKNOWN">]; // BigQuery, MySQL
+    | [Keyword<"IS">, Keyword<"UNKNOWN">] // BigQuery, MySQL, PostgreSQL
+    | [Keyword<"IS">, Keyword<"NOT">, Keyword<"UNKNOWN">]; // BigQuery, MySQL, PostgreSQL
   expr: Expr;
 }
 
