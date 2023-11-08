@@ -226,25 +226,60 @@ other_clause
  * --------------------------------------------------------------------------------------
  */
 select_clause
-  = selectKw:SELECT
-    distinctKw:(__ distinct_kw)?
+  = &postgres
+    selectKw:SELECT
+    distinctKw:(__ (ALL / DISTINCT))?
+    columns:(__ select_columns)? {
+      return loc({
+        type: "select_clause",
+        selectKw,
+        distinctKw: read(distinctKw),
+        hints: [],
+        asStructOrValueKw: undefined,
+        columns: read(columns),
+      });
+    }
+  / &mysql
+    selectKw:SELECT
+    distinctKw:(__ (ALL / DISTINCT / DISTINCTROW))?
     hints:(__ mysql_select_hint)*
-    asKw:(__ AS __ (STRUCT / VALUE))?
     columns:(__ select_columns) {
       return loc({
         type: "select_clause",
         selectKw,
         distinctKw: read(distinctKw),
         hints: hints.map(read),
+        asStructOrValueKw: undefined,
+        columns: read(columns),
+      });
+    }
+  / &bigquery
+    selectKw:SELECT
+    distinctKw:(__ (ALL / DISTINCT))?
+    asKw:(__ AS __ (STRUCT / VALUE))?
+    columns:(__ select_columns) {
+      return loc({
+        type: "select_clause",
+        selectKw,
+        distinctKw: read(distinctKw),
+        hints: [],
         asStructOrValueKw: read(asKw),
         columns: read(columns),
       });
     }
-
-distinct_kw
-  = ALL
-  / DISTINCT
-  / &mysql kw:DISTINCTROW { return kw; }
+  / &sqlite
+    selectKw:SELECT
+    distinctKw:(__ (ALL / DISTINCT))?
+    columns:(__ select_columns) {
+      return loc({
+        type: "select_clause",
+        selectKw,
+        distinctKw: read(distinctKw),
+        hints: [],
+        asStructOrValueKw: undefined,
+        columns: read(columns),
+      });
+    }
 
 mysql_select_hint
   = &mysql kw:(

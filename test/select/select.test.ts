@@ -85,6 +85,13 @@ describe("select", () => {
     test(`(SELECT * FROM tbl) LIMIT 1`);
   });
 
+  dialect("postgresql", () => {
+    it("supports empty select", () => {
+      test(`SELECT FROM tbl;`);
+      test(`SELECT;`);
+    });
+  });
+
   dialect("bigquery", () => {
     it("supports trailing commas in SELECT clause", () => {
       testWc("SELECT foo, bar, FROM tbl");
