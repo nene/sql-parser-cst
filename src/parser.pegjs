@@ -3820,7 +3820,7 @@ _comparison_expr_right
   / c1:__ op:(NOT __ IN / IN) c2:__ right:(paren$list$expr / bitwise_or_expr / &bigquery e:unnest_expr { return e; }) {
     return (left: any) => createBinaryExpr(left, c1, read(op), c2, right);
   }
-  / c1:__ op:(NOT __ LIKE / LIKE) c2:__ right:escape_expr {
+  / c1:__ op:(NOT __ like_op / like_op) c2:__ right:escape_expr {
     return (left: any) => createBinaryExpr(left, c1, read(op), c2, right);
   }
   / &only_mysql c1:__ op:(MEMBER __ OF) c2:__ right:paren$string_literal {
@@ -3872,6 +3872,10 @@ is_op
 
 regexp_op
   = op:(NOT __ regexp_op_kw / regexp_op_kw) { return read(op); }
+
+like_op
+  = LIKE
+  / kw:ILIKE &postgres { return kw; }
 
 regexp_op_kw
   = REGEXP
@@ -5567,6 +5571,7 @@ HOUR_MINUTE         = kw:"HOUR_MINUTE"          !ident_part { return loc(createK
 HOUR_SECOND         = kw:"HOUR_SECOND"          !ident_part { return loc(createKeyword(kw)); }
 IF                  = kw:"IF"i                  !ident_part { return loc(createKeyword(kw)); }
 IGNORE              = kw:"IGNORE"i              !ident_part { return loc(createKeyword(kw)); }
+ILIKE               = kw:"ILIKE"i               !ident_part { return loc(createKeyword(kw)); }
 IMMEDIATE           = kw:"IMMEDIATE"i           !ident_part { return loc(createKeyword(kw)); }
 IN                  = kw:"IN"i                  !ident_part { return loc(createKeyword(kw)); }
 INCLUDE             = kw:"INCLUDE"i             !ident_part { return loc(createKeyword(kw)); }

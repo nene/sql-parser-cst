@@ -6,10 +6,22 @@ describe("string operators", () => {
     testExprWc(`'foobar' NOT LIKE 'foo%'`);
   });
 
-  dialect(["mysql", "mariadb", "sqlite"], () => {
+  dialect(["mysql", "mariadb", "sqlite", "postgresql"], () => {
     it("supports LIKE with ESCAPE", () => {
       testExprWc(`'foobar' LIKE 'percentage|%' ESCAPE '|'`);
       testExprWc(`'foobar' NOT LIKE 'foo^_bar' ESCAPE '^'`);
+    });
+  });
+
+  dialect("postgresql", () => {
+    it("supports [NOT] ILIKE operator", () => {
+      testExprWc(`'foobar' ILIKE 'foo%'`);
+      testExprWc(`'foobar' NOT ILIKE 'foo%'`);
+    });
+
+    it("supports ILIKE with ESCAPE", () => {
+      testExprWc(`'foobar' ILIKE 'percentage|%' ESCAPE '|'`);
+      testExprWc(`'foobar' NOT ILIKE 'foo^_bar' ESCAPE '^'`);
     });
   });
 
