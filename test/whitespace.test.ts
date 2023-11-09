@@ -179,8 +179,15 @@ describe("whitespace", () => {
       test("SELECT 1 + -- comment 1\n -- comment 2\n 2");
     });
 
-    it("parses hash comments", () => {
-      test("SELECT 1 + # comment 1\n # comment 2\n 2");
+    dialect(["bigquery", "sqlite", "mysql", "mariadb"], () => {
+      it("parses hash comments", () => {
+        test("SELECT 1 + # comment 1\n # comment 2\n 2");
+      });
+    });
+    dialect(["postgresql"], () => {
+      it("does not support hash comments", () => {
+        expect(() => test("SELECT 1 + # comment 1\n # comment 2\n 2")).toThrowError();
+      });
     });
 
     it("parses block comments", () => {

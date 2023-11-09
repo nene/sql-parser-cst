@@ -5317,7 +5317,7 @@ __ "whitespace"
 // Comments
 comment
   = line_comment
-  / pound_sign_comment
+  / !postgres x:pound_sign_comment { return x; }
   / !postgres x:block_comment { return x; }
   / &postgres x:nested_block_comment { return x; }
 
