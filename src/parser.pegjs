@@ -4721,6 +4721,7 @@ ident_name_basic
 ident_start
   = ascii_letter
   / &postgres unicode_letter
+  / &sqlite unicode_letter
   / &mysql (unicode_letter / "$")
 
 ident_part

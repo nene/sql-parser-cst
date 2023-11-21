@@ -15,7 +15,8 @@ describe("identifier", () => {
     testExpr("_96");
   });
 
-  dialect(["postgresql", "mysql", "mariadb"], () => {
+  // For SQLite see: #45
+  dialect(["postgresql", "mysql", "mariadb", "sqlite"], () => {
     it("supports unicode letters in identifiers", () => {
       testExpr("õllevägilane");
     });
