@@ -215,8 +215,48 @@ describe("operator precedence", () => {
   });
 
   dialect("postgresql", () => {
-    it.skip("TODO:postgres", () => {
-      expect(true).toBe(true);
+    // TODO: . > :: > [] > unary +/-
+    it("member_expr > negation", () => {
+      expect(showPrecedence(`-tbl.col`)).toBe(`(- tbl.col)`);
+    });
+
+    // TODO: unary +/- > ^ (exponent)
+
+    it("negation > multiplication", () => {
+      expect(showPrecedence(`-x * y`)).toBe(`((- x) * y)`);
+      expect(showPrecedence(`x * -y`)).toBe(`(x * (- y))`);
+    });
+
+    it("multiplication > addition", () => {
+      expect(showPrecedence(`5 + 2 * 3`)).toBe(`(5 + (2 * 3))`);
+    });
+
+    // TODO: multiplication > any other operator > range containment
+
+    it("addition > range containment", () => {
+      // TODO: BETWEEN, ILIKE, SIMILAR TO
+      expect(showPrecedence(`5 + 2 IN col1`)).toBe(`((5 + 2) IN col1)`);
+      expect(showPrecedence(`5 + 2 LIKE col1 - col2`)).toBe(`((5 + 2) LIKE (col1 - col2))`);
+    });
+
+    // TODO: Other dialects treat IN/IS with same precedence as comparisons
+    // it("range containment > comparison", () => {
+    //   expect(showPrecedence(`x IN y > a IN b`)).toBe(`((x IN y) > (a IN b))`);
+    // });
+    // it("comparison > IS", () => {
+    //   expect(showPrecedence(`x > y IS NULL`)).toBe(`((x > y) IS NULL)`);
+    // });
+
+    it("IS > NOT", () => {
+      expect(showPrecedence(`NOT x IS NULL`)).toBe(`(NOT (x IS NULL))`);
+    });
+
+    it("NOT > AND", () => {
+      expect(showPrecedence(`NOT false AND true`)).toBe(`((NOT false) AND true)`);
+    });
+
+    it("AND > OR", () => {
+      expect(showPrecedence(`true OR false AND true`)).toBe(`(true OR (false AND true))`);
     });
   });
 });
