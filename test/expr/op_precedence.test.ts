@@ -220,11 +220,13 @@ describe("operator precedence", () => {
       expect(showPrecedence(`-tbl.col`)).toBe(`(- tbl.col)`);
     });
 
-    // TODO: unary +/- > ^ (exponent)
+    it("negation > exponent", () => {
+      expect(showPrecedence(`-x ^ y`)).toBe(`((- x) ^ y)`);
+      expect(showPrecedence(`x ^ -y`)).toBe(`(x ^ (- y))`);
+    });
 
-    it("negation > multiplication", () => {
-      expect(showPrecedence(`-x * y`)).toBe(`((- x) * y)`);
-      expect(showPrecedence(`x * -y`)).toBe(`(x * (- y))`);
+    it("exponent > multiplication", () => {
+      expect(showPrecedence(`x ^ y * a ^ b`)).toBe(`((x ^ y) * (a ^ b))`);
     });
 
     it("multiplication > addition", () => {
