@@ -3735,67 +3735,61 @@ sqlite_type_name_part
 /**
  * Expressions
  *
- * Operator precedence, as implemented currently
- * ---------------------------------------------------------------------------------------------------
- * | :=                                                       | assignment                           |
- * | OR, ||                                                   | disjunction                          |
- * | XOR                                                      | exclusive or                         |
- * | AND, &&                                                  | conjunction                          |
- * | NOT                                                      | logical negation                     |
- * | =, <, >, <=, >=, <>, !=, <=>, IS, LIKE, BETWEEN, IN      | comparion                            |
- * | |                                                        | bitwise or                           |
- * | &                                                        | bitwise and                          |
- * | >>, <<                                                   | bit shift                            |
- * | +, -                                                     | addition, subtraction                |
- * | *, /, %, DIV, MOD                                        | multiplication, division, modulo     |
- * | ^                                                        | bitwise XOR                          |
- * | ||, ->, ->>                                              | concatenation and JSON               |
- * | COLLATE / BINARY                                         | collation/charset                    |
- * | -, ~, !                                                  | negation, bit inversion, logical not |
- * ---------------------------------------------------------------------------------------------------
+ * Most dialects support the basic logical operators:
+ *
+ *   OR
+ *   AND
+ *   NOT
+ *
+ * But MySQL additionally includes XOR, assignment and AND/OR alternates:
+ *
+ *   :=
+ *   OR, ||
+ *   XOR
+ *   AND, &&
+ *   NOT
  */
-
 expr
-  = assign_expr
+  = &mysql x:mysql_assign_expr { return x; }
+  / !mysql x:or_expr { return x; }
 
-assign_expr
-  = &mysql left:or_expr createAssignOp:_assign_expr_right? {
+mysql_assign_expr
+  = left:mysql_or_expr createAssignOp:_mysql_assign_expr_right? {
     if (createAssignOp) {
       return loc(createAssignOp(left));
     } else {
       return left;
     }
   }
-  / or_expr
 
-_assign_expr_right
-  = c1:__ op:":=" c2:__ right:assign_expr {
+_mysql_assign_expr_right
+  = c1:__ op:":=" c2:__ right:mysql_assign_expr {
     return (left: any) => createBinaryExpr(left, c1, op, c2, right);
   }
 
+mysql_or_expr = head:mysql_xor_expr tail:(__ (OR / "||") __ mysql_xor_expr)* {
+    return createBinaryExprChain(head, tail);
+  }
+
+mysql_xor_expr
+  = head:mysql_and_expr tail:(__ XOR __ mysql_and_expr)* {
+    return createBinaryExprChain(head, tail);
+  }
+
+mysql_and_expr
+  = head:not_expr tail:(__ (AND / "&&") __ not_expr)* {
+    return createBinaryExprChain(head, tail);
+  }
+
 or_expr
-  = head:xor_expr tail:(__ or_op __ xor_expr)* {
+  = head:and_expr tail:(__ OR __ and_expr)* {
     return createBinaryExprChain(head, tail);
   }
-
-or_op
-  = OR
-  / op:"||" &mysql { return op; }
-
-xor_expr
-  = &mysql head:and_expr tail:(__ XOR __ and_expr)* {
-    return createBinaryExprChain(head, tail);
-  }
-  / and_expr
 
 and_expr
-  = head:not_expr tail:(__ and_op __ not_expr)* {
+  = head:not_expr tail:(__ AND __ not_expr)* {
     return createBinaryExprChain(head, tail);
   }
-
-and_op
-  = AND
-  / op:"&&" &mysql { return op; }
 
 not_expr
   = kw:NOT expr:(__ not_expr) {
