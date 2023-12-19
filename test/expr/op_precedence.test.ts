@@ -241,13 +241,13 @@ describe("operator precedence", () => {
       expect(showPrecedence(`5 + 2 LIKE col1 - col2`)).toBe(`((5 + 2) LIKE (col1 - col2))`);
     });
 
-    // TODO: Other dialects treat IN/IS with same precedence as comparisons
-    // it("range containment > comparison", () => {
-    //   expect(showPrecedence(`x IN y > a IN b`)).toBe(`((x IN y) > (a IN b))`);
-    // });
-    // it("comparison > IS", () => {
-    //   expect(showPrecedence(`x > y IS NULL`)).toBe(`((x > y) IS NULL)`);
-    // });
+    it("range containment > comparison", () => {
+      expect(showPrecedence(`x IN y > a IN b`)).toBe(`((x IN y) > (a IN b))`);
+    });
+
+    it("comparison > IS", () => {
+      expect(showPrecedence(`x > y IS NULL`)).toBe(`((x > y) IS NULL)`);
+    });
 
     it("IS > NOT", () => {
       expect(showPrecedence(`NOT x IS NULL`)).toBe(`(NOT (x IS NULL))`);

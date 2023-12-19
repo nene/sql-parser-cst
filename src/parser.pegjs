@@ -3795,7 +3795,62 @@ not_expr
   = kw:NOT expr:(__ not_expr) {
     return loc(createPrefixOpExpr(kw, read(expr)));
   }
-  / comparison_expr
+  / &postgres x:pg_is_expr { return x; }
+  / !postgres x:comparison_expr { return x; }
+
+/**
+ * Comparison operators
+ *
+ * Most dialects treat <, >, != etc operators with same precedence as LIKE, IS
+ *
+ * PostgreSQL has however different levels for:
+ * 1. IS ISNULL NOTNULL
+ * 2. < > = <= >= <>
+ * 3. BETWEEN IN LIKE ILIKE SIMILAR
+ */
+pg_is_expr
+  = left:pg_comparison_expr rightFn:_pg_is_expr_right {
+    return loc(rightFn(left));
+  }
+  / pg_comparison_expr
+
+_pg_is_expr_right
+  = op:(__ unary_comparison_op) {
+    return (expr: any) => createPostfixOpExpr(read(op), expr);
+  }
+  / tail:(__ is_op __ pg_comparison_expr)+ {
+    return (head: any) => createBinaryExprChain(head, tail);
+  }
+
+pg_comparison_expr
+  = head:pg_in_expr tail:(__ (">=" / ">" / "<=" / "<>" / "<" / "=" / "!=") __ pg_in_expr)+ {
+    return loc(createBinaryExprChain(head, tail));
+  }
+  / pg_in_expr
+
+pg_in_expr
+  = left:bitwise_or_expr rightFn:_pg_in_expr_right {
+    return loc(rightFn(left));
+  }
+  / bitwise_or_expr
+
+_pg_in_expr_right
+  = c1:__ op:(NOT __ IN / IN) c2:__ right:(paren$list$expr / bitwise_or_expr) {
+    return (left: any) => createBinaryExpr(left, c1, read(op), c2, right);
+  }
+  / c1:__ op:(NOT __ (LIKE / ILIKE) / (LIKE / ILIKE)) c2:__ right:escape_expr {
+    return (left: any) => createBinaryExpr(left, c1, read(op), c2, right);
+  }
+  / betweenKw:(__ between_op) begin:(__ bitwise_or_expr) andKw:(__ AND) end:(__ bitwise_or_expr) {
+    return (left: any) => ({
+      type: "between_expr",
+      left: left,
+      betweenKw: read(betweenKw),
+      begin: read(begin),
+      andKw: read(andKw),
+      end: read(end),
+    });
+  }
 
 comparison_expr
   = left:bitwise_or_expr rightFn:_comparison_expr_right {
@@ -3814,7 +3869,7 @@ _comparison_expr_right
   / c1:__ op:(NOT __ IN / IN) c2:__ right:(paren$list$expr / bitwise_or_expr / &bigquery e:unnest_expr { return e; }) {
     return (left: any) => createBinaryExpr(left, c1, read(op), c2, right);
   }
-  / c1:__ op:(NOT __ like_op / like_op) c2:__ right:escape_expr {
+  / c1:__ op:(NOT __ LIKE / LIKE) c2:__ right:escape_expr {
     return (left: any) => createBinaryExpr(left, c1, read(op), c2, right);
   }
   / &only_mysql c1:__ op:(MEMBER __ OF) c2:__ right:paren$string_literal {
@@ -3866,10 +3921,6 @@ is_op
 
 regexp_op
   = op:(NOT __ regexp_op_kw / regexp_op_kw) { return read(op); }
-
-like_op
-  = LIKE
-  / kw:ILIKE &postgres { return kw; }
 
 regexp_op_kw
   = REGEXP
