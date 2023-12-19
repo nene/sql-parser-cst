@@ -3841,7 +3841,7 @@ _pg_in_expr_right
   / c1:__ op:(NOT __ (LIKE / ILIKE) / (LIKE / ILIKE)) c2:__ right:escape_expr {
     return (left: any) => createBinaryExpr(left, c1, read(op), c2, right);
   }
-  / betweenKw:(__ between_op) begin:(__ bitwise_or_expr) andKw:(__ AND) end:(__ bitwise_or_expr) {
+  / betweenKw:(__ pg_between_op) begin:(__ bitwise_or_expr) andKw:(__ AND) end:(__ bitwise_or_expr) {
     return (left: any) => ({
       type: "between_expr",
       left: left,
@@ -3851,6 +3851,9 @@ _pg_in_expr_right
       end: read(end),
     });
   }
+
+pg_between_op
+  = kws:(NOT __ BETWEEN __ SYMMETRIC / BETWEEN __ SYMMETRIC / NOT __ BETWEEN / BETWEEN) { return read(kws); }
 
 comparison_expr
   = left:bitwise_or_expr rightFn:_comparison_expr_right {
@@ -5831,6 +5834,7 @@ STRING              = kw:"STRING"i              !ident_part { return loc(createK
 STRUCT              = kw:"STRUCT"i              !ident_part { return loc(createKeyword(kw)); }
 SUM                 = kw:"SUM"i                 !ident_part { return loc(createKeyword(kw)); }
 SUNDAY              = kw:"SUNDAY"i              !ident_part { return loc(createKeyword(kw)); }
+SYMMETRIC           = kw:"SYMMETRIC"i           !ident_part { return loc(createKeyword(kw)); }
 SYSTEM              = kw:"SYSTEM"i              !ident_part { return loc(createKeyword(kw)); }
 SYSTEM_TIME         = kw:"SYSTEM_TIME"i         !ident_part { return loc(createKeyword(kw)); }
 SYSTEM_USER         = kw:"SYSTEM_USER"i         !ident_part { return loc(createKeyword(kw)); }

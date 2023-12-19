@@ -189,6 +189,13 @@ describe("comparison operators", () => {
         }
       `);
     });
+
+    dialect("postgresql", () => {
+      it("supports [NOT] BETWEEN SYMMETRIC operator", () => {
+        testExprWc(`x BETWEEN SYMMETRIC 10 AND 1`);
+        testExprWc(`y NOT BETWEEN SYMMETRIC 10 AND 1`);
+      });
+    });
   });
 
   dialect(["mysql"], () => {

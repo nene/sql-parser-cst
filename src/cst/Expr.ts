@@ -272,7 +272,11 @@ export interface WeekExpr extends BaseNode {
 export interface BetweenExpr extends BaseNode {
   type: "between_expr";
   left: Expr;
-  betweenKw: Keyword<"BETWEEN"> | [Keyword<"NOT">, Keyword<"BETWEEN">];
+  betweenKw:
+    | Keyword<"BETWEEN">
+    | [Keyword<"NOT">, Keyword<"BETWEEN">]
+    | [Keyword<"BETWEEN">, Keyword<"SYMMETRIC">] // PostgreSQL
+    | [Keyword<"NOT">, Keyword<"BETWEEN">, Keyword<"SYMMETRIC">]; // PostgreSQL
   begin: Expr;
   andKw: Keyword<"AND">;
   end: Expr;
