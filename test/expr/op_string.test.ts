@@ -50,7 +50,7 @@ describe("string operators", () => {
     });
   });
 
-  dialect(["sqlite", "bigquery"], () => {
+  dialect(["sqlite", "bigquery", "postgresql"], () => {
     it("treats || as concatenation operator", () => {
       testExprWc(`'hello' || '_' || 'world'`);
     });

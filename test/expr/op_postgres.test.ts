@@ -6,6 +6,7 @@ describe("special PostgreSQL operators", () => {
     [
       "||/",
       "|/",
+      "||",
       ">>",
       "<<",
       "!~~*",
