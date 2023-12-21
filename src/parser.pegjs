@@ -3838,7 +3838,7 @@ _pg_in_expr_right
   = c1:__ op:(NOT __ IN / IN) c2:__ right:(paren$list$expr / sub_comparison_expr) {
     return (left: any) => createBinaryExpr(left, c1, read(op), c2, right);
   }
-  / c1:__ op:(NOT __ (LIKE / ILIKE) / (LIKE / ILIKE)) c2:__ right:escape_expr {
+  / c1:__ op:pg_like_op c2:__ right:escape_expr {
     return (left: any) => createBinaryExpr(left, c1, read(op), c2, right);
   }
   / betweenKw:(__ pg_between_op) begin:(__ sub_comparison_expr) andKw:(__ AND) end:(__ sub_comparison_expr) {
@@ -3851,6 +3851,10 @@ _pg_in_expr_right
       end: read(end),
     });
   }
+
+pg_like_op
+  = LIKE / ILIKE / SIMILAR __ TO
+  / NOT __ LIKE / NOT __ ILIKE / NOT __ SIMILAR __ TO
 
 pg_between_op
   = kws:(NOT __ BETWEEN __ SYMMETRIC / BETWEEN __ SYMMETRIC / NOT __ BETWEEN / BETWEEN) { return read(kws); }
@@ -5846,6 +5850,7 @@ SHARE               = kw:"SHARE"i               !ident_part { return loc(createK
 SHARED              = kw:"SHARED"i              !ident_part { return loc(createKeyword(kw)); }
 SHOW                = kw:"SHOW"i                !ident_part { return loc(createKeyword(kw)); }
 SIGNED              = kw:"SIGNED"i              !ident_part { return loc(createKeyword(kw)); }
+SIMILAR             = kw:"SIMILAR"i             !ident_part { return loc(createKeyword(kw)); }
 SIMPLE              = kw:"SIMPLE"i              !ident_part { return loc(createKeyword(kw)); }
 SKIP                = kw:"SKIP"i                !ident_part { return loc(createKeyword(kw)); }
 SMALLINT            = kw:"SMALLINT"i            !ident_part { return loc(createKeyword(kw)); }

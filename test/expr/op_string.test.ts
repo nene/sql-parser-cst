@@ -23,6 +23,16 @@ describe("string operators", () => {
       testExprWc(`'foobar' ILIKE 'percentage|%' ESCAPE '|'`);
       testExprWc(`'foobar' NOT ILIKE 'foo^_bar' ESCAPE '^'`);
     });
+
+    it("supports [NOT] SIMILAR TO operator", () => {
+      testExprWc(`'abc' SIMILAR TO '%(b|d)%'`);
+      testExprWc(`'abc' NOT SIMILAR TO '%(b|d)%'`);
+    });
+
+    it("supports SIMILAR TO with ESCAPE", () => {
+      testExprWc(`'foobar' SIMILAR TO 'percentage|%' ESCAPE '|'`);
+      testExprWc(`'foobar' NOT SIMILAR TO 'foo^_bar' ESCAPE '^'`);
+    });
   });
 
   dialect(["mysql", "mariadb", "sqlite"], () => {

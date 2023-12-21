@@ -138,6 +138,8 @@ type KeywordOperator =
   | [Keyword<"NOT">, Keyword<"IN">]
   | Keyword<"LIKE" | "RLIKE" | "ILIKE" | "GLOB" | "MATCH"> // RLIKE is MySQL, GLOB/MATCH are SQLite, ILIKE in PostgreSQL
   | [Keyword<"NOT">, Keyword<"LIKE" | "RLIKE" | "ILIKE" | "GLOB" | "MATCH">]
+  | [Keyword<"SIMILAR">, Keyword<"TO">] // PostgreSQL
+  | [Keyword<"NOT">, Keyword<"SIMILAR">, Keyword<"TO">] // PostgreSQL
   | [Keyword<"MEMBER">, Keyword<"OF">] // MySQL
   | [Keyword<"SOUNDS">, Keyword<"LIKE">] // MySQL
   | Keyword<"ESCAPE">; // SQLite, MySQL, PostgreSQL
