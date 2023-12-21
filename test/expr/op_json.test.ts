@@ -20,6 +20,19 @@ describe("JSON operators", () => {
       testExprWc(`x #> 'op'`);
       testExprWc(`x #>> 'op'`);
     });
+
+    it("supports JSONB operators", () => {
+      testExprWc(`x @> 'op'`);
+      testExprWc(`x <@ 'op'`);
+      testExprWc(`x ? 'op'`);
+      testExprWc(`x ?| 'op'`);
+      testExprWc(`x ?& 'op'`);
+      testExprWc(`x || 'op'`);
+      testExprWc(`x - 'op'`);
+      testExprWc(`x #- 'op'`);
+      testExprWc(`x @? 'op'`);
+      testExprWc(`x @@ 'op'`);
+    });
   });
 
   dialect(["mariadb", "bigquery"], () => {

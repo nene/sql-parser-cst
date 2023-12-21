@@ -22,7 +22,20 @@ describe("special PostgreSQL operators", () => {
       "&",
       "|",
       "`",
+      // JSON
+      "->>",
+      "->",
+      "#>>",
+      "#>",
+      // JSONB
+      "@>",
+      "<@",
       "?",
+      "?|",
+      "?&",
+      "#-",
+      "@?",
+      "@@",
     ].forEach((op) => {
       it(`parses ${op} operator`, () => {
         testExprWc(`x ${op} y`);
