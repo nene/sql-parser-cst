@@ -30,7 +30,8 @@ export type AllExprNodes =
   | WeekExpr
   | FullTextMatchArgs
   | ArraySubscript
-  | ArraySubscriptSpecifier;
+  | ArraySubscriptSpecifier
+  | ArraySliceSpecifier;
 
 export type Expr =
   | ListExpr
@@ -403,13 +404,21 @@ export type EntityName = MemberExpr | Identifier | BigQueryQuotedMemberExpr;
 
 export interface ArraySubscript extends BaseNode {
   type: "array_subscript";
-  expr: Expr | ArraySubscriptSpecifier;
+  expr: Expr | ArraySubscriptSpecifier | ArraySliceSpecifier;
 }
 
+// In BigQuery
 export interface ArraySubscriptSpecifier extends BaseNode {
   type: "array_subscript_specifier";
   specifierKw: Keyword<"OFFSET" | "SAFE_OFFSET" | "ORDINAL" | "SAFE_ORDINAL">;
   args: ParenExpr<Expr>;
+}
+
+// In PostgreSQL
+export interface ArraySliceSpecifier extends BaseNode {
+  type: "array_slice_specifier";
+  from?: Expr;
+  to?: Expr;
 }
 
 export interface Identifier extends BaseNode {

@@ -4119,7 +4119,7 @@ member_expr
   }
 
 array_subscript
-  = (&bigquery / &postgres) "[" expr:(__ (array_subscript_specifier / expr) __) "]" {
+  = (&bigquery / &postgres) "[" expr:(__ (array_subscript_specifier / array_slice_specifier / expr) __) "]" {
     return loc({
       type: "array_subscript",
       expr: read(expr),
@@ -4132,6 +4132,15 @@ array_subscript_specifier
       type: "array_subscript_specifier",
       specifierKw: kw,
       args: read(args),
+    });
+  }
+
+array_slice_specifier
+  = &postgres left:(expr __)? ":" right:(__ expr)? {
+    return loc({
+      type: "array_slice_specifier",
+      from: read(left),
+      to: read(right),
     });
   }
 

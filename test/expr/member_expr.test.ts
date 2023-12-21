@@ -140,6 +140,48 @@ describe("member_expr", () => {
         `);
       });
     });
+
+    dialect("postgresql", () => {
+      it("supports array slice operator", () => {
+        testExpr("foo[5:10]");
+        testExpr("foo[:10]");
+        testExpr("foo[5:]");
+        testExpr("foo[:]");
+      });
+
+      it("supports any expression inside array slice operator", () => {
+        testExprWc("foo[ foo + 2 : 12 / col ]");
+      });
+
+      it("parses array slice operator", () => {
+        expect(parseExpr("foo[5:10]")).toMatchInlineSnapshot(`
+          {
+            "object": {
+              "name": "foo",
+              "text": "foo",
+              "type": "identifier",
+            },
+            "property": {
+              "expr": {
+                "from": {
+                  "text": "5",
+                  "type": "number_literal",
+                  "value": 5,
+                },
+                "to": {
+                  "text": "10",
+                  "type": "number_literal",
+                  "value": 10,
+                },
+                "type": "array_slice_specifier",
+              },
+              "type": "array_subscript",
+            },
+            "type": "member_expr",
+          }
+        `);
+      });
+    });
   });
 
   dialect(["mysql", "mariadb", "sqlite"], () => {

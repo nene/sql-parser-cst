@@ -58,6 +58,7 @@ export const exprMap: FullTransformMap<string, AllExprNodes> = {
   bigquery_quoted_member_expr: (node) => show(["`", node.expr, "`"]),
   array_subscript: (node) => show(["[", node.expr, "]"]),
   array_subscript_specifier: (node) => show([node.specifierKw, node.args]),
+  array_slice_specifier: (node) => show([node.from, ":", node.to]),
 
   // special literals
   string_with_charset: (node) => "_" + node.charset + show(node.string),
