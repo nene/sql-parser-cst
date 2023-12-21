@@ -4103,7 +4103,7 @@ negation_operator
   / op:"!" !postgres { return op; }
 
 member_expr_or_func_call
-  = obj:primary props:(__ "." __ qualified_column / __ array_subscript &bigquery / __ func_call_right)+ {
+  = obj:primary props:(__ "." __ qualified_column / __ array_subscript / __ func_call_right)+ {
     return createMemberExprChain(obj, props);
   }
   / name:func_name_kw fnRight:(__ func_call_right) {
@@ -4119,7 +4119,7 @@ member_expr
   }
 
 array_subscript
-  = "[" expr:(__ (array_subscript_specifier / expr) __) "]" {
+  = (&bigquery / &postgres) "[" expr:(__ (array_subscript_specifier / expr) __) "]" {
     return loc({
       type: "array_subscript",
       expr: read(expr),
@@ -4127,7 +4127,7 @@ array_subscript
   }
 
 array_subscript_specifier
-  = kw:(OFFSET / SAFE_OFFSET / ORDINAL / SAFE_ORDINAL) args:(__ paren$expr) {
+  = &bigquery kw:(OFFSET / SAFE_OFFSET / ORDINAL / SAFE_ORDINAL) args:(__ paren$expr) {
     return loc({
       type: "array_subscript_specifier",
       specifierKw: kw,

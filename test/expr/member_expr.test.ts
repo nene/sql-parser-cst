@@ -66,23 +66,11 @@ describe("member_expr", () => {
     `);
   });
 
-  dialect("bigquery", () => {
+  dialect(["bigquery", "postgresql"], () => {
     it("supports simple array subscript", () => {
       testExpr(`my_array[0]`);
       testExpr(`my_array[1+2]`);
       testExprWc(`my_array [ 8 ]`);
-    });
-
-    it("supports array subscript specifiers", () => {
-      testExpr(`my_array[OFFSET(0)]`);
-      testExpr(`my_array[SAFE_OFFSET(4-6)]`);
-      testExpr(`my_array[ORDINAL(1)]`);
-      testExpr(`my_array[SAFE_ORDINAL(1+2)]`);
-      testExprWc(`my_array[ OFFSET ( 2 ) ]`);
-    });
-
-    it("supports array subscript on array literal", () => {
-      testExpr(`[1, 2, 3, 4][2]`);
     });
 
     it("supports array subscript on qualified column name", () => {
@@ -97,41 +85,60 @@ describe("member_expr", () => {
       testExpr(`obj.items[5].vehicles[12]`);
     });
 
+    // TODO: Is this a thing also in PostgreSQL?
     it("supports indexing with a string (e.g. in JSON object traversal)", () => {
       testExpr(`my_arr['field']`);
     });
 
-    // to ensure we don't parse it to plain function call
-    it("parses array subscript specifiers", () => {
-      expect(parseExpr(`my_array[OFFSET(0)]`)).toMatchInlineSnapshot(`
-        {
-          "object": {
-            "name": "my_array",
-            "text": "my_array",
-            "type": "identifier",
-          },
-          "property": {
-            "expr": {
-              "args": {
-                "expr": {
-                  "text": "0",
-                  "type": "number_literal",
-                  "value": 0,
-                },
-                "type": "paren_expr",
-              },
-              "specifierKw": {
-                "name": "OFFSET",
-                "text": "OFFSET",
-                "type": "keyword",
-              },
-              "type": "array_subscript_specifier",
+    it("supports array subscript on ARRAY[] literal", () => {
+      testExpr(`ARRAY[1, 2, 3, 4][2]`);
+    });
+
+    dialect("bigquery", () => {
+      it("supports array subscript on array literal (without ARRAY keyword)", () => {
+        testExpr(`[1, 2, 3, 4][2]`);
+      });
+
+      it("supports array subscript specifiers", () => {
+        testExpr(`my_array[OFFSET(0)]`);
+        testExpr(`my_array[SAFE_OFFSET(4-6)]`);
+        testExpr(`my_array[ORDINAL(1)]`);
+        testExpr(`my_array[SAFE_ORDINAL(1+2)]`);
+        testExprWc(`my_array[ OFFSET ( 2 ) ]`);
+      });
+
+      // to ensure we don't parse it to plain function call
+      it("parses array subscript specifiers", () => {
+        expect(parseExpr(`my_array[OFFSET(0)]`)).toMatchInlineSnapshot(`
+          {
+            "object": {
+              "name": "my_array",
+              "text": "my_array",
+              "type": "identifier",
             },
-            "type": "array_subscript",
-          },
-          "type": "member_expr",
-        }
-      `);
+            "property": {
+              "expr": {
+                "args": {
+                  "expr": {
+                    "text": "0",
+                    "type": "number_literal",
+                    "value": 0,
+                  },
+                  "type": "paren_expr",
+                },
+                "specifierKw": {
+                  "name": "OFFSET",
+                  "text": "OFFSET",
+                  "type": "keyword",
+                },
+                "type": "array_subscript_specifier",
+              },
+              "type": "array_subscript",
+            },
+            "type": "member_expr",
+          }
+        `);
+      });
     });
   });
 
