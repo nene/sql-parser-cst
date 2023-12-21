@@ -126,4 +126,10 @@ describe("string operators", () => {
       expect(() => parseExpr(`col->'op'`)).toThrowError();
     });
   });
+
+  dialect("postgresql", () => {
+    it("supports ^@ starts-with operator", () => {
+      testExprWc(`'hello' ^@ 'he'`);
+    });
+  });
 });
