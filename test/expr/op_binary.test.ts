@@ -16,4 +16,10 @@ describe("binary operators", () => {
   it("parses unary bit inversion operator", () => {
     testExprWc(`x << ~y`);
   });
+
+  dialect("postgresql", () => {
+    it("parses bitwise XOR operator", () => {
+      testExprWc(`x # y`);
+    });
+  });
 });

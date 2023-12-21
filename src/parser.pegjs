@@ -4007,7 +4007,7 @@ pg_other_op
     // multi-letter operators (non-exhaustive list)
     "||/" / "|/" / ">>" / "<<" / "!~~*" / "~~*" / "!~~" / "~~" / "!~*" / "~*" / "!~"
     // single-letter operators (exhaustive list)
-    / "~" / "!" / "@" / "#" / "&" / "|" / "`" / "?"
+    / "!" / "@" / "#" / "&" / "|" / "`" / "?"
   ) {
     return op;
   }
@@ -4091,7 +4091,7 @@ negation_expr
 
 negation_operator
   = "-"
-  / op:"~" !postgres { return op; }
+  / "~"
   / op:"!" !postgres { return op; }
 
 member_expr_or_func_call

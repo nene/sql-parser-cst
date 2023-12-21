@@ -15,7 +15,6 @@ describe("special PostgreSQL operators", () => {
       "!~*",
       "~*",
       "!~",
-      "~",
       "!",
       "@",
       "#",
@@ -45,6 +44,7 @@ describe("special PostgreSQL operators", () => {
         expect(isPostgresqlOtherOperator("<=")).toBe(false);
         expect(isPostgresqlOtherOperator("!=")).toBe(false);
         expect(isPostgresqlOtherOperator("=")).toBe(false);
+        expect(isPostgresqlOtherOperator("~")).toBe(false);
       });
 
       it("rejects operators containing -- or /*", () => {

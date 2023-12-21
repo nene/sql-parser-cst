@@ -16,9 +16,6 @@
  * 2. A multiple-character operator name cannot end in + or -,
  *    unless the name also contains at least one of these characters:
  *    ~ ! @ # % ^ & | ` ?
- *
- * |/, ||/, @, &, |, #, ~, >>, <<
- * ~, !~, ~*, !~*, ~~, !~~, ~~*, !~~*
  */
 export const isPostgresqlOtherOperator = (op: string) => {
   if (standardOperators.includes(op)) {
@@ -51,4 +48,6 @@ const standardOperators = [
   "<>",
   "!=",
   "=",
+  // bitwise unary
+  "~",
 ];

@@ -111,6 +111,7 @@ export interface BinaryExpr<
  * bitwise:
  *   & | >> <<
  *   ^ (BigQuery and MySQL)
+ *   # (PostgreSQL)
  * assignment:
  *   := (MySQL)
  */
