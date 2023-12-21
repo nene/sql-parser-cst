@@ -4098,6 +4098,7 @@ negation_expr
 
 negation_operator
   = "-"
+  / "+"
   / "~"
   / op:"!" !postgres { return op; }
 

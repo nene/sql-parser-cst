@@ -33,5 +33,13 @@ describe("arithmetic operators", () => {
 
   it("supports unary negation operator", () => {
     testExprWc(`x + -y`);
+    testExprWc(`x - -y`);
+    testExprWc(`x - - -y`);
+  });
+
+  it("supports unary plus operator", () => {
+    testExprWc(`x + +y`);
+    testExprWc(`x - +y`);
+    testExprWc(`x + + +y`);
   });
 });
