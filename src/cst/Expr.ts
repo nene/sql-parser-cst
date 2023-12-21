@@ -85,39 +85,36 @@ export interface BinaryExpr<
   right: TRight;
 }
 
-type SymbolOperator =
-  // standard arithmetics
-  | "+"
-  | "-"
-  | "*"
-  | "/"
-  | "%" // SQLite, MySQL, PostgreSQL
-  // comparison
-  | "="
-  | "==" // SQLite
-  | "<"
-  | ">"
-  | ">="
-  | "<="
-  | "<>"
-  | "!="
-  | "<=>" // MySQL
-  // string concat
-  | "||" // OR in MySQL
-  | "" // MySQL concatenation of adjecent string literals
-  // Logic
-  | "&&" // MySQL
-  // JSON
-  | "->" // SQLite, MySQL
-  | "->>" // SQLite, MySQL
-  // bitwise
-  | "&"
-  | "|"
-  | ">>"
-  | "<<"
-  | "^" // BigQuery, MySQL, PostgreSQL (exp)
-  // Assignment
-  | ":="; // MySQL
+/**
+ * We can't enumerate all operators because PostgreSQL allows custom operators.
+ * So this type is just alias for string.
+ *
+ * However, for reference, here's a list of the usual operators and to which dialects they apply:
+ *
+ * arithmetics:
+ *   + - * /
+ *   % (SQLite, MySQL, PostgreSQL)
+ *   ^ (PostgreSQL)
+ * comparison:
+ *   = < > >= <= <> !=
+ *   == (SQLite)
+ *   <=> (MySQL)
+ * string concatenation:
+ *   || (except in MySQL)
+ *   "" (empty string - in MySQL adjecent strings get concatenated)
+ * logic:
+ *   && (MySQL AND)
+ *   || (MySQL)
+ * JSON:
+ *   ->  (SQLite, MySQL)
+ *   ->> (SQLite, MySQL)
+ * bitwise:
+ *   & | >> <<
+ *   ^ (BigQuery and MySQL)
+ * assignment:
+ *   := (MySQL)
+ */
+type SymbolOperator = string;
 
 type KeywordOperator =
   // arithmetic
