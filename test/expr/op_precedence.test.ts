@@ -241,6 +241,7 @@ describe("operator precedence", () => {
     it("these other operators have the same precedence", () => {
       expect(showPrecedence(`a | b & c >> d`)).toBe(`(((a | b) & c) >> d)`);
       expect(showPrecedence(`a >> b & c | d`)).toBe(`(((a >> b) & c) | d)`);
+      expect(showPrecedence(`a |/ b @ c !~~ d`)).toBe(`(((a |/ b) @ c) !~~ d)`);
     });
 
     it("any other operator > range containment", () => {

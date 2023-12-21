@@ -3998,8 +3998,19 @@ pg_other_expr
     return createBinaryExprChain(head, tail);
   }
 
+// TODO: Actually Postgres allows combinations of all these symbols:
+//
+//   + - * / < > = ~ ! @ # % ^ & | ` ?
+//
 pg_other_op
-  = "|" / "&" / ">>" / "<<"
+  = op:(
+    // multi-letter operators (non-exhaustive list)
+    "||/" / "|/" / ">>" / "<<" / "!~~*" / "~~*" / "!~~" / "~~" / "!~*" / "~*" / "!~"
+    // single-letter operators (exhaustive list)
+    "~" / "!" / "@" / "#" / "&" / "|" / "`" / "?"
+  ) {
+    return op;
+  }
 
 bitwise_or_expr
   = head:bitwise_xor_expr tail:(__ "|"  __ bitwise_xor_expr)* {
@@ -4078,7 +4089,10 @@ negation_expr
   }
   / member_expr_or_func_call
 
-negation_operator = "-" / "~" / "!"
+negation_operator
+  = "-"
+  / op:"~" !postgres { return op; }
+  / op:"!" !postgres { return op; }
 
 member_expr_or_func_call
   = obj:primary props:(__ "." __ qualified_column / __ array_subscript &bigquery / __ func_call_right)+ {
