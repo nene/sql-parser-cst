@@ -1,4 +1,4 @@
-import { dialect, testExprWc } from "../test_utils";
+import { dialect, parseExpr, testExprWc } from "../test_utils";
 
 describe("arithmetic operators", () => {
   ["+", "-", "*", "/"].forEach((op) => {
@@ -41,5 +41,30 @@ describe("arithmetic operators", () => {
     testExprWc(`x + +y`);
     testExprWc(`x - +y`);
     testExprWc(`x + + +y`);
+  });
+
+  it("parses unary + and - as operators, not as part of numbers", () => {
+    expect(parseExpr("+5")).toMatchInlineSnapshot(`
+      {
+        "expr": {
+          "text": "5",
+          "type": "number_literal",
+          "value": 5,
+        },
+        "operator": "+",
+        "type": "prefix_op_expr",
+      }
+    `);
+    expect(parseExpr("-5")).toMatchInlineSnapshot(`
+      {
+        "expr": {
+          "text": "5",
+          "type": "number_literal",
+          "value": 5,
+        },
+        "operator": "-",
+        "type": "prefix_op_expr",
+      }
+    `);
   });
 });
