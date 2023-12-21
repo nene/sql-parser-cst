@@ -220,7 +220,7 @@ describe("comparison operators", () => {
   });
 
   describe("quantifiers", () => {
-    dialect(["mysql", "mariadb"], () => {
+    dialect(["mysql", "mariadb", "postgresql"], () => {
       it("supports ANY / SOME / ALL quantifiers", () => {
         testExprWc(`col = ANY (SELECT c1 FROM tbl)`);
         testExprWc(`col >= SOME (SELECT c1 FROM tbl)`);

@@ -3823,7 +3823,7 @@ _pg_is_expr_right
   }
 
 pg_comparison_expr
-  = head:pg_in_expr tail:(__ (">=" / ">" / "<=" / "<>" / "<" / "=" / "!=") __ pg_in_expr)+ {
+  = head:pg_in_expr tail:(__ (">=" / ">" / "<=" / "<>" / "<" / "=" / "!=") __ (quantifier_expr / pg_in_expr))+ {
     return loc(createBinaryExprChain(head, tail));
   }
   / pg_in_expr
@@ -3866,7 +3866,7 @@ _comparison_expr_right
   = op:(__ unary_comparison_op) {
     return (expr: any) => createPostfixOpExpr(read(op), expr);
   }
-  / tail:(__ comparison_op __ quantifier_expr)+ {
+  / tail:(__ comparison_op __ (x:quantifier_expr &mysql { return x; } / sub_comparison_expr))+ {
     return (head: any) => createBinaryExprChain(head, tail);
   }
   / c1:__ op:(NOT __ IN / IN) c2:__ right:(paren$list$expr / sub_comparison_expr / &bigquery e:unnest_expr { return e; }) {
@@ -3941,14 +3941,13 @@ between_op
   = kws:(NOT __ BETWEEN / BETWEEN) { return read(kws); }
 
 quantifier_expr
-  = &mysql op:((ANY / SOME / ALL) __) expr:paren$compound_select_stmt {
+  = op:((ANY / SOME / ALL) __) expr:paren$compound_select_stmt {
     return loc({
       type: "quantifier_expr",
       quantifier: read(op),
       expr,
     });
   }
-  / sub_comparison_expr
 
 full_text_match_expr
   = mKw:MATCH cols:(__ paren$list$ident __) aKw:AGAINST args:(__ paren$full_text_match_args) {
