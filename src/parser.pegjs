@@ -4007,7 +4007,7 @@ pg_other_op
     // multi-letter operators (non-exhaustive list)
     "||/" / "|/" / ">>" / "<<" / "!~~*" / "~~*" / "!~~" / "~~" / "!~*" / "~*" / "!~"
     // single-letter operators (exhaustive list)
-    "~" / "!" / "@" / "#" / "&" / "|" / "`" / "?"
+    / "~" / "!" / "@" / "#" / "&" / "|" / "`" / "?"
   ) {
     return op;
   }
