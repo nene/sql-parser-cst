@@ -245,7 +245,6 @@ describe("operator precedence", () => {
     });
 
     it("any other operator > range containment", () => {
-      // TODO: SIMILAR TO
       expect(showPrecedence(`5 >> 2 IN col1`)).toBe(`((5 >> 2) IN col1)`);
       expect(showPrecedence(`5 | 2 LIKE col1 | col2`)).toBe(`((5 | 2) LIKE (col1 | col2))`);
       expect(showPrecedence(`5 & 2 BETWEEN a & b AND c & d`)).toBe(
