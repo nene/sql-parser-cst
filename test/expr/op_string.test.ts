@@ -108,33 +108,6 @@ describe("string operators", () => {
     });
   });
 
-  dialect(["mysql", "sqlite", "postgresql"], () => {
-    it("supports standard JSON operators", () => {
-      testExpr(`col->'items[0].id'`);
-      testExprWc(`x -> 'op'`);
-
-      testExpr(`col->>'items[0].id'`);
-      testExprWc(`x ->> 'op'`);
-    });
-
-    it("supports chain of JSON operators", () => {
-      testExpr(`col->'items'->'[0]'->'id'`);
-    });
-  });
-
-  dialect("postgresql", () => {
-    it("supports additional JSON operators", () => {
-      testExprWc(`x #> 'op'`);
-      testExprWc(`x #>> 'op'`);
-    });
-  });
-
-  dialect(["mariadb", "bigquery"], () => {
-    it("does not support JSON operators", () => {
-      expect(() => parseExpr(`col->'op'`)).toThrowError();
-    });
-  });
-
   dialect("postgresql", () => {
     it("supports ^@ starts-with operator", () => {
       testExprWc(`'hello' ^@ 'he'`);
