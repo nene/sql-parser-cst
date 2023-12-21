@@ -233,14 +233,22 @@ describe("operator precedence", () => {
       expect(showPrecedence(`5 + 2 * 3`)).toBe(`(5 + (2 * 3))`);
     });
 
-    // TODO: addition > any other operator > range containment
+    it("addition > any other operator", () => {
+      expect(showPrecedence(`5 + 2 & 3`)).toBe(`((5 + 2) & 3)`);
+      expect(showPrecedence(`5 + 2 >> 3`)).toBe(`((5 + 2) >> 3)`);
+    });
 
-    it("addition > range containment", () => {
+    it("these other operators have the same precedence", () => {
+      expect(showPrecedence(`a | b & c >> d`)).toBe(`(((a | b) & c) >> d)`);
+      expect(showPrecedence(`a >> b & c | d`)).toBe(`(((a >> b) & c) | d)`);
+    });
+
+    it("any other operator > range containment", () => {
       // TODO: SIMILAR TO
-      expect(showPrecedence(`5 + 2 IN col1`)).toBe(`((5 + 2) IN col1)`);
-      expect(showPrecedence(`5 + 2 LIKE col1 - col2`)).toBe(`((5 + 2) LIKE (col1 - col2))`);
-      expect(showPrecedence(`5 + 2 BETWEEN a + b AND c + d`)).toBe(
-        `((5 + 2) BETWEEN (a + b) AND (c + d))`
+      expect(showPrecedence(`5 >> 2 IN col1`)).toBe(`((5 >> 2) IN col1)`);
+      expect(showPrecedence(`5 | 2 LIKE col1 | col2`)).toBe(`((5 | 2) LIKE (col1 | col2))`);
+      expect(showPrecedence(`5 & 2 BETWEEN a & b AND c & d`)).toBe(
+        `((5 & 2) BETWEEN (a & b) AND (c & d))`
       );
     });
 

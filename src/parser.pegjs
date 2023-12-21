@@ -3984,8 +3984,22 @@ full_text_modifier
  * but before the additive (+ / -) expressions.
  *
  * For most dialects these are bitwise operators: |, &, ^, <<, >>
+ * which come in the order of precedence: OR < XOR < AND < SHIFT.
+ *
+ * PostgreSQL though supports any kind of custom operator in this place,
+ * and they all have the same precedence.
  */
-sub_comparison_expr = bitwise_or_expr
+sub_comparison_expr
+  = !postgres x:bitwise_or_expr { return x; }
+  / &postgres x:pg_other_expr { return x; }
+
+pg_other_expr
+  = head:additive_expr tail:(__ pg_other_op  __ additive_expr)* {
+    return createBinaryExprChain(head, tail);
+  }
+
+pg_other_op
+  = "|" / "&" / ">>" / "<<"
 
 bitwise_or_expr
   = head:bitwise_xor_expr tail:(__ "|"  __ bitwise_xor_expr)* {
