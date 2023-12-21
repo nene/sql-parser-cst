@@ -106,8 +106,10 @@ export interface BinaryExpr<
  *   && (MySQL AND)
  *   || (MySQL)
  * JSON:
- *   ->  (SQLite, MySQL)
- *   ->> (SQLite, MySQL)
+ *   ->  (SQLite, MySQL, PostgreSQL)
+ *   ->> (SQLite, MySQL, PostgreSQL)
+ *   #>  (PostgreSQL)
+ *   #>> (PostgreSQL)
  * bitwise:
  *   & | >> <<
  *   ^ (BigQuery and MySQL)

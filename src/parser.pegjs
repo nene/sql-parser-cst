@@ -4006,6 +4006,7 @@ pg_other_op
   = op:(
     // multi-letter operators (non-exhaustive list)
     "||/" / "|/" / "||" / ">>" / "<<" / "!~~*" / "~~*" / "!~~" / "~~" / "!~*" / "~*" / "!~" / "^@"
+    / "->>" / "->" / "#>>" / "#>"
     // single-letter operators (exhaustive list)
     / "!" / "@" / "#" / "&" / "|" / "`" / "?"
   ) {
