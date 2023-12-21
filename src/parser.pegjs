@@ -3829,19 +3829,19 @@ pg_comparison_expr
   / pg_in_expr
 
 pg_in_expr
-  = left:bitwise_or_expr rightFn:_pg_in_expr_right {
+  = left:sub_comparison_expr rightFn:_pg_in_expr_right {
     return loc(rightFn(left));
   }
-  / bitwise_or_expr
+  / sub_comparison_expr
 
 _pg_in_expr_right
-  = c1:__ op:(NOT __ IN / IN) c2:__ right:(paren$list$expr / bitwise_or_expr) {
+  = c1:__ op:(NOT __ IN / IN) c2:__ right:(paren$list$expr / sub_comparison_expr) {
     return (left: any) => createBinaryExpr(left, c1, read(op), c2, right);
   }
   / c1:__ op:(NOT __ (LIKE / ILIKE) / (LIKE / ILIKE)) c2:__ right:escape_expr {
     return (left: any) => createBinaryExpr(left, c1, read(op), c2, right);
   }
-  / betweenKw:(__ pg_between_op) begin:(__ bitwise_or_expr) andKw:(__ AND) end:(__ bitwise_or_expr) {
+  / betweenKw:(__ pg_between_op) begin:(__ sub_comparison_expr) andKw:(__ AND) end:(__ sub_comparison_expr) {
     return (left: any) => ({
       type: "between_expr",
       left: left,
@@ -3856,11 +3856,11 @@ pg_between_op
   = kws:(NOT __ BETWEEN __ SYMMETRIC / BETWEEN __ SYMMETRIC / NOT __ BETWEEN / BETWEEN) { return read(kws); }
 
 comparison_expr
-  = left:bitwise_or_expr rightFn:_comparison_expr_right {
+  = left:sub_comparison_expr rightFn:_comparison_expr_right {
     return loc(rightFn(left));
   }
   / &mysql full_text_match_expr
-  / bitwise_or_expr
+  / sub_comparison_expr
 
 _comparison_expr_right
   = op:(__ unary_comparison_op) {
@@ -3869,7 +3869,7 @@ _comparison_expr_right
   / tail:(__ comparison_op __ quantifier_expr)+ {
     return (head: any) => createBinaryExprChain(head, tail);
   }
-  / c1:__ op:(NOT __ IN / IN) c2:__ right:(paren$list$expr / bitwise_or_expr / &bigquery e:unnest_expr { return e; }) {
+  / c1:__ op:(NOT __ IN / IN) c2:__ right:(paren$list$expr / sub_comparison_expr / &bigquery e:unnest_expr { return e; }) {
     return (left: any) => createBinaryExpr(left, c1, read(op), c2, right);
   }
   / c1:__ op:(NOT __ LIKE / LIKE) c2:__ right:escape_expr {
@@ -3878,10 +3878,10 @@ _comparison_expr_right
   / &only_mysql c1:__ op:(MEMBER __ OF) c2:__ right:paren$string_literal {
     return (left: any) => createBinaryExpr(left, c1, read(op), c2, right);
   }
-  / &mysql c1:__ op:(SOUNDS __ LIKE) c2:__ right:bitwise_or_expr {
+  / &mysql c1:__ op:(SOUNDS __ LIKE) c2:__ right:sub_comparison_expr {
     return (left: any) => createBinaryExpr(left, c1, read(op), c2, right);
   }
-  / betweenKw:(__ between_op) begin:(__ bitwise_or_expr) andKw:(__ AND) end:(__ bitwise_or_expr) {
+  / betweenKw:(__ between_op) begin:(__ sub_comparison_expr) andKw:(__ AND) end:(__ sub_comparison_expr) {
     return (left: any) => ({
       type: "between_expr",
       left: left,
@@ -3932,10 +3932,10 @@ regexp_op_kw
   / kw:MATCH &sqlite { return kw; }
 
 escape_expr
-  = left:bitwise_or_expr c1:__ op:ESCAPE c2:__ right:string_literal {
+  = left:sub_comparison_expr c1:__ op:ESCAPE c2:__ right:string_literal {
     return loc(createBinaryExpr(left, c1, op, c2, right));
   }
-  / bitwise_or_expr
+  / sub_comparison_expr
 
 between_op
   = kws:(NOT __ BETWEEN / BETWEEN) { return read(kws); }
@@ -3948,7 +3948,7 @@ quantifier_expr
       expr,
     });
   }
-  / bitwise_or_expr
+  / sub_comparison_expr
 
 full_text_match_expr
   = mKw:MATCH cols:(__ paren$list$ident __) aKw:AGAINST args:(__ paren$full_text_match_args) {
@@ -3962,7 +3962,7 @@ full_text_match_expr
   }
 
 full_text_match_args
-  = expr:bitwise_or_expr mod:(__ full_text_modifier)? {
+  = expr:sub_comparison_expr mod:(__ full_text_modifier)? {
     return loc({
       type: "full_text_match_args",
       expr,
@@ -3977,6 +3977,15 @@ full_text_modifier
   / WITH __ QUERY __ EXPANSION) {
     return read(mod);
   }
+
+/**
+ * There's a variation in which sort of expressions come next
+ * in precedence order after the comparison expressions (>, <, =, IN, IS, ...),
+ * but before the additive (+ / -) expressions.
+ *
+ * For most dialects these are bitwise operators: |, &, ^, <<, >>
+ */
+sub_comparison_expr = bitwise_or_expr
 
 bitwise_or_expr
   = head:bitwise_xor_expr tail:(__ "|"  __ bitwise_xor_expr)* {
