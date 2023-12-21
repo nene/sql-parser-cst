@@ -5374,17 +5374,13 @@ number_literal_oct
   }
 
 number_literal_decimal
-  = int frac? exp? !ident_start {
+  = digits frac? exp? !ident_start {
     return loc({
       type: "number_literal",
       text: text(),
       value: parseFloat(text()),
     });
   }
-
-int
-  = digits
-  / [+-] digits { return text(); }
 
 frac
   = "." digits
