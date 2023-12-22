@@ -4094,6 +4094,7 @@ negation_expr
   = op:negation_operator right:(__ negation_expr) {
     return loc(createPrefixOpExpr(op, read(right)));
   }
+  / cast_operator_expr
   / member_expr_or_func_call
 
 negation_operator
@@ -4101,6 +4102,15 @@ negation_operator
   / "+"
   / "~"
   / op:"!" !postgres { return op; }
+
+cast_operator_expr
+  = &postgres expr:(member_expr_or_func_call __) "::" dataType:(__ data_type) {
+    return loc({
+      type: "cast_operator_expr",
+      expr: read(expr),
+      dataType: read(dataType),
+    });
+  }
 
 member_expr_or_func_call
   = obj:primary props:(__ "." __ qualified_column / __ array_subscript / __ func_call_right)+ {

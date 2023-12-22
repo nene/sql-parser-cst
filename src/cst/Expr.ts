@@ -41,6 +41,7 @@ export type Expr =
   | PostfixOpExpr
   | FuncCall
   | CastExpr
+  | CastOperatorExpr
   | RaiseExpr
   | ExtractExpr
   | BetweenExpr
@@ -205,10 +206,18 @@ export interface HavingArg extends BaseNode {
   expr: Expr;
 }
 
+// Standard SQL CAST(foo AS TYPE)
 export interface CastExpr extends BaseNode {
   type: "cast_expr";
   castKw: Keyword<"CAST" | "SAFE_CAST">;
   args: ParenExpr<CastArg>;
+}
+
+// PostgreSQL foo :: TYPE
+export interface CastOperatorExpr extends BaseNode {
+  type: "cast_operator_expr";
+  expr: Expr;
+  dataType: DataType;
 }
 
 export interface CastArg extends BaseNode {

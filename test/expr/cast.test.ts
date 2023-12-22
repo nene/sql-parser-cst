@@ -61,4 +61,11 @@ describe("type cast", () => {
       }
     `);
   });
+
+  dialect("postgresql", () => {
+    it("supports :: cast operator", () => {
+      testExprWc(`x :: INT`);
+      testExprWc(`8 :: DECIMAL(3, 2)`);
+    });
+  });
 });
