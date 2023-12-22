@@ -40,7 +40,7 @@ describe("type cast", () => {
                 "text": "INT",
                 "type": "keyword",
               },
-              "type": "data_type",
+              "type": "named_data_type",
             },
             "expr": {
               "text": "10",

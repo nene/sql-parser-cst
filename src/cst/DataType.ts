@@ -1,18 +1,34 @@
 import { BaseNode, Keyword } from "./Base";
 import { ColumnConstraint } from "./Constraint";
 import { Identifier, ListExpr, ParenExpr } from "./Expr";
-import { Literal } from "./Literal";
+import { Literal, NumberLiteral } from "./Literal";
 
 export type AllDataTypeNodes =
   | DataType
   | GenericTypeParams
   | ArrayTypeParam
-  | StructTypeParam;
+  | StructTypeParam
+  | ArrayBounds;
 
-export interface DataType extends BaseNode {
-  type: "data_type";
+export type DataType = NamedDataType | ArrayDataType;
+
+export interface NamedDataType extends BaseNode {
+  type: "named_data_type";
   nameKw: Keyword | Keyword[];
   params?: ParenExpr<ListExpr<Literal>> | GenericTypeParams;
+}
+
+export interface ArrayDataType extends BaseNode {
+  type: "array_data_type";
+  dataType: DataType;
+  bounds: ArrayBounds;
+}
+
+export interface ArrayBounds extends BaseNode {
+  type: "array_bounds";
+  // This can only contain one or zero items.
+  // We use a list because we want to store whitespace and comments inside empty [] brackets.
+  bounds: ListExpr<NumberLiteral>;
 }
 
 export interface GenericTypeParams extends BaseNode {

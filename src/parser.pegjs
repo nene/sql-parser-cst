@@ -3587,29 +3587,47 @@ on_conflict_clause
  * ------------------------------------------------------------------------------------ *
  */
 data_type
+  = &postgres dataType:(named_data_type __) bounds:array_bounds {
+    return loc({
+      type: "array_data_type",
+      dataType: read(dataType),
+      bounds: read(bounds),
+    });
+  }
+  / named_data_type
+
+array_bounds
+  = "[" bounds:(__ empty_list __) "]" {
+    return loc({ type: "array_bounds", bounds: read(bounds) });
+  }
+  / "[" bounds:(__ list$number_literal __) "]" {
+    return loc({ type: "array_bounds", bounds: read(bounds) });
+  }
+
+named_data_type
   = kw:(type_name __) params:paren$list$literal {
-    return loc({ type: "data_type", nameKw: read(kw), params });
+    return loc({ type: "named_data_type", nameKw: read(kw), params });
   }
   / &bigquery type:(bigquery_array_type / bigquery_struct_type / bigquery_table_type) {
     return type;
   }
   / kw:type_name {
-    return loc({ type: "data_type", nameKw: kw });
+    return loc({ type: "named_data_type", nameKw: kw });
   }
 
 bigquery_array_type
   = kw:ARRAY params:(__ generic_type_params)? {
-    return loc({ type: "data_type", nameKw: read(kw), params: read(params) });
+    return loc({ type: "named_data_type", nameKw: read(kw), params: read(params) });
   }
 
 bigquery_struct_type
   = kw:STRUCT params:(__ generic_type_params)? {
-    return loc({ type: "data_type", nameKw: read(kw), params: read(params) });
+    return loc({ type: "named_data_type", nameKw: read(kw), params: read(params) });
   }
 
 bigquery_table_type
   = kw:TABLE params:(__ generic_type_params) {
-    return loc({ type: "data_type", nameKw: read(kw), params: read(params) });
+    return loc({ type: "named_data_type", nameKw: read(kw), params: read(params) });
   }
 
 generic_type_params
@@ -4660,6 +4678,7 @@ list$expr_or_explicit_alias = .
 list$func_param = .
 list$ident = .
 list$literal = .
+list$number_literal = .
 list$named_window = .
 list$procedure_param = .
 list$rename_action = .

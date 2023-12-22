@@ -239,4 +239,22 @@ describe("data types", () => {
       testType("MY CUSTOM MADEUP DATATYPLIKE THINGIE");
     });
   });
+
+  dialect("postgresql", () => {
+    it("supports array types", () => {
+      testType("INT[]");
+      testTypeWc("INT [ ]");
+    });
+
+    it("supports array types with bounds", () => {
+      testType("INT[5]");
+      testTypeWc("INT [ 10 ]");
+    });
+
+    it.skip("supports multi-dimensional array types", () => {
+      testType("INT[][]");
+      testTypeWc("INT [ ] [ ]");
+      testTypeWc("INT [ 5 ] [ 6 ]");
+    });
+  });
 });
