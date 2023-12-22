@@ -251,7 +251,7 @@ describe("data types", () => {
       testTypeWc("INT [ 10 ]");
     });
 
-    it.skip("supports multi-dimensional array types", () => {
+    it("supports multi-dimensional array types", () => {
       testType("INT[][]");
       testTypeWc("INT [ ] [ ]");
       testTypeWc("INT [ 5 ] [ 6 ]");

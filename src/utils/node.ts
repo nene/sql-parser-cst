@@ -19,6 +19,7 @@ import {
   TablesampleExpr,
   FuncCall,
   ForSystemTimeAsOfExpr,
+  ArrayDataType,
 } from "../cst/Node";
 import { leading, surrounding, trailing } from "./whitespace";
 import { readCommaSepList } from "./list";
@@ -342,3 +343,35 @@ export const createListExpr = <T extends Node>(
     items: readCommaSepList(head, tail),
   };
 };
+
+export function createArrayDataTypeChain(
+  head: ArrayDataType["dataType"],
+  tail: [Whitespace[], ArrayDataType["bounds"]][]
+): ArrayDataType["dataType"] {
+  return tail.reduce(
+    (left, [c1, right]) =>
+      deriveArrayDataTypeLoc(createArrayDataType(left, c1, right)),
+    head
+  );
+}
+
+const deriveArrayDataTypeLoc = (array: ArrayDataType): ArrayDataType => {
+  if (!array.dataType.range || !array.bounds.range) {
+    return array;
+  }
+  const start = array.dataType.range[0];
+  const end = array.bounds.range[1];
+  return { ...array, range: [start, end] };
+};
+
+function createArrayDataType(
+  dataType: ArrayDataType["dataType"],
+  c1: Whitespace[],
+  bounds: ArrayDataType["bounds"]
+): ArrayDataType {
+  return {
+    type: "array_data_type",
+    dataType: trailing(dataType, c1) as ArrayDataType["dataType"],
+    bounds: bounds,
+  };
+}

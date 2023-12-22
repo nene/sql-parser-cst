@@ -22,6 +22,7 @@
     createAlias,
     createParenExpr,
     createListExpr,
+    createArrayDataTypeChain,
   } from "./utils/node";
   import {
     trailing,
@@ -3587,12 +3588,8 @@ on_conflict_clause
  * ------------------------------------------------------------------------------------ *
  */
 data_type
-  = &postgres dataType:(named_data_type __) bounds:array_bounds {
-    return loc({
-      type: "array_data_type",
-      dataType: read(dataType),
-      bounds: read(bounds),
-    });
+  = &postgres head:named_data_type tail:(__ array_bounds)+ {
+    return loc(createArrayDataTypeChain(head, tail));
   }
   / named_data_type
 
