@@ -3590,24 +3590,24 @@ data_type
   = kw:(type_name __) params:paren$list$literal {
     return loc({ type: "data_type", nameKw: read(kw), params });
   }
-  / &bigquery type:(array_type / struct_type / table_type) {
+  / &bigquery type:(bigquery_array_type / bigquery_struct_type / bigquery_table_type) {
     return type;
   }
   / kw:type_name {
     return loc({ type: "data_type", nameKw: kw });
   }
 
-array_type
+bigquery_array_type
   = kw:ARRAY params:(__ generic_type_params)? {
     return loc({ type: "data_type", nameKw: read(kw), params: read(params) });
   }
 
-struct_type
+bigquery_struct_type
   = kw:STRUCT params:(__ generic_type_params)? {
     return loc({ type: "data_type", nameKw: read(kw), params: read(params) });
   }
 
-table_type
+bigquery_table_type
   = kw:TABLE params:(__ generic_type_params) {
     return loc({ type: "data_type", nameKw: read(kw), params: read(params) });
   }
@@ -4892,7 +4892,7 @@ system_variable
  * ------------------------------------------------------------------------------------ *
  */
 typed_array_expr
-  = type:(array_type __) expr:array_expr {
+  = type:(bigquery_array_type __) expr:array_expr {
     return loc({
       type: "typed_expr",
       dataType: read(type),
@@ -4909,7 +4909,7 @@ array_expr
   }
 
 typed_struct_expr
-  = type:(struct_type __) expr:struct_expr {
+  = type:(bigquery_struct_type __) expr:struct_expr {
     return loc({
       type: "typed_expr",
       dataType: read(type),
