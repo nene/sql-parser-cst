@@ -39,7 +39,7 @@ describe("array", () => {
                         "text": "INT64",
                         "type": "keyword",
                       },
-                      "type": "data_type",
+                      "type": "named_data_type",
                     },
                     "type": "array_type_param",
                   },
@@ -48,7 +48,7 @@ describe("array", () => {
               },
               "type": "generic_type_params",
             },
-            "type": "data_type",
+            "type": "named_data_type",
           },
           "expr": {
             "expr": {

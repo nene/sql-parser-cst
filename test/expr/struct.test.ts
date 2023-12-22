@@ -68,7 +68,7 @@ describe("struct", () => {
                         "text": "INT64",
                         "type": "keyword",
                       },
-                      "type": "data_type",
+                      "type": "named_data_type",
                     },
                     "name": {
                       "name": "id",
@@ -82,7 +82,7 @@ describe("struct", () => {
               },
               "type": "generic_type_params",
             },
-            "type": "data_type",
+            "type": "named_data_type",
           },
           "expr": {
             "expr": {
