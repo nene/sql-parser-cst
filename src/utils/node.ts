@@ -74,8 +74,8 @@ export function createBinaryExpr(
   return {
     type: "binary_expr",
     operator: op,
-    left: trailing(left, c1) as BinaryExpr["left"],
-    right: leading(right, c2) as BinaryExpr["right"],
+    left: trailing(left, c1),
+    right: leading(right, c2),
   };
 }
 
@@ -105,8 +105,8 @@ export function createCompoundSelectStmt(
   return {
     type: "compound_select_stmt",
     operator: op,
-    left: trailing(left, c1) as CompoundSelectStmt["left"],
-    right: leading(right, c2) as CompoundSelectStmt["right"],
+    left: trailing(left, c1),
+    right: leading(right, c2),
   };
 }
 
@@ -221,15 +221,15 @@ function createMemberExpr(
     const [c1, _, c2, prop] = tailPart;
     return {
       type: "member_expr",
-      object: trailing(obj, c1) as MemberExpr["object"],
-      property: leading(prop, c2) as MemberExpr["property"],
+      object: trailing(obj, c1),
+      property: leading(prop, c2),
     };
   } else {
     const [c1, prop] = tailPart;
     return {
       type: "member_expr",
       object: obj,
-      property: leading(prop, c1) as MemberExpr["property"],
+      property: leading(prop, c1),
     };
   }
 }
@@ -240,7 +240,7 @@ export function createFuncCall(
 ): FuncCall {
   return {
     type: "func_call",
-    name: trailing(name, c1) as FuncCall["name"],
+    name: trailing(name, c1),
     args: fn.args,
     filter: fn.filter,
     over: fn.over,
@@ -318,7 +318,7 @@ export const createAlias = <T extends Node>(
   const [c, partialAlias] = _alias;
   return {
     type: "alias",
-    expr: trailing(expr, c) as T,
+    expr: trailing(expr, c),
     ...partialAlias,
   };
 };
@@ -371,7 +371,7 @@ function createArrayDataType(
 ): ArrayDataType {
   return {
     type: "array_data_type",
-    dataType: trailing(dataType, c1) as ArrayDataType["dataType"],
+    dataType: trailing(dataType, c1),
     bounds: bounds,
   };
 }

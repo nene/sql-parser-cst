@@ -1,4 +1,4 @@
-import { Node, Whitespace } from "src/cst/Node";
+import { BaseNode, Node, Whitespace } from "src/cst/Node";
 import { leading, trailing } from "./whitespace";
 
 /* eslint-disable @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-return */
@@ -23,7 +23,10 @@ export const read = (items: any) => {
   for (const it of items) {
     if (isWhitespace(it)) {
       if (nodes.length > 0) {
-        nodes[nodes.length - 1] = trailing(nodes[nodes.length - 1], it);
+        nodes[nodes.length - 1] = trailing(
+          nodes[nodes.length - 1] as BaseNode,
+          it
+        );
       } else {
         leadingWhitespace = it;
       }
