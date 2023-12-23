@@ -34,7 +34,7 @@ describe("data types", () => {
         { type: "NUMERIC", lang: ["mysql", "bigquery", "postgresql"] },
         { type: "DECIMAL", lang: ["mysql", "bigquery", "postgresql"] },
         { type: "FIXED", lang: ["mysql"] },
-        { type: "DEC", lang: ["mysql"] },
+        { type: "DEC", lang: ["mysql", "postgresql"] },
         { type: "BIGNUMERIC", lang: ["bigquery"] },
         { type: "BIGDECIMAL", lang: ["bigquery"] },
       ],

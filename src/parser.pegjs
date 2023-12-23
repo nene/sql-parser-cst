@@ -3766,7 +3766,7 @@ type_name_postgresql
   / MACADDR
   / MACADDR8
   / MONEY
-  / NUMERIC / DECIMAL
+  / NUMERIC / DECIMAL / DEC
   / PATH
   / PG_LSN
   / PG_SNAPSHOT
