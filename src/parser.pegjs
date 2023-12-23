@@ -3661,7 +3661,8 @@ array_type_param
 type_name
   = &bigquery t:type_name_bigquery { return t; }
   / &mysql t:type_name_mysql { return t; }
-  / (&sqlite / &postgres) t:type_name_sqlite { return t; }
+  / &postgres t:type_name_postgresql { return t; }
+  / &sqlite t:type_name_sqlite { return t; }
 
 type_name_bigquery
   = BOOL
@@ -3733,6 +3734,51 @@ type_name_mysql
   / JSON
   / ENUM
   / SET
+
+type_name_postgresql
+  = BIGINT / INT8
+  / BIGSERIAL / SERIAL8
+  / kws:(BIT __ VARYING) { return read(kws); } / VARBIT
+  / BIT
+  / BOOLEAN / BOOL
+  / BOX
+  / BYTEA
+  / kws:(CHARACTER __ VARYING) { return read(kws); } / VARCHAR
+  / CHARACTER / CHAR
+  / CIDR
+  / CIRCLE
+  / DATE
+  / kws:(DOUBLE __ PRECISION) { return read(kws); } / FLOAT8
+  / INET
+  / INTEGER / INT / INT4
+  / INTERVAL // TODO: add fields
+  / JSON
+  / JSONB
+  / LINE
+  / LSEG
+  / MACADDR
+  / MACADDR8
+  / MONEY
+  / NUMERIC / DECIMAL
+  / PATH
+  / PG_LSN
+  / PG_SNAPSHOT
+  / POINT
+  / POLYGON
+  / REAL / FLOAT4
+  / SMALLINT / INT2
+  / SMALLSERIAL / SERIAL2
+  / SERIAL / SERIAL4
+  / TEXT
+  / TIME // TODO: add time zone
+  / TIMETZ
+  / TIMESTAMP // TODO: add time zone
+  / TIMESTAMPTZ
+  / TSQUERY
+  / TSVECTOR
+  / TXID_SNAPSHOT
+  / UUID
+  / XML
 
 type_name_sqlite
   = head:sqlite_type_name_part tail:(__ sqlite_type_name_part)* {
@@ -5543,15 +5589,18 @@ BI_CAPACITY         = kw:"BI_CAPACITY"i         !ident_part { return loc(createK
 BIGDECIMAL          = kw:"BIGDECIMAL"i          !ident_part { return loc(createKeyword(kw)); }
 BIGINT              = kw:"BIGINT"i              !ident_part { return loc(createKeyword(kw)); }
 BIGNUMERIC          = kw:"BIGNUMERIC"i          !ident_part { return loc(createKeyword(kw)); }
+BIGSERIAL           = kw:"BIGSERIAL"i           !ident_part { return loc(createKeyword(kw)); }
 BINARY              = kw:"BINARY"i              !ident_part { return loc(createKeyword(kw)); }
 BINLOG              = kw:"BINLOG"i              !ident_part { return loc(createKeyword(kw)); }
 BIT                 = kw:"BIT"i                 !ident_part { return loc(createKeyword(kw)); }
 BLOB                = kw:"BLOB"i                !ident_part { return loc(createKeyword(kw)); }
 BOOL                = kw:"BOOL"i                !ident_part { return loc(createKeyword(kw)); }
 BOOLEAN             = kw:"BOOLEAN"i             !ident_part { return loc(createKeyword(kw)); }
+BOX                 = kw:"BOX"i                 !ident_part { return loc(createKeyword(kw)); }
 BREAK               = kw:"BREAK"i               !ident_part { return loc(createKeyword(kw)); }
 BTREE               = kw:"BTREE"i               !ident_part { return loc(createKeyword(kw)); }
 BY                  = kw:"BY"i                  !ident_part { return loc(createKeyword(kw)); }
+BYTEA               = kw:"BYTEA"i               !ident_part { return loc(createKeyword(kw)); }
 BYTEINT             = kw:"BYTEINT"i             !ident_part { return loc(createKeyword(kw)); }
 BYTES               = kw:"BYTES"i               !ident_part { return loc(createKeyword(kw)); }
 CALL                = kw:"CALL"i                !ident_part { return loc(createKeyword(kw)); }
@@ -5566,6 +5615,8 @@ CHARACTER           = kw:"CHARACTER"i           !ident_part { return loc(createK
 CHARSET             = kw:"CHARSET"i             !ident_part { return loc(createKeyword(kw)); }
 CHECK               = kw:"CHECK"i               !ident_part { return loc(createKeyword(kw)); }
 CHECKSUM            = kw:"CHECKSUM"i            !ident_part { return loc(createKeyword(kw)); }
+CIDR                = kw:"CIDR"i                !ident_part { return loc(createKeyword(kw)); }
+CIRCLE              = kw:"CIRCLE"i              !ident_part { return loc(createKeyword(kw)); }
 CLONE               = kw:"CLONE"i               !ident_part { return loc(createKeyword(kw)); }
 CLUSTER             = kw:"CLUSTER"i             !ident_part { return loc(createKeyword(kw)); }
 COLLATE             = kw:"COLLATE"i             !ident_part { return loc(createKeyword(kw)); }
@@ -5667,7 +5718,10 @@ FIRST               = kw:"FIRST"i               !ident_part { return loc(createK
 FIRST_VALUE         = kw:"FIRST_VALUE"i         !ident_part { return loc(createKeyword(kw)); }
 FIXED               = kw:"FIXED"i               !ident_part { return loc(createKeyword(kw)); }
 FLOAT               = kw:"FLOAT"i               !ident_part { return loc(createKeyword(kw)); }
+FLOAT2              = kw:"FLOAT2"i              !ident_part { return loc(createKeyword(kw)); }
+FLOAT4              = kw:"FLOAT4"i              !ident_part { return loc(createKeyword(kw)); }
 FLOAT64             = kw:"FLOAT64"i             !ident_part { return loc(createKeyword(kw)); }
+FLOAT8              = kw:"FLOAT8"i              !ident_part { return loc(createKeyword(kw)); }
 FOLLOWING           = kw:"FOLLOWING"i           !ident_part { return loc(createKeyword(kw)); }
 FOR                 = kw:"FOR"i                 !ident_part { return loc(createKeyword(kw)); }
 FOREIGN             = kw:"FOREIGN"i             !ident_part { return loc(createKeyword(kw)); }
@@ -5702,6 +5756,7 @@ IN                  = kw:"IN"i                  !ident_part { return loc(createK
 INCLUDE             = kw:"INCLUDE"i             !ident_part { return loc(createKeyword(kw)); }
 INDEX               = kw:"INDEX"i               !ident_part { return loc(createKeyword(kw)); }
 INDEXED             = kw:"INDEXED"              !ident_part { return loc(createKeyword(kw)); }
+INET                = kw:"INET"i                !ident_part { return loc(createKeyword(kw)); }
 INITIALLY           = kw:"INITIALLY"i           !ident_part { return loc(createKeyword(kw)); }
 INNER               = kw:"INNER"i               !ident_part { return loc(createKeyword(kw)); }
 INOUT               = kw:"INOUT"i               !ident_part { return loc(createKeyword(kw)); }
@@ -5711,7 +5766,10 @@ INSERT_METHOD       = kw:"INSERT_METHOD"i       !ident_part { return loc(createK
 INSTANT             = kw:"INSTANT"i             !ident_part { return loc(createKeyword(kw)); }
 INSTEAD             = kw:"INSTEAD"i             !ident_part { return loc(createKeyword(kw)); }
 INT                 = kw:"INT"i                 !ident_part { return loc(createKeyword(kw)); }
+INT2                = kw:"INT2"i                !ident_part { return loc(createKeyword(kw)); }
+INT4                = kw:"INT4"i                !ident_part { return loc(createKeyword(kw)); }
 INT64               = kw:"INT64"i               !ident_part { return loc(createKeyword(kw)); }
+INT8                = kw:"INT8"i                !ident_part { return loc(createKeyword(kw)); }
 INTEGER             = kw:"INTEGER"i             !ident_part { return loc(createKeyword(kw)); }
 INTERSECT           = kw:"INTERSECT"i           !ident_part { return loc(createKeyword(kw)); }
 INTERVAL            = kw:"INTERVAL"i            !ident_part { return loc(createKeyword(kw)); }
@@ -5738,6 +5796,7 @@ LEAVE               = kw:"LEAVE"i               !ident_part { return loc(createK
 LEFT                = kw:"LEFT"i                !ident_part { return loc(createKeyword(kw)); }
 LIKE                = kw:"LIKE"i                !ident_part { return loc(createKeyword(kw)); }
 LIMIT               = kw:"LIMIT"i               !ident_part { return loc(createKeyword(kw)); }
+LINE                = kw:"LINE"i                !ident_part { return loc(createKeyword(kw)); }
 LINES               = kw:"LINES"i               !ident_part { return loc(createKeyword(kw)); }
 LOAD                = kw:"LOAD"i                !ident_part { return loc(createKeyword(kw)); }
 LOCAL               = kw:"LOCAL"i               !ident_part { return loc(createKeyword(kw)); }
@@ -5750,6 +5809,9 @@ LONGBLOB            = kw:"LONGBLOB"i            !ident_part { return loc(createK
 LONGTEXT            = kw:"LONGTEXT"i            !ident_part { return loc(createKeyword(kw)); }
 LOOP                = kw:"LOOP"i                !ident_part { return loc(createKeyword(kw)); }
 LOW_PRIORITY        = kw:"LOW_PRIORITY"i        !ident_part { return loc(createKeyword(kw)); }
+LSEG                = kw:"LSEG"i                !ident_part { return loc(createKeyword(kw)); }
+MACADDR             = kw:"MACADDR"i             !ident_part { return loc(createKeyword(kw)); }
+MACADDR8            = kw:"MACADDR8"i            !ident_part { return loc(createKeyword(kw)); }
 MASTER              = kw:"MASTER"i              !ident_part { return loc(createKeyword(kw)); }
 MATCH               = kw:"MATCH"i               !ident_part { return loc(createKeyword(kw)); }
 MATCHED             = kw:"MATCHED"i             !ident_part { return loc(createKeyword(kw)); }
@@ -5773,6 +5835,7 @@ MINUTE_SECOND       = kw:"MINUTE_SECOND"        !ident_part { return loc(createK
 MOD                 = kw:"MOD"i                 !ident_part { return loc(createKeyword(kw)); }
 MODE                = kw:"MODE"i                !ident_part { return loc(createKeyword(kw)); }
 MONDAY              = kw:"MONDAY"i              !ident_part { return loc(createKeyword(kw)); }
+MONEY               = kw:"MONEY"i               !ident_part { return loc(createKeyword(kw)); }
 MONTH               = kw:"MONTH"i               !ident_part { return loc(createKeyword(kw)); }
 NATIVE              = kw:"NATIVE"i              !ident_part { return loc(createKeyword(kw)); }
 NATURAL             = kw:"NATURAL"i             !ident_part { return loc(createKeyword(kw)); }
@@ -5813,14 +5876,19 @@ PARSER              = kw:"PARSER"i              !ident_part { return loc(createK
 PARTIAL             = kw:"PARTIAL"i             !ident_part { return loc(createKeyword(kw)); }
 PARTITION           = kw:"PARTITION"i           !ident_part { return loc(createKeyword(kw)); }
 PASSWORD            = kw:"PASSWORD"i            !ident_part { return loc(createKeyword(kw)); }
+PATH                = kw:"PATH"i                !ident_part { return loc(createKeyword(kw)); }
 PERCENT             = kw:"PERCENT"i             !ident_part { return loc(createKeyword(kw)); }
 PERCENT_RANK        = kw:"PERCENT_RANK"i        !ident_part { return loc(createKeyword(kw)); }
 PERSIST             = kw:"PERSIST"i             !ident_part { return loc(createKeyword(kw)); }
 PERSIST_ONLY        = kw:"PERSIST_ONLY"i        !ident_part { return loc(createKeyword(kw)); }
+PG_LSN              = kw:"PG_LSN"i              !ident_part { return loc(createKeyword(kw)); }
+PG_SNAPSHOT         = kw:"PG_SNAPSHOT"i         !ident_part { return loc(createKeyword(kw)); }
 PIVOT               = kw:"PIVOT"i               !ident_part { return loc(createKeyword(kw)); }
 PLAN                = kw:"PLAN"i                !ident_part { return loc(createKeyword(kw)); }
+POINT               = kw:"POINT"i               !ident_part { return loc(createKeyword(kw)); }
 POLICIES            = kw:"POLICIES"i            !ident_part { return loc(createKeyword(kw)); }
 POLICY              = kw:"POLICY"i              !ident_part { return loc(createKeyword(kw)); }
+POLYGON             = kw:"POLYGON"i             !ident_part { return loc(createKeyword(kw)); }
 PRAGMA              = kw:"PRAGMA"i              !ident_part { return loc(createKeyword(kw)); }
 PRECEDING           = kw:"PRECEDING"i           !ident_part { return loc(createKeyword(kw)); }
 PRECISION           = kw:"PRECISION"i           !ident_part { return loc(createKeyword(kw)); }
@@ -5875,6 +5943,10 @@ SECOND_MICROSECOND  = kw:"SECOND_MICROSECOND"   !ident_part { return loc(createK
 SECONDARY_ENGINE_ATTRIBUTE = kw:"SECONDARY_ENGINE_ATTRIBUTE"i !ident_part { return loc(createKeyword(kw)); }
 SECURITY            = kw:"SECURITY"i            !ident_part { return loc(createKeyword(kw)); }
 SELECT              = kw:"SELECT"i              !ident_part { return loc(createKeyword(kw)); }
+SERIAL              = kw:"SERIAL"i              !ident_part { return loc(createKeyword(kw)); }
+SERIAL2             = kw:"SERIAL2"i             !ident_part { return loc(createKeyword(kw)); }
+SERIAL4             = kw:"SERIAL4"i             !ident_part { return loc(createKeyword(kw)); }
+SERIAL8             = kw:"SERIAL8"i             !ident_part { return loc(createKeyword(kw)); }
 SESSION             = kw:"SESSION"i             !ident_part { return loc(createKeyword(kw)); }
 SESSION_USER        = kw:"SESSION_USER"i        !ident_part { return loc(createKeyword(kw)); }
 SET                 = kw:"SET"i                 !ident_part { return loc(createKeyword(kw)); }
@@ -5886,6 +5958,7 @@ SIMILAR             = kw:"SIMILAR"i             !ident_part { return loc(createK
 SIMPLE              = kw:"SIMPLE"i              !ident_part { return loc(createKeyword(kw)); }
 SKIP                = kw:"SKIP"i                !ident_part { return loc(createKeyword(kw)); }
 SMALLINT            = kw:"SMALLINT"i            !ident_part { return loc(createKeyword(kw)); }
+SMALLSERIAL         = kw:"SMALLSERIAL"i         !ident_part { return loc(createKeyword(kw)); }
 SNAPSHOT            = kw:"SNAPSHOT"i            !ident_part { return loc(createKeyword(kw)); }
 SOME                = kw:"SOME"i                !ident_part { return loc(createKeyword(kw)); }
 SOUNDS              = kw:"SOUNDS"i              !ident_part { return loc(createKeyword(kw)); }
@@ -5929,6 +6002,8 @@ THURSDAY            = kw:"THURSDAY"i            !ident_part { return loc(createK
 TIES                = kw:"TIES"i                !ident_part { return loc(createKeyword(kw)); }
 TIME                = kw:"TIME"i                !ident_part { return loc(createKeyword(kw)); }
 TIMESTAMP           = kw:"TIMESTAMP"i           !ident_part { return loc(createKeyword(kw)); }
+TIMESTAMPTZ         = kw:"TIMESTAMPTZ"i         !ident_part { return loc(createKeyword(kw)); }
+TIMETZ              = kw:"TIMETZ"i              !ident_part { return loc(createKeyword(kw)); }
 TINYBLOB            = kw:"TINYBLOB"i            !ident_part { return loc(createKeyword(kw)); }
 TINYINT             = kw:"TINYINT"i             !ident_part { return loc(createKeyword(kw)); }
 TINYTEXT            = kw:"TINYTEXT"i            !ident_part { return loc(createKeyword(kw)); }
@@ -5937,7 +6012,10 @@ TRANSACTION         = kw:"TRANSACTION"i         !ident_part { return loc(createK
 TRIGGER             = kw:"TRIGGER"i             !ident_part { return loc(createKeyword(kw)); }
 TRUE                = kw:"TRUE"i                !ident_part { return loc(createKeyword(kw)); }
 TRUNCATE            = kw:"TRUNCATE"i            !ident_part { return loc(createKeyword(kw)); }
+TSQUERY             = kw:"TSQUERY"i             !ident_part { return loc(createKeyword(kw)); }
+TSVECTOR            = kw:"TSVECTOR"i            !ident_part { return loc(createKeyword(kw)); }
 TUESDAY             = kw:"TUESDAY"i             !ident_part { return loc(createKeyword(kw)); }
+TXID_SNAPSHOT       = kw:"TXID_SNAPSHOT"i       !ident_part { return loc(createKeyword(kw)); }
 TYPE                = kw:"TYPE"i                !ident_part { return loc(createKeyword(kw)); }
 UNBOUNDED           = kw:"UNBOUNDED"i           !ident_part { return loc(createKeyword(kw)); }
 UNDEFINED           = kw:"UNDEFINED"i           !ident_part { return loc(createKeyword(kw)); }
@@ -5954,10 +6032,12 @@ UPDATE              = kw:"UPDATE"i              !ident_part { return loc(createK
 USE                 = kw:"USE"i                 !ident_part { return loc(createKeyword(kw)); }
 USER                = kw:"USER"i                !ident_part { return loc(createKeyword(kw)); }
 USING               = kw:"USING"i               !ident_part { return loc(createKeyword(kw)); }
+UUID                = kw:"UUID"i                !ident_part { return loc(createKeyword(kw)); }
 VACUUM              = kw:"VACUUM"i              !ident_part { return loc(createKeyword(kw)); }
 VALUE               = kw:"VALUE"i               !ident_part { return loc(createKeyword(kw)); }
 VALUES              = kw:"VALUES"i              !ident_part { return loc(createKeyword(kw)); }
 VARBINARY           = kw:"VARBINARY"i           !ident_part { return loc(createKeyword(kw)); }
+VARBIT              = kw:"VARBIT"i              !ident_part { return loc(createKeyword(kw)); }
 VARCHAR             = kw:"VARCHAR"i             !ident_part { return loc(createKeyword(kw)); }
 VARYING             = kw:"VARYING"i             !ident_part { return loc(createKeyword(kw)); }
 VIEW                = kw:"VIEW"i                !ident_part { return loc(createKeyword(kw)); }
@@ -5974,6 +6054,7 @@ WITH                = kw:"WITH"i                !ident_part { return loc(createK
 WITHOUT             = kw:"WITHOUT"i             !ident_part { return loc(createKeyword(kw)); }
 WORK                = kw:"WORK"i                !ident_part { return loc(createKeyword(kw)); }
 WRITE               = kw:"WRITE"i               !ident_part { return loc(createKeyword(kw)); }
+XML                 = kw:"XML"i                 !ident_part { return loc(createKeyword(kw)); }
 XOR                 = kw:"XOR"i                 !ident_part { return loc(createKeyword(kw)); }
 YEAR                = kw:"YEAR"i                !ident_part { return loc(createKeyword(kw)); }
 YEAR_MONTH          = kw:"YEAR_MONTH"           !ident_part { return loc(createKeyword(kw)); }

@@ -76,7 +76,7 @@ describe("data types", () => {
       { type: "FLOAT", lang: ["mysql"] },
       { type: "DOUBLE", lang: ["mysql"] },
       { type: "REAL", lang: ["mysql", "postgresql"] },
-      { type: "DOUBLE PRECISION", lang: ["mysql" /*"postgresql"*/] },
+      { type: "DOUBLE PRECISION", lang: ["mysql", "postgresql"] },
       { type: "FLOAT64", lang: ["bigquery"] },
       { type: "FLOAT4", lang: ["postgresql"] },
       { type: "FLOAT8", lang: ["postgresql"] },
@@ -96,7 +96,7 @@ describe("data types", () => {
         { type: "MEDIUMTEXT", lang: ["mysql"] },
         { type: "LONGTEXT", lang: ["mysql"] },
         { type: "VARYING CHARACTER", lang: ["mysql"] },
-        // { type: "CHARACTER VARYING", lang: ["postgresql"] },
+        { type: "CHARACTER VARYING", lang: ["postgresql"] },
         { type: "NATIVE CHARACTER", lang: ["mysql"] },
         { type: "LONGTEXT", lang: ["mysql"] },
         { type: "STRING", lang: ["bigquery"] },
@@ -140,8 +140,8 @@ describe("data types", () => {
     testTypesByDialect(
       [
         { type: "BIT", lang: ["mysql", "postgresql"] },
-        // { type: "BIT VARYING", lang: ["postgresql"] },
-        { type: "VARYBIT", lang: ["postgresql"] },
+        { type: "BIT VARYING", lang: ["postgresql"] },
+        { type: "VARBIT", lang: ["postgresql"] },
         { type: "BINARY", lang: ["mysql"] },
         { type: "VARBINARY", lang: ["mysql"] },
       ],
@@ -162,6 +162,14 @@ describe("data types", () => {
       ],
       testTypeWithLength
     );
+  });
+
+  describe("interval type", () => {
+    dialect(["bigquery", "postgresql"], () => {
+      it("supports INTERVAL", () => {
+        testType("INTERVAL");
+      });
+    });
   });
 
   dialect(["mysql", "mariadb"], () => {
@@ -246,9 +254,6 @@ describe("data types", () => {
     it("GEOGRAPHY type", () => {
       testType("GEOGRAPHY");
     });
-    it("INTERVAL type", () => {
-      testType("INTERVAL");
-    });
   });
 
   dialect("sqlite", () => {
@@ -279,6 +284,36 @@ describe("data types", () => {
       testType("INT[][]");
       testTypeWc("INT [ ] [ ]");
       testTypeWc("INT [ 5 ] [ 6 ]");
+    });
+  });
+
+  dialect("postgresql", () => {
+    describe("postgres-specific data types", () => {
+      [
+        "BOX",
+        "CIDR",
+        "CIRCLE",
+        "INET",
+        "LINE",
+        "LSEG",
+        "MACADDR",
+        "MACADDR8",
+        "MONEY",
+        "PATH",
+        "PG_LSN",
+        "PG_SNAPSHOT",
+        "POINT",
+        "POLYGON",
+        "TSQUERY",
+        "TSVECTOR",
+        "TXID_SNAPSHOT",
+        "UUID",
+        "XML",
+      ].forEach((type) => {
+        it(`supports ${type}`, () => {
+          testType(type);
+        });
+      });
     });
   });
 });
