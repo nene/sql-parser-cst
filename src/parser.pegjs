@@ -3770,9 +3770,11 @@ type_name_postgresql
   / SMALLSERIAL / SERIAL2
   / SERIAL / SERIAL4
   / TEXT
-  / TIME // TODO: add time zone
+  / kws:(TIME __ (WITH / WITHOUT) __ TIME __ ZONE) { return read(kws); }
+  / TIME // TODO: add TIME (p) WITH TIME ZONE
   / TIMETZ
-  / TIMESTAMP // TODO: add time zone
+  / kws:(TIMESTAMP __ (WITH / WITHOUT) __ TIME __ ZONE) { return read(kws); }
+  / TIMESTAMP // TODO: add TIMESTAMP (p) WITH TIME ZONE
   / TIMESTAMPTZ
   / TSQUERY
   / TSVECTOR
