@@ -187,6 +187,25 @@ describe("data types", () => {
         testType("INTERVAL");
       });
     });
+
+    dialect("postgresql", () => {
+      it("supports restricted INTERVAL type", () => {
+        testTypeWithLength("INTERVAL");
+        testTypeWithLength("INTERVAL YEAR");
+        testTypeWithLength("INTERVAL MONTH");
+        testTypeWithLength("INTERVAL DAY");
+        testTypeWithLength("INTERVAL HOUR");
+        testTypeWithLength("INTERVAL MINUTE");
+        testTypeWithLength("INTERVAL SECOND");
+        testTypeWithLength("INTERVAL YEAR TO MONTH");
+        testTypeWithLength("INTERVAL DAY TO HOUR");
+        testTypeWithLength("INTERVAL DAY TO MINUTE");
+        testTypeWithLength("INTERVAL DAY TO SECOND");
+        testTypeWithLength("INTERVAL HOUR TO MINUTE");
+        testTypeWithLength("INTERVAL HOUR TO SECOND");
+        testTypeWithLength("INTERVAL MINUTE TO SECOND");
+      });
+    });
   });
 
   dialect(["mysql", "mariadb"], () => {

@@ -3746,8 +3746,13 @@ type_name_postgresql
   = kws:(BIT __ VARYING) { return read(kws); }
   / kws:(CHARACTER __ VARYING) { return read(kws); }
   / kws:(DOUBLE __ PRECISION) { return read(kws); }
-  / INTERVAL // TODO: add fields
+  / interval_type_name_postgresql
   / unreserved_keyword // custom types
+
+interval_type_name_postgresql
+  = kws:(INTERVAL __ interval_unit_kw __ TO __ interval_unit_kw) { return read(kws); }
+  / kws:(INTERVAL __ interval_unit_kw) { return read(kws); }
+  / INTERVAL
 
 type_name_sqlite
   = head:unreserved_keyword tail:(__ unreserved_keyword)* {
