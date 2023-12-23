@@ -326,11 +326,30 @@ describe("data types", () => {
         "TXID_SNAPSHOT",
         "UUID",
         "XML",
+        // range types
+        "int4range",
+        "int8range",
+        "numrange",
+        "tsrange",
+        "tstzrange",
+        "daterange",
+        // multirange types
+        "int4multirange",
+        "int8multirange",
+        "nummultirange",
+        "tsmultirange",
+        "tstzmultirange",
+        "datemultirange",
       ].forEach((type) => {
         it(`supports ${type}`, () => {
           testType(type);
         });
       });
+    });
+
+    it("supports custom data types", () => {
+      testType("COMPLEX");
+      testType("MY_CUSTOM_TYPE");
     });
   });
 });

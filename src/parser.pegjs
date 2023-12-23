@@ -3786,16 +3786,17 @@ type_name_postgresql
   / TXID_SNAPSHOT
   / UUID
   / XML
+  / unreserved_keyword // custom types
 
 type_name_sqlite
-  = head:sqlite_type_name_part tail:(__ sqlite_type_name_part)* {
+  = head:unreserved_keyword tail:(__ unreserved_keyword)* {
     if (tail.length === 0) {
       return head;
     }
     return [head, ...tail.map(read)];
   }
 
-sqlite_type_name_part
+unreserved_keyword
   = name:ident_name !{ return isReservedKeyword(name); } {
     return loc(createKeyword(name));
   }
