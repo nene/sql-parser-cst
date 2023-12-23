@@ -10,7 +10,7 @@ export type AllDataTypeNodes =
   | StructTypeParam
   | ArrayBounds;
 
-export type DataType = NamedDataType | ArrayDataType;
+export type DataType = NamedDataType | ArrayDataType | WithTimeZoneDataType;
 
 export interface NamedDataType extends BaseNode {
   type: "named_data_type";
@@ -29,6 +29,16 @@ export interface ArrayBounds extends BaseNode {
   // This can only contain one or zero items.
   // We use a list because we want to store whitespace and comments inside empty [] brackets.
   bounds: ListExpr<NumberLiteral>;
+}
+
+export interface WithTimeZoneDataType extends BaseNode {
+  type: "with_time_zone_data_type";
+  dataType: DataType;
+  withTimeZoneKw: [
+    Keyword<"WITH" | "WITHOUT">,
+    Keyword<"TIME">,
+    Keyword<"ZONE">
+  ];
 }
 
 export interface GenericTypeParams extends BaseNode {

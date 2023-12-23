@@ -156,16 +156,29 @@ describe("data types", () => {
         { type: "DATETIME", lang: ["mysql", "bigquery"] },
         { type: "TIME", lang: ["mysql", "bigquery", "postgresql"] },
         { type: "TIMESTAMP", lang: ["mysql", "bigquery", "postgresql"] },
-        { type: "TIME WITH TIME ZONE", lang: ["postgresql"] },
-        { type: "TIME WITHOUT TIME ZONE", lang: ["postgresql"] },
-        { type: "TIMESTAMP WITH TIME ZONE", lang: ["postgresql"] },
-        { type: "TIMESTAMP WITHOUT TIME ZONE", lang: ["postgresql"] },
         { type: "YEAR", lang: ["mysql"] },
         { type: "TIMETZ", lang: ["postgresql"] },
         { type: "TIMESTAMPTZ", lang: ["postgresql"] },
       ],
       testTypeWithLength
     );
+
+    dialect("postgresql", () => {
+      it("supports TIME & TIMESTAMP WITH TIME ZONE", () => {
+        testType("TIME WITH TIME ZONE");
+        testType("TIMESTAMP WITH TIME ZONE");
+      });
+
+      it("supports TIME & TIMESTAMP WITHOUT TIME ZONE", () => {
+        testType("TIME WITHOUT TIME ZONE");
+        testType("TIMESTAMP WITHOUT TIME ZONE");
+      });
+
+      it("supports parameterized TIME & TIMESTAMP WITH/WITHOUT TIME ZONE", () => {
+        testType("TIME (10) WITHOUT TIME ZONE");
+        testType("TIMESTAMP (8) WITH TIME ZONE");
+      });
+    });
   });
 
   describe("interval type", () => {

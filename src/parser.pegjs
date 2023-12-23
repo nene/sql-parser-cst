@@ -3591,6 +3591,13 @@ data_type
   = &postgres head:named_data_type tail:(__ array_bounds)+ {
     return loc(createArrayDataTypeChain(head, tail));
   }
+  / &postgres dataType:named_data_type tz:(__ (WITHOUT / WITH) __ TIME __ ZONE) {
+    return loc({
+      type: "with_time_zone_data_type",
+      dataType,
+      withTimeZoneKw: read(tz),
+    });
+  }
   / named_data_type
 
 array_bounds
@@ -3770,11 +3777,9 @@ type_name_postgresql
   / SMALLSERIAL / SERIAL2
   / SERIAL / SERIAL4
   / TEXT
-  / kws:(TIME __ (WITH / WITHOUT) __ TIME __ ZONE) { return read(kws); }
-  / TIME // TODO: add TIME (p) WITH TIME ZONE
+  / TIME
   / TIMETZ
-  / kws:(TIMESTAMP __ (WITH / WITHOUT) __ TIME __ ZONE) { return read(kws); }
-  / TIMESTAMP // TODO: add TIMESTAMP (p) WITH TIME ZONE
+  / TIMESTAMP
   / TIMESTAMPTZ
   / TSQUERY
   / TSVECTOR
