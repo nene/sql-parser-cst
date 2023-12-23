@@ -31,8 +31,8 @@ describe("data types", () => {
   describe("numeric types", () => {
     testTypesByDialect(
       [
-        { type: "NUMERIC", lang: ["mysql", "bigquery"] },
-        { type: "DECIMAL", lang: ["mysql", "bigquery"] },
+        { type: "NUMERIC", lang: ["mysql", "bigquery", "postgresql"] },
+        { type: "DECIMAL", lang: ["mysql", "bigquery", "postgresql"] },
         { type: "FIXED", lang: ["mysql"] },
         { type: "DEC", lang: ["mysql"] },
         { type: "BIGNUMERIC", lang: ["bigquery"] },
@@ -49,14 +49,23 @@ describe("data types", () => {
   describe("integer types", () => {
     testTypesByDialect(
       [
-        { type: "INT", lang: ["mysql", "bigquery"] },
-        { type: "INTEGER", lang: ["mysql", "bigquery"] },
+        { type: "INT", lang: ["mysql", "bigquery", "postgresql"] },
+        { type: "INTEGER", lang: ["mysql", "bigquery", "postgresql"] },
         { type: "TINYINT", lang: ["mysql", "bigquery"] },
-        { type: "SMALLINT", lang: ["mysql", "bigquery"] },
-        { type: "BIGINT", lang: ["mysql", "bigquery"] },
+        { type: "SMALLINT", lang: ["mysql", "bigquery", "postgresql"] },
+        { type: "BIGINT", lang: ["mysql", "bigquery", "postgresql"] },
         { type: "MEDIUMINT", lang: ["mysql"] },
         { type: "INT64", lang: ["bigquery"] },
         { type: "BYTEINT", lang: ["bigquery"] },
+        { type: "INT2", lang: ["postgresql"] },
+        { type: "INT4", lang: ["postgresql"] },
+        { type: "INT8", lang: ["postgresql"] },
+        { type: "SMALLSERIAL", lang: ["postgresql"] },
+        { type: "SERIAL", lang: ["postgresql"] },
+        { type: "BIGSERIAL", lang: ["postgresql"] },
+        { type: "SERIAL2", lang: ["postgresql"] },
+        { type: "SERIAL4", lang: ["postgresql"] },
+        { type: "SERIAL8", lang: ["postgresql"] },
       ],
       testTypeWithLength
     );
@@ -66,24 +75,28 @@ describe("data types", () => {
     testTypesByDialect([
       { type: "FLOAT", lang: ["mysql"] },
       { type: "DOUBLE", lang: ["mysql"] },
-      { type: "REAL", lang: ["mysql"] },
-      { type: "DOUBLE PRECISION", lang: ["mysql"] },
+      { type: "REAL", lang: ["mysql", "postgresql"] },
+      { type: "DOUBLE PRECISION", lang: ["mysql" /*"postgresql"*/] },
       { type: "FLOAT64", lang: ["bigquery"] },
+      { type: "FLOAT4", lang: ["postgresql"] },
+      { type: "FLOAT8", lang: ["postgresql"] },
     ]);
   });
 
   describe("string types", () => {
     testTypesByDialect(
       [
-        { type: "VARCHAR", lang: ["mysql"] },
+        { type: "VARCHAR", lang: ["mysql", "postgresql"] },
         { type: "NVARCHAR", lang: ["mysql"] },
-        { type: "CHAR", lang: ["mysql"] },
+        { type: "CHAR", lang: ["mysql", "postgresql"] },
+        { type: "CHARACTER", lang: ["postgresql"] },
         { type: "NCHAR", lang: ["mysql"] },
-        { type: "TEXT", lang: ["mysql"] },
+        { type: "TEXT", lang: ["mysql", "postgresql"] },
         { type: "TINYTEXT", lang: ["mysql"] },
         { type: "MEDIUMTEXT", lang: ["mysql"] },
         { type: "LONGTEXT", lang: ["mysql"] },
         { type: "VARYING CHARACTER", lang: ["mysql"] },
+        // { type: "CHARACTER VARYING", lang: ["postgresql"] },
         { type: "NATIVE CHARACTER", lang: ["mysql"] },
         { type: "LONGTEXT", lang: ["mysql"] },
         { type: "STRING", lang: ["bigquery"] },
@@ -96,10 +109,16 @@ describe("data types", () => {
     testType("JSON");
   });
 
+  dialect("postgresql", () => {
+    it("JSONB type", () => {
+      testType("JSONB");
+    });
+  });
+
   describe("boolean type", () => {
     testTypesByDialect([
-      { type: "BOOL", lang: ["mysql", "bigquery"] },
-      { type: "BOOLEAN", lang: ["mysql"] },
+      { type: "BOOL", lang: ["mysql", "bigquery", "postgresql"] },
+      { type: "BOOLEAN", lang: ["mysql", "postgresql"] },
     ]);
   });
 
@@ -111,6 +130,7 @@ describe("data types", () => {
         { type: "MEDIUMBLOB", lang: ["mysql"] },
         { type: "LONGBLOB", lang: ["mysql"] },
         { type: "BYTES", lang: ["bigquery"] },
+        { type: "BYTEA", lang: ["postgresql"] },
       ],
       testTypeWithLength
     );
@@ -119,7 +139,9 @@ describe("data types", () => {
   describe("binary types", () => {
     testTypesByDialect(
       [
-        { type: "BIT", lang: ["mysql"] },
+        { type: "BIT", lang: ["mysql", "postgresql"] },
+        // { type: "BIT VARYING", lang: ["postgresql"] },
+        { type: "VARYBIT", lang: ["postgresql"] },
         { type: "BINARY", lang: ["mysql"] },
         { type: "VARBINARY", lang: ["mysql"] },
       ],
@@ -130,11 +152,13 @@ describe("data types", () => {
   describe("date types", () => {
     testTypesByDialect(
       [
-        { type: "DATE", lang: ["mysql", "bigquery"] },
+        { type: "DATE", lang: ["mysql", "bigquery", "postgresql"] },
         { type: "DATETIME", lang: ["mysql", "bigquery"] },
-        { type: "TIME", lang: ["mysql", "bigquery"] },
-        { type: "TIMESTAMP", lang: ["mysql", "bigquery"] },
+        { type: "TIME", lang: ["mysql", "bigquery", "postgresql"] },
+        { type: "TIMESTAMP", lang: ["mysql", "bigquery", "postgresql"] },
         { type: "YEAR", lang: ["mysql"] },
+        { type: "TIMETZ", lang: ["postgresql"] },
+        { type: "TIMESTAMPTZ", lang: ["postgresql"] },
       ],
       testTypeWithLength
     );
