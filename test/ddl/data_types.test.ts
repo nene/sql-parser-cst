@@ -359,6 +359,19 @@ describe("data types", () => {
         "tsmultirange",
         "tstzmultirange",
         "datemultirange",
+        // object identifer types
+        "oid",
+        "regclass",
+        "regcollation",
+        "regconfig",
+        "regdictionary",
+        "regnamespace",
+        "regoper",
+        "regoperator",
+        "regproc",
+        "regprocedure",
+        "regrole",
+        "regtype",
       ].forEach((type) => {
         it(`supports ${type}`, () => {
           testType(type);
