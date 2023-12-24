@@ -1,4 +1,4 @@
-import { dialect, notDialect, parseExpr, testExpr, testExprWc } from "../test_utils";
+import { dialect, parseExpr, testExpr, testExprWc } from "../test_utils";
 
 describe("ROW constructor", () => {
   dialect("postgresql", () => {
@@ -50,9 +50,14 @@ describe("ROW constructor", () => {
     });
   });
 
-  notDialect("postgresql", () => {
+  dialect(["sqlite", "mysql", "mariadb"], () => {
     it("does not support ROW() constructor", () => {
       expect(() => parseExpr("ROW(1, 2, 3)")).toThrowError();
+    });
+  });
+  dialect("bigquery", () => {
+    it("parses ROW() as a function", () => {
+      expect(parseExpr("ROW(1, 2, 3)").type).toBe("func_call");
     });
   });
 });
