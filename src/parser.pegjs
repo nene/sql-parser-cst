@@ -4196,6 +4196,7 @@ primary
   / &bigquery x:(typed_array_expr / array_expr / typed_struct_expr) { return x; }
   / &postgres x:typed_array_expr { return x; }
   / cast_expr
+  / &postgres x:row_constructor { return x; }
   / &sqlite e:raise_expr { return e; }
   / (&mysql / &bigquery) e:extract_expr { return e; }
   / case_expr
