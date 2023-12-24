@@ -50,12 +50,12 @@ describe("ROW constructor", () => {
     });
   });
 
-  dialect(["sqlite", "mysql", "mariadb"], () => {
+  dialect(["sqlite", "mysql"], () => {
     it("does not support ROW() constructor", () => {
       expect(() => parseExpr("ROW(1, 2, 3)")).toThrowError();
     });
   });
-  dialect("bigquery", () => {
+  dialect(["bigquery", "mariadb"], () => {
     it("parses ROW() as a function", () => {
       expect(parseExpr("ROW(1, 2, 3)").type).toBe("func_call");
     });
