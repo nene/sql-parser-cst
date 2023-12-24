@@ -122,5 +122,20 @@ describe("string operators", () => {
     it("supports ^@ starts-with operator", () => {
       testExprWc(`'hello' ^@ 'he'`);
     });
+
+    it("supports IS [NOT] [form] NORMALIZED operator", () => {
+      testExprWc(`'hello' IS NORMALIZED`);
+      testExprWc(`'hello' IS NOT NORMALIZED`);
+
+      testExprWc(`'hello' IS NFC NORMALIZED`);
+      testExprWc(`'hello' IS NFD NORMALIZED`);
+      testExprWc(`'hello' IS NFKC NORMALIZED`);
+      testExprWc(`'hello' IS NFKD NORMALIZED`);
+
+      testExprWc(`'hello' IS NOT NFC NORMALIZED`);
+      testExprWc(`'hello' IS NOT NFD NORMALIZED`);
+      testExprWc(`'hello' IS NOT NFKC NORMALIZED`);
+      testExprWc(`'hello' IS NOT NFKD NORMALIZED`);
+    });
   });
 });

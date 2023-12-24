@@ -3941,6 +3941,15 @@ unary_comparison_op
   / kws:(IS __ UNKNOWN / IS __ NOT __ UNKNOWN) (&mysql / &bigquery / &postgres) {
     return read(kws);
   }
+  / kws:(IS __ NOT __ normalization_form __ NORMALIZED / IS __ normalization_form __ NORMALIZED) &postgres {
+    return read(kws);
+  }
+  / kws:(IS __ NOT __ NORMALIZED / IS __ NORMALIZED) &postgres {
+    return read(kws);
+  }
+
+normalization_form
+  = NFC / NFD / NFKC / NFKD
 
 comparison_op
   = op:"<=>" &mysql { return op; }
@@ -5799,9 +5808,14 @@ NATIVE              = kw:"NATIVE"i              !ident_part { return loc(createK
 NATURAL             = kw:"NATURAL"i             !ident_part { return loc(createKeyword(kw)); }
 NCHAR               = kw:"NCHAR"i               !ident_part { return loc(createKeyword(kw)); }
 NEXT                = kw:"NEXT"i                !ident_part { return loc(createKeyword(kw)); }
+NFC                 = kw:"NFC"i                 !ident_part { return loc(createKeyword(kw)); }
+NFD                 = kw:"NFD"i                 !ident_part { return loc(createKeyword(kw)); }
+NFKC                = kw:"NFKC"i                !ident_part { return loc(createKeyword(kw)); }
+NFKD                = kw:"NFKD"i                !ident_part { return loc(createKeyword(kw)); }
 NO                  = kw:"NO"i                  !ident_part { return loc(createKeyword(kw)); }
 NOCHECK             = kw:"NOCHECK"i             !ident_part { return loc(createKeyword(kw)); }
 NONE                = kw:"NONE"i                !ident_part { return loc(createKeyword(kw)); }
+NORMALIZED          = kw:"NORMALIZED"i          !ident_part { return loc(createKeyword(kw)); }
 NOT                 = kw:"NOT"i                 !ident_part { return loc(createKeyword(kw)); }
 NOTHING             = kw:"NOTHING"i             !ident_part { return loc(createKeyword(kw)); }
 NOTNULL             = kw:"NOTNULL"              !ident_part { return loc(createKeyword(kw)); }

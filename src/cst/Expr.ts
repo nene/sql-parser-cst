@@ -161,9 +161,15 @@ export interface PostfixOpExpr extends BaseNode {
     | Keyword<"NOTNULL"> // SQLite, PostgreSQL
     | [Keyword<"NOT">, Keyword<"NULL">] // SQLite
     | [Keyword<"IS">, Keyword<"UNKNOWN">] // BigQuery, MySQL, PostgreSQL
-    | [Keyword<"IS">, Keyword<"NOT">, Keyword<"UNKNOWN">]; // BigQuery, MySQL, PostgreSQL
+    | [Keyword<"IS">, Keyword<"NOT">, Keyword<"UNKNOWN">] // BigQuery, MySQL, PostgreSQL
+    | [Keyword<"IS">, Keyword<"NORMALIZED">] // PostgreSQL
+    | [Keyword<"IS">, Keyword<"NOT">, Keyword<"NORMALIZED">] // PostgreSQL
+    | [Keyword<"IS">, NormalizationForm, Keyword<"NORMALIZED">] // PostgreSQL
+    | [Keyword<"IS">, Keyword<"NOT">, NormalizationForm, Keyword<"NORMALIZED">]; // PostgreSQL
   expr: Expr;
 }
+
+type NormalizationForm = Keyword<"NFC" | "NFD" | "NFKC" | "NFKD">;
 
 export interface FuncCall extends BaseNode {
   type: "func_call";
