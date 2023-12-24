@@ -10,7 +10,6 @@ export const insertMap: FullTransformMap<string, AllInsertNodes> = {
   or_alternate_action: (node) => show([node.orKw, node.actionKw]),
   // VALUES
   values_clause: (node) => show([node.valuesKw, node.values]),
-  row_constructor: (node) => show([node.rowKw, node.row]),
   default_values: (node) => show(node.defaultValuesKw),
   default: (node) => show(node.defaultKw),
 

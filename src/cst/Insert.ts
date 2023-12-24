@@ -1,5 +1,12 @@
 import { BaseNode, Keyword } from "./Base";
-import { Expr, Identifier, ListExpr, ParenExpr, EntityName } from "./Expr";
+import {
+  Expr,
+  Identifier,
+  ListExpr,
+  ParenExpr,
+  EntityName,
+  RowConstructor,
+} from "./Expr";
 import { Alias } from "./Alias";
 import {
   PartitionClause,
@@ -18,7 +25,6 @@ export type AllInsertNodes =
   | InsertColumnsClause
   | OrAlternateAction
   | ValuesClause
-  | RowConstructor
   | DefaultValues
   | Default
   | RowAliasClause
@@ -68,13 +74,6 @@ export interface ValuesClause extends BaseNode {
   type: "values_clause";
   valuesKw: Keyword<"VALUES" | "VALUE">;
   values: ListExpr<ParenExpr<ListExpr<Expr | Default>> | RowConstructor>;
-}
-
-// only in MySQL
-export interface RowConstructor extends BaseNode {
-  type: "row_constructor";
-  rowKw: Keyword<"ROW">;
-  row: ParenExpr<ListExpr<Expr | Default>>;
 }
 
 export interface DefaultValues extends BaseNode {

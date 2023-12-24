@@ -9,6 +9,7 @@ import {
   WhereClause,
   WindowDefinition,
 } from "./Select";
+import { Default } from "./Insert";
 
 export type AllExprNodes =
   | Expr
@@ -46,6 +47,7 @@ export type Expr =
   | ExtractExpr
   | BetweenExpr
   | CaseExpr
+  | RowConstructor
   | IntervalExpr
   | StringWithCharset
   | QuantifierExpr
@@ -314,6 +316,13 @@ export interface CaseElse<T> extends BaseNode {
   type: "case_else";
   elseKw: Keyword<"ELSE">;
   result: T;
+}
+
+// in MySQL & PostgreSQL
+export interface RowConstructor extends BaseNode {
+  type: "row_constructor";
+  rowKw: Keyword<"ROW">;
+  row: ParenExpr<ListExpr<Expr | Default>>;
 }
 
 export interface IntervalExpr extends BaseNode {
