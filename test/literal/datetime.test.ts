@@ -39,24 +39,26 @@ describe("date/time literal", () => {
     `);
   });
 
-  it("supports DATETIME", () => {
-    testExpr(`DATEtime '1995-06-01 20:15:00'`);
-    testExpr(`DATETIME /* com1 */ '20:15:00'`);
-    expect(parseExpr(`DATETIME '1995-06-01 20:15:00'`)).toMatchInlineSnapshot(`
-      {
-        "datetimeKw": {
-          "name": "DATETIME",
-          "text": "DATETIME",
-          "type": "keyword",
-        },
-        "string": {
-          "text": "'1995-06-01 20:15:00'",
-          "type": "string_literal",
-          "value": "1995-06-01 20:15:00",
-        },
-        "type": "datetime_literal",
-      }
-    `);
+  dialect(["sqlite", "mysql", "mariadb", "bigquery"], () => {
+    it("supports DATETIME", () => {
+      testExpr(`DATEtime '1995-06-01 20:15:00'`);
+      testExpr(`DATETIME /* com1 */ '20:15:00'`);
+      expect(parseExpr(`DATETIME '1995-06-01 20:15:00'`)).toMatchInlineSnapshot(`
+        {
+          "datetimeKw": {
+            "name": "DATETIME",
+            "text": "DATETIME",
+            "type": "keyword",
+          },
+          "string": {
+            "text": "'1995-06-01 20:15:00'",
+            "type": "string_literal",
+            "value": "1995-06-01 20:15:00",
+          },
+          "type": "datetime_literal",
+        }
+      `);
+    });
   });
 
   it("supports TIMESTAMP", () => {

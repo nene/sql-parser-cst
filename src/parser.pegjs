@@ -5315,7 +5315,7 @@ blob_literal_byte
     }
 
 datetime_literal
-  = kw:DATETIME str:(__ string_literal_plain) {
+  = kw:DATETIME str:(__ string_literal_plain) (&mysql / &sqlite / &bigquery) {
       return loc({
         type: "datetime_literal",
         datetimeKw: kw,
