@@ -1,7 +1,7 @@
 import { dialect, parseExpr, testExpr, testExprWc } from "../test_utils";
 
 describe("extract()", () => {
-  dialect(["mysql", "mariadb", "bigquery"], () => {
+  dialect(["mysql", "mariadb", "bigquery", "postgresql"], () => {
     it("supports extract() expression", () => {
       testExprWc(`EXTRACT ( DAY FROM col1 )`);
     });
@@ -106,17 +106,38 @@ describe("extract()", () => {
         }
       `);
     });
+
+    dialect("postgresql", () => {
+      testExtractUnits([
+        "CENTURY",
+        "DAY",
+        "DECADE",
+        "DOW",
+        "DOY",
+        "EPOCH",
+        "HOUR",
+        "ISODOW",
+        "ISOYEAR",
+        "JULIAN",
+        "MICROSECONDS",
+        "MILLENNIUM",
+        "MILLISECONDS",
+        "MINUTE",
+        "MONTH",
+        "QUARTER",
+        "SECOND",
+        "TIMEZONE",
+        "TIMEZONE_HOUR",
+        "TIMEZONE_MINUTE",
+        "WEEK",
+        "YEAR",
+      ]);
+    });
   });
 
   dialect("sqlite", () => {
     it("does not support extract expression", () => {
       expect(() => parseExpr("EXTRACT(DAY FROM col)")).toThrowError();
-    });
-  });
-
-  dialect("postgresql", () => {
-    it.skip("TODO:postgres", () => {
-      expect(true).toBe(true);
     });
   });
 });
