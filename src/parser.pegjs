@@ -4460,6 +4460,9 @@ func_name_kw
   / &bigquery kw:bigquery_func_keyword {
     return loc(createIdentifier(kw.text, kw.text));
   }
+  / &postgres kw:postgres_func_keyword {
+    return loc(createIdentifier(kw.text, kw.text));
+  }
 
 mysql_func_keyword
   = VALUES
@@ -4486,6 +4489,13 @@ bigquery_func_keyword
   / COLLATE
   / IF
 
+postgres_func_keyword
+  = CURRENT_TIME
+  / CURRENT_TIMESTAMP
+  / LOCALTIME
+  / LOCALTIMESTAMP
+  / CURRENT_SCHEMA
+
 paren_less_func_call
   = name:paren_less_func_name {
     return loc({
@@ -4501,6 +4511,7 @@ paren_less_func_name
     / CURRENT_TIMESTAMP
     / paren_less_func_name_bigquery
     / paren_less_func_name_mysql
+    / paren_less_func_name_postgresql
   ) {
     return loc(createIdentifier(kw.text, kw.text));
   }
@@ -4510,6 +4521,19 @@ paren_less_func_name_bigquery
 
 paren_less_func_name_mysql
   = kw:(LOCALTIME / LOCALTIMESTAMP / CURRENT_USER) &mysql { return kw; }
+
+paren_less_func_name_postgresql
+  = kw:(
+      LOCALTIME
+    / LOCALTIMESTAMP
+    / CURRENT_CATALOG
+    / CURRENT_ROLE
+    / CURRENT_SCHEMA
+    / CURRENT_USER
+    / USER
+    / SESSION_USER
+    / SYSTEM_USER
+  ) &postgres { return kw; }
 
 func_args
   = distinctKw:(DISTINCT __)? args:func_args_list
@@ -5688,8 +5712,11 @@ CREATE              = kw:"CREATE"i              !ident_part { return loc(createK
 CROSS               = kw:"CROSS"i               !ident_part { return loc(createKeyword(kw)); }
 CUME_DIST           = kw:"CUME_DIST"i           !ident_part { return loc(createKeyword(kw)); }
 CURRENT             = kw:"CURRENT"i             !ident_part { return loc(createKeyword(kw)); }
+CURRENT_CATALOG     = kw:"CURRENT_CATALOG"i     !ident_part { return loc(createKeyword(kw)); }
 CURRENT_DATE        = kw:"CURRENT_DATE"i        !ident_part { return loc(createKeyword(kw)); }
 CURRENT_DATETIME    = kw:"CURRENT_DATETIME"i    !ident_part { return loc(createKeyword(kw)); }
+CURRENT_ROLE        = kw:"CURRENT_ROLE"i        !ident_part { return loc(createKeyword(kw)); }
+CURRENT_SCHEMA      = kw:"CURRENT_SCHEMA"i      !ident_part { return loc(createKeyword(kw)); }
 CURRENT_TIME        = kw:"CURRENT_TIME"i        !ident_part { return loc(createKeyword(kw)); }
 CURRENT_TIMESTAMP   = kw:"CURRENT_TIMESTAMP"i   !ident_part { return loc(createKeyword(kw)); }
 CURRENT_USER        = kw:"CURRENT_USER"i        !ident_part { return loc(createKeyword(kw)); }

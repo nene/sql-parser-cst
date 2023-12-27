@@ -85,6 +85,28 @@ describe("function call", () => {
         testIsFunction("LOCALTIMESTAMP");
       });
     });
+
+    dialect("postgresql", () => {
+      it("supports additional special functions without parenthesis", () => {
+        testIsFunction("LOCALTIME");
+        testIsFunction("LOCALTIMESTAMP");
+        testIsFunction("CURRENT_CATALOG");
+        testIsFunction("CURRENT_ROLE");
+        testIsFunction("CURRENT_SCHEMA");
+        testIsFunction("CURRENT_USER");
+        testIsFunction("USER");
+        testIsFunction("SESSION_USER");
+        testIsFunction("SYSTEM_USER");
+      });
+
+      it("supports calling some paren-less functions with parenthesis", () => {
+        testExpr("CURRENT_TIME(5)");
+        testExpr("CURRENT_TIMESTAMP(2)");
+        testExpr("LOCALTIME(4)");
+        testExpr("LOCALTIMESTAMP(3)");
+        testExpr("CURRENT_SCHEMA()");
+      });
+    });
   });
 
   it("parses special paren-less function to func_call node", () => {
