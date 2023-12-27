@@ -146,7 +146,9 @@ type KeywordOperator =
   | [Keyword<"NOT">, Keyword<"SIMILAR">, Keyword<"TO">] // PostgreSQL
   | [Keyword<"MEMBER">, Keyword<"OF">] // MySQL
   | [Keyword<"SOUNDS">, Keyword<"LIKE">] // MySQL
-  | Keyword<"ESCAPE">; // SQLite, MySQL, PostgreSQL
+  | Keyword<"ESCAPE"> // SQLite, MySQL, PostgreSQL
+  // Timezone
+  | [Keyword<"AT">, Keyword<"TIME">, Keyword<"ZONE">]; // PostgreSQL
 
 export interface PrefixOpExpr extends BaseNode {
   type: "prefix_op_expr";

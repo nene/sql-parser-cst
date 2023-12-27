@@ -4138,7 +4138,7 @@ negation_expr
   = op:negation_operator right:(__ negation_expr) {
     return loc(createPrefixOpExpr(op, read(right)));
   }
-  / cast_operator_expr
+  / &postgres x:pg_at_time_zone_expr { return x; }
   / member_expr_or_func_call
 
 negation_operator
@@ -4147,14 +4147,24 @@ negation_operator
   / "~"
   / op:"!" !postgres { return op; }
 
-cast_operator_expr
-  = &postgres expr:(member_expr_or_func_call __) "::" dataType:(__ data_type) {
+pg_at_time_zone_expr
+  = head:pg_cast_operator_expr tail:(__ pg_at_time_zone_op __ pg_cast_operator_expr)+ {
+    return createBinaryExprChain(head, tail);
+  }
+  / pg_cast_operator_expr
+
+pg_at_time_zone_op
+  = kws:(AT __ TIME __ ZONE) { return read(kws); }
+
+pg_cast_operator_expr
+  = expr:(member_expr_or_func_call __) "::" dataType:(__ data_type) {
     return loc({
       type: "cast_operator_expr",
       expr: read(expr),
       dataType: read(dataType),
     });
   }
+  / member_expr_or_func_call
 
 member_expr_or_func_call
   = obj:primary props:(__ "." __ qualified_column / __ array_subscript / __ func_call_right)+ {
