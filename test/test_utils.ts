@@ -1,5 +1,6 @@
 import {
   Expr,
+  Keyword,
   ParenExpr,
   Program,
   SelectClause,
@@ -161,6 +162,7 @@ function addPrecedenceParens<T extends Expr | SubSelect>(
       type: "paren_expr",
       expr: {
         ...expr,
+        operator: spacedKeywords(expr.operator),
         left: { ...addPrecedenceParens(expr.left), trailing: space },
         right: { ...addPrecedenceParens(expr.right), leading: space },
       },
@@ -209,6 +211,17 @@ function addPrecedenceParens<T extends Expr | SubSelect>(
     };
   } else {
     return expr;
+  }
+}
+
+function spacedKeywords<T>(op: T): T {
+  if (Array.isArray(op)) {
+    const space: Whitespace[] = [{ type: "space", text: " " }];
+    return op.map((kw: Keyword, i) =>
+      i < op.length - 1 ? { ...kw, trailing: space } : kw
+    ) as T;
+  } else {
+    return op;
   }
 }
 
