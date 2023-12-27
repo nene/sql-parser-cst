@@ -220,6 +220,13 @@ describe("operator precedence", () => {
       expect(showPrecedence(`-tbl.col`)).toBe(`(- tbl.col)`);
     });
 
+    // The precedence of AT TIME ZONE is not documented in the PostgreSQL docs.
+    // It seems to sit between negation and exponentiation, but not 100% sure.
+    it("negation > AT TIME ZONE > exponent", () => {
+      expect(showPrecedence(`-col AT TIME ZONE 'UTC'`)).toBe(`((- col) ATTIMEZONE 'UTC')`);
+      expect(showPrecedence(`foo ^ bar AT TIME ZONE 'UTC'`)).toBe(`(foo ^ (bar ATTIMEZONE 'UTC'))`);
+    });
+
     it("negation > exponent", () => {
       expect(showPrecedence(`-x ^ y`)).toBe(`((- x) ^ y)`);
       expect(showPrecedence(`x ^ -y`)).toBe(`(x ^ (- y))`);

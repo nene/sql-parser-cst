@@ -4041,7 +4041,7 @@ sub_comparison_expr
   / &postgres x:pg_other_expr { return x; }
 
 pg_other_expr
-  = head:additive_expr tail:(__ pg_other_op  __ additive_expr)* {
+  = head:pg_additive_expr tail:(__ pg_other_op  __ pg_additive_expr)* {
     return createBinaryExprChain(head, tail);
   }
 
@@ -4063,12 +4063,61 @@ pg_other_op
     return op;
   }
 
-bitwise_or_expr
-  = head:bitwise_xor_expr tail:(__ "|"  __ bitwise_xor_expr)* {
+/**
+ * The precedence of PostgreSQL operators starting from addition:
+ *
+ * addition: + -
+ * multiplication: * / %
+ * exponentiation: ^
+ * time zone: AT TIME ZONE
+ * negation: - + ~
+ * cast: ::
+ */
+pg_additive_expr
+  = head:pg_multiplicative_expr tail:(__ additive_operator  __ pg_multiplicative_expr)* {
     return createBinaryExprChain(head, tail);
   }
 
-bitwise_xor_expr
+pg_multiplicative_expr
+  = head:pg_exponent_expr tail:(__ ("*" / "/" / "%")  __ pg_exponent_expr)* {
+      return createBinaryExprChain(head, tail);
+    }
+
+pg_exponent_expr
+  = head:pg_at_time_zone_expr tail:(__ "^"  __ pg_at_time_zone_expr)* {
+    return createBinaryExprChain(head, tail);
+  }
+
+pg_at_time_zone_expr
+  = head:pg_negation_expr tail:(__ pg_at_time_zone_op __ pg_negation_expr)* {
+    return createBinaryExprChain(head, tail);
+  }
+
+pg_at_time_zone_op
+  = kws:(AT __ TIME __ ZONE) { return read(kws); }
+
+pg_negation_expr
+  = op:("-" / "+" / "~") right:(__ pg_negation_expr) {
+    return loc(createPrefixOpExpr(op, read(right)));
+  }
+  / pg_cast_operator_expr
+
+pg_cast_operator_expr
+  = expr:(member_expr_or_func_call __) "::" dataType:(__ data_type) {
+    return loc({
+      type: "cast_operator_expr",
+      expr: read(expr),
+      dataType: read(dataType),
+    });
+  }
+  / member_expr_or_func_call
+
+bitwise_or_expr
+  = head:bigquery_bitwise_xor_expr tail:(__ "|"  __ bigquery_bitwise_xor_expr)* {
+    return createBinaryExprChain(head, tail);
+  }
+
+bigquery_bitwise_xor_expr
   = &bigquery head:bitwise_and_expr tail:(__ "^"  __ bitwise_and_expr)* {
     return createBinaryExprChain(head, tail);
   }
@@ -4094,20 +4143,20 @@ additive_operator
   = "+" / "-"
 
 multiplicative_expr
-  = head:bitwise_xor_or_exponent_expr tail:(__ multiplicative_operator  __ bitwise_xor_or_exponent_expr)* {
+  = head:mysql_bitwise_xor_expr tail:(__ multiplicative_operator  __ mysql_bitwise_xor_expr)* {
       return createBinaryExprChain(head, tail);
     }
 
 multiplicative_operator
   = "*"
   / "/"
-  / op:"%" (&mysql / &sqlite / &postgres) { return op; }
+  / op:"%" (&mysql / &sqlite) { return op; }
   / op:DIV (&mysql / &sqlite) { return op; }
   / op:MOD (&mysql / &sqlite) { return op; }
   / op:"||" &bigquery { return op; }
 
-bitwise_xor_or_exponent_expr
-  = (&mysql / &postgres) head:concat_or_json_expr tail:(__ "^"  __ concat_or_json_expr)* {
+mysql_bitwise_xor_expr
+  = &mysql head:concat_or_json_expr tail:(__ "^"  __ concat_or_json_expr)* {
     return createBinaryExprChain(head, tail);
   }
   / concat_or_json_expr
@@ -4138,33 +4187,13 @@ negation_expr
   = op:negation_operator right:(__ negation_expr) {
     return loc(createPrefixOpExpr(op, read(right)));
   }
-  / &postgres x:pg_at_time_zone_expr { return x; }
   / member_expr_or_func_call
 
 negation_operator
   = "-"
   / "+"
   / "~"
-  / op:"!" !postgres { return op; }
-
-pg_at_time_zone_expr
-  = head:pg_cast_operator_expr tail:(__ pg_at_time_zone_op __ pg_cast_operator_expr)+ {
-    return createBinaryExprChain(head, tail);
-  }
-  / pg_cast_operator_expr
-
-pg_at_time_zone_op
-  = kws:(AT __ TIME __ ZONE) { return read(kws); }
-
-pg_cast_operator_expr
-  = expr:(member_expr_or_func_call __) "::" dataType:(__ data_type) {
-    return loc({
-      type: "cast_operator_expr",
-      expr: read(expr),
-      dataType: read(dataType),
-    });
-  }
-  / member_expr_or_func_call
+  / "!"
 
 member_expr_or_func_call
   = obj:primary props:(__ "." __ qualified_column / __ array_subscript / __ func_call_right)+ {
