@@ -3,10 +3,13 @@ import { dialect, parseExpr, testExprWc } from "../test_utils";
 describe("COLLATE operator", () => {
   dialect(["mysql", "mariadb", "sqlite", "postgresql"], () => {
     it("supports COLLATE operator", () => {
-      // MySQL style
+      // MySQL style collation identifiers
       testExprWc(`'foobar' COLLATE utf8`);
-      // PostgreSQL style
-      testExprWc(`'foobar' COLLATE "C"`);
+    });
+    dialect("postgresql", () => {
+      it("supports COLLATE with quoted collation identifier", () => {
+        testExprWc(`'foobar' COLLATE "C"`);
+      });
     });
 
     it("supports nested COLLATE operator", () => {
