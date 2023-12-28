@@ -69,7 +69,7 @@ statement
   / x:analyze_stmt (&mysql / &sqlite / &postgres) { return x; }
   / x:explain_stmt (&mysql / &sqlite / &postgres) { return x; }
   / transaction_statement
-  / x:execute_stmt (&mysql / &bigquery) { return x; }
+  / x:execute_stmt (&mysql / &bigquery / &postgres) { return x; }
   / x:sqlite_statement &sqlite { return x; }
   / x:bigquery_statement &bigquery { return x; }
 

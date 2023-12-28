@@ -1,7 +1,7 @@
 import { dialect, parse, testWc, test } from "./test_utils";
 
 describe("prepared statements", () => {
-  dialect(["mysql", "mariadb"], () => {
+  dialect(["mysql", "mariadb", "postgresql"], () => {
     it("supports EXECUTE", () => {
       testWc(`EXECUTE my_stmt`);
     });
@@ -40,12 +40,6 @@ describe("prepared statements", () => {
   dialect("sqlite", () => {
     it("does not support EXECUTE statement", () => {
       expect(() => parse(`EXECUTE my_stmt`)).toThrowError();
-    });
-  });
-
-  dialect("postgresql", () => {
-    it.skip("TODO:postgres", () => {
-      expect(true).toBe(true);
     });
   });
 });
