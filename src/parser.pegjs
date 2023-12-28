@@ -4070,6 +4070,7 @@ pg_other_op
  * multiplication: * / %
  * exponentiation: ^
  * time zone: AT TIME ZONE
+ * collation: COLLATE
  * negation: - + ~
  * cast: ::
  */
@@ -4089,7 +4090,12 @@ pg_exponent_expr
   }
 
 pg_at_time_zone_expr
-  = head:pg_negation_expr tail:(__ pg_at_time_zone_op __ pg_negation_expr)* {
+  = head:pg_collate_expr tail:(__ pg_at_time_zone_op __ pg_collate_expr)* {
+    return createBinaryExprChain(head, tail);
+  }
+
+pg_collate_expr
+  = head:pg_negation_expr tail:(__ COLLATE __ ident)* {
     return createBinaryExprChain(head, tail);
   }
 

@@ -220,18 +220,26 @@ describe("operator precedence", () => {
       expect(showPrecedence(`-tbl.col`)).toBe(`(- tbl.col)`);
     });
 
-    // The precedence of AT TIME ZONE is not documented in the PostgreSQL docs.
-    // It seems to sit between negation and exponentiation, but not 100% sure.
-    it("negation > AT TIME ZONE > exponent", () => {
-      expect(showPrecedence(`-col AT TIME ZONE 'UTC'`)).toBe(`((- col) AT TIME ZONE 'UTC')`);
-      expect(showPrecedence(`foo ^ bar AT TIME ZONE 'UTC'`)).toBe(
-        `(foo ^ (bar AT TIME ZONE 'UTC'))`
+    // The precedence of COLLATE & AT TIME ZONE is not documented in the PostgreSQL docs.
+    // My experiments show that they have higher precedence as negation, but lower than exponentiation.
+    // See: https://stackoverflow.com/questions/73535534/what-is-the-precedence-of-the-collate-operator/77726451#77726451
+
+    it("negation > COLLATE", () => {
+      expect(showPrecedence(`-col COLLATE "POSIX"`)).toBe(`((- col) COLLATE "POSIX")`);
+      expect(showPrecedence(`~foo COLLATE "C"`)).toBe(`((~ foo) COLLATE "C")`);
+      expect(showPrecedence(`+'2' COLLATE "C"`)).toBe(`((+ '2') COLLATE "C")`);
+    });
+
+    it("COLLATE > AT TIME ZONE", () => {
+      expect(showPrecedence(`foo AT TIME ZONE 'UTC' COLLATE "POSIX"`)).toBe(
+        `(foo AT TIME ZONE ('UTC' COLLATE "POSIX"))`
       );
     });
 
-    it("negation > exponent", () => {
-      expect(showPrecedence(`-x ^ y`)).toBe(`((- x) ^ y)`);
-      expect(showPrecedence(`x ^ -y`)).toBe(`(x ^ (- y))`);
+    it("AT TIME ZONE > exponent", () => {
+      expect(showPrecedence(`foo ^ bar AT TIME ZONE 'UTC'`)).toBe(
+        `(foo ^ (bar AT TIME ZONE 'UTC'))`
+      );
     });
 
     it("exponent > multiplication", () => {

@@ -1,9 +1,12 @@
 import { dialect, parseExpr, testExprWc } from "../test_utils";
 
 describe("COLLATE operator", () => {
-  dialect(["mysql", "mariadb", "sqlite"], () => {
+  dialect(["mysql", "mariadb", "sqlite", "postgresql"], () => {
     it("supports COLLATE operator", () => {
+      // MySQL style
       testExprWc(`'foobar' COLLATE utf8`);
+      // PostgreSQL style
+      testExprWc(`'foobar' COLLATE "C"`);
     });
 
     it("supports nested COLLATE operator", () => {
@@ -69,12 +72,6 @@ describe("COLLATE operator", () => {
 
     it("does not support BINARY operator", () => {
       expect(() => parseExpr(`BINARY 'foobar'`)).toThrowError();
-    });
-  });
-
-  dialect("postgresql", () => {
-    it.skip("TODO:postgres", () => {
-      expect(true).toBe(true);
     });
   });
 });

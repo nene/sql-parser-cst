@@ -132,7 +132,7 @@ type KeywordOperator =
   | Keyword<"OR">
   | Keyword<"XOR"> // MySQL
   // Collation
-  | Keyword<"COLLATE"> // SQLite, MySQL
+  | Keyword<"COLLATE"> // SQLite, MySQL, PostgreSQL
   // Comparison
   | Keyword<"IS">
   | [Keyword<"IS">, Keyword<"NOT">]
