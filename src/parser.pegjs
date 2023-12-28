@@ -67,7 +67,7 @@ statement
   / dcl_statement
   / x:proc_statement (&mysql / &bigquery) { return x; }
   / x:analyze_stmt (&mysql / &sqlite / &postgres) { return x; }
-  / x:explain_stmt (&mysql / &sqlite) { return x; }
+  / x:explain_stmt (&mysql / &sqlite / &postgres) { return x; }
   / transaction_statement
   / x:execute_stmt (&mysql / &bigquery) { return x; }
   / x:sqlite_statement &sqlite { return x; }

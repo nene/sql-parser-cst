@@ -1,7 +1,7 @@
 import { dialect, test, testWc } from "./test_utils";
 
 describe("explain", () => {
-  dialect(["mysql", "mariadb", "sqlite"], () => {
+  dialect(["mysql", "mariadb", "sqlite", "postgresql"], () => {
     it("supports explaining of SELECT statement", () => {
       testWc("EXPLAIN SELECT * FROM foo");
     });
@@ -19,14 +19,16 @@ describe("explain", () => {
     });
   });
 
+  dialect(["mysql", "mariadb", "postgresql"], () => {
+    it("supports EXPLAIN ANALYZE", () => {
+      testWc("EXPLAIN ANALYZE SELECT 1");
+    });
+  });
+
   dialect(["mysql", "mariadb"], () => {
     it("supports DESCRIBE/DESC instead of EXPLAIN", () => {
       testWc("DESCRIBE SELECT 1");
       testWc("DESC SELECT 1");
-    });
-
-    it("supports EXPLAIN ANALYZE", () => {
-      testWc("EXPLAIN ANALYZE SELECT 1");
     });
 
     it("supports DESCRIBE ANALYZE", () => {
@@ -37,12 +39,6 @@ describe("explain", () => {
   dialect("bigquery", () => {
     it("does not support EXPLAIN", () => {
       expect(() => test("EXPLAIN SELECT * FROM foo")).toThrowError();
-    });
-  });
-
-  dialect("postgresql", () => {
-    it.skip("TODO:postgres", () => {
-      expect(true).toBe(true);
     });
   });
 });
