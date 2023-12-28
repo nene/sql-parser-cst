@@ -42,22 +42,35 @@ describe("select", () => {
     });
   });
 
-  it("parses column aliases", () => {
-    testWc("SELECT 'hello' AS foo");
-    testWc("SELECT 1 as bar, 2 baz");
-  });
-
-  dialect(["bigquery", "sqlite", "mysql", "mariadb"], () => {
-    it("supports string as column alias", () => {
-      test(`SELECT col AS 'foo'`);
-      test(`SELECT col AS "foo"`);
-      test(`SELECT col 'foo'`);
-      test(`SELECT col "foo"`);
+  describe("aliases", () => {
+    it("supports column aliases", () => {
+      testWc("SELECT 'hello' AS foo");
+      testWc("SELECT 1 as bar, 2 baz");
     });
-  });
-  dialect(["postgresql"], () => {
-    it("does not support string as column alias", () => {
-      expect(() => test(`SELECT col AS 'foo'`)).toThrowError();
+
+    dialect(["bigquery", "sqlite", "mysql", "mariadb"], () => {
+      it("supports string as column alias", () => {
+        test(`SELECT col AS 'foo'`);
+        test(`SELECT col AS "foo"`);
+        test(`SELECT col 'foo'`);
+        test(`SELECT col "foo"`);
+      });
+    });
+    dialect("postgresql", () => {
+      it("does not support string as column alias", () => {
+        expect(() => test(`SELECT col AS 'foo'`)).toThrowError();
+      });
+    });
+
+    dialect("postgresql", () => {
+      it("supports reserved keywords as explicit aliases", () => {
+        test("SELECT 'hello' AS select");
+      });
+    });
+    dialect(["bigquery", "sqlite", "mysql", "mariadb"], () => {
+      it("does not allow reserved keywords as explicit column aliases", () => {
+        expect(() => test("SELECT col AS select")).toThrowError();
+      });
     });
   });
 

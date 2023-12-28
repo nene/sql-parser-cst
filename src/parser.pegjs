@@ -346,7 +346,7 @@ alias
   / implicit_alias
 
 explicit_alias
-  = kw:AS id:(__ alias_ident) {
+  = kw:AS id:(__ explicit_alias_ident) {
     return {
       asKw: kw,
       alias: read(id),
@@ -358,10 +358,10 @@ explicit_alias
 // So we check if we can treat it as pivot/unpivot_expr, and only if not,
 // will we treat it as alias.
 implicit_alias
-  = &bigquery !(pivot_expr_right / unpivot_expr_right) id:alias_ident {
+  = &bigquery !(pivot_expr_right / unpivot_expr_right) id:implicit_alias_ident {
     return { alias: id };
   }
-  / !bigquery id:alias_ident {
+  / !bigquery id:implicit_alias_ident {
     return { alias: id };
   }
 
@@ -4905,10 +4905,16 @@ column
  *                                                                                      *
  * ------------------------------------------------------------------------------------ *
  */
-alias_ident
+implicit_alias_ident
   = ident
   / s:string_literal_plain (&sqlite / &bigquery / &mysql) {
     return loc(createIdentifier(s.text, s.value));
+  }
+
+explicit_alias_ident
+  = implicit_alias_ident
+  / name:ident_name &postgres {
+    return loc(createIdentifier(name, name));
   }
 
 ident "identifier"
