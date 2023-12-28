@@ -1,4 +1,4 @@
-import { dialect, parseExpr, testExpr, testExprWc } from "../test_utils";
+import { dialect, notDialect, parseExpr, testExpr, testExprWc } from "../test_utils";
 
 describe("raise function", () => {
   dialect("sqlite", () => {
@@ -42,19 +42,13 @@ describe("raise function", () => {
     });
   });
 
-  dialect(["mysql", "mariadb", "bigquery"], () => {
+  notDialect("sqlite", () => {
     it("supports ordinary function named RAISE()", () => {
       testExpr(`RAISE(FAIL, 'blah')`);
     });
 
     it("parses RAISE() as ordinary function call", () => {
       expect(parseExpr(`RAISE(FAIL, 'blah')`).type).toBe("func_call");
-    });
-  });
-
-  dialect("postgresql", () => {
-    it.skip("TODO:postgres", () => {
-      expect(true).toBe(true);
     });
   });
 });
