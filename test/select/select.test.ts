@@ -65,6 +65,9 @@ describe("select", () => {
     dialect("postgresql", () => {
       it("supports reserved keywords as explicit aliases", () => {
         test("SELECT 'hello' AS select");
+        test("SELECT 'hello' AS from");
+        test("SELECT 'hello' AS where");
+        test("SELECT 'hello' AS join");
       });
     });
     dialect(["bigquery", "sqlite", "mysql", "mariadb"], () => {
