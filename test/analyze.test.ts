@@ -1,7 +1,7 @@
 import { dialect, test, testWc } from "./test_utils";
 
 describe("analyze", () => {
-  dialect("sqlite", () => {
+  dialect(["sqlite", "postgresql"], () => {
     it("supports plain ANALYZE", () => {
       test("ANALYZE");
     });
@@ -9,6 +9,12 @@ describe("analyze", () => {
     it("supports ANALYZE table_name", () => {
       testWc("ANALYZE my_tbl");
       test("ANALYZE schm.my_tbl");
+    });
+  });
+
+  dialect("postgresql", () => {
+    it("supports ANALYZE with multiple tables", () => {
+      testWc("ANALYZE tbl1, tbl2, tbl3");
     });
   });
 
@@ -26,12 +32,6 @@ describe("analyze", () => {
   dialect("bigquery", () => {
     it("does not support ANALYZE", () => {
       expect(() => test("ANALYZE my_tbl")).toThrowError();
-    });
-  });
-
-  dialect("postgresql", () => {
-    it.skip("TODO:postgres", () => {
-      expect(true).toBe(true);
     });
   });
 });
