@@ -1,4 +1,4 @@
-import { dialect, parseExpr, testExpr, testExprWc } from "../test_utils";
+import { dialect, notDialect, parseExpr, testExpr, testExprWc } from "../test_utils";
 
 describe("struct", () => {
   dialect("bigquery", () => {
@@ -103,15 +103,9 @@ describe("struct", () => {
     });
   });
 
-  dialect(["mysql", "mariadb", "sqlite"], () => {
+  notDialect("bigquery", () => {
     it("does not support structs", () => {
       expect(parseExpr("STRUCT(1, 2, 3)").type).toBe("func_call");
-    });
-  });
-
-  dialect("postgresql", () => {
-    it.skip("TODO:postgres", () => {
-      expect(true).toBe(true);
     });
   });
 });
