@@ -3898,7 +3898,7 @@ comparison_expr
   = left:sub_comparison_expr rightFn:_comparison_expr_right {
     return loc(rightFn(left));
   }
-  / &mysql full_text_match_expr
+  / &mysql x:full_text_match_expr { return x; }
   / sub_comparison_expr
 
 _comparison_expr_right

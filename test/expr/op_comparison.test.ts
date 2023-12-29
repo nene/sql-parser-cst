@@ -311,63 +311,60 @@ describe("comparison operators", () => {
 
       it("parses MATCH..AGAINST", () => {
         expect(parseExpr(`MATCH (a) AGAINST ('abc' IN BOOLEAN MODE)`)).toMatchInlineSnapshot(`
-          [
-            undefined,
-            {
-              "againstKw": {
-                "name": "AGAINST",
-                "text": "AGAINST",
-                "type": "keyword",
-              },
-              "args": {
-                "expr": {
-                  "expr": {
-                    "text": "'abc'",
-                    "type": "string_literal",
-                    "value": "abc",
-                  },
-                  "modifier": [
-                    {
-                      "name": "IN",
-                      "text": "IN",
-                      "type": "keyword",
-                    },
-                    {
-                      "name": "BOOLEAN",
-                      "text": "BOOLEAN",
-                      "type": "keyword",
-                    },
-                    {
-                      "name": "MODE",
-                      "text": "MODE",
-                      "type": "keyword",
-                    },
-                  ],
-                  "type": "full_text_match_args",
-                },
-                "type": "paren_expr",
-              },
-              "columns": {
-                "expr": {
-                  "items": [
-                    {
-                      "name": "a",
-                      "text": "a",
-                      "type": "identifier",
-                    },
-                  ],
-                  "type": "list_expr",
-                },
-                "type": "paren_expr",
-              },
-              "matchKw": {
-                "name": "MATCH",
-                "text": "MATCH",
-                "type": "keyword",
-              },
-              "type": "full_text_match_expr",
+          {
+            "againstKw": {
+              "name": "AGAINST",
+              "text": "AGAINST",
+              "type": "keyword",
             },
-          ]
+            "args": {
+              "expr": {
+                "expr": {
+                  "text": "'abc'",
+                  "type": "string_literal",
+                  "value": "abc",
+                },
+                "modifier": [
+                  {
+                    "name": "IN",
+                    "text": "IN",
+                    "type": "keyword",
+                  },
+                  {
+                    "name": "BOOLEAN",
+                    "text": "BOOLEAN",
+                    "type": "keyword",
+                  },
+                  {
+                    "name": "MODE",
+                    "text": "MODE",
+                    "type": "keyword",
+                  },
+                ],
+                "type": "full_text_match_args",
+              },
+              "type": "paren_expr",
+            },
+            "columns": {
+              "expr": {
+                "items": [
+                  {
+                    "name": "a",
+                    "text": "a",
+                    "type": "identifier",
+                  },
+                ],
+                "type": "list_expr",
+              },
+              "type": "paren_expr",
+            },
+            "matchKw": {
+              "name": "MATCH",
+              "text": "MATCH",
+              "type": "keyword",
+            },
+            "type": "full_text_match_expr",
+          }
         `);
       });
     });
