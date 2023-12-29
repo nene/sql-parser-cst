@@ -28,7 +28,7 @@ export interface ArrayBounds extends BaseNode {
   type: "array_bounds";
   // This can only contain one or zero items.
   // We use a list because we want to store whitespace and comments inside empty [] brackets.
-  bounds: ListExpr<NumberLiteral>;
+  bounds: ListExpr<NumberLiteral>; // TODO: use Empty node instead of empty ListExpr
 }
 
 export interface WithTimeZoneDataType extends BaseNode {

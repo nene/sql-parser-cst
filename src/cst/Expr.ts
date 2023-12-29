@@ -321,13 +321,14 @@ export interface CaseElse<T> extends BaseNode {
   result: T;
 }
 
-// in MySQL & PostgreSQL
+// in MySQL, MariaDB & PostgreSQL
 export interface RowConstructor extends BaseNode {
   type: "row_constructor";
   rowKw: Keyword<"ROW">;
   row: ParenExpr<ListExpr<Expr | Default>>;
 }
 
+// MySQL, MariaDB, BigQuery
 export interface IntervalExpr extends BaseNode {
   type: "interval_expr";
   intervalKw: Keyword<"INTERVAL">;
@@ -382,18 +383,21 @@ export interface IntervalUnit extends BaseNode {
   >;
 }
 
+// MySQL, MariaDB
 export interface StringWithCharset extends BaseNode {
   type: "string_with_charset";
   charset: string;
   string: StringLiteral;
 }
 
+// MySQL, MariaDB, PostgreSQL
 export interface QuantifierExpr extends BaseNode {
   type: "quantifier_expr";
-  quantifier: Keyword<"ANY" | "SOME" | "ALL">;
+  quantifier: Keyword<"ANY" | "SOME" | "ALL">; // TODO: rename to quantifierKw
   expr: ParenExpr<SubSelect>;
 }
 
+// MySQL, MariaDB
 export interface FullTextMatchExpr extends BaseNode {
   type: "full_text_match_expr";
   matchKw: Keyword<"MATCH">;
@@ -423,10 +427,11 @@ export interface FullTextMatchArgs extends BaseNode {
 export interface MemberExpr extends BaseNode {
   type: "member_expr";
   object: Expr;
+  // The Empty node is only used inside BigQueryQuotedMemberExpr to allow for repeated .. syntax
   property: ArraySubscript | Identifier | AllColumns | Empty;
 }
 
-// Represents BigQuery-specific quated table path expressions like:
+// Represents BigQuery-specific quoted table path expressions like:
 // `my project.dataset.my table`
 export interface BigQueryQuotedMemberExpr extends BaseNode {
   type: "bigquery_quoted_member_expr";
@@ -437,6 +442,7 @@ export interface BigQueryQuotedMemberExpr extends BaseNode {
 // should refer to a table, view, stored procedure, or any other schema-qualified name
 export type EntityName = MemberExpr | Identifier | BigQueryQuotedMemberExpr;
 
+// PostgreSQL, BigQuery
 export interface ArraySubscript extends BaseNode {
   type: "array_subscript";
   expr: Expr | ArraySubscriptSpecifier | ArraySliceSpecifier;
@@ -473,19 +479,21 @@ export interface Parameter extends BaseNode {
   text: string;
 }
 
-// BigQuery
-// ------------
+// BigQuery, PostgreSQL
+// TODO: It feels awkward that PostgreSQL array literals have the ARRAY type attached to them
 export interface TypedExpr extends BaseNode {
   type: "typed_expr";
   dataType: DataType;
   expr: ArrayExpr | StructExpr;
 }
 
+// BigQuery, PostgreSQL
 export interface ArrayExpr extends BaseNode {
   type: "array_expr";
   expr: ListExpr<Expr>;
 }
 
+// BigQuery
 export interface StructExpr extends BaseNode {
   type: "struct_expr";
   expr: ListExpr<Expr>;
