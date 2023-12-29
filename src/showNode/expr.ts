@@ -5,7 +5,6 @@ import { FullTransformMap } from "../cstTransformer";
 export const exprMap: FullTransformMap<string, AllExprNodes> = {
   list_expr: (node) => show(node.items, ","),
   paren_expr: (node) => "(" + show(node.expr) + ")",
-  pair_expr: (node) => show([node.expr1, node.expr2]),
   binary_expr: (node) => show([node.left, node.operator, node.right]),
   prefix_op_expr: (node) => show([node.operator, node.expr]),
   postfix_op_expr: (node) => show([node.expr, node.operator]),

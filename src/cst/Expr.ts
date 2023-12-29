@@ -27,7 +27,6 @@ export type AllExprNodes =
   | CaseElse<Expr | Program>
   | IntervalUnitRange
   | IntervalUnit
-  | PairExpr
   | WeekExpr
   | FullTextMatchArgs
   | ArraySubscript
@@ -70,12 +69,6 @@ export interface ListExpr<T = Node> extends BaseNode {
 export interface ParenExpr<T = Node> extends BaseNode {
   type: "paren_expr";
   expr: T;
-}
-
-export interface PairExpr<T1 = Node | Node[], T2 = Node> extends BaseNode {
-  type: "pair_expr";
-  expr1: T1;
-  expr2: T2;
 }
 
 export interface BinaryExpr<
