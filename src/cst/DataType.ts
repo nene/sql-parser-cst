@@ -18,12 +18,14 @@ export interface NamedDataType extends BaseNode {
   params?: ParenExpr<ListExpr<Literal>> | GenericTypeParams;
 }
 
+// PostgreSQL
 export interface ArrayDataType extends BaseNode {
   type: "array_data_type";
   dataType: DataType;
   bounds: ArrayBounds;
 }
 
+// PostgreSQL
 export interface ArrayBounds extends BaseNode {
   type: "array_bounds";
   // This can only contain one or zero items.
@@ -31,6 +33,7 @@ export interface ArrayBounds extends BaseNode {
   bounds: ListExpr<NumberLiteral>; // TODO: use Empty node instead of empty ListExpr
 }
 
+// PostgreSQL
 export interface WithTimeZoneDataType extends BaseNode {
   type: "with_time_zone_data_type";
   dataType: DataType;
@@ -41,17 +44,20 @@ export interface WithTimeZoneDataType extends BaseNode {
   ];
 }
 
+// BigQuery
 export interface GenericTypeParams extends BaseNode {
   type: "generic_type_params";
   params: ListExpr<ArrayTypeParam> | ListExpr<StructTypeParam>;
 }
 
+// BigQuery
 export interface ArrayTypeParam extends BaseNode {
   type: "array_type_param";
   dataType: DataType;
   constraints: ColumnConstraint[];
 }
 
+// BigQuery
 export interface StructTypeParam extends BaseNode {
   type: "struct_type_param";
   name: Identifier;
