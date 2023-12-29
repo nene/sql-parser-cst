@@ -46,6 +46,7 @@ export interface NullLiteral extends BaseNode {
   value: null;
 }
 
+// SQLite, MySQL, MariaDB, BigQuery
 export interface DatetimeLiteral extends BaseNode {
   type: "datetime_literal";
   datetimeKw: Keyword<"DATETIME">;
@@ -70,30 +71,35 @@ export interface TimestampLiteral extends BaseNode {
   string: StringLiteral;
 }
 
+// PostgreSQL, BigQuery
 export interface JsonLiteral extends BaseNode {
   type: "json_literal";
   jsonKw: Keyword<"JSON">;
   string: StringLiteral;
 }
 
+// PostgreSQL
 export interface JsonbLiteral extends BaseNode {
   type: "jsonb_literal";
   jsonbKw: Keyword<"JSONB">;
   string: StringLiteral;
 }
 
+// BigQuery
 export interface NumericLiteral extends BaseNode {
   type: "numeric_literal";
   numericKw: Keyword<"NUMERIC">;
   string: StringLiteral;
 }
 
+// BigQuery
 export interface BignumericLiteral extends BaseNode {
   type: "bignumeric_literal";
   bignumericKw: Keyword<"BIGNUMERIC">;
   string: StringLiteral;
 }
 
+// PostgreSQL (other dialects use INTERVAL expression)
 export interface IntervalLiteral extends BaseNode {
   type: "interval_literal";
   intervalKw: Keyword<"INTERVAL">;
