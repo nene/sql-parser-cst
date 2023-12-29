@@ -167,7 +167,7 @@ describe("function call", () => {
     });
   });
 
-  dialect("bigquery", () => {
+  dialect(["bigquery", "postgresql"], () => {
     it("supports named function arguments", () => {
       testExpr(`my_func(arg1 => 'foo', arg2 => 'bar')`);
     });

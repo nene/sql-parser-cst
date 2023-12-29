@@ -178,10 +178,10 @@ export interface FuncArgs extends BaseNode {
   type: "func_args";
   distinctKw?: Keyword<"DISTINCT">;
   args: ListExpr<Expr | AllColumns | SubSelect | NamedArg>;
-  nullHandlingKw?: [Keyword<"IGNORE" | "RESPECT">, Keyword<"NULLS">];
-  orderBy?: OrderByClause;
-  limit?: LimitClause;
-  having?: HavingArg;
+  nullHandlingKw?: [Keyword<"IGNORE" | "RESPECT">, Keyword<"NULLS">]; // BigQuery
+  orderBy?: OrderByClause; // BigQuery
+  limit?: LimitClause; // BigQuery
+  having?: HavingArg; // BigQuery
 }
 
 export interface FilterArg extends BaseNode {
@@ -196,12 +196,14 @@ export interface OverArg extends BaseNode {
   window: ParenExpr<WindowDefinition> | Identifier;
 }
 
+// BigQuery, PostgreSQL
 export interface NamedArg extends BaseNode {
   type: "named_arg";
   name: Identifier;
   value: Expr;
 }
 
+// BigQuery
 export interface HavingArg extends BaseNode {
   type: "having_arg";
   havingKw: Keyword<"HAVING">;

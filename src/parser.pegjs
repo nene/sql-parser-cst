@@ -4581,7 +4581,7 @@ func_arg
   / expr
 
 named_arg
-  = name:(ident __) "=>" value:(__ expr) &bigquery {
+  = name:(ident __) "=>" value:(__ expr) (&bigquery / &postgres) {
     return loc({
       type: "named_arg",
       name: read(name),
