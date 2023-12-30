@@ -137,11 +137,13 @@ export interface SelectClause extends BaseNode {
   distinctKw?: Keyword<"ALL" | "DISTINCT" | "DISTINCTROW">;
   hints: MysqlHint[];
   asStructOrValueKw?: [Keyword<"AS">, Keyword<"STRUCT" | "VALUE">];
+  // PostgreSQL supports empty SELECT clause
   columns?: ListExpr<
     AllColumns | ExceptColumns | ReplaceColumns | Expr | Alias<Expr> | Empty
   >;
 }
 
+// BigQuery
 export interface ExceptColumns extends BaseNode {
   type: "except_columns";
   expr: MemberExpr | AllColumns;
@@ -149,6 +151,7 @@ export interface ExceptColumns extends BaseNode {
   columns: ParenExpr<ListExpr<Identifier>>;
 }
 
+// BigQuery
 export interface ReplaceColumns extends BaseNode {
   type: "replace_columns";
   expr: MemberExpr | AllColumns;
@@ -171,11 +174,12 @@ export interface WhereClause extends BaseNode {
 export interface GroupByClause extends BaseNode {
   type: "group_by_clause";
   groupByKw: [Keyword<"GROUP">, Keyword<"BY">];
-  distinctKw?: Keyword<"ALL" | "DISTINCT">;
+  distinctKw?: Keyword<"ALL" | "DISTINCT">; // PostgreSQL
   columns: ListExpr<Expr> | GroupByRollup;
-  withRollupKw?: [Keyword<"WITH">, Keyword<"ROLLUP">];
+  withRollupKw?: [Keyword<"WITH">, Keyword<"ROLLUP">]; // MySQL, MariaDB
 }
 
+// BigQuery, PostgreSQL
 export interface GroupByRollup extends BaseNode {
   type: "group_by_rollup";
   rollupKw: Keyword<"ROLLUP">;
@@ -213,7 +217,7 @@ export interface OrderByClause extends BaseNode {
   type: "order_by_clause";
   orderByKw: [Keyword<"ORDER">, Keyword<"BY">];
   specifications: ListExpr<SortSpecification | Identifier>;
-  withRollupKw?: [Keyword<"WITH">, Keyword<"ROLLUP">];
+  withRollupKw?: [Keyword<"WITH">, Keyword<"ROLLUP">]; // MySQL
 }
 
 export interface PartitionByClause extends BaseNode {
@@ -222,6 +226,7 @@ export interface PartitionByClause extends BaseNode {
   specifications: ListExpr<Expr>;
 }
 
+// MySQL
 // TODO: Should this be a clause?
 // Or should it be an expression that modifies a table?
 export interface PartitionClause extends BaseNode {
@@ -230,6 +235,7 @@ export interface PartitionClause extends BaseNode {
   partitions: ParenExpr<ListExpr<Identifier>>;
 }
 
+// BigQuery
 export interface ClusterByClause extends BaseNode {
   type: "cluster_by_clause";
   clusterByKw: [Keyword<"CLUSTER">, Keyword<"BY">];
@@ -245,17 +251,20 @@ export interface LimitClause extends BaseNode {
   rowsExamined?: LimitRowsExamined;
 }
 
+// PostgreSQL
 export interface LimitAll extends BaseNode {
   type: "limit_all";
   allKw: Keyword<"ALL">;
 }
 
+// MariaDB
 export interface LimitRowsExamined extends BaseNode {
   type: "limit_rows_examined";
   rowsExaminedKw: [Keyword<"ROWS">, Keyword<"EXAMINED">];
   count: Expr;
 }
 
+// MariaDB, PostgreSQL
 export interface OffsetClause extends BaseNode {
   type: "offset_clause";
   offsetKw: Keyword<"OFFSET">;
@@ -263,14 +272,16 @@ export interface OffsetClause extends BaseNode {
   rowsKw?: Keyword<"ROWS" | "ROW">;
 }
 
+// MariaDB, PostgreSQL
 export interface FetchClause extends BaseNode {
   type: "fetch_clause";
   fetchKw: [Keyword<"FETCH">, Keyword<"FIRST" | "NEXT">];
   count?: Expr;
-  rowsKw?: Keyword<"ROWS" | "ROW">;
+  rowsKw?: Keyword<"ROWS" | "ROW">; // TODO: This field is always present
   withTiesKw: Keyword<"ONLY"> | [Keyword<"WITH">, Keyword<"TIES">];
 }
 
+// MySQL, MariaDB
 export interface DualTable extends BaseNode {
   type: "dual_table";
   dualKw: Keyword<"DUAL">;
@@ -337,6 +348,7 @@ export interface LateralDerivedTable extends BaseNode {
   expr: ParenExpr<SubSelect>;
 }
 
+// MySQL, MariaDB
 export interface PartitionedTable extends BaseNode {
   type: "partitioned_table";
   table: EntityName;
@@ -344,7 +356,7 @@ export interface PartitionedTable extends BaseNode {
   partitions: ParenExpr<ListExpr<Identifier>>;
 }
 
-// BigQuery only
+// BigQuery
 export interface UnnestWithOffsetExpr extends BaseNode {
   type: "unnest_with_offset_expr";
   unnest:
@@ -354,17 +366,20 @@ export interface UnnestWithOffsetExpr extends BaseNode {
     | Alias<UnnestExpr | MemberExpr | Identifier>;
   withOffsetKw: [Keyword<"WITH">, Keyword<"OFFSET">];
 }
+// BigQuery
 export interface UnnestExpr extends BaseNode {
   type: "unnest_expr";
   unnestKw: Keyword<"UNNEST">;
   expr: ParenExpr<Expr>;
 }
+// BigQuery
 export interface PivotExpr extends BaseNode {
   type: "pivot_expr";
   left: TableExpr;
   pivotKw: Keyword<"PIVOT">;
   args: ParenExpr<PivotForIn>;
 }
+// BigQuery
 export interface PivotForIn extends BaseNode {
   type: "pivot_for_in";
   aggregations: ListExpr<FuncCall | Alias<FuncCall>>;
@@ -373,6 +388,7 @@ export interface PivotForIn extends BaseNode {
   inKw: Keyword<"IN">;
   pivotColumns: ParenExpr<ListExpr<Expr | Alias<Expr>>>;
 }
+// BigQuery
 export interface UnpivotExpr extends BaseNode {
   type: "unpivot_expr";
   left: TableExpr;
@@ -380,6 +396,7 @@ export interface UnpivotExpr extends BaseNode {
   nullHandlingKw?: [Keyword<"INCLUDE" | "EXCLUDE">, Keyword<"NULLS">];
   args: ParenExpr<UnpivotForIn>;
 }
+// BigQuery
 export interface UnpivotForIn extends BaseNode {
   type: "unpivot_for_in";
   valuesColumn:
@@ -398,18 +415,20 @@ export interface UnpivotForIn extends BaseNode {
         >
       >;
 }
+// BigQuery
 export interface TablesampleExpr extends BaseNode {
   type: "tablesample_expr";
   left: TableExpr;
   tablesampleKw: [Keyword<"TABLESAMPLE">, Keyword<"SYSTEM">];
   args: ParenExpr<TablesamplePercent>;
 }
+// BigQuery
 export interface TablesamplePercent extends BaseNode {
   type: "tablesample_percent";
   percent: Expr;
   percentKw: Keyword<"PERCENT">;
 }
-
+// BigQuery
 export interface ForSystemTimeAsOfExpr extends BaseNode {
   type: "for_system_time_as_of_expr";
   left: TableExpr;
@@ -438,9 +457,10 @@ export interface SortSpecification extends BaseNode {
   type: "sort_specification";
   expr: Expr;
   orderKw?: Keyword<"ASC" | "DESC">;
-  nullHandlingKw?: [Keyword<"NULLS">, Keyword<"FIRST" | "LAST">];
+  nullHandlingKw?: [Keyword<"NULLS">, Keyword<"FIRST" | "LAST">]; // SQLite, PostgreSQL
 }
 
+// BigQuery
 export interface QualifyClause extends BaseNode {
   type: "qualify_clause";
   qualifyKw: Keyword<"QUALIFY">;
@@ -453,6 +473,7 @@ export interface ReturningClause extends BaseNode {
   columns: ListExpr<Expr | Alias<Expr>>;
 }
 
+// PostgreSQL
 export interface IntoTableClause extends BaseNode {
   type: "into_table_clause";
   intoKw: Keyword<"INTO">;
@@ -462,18 +483,21 @@ export interface IntoTableClause extends BaseNode {
   name: EntityName;
 }
 
+// MySQL, MariaDB
 export interface IntoVariablesClause extends BaseNode {
   type: "into_variables_clause";
   intoKw: Keyword<"INTO">;
   variables: ListExpr<Variable>;
 }
 
+// MySQL, MariaDB
 export interface IntoDumpfileClause extends BaseNode {
   type: "into_dumpfile_clause";
   intoDumpfileKw: [Keyword<"INTO">, Keyword<"DUMPFILE">];
   filename: StringLiteral;
 }
 
+// MySQL, MariaDB
 export interface IntoOutfileClause extends BaseNode {
   type: "into_outfile_clause";
   intoOutfileKw: [Keyword<"INTO">, Keyword<"OUTFILE">];
@@ -483,6 +507,7 @@ export interface IntoOutfileClause extends BaseNode {
   lines?: OutfileLines;
 }
 
+// MySQL, MariaDB
 export interface OutfileFields extends BaseNode {
   type: "outfile_fields";
   fieldsKw: Keyword<"FIELDS" | "COLUMNS">;
@@ -493,30 +518,35 @@ export interface OutfileFields extends BaseNode {
   )[];
 }
 
+// MySQL, MariaDB
 export interface OutfileLines extends BaseNode {
   type: "outfile_lines";
   linesKw: Keyword<"LINES">;
   options: (OutfileOptionStartingBy | OutfileOptionTerminatedBy)[];
 }
 
+// MySQL, MariaDB
 export interface OutfileOptionTerminatedBy extends BaseNode {
   type: "outfile_option_terminated_by";
   terminatedByKw: [Keyword<"TERMINATED">, Keyword<"BY">];
   value: StringLiteral;
 }
 
+// MySQL, MariaDB
 export interface OutfileOptionEscapedBy extends BaseNode {
   type: "outfile_option_escaped_by";
   escapedByKw: [Keyword<"ESCAPED">, Keyword<"BY">];
   value: StringLiteral;
 }
 
+// MySQL, MariaDB
 export interface OutfileOptionStartingBy extends BaseNode {
   type: "outfile_option_starting_by";
   startingByKw: [Keyword<"STARTING">, Keyword<"BY">];
   value: StringLiteral;
 }
 
+// MySQL, MariaDB
 export interface OutfileOptionEnclosedBy extends BaseNode {
   type: "outfile_option_enclosed_by";
   optionallyKw?: Keyword<"OPTIONALLY">;
@@ -524,12 +554,14 @@ export interface OutfileOptionEnclosedBy extends BaseNode {
   value: StringLiteral;
 }
 
+// MySQL, MariaDB
 export interface OutfileOptionCharacterSet extends BaseNode {
   type: "outfile_option_character_set";
   characterSetKw: [Keyword<"CHARACTER">, Keyword<"SET">];
   value: Identifier;
 }
 
+// MySQL, MariaDB, PostgreSQL
 // Referred to as the Locking Clause in PostgreSQL documentation
 export interface ForClause extends BaseNode {
   type: "for_clause";
@@ -543,12 +575,14 @@ export interface ForClause extends BaseNode {
   waitingKw?: Keyword<"NOWAIT"> | [Keyword<"SKIP">, Keyword<"LOCKED">];
 }
 
+// MySQL, PostgreSQL
 export interface ForClauseTables extends BaseNode {
   type: "for_clause_tables";
   ofKw: Keyword<"OF">;
   tables: ListExpr<Identifier>;
 }
 
+// MySQL, MariaDB
 export interface LockInShareModeClause extends BaseNode {
   type: "lock_in_share_mode_clause";
   lockInShareModeKw: [
@@ -559,6 +593,7 @@ export interface LockInShareModeClause extends BaseNode {
   ];
 }
 
+// MySQL, MariaDB, PostgreSQL
 export interface TableClause extends BaseNode {
   type: "table_clause";
   tableKw: Keyword<"TABLE">;
