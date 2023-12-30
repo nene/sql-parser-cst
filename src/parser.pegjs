@@ -646,7 +646,7 @@ where_clause
  */
 group_by_clause
   = kws:(GROUP __ BY __)
-    distinctKw:((ALL / DISTINCT) __ &postgres)?
+    distinctKw:(group_by_distinct __)?
     list:(group_by_rollup / list$expr)
     rolKw:(__ WITH __ ROLLUP)? {
     return loc({
@@ -657,6 +657,9 @@ group_by_clause
       withRollupKw: read(rolKw),
     });
   }
+
+group_by_distinct
+  = kw:(ALL / DISTINCT) &postgres { return kw; }
 
 group_by_rollup
   = &bigquery kw:(ROLLUP __) cols:paren$list$expr {

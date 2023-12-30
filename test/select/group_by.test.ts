@@ -46,14 +46,11 @@ describe("select GROUP BY", () => {
             ],
             "type": "list_expr",
           },
-          "distinctKw": [
-            {
-              "name": "DISTINCT",
-              "text": "DISTINCT",
-              "type": "keyword",
-            },
-            undefined,
-          ],
+          "distinctKw": {
+            "name": "DISTINCT",
+            "text": "DISTINCT",
+            "type": "keyword",
+          },
           "groupByKw": [
             {
               "name": "GROUP",
