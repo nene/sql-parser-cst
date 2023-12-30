@@ -225,15 +225,22 @@ function spacedKeywords<T>(op: T): T {
   }
 }
 
+export function parseClause(
+  clause: string,
+  options: Partial<ParserOptions> = {}
+) {
+  const stmt = parseStmt(`SELECT c ${clause}`, options);
+  if (stmt.type !== "select_stmt") {
+    throw new Error(`Expected select_stmt, instead got ${stmt.type}`);
+  }
+  return stmt.clauses[1];
+}
+
 export function parseFrom(
   fromExpr: string,
   options: Partial<ParserOptions> = {}
 ) {
-  const stmt = parseStmt(`SELECT col FROM ${fromExpr}`, options);
-  if (stmt.type !== "select_stmt") {
-    throw new Error(`Expected select_stmt, instead got ${stmt.type}`);
-  }
-  const fromClause = stmt.clauses[1];
+  const fromClause = parseClause(`FROM ${fromExpr}`, options);
   if (fromClause.type !== "from_clause") {
     throw new Error(`Expected from_clause, instead got ${fromClause.type}`);
   }
