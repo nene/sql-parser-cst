@@ -1,14 +1,18 @@
-import { dialect, test, testWc } from "../test_utils";
+import { dialect, parseStmt, test, testWc } from "../test_utils";
 
 describe("VALUES clause/statement", () => {
   dialect(["sqlite", "postgresql"], () => {
-    it("parses separate VALUES statement", () => {
+    it("supports separate VALUES statement", () => {
       testWc("VALUES (1, 'Hello', TRUE, NULL)");
       testWc("VALUES (1, 'Hello'), (2, 'World')");
     });
 
-    it("parses UNION of VALUES", () => {
+    it("supports UNION of VALUES", () => {
       testWc("VALUES (1, 2) UNION VALUES (3, 4)");
+    });
+
+    it("parses VALUES statement as select_stmt", () => {
+      expect(parseStmt("VALUES (1, 2)").type).toBe("select_stmt");
     });
   });
 
@@ -25,12 +29,12 @@ describe("VALUES clause/statement", () => {
   });
 
   dialect(["mysql", "mariadb"], () => {
-    it("parses separate VALUES statement with row-constructor list", () => {
+    it("supports separate VALUES statement with row-constructor list", () => {
       testWc("VALUES ROW(1, 'Hello', TRUE, NULL)");
       testWc("VALUES ROW (1, 'Hello'), ROW (2, 'World')");
     });
 
-    it("parses UNION of VALUES", () => {
+    it("supports UNION of VALUES", () => {
       testWc("VALUES ROW(1, 2) UNION VALUES ROW(3, 4)");
     });
   });
