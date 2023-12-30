@@ -277,7 +277,7 @@ export interface FetchClause extends BaseNode {
   type: "fetch_clause";
   fetchKw: [Keyword<"FETCH">, Keyword<"FIRST" | "NEXT">];
   count?: Expr;
-  rowsKw?: Keyword<"ROWS" | "ROW">; // TODO: This field is always present
+  rowsKw: Keyword<"ROWS" | "ROW">;
   withTiesKw: Keyword<"ONLY"> | [Keyword<"WITH">, Keyword<"TIES">];
 }
 
