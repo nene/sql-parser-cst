@@ -266,7 +266,7 @@ describe("comparison operators", () => {
                 },
                 "type": "paren_expr",
               },
-              "quantifier": {
+              "quantifierKw": {
                 "name": "ANY",
                 "text": "ANY",
                 "type": "keyword",

@@ -3995,7 +3995,7 @@ quantifier_expr
   = op:((ANY / SOME / ALL) __) expr:paren$compound_select_stmt {
     return loc({
       type: "quantifier_expr",
-      quantifier: read(op),
+      quantifierKw: read(op),
       expr,
     });
   }

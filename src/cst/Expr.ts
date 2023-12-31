@@ -393,7 +393,7 @@ export interface StringWithCharset extends BaseNode {
 // MySQL, MariaDB, PostgreSQL
 export interface QuantifierExpr extends BaseNode {
   type: "quantifier_expr";
-  quantifier: Keyword<"ANY" | "SOME" | "ALL">; // TODO: rename to quantifierKw
+  quantifierKw: Keyword<"ANY" | "SOME" | "ALL">;
   expr: ParenExpr<SubSelect>;
 }
 

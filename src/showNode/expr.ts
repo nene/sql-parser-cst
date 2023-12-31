@@ -45,7 +45,7 @@ export const exprMap: FullTransformMap<string, AllExprNodes> = {
   typed_expr: (node) => show([node.dataType, node.expr]),
   array_expr: (node) => show(["[", node.expr, "]"]),
   struct_expr: (node) => show(["(", node.expr, ")"]),
-  quantifier_expr: (node) => show([node.quantifier, node.expr]),
+  quantifier_expr: (node) => show([node.quantifierKw, node.expr]),
   full_text_match_expr: (node) =>
     show([node.matchKw, node.columns, node.againstKw, node.args]),
   full_text_match_args: (node) => show([node.expr, node.modifier]),
