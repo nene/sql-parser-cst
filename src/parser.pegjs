@@ -443,7 +443,7 @@ lateral_derived_table
   }
 
 partitioned_table
-  = &mysql table:(entity_name __) kw:(PARTITION __) partitions:paren$list$ident {
+  = &mysql table:(alias$entity_name __) kw:(PARTITION __) partitions:paren$list$ident {
     return loc({
       type: "partitioned_table",
       table: read(table),
@@ -693,19 +693,6 @@ partition_by_clause
       type: "partition_by_clause",
       partitionByKw: read(kws),
       specifications: list,
-    });
-  }
-
-/**
- * SELECT .. FROM .. PARTITION (part1, part2)
- * --------------------------------------------------------------------------------------
- */
-partition_clause
-  = kw:(PARTITION __) partitions:paren$list$ident {
-    return loc({
-      type: "partition_clause",
-      partitionKw: read(kw),
-      partitions,
     });
   }
 
@@ -1161,7 +1148,7 @@ insert_clause
     hints:(__ mysql_upsert_hint)*
     orAction:(__ or_alternate_action)?
     intoKw:(__ INTO)?
-    table:(__ table_or_partition) {
+    table:(__ (partitioned_table / table_or_alias)) {
       return loc({
         type: "insert_clause",
         insertKw,
@@ -1189,14 +1176,6 @@ or_alternate_action
       orKw: read(or),
       actionKw: read(act)
     });
-  }
-
-table_or_partition
-  = partitioned_table / table_or_explicit_alias
-
-table_or_explicit_alias
-  = t:entity_name alias:(__ explicit_alias)? {
-    return loc(createAlias(t, alias));
   }
 
 insert_source
@@ -1383,7 +1362,7 @@ delete_stmt
 
 delete_clause
   = delKw:(DELETE __) hints:(mysql_delete_hint __)* fromKw:(FROM __)?
-    tables:(list$table_or_alias_or_qualified_star) {
+    tables:(list$delete_clause_table) {
       return loc({
         type: "delete_clause",
         deleteKw: read(delKw),
@@ -1398,8 +1377,9 @@ mysql_delete_hint
     return loc({ type: "mysql_hint", hintKw: kw });
   }
 
-table_or_alias_or_qualified_star
+delete_clause_table
   = &mysql x:qualified_star { return x; }
+  / partitioned_table
   / table_or_alias
 
 other_delete_clause
@@ -1407,7 +1387,7 @@ other_delete_clause
   / returning_clause
   / order_by_clause
   / limit_clause
-  / &mysql x:(from_clause / from_using_clause / partition_clause) { return x; }
+  / &mysql x:(from_clause / from_using_clause) { return x; }
 
 /**
  * ------------------------------------------------------------------------------------ *
@@ -4800,6 +4780,7 @@ list$column_assignment = .
 list$column_definition = .
 list$common_table_expr = .
 list$create_definition = .
+list$delete_clause_table = .
 list$entity_name = .
 list$equals_expr = .
 list$expr = .
@@ -4808,15 +4789,14 @@ list$expr_or_explicit_alias = .
 list$func_param = .
 list$ident = .
 list$literal = .
-list$number_literal = .
 list$named_window = .
+list$number_literal = .
 list$procedure_param = .
 list$rename_action = .
 list$set_assignment = .
 list$sort_specification = .
 list$string_literal = .
 list$table_or_alias = .
-list$table_or_alias_or_qualified_star = .
 list$type_param = .
 list$values_row = .
 list$variable = .

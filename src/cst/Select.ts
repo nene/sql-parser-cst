@@ -33,7 +33,6 @@ export type AllSelectNodes =
   | WindowDefinition
   | OrderByClause
   | PartitionByClause
-  | PartitionClause
   | ClusterByClause
   | LimitClause
   | LimitAll
@@ -226,15 +225,6 @@ export interface PartitionByClause extends BaseNode {
   specifications: ListExpr<Expr>;
 }
 
-// MySQL
-// TODO: Should this be a clause?
-// Or should it be an expression that modifies a table?
-export interface PartitionClause extends BaseNode {
-  type: "partition_clause";
-  partitionKw: Keyword<"PARTITION">;
-  partitions: ParenExpr<ListExpr<Identifier>>;
-}
-
 // BigQuery
 export interface ClusterByClause extends BaseNode {
   type: "cluster_by_clause";
@@ -351,7 +341,7 @@ export interface LateralDerivedTable extends BaseNode {
 // MySQL, MariaDB
 export interface PartitionedTable extends BaseNode {
   type: "partitioned_table";
-  table: EntityName;
+  table: EntityName | Alias<EntityName>;
   partitionKw: Keyword<"PARTITION">;
   partitions: ParenExpr<ListExpr<Identifier>>;
 }

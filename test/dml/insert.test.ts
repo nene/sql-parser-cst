@@ -107,10 +107,8 @@ describe("insert into", () => {
 
     it("parses PARTITION as partitioned_table node", () => {
       const stmt = parseStmt("INSERT INTO tbl PARTITION (foo) (col1, col2) VALUES (1, 2)");
-      expect(stmt.type).toBe("insert_stmt");
       if (stmt.type !== "insert_stmt") throw new Error("Expected insert_stmt");
       const insertClause = stmt.clauses[0];
-      expect(insertClause.type).toBe("insert_clause");
       if (insertClause.type !== "insert_clause") throw new Error("Expected insert_clause");
       expect(insertClause.table.type).toBe("partitioned_table");
     });

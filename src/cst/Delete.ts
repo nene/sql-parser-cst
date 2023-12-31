@@ -6,7 +6,7 @@ import {
   FromClause,
   LimitClause,
   OrderByClause,
-  PartitionClause,
+  PartitionedTable,
   ReturningClause,
   WhereClause,
   WithClause,
@@ -21,7 +21,6 @@ export interface DeleteStmt extends BaseNode {
     | WithClause
     | DeleteClause
     | WhereClause
-    | PartitionClause
     | ReturningClause
     | OrderByClause
     | LimitClause
@@ -34,5 +33,5 @@ export interface DeleteClause extends BaseNode {
   deleteKw: Keyword<"DELETE">;
   hints: MysqlHint[];
   fromKw?: Keyword<"FROM">;
-  tables: ListExpr<EntityName | Alias<EntityName>>;
+  tables: ListExpr<EntityName | Alias<EntityName> | PartitionedTable>;
 }

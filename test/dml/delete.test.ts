@@ -1,4 +1,4 @@
-import { dialect, testWc } from "../test_utils";
+import { dialect, parseStmt, testWc } from "../test_utils";
 
 describe("delete from", () => {
   it("supports DELETE FROM without WHERE", () => {
@@ -57,8 +57,20 @@ describe("delete from", () => {
   });
 
   dialect(["mysql", "mariadb"], () => {
-    it("supports PARTITION clause", () => {
+    it("supports deleting from PARTITION", () => {
       testWc("DELETE FROM tbl PARTITION (foo, bar) WHERE id = 2");
+    });
+
+    it("supports deleting from aliased table PARTITION", () => {
+      testWc("DELETE FROM tbl AS my_table PARTITION (foo, bar) WHERE id = 2");
+    });
+
+    it("parses PARTITION as partitioned_table node", () => {
+      const stmt = parseStmt("DELETE FROM tbl PARTITION (foo, bar) WHERE id = 2");
+      if (stmt.type !== "delete_stmt") throw new Error("Expected delete_stmt");
+      const deleteClause = stmt.clauses[0];
+      if (deleteClause.type !== "delete_clause") throw new Error("Expected delete_clause");
+      expect(deleteClause.tables.items[0].type).toBe("partitioned_table");
     });
   });
 
