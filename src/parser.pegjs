@@ -1135,7 +1135,6 @@ lock_in_share_mode_clause
 insert_stmt
   = withCls:(with_clause __)?
     insertCls:insert_clause
-    partitionCls:(__ (&mysql p:partition_clause { return p; } ))?
     columnsCls:(__ insert_columns_clause)?
     source:(__ insert_source)
     aliasCls:(__ row_alias_clause)?
@@ -1147,7 +1146,6 @@ insert_stmt
         clauses: [
           read(withCls),
           insertCls,
-          read(partitionCls),
           read(columnsCls),
           read(source),
           read(aliasCls),
@@ -1163,7 +1161,7 @@ insert_clause
     hints:(__ mysql_upsert_hint)*
     orAction:(__ or_alternate_action)?
     intoKw:(__ INTO)?
-    table:(__ table_or_explicit_alias) {
+    table:(__ table_or_partition) {
       return loc({
         type: "insert_clause",
         insertKw,
@@ -1192,6 +1190,9 @@ or_alternate_action
       actionKw: read(act)
     });
   }
+
+table_or_partition
+  = partitioned_table / table_or_explicit_alias
 
 table_or_explicit_alias
   = t:entity_name alias:(__ explicit_alias)? {

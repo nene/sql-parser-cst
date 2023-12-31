@@ -9,7 +9,7 @@ import {
 } from "./Expr";
 import { Alias } from "./Alias";
 import {
-  PartitionClause,
+  PartitionedTable,
   ReturningClause,
   SortSpecification,
   SubSelect,
@@ -39,7 +39,6 @@ export interface InsertStmt extends BaseNode {
   clauses: (
     | WithClause
     | InsertClause
-    | PartitionClause
     | InsertColumnsClause
     | (ValuesClause | SubSelect | DefaultValues | SetClause)
     | RowAliasClause
@@ -55,7 +54,7 @@ export interface InsertClause extends BaseNode {
   hints: MysqlHint[];
   orAction?: OrAlternateAction;
   intoKw?: Keyword<"INTO">;
-  table: EntityName | Alias<EntityName>;
+  table: EntityName | Alias<EntityName> | PartitionedTable;
 }
 
 export interface InsertColumnsClause extends BaseNode {
