@@ -189,26 +189,6 @@ describe("insert into", () => {
       {
         "clauses": [
           {
-            "hints": [],
-            "insertKw": {
-              "name": "INSERT",
-              "text": "INSERT",
-              "type": "keyword",
-            },
-            "intoKw": {
-              "name": "INTO",
-              "text": "INTO",
-              "type": "keyword",
-            },
-            "orAction": undefined,
-            "table": {
-              "name": "tbl",
-              "text": "tbl",
-              "type": "identifier",
-            },
-            "type": "insert_clause",
-          },
-          {
             "columns": {
               "expr": {
                 "items": [
@@ -227,7 +207,24 @@ describe("insert into", () => {
               },
               "type": "paren_expr",
             },
-            "type": "insert_columns_clause",
+            "hints": [],
+            "insertKw": {
+              "name": "INSERT",
+              "text": "INSERT",
+              "type": "keyword",
+            },
+            "intoKw": {
+              "name": "INTO",
+              "text": "INTO",
+              "type": "keyword",
+            },
+            "orAction": undefined,
+            "table": {
+              "name": "tbl",
+              "text": "tbl",
+              "type": "identifier",
+            },
+            "type": "insert_clause",
           },
           {
             "type": "values_clause",

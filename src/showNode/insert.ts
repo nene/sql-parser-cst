@@ -5,8 +5,14 @@ import { FullTransformMap } from "../cstTransformer";
 export const insertMap: FullTransformMap<string, AllInsertNodes> = {
   insert_stmt: (node) => show(node.clauses),
   insert_clause: (node) =>
-    show([node.insertKw, node.hints, node.orAction, node.intoKw, node.table]),
-  insert_columns_clause: (node) => show(node.columns),
+    show([
+      node.insertKw,
+      node.hints,
+      node.orAction,
+      node.intoKw,
+      node.table,
+      node.columns,
+    ]),
   or_alternate_action: (node) => show([node.orKw, node.actionKw]),
   // VALUES
   values_clause: (node) => show([node.valuesKw, node.values]),

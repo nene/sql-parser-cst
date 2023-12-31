@@ -1122,7 +1122,6 @@ lock_in_share_mode_clause
 insert_stmt
   = withCls:(with_clause __)?
     insertCls:insert_clause
-    columnsCls:(__ insert_columns_clause)?
     source:(__ insert_source)
     aliasCls:(__ row_alias_clause)?
     updateCls:(__ on_duplicate_key_update_clause)?
@@ -1133,7 +1132,6 @@ insert_stmt
         clauses: [
           read(withCls),
           insertCls,
-          read(columnsCls),
           read(source),
           read(aliasCls),
           read(updateCls),
@@ -1148,7 +1146,8 @@ insert_clause
     hints:(__ mysql_upsert_hint)*
     orAction:(__ or_alternate_action)?
     intoKw:(__ INTO)?
-    table:(__ (partitioned_table / table_or_alias)) {
+    table:(__ (partitioned_table / table_or_explicit_alias))
+    columns:(__ paren$list$column)? {
       return loc({
         type: "insert_clause",
         insertKw,
@@ -1156,13 +1155,9 @@ insert_clause
         orAction: read(orAction),
         intoKw: read(intoKw),
         table: read(table),
+        columns: read(columns),
       });
     }
-
-insert_columns_clause
-  = columns:paren$list$column {
-    return loc({ type: "insert_columns_clause", columns });
-  }
 
 mysql_upsert_hint
   = kw:(LOW_PRIORITY / DELAYED / HIGH_PRIORITY / IGNORE) &mysql {
@@ -1176,6 +1171,11 @@ or_alternate_action
       orKw: read(or),
       actionKw: read(act)
     });
+  }
+
+table_or_explicit_alias
+  = t:entity_name alias:(__ explicit_alias)? {
+    return loc(createAlias(t, alias));
   }
 
 insert_source
