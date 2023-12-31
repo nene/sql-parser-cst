@@ -3585,10 +3585,10 @@ data_type
   / named_data_type
 
 array_bounds
-  = "[" bounds:(__ empty_list __) "]" {
+  = "[" bounds:(__ empty __) "]" {
     return loc({ type: "array_bounds", bounds: read(bounds) });
   }
-  / "[" bounds:(__ list$number_literal __) "]" {
+  / "[" bounds:(__ number_literal __) "]" {
     return loc({ type: "array_bounds", bounds: read(bounds) });
   }
 

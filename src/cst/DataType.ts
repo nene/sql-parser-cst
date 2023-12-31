@@ -1,4 +1,4 @@
-import { BaseNode, Keyword } from "./Base";
+import { BaseNode, Empty, Keyword } from "./Base";
 import { ColumnConstraint } from "./Constraint";
 import { Identifier, ListExpr, ParenExpr } from "./Expr";
 import { Literal, NumberLiteral } from "./Literal";
@@ -28,9 +28,7 @@ export interface ArrayDataType extends BaseNode {
 // PostgreSQL
 export interface ArrayBounds extends BaseNode {
   type: "array_bounds";
-  // This can only contain one or zero items.
-  // We use a list because we want to store whitespace and comments inside empty [] brackets.
-  bounds: ListExpr<NumberLiteral>; // TODO: use Empty node instead of empty ListExpr
+  bounds: NumberLiteral | Empty;
 }
 
 // PostgreSQL
