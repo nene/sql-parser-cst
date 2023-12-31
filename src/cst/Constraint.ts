@@ -105,7 +105,7 @@ export interface ReferencesSpecification extends BaseNode {
 export interface ReferentialAction extends BaseNode {
   type: "referential_action";
   onKw: Keyword<"ON">;
-  eventKw: Keyword<"DELETE" | "UPDATE">; // DELETE | UPDATE
+  eventKw: Keyword<"DELETE" | "UPDATE">;
   actionKw:
     | Keyword<"RESTRICT" | "CASCADE">
     | [Keyword<"SET">, Keyword<"NULL" | "DEFAULT">]
@@ -132,6 +132,7 @@ export interface ConstraintCheck extends BaseNode {
   onConflict?: OnConflictClause;
 }
 
+// MySQL, MariaDB
 export interface ConstraintIndex extends BaseNode {
   type: "constraint_index";
   indexTypeKw?: Keyword<"FULLTEXT" | "SPATIAL">;
@@ -139,6 +140,7 @@ export interface ConstraintIndex extends BaseNode {
   columns?: ParenExpr<ListExpr<Identifier>>;
 }
 
+// MySQL, MariaDB, SQLite
 export interface ConstraintNull extends BaseNode {
   type: "constraint_null";
   nullKw: Keyword<"NULL">;
@@ -156,17 +158,20 @@ export interface ConstraintDefault extends BaseNode {
   expr: Expr;
 }
 
+// MySQL, MariaDB, SQLite
 export interface ConstraintAutoIncrement extends BaseNode {
   type: "constraint_auto_increment";
   autoIncrementKw: Keyword<"AUTO_INCREMENT" | "AUTOINCREMENT">;
 }
 
+// MySQL, MariaDB
 export interface ConstraintComment extends BaseNode {
   type: "constraint_comment";
   commentKw: Keyword<"COMMENT">;
   value: StringLiteral;
 }
 
+// MySQL, MariaDB, SQLite
 export interface ConstraintGenerated extends BaseNode {
   type: "constraint_generated";
   generatedKw?: [Keyword<"GENERATED">, Keyword<"ALWAYS">];
@@ -175,23 +180,27 @@ export interface ConstraintGenerated extends BaseNode {
   storageKw?: Keyword<"STORED" | "VIRTUAL">;
 }
 
+// MySQL, MariaDB, SQLite, BigQuery
 export interface ConstraintCollate extends BaseNode {
   type: "constraint_collate";
   collateKw: Keyword<"COLLATE">;
   collation: Identifier | StringLiteral;
 }
 
+// MySQL, MariaDB
 export interface ConstraintVisible extends BaseNode {
   type: "constraint_visible";
   visibleKw: Keyword<"VISIBLE" | "INVISIBLE">;
 }
 
+// MySQL, MariaDB
 export interface ConstraintColumnFormat extends BaseNode {
   type: "constraint_column_format";
   columnFormatKw: Keyword<"COLUMN_FORMAT">;
   formatKw: Keyword<"FIXED" | "DYNAMIC" | "DEFAULT">;
 }
 
+// MySQL, MariaDB
 export interface ConstraintStorage extends BaseNode {
   type: "constraint_storage";
   storageKw: Keyword<"STORAGE">;
