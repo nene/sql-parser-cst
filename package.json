@@ -22,6 +22,7 @@
     "pretty": "prettier --write .",
     "add:keyword": "ts-node ./scripts/add-keyword.ts",
     "generate": "ts-node ./scripts/generate.ts",
+    "generate:fast": "ts-node ./scripts/generate.ts --fast",
     "watch:generate": "npm-watch",
     "clean": "rm -rf lib; rm -rf src/generated_parser.ts",
     "build": "yarn clean && yarn generate && tsc",
@@ -55,6 +56,6 @@
     "typescript": "^4.8.4"
   },
   "watch": {
-    "generate": "src/parser.pegjs"
+    "generate:fast": "src/parser.pegjs"
   }
 }

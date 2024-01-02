@@ -4,6 +4,7 @@ import fs from "fs";
 import path from "path";
 import { moveImports } from "./move-imports";
 import { ruleTemplates } from "./rule-templates";
+import { disableRecursionCheck } from "./disable-recusion-check";
 
 const source = fs.readFileSync(
   path.resolve(__dirname, "../src/parser.pegjs"),
@@ -13,7 +14,7 @@ const source = fs.readFileSync(
 console.log(`Generating parser...`);
 
 const parser = peggy.generate(source, {
-  plugins: [tspegjs, moveImports, ruleTemplates],
+  plugins: [tspegjs, moveImports, ruleTemplates, disableRecursionCheck],
   output: "source",
   format: "commonjs",
   tspegjs: {
@@ -21,6 +22,7 @@ const parser = peggy.generate(source, {
     // At the time of writing, it adds about 30 seconds to the build time.
     skipTypeComputation: true,
   },
+  disableRecursionCheck: process.argv.includes("--fast"),
 } as peggy.SourceBuildOptions<"source">);
 
 fs.writeFileSync(path.resolve(__dirname, `../src/parser.ts`), parser);
