@@ -6,21 +6,27 @@ import { Pass, Plugin } from "peggy";
  */
 export const moveImports: Plugin = {
   use(config) {
-    config.passes.generate.push(moveImportsPass);
+    config.passes.generate.unshift(removeImportsPass);
+    config.passes.generate.push(addImportsPass);
   },
 };
 
 const IMPORT_REGEX = /import\s*\{[^}]*\}\s*from\s*"[^"]*"\s*;/g;
+let imports: string[] = [];
 
-const moveImportsPass: Pass = (ast) => {
-  const code = ast.code as unknown as string;
+const removeImportsPass: Pass = (ast) => {
+  if (!ast.initializer) {
+    return;
+  }
+  const code = ast.initializer.code;
 
-  const imports = code.match(IMPORT_REGEX) || [];
+  imports = code.match(IMPORT_REGEX) || [];
   const withoutImports = code.replace(IMPORT_REGEX, "");
-  const withMovedImports = withoutImports.replace(
-    /"use strict";\n/,
-    `"use strict";\n\n${imports.join("\n")}\n`
-  );
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-  (ast as any).code = withMovedImports;
+  ast.initializer.code = withoutImports;
+};
+
+const addImportsPass: Pass = (ast) => {
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  ast.code.children[1] = `${imports.join("\n")}\n`;
 };
