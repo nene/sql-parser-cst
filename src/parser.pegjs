@@ -4042,7 +4042,7 @@ pg_other_op
     // JSONB operators
     / "@>" / "<@" / "?|" / "?&" / "#-" / "@?" / "@@"
     // single-letter operators (exhaustive list)
-    / "!" / "@" / "#" / "&" / "|" / "`" / "?"
+    / "!" / "~" / "@" / "#" / "&" / "|" / "`" / "?"
   ) {
     return op;
   }
@@ -4182,8 +4182,8 @@ negation_expr
 negation_operator
   = "-"
   / "+"
-  / "~"
-  / "!"
+  / op:"~" !postgres { return op; }
+  / op:"!" &mysql { return op; }
 
 member_expr_or_func_call
   = obj:primary props:(__ "." __ qualified_column / __ array_subscript / __ func_call_right)+ {

@@ -9,6 +9,8 @@ describe("operator precedence", () => {
 
     it("negation > COLLATE", () => {
       expect(showPrecedence(`-x COLLATE rtrim`)).toBe(`((- x) COLLATE rtrim)`);
+      expect(showPrecedence(`+x COLLATE rtrim`)).toBe(`((+ x) COLLATE rtrim)`);
+      expect(showPrecedence(`~x COLLATE rtrim`)).toBe(`((~ x) COLLATE rtrim)`);
     });
 
     it("COLLATE > JSON", () => {
@@ -70,9 +72,14 @@ describe("operator precedence", () => {
       expect(showPrecedence(`-tbl.col`)).toBe(`(- tbl.col)`);
     });
 
+    // TODO: ! has higher precedence than unary -
+
     it("negation > multiplication", () => {
       expect(showPrecedence(`-x * y`)).toBe(`((- x) * y)`);
-      expect(showPrecedence(`x * -y`)).toBe(`(x * (- y))`);
+      expect(showPrecedence(`x * +y`)).toBe(`(x * (+ y))`);
+      expect(showPrecedence(`~x * y`)).toBe(`((~ x) * y)`);
+
+      expect(showPrecedence(`!x * y`)).toBe(`((! x) * y)`);
     });
 
     dialect("mysql", () => {
@@ -167,7 +174,8 @@ describe("operator precedence", () => {
 
     it("negation > multiplication", () => {
       expect(showPrecedence(`-x * y`)).toBe(`((- x) * y)`);
-      expect(showPrecedence(`x * -y`)).toBe(`(x * (- y))`);
+      expect(showPrecedence(`x * +y`)).toBe(`(x * (+ y))`);
+      expect(showPrecedence(`~x * y`)).toBe(`((~ x) * y)`);
     });
 
     it("concatenation and multiplication operators have same precedence", () => {
@@ -226,7 +234,6 @@ describe("operator precedence", () => {
 
     it("negation > COLLATE", () => {
       expect(showPrecedence(`-col COLLATE "POSIX"`)).toBe(`((- col) COLLATE "POSIX")`);
-      expect(showPrecedence(`~foo COLLATE "C"`)).toBe(`((~ foo) COLLATE "C")`);
       expect(showPrecedence(`+'2' COLLATE "C"`)).toBe(`((+ '2') COLLATE "C")`);
     });
 
@@ -259,6 +266,7 @@ describe("operator precedence", () => {
       expect(showPrecedence(`a | b & c >> d`)).toBe(`(((a | b) & c) >> d)`);
       expect(showPrecedence(`a >> b & c | d`)).toBe(`(((a >> b) & c) | d)`);
       expect(showPrecedence(`a |/ b @ c !~~ d`)).toBe(`(((a |/ b) @ c) !~~ d)`);
+      expect(showPrecedence(`a | b ~ c & d`)).toBe(`(((a | b) ~ c) & d)`);
     });
 
     it("any other operator > range containment", () => {
