@@ -175,6 +175,12 @@ describe("function call", () => {
     it("supports mix of named and positional function arguments", () => {
       testExpr(`SEARCH('foo', 'f', analyzer => 'NO_OP_ANALYZER')`);
     });
+
+    dialect("postgresql", () => {
+      it("supports deprecated := syntax for named function arguments", () => {
+        testExpr(`my_func(arg1 := 'foo', arg2 := 'bar')`);
+      });
+    });
   });
 
   dialect("bigquery", () => {

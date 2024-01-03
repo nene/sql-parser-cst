@@ -4572,13 +4572,18 @@ func_arg
   / expr
 
 named_arg
-  = name:(ident __) "=>" value:(__ expr) (&bigquery / &postgres) {
+  = name:(ident __) op:named_arg_op value:(__ expr) (&bigquery / &postgres) {
     return loc({
       type: "named_arg",
       name: read(name),
+      operator: op,
       value: read(value),
     });
   }
+
+named_arg_op
+  = "=>"
+  / op:":=" &postgres { return op; }
 
 filter_arg
   = kw:(FILTER __) e:paren$where_clause &sqlite {

@@ -200,6 +200,7 @@ export interface OverArg extends BaseNode {
 export interface NamedArg extends BaseNode {
   type: "named_arg";
   name: Identifier;
+  operator: "=>" | ":="; // The := operator is only used in PostgreSQL
   value: Expr;
 }
 

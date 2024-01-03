@@ -18,7 +18,7 @@ export const exprMap: FullTransformMap<string, AllExprNodes> = {
       node.limit,
       node.having,
     ]),
-  named_arg: (node) => show([node.name, "=>", node.value]),
+  named_arg: (node) => show([node.name, node.operator, node.value]),
   cast_expr: (node) => show([node.castKw, node.args]),
   cast_operator_expr: (node) => show([node.expr, "::", node.dataType]),
   cast_arg: (node) => show([node.expr, node.asKw, node.dataType, node.format]),
