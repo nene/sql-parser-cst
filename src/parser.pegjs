@@ -4025,7 +4025,7 @@ sub_comparison_expr
   / &postgres x:pg_other_expr { return x; }
 
 pg_other_expr
-  = head:pg_additive_expr tail:(__ pg_other_op  __ pg_additive_expr)* {
+  = head:pg_other_unary_expr tail:(__ pg_other_op  __ pg_other_unary_expr)* {
     return createBinaryExprChain(head, tail);
   }
 
@@ -4046,6 +4046,13 @@ pg_other_op
   ) {
     return op;
   }
+
+// Some of these PostgreSQL operators above can also be unary
+pg_other_unary_expr
+  = op:("~") right:(__ pg_other_unary_expr) {
+    return loc(createPrefixOpExpr(op, read(right)));
+  }
+  / pg_additive_expr
 
 /**
  * The precedence of PostgreSQL operators starting from addition:

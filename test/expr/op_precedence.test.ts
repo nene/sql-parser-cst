@@ -269,6 +269,17 @@ describe("operator precedence", () => {
       expect(showPrecedence(`a | b ~ c & d`)).toBe(`(((a | b) ~ c) & d)`);
     });
 
+    // Technically all these other operators should have the same precedence.
+    // But probably doesn't matter in practice.
+    // More important to have them working as both unary and binary.
+    it("unary ~ has higher precedence than binary ~", () => {
+      expect(showPrecedence(`~a ~ b`)).toBe(`((~ a) ~ b)`);
+      expect(showPrecedence(`a ~ ~ ~b`)).toBe(`(a ~ (~ (~ b)))`);
+    });
+    it("unary ~ has lower precedence than addition", () => {
+      expect(showPrecedence(`~a + b`)).toBe(`(~ (a + b))`);
+    });
+
     it("any other operator > range containment", () => {
       expect(showPrecedence(`5 >> 2 IN col1`)).toBe(`((5 >> 2) IN col1)`);
       expect(showPrecedence(`5 | 2 LIKE col1 | col2`)).toBe(`((5 | 2) LIKE (col1 | col2))`);
