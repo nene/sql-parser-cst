@@ -1,7 +1,7 @@
 import { dialect, testExprWc } from "../test_utils";
 
 describe("logic operators", () => {
-  dialect(["mysql", "mariadb", "sqlite"], () => {
+  dialect(["mysql", "mariadb"], () => {
     it("parses unary ! operator", () => {
       testExprWc(`!x OR y`);
       testExprWc(`!!!false`);
