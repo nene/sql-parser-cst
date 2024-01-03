@@ -27,7 +27,7 @@ Supports the following SQL dialects:
 - **MariaDB** - experimental
   (see [#32](https://github.com/nene/sql-parser-cst/issues/32) for implementation progress).
 - **PostgreSQL** - experimental
-  (see [#42](https://github.com/nene/sql-parser-cst/issues/42) for implementation progress).
+  (see [#40](https://github.com/nene/sql-parser-cst/issues/40) for implementation progress).
 
 **Note:** This software is in very active development.
 The syntax tree structure is mostly stable now,
