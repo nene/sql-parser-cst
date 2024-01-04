@@ -81,7 +81,6 @@ describe("location", () => {
                     "text": "t",
                     "type": "identifier",
                   },
-                  "columnAliases": undefined,
                   "expr": {
                     "name": "tbl",
                     "range": [
