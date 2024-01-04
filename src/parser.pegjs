@@ -475,7 +475,7 @@ table_with_inheritance
   }
 
 table_without_inheritance
-  = &postgres kw:(ONLY __) table:entity_name {
+  = &postgres kw:(ONLY __) table:(paren$entity_name / entity_name) {
     return loc({
       type: "table_without_inheritance",
       onlyKw: read(kw),
@@ -4769,6 +4769,7 @@ paren$__template__
 paren$cast_arg = .
 paren$compound_select_stmt = .
 paren$empty_list = .
+paren$entity_name = .
 paren$expr = .
 paren$extract_from = .
 paren$full_text_match_args = .

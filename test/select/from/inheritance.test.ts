@@ -10,6 +10,10 @@ describe("select FROM + table inheritance modifiers", () => {
       testWc("SELECT * FROM ONLY my_table");
     });
 
+    it("supports ONLY (table) syntax", () => {
+      testWc("SELECT * FROM ONLY ( my_table )");
+    });
+
     it("supports combining inherited and uninherited tables in joins", () => {
       testWc("SELECT * FROM ONLY foo JOIN bar.rar * USING (id) JOIN ONLY zip.zap USING (id)");
     });
