@@ -358,10 +358,11 @@ alias
   / implicit_alias
 
 explicit_alias
-  = kw:AS id:(__ explicit_alias_ident) {
+  = kw:AS id:(__ explicit_alias_ident) columnAliases:(__ column_aliases)? {
     return {
       asKw: kw,
       alias: read(id),
+      columnAliases: read(columnAliases),
     };
   }
 
@@ -373,9 +374,11 @@ implicit_alias
   = &bigquery !(pivot_expr_right / unpivot_expr_right) id:implicit_alias_ident {
     return { alias: id };
   }
-  / !bigquery id:implicit_alias_ident {
-    return { alias: id };
+  / !bigquery id:implicit_alias_ident columnAliases:(__ column_aliases)? {
+    return { alias: id, columnAliases: read(columnAliases) };
   }
+
+column_aliases = x:paren$list$column (&mysql / &postgres) { return x; }
 
 /**
  * SELECT .. FROM

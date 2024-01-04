@@ -9,6 +9,6 @@ export const baseMap: FullTransformMap<
   keyword: (node) => node.text,
   all_columns: () => "*",
   empty: () => "",
-  alias: (node) => show([node.expr, node.asKw, node.alias]),
+  alias: (node) => show([node.expr, node.asKw, node.alias, node.columnAliases]),
   program: (node) => show(node.statements, ";"),
 };

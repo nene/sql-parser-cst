@@ -1,5 +1,5 @@
 import { BaseNode, Keyword } from "./Base";
-import { Identifier } from "./Expr";
+import { Identifier, ListExpr, ParenExpr } from "./Expr";
 import { Node } from "./Node";
 
 export interface Alias<T = Node> extends BaseNode {
@@ -7,4 +7,5 @@ export interface Alias<T = Node> extends BaseNode {
   expr: T;
   asKw?: Keyword<"AS">;
   alias: Identifier;
+  columnAliases?: ParenExpr<ListExpr<Identifier>>;
 }

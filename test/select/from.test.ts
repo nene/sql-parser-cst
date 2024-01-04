@@ -28,6 +28,13 @@ describe("select FROM", () => {
     test("SELECT t.col FROM (((tbl) AS t) AS t1) AS t2");
   });
 
+  dialect(["mysql", "mariadb", "postgresql"], () => {
+    it("supports table column aliases", () => {
+      test("SELECT t.col1 FROM tbl AS t (col1, col2)");
+      test("SELECT t.col2 FROM tbl t (col1, col2)");
+    });
+  });
+
   it("supports subselect in parenthesis", () => {
     testWc("SELECT t.col FROM ( SELECT x FROM tbl ) AS t");
   });

@@ -306,6 +306,7 @@ export const createIdentifier = (text: string, name: string): Identifier => ({
 interface PartialAlias {
   asKw?: Keyword<"AS">;
   alias: Identifier;
+  columnAliases?: ParenExpr<ListExpr<Identifier>>;
 }
 
 export const createAlias = <T extends Node>(
