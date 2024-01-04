@@ -372,7 +372,7 @@ explicit_alias
 // will we treat it as alias.
 implicit_alias
   = &bigquery !(pivot_expr_right / unpivot_expr_right) id:implicit_alias_ident {
-    return { alias: id };
+    return { alias: id, columnAliases: undefined };
   }
   / !bigquery id:implicit_alias_ident columnAliases:(__ column_aliases)? {
     return { alias: id, columnAliases: read(columnAliases) };

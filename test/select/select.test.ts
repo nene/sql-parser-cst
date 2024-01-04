@@ -304,6 +304,7 @@ describe("select", () => {
                         "text": "'foo'",
                         "type": "identifier",
                       },
+                      "columnAliases": undefined,
                       "expr": {
                         "name": "col",
                         "text": "col",
