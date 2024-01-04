@@ -114,7 +114,7 @@ describe("select", () => {
             {
               "asStructOrValueKw": undefined,
               "columns": undefined,
-              "distinctKw": undefined,
+              "distinct": undefined,
               "hints": [],
               "selectKw": {
                 "name": "SELECT",
@@ -204,7 +204,7 @@ describe("select", () => {
                 ],
                 "type": "list_expr",
               },
-              "distinctKw": undefined,
+              "distinct": undefined,
               "hints": [],
               "selectKw": {
                 "name": "SELECT",
@@ -269,7 +269,7 @@ describe("select", () => {
                 ],
                 "type": "list_expr",
               },
-              "distinctKw": undefined,
+              "distinct": undefined,
               "hints": [],
               "selectKw": {
                 "name": "SELECT",
@@ -309,7 +309,7 @@ describe("select", () => {
                   ],
                   "type": "list_expr",
                 },
-                "distinctKw": undefined,
+                "distinct": undefined,
                 "hints": [],
                 "selectKw": {
                   "name": "SELECT",

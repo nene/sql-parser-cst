@@ -13,11 +13,13 @@ export const selectMap: FullTransformMap<string, AllSelectNodes> = {
   select_clause: (node) =>
     show([
       node.selectKw,
-      node.distinctKw,
+      node.distinct,
       node.hints,
       node.asStructOrValueKw,
       node.columns,
     ]),
+  select_all: (node) => show(node.allKw),
+  select_distinct: (node) => show(node.distinctKw),
   except_columns: (node) => show([node.expr, node.exceptKw, node.columns]),
   replace_columns: (node) => show([node.expr, node.replaceKw, node.columns]),
   // FROM

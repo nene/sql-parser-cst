@@ -229,12 +229,12 @@ other_clause
 select_clause
   = &postgres
     selectKw:SELECT
-    distinctKw:(__ (ALL / DISTINCT))?
+    distinct:(__ select_distinct)?
     columns:(__ select_columns)? {
       return loc({
         type: "select_clause",
         selectKw,
-        distinctKw: read(distinctKw),
+        distinct: read(distinct),
         hints: [],
         asStructOrValueKw: undefined,
         columns: read(columns),
@@ -242,13 +242,13 @@ select_clause
     }
   / &mysql
     selectKw:SELECT
-    distinctKw:(__ (ALL / DISTINCT / DISTINCTROW))?
+    distinct:(__ select_distinct)?
     hints:(__ mysql_select_hint)*
     columns:(__ select_columns) {
       return loc({
         type: "select_clause",
         selectKw,
-        distinctKw: read(distinctKw),
+        distinct: read(distinct),
         hints: hints.map(read),
         asStructOrValueKw: undefined,
         columns: read(columns),
@@ -256,13 +256,13 @@ select_clause
     }
   / &bigquery
     selectKw:SELECT
-    distinctKw:(__ (ALL / DISTINCT))?
+    distinct:(__ select_distinct)?
     asKw:(__ AS __ (STRUCT / VALUE))?
     columns:(__ select_columns) {
       return loc({
         type: "select_clause",
         selectKw,
-        distinctKw: read(distinctKw),
+        distinct: read(distinct),
         hints: [],
         asStructOrValueKw: read(asKw),
         columns: read(columns),
@@ -270,17 +270,28 @@ select_clause
     }
   / &sqlite
     selectKw:SELECT
-    distinctKw:(__ (ALL / DISTINCT))?
+    distinct:(__ select_distinct)?
     columns:(__ select_columns) {
       return loc({
         type: "select_clause",
         selectKw,
-        distinctKw: read(distinctKw),
+        distinct: read(distinct),
         hints: [],
         asStructOrValueKw: undefined,
         columns: read(columns),
       });
     }
+
+select_distinct
+  = kw:ALL {
+    return loc({ type: "select_all", allKw: kw });
+  }
+  / kw:DISTINCT {
+    return loc({ type: "select_distinct", distinctKw: kw });
+  }
+  / kw:DISTINCTROW &mysql {
+    return loc({ type: "select_distinct", distinctKw: kw });
+  }
 
 mysql_select_hint
   = &mysql kw:(

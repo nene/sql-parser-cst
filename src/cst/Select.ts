@@ -20,6 +20,8 @@ export type AllSelectNodes =
   | WithClause
   | CommonTableExpr
   | SelectClause
+  | SelectAll
+  | SelectDistinct
   | ExceptColumns
   | ReplaceColumns
   | FromClause
@@ -133,13 +135,23 @@ export interface CommonTableExpr extends BaseNode {
 export interface SelectClause extends BaseNode {
   type: "select_clause";
   selectKw: Keyword<"SELECT">;
-  distinctKw?: Keyword<"ALL" | "DISTINCT" | "DISTINCTROW">;
+  distinct?: SelectAll | SelectDistinct;
   hints: MysqlHint[];
   asStructOrValueKw?: [Keyword<"AS">, Keyword<"STRUCT" | "VALUE">];
   // PostgreSQL supports empty SELECT clause
   columns?: ListExpr<
     AllColumns | ExceptColumns | ReplaceColumns | Expr | Alias<Expr> | Empty
   >;
+}
+
+export interface SelectAll extends BaseNode {
+  type: "select_all";
+  allKw: Keyword<"ALL">;
+}
+
+export interface SelectDistinct extends BaseNode {
+  type: "select_distinct";
+  distinctKw: Keyword<"DISTINCT" | "DISTINCTROW">;
 }
 
 // BigQuery
