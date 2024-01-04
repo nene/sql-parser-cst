@@ -440,6 +440,8 @@ table_or_subquery
     / paren$join_expr
     / paren$compound_select_stmt
     / partitioned_table
+    / table_with_inheritance
+    / table_without_inheritance
   ) alias:(__ alias)? {
     return loc(createAlias(t, alias));
   }
@@ -461,6 +463,23 @@ partitioned_table
       table: read(table),
       partitionKw: read(kw),
       partitions,
+    });
+  }
+
+table_with_inheritance
+  = &postgres table:(entity_name __) "*" {
+    return loc({
+      type: "table_with_inheritance",
+      table: read(table),
+    });
+  }
+
+table_without_inheritance
+  = &postgres kw:(ONLY __) table:entity_name {
+    return loc({
+      type: "table_without_inheritance",
+      onlyKw: read(kw),
+      table: read(table),
     });
   }
 

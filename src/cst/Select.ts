@@ -50,6 +50,8 @@ export type AllSelectNodes =
   | NotIndexedTable
   | LateralDerivedTable
   | PartitionedTable
+  | TableWithInheritance
+  | TableWithoutInheritance
   | UnnestWithOffsetExpr
   | UnnestExpr
   | PivotExpr
@@ -347,6 +349,8 @@ type JoinOp =
 
 export type TableOrSubquery =
   | EntityName
+  | TableWithInheritance
+  | TableWithoutInheritance
   | FuncCall
   | IndexedTable
   | NotIndexedTable
@@ -383,6 +387,19 @@ export interface PartitionedTable extends BaseNode {
   table: EntityName | Alias<EntityName>;
   partitionKw: Keyword<"PARTITION">;
   partitions: ParenExpr<ListExpr<Identifier>>;
+}
+
+// PostgreSQL syntax: table_name *
+export interface TableWithInheritance extends BaseNode {
+  type: "table_with_inheritance";
+  table: EntityName;
+}
+
+// PostgreSQL syntax: ONLY table_name
+export interface TableWithoutInheritance extends BaseNode {
+  type: "table_without_inheritance";
+  onlyKw: Keyword<"ONLY">;
+  table: EntityName;
 }
 
 // BigQuery
