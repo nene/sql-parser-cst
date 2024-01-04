@@ -229,7 +229,7 @@ other_clause
 select_clause
   = &postgres
     selectKw:SELECT
-    modifiers:(__ select_distinct)*
+    modifiers:(__ select_distinct)|0..1|
     columns:(__ select_columns)? {
       return loc({
         type: "select_clause",
@@ -251,7 +251,7 @@ select_clause
     }
   / &bigquery
     selectKw:SELECT
-    modifiers:(__ (select_distinct / bigquery_select_as))*
+    modifiers:(__ (select_distinct / bigquery_select_as))|0..2|
     columns:(__ select_columns) {
       return loc({
         type: "select_clause",
@@ -262,7 +262,7 @@ select_clause
     }
   / &sqlite
     selectKw:SELECT
-    modifiers:(__ select_distinct)*
+    modifiers:(__ select_distinct)|0..1|
     columns:(__ select_columns) {
       return loc({
         type: "select_clause",
