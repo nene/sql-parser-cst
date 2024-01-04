@@ -633,13 +633,15 @@ unpivot_for_in
 // TABLESAMPLE ........................................................
 tablesample_expr_right
   = (&bigquery / &postgres) c1:__ kw:(TABLESAMPLE __)
-    method:((tablesample_method / ident) __) args:paren$list$tablesample_arg {
+    method:((tablesample_method / ident) __) args:paren$list$tablesample_arg
+    repeatable:(__ tablesample_repeatable)? {
       return (left: any) => ({
         type: "tablesample_expr",
         left: trailing(left, c1),
         tablesampleKw: read(kw),
         method: read(method),
         args,
+        repeatable: read(repeatable),
       });
     }
 
@@ -656,6 +658,15 @@ tablesample_percent
       type: "tablesample_percent",
       percent: p,
       percentKw: read(kw),
+    });
+  }
+
+tablesample_repeatable
+  = kw:(REPEATABLE __) seed:paren$expr {
+    return loc({
+      type: "tablesample_repeatable",
+      repeatableKw: read(kw),
+      seed,
     });
   }
 
@@ -6040,6 +6051,7 @@ RELEASE             = kw:"RELEASE"i             !ident_part { return loc(createK
 REMOTE              = kw:"REMOTE"i              !ident_part { return loc(createKeyword(kw)); }
 RENAME              = kw:"RENAME"i              !ident_part { return loc(createKeyword(kw)); }
 REPEAT              = kw:"REPEAT"i              !ident_part { return loc(createKeyword(kw)); }
+REPEATABLE          = kw:"REPEATABLE"i          !ident_part { return loc(createKeyword(kw)); }
 REPLACE             = kw:"REPLACE"i             !ident_part { return loc(createKeyword(kw)); }
 REPLICATION         = kw:"REPLICATION"i         !ident_part { return loc(createKeyword(kw)); }
 RESERVATION         = kw:"RESERVATION"i         !ident_part { return loc(createKeyword(kw)); }

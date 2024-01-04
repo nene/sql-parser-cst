@@ -54,9 +54,16 @@ export const selectMap: FullTransformMap<string, AllSelectNodes> = {
       node.unpivotColumns,
     ]),
   tablesample_expr: (node) =>
-    show([node.left, node.tablesampleKw, node.method, node.args]),
+    show([
+      node.left,
+      node.tablesampleKw,
+      node.method,
+      node.args,
+      node.repeatable,
+    ]),
   tablesample_method: (node) => show(node.methodKw),
   tablesample_percent: (node) => show([node.percent, node.percentKw]),
+  tablesample_repeatable: (node) => show([node.repeatableKw, node.seed]),
   for_system_time_as_of_expr: (node) =>
     show([node.left, node.forSystemTimeAsOfKw, node.expr]),
   sort_specification: (node) =>

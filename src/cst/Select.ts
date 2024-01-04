@@ -61,6 +61,7 @@ export type AllSelectNodes =
   | TablesampleExpr
   | TablesampleMethod
   | TablesamplePercent
+  | TablesampleRepeatable
   | ForSystemTimeAsOfExpr
   | JoinOnSpecification
   | JoinUsingSpecification
@@ -469,6 +470,7 @@ export interface TablesampleExpr extends BaseNode {
   tablesampleKw: Keyword<"TABLESAMPLE">;
   method: TablesampleMethod | Identifier;
   args: ParenExpr<ListExpr<TablesamplePercent | Expr>>;
+  repeatable?: TablesampleRepeatable;
 }
 // BigQuery & PostgreSQL
 export interface TablesampleMethod extends BaseNode {
@@ -481,6 +483,13 @@ export interface TablesamplePercent extends BaseNode {
   percent: Expr;
   percentKw: Keyword<"PERCENT">;
 }
+// PostgreSQL
+export interface TablesampleRepeatable extends BaseNode {
+  type: "tablesample_repeatable";
+  repeatableKw: Keyword<"REPEATABLE">;
+  seed: ParenExpr<Expr>;
+}
+
 // BigQuery
 export interface ForSystemTimeAsOfExpr extends BaseNode {
   type: "for_system_time_as_of_expr";

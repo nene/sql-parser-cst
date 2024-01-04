@@ -23,6 +23,11 @@ describe("select FROM + TABLESAMPLE", () => {
     it("supports TABLESAMPLE with custom sampling function", () => {
       testWc("SELECT * FROM my_table TABLESAMPLE my_sampler (1, 2, 'hello')");
     });
+
+    it("supports REPEATABLE clause", () => {
+      testWc("SELECT * FROM my_table TABLESAMPLE SYSTEM (10) REPEATABLE (123)");
+      testWc("SELECT * FROM my_table TABLESAMPLE SYSTEM (10) REPEATABLE (5 + 15)");
+    });
   });
 
   notDialect(["bigquery", "postgresql"], () => {
