@@ -229,54 +229,49 @@ other_clause
 select_clause
   = &postgres
     selectKw:SELECT
-    distinct:(__ select_distinct)?
+    modifiers:(__ select_distinct)*
     columns:(__ select_columns)? {
       return loc({
         type: "select_clause",
         selectKw,
-        distinct: read(distinct),
-        hints: [],
+        modifiers: modifiers.map(read),
         asStructOrValueKw: undefined,
         columns: read(columns),
       });
     }
   / &mysql
     selectKw:SELECT
-    distinct:(__ select_distinct)?
-    hints:(__ mysql_select_hint)*
+    modifiers:(__ (select_distinct / mysql_select_hint))*
     columns:(__ select_columns) {
       return loc({
         type: "select_clause",
         selectKw,
-        distinct: read(distinct),
-        hints: hints.map(read),
+        modifiers: modifiers.map(read),
         asStructOrValueKw: undefined,
         columns: read(columns),
       });
     }
   / &bigquery
     selectKw:SELECT
-    distinct:(__ select_distinct)?
+    modifiers:(__ select_distinct)*
     asKw:(__ AS __ (STRUCT / VALUE))?
     columns:(__ select_columns) {
       return loc({
         type: "select_clause",
         selectKw,
-        distinct: read(distinct),
-        hints: [],
+        modifiers: modifiers.map(read),
         asStructOrValueKw: read(asKw),
         columns: read(columns),
       });
     }
   / &sqlite
     selectKw:SELECT
-    distinct:(__ select_distinct)?
+    modifiers:(__ select_distinct)*
     columns:(__ select_columns) {
       return loc({
         type: "select_clause",
         selectKw,
-        distinct: read(distinct),
-        hints: [],
+        modifiers: modifiers.map(read),
         asStructOrValueKw: undefined,
         columns: read(columns),
       });

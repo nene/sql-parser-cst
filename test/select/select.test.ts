@@ -35,6 +35,10 @@ describe("select", () => {
     it("parses SELECT with multiple hints", () => {
       test("SELECT DISTINCT STRAIGHT_JOIN SQL_NO_CACHE foo");
     });
+
+    it("allows mixing the order of DISTINCT and other hints", () => {
+      test("SELECT STRAIGHT_JOIN DISTINCT SQL_NO_CACHE foo");
+    });
   });
 
   dialect("mariadb", () => {
@@ -211,8 +215,7 @@ describe("select", () => {
                 ],
                 "type": "list_expr",
               },
-              "distinct": undefined,
-              "hints": [],
+              "modifiers": [],
               "selectKw": {
                 "name": "SELECT",
                 "text": "SELECT",
@@ -276,8 +279,7 @@ describe("select", () => {
                 ],
                 "type": "list_expr",
               },
-              "distinct": undefined,
-              "hints": [],
+              "modifiers": [],
               "selectKw": {
                 "name": "SELECT",
                 "text": "SELECT",
@@ -316,8 +318,7 @@ describe("select", () => {
                   ],
                   "type": "list_expr",
                 },
-                "distinct": undefined,
-                "hints": [],
+                "modifiers": [],
                 "selectKw": {
                   "name": "SELECT",
                   "text": "SELECT",

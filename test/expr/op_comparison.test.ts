@@ -252,8 +252,7 @@ describe("comparison operators", () => {
                         ],
                         "type": "list_expr",
                       },
-                      "distinctKw": undefined,
-                      "hints": [],
+                      "modifiers": [],
                       "selectKw": {
                         "name": "SELECT",
                         "text": "SELECT",

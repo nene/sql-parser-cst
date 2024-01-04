@@ -55,8 +55,7 @@ describe("location", () => {
                   ],
                   "type": "list_expr",
                 },
-                "distinct": undefined,
-                "hints": [],
+                "modifiers": [],
                 "range": [
                   0,
                   16,
@@ -167,8 +166,7 @@ describe("location", () => {
                   ],
                   "type": "list_expr",
                 },
-                "distinct": undefined,
-                "hints": [],
+                "modifiers": [],
                 "range": [
                   0,
                   17,

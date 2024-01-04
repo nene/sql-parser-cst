@@ -29,8 +29,7 @@ describe("EXISTS expression", () => {
                     ],
                     "type": "list_expr",
                   },
-                  "distinct": undefined,
-                  "hints": [],
+                  "modifiers": [],
                   "selectKw": {
                     "name": "SELECT",
                     "text": "SELECT",

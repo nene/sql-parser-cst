@@ -136,8 +136,7 @@ export interface CommonTableExpr extends BaseNode {
 export interface SelectClause extends BaseNode {
   type: "select_clause";
   selectKw: Keyword<"SELECT">;
-  distinct?: SelectAll | SelectDistinct | SelectDistinctOn;
-  hints: MysqlHint[];
+  modifiers: (SelectAll | SelectDistinct | SelectDistinctOn | MysqlHint)[];
   asStructOrValueKw?: [Keyword<"AS">, Keyword<"STRUCT" | "VALUE">];
   // PostgreSQL supports empty SELECT clause
   columns?: ListExpr<
