@@ -18,7 +18,6 @@ describe("EXISTS expression", () => {
             "expr": {
               "clauses": [
                 {
-                  "asStructOrValueKw": undefined,
                   "columns": {
                     "items": [
                       {

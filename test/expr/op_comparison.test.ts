@@ -241,7 +241,6 @@ describe("comparison operators", () => {
                 "expr": {
                   "clauses": [
                     {
-                      "asStructOrValueKw": undefined,
                       "columns": {
                         "items": [
                           {

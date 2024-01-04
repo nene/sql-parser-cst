@@ -10,11 +10,12 @@ export const selectMap: FullTransformMap<string, AllSelectNodes> = {
   common_table_expr: (node) =>
     show([node.table, node.columns, node.asKw, node.materializedKw, node.expr]),
   // SELECT
-  select_clause: (node) =>
-    show([node.selectKw, node.modifiers, node.asStructOrValueKw, node.columns]),
+  select_clause: (node) => show([node.selectKw, node.modifiers, node.columns]),
   select_all: (node) => show(node.allKw),
   select_distinct: (node) => show(node.distinctKw),
   select_distinct_on: (node) => show([node.distinctOnKw, node.columns]),
+  select_as_struct: (node) => show(node.asStructKw),
+  select_as_value: (node) => show(node.asValueKw),
   except_columns: (node) => show([node.expr, node.exceptKw, node.columns]),
   replace_columns: (node) => show([node.expr, node.replaceKw, node.columns]),
   // FROM

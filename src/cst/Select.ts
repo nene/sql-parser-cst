@@ -23,6 +23,8 @@ export type AllSelectNodes =
   | SelectAll
   | SelectDistinct
   | SelectDistinctOn
+  | SelectAsStruct
+  | SelectAsValue
   | ExceptColumns
   | ReplaceColumns
   | FromClause
@@ -136,8 +138,14 @@ export interface CommonTableExpr extends BaseNode {
 export interface SelectClause extends BaseNode {
   type: "select_clause";
   selectKw: Keyword<"SELECT">;
-  modifiers: (SelectAll | SelectDistinct | SelectDistinctOn | MysqlHint)[];
-  asStructOrValueKw?: [Keyword<"AS">, Keyword<"STRUCT" | "VALUE">];
+  modifiers: (
+    | SelectAll
+    | SelectDistinct
+    | SelectDistinctOn
+    | SelectAsStruct
+    | SelectAsValue
+    | MysqlHint
+  )[];
   // PostgreSQL supports empty SELECT clause
   columns?: ListExpr<
     AllColumns | ExceptColumns | ReplaceColumns | Expr | Alias<Expr> | Empty
@@ -159,6 +167,18 @@ export interface SelectDistinctOn extends BaseNode {
   type: "select_distinct_on";
   distinctOnKw: [Keyword<"DISTINCT">, Keyword<"ON">];
   columns: ParenExpr<ListExpr<Expr>>;
+}
+
+// BigQuery
+export interface SelectAsStruct extends BaseNode {
+  type: "select_as_struct";
+  asStructKw: [Keyword<"AS">, Keyword<"STRUCT">];
+}
+
+// BigQuery
+export interface SelectAsValue extends BaseNode {
+  type: "select_as_value";
+  asValueKw: [Keyword<"AS">, Keyword<"VALUE">];
 }
 
 // BigQuery

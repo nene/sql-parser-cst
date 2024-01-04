@@ -123,10 +123,8 @@ describe("select", () => {
         {
           "clauses": [
             {
-              "asStructOrValueKw": undefined,
               "columns": undefined,
-              "distinct": undefined,
-              "hints": [],
+              "modifiers": [],
               "selectKw": {
                 "name": "SELECT",
                 "text": "SELECT",
@@ -194,7 +192,6 @@ describe("select", () => {
         {
           "clauses": [
             {
-              "asStructOrValueKw": undefined,
               "columns": {
                 "items": [
                   {
@@ -255,7 +252,6 @@ describe("select", () => {
         {
           "clauses": [
             {
-              "asStructOrValueKw": undefined,
               "columns": {
                 "items": [
                   {
@@ -299,7 +295,6 @@ describe("select", () => {
           {
             "clauses": [
               {
-                "asStructOrValueKw": undefined,
                 "columns": {
                   "items": [
                     {

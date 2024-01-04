@@ -12,7 +12,6 @@ describe("location", () => {
           {
             "clauses": [
               {
-                "asStructOrValueKw": undefined,
                 "columns": {
                   "items": [
                     {
@@ -137,7 +136,6 @@ describe("location", () => {
           {
             "clauses": [
               {
-                "asStructOrValueKw": undefined,
                 "columns": {
                   "items": [
                     {

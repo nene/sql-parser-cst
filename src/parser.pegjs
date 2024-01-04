@@ -235,7 +235,6 @@ select_clause
         type: "select_clause",
         selectKw,
         modifiers: modifiers.map(read),
-        asStructOrValueKw: undefined,
         columns: read(columns),
       });
     }
@@ -247,20 +246,17 @@ select_clause
         type: "select_clause",
         selectKw,
         modifiers: modifiers.map(read),
-        asStructOrValueKw: undefined,
         columns: read(columns),
       });
     }
   / &bigquery
     selectKw:SELECT
-    modifiers:(__ select_distinct)*
-    asKw:(__ AS __ (STRUCT / VALUE))?
+    modifiers:(__ (select_distinct / bigquery_select_as))*
     columns:(__ select_columns) {
       return loc({
         type: "select_clause",
         selectKw,
         modifiers: modifiers.map(read),
-        asStructOrValueKw: read(asKw),
         columns: read(columns),
       });
     }
@@ -272,7 +268,6 @@ select_clause
         type: "select_clause",
         selectKw,
         modifiers: modifiers.map(read),
-        asStructOrValueKw: undefined,
         columns: read(columns),
       });
     }
@@ -289,6 +284,14 @@ select_distinct
   }
   / kw:DISTINCTROW &mysql {
     return loc({ type: "select_distinct", distinctKw: kw });
+  }
+
+bigquery_select_as
+  = kw:(AS __ STRUCT) {
+    return loc({ type: "select_as_struct", asStructKw: read(kw) });
+  }
+  / kw:(AS __ VALUE) {
+    return loc({ type: "select_as_value", asValueKw: read(kw) });
   }
 
 mysql_select_hint
