@@ -207,7 +207,6 @@ describe("insert into", () => {
               },
               "type": "paren_expr",
             },
-            "hints": [],
             "insertKw": {
               "name": "INSERT",
               "text": "INSERT",
@@ -218,6 +217,7 @@ describe("insert into", () => {
               "text": "INTO",
               "type": "keyword",
             },
+            "modifiers": [],
             "orAction": undefined,
             "table": {
               "name": "tbl",

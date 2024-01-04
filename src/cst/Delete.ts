@@ -1,7 +1,7 @@
 import { Alias } from "./Alias";
 import { BaseNode, Keyword } from "./Base";
 import { EntityName, ListExpr } from "./Expr";
-import { MysqlHint } from "./Mysql";
+import { MysqlModifier } from "./Mysql";
 import {
   FromClause,
   LimitClause,
@@ -31,7 +31,7 @@ export interface DeleteStmt extends BaseNode {
 export interface DeleteClause extends BaseNode {
   type: "delete_clause";
   deleteKw: Keyword<"DELETE">;
-  hints: MysqlHint[];
+  modifiers: MysqlModifier[];
   fromKw?: Keyword<"FROM">;
   tables: ListExpr<EntityName | Alias<EntityName> | PartitionedTable>;
 }

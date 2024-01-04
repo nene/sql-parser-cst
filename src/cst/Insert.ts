@@ -17,7 +17,7 @@ import {
   WithClause,
 } from "./Select";
 import { ColumnAssignment, SetClause } from "./Update";
-import { MysqlHint } from "./Mysql";
+import { MysqlModifier } from "./Mysql";
 
 export type AllInsertNodes =
   | InsertStmt
@@ -49,7 +49,7 @@ export interface InsertStmt extends BaseNode {
 export interface InsertClause extends BaseNode {
   type: "insert_clause";
   insertKw: Keyword<"INSERT" | "REPLACE">;
-  hints: MysqlHint[];
+  modifiers: MysqlModifier[];
   orAction?: OrAlternateAction;
   intoKw?: Keyword<"INTO">;
   table: EntityName | Alias<EntityName> | PartitionedTable;

@@ -12,7 +12,7 @@ import {
 import { Alias } from "./Alias";
 import { FrameClause } from "./WindowFrame";
 import { StringLiteral } from "./Literal";
-import { MysqlHint } from "./Mysql";
+import { MysqlModifier } from "./Mysql";
 
 export type AllSelectNodes =
   | CompoundSelectStmt
@@ -144,7 +144,7 @@ export interface SelectClause extends BaseNode {
     | SelectDistinctOn
     | SelectAsStruct
     | SelectAsValue
-    | MysqlHint
+    | MysqlModifier
   )[];
   // PostgreSQL supports empty SELECT clause
   columns?: ListExpr<

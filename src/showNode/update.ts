@@ -5,7 +5,7 @@ import { FullTransformMap } from "../cstTransformer";
 export const updateMap: FullTransformMap<string, AllUpdateNodes> = {
   update_stmt: (node) => show(node.clauses),
   update_clause: (node) =>
-    show([node.updateKw, node.hints, node.orAction, node.tables]),
+    show([node.updateKw, node.modifiers, node.orAction, node.tables]),
   set_clause: (node) => show([node.setKw, node.assignments]),
   column_assignment: (node) => show([node.column, "=", node.expr]),
 };

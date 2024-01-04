@@ -240,7 +240,7 @@ select_clause
     }
   / &mysql
     selectKw:SELECT
-    modifiers:(__ (select_distinct / mysql_select_hint))*
+    modifiers:(__ (select_distinct / mysql_select_modifier))*
     columns:(__ select_columns) {
       return loc({
         type: "select_clause",
@@ -294,7 +294,7 @@ bigquery_select_as
     return loc({ type: "select_as_value", asValueKw: read(kw) });
   }
 
-mysql_select_hint
+mysql_select_modifier
   = &mysql kw:(
     HIGH_PRIORITY
   / STRAIGHT_JOIN
@@ -305,8 +305,8 @@ mysql_select_hint
   / SQL_SMALL_RESULT
   / SQL_BUFFER_RESULT) {
     return loc({
-      type: "mysql_hint",
-      hintKw: kw,
+      type: "mysql_modifier",
+      modifierKw: kw,
     });
   }
 
@@ -1155,7 +1155,7 @@ insert_stmt
 
 insert_clause
   = insertKw:(INSERT / REPLACE)
-    hints:(__ mysql_upsert_hint)*
+    modifiers:(__ mysql_upsert_modifier)*
     orAction:(__ or_alternate_action)?
     intoKw:(__ INTO)?
     table:(__ (partitioned_table / table_or_explicit_alias))
@@ -1163,7 +1163,7 @@ insert_clause
       return loc({
         type: "insert_clause",
         insertKw,
-        hints: hints.map(read),
+        modifiers: modifiers.map(read),
         orAction: read(orAction),
         intoKw: read(intoKw),
         table: read(table),
@@ -1171,9 +1171,9 @@ insert_clause
       });
     }
 
-mysql_upsert_hint
+mysql_upsert_modifier
   = kw:(LOW_PRIORITY / DELAYED / HIGH_PRIORITY / IGNORE) &mysql {
-    return loc({ type: "mysql_hint", hintKw: kw });
+    return loc({ type: "mysql_modifier", modifierKw: kw });
   }
 
 or_alternate_action
@@ -1310,13 +1310,13 @@ update_stmt
 
 update_clause
   = kw:(UPDATE __)
-    hints:(mysql_upsert_hint __)*
+    modifiers:(mysql_upsert_modifier __)*
     orAction:(or_alternate_action __)?
     tables:list$table_or_alias {
       return loc({
         type: "update_clause",
         updateKw: read(kw),
-        hints: hints.map(read),
+        modifiers: modifiers.map(read),
         orAction: read(orAction),
         tables: tables,
       });
@@ -1373,20 +1373,20 @@ delete_stmt
     }
 
 delete_clause
-  = delKw:(DELETE __) hints:(mysql_delete_hint __)* fromKw:(FROM __)?
+  = delKw:(DELETE __) modifiers:(mysql_delete_modifier __)* fromKw:(FROM __)?
     tables:(list$delete_clause_table) {
       return loc({
         type: "delete_clause",
         deleteKw: read(delKw),
-        hints: hints.map(read),
+        modifiers: modifiers.map(read),
         fromKw: read(fromKw),
         tables,
       });
     }
 
-mysql_delete_hint
+mysql_delete_modifier
   = &mysql kw:(LOW_PRIORITY / QUICK / IGNORE) {
-    return loc({ type: "mysql_hint", hintKw: kw });
+    return loc({ type: "mysql_modifier", modifierKw: kw });
   }
 
 delete_clause_table

@@ -1,10 +1,10 @@
 import { BaseNode, Keyword } from "./Base";
 
-export type AllMysqlNodes = MysqlHint;
+export type AllMysqlNodes = MysqlModifier;
 
-export interface MysqlHint extends BaseNode {
-  type: "mysql_hint";
-  hintKw: Keyword<
+export interface MysqlModifier extends BaseNode {
+  type: "mysql_modifier";
+  modifierKw: Keyword<
     | "LOW_PRIORITY"
     | "HIGH_PRIORITY"
     | "QUICK"

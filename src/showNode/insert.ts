@@ -7,7 +7,7 @@ export const insertMap: FullTransformMap<string, AllInsertNodes> = {
   insert_clause: (node) =>
     show([
       node.insertKw,
-      node.hints,
+      node.modifiers,
       node.orAction,
       node.intoKw,
       node.table,
