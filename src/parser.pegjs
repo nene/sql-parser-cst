@@ -632,14 +632,23 @@ unpivot_for_in
 
 // TABLESAMPLE ........................................................
 tablesample_expr_right
-  = &bigquery c1:__ kw:(TABLESAMPLE __ SYSTEM __) args:paren$tablesample_percent {
-    return (left: any) => ({
-      type: "tablesample_expr",
-      left: trailing(left, c1),
-      tablesampleKw: read(kw),
-      args,
-    });
+  = (&bigquery / &postgres) c1:__ kw:(TABLESAMPLE __)
+    method:((tablesample_method / ident) __) args:paren$list$tablesample_arg {
+      return (left: any) => ({
+        type: "tablesample_expr",
+        left: trailing(left, c1),
+        tablesampleKw: read(kw),
+        method: read(method),
+        args,
+      });
+    }
+
+tablesample_method
+  = kw:(BERNOULLI / SYSTEM) {
+    return loc({ type: "tablesample_method", methodKw: read(kw) });
   }
+
+tablesample_arg = tablesample_percent / expr
 
 tablesample_percent
   = p:(literal / parameter) kw:(__ PERCENT) {
@@ -4793,11 +4802,11 @@ paren$list$literal = .
 paren$list$procedure_param = .
 paren$list$sort_specification = .
 paren$list$string_literal = .
+paren$list$tablesample_arg = .
 paren$pivot_for_in = .
 paren$pragma_value = .
 paren$string_literal = .
 paren$raise_args = .
-paren$tablesample_percent = .
 paren$unpivot_for_in = .
 paren$verbose_all_columns = .
 paren$weekday_unit = .
@@ -4844,6 +4853,7 @@ list$set_assignment = .
 list$sort_specification = .
 list$string_literal = .
 list$table_or_alias = .
+list$tablesample_arg = .
 list$type_param = .
 list$values_row = .
 list$variable = .
@@ -5704,6 +5714,7 @@ AVG                 = kw:"AVG"i                 !ident_part { return loc(createK
 AVG_ROW_LENGTH      = kw:"AVG_ROW_LENGTH"i      !ident_part { return loc(createKeyword(kw)); }
 BEFORE              = kw:"BEFORE"i              !ident_part { return loc(createKeyword(kw)); }
 BEGIN               = kw:"BEGIN"i               !ident_part { return loc(createKeyword(kw)); }
+BERNOULLI           = kw:"BERNOULLI"i           !ident_part { return loc(createKeyword(kw)); }
 BETWEEN             = kw:"BETWEEN"i             !ident_part { return loc(createKeyword(kw)); }
 BI_CAPACITY         = kw:"BI_CAPACITY"i         !ident_part { return loc(createKeyword(kw)); }
 BIGDECIMAL          = kw:"BIGDECIMAL"i          !ident_part { return loc(createKeyword(kw)); }

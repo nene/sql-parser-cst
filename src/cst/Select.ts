@@ -59,6 +59,7 @@ export type AllSelectNodes =
   | UnpivotExpr
   | UnpivotForIn
   | TablesampleExpr
+  | TablesampleMethod
   | TablesamplePercent
   | ForSystemTimeAsOfExpr
   | JoinOnSpecification
@@ -461,12 +462,18 @@ export interface UnpivotForIn extends BaseNode {
         >
       >;
 }
-// BigQuery
+// BigQuery & PostgreSQL
 export interface TablesampleExpr extends BaseNode {
   type: "tablesample_expr";
   left: TableExpr;
-  tablesampleKw: [Keyword<"TABLESAMPLE">, Keyword<"SYSTEM">];
-  args: ParenExpr<TablesamplePercent>;
+  tablesampleKw: Keyword<"TABLESAMPLE">;
+  method: TablesampleMethod | Identifier;
+  args: ParenExpr<ListExpr<TablesamplePercent | Expr>>;
+}
+// BigQuery & PostgreSQL
+export interface TablesampleMethod extends BaseNode {
+  type: "tablesample_method";
+  methodKw: Keyword<"SYSTEM" | "BERNOULLI">;
 }
 // BigQuery
 export interface TablesamplePercent extends BaseNode {
