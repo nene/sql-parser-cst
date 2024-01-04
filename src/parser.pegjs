@@ -286,6 +286,9 @@ select_distinct
   = kw:ALL {
     return loc({ type: "select_all", allKw: kw });
   }
+  / kw:(DISTINCT __ ON __) columns:paren$list$expr &postgres {
+    return loc({ type: "select_distinct_on", distinctOnKw: read(kw), columns });
+  }
   / kw:DISTINCT {
     return loc({ type: "select_distinct", distinctKw: kw });
   }

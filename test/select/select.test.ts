@@ -13,6 +13,13 @@ describe("select", () => {
     test("SELECT DISTINCT foo");
   });
 
+  dialect("postgresql", () => {
+    it("supports DISTINCT ON ()", () => {
+      test("SELECT DISTINCT ON (foo, bar) * FROM tbl");
+      test("SELECT DISTINCT ON (foo) foo, bar, baz, zap FROM tbl");
+    });
+  });
+
   dialect(["mysql", "mariadb"], () => {
     it("parses SELECT with MySQL-specific hints", () => {
       test("SELECT DISTINCTROW foo AS x");

@@ -20,6 +20,7 @@ export const selectMap: FullTransformMap<string, AllSelectNodes> = {
     ]),
   select_all: (node) => show(node.allKw),
   select_distinct: (node) => show(node.distinctKw),
+  select_distinct_on: (node) => show([node.distinctOnKw, node.columns]),
   except_columns: (node) => show([node.expr, node.exceptKw, node.columns]),
   replace_columns: (node) => show([node.expr, node.replaceKw, node.columns]),
   // FROM
