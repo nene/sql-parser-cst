@@ -26,7 +26,7 @@ describe("parse()", () => {
     expect(() => parse("SELECT foo bar baz", { dialect: "sqlite" }))
       .toThrowErrorMatchingInlineSnapshot(`
       "Syntax Error: Unexpected "baz"
-      Was expecting to see: ",", ";", "EXCEPT", "FROM", "GROUP", "HAVING", "INTERSECT", "LIMIT", "ORDER", "UNION", "WHERE", "WINDOW", end of input, or whitespace
+      Was expecting to see: "(", ",", ";", "EXCEPT", "FROM", "GROUP", "HAVING", "INTERSECT", "LIMIT", "ORDER", "UNION", "WHERE", "WINDOW", end of input, or whitespace
       --> undefined:1:16
         |
       1 | SELECT foo bar baz
@@ -38,7 +38,7 @@ describe("parse()", () => {
     expect(() => parse("\n".repeat(100) + "SELECT foo bar baz", { dialect: "sqlite" }))
       .toThrowErrorMatchingInlineSnapshot(`
       "Syntax Error: Unexpected "baz"
-      Was expecting to see: ",", ";", "EXCEPT", "FROM", "GROUP", "HAVING", "INTERSECT", "LIMIT", "ORDER", "UNION", "WHERE", "WINDOW", end of input, or whitespace
+      Was expecting to see: "(", ",", ";", "EXCEPT", "FROM", "GROUP", "HAVING", "INTERSECT", "LIMIT", "ORDER", "UNION", "WHERE", "WINDOW", end of input, or whitespace
       --> undefined:101:16
           |
       101 | SELECT foo bar baz

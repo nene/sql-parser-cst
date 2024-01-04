@@ -265,6 +265,7 @@ describe("select", () => {
                       "text": "AS",
                       "type": "keyword",
                     },
+                    "columnAliases": undefined,
                     "expr": {
                       "text": "1",
                       "type": "number_literal",
@@ -303,6 +304,7 @@ describe("select", () => {
                         "text": "'foo'",
                         "type": "identifier",
                       },
+                      "columnAliases": undefined,
                       "expr": {
                         "name": "col",
                         "text": "col",
