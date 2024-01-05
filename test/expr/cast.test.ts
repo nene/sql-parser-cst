@@ -67,5 +67,15 @@ describe("type cast", () => {
       testExprWc(`x :: INT`);
       testExprWc(`8 :: DECIMAL(3, 2)`);
     });
+
+    it("supports function call syntax for type casts", () => {
+      testExpr(`float8('12.33')`);
+      testExpr(`text(12.5)`);
+      testExpr(`"time"(12.5)`);
+    });
+
+    it("parses typename(..) type casts as function calls", () => {
+      expect(parseExpr(`float8(10)`).type).toBe("func_call");
+    });
   });
 });
