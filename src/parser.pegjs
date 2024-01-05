@@ -451,7 +451,7 @@ table_or_subquery
   / table_or_alias
 
 lateral_derived_table
-  = &mysql kw:(LATERAL __) expr:paren$compound_select_stmt {
+  = kw:(LATERAL __) expr:paren$compound_select_stmt (&mysql / &postgres) {
     return loc({
       type: "lateral_derived_table",
       lateralKw: read(kw),
