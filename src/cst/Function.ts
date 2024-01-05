@@ -1,5 +1,5 @@
 import { BaseNode, Keyword } from "./Base";
-import { BigqueryOptions } from "./Bigquery";
+import { BigqueryOptions } from "./dialects/Bigquery";
 import { DataType } from "./DataType";
 import { Expr, Identifier, ListExpr, ParenExpr, EntityName } from "./Expr";
 import { StringLiteral } from "./Literal";

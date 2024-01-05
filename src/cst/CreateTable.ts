@@ -1,5 +1,8 @@
 import { BaseNode, Keyword } from "./Base";
-import { BigqueryOptionDefaultCollate, BigqueryOptions } from "./Bigquery";
+import {
+  BigqueryOptionDefaultCollate,
+  BigqueryOptions,
+} from "./dialects/Bigquery";
 import { ColumnConstraint, Constraint, TableConstraint } from "./Constraint";
 import { DataType } from "./DataType";
 import {

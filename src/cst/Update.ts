@@ -9,7 +9,7 @@ import {
   EntityName,
 } from "./Expr";
 import { Default, OrAlternateAction } from "./Insert";
-import { MysqlModifier } from "./Mysql";
+import { MysqlModifier } from "./dialects/Mysql";
 import {
   FromClause,
   LimitClause,

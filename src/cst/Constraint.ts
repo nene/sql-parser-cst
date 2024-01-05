@@ -2,7 +2,7 @@ import { BaseNode, Keyword } from "./Base";
 import { StringLiteral } from "./Literal";
 import { Expr, Identifier, ListExpr, ParenExpr, EntityName } from "./Expr";
 import { SortSpecification } from "./Select";
-import { BigqueryOptions } from "./Bigquery";
+import { BigqueryOptions } from "./dialects/Bigquery";
 
 export type AllConstraintNodes =
   | Constraint<ColumnConstraint | TableConstraint>

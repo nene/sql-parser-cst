@@ -10,7 +10,10 @@ import {
   WindowDefinition,
 } from "./Select";
 import { Default } from "./Insert";
-import { PostgresqlOperator, PostgresqlOperatorExpr } from "./Postgresql";
+import {
+  PostgresqlOperator,
+  PostgresqlOperatorExpr,
+} from "./dialects/Postgresql";
 
 export type AllExprNodes =
   | Expr

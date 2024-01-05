@@ -1,6 +1,6 @@
 import { AlterActionSetOptions } from "./AlterAction";
 import { BaseNode, Keyword } from "./Base";
-import { BigqueryOptions } from "./Bigquery";
+import { BigqueryOptions } from "./dialects/Bigquery";
 import { Identifier, ListExpr, ParenExpr, EntityName } from "./Expr";
 import { AsClause } from "./ProcClause";
 import { ClusterByClause, PartitionByClause, SubSelect } from "./Select";

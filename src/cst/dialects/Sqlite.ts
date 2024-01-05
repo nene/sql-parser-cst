@@ -1,6 +1,6 @@
-import { BaseNode, Keyword } from "./Base";
-import { Expr, Identifier, ParenExpr, EntityName } from "./Expr";
-import { Literal, StringLiteral } from "./Literal";
+import { BaseNode, Keyword } from "../Base";
+import { Expr, Identifier, ParenExpr, EntityName } from "../Expr";
+import { Literal, StringLiteral } from "../Literal";
 
 export type AllSqliteNodes =
   | AllSqliteStatements

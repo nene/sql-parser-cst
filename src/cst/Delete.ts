@@ -1,7 +1,7 @@
 import { Alias } from "./Alias";
 import { BaseNode, Keyword } from "./Base";
 import { EntityName, ListExpr } from "./Expr";
-import { MysqlModifier } from "./Mysql";
+import { MysqlModifier } from "./dialects/Mysql";
 import {
   FromClause,
   LimitClause,

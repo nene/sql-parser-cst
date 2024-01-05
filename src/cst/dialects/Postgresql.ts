@@ -1,5 +1,5 @@
-import { BaseNode, Keyword } from "./Base";
-import { MemberExpr, ParenExpr } from "./Expr";
+import { BaseNode, Keyword } from "../Base";
+import { MemberExpr, ParenExpr } from "../Expr";
 
 export type AllPostgresqlNodes = PostgresqlOperatorExpr | PostgresqlOperator;
 

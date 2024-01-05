@@ -1,4 +1,4 @@
-import { BaseNode, Keyword } from "./Base";
+import { BaseNode, Keyword } from "../Base";
 
 export type AllMysqlNodes = MysqlModifier;
 

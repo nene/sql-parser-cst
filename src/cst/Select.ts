@@ -12,7 +12,7 @@ import {
 import { Alias } from "./Alias";
 import { FrameClause } from "./WindowFrame";
 import { StringLiteral } from "./Literal";
-import { MysqlModifier } from "./Mysql";
+import { MysqlModifier } from "./dialects/Mysql";
 
 export type AllSelectNodes =
   | CompoundSelectStmt

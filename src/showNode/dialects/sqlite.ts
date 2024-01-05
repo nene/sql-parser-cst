@@ -1,6 +1,6 @@
-import { show } from "../show";
-import { AllSqliteNodes } from "../cst/Node";
-import { FullTransformMap } from "../cstTransformer";
+import { show } from "../../show";
+import { AllSqliteNodes } from "../../cst/Node";
+import { FullTransformMap } from "../../cstTransformer";
 
 export const sqliteMap: FullTransformMap<string, AllSqliteNodes> = {
   attach_database_stmt: (node) =>

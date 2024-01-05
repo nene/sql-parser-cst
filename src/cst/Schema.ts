@@ -1,6 +1,9 @@
 import { AlterSchemaAction } from "./AlterAction";
 import { BaseNode, Keyword } from "./Base";
-import { BigqueryOptionDefaultCollate, BigqueryOptions } from "./Bigquery";
+import {
+  BigqueryOptionDefaultCollate,
+  BigqueryOptions,
+} from "./dialects/Bigquery";
 import { EntityName } from "./Expr";
 
 export type AllSchemaStatements =

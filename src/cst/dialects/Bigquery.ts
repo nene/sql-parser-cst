@@ -1,6 +1,6 @@
-import { AlterActionSetOptions } from "./AlterAction";
-import { BaseNode, Keyword } from "./Base";
-import { ColumnDefinition, WithPartitionColumnsClause } from "./CreateTable";
+import { AlterActionSetOptions } from "../AlterAction";
+import { BaseNode, Keyword } from "../Base";
+import { ColumnDefinition, WithPartitionColumnsClause } from "../CreateTable";
 import {
   BinaryExpr,
   Expr,
@@ -8,10 +8,10 @@ import {
   ListExpr,
   ParenExpr,
   EntityName,
-} from "./Expr";
-import { StringLiteral } from "./Literal";
-import { AsClause, WithConnectionClause } from "./ProcClause";
-import { ClusterByClause, PartitionByClause, SubSelect } from "./Select";
+} from "../Expr";
+import { StringLiteral } from "../Literal";
+import { AsClause, WithConnectionClause } from "../ProcClause";
+import { ClusterByClause, PartitionByClause, SubSelect } from "../Select";
 
 export type AllBigqueryNodes =
   | BigqueryOptions

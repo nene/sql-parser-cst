@@ -17,7 +17,7 @@ import {
   WithClause,
 } from "./Select";
 import { ColumnAssignment, SetClause } from "./Update";
-import { MysqlModifier } from "./Mysql";
+import { MysqlModifier } from "./dialects/Mysql";
 
 export type AllInsertNodes =
   | InsertStmt

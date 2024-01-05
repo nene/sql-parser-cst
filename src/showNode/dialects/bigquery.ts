@@ -1,6 +1,6 @@
-import { show } from "../show";
-import { AllBigqueryNodes } from "../cst/Node";
-import { FullTransformMap } from "../cstTransformer";
+import { show } from "../../show";
+import { AllBigqueryNodes } from "../../cst/Node";
+import { FullTransformMap } from "../../cstTransformer";
 
 export const bigqueryMap: FullTransformMap<string, AllBigqueryNodes> = {
   bigquery_options: (node) => show([node.optionsKw, node.options]),

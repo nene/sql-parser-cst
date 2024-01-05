@@ -1,11 +1,11 @@
-import { AllBigqueryStatements } from "./Bigquery";
+import { AllBigqueryStatements } from "./dialects/Bigquery";
 import { AllDclStatements } from "./Dcl";
 import { AllFunctionStatements } from "./Function";
 import { AllIndexStatements } from "./Index";
 import { AllProceduralStatements } from "./ProceduralLanguage";
 import { AllProcedureStatements } from "./Procedure";
 import { AllSchemaStatements } from "./Schema";
-import { AllSqliteStatements } from "./Sqlite";
+import { AllSqliteStatements } from "./dialects/Sqlite";
 import { AllTransactionStatements } from "./Transaction";
 import { AllTriggerStatements } from "./Trigger";
 import { AllViewStatements } from "./View";
