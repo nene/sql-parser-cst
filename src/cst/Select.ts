@@ -382,7 +382,7 @@ export interface NotIndexedTable extends BaseNode {
 export interface LateralDerivedTable extends BaseNode {
   type: "lateral_derived_table";
   lateralKw: Keyword<"LATERAL">;
-  expr: ParenExpr<SubSelect> | FuncCall;
+  expr: ParenExpr<SubSelect> | FuncCall | RowsFromExpr;
 }
 
 // MySQL, MariaDB

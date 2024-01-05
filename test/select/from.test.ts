@@ -93,6 +93,10 @@ describe("select FROM", () => {
       it("supports LATERAL table function", () => {
         testWc(`SELECT * FROM LATERAL table_func(1, 2, 3) AS t`);
       });
+
+      it("supports LATERAL ROWS FROM ()", () => {
+        testWc(`SELECT * FROM LATERAL ROWS FROM (fn1(), fn2()) AS t`);
+      });
     });
   });
 

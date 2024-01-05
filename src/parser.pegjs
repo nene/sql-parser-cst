@@ -459,7 +459,7 @@ lateral_derived_table
       expr,
     });
   }
-  / kw:(LATERAL __) expr:func_call &postgres {
+  / kw:(LATERAL __) expr:(rows_from_expr / func_call) &postgres {
     return loc({
       type: "lateral_derived_table",
       lateralKw: read(kw),
