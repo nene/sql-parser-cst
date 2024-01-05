@@ -288,6 +288,13 @@ describe("operator precedence", () => {
       );
     });
 
+    it("OPERATOR() syntax makes all operators have the same precedence as 'any other operator'", () => {
+      expect(showPrecedence(`x OPERATOR(+) y OPERATOR(*) z`)).toBe(
+        `((x OPERATOR(+) y) OPERATOR(*) z)`
+      );
+      expect(showPrecedence(`x OPERATOR(+) y + z`)).toBe(`(x OPERATOR(+) (y + z))`);
+    });
+
     it("range containment > comparison", () => {
       expect(showPrecedence(`x IN y > a IN b`)).toBe(`((x IN y) > (a IN b))`);
     });
