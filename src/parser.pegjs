@@ -445,6 +445,7 @@ table_or_subquery
     / partitioned_table
     / table_with_inheritance
     / table_without_inheritance
+    / rows_from_expr
   ) alias:(__ alias)? {
     return loc(createAlias(t, alias));
   }
@@ -490,6 +491,15 @@ table_without_inheritance
       type: "table_without_inheritance",
       onlyKw: read(kw),
       table: read(table),
+    });
+  }
+
+rows_from_expr
+  = kw:(ROWS __ FROM __) expr:paren$list$expr &postgres {
+    return loc({
+      type: "rows_from_expr",
+      rowsFromKw: read(kw),
+      expr,
     });
   }
 

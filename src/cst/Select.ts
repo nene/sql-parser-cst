@@ -52,6 +52,7 @@ export type AllSelectNodes =
   | PartitionedTable
   | TableWithInheritance
   | TableWithoutInheritance
+  | RowsFromExpr
   | UnnestWithOffsetExpr
   | UnnestExpr
   | PivotExpr
@@ -361,6 +362,7 @@ export type TableOrSubquery =
   | UnnestExpr
   | LateralDerivedTable
   | PartitionedTable
+  | RowsFromExpr
   | Alias<TableOrSubquery>;
 
 // SQLite only
@@ -402,6 +404,13 @@ export interface TableWithoutInheritance extends BaseNode {
   type: "table_without_inheritance";
   onlyKw: Keyword<"ONLY">;
   table: EntityName;
+}
+
+// PostgreSQL
+export interface RowsFromExpr extends BaseNode {
+  type: "rows_from_expr";
+  rowsFromKw: [Keyword<"ROWS">, Keyword<"FROM">];
+  expr: ParenExpr<ListExpr<FuncCall>>;
 }
 
 // BigQuery

@@ -96,6 +96,16 @@ describe("select FROM", () => {
     });
   });
 
+  dialect("postgresql", () => {
+    it("supports ROWS FROM", () => {
+      testWc(`SELECT * FROM ROWS FROM (fn1(), fn2(1, 2), fn3())`);
+    });
+
+    it("parses ROWS FROM as rows_from_expr", () => {
+      expect(parseFrom("ROWS FROM(fn1(), fn2())").type).toBe("rows_from_expr");
+    });
+  });
+
   describe("table functions", () => {
     it("supports table-valued functions", () => {
       test("SELECT * FROM generate_series(5, 10)");
