@@ -40,5 +40,10 @@ describe("operators", () => {
       testExprWc(`OPERATOR(~) 6`);
       testExprWc(`OPERATOR(-) 6`);
     });
+
+    it("supports namespaced OPERATOR() syntax", () => {
+      testExprWc(`8 OPERATOR(foo.>>) 6`);
+      testExprWc(`OPERATOR( my . schematic . + ) 6`);
+    });
   });
 });

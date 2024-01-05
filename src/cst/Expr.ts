@@ -10,7 +10,7 @@ import {
   WindowDefinition,
 } from "./Select";
 import { Default } from "./Insert";
-import { PostgresqlOperatorExpr } from "./Postgresql";
+import { PostgresqlOperator, PostgresqlOperatorExpr } from "./Postgresql";
 
 export type AllExprNodes =
   | Expr
@@ -437,7 +437,13 @@ export interface MemberExpr extends BaseNode {
   type: "member_expr";
   object: Expr;
   // The Empty node is only used inside BigQueryQuotedMemberExpr to allow for repeated .. syntax
-  property: ArraySubscript | Identifier | AllColumns | Empty;
+  // The PostgresqlOperator is only used inside PostgreSQL OPERATOR(foo.bar.>>) syntax
+  property:
+    | ArraySubscript
+    | Identifier
+    | AllColumns
+    | Empty
+    | PostgresqlOperator;
 }
 
 // Represents BigQuery-specific quoted table path expressions like:

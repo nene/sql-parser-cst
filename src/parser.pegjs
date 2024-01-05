@@ -4102,11 +4102,23 @@ pg_other_op
   }
 
 postgresql_operator_expr
-  = op:(OPERATOR __) expr:paren$postgresql_operator {
+  = op:(OPERATOR __) expr:paren$postgresql_op {
     return loc({
       type: "postgresql_operator_expr",
       operatorKw: read(op),
       expr: expr,
+    });
+  }
+
+postgresql_op
+  = postgresql_operator_member_expr / postgresql_operator
+
+postgresql_operator_member_expr
+  = object:(member_expr __) "." property:(__ postgresql_operator) {
+    return loc({
+      type: "member_expr",
+      object: read(object),
+      property: read(property),
     });
   }
 
@@ -4831,7 +4843,7 @@ paren$list$procedure_param = .
 paren$list$sort_specification = .
 paren$list$string_literal = .
 paren$list$tablesample_arg = .
-paren$postgresql_operator = .
+paren$postgresql_op = .
 paren$pivot_for_in = .
 paren$pragma_value = .
 paren$string_literal = .
