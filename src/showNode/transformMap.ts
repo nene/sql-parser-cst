@@ -15,6 +15,7 @@ import { functionMap } from "./function";
 import { indexMap } from "./index";
 import { insertMap } from "./insert";
 import { mergeMap } from "./merge";
+import { postgresqlMap } from "./postgresql";
 import { preparedStatementsMap } from "./prepared_statements";
 import { proceduralLanguageMap } from "./procedural_language";
 import { procedureMap } from "./procedure";
@@ -75,6 +76,7 @@ export const transformMap: FullTransformMap<string> = {
   ...sqliteMap,
   ...bigqueryMap,
   ...mysqlMap,
+  ...postgresqlMap,
 
   // Expressions
   ...exprMap,

@@ -4079,7 +4079,7 @@ sub_comparison_expr
   / &postgres x:pg_other_expr { return x; }
 
 pg_other_expr
-  = head:pg_other_unary_expr tail:(__ pg_other_op  __ pg_other_unary_expr)* {
+  = head:pg_other_unary_expr tail:(__ (pg_other_op / postgresql_operator_expr)  __ pg_other_unary_expr)* {
     return createBinaryExprChain(head, tail);
   }
 
@@ -4099,6 +4099,23 @@ pg_other_op
     / "!" / "~" / "@" / "#" / "&" / "|" / "`" / "?"
   ) {
     return op;
+  }
+
+postgresql_operator_expr
+  = op:(OPERATOR __) expr:paren$postgresql_operator {
+    return loc({
+      type: "postgresql_operator_expr",
+      operatorKw: read(op),
+      expr: expr,
+    });
+  }
+
+postgresql_operator
+  = op:[-+*/<>=~!@#%^&|`?]+ {
+    return loc({
+      type: "postgresql_operator",
+      operator: text(),
+    });
   }
 
 // Some of these PostgreSQL operators above can also be unary
@@ -4814,6 +4831,7 @@ paren$list$procedure_param = .
 paren$list$sort_specification = .
 paren$list$string_literal = .
 paren$list$tablesample_arg = .
+paren$postgresql_operator = .
 paren$pivot_for_in = .
 paren$pragma_value = .
 paren$string_literal = .
@@ -6001,6 +6019,7 @@ OF                  = kw:"OF"i                  !ident_part { return loc(createK
 OFFSET              = kw:"OFFSET"i              !ident_part { return loc(createKeyword(kw)); }
 ON                  = kw:"ON"i                  !ident_part { return loc(createKeyword(kw)); }
 ONLY                = kw:"ONLY"i                !ident_part { return loc(createKeyword(kw)); }
+OPERATOR            = kw:"OPERATOR"i            !ident_part { return loc(createKeyword(kw)); }
 OPTION              = kw:"OPTION"i              !ident_part { return loc(createKeyword(kw)); }
 OPTIONALLY          = kw:"OPTIONALLY"i          !ident_part { return loc(createKeyword(kw)); }
 OPTIONS             = kw:"OPTIONS"i             !ident_part { return loc(createKeyword(kw)); }

@@ -10,6 +10,7 @@ import {
   WindowDefinition,
 } from "./Select";
 import { Default } from "./Insert";
+import { PostgresqlOperatorExpr } from "./Postgresql";
 
 export type AllExprNodes =
   | Expr
@@ -73,7 +74,7 @@ export interface ParenExpr<T = Node> extends BaseNode {
 
 export interface BinaryExpr<
   TLeft = Expr,
-  TOperator = SymbolOperator | KeywordOperator,
+  TOperator = SymbolOperator | KeywordOperator | PostgresqlOperatorExpr,
   TRight = Expr
 > extends BaseNode {
   type: "binary_expr";
