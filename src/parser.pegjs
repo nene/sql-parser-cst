@@ -4120,7 +4120,7 @@ postgresql_operator
 
 // Some of these PostgreSQL operators above can also be unary
 pg_other_unary_expr
-  = op:("~") right:(__ pg_other_unary_expr) {
+  = op:("~" / postgresql_operator_expr) right:(__ pg_other_unary_expr) {
     return loc(createPrefixOpExpr(op, read(right)));
   }
   / pg_additive_expr

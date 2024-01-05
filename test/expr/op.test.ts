@@ -35,5 +35,10 @@ describe("operators", () => {
       testExprWc(`5 OPERATOR(+) 6`);
       testExprWc(`5 OPERATOR ( ~|// ) 6`);
     });
+
+    it("supports OPERATOR(..) syntax for prefix operators", () => {
+      testExprWc(`OPERATOR(~) 6`);
+      testExprWc(`OPERATOR(-) 6`);
+    });
   });
 });

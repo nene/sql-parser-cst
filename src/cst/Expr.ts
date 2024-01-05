@@ -146,7 +146,14 @@ type KeywordOperator =
 
 export interface PrefixOpExpr extends BaseNode {
   type: "prefix_op_expr";
-  operator: "-" | "+" | "~" | "!" | Keyword<"NOT"> | Keyword<"EXISTS">;
+  operator:
+    | "-"
+    | "+"
+    | "~"
+    | "!"
+    | Keyword<"NOT">
+    | Keyword<"EXISTS">
+    | PostgresqlOperatorExpr;
   expr: Expr;
 }
 
