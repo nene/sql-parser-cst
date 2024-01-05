@@ -88,6 +88,12 @@ describe("select FROM", () => {
         testWc(`SELECT 8 FROM tbl JOIN LATERAL (SELECT * FROM foo WHERE id=tbl.id) AS t`);
       });
     });
+
+    dialect(["postgresql"], () => {
+      it("supports LATERAL table function", () => {
+        testWc(`SELECT * FROM LATERAL table_func(1, 2, 3) AS t`);
+      });
+    });
   });
 
   describe("table functions", () => {

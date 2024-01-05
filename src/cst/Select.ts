@@ -376,11 +376,11 @@ export interface NotIndexedTable extends BaseNode {
   notIndexedKw: [Keyword<"NOT">, Keyword<"INDEXED">];
 }
 
-// MySQL only (SQL 99)
+// MySQL, MariaDB, PostgreSQL
 export interface LateralDerivedTable extends BaseNode {
   type: "lateral_derived_table";
   lateralKw: Keyword<"LATERAL">;
-  expr: ParenExpr<SubSelect>;
+  expr: ParenExpr<SubSelect> | FuncCall;
 }
 
 // MySQL, MariaDB

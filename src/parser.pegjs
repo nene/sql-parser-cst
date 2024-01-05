@@ -458,6 +458,13 @@ lateral_derived_table
       expr,
     });
   }
+  / kw:(LATERAL __) expr:func_call &postgres {
+    return loc({
+      type: "lateral_derived_table",
+      lateralKw: read(kw),
+      expr,
+    });
+  }
 
 partitioned_table
   = &mysql table:(alias$entity_name __) kw:(PARTITION __) partitions:paren$list$ident {
