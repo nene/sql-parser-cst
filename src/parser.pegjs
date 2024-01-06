@@ -802,6 +802,7 @@ group_by_distinct
 grouping_element
   = group_by_rollup
   / group_by_cube
+  / group_by_grouping_sets
   / paren$empty_list
   / expr
 
@@ -820,6 +821,15 @@ group_by_cube
       type: "group_by_cube",
       cubeKw: read(kw),
       columns: cols,
+    });
+  }
+
+group_by_grouping_sets
+  = kw:(GROUPING __ SETS __) columns:paren$list$grouping_element &postgres {
+    return loc({
+      type: "group_by_grouping_sets",
+      groupingSetsKw: read(kw),
+      columns,
     });
   }
 
@@ -4951,6 +4961,7 @@ paren$list$equals_expr = .
 paren$list$expr = .
 paren$list$expr_or_default = .
 paren$list$func_param = .
+paren$list$grouping_element = .
 paren$list$ident = .
 paren$list$literal = .
 paren$list$procedure_param = .
@@ -6035,6 +6046,7 @@ GRANT               = kw:"GRANT"i               !ident_part { return loc(createK
 GRANTS              = kw:"GRANTS"i              !ident_part { return loc(createKeyword(kw)); }
 GROUP               = kw:"GROUP"i               !ident_part { return loc(createKeyword(kw)); }
 GROUP_CONCAT        = kw:"GROUP_CONCAT"i        !ident_part { return loc(createKeyword(kw)); }
+GROUPING            = kw:"GROUPING"i            !ident_part { return loc(createKeyword(kw)); }
 GROUPS              = kw:"GROUPS"i              !ident_part { return loc(createKeyword(kw)); }
 HASH                = kw:"HASH"i                !ident_part { return loc(createKeyword(kw)); }
 HAVING              = kw:"HAVING"i              !ident_part { return loc(createKeyword(kw)); }
@@ -6240,6 +6252,7 @@ SELECT              = kw:"SELECT"i              !ident_part { return loc(createK
 SESSION             = kw:"SESSION"i             !ident_part { return loc(createKeyword(kw)); }
 SESSION_USER        = kw:"SESSION_USER"i        !ident_part { return loc(createKeyword(kw)); }
 SET                 = kw:"SET"i                 !ident_part { return loc(createKeyword(kw)); }
+SETS                = kw:"SETS"i                !ident_part { return loc(createKeyword(kw)); }
 SHARE               = kw:"SHARE"i               !ident_part { return loc(createKeyword(kw)); }
 SHARED              = kw:"SHARED"i              !ident_part { return loc(createKeyword(kw)); }
 SHOW                = kw:"SHOW"i                !ident_part { return loc(createKeyword(kw)); }

@@ -47,6 +47,24 @@ describe("select GROUP BY", () => {
     });
   });
 
+  dialect("postgresql", () => {
+    it("supports GROUPING SETS", () => {
+      testClauseWc("GROUP BY GROUPING SETS ( (id, name), age )");
+    });
+
+    it("supports multiple GROUPING SETS", () => {
+      testClauseWc("GROUP BY GROUPING SETS (id), GROUPING SETS (name)");
+    });
+
+    it("supports ROLLUP & CUBE inside GROUPING SETS", () => {
+      testClauseWc("GROUP BY GROUPING SETS ( ROLLUP(id), CUBE(age) )");
+    });
+
+    it("supports GROUPING SETS inside GROUPING SETS", () => {
+      testClauseWc("GROUP BY GROUPING SETS ( GROUPING SETS (foo, bar), GROUPING SETS (age) )");
+    });
+  });
+
   dialect(["mysql", "mariadb"], () => {
     it("supports GROUP BY .. WITH ROLLUP", () => {
       testClauseWc("GROUP BY id, name WITH ROLLUP");
