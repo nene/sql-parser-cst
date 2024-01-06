@@ -60,5 +60,17 @@ describe("select WITH", () => {
         SELECT * FROM search_graph
       `);
     });
+
+    it("supports INSERT inside WITH", () => {
+      testWc(`WITH t1 AS (INSERT INTO foo VALUES (1) RETURNING *) SELECT * FROM t1`);
+    });
+
+    it("supports UPDATE inside WITH", () => {
+      testWc(`WITH t1 AS (UPDATE foo SET bar = 1 RETURNING *) SELECT * FROM t1`);
+    });
+
+    it("supports DELETE inside WITH", () => {
+      testWc(`WITH t1 AS (DELETE FROM foo RETURNING *) SELECT * FROM t1`);
+    });
   });
 });

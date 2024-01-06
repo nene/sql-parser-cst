@@ -14,7 +14,13 @@ import { FrameClause } from "./WindowFrame";
 import { Literal, StringLiteral } from "./Literal";
 import { MysqlModifier } from "./dialects/Mysql";
 import { ColumnDefinition } from "./CreateTable";
-import { PostgresqlOperator, PostgresqlOperatorExpr } from "./Node";
+import {
+  DeleteStmt,
+  InsertStmt,
+  PostgresqlOperator,
+  PostgresqlOperatorExpr,
+  UpdateStmt,
+} from "./Node";
 
 export type AllSelectNodes =
   | CompoundSelectStmt
@@ -149,7 +155,8 @@ export interface CommonTableExpr extends BaseNode {
   materializedKw?:
     | Keyword<"MATERIALIZED">
     | [Keyword<"NOT">, Keyword<"MATERIALIZED">];
-  expr: ParenExpr<SubSelect>;
+  // PostgreSQL supports UPDATE, DELETE, and INSERT in WITH clause
+  expr: ParenExpr<SubSelect | DeleteStmt | InsertStmt | UpdateStmt>;
   search?: CteSearchClause;
   cycle?: CteCycleClause;
 }

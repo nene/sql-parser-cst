@@ -191,7 +191,7 @@ common_table_expr
     columns:(__ paren$list$column)?
     asKw:(__ AS)
     materialized:(__ cte_materialized)?
-    select:(__ paren$compound_select_stmt)
+    expr:(__ paren$cte_expr)
     search:(__ cte_search_clause)?
     cycle:(__ cte_cycle_clause)? {
       return loc({
@@ -200,7 +200,7 @@ common_table_expr
         columns: read(columns),
         asKw: read(asKw),
         materializedKw: read(materialized),
-        expr: read(select),
+        expr: read(expr),
         search: read(search),
         cycle: read(cycle),
       });
@@ -208,6 +208,10 @@ common_table_expr
 
 cte_materialized
   = kws:(NOT __ MATERIALIZED / MATERIALIZED) { return read(kws); }
+
+cte_expr
+  = compound_select_stmt
+  / stmt:(update_stmt / insert_stmt / delete_stmt) &postgres { return stmt; }
 
 cte_search_clause
   = kw:(SEARCH __ (BREADTH / DEPTH) __ FIRST __ BY __) columns:list$ident
@@ -4944,6 +4948,7 @@ paren$__template__
 
 paren$cast_arg = .
 paren$compound_select_stmt = .
+paren$cte_expr = .
 paren$empty_list = .
 paren$entity_name = .
 paren$expr = .
