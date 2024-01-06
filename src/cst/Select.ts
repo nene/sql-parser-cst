@@ -354,9 +354,7 @@ type JoinOp =
   | Keyword<"JOIN" | "STRAIGHT_JOIN">;
 
 export type TableFactor =
-  | EntityName
-  | TableWithInheritance
-  | TableWithoutInheritance
+  | RelationExpr
   | TableFuncCall
   | WithOrdinalityExpr
   | IndexedTable
@@ -368,6 +366,11 @@ export type TableFactor =
   | PartitionedTable
   | RowsFromExpr
   | Alias<TableFactor>;
+
+export type RelationExpr =
+  | EntityName
+  | TableWithInheritance
+  | TableWithoutInheritance;
 
 export type TableFuncCall = FuncCall | FuncCallWithColumnDefinitions;
 
@@ -693,5 +696,5 @@ export interface LockInShareModeClause extends BaseNode {
 export interface TableClause extends BaseNode {
   type: "table_clause";
   tableKw: Keyword<"TABLE">;
-  table: EntityName | TableWithInheritance | TableWithoutInheritance;
+  table: RelationExpr;
 }

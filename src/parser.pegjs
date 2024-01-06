@@ -162,7 +162,7 @@ select_main_clause
   / t:table_clause (&mysql / &postgres) { return t; }
 
 table_clause
-  = kw:(TABLE __) table:(table_with_inheritance / table_without_inheritance / entity_name) {
+  = kw:(TABLE __) table:relation_expr {
     return loc({
       type: "table_clause",
       tableKw: read(kw),
@@ -444,13 +444,35 @@ table_factor
     / paren$join_expr
     / paren$compound_select_stmt
     / partitioned_table
-    / table_with_inheritance
-    / table_without_inheritance
     / rows_from_expr
+    / relation_expr
   ) alias:(__ alias)? {
     return loc(createAlias(t, alias));
   }
   / table_or_alias
+
+relation_expr
+  = table_with_inheritance
+  / table_without_inheritance
+  / entity_name
+
+table_or_alias
+  = &sqlite table:(alias$entity_name __) kw:(INDEXED __ BY) id:(__ ident) {
+    return loc({
+      type: "indexed_table",
+      table: read(table),
+      indexedByKw: read(kw),
+      index: read(id),
+    });
+  }
+  / &sqlite table:(alias$entity_name __) kw:(NOT __ INDEXED) {
+    return loc({
+      type: "not_indexed_table",
+      table: read(table),
+      notIndexedKw: read(kw),
+    });
+  }
+  / alias$entity_name
 
 table_func_call
   = fn:func_call asKw:(__ AS __) columns:paren$list$column_definition &postgres {
@@ -523,24 +545,6 @@ table_without_inheritance
       table: read(table),
     });
   }
-
-table_or_alias
-  = &sqlite table:(alias$entity_name __) kw:(INDEXED __ BY) id:(__ ident) {
-    return loc({
-      type: "indexed_table",
-      table: read(table),
-      indexedByKw: read(kw),
-      index: read(id),
-    });
-  }
-  / &sqlite table:(alias$entity_name __) kw:(NOT __ INDEXED) {
-    return loc({
-      type: "not_indexed_table",
-      table: read(table),
-      notIndexedKw: read(kw),
-    });
-  }
-  / alias$entity_name
 
 join_op
   = natural_join
