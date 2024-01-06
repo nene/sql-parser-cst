@@ -26,6 +26,7 @@ export const selectMap: FullTransformMap<string, AllSelectNodes> = {
     show([node.table, node.partitionKw, node.partitions]),
   indexed_table: (node) => show([node.table, node.indexedByKw, node.index]),
   not_indexed_table: (node) => show([node.table, node.notIndexedKw]),
+  with_ordinality_expr: (node) => show([node.expr, node.withOrdinalityKw]),
   table_with_inheritance: (node) => show([node.table, "*"]),
   table_without_inheritance: (node) => show([node.onlyKw, node.table]),
   rows_from_expr: (node) => show([node.rowsFromKw, node.expr]),

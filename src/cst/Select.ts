@@ -52,6 +52,7 @@ export type AllSelectNodes =
   | PartitionedTable
   | TableWithInheritance
   | TableWithoutInheritance
+  | WithOrdinalityExpr
   | RowsFromExpr
   | UnnestWithOffsetExpr
   | UnnestExpr
@@ -355,6 +356,7 @@ export type TableOrSubquery =
   | TableWithInheritance
   | TableWithoutInheritance
   | FuncCall
+  | WithOrdinalityExpr
   | IndexedTable
   | NotIndexedTable
   | ParenExpr<SubSelect | TableExpr>
@@ -411,6 +413,13 @@ export interface RowsFromExpr extends BaseNode {
   type: "rows_from_expr";
   rowsFromKw: [Keyword<"ROWS">, Keyword<"FROM">];
   expr: ParenExpr<ListExpr<FuncCall>>;
+}
+
+// PostgreSQL
+export interface WithOrdinalityExpr extends BaseNode {
+  type: "with_ordinality_expr";
+  expr: FuncCall | RowsFromExpr;
+  withOrdinalityKw: [Keyword<"WITH">, Keyword<"ORDINALITY">];
 }
 
 // BigQuery

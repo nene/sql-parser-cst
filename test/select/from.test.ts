@@ -108,6 +108,10 @@ describe("select FROM", () => {
     it("parses ROWS FROM as rows_from_expr", () => {
       expect(parseFrom("ROWS FROM(fn1(), fn2())").type).toBe("rows_from_expr");
     });
+
+    it("supports ROWS FROM ... WITH ORDINALITY", () => {
+      testWc(`SELECT * FROM ROWS FROM (fn1()) WITH ORDINALITY`);
+    });
   });
 
   describe("table functions", () => {
@@ -119,6 +123,12 @@ describe("select FROM", () => {
     });
     it("supports combining table-functions with joins", () => {
       test("SELECT * FROM func1(5, 10) JOIN func2(8)");
+    });
+
+    dialect("postgresql", () => {
+      it("supports WITH ORDINALITY", () => {
+        test("SELECT * FROM generate_series(5, 10) WITH ORDINALITY");
+      });
     });
   });
 

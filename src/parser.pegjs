@@ -438,6 +438,7 @@ join_expr_right
 table_or_subquery
   = t:(
       unnest_with_offset_expr
+    / with_ordinality_expr
     / func_call
     / lateral_derived_table
     / paren$join_expr
@@ -491,6 +492,15 @@ table_without_inheritance
       type: "table_without_inheritance",
       onlyKw: read(kw),
       table: read(table),
+    });
+  }
+
+with_ordinality_expr
+  = expr:(func_call / rows_from_expr) kw:(__ WITH __ ORDINALITY) &postgres {
+    return loc({
+      type: "with_ordinality_expr",
+      expr,
+      withOrdinalityKw: read(kw),
     });
   }
 
@@ -6055,6 +6065,7 @@ OPTIONS             = kw:"OPTIONS"i             !ident_part { return loc(createK
 OR                  = kw:"OR"i                  !ident_part { return loc(createKeyword(kw)); }
 ORDER               = kw:"ORDER"i               !ident_part { return loc(createKeyword(kw)); }
 ORDINAL             = kw:"ORDINAL"i             !ident_part { return loc(createKeyword(kw)); }
+ORDINALITY          = kw:"ORDINALITY"i          !ident_part { return loc(createKeyword(kw)); }
 ORGANIZATION        = kw:"ORGANIZATION"i        !ident_part { return loc(createKeyword(kw)); }
 OTHERS              = kw:"OTHERS"i              !ident_part { return loc(createKeyword(kw)); }
 OUT                 = kw:"OUT"i                 !ident_part { return loc(createKeyword(kw)); }
