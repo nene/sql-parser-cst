@@ -693,5 +693,5 @@ export interface LockInShareModeClause extends BaseNode {
 export interface TableClause extends BaseNode {
   type: "table_clause";
   tableKw: Keyword<"TABLE">;
-  table: EntityName;
+  table: EntityName | TableWithInheritance | TableWithoutInheritance;
 }

@@ -15,6 +15,14 @@ describe("table", () => {
     });
 
     dialect("postgresql", () => {
+      it("supports TABLE ONLY name", () => {
+        testWc("TABLE ONLY my_tbl");
+      });
+
+      it("supports TABLE name *", () => {
+        testWc("TABLE my_tbl *");
+      });
+
       it("supports OFFSET & FETCH clauses", () => {
         testWc("TABLE my_tbl OFFSET 100 FETCH FIRST 25 ROWS ONLY");
       });

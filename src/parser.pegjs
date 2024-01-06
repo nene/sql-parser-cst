@@ -162,7 +162,7 @@ select_main_clause
   / t:table_clause (&mysql / &postgres) { return t; }
 
 table_clause
-  = kw:(TABLE __) table:ident {
+  = kw:(TABLE __) table:(table_with_inheritance / table_without_inheritance / ident) {
     return loc({
       type: "table_clause",
       tableKw: read(kw),
