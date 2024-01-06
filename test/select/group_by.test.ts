@@ -19,6 +19,21 @@ describe("select GROUP BY", () => {
       testClauseWc("GROUP BY ROLLUP ( id, name + age )");
       testClauseWc("GROUP BY ROLLUP ( id, (name, age) )");
     });
+
+    dialect("postgresql", () => {
+      it("supports multiple ROLLUPs in one GROUP BY", () => {
+        testClauseWc("GROUP BY ROLLUP(id), ROLLUP(name)");
+      });
+
+      it("parses multiple ROLLUPs as group_by_rollup nodes", () => {
+        const clause = parseClause("GROUP BY ROLLUP(id), ROLLUP(name)");
+        if (clause.type !== "group_by_clause") {
+          throw new Error("Expected group_by_clause");
+        }
+        expect(clause.columns.items[0].type).toBe("group_by_rollup");
+        expect(clause.columns.items[1].type).toBe("group_by_rollup");
+      });
+    });
   });
 
   dialect(["mysql", "mariadb"], () => {

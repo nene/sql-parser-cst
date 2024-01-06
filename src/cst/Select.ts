@@ -265,7 +265,7 @@ export interface GroupByClause extends BaseNode {
   type: "group_by_clause";
   groupByKw: [Keyword<"GROUP">, Keyword<"BY">];
   distinctKw?: Keyword<"ALL" | "DISTINCT">; // PostgreSQL
-  columns: ListExpr<Expr> | GroupByRollup;
+  columns: ListExpr<Expr | GroupByRollup>;
   withRollupKw?: [Keyword<"WITH">, Keyword<"ROLLUP">]; // MySQL, MariaDB
 }
 

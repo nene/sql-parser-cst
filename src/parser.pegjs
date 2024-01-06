@@ -785,7 +785,7 @@ where_clause
 group_by_clause
   = kws:(GROUP __ BY __)
     distinctKw:(group_by_distinct __)?
-    list:(group_by_rollup / list$expr)
+    list:list$grouping_element
     rolKw:(__ WITH __ ROLLUP)? {
     return loc({
       type: "group_by_clause",
@@ -799,8 +799,12 @@ group_by_clause
 group_by_distinct
   = kw:(ALL / DISTINCT) &postgres { return kw; }
 
+grouping_element
+  = group_by_rollup
+  / expr
+
 group_by_rollup
-  = &bigquery kw:(ROLLUP __) cols:paren$list$expr {
+  = kw:(ROLLUP __) cols:paren$list$expr (&bigquery / &postgres) {
     return loc({
       type: "group_by_rollup",
       rollupKw: read(kw),
@@ -4984,6 +4988,7 @@ list$expr = .
 list$expr_or_default = .
 list$expr_or_explicit_alias = .
 list$func_param = .
+list$grouping_element = .
 list$ident = .
 list$literal = .
 list$named_window = .
