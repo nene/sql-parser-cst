@@ -1,4 +1,4 @@
-import { dialect, testClause as testClauseWc } from "../test_utils";
+import { dialect, parseClause, testClause as testClauseWc } from "../test_utils";
 
 describe("select ORDER BY", () => {
   it("supports ORDER BY clause", () => {
@@ -27,5 +27,44 @@ describe("select ORDER BY", () => {
     it("supports WITH ROLLUP", () => {
       testClauseWc("ORDER BY name, age WITH ROLLUP");
     });
+  });
+
+  it("parses ORDER BY clause", () => {
+    expect(parseClause("ORDER BY col1 DESC")).toMatchInlineSnapshot(`
+      {
+        "orderByKw": [
+          {
+            "name": "ORDER",
+            "text": "ORDER",
+            "type": "keyword",
+          },
+          {
+            "name": "BY",
+            "text": "BY",
+            "type": "keyword",
+          },
+        ],
+        "specifications": {
+          "items": [
+            {
+              "expr": {
+                "name": "col1",
+                "text": "col1",
+                "type": "identifier",
+              },
+              "orderKw": {
+                "name": "DESC",
+                "text": "DESC",
+                "type": "keyword",
+              },
+              "type": "sort_specification",
+            },
+          ],
+          "type": "list_expr",
+        },
+        "type": "order_by_clause",
+        "withRollupKw": undefined,
+      }
+    `);
   });
 });
