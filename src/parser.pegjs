@@ -801,6 +801,7 @@ group_by_distinct
 
 grouping_element
   = group_by_rollup
+  / paren$empty_list
   / expr
 
 group_by_rollup
