@@ -449,14 +449,15 @@ table_factor
   ) alias:(__ alias)? {
     return loc(createAlias(t, alias));
   }
-  / table_or_alias
 
 relation_expr
-  = table_with_inheritance
-  / table_without_inheritance
+  = pg_table_with_inheritance
+  / pg_table_without_inheritance
+  / sqlite_indexed_table
+  / sqlite_not_indexed_table
   / entity_name
 
-table_or_alias
+sqlite_indexed_table
   = &sqlite table:(alias$entity_name __) kw:(INDEXED __ BY) id:(__ ident) {
     return loc({
       type: "indexed_table",
@@ -465,7 +466,9 @@ table_or_alias
       index: read(id),
     });
   }
-  / &sqlite table:(alias$entity_name __) kw:(NOT __ INDEXED) {
+
+sqlite_not_indexed_table
+  = &sqlite table:(alias$entity_name __) kw:(NOT __ INDEXED) {
     return loc({
       type: "not_indexed_table",
       table: read(table),
@@ -473,6 +476,23 @@ table_or_alias
     });
   }
   / alias$entity_name
+
+pg_table_with_inheritance
+  = &postgres table:(entity_name __) "*" {
+    return loc({
+      type: "table_with_inheritance",
+      table: read(table),
+    });
+  }
+
+pg_table_without_inheritance
+  = &postgres kw:(ONLY __) table:(paren$entity_name / entity_name) {
+    return loc({
+      type: "table_without_inheritance",
+      onlyKw: read(kw),
+      table: read(table),
+    });
+  }
 
 table_func_call
   = fn:func_call asKw:(__ AS __) columns:paren$list$column_definition &postgres {
@@ -526,23 +546,6 @@ partitioned_table
       table: read(table),
       partitionKw: read(kw),
       partitions,
-    });
-  }
-
-table_with_inheritance
-  = &postgres table:(entity_name __) "*" {
-    return loc({
-      type: "table_with_inheritance",
-      table: read(table),
-    });
-  }
-
-table_without_inheritance
-  = &postgres kw:(ONLY __) table:(paren$entity_name / entity_name) {
-    return loc({
-      type: "table_without_inheritance",
-      onlyKw: read(kw),
-      table: read(table),
     });
   }
 
@@ -1396,7 +1399,7 @@ update_clause
   = kw:(UPDATE __)
     modifiers:(mysql_upsert_modifier __)*
     orAction:(or_alternate_action __)?
-    tables:list$table_or_alias {
+    tables:list$alias$relation_expr {
       return loc({
         type: "update_clause",
         updateKw: read(kw),
@@ -1476,7 +1479,7 @@ mysql_delete_modifier
 delete_clause_table
   = &mysql x:qualified_star { return x; }
   / partitioned_table
-  / table_or_alias
+  / alias$relation_expr
 
 other_delete_clause
   = where_clause
@@ -1510,8 +1513,8 @@ truncate_stmt
  * ------------------------------------------------------------------------------------ *
  */
 merge_stmt
-  = mergeKw:(MERGE __) intoKw:(INTO __)? target:(table_or_alias __)
-    usingKw:(USING __) source:((table_or_alias / alias$paren$compound_select_stmt) __)
+  = mergeKw:(MERGE __) intoKw:(INTO __)? target:(alias$relation_expr __)
+    usingKw:(USING __) source:((alias$relation_expr / alias$paren$compound_select_stmt) __)
     onKw:(ON __) condition:expr
     clauses:(__ merge_when_clause)+ {
       return loc({
@@ -4937,7 +4940,7 @@ list$set_assignment = .
 list$sort_specification = .
 list$string_literal = .
 list$table_func_call = .
-list$table_or_alias = .
+list$alias$relation_expr = .
 list$tablesample_arg = .
 list$type_param = .
 list$values_row = .
@@ -4962,11 +4965,12 @@ alias$__template__
   }
 
 alias$column = .
+alias$entity_name = .
 alias$expr = .
 alias$func_call = .
 alias$paren$compound_select_stmt = .
 alias$paren$list$column = .
-alias$entity_name = .
+alias$relation_expr = .
 alias$unnest_or_member_expr = .
 
 /**

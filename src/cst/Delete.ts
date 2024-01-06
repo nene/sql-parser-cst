@@ -1,12 +1,13 @@
 import { Alias } from "./Alias";
 import { BaseNode, Keyword } from "./Base";
-import { EntityName, ListExpr } from "./Expr";
+import { ListExpr } from "./Expr";
 import { MysqlModifier } from "./dialects/Mysql";
 import {
   FromClause,
   LimitClause,
   OrderByClause,
   PartitionedTable,
+  RelationExpr,
   ReturningClause,
   WhereClause,
   WithClause,
@@ -33,5 +34,5 @@ export interface DeleteClause extends BaseNode {
   deleteKw: Keyword<"DELETE">;
   modifiers: MysqlModifier[];
   fromKw?: Keyword<"FROM">;
-  tables: ListExpr<EntityName | Alias<EntityName> | PartitionedTable>;
+  tables: ListExpr<RelationExpr | Alias<RelationExpr> | PartitionedTable>;
 }

@@ -357,8 +357,6 @@ export type TableFactor =
   | RelationExpr
   | TableFuncCall
   | WithOrdinalityExpr
-  | IndexedTable
-  | NotIndexedTable
   | ParenExpr<SubSelect | TableExpr>
   | UnnestWithOffsetExpr
   | UnnestExpr
@@ -370,7 +368,9 @@ export type TableFactor =
 export type RelationExpr =
   | EntityName
   | TableWithInheritance
-  | TableWithoutInheritance;
+  | TableWithoutInheritance
+  | IndexedTable
+  | NotIndexedTable;
 
 export type TableFuncCall = FuncCall | FuncCallWithColumnDefinitions;
 

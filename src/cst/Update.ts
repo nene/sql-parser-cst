@@ -1,19 +1,13 @@
 import { Alias } from "./Alias";
 import { BaseNode, Keyword } from "./Base";
-import {
-  Expr,
-  Identifier,
-  ListExpr,
-  MemberExpr,
-  ParenExpr,
-  EntityName,
-} from "./Expr";
+import { Expr, Identifier, ListExpr, MemberExpr, ParenExpr } from "./Expr";
 import { Default, OrAlternateAction } from "./Insert";
 import { MysqlModifier } from "./dialects/Mysql";
 import {
   FromClause,
   LimitClause,
   OrderByClause,
+  RelationExpr,
   ReturningClause,
   WhereClause,
   WithClause,
@@ -45,7 +39,7 @@ export interface UpdateClause extends BaseNode {
   updateKw: Keyword<"UPDATE">;
   modifiers: MysqlModifier[];
   orAction?: OrAlternateAction;
-  tables: ListExpr<EntityName | Alias<EntityName>>;
+  tables: ListExpr<RelationExpr | Alias<RelationExpr>>;
 }
 
 export interface SetClause extends BaseNode {
