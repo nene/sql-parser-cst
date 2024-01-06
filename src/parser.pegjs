@@ -413,7 +413,7 @@ dual_table
   }
 
 join_expr
-  = head:table_factor
+  = head:alias$table_factor
     tail:(
         join_expr_right
       / pivot_expr_right
@@ -425,7 +425,7 @@ join_expr
     }
 
 join_expr_right
-  = c1:__ op:(join_op / ",") right:(__ table_factor) spec:(__ join_specification)? {
+  = c1:__ op:(join_op / ",") right:(__ alias$table_factor) spec:(__ join_specification)? {
     return (left: any) => ({
       type: "join_expr",
       left: trailing(left, c1),
@@ -436,19 +436,15 @@ join_expr_right
   }
 
 table_factor
-  = t:(
-      unnest_with_offset_expr
-    / with_ordinality_expr
-    / table_func_call
-    / lateral_derived_table
-    / paren$join_expr
-    / paren$compound_select_stmt
-    / partitioned_table
-    / rows_from_expr
-    / relation_expr
-  ) alias:(__ alias)? {
-    return loc(createAlias(t, alias));
-  }
+  = unnest_with_offset_expr
+  / with_ordinality_expr
+  / table_func_call
+  / lateral_derived_table
+  / paren$join_expr
+  / paren$compound_select_stmt
+  / partitioned_table
+  / rows_from_expr
+  / relation_expr
 
 relation_expr
   = pg_table_with_inheritance
@@ -4971,6 +4967,7 @@ alias$func_call = .
 alias$paren$compound_select_stmt = .
 alias$paren$list$column = .
 alias$relation_expr = .
+alias$table_factor = .
 alias$unnest_or_member_expr = .
 
 /**
