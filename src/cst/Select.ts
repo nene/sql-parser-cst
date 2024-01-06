@@ -330,13 +330,13 @@ type TableExpr =
   | UnpivotExpr
   | TablesampleExpr
   | ForSystemTimeAsOfExpr
-  | TableOrSubquery;
+  | TableFactor;
 
 export interface JoinExpr extends BaseNode {
   type: "join_expr";
   left: TableExpr;
   operator: JoinOp | ",";
-  right: TableOrSubquery;
+  right: TableFactor;
   specification?: JoinOnSpecification | JoinUsingSpecification;
 }
 
@@ -353,7 +353,7 @@ type JoinOp =
     >[]
   | Keyword<"JOIN" | "STRAIGHT_JOIN">;
 
-export type TableOrSubquery =
+export type TableFactor =
   | EntityName
   | TableWithInheritance
   | TableWithoutInheritance
@@ -367,7 +367,7 @@ export type TableOrSubquery =
   | LateralDerivedTable
   | PartitionedTable
   | RowsFromExpr
-  | Alias<TableOrSubquery>;
+  | Alias<TableFactor>;
 
 export type TableFuncCall = FuncCall | FuncCallWithColumnDefinitions;
 

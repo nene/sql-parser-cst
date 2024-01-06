@@ -413,7 +413,7 @@ dual_table
   }
 
 join_expr
-  = head:table_or_subquery
+  = head:table_factor
     tail:(
         join_expr_right
       / pivot_expr_right
@@ -425,7 +425,7 @@ join_expr
     }
 
 join_expr_right
-  = c1:__ op:(join_op / ",") right:(__ table_or_subquery) spec:(__ join_specification)? {
+  = c1:__ op:(join_op / ",") right:(__ table_factor) spec:(__ join_specification)? {
     return (left: any) => ({
       type: "join_expr",
       left: trailing(left, c1),
@@ -435,7 +435,7 @@ join_expr_right
     });
   }
 
-table_or_subquery
+table_factor
   = t:(
       unnest_with_offset_expr
     / with_ordinality_expr
