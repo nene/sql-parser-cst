@@ -1,7 +1,11 @@
 import { BaseNode, Keyword } from "./Base";
 import { StringLiteral } from "./Literal";
 import { Expr, Identifier, ListExpr, ParenExpr, EntityName } from "./Expr";
-import { SortSpecification } from "./Select";
+import {
+  SortDirectionAsc,
+  SortDirectionDesc,
+  SortSpecification,
+} from "./Select";
 import { BigqueryOptions } from "./dialects/Bigquery";
 
 export type AllConstraintNodes =
@@ -82,7 +86,7 @@ export type ColumnConstraint =
 export interface ConstraintPrimaryKey extends BaseNode {
   type: "constraint_primary_key";
   primaryKeyKw: [Keyword<"PRIMARY">, Keyword<"KEY">];
-  orderKw?: Keyword<"ASC" | "DESC">;
+  direction?: SortDirectionAsc | SortDirectionDesc; // SQLite
   columns?: ParenExpr<ListExpr<SortSpecification | Identifier>>;
   onConflict?: OnConflictClause;
 }

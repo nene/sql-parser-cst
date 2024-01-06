@@ -3534,11 +3534,11 @@ table_constraint_primary_key
     }
 
 column_constraint_primary_key
-  = kws:(PRIMARY __ KEY) orderKw:(__ (ASC / DESC))? confl:(__ on_conflict_clause)? {
+  = kws:(PRIMARY __ KEY) direction:(__ sort_direction &sqlite)? confl:(__ on_conflict_clause)? {
       return loc({
         type: "constraint_primary_key",
         primaryKeyKw: read(kws),
-        orderKw: read(orderKw),
+        direction: read(direction),
         onConflict: read(confl),
       });
     }
