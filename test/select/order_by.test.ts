@@ -47,15 +47,18 @@ describe("select ORDER BY", () => {
         "specifications": {
           "items": [
             {
+              "direction": {
+                "descKw": {
+                  "name": "DESC",
+                  "text": "DESC",
+                  "type": "keyword",
+                },
+                "type": "sort_direction_desc",
+              },
               "expr": {
                 "name": "col1",
                 "text": "col1",
                 "type": "identifier",
-              },
-              "orderKw": {
-                "name": "DESC",
-                "text": "DESC",
-                "type": "keyword",
               },
               "type": "sort_specification",
             },

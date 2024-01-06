@@ -70,6 +70,8 @@ export type AllSelectNodes =
   | JoinOnSpecification
   | JoinUsingSpecification
   | SortSpecification
+  | SortDirectionAsc
+  | SortDirectionDesc
   | ReturningClause
   | IntoTableClause
   | IntoVariablesClause
@@ -555,8 +557,18 @@ export interface JoinUsingSpecification extends BaseNode {
 export interface SortSpecification extends BaseNode {
   type: "sort_specification";
   expr: Expr;
-  orderKw?: Keyword<"ASC" | "DESC">;
+  direction?: SortDirectionAsc | SortDirectionDesc;
   nullHandlingKw?: [Keyword<"NULLS">, Keyword<"FIRST" | "LAST">]; // SQLite, PostgreSQL
+}
+
+export interface SortDirectionAsc extends BaseNode {
+  type: "sort_direction_asc";
+  ascKw: Keyword<"ASC">;
+}
+
+export interface SortDirectionDesc extends BaseNode {
+  type: "sort_direction_desc";
+  descKw: Keyword<"DESC">;
 }
 
 // BigQuery

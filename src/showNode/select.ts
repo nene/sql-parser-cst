@@ -71,7 +71,9 @@ export const selectMap: FullTransformMap<string, AllSelectNodes> = {
   for_system_time_as_of_expr: (node) =>
     show([node.left, node.forSystemTimeAsOfKw, node.expr]),
   sort_specification: (node) =>
-    show([node.expr, node.orderKw, node.nullHandlingKw]),
+    show([node.expr, node.direction, node.nullHandlingKw]),
+  sort_direction_asc: (node) => show(node.ascKw),
+  sort_direction_desc: (node) => show(node.descKw),
   // WHERE .. GROUP BY .. HAVING .. QUALIFY ... ORDER BY .. PARTITION BY .. CLUSTER BY
   where_clause: (node) => show([node.whereKw, node.expr]),
   group_by_clause: (node) =>

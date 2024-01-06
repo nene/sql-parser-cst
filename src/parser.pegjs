@@ -819,18 +819,26 @@ order_by_clause
   }
 
 sort_specification
-  = e:expr orderKw:(__ (DESC / ASC))? nullsKw:(__ sort_specification_nulls)? {
+  = e:expr direction:(__ sort_direction)? nullsKw:(__ sort_specification_nulls)? {
     // don't create full sort_specification node when dealing with just a column name
-    if (!orderKw && !nullsKw && e.type === "identifier") {
+    if (!direction && !nullsKw && e.type === "identifier") {
       return e;
     }
 
     return loc({
       type: "sort_specification",
       expr: read(e),
-      orderKw: read(orderKw),
+      direction: read(direction),
       ...(nullsKw ? {nullHandlingKw: read(nullsKw)} : {}),
     });
+  }
+
+sort_direction
+  = kw:ASC {
+    return loc({ type: "sort_direction_asc", ascKw: kw });
+  }
+  / kw:DESC {
+    return loc({ type: "sort_direction_desc", descKw: kw });
   }
 
 sort_specification_nulls
