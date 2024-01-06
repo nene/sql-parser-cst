@@ -36,6 +36,7 @@ export type AllSelectNodes =
   | WhereClause
   | GroupByClause
   | GroupByRollup
+  | GroupByCube
   | HavingClause
   | WindowClause
   | QualifyClause
@@ -265,7 +266,7 @@ export interface GroupByClause extends BaseNode {
   type: "group_by_clause";
   groupByKw: [Keyword<"GROUP">, Keyword<"BY">];
   distinctKw?: Keyword<"ALL" | "DISTINCT">; // PostgreSQL
-  columns: ListExpr<Expr | GroupByRollup>;
+  columns: ListExpr<Expr | GroupByRollup | GroupByCube>;
   withRollupKw?: [Keyword<"WITH">, Keyword<"ROLLUP">]; // MySQL, MariaDB
 }
 
@@ -273,6 +274,13 @@ export interface GroupByClause extends BaseNode {
 export interface GroupByRollup extends BaseNode {
   type: "group_by_rollup";
   rollupKw: Keyword<"ROLLUP">;
+  columns: ParenExpr<ListExpr<Expr>>;
+}
+
+// PostgreSQL
+export interface GroupByCube extends BaseNode {
+  type: "group_by_cube";
+  cubeKw: Keyword<"CUBE">;
   columns: ParenExpr<ListExpr<Expr>>;
 }
 

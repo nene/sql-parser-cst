@@ -801,6 +801,7 @@ group_by_distinct
 
 grouping_element
   = group_by_rollup
+  / group_by_cube
   / paren$empty_list
   / expr
 
@@ -809,6 +810,15 @@ group_by_rollup
     return loc({
       type: "group_by_rollup",
       rollupKw: read(kw),
+      columns: cols,
+    });
+  }
+
+group_by_cube
+  = kw:(CUBE __) cols:paren$list$expr &postgres {
+    return loc({
+      type: "group_by_cube",
+      cubeKw: read(kw),
       columns: cols,
     });
   }
@@ -5915,6 +5925,7 @@ COPY                = kw:"COPY"i                !ident_part { return loc(createK
 COUNT               = kw:"COUNT"i               !ident_part { return loc(createKeyword(kw)); }
 CREATE              = kw:"CREATE"i              !ident_part { return loc(createKeyword(kw)); }
 CROSS               = kw:"CROSS"i               !ident_part { return loc(createKeyword(kw)); }
+CUBE                = kw:"CUBE"i                !ident_part { return loc(createKeyword(kw)); }
 CUME_DIST           = kw:"CUME_DIST"i           !ident_part { return loc(createKeyword(kw)); }
 CURRENT             = kw:"CURRENT"i             !ident_part { return loc(createKeyword(kw)); }
 CURRENT_CATALOG     = kw:"CURRENT_CATALOG"i     !ident_part { return loc(createKeyword(kw)); }
