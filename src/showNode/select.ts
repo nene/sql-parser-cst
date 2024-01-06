@@ -29,6 +29,8 @@ export const selectMap: FullTransformMap<string, AllSelectNodes> = {
   with_ordinality_expr: (node) => show([node.expr, node.withOrdinalityKw]),
   table_with_inheritance: (node) => show([node.table, "*"]),
   table_without_inheritance: (node) => show([node.onlyKw, node.table]),
+  func_call_with_column_definitions: (node) =>
+    show([node.funcCall, node.asKw, node.columns]),
   rows_from_expr: (node) => show([node.rowsFromKw, node.expr]),
   unnest_expr: (node) => show([node.unnestKw, node.expr]),
   unnest_with_offset_expr: (node) => show([node.unnest, node.withOffsetKw]),

@@ -439,7 +439,7 @@ table_or_subquery
   = t:(
       unnest_with_offset_expr
     / with_ordinality_expr
-    / func_call
+    / table_func_call
     / lateral_derived_table
     / paren$join_expr
     / paren$compound_select_stmt
@@ -452,6 +452,26 @@ table_or_subquery
   }
   / table_or_alias
 
+table_func_call
+  = fn:func_call asKw:(__ AS __) columns:paren$list$column_definition &postgres {
+    return loc({
+      type: "func_call_with_column_definitions",
+      funcCall: fn,
+      asKw: read(asKw),
+      columns: columns,
+    });
+  }
+  / func_call
+
+with_ordinality_expr
+  = expr:(table_func_call / rows_from_expr) kw:(__ WITH __ ORDINALITY) &postgres {
+    return loc({
+      type: "with_ordinality_expr",
+      expr,
+      withOrdinalityKw: read(kw),
+    });
+  }
+
 lateral_derived_table
   = kw:(LATERAL __) expr:paren$compound_select_stmt (&mysql / &postgres) {
     return loc({
@@ -460,10 +480,19 @@ lateral_derived_table
       expr,
     });
   }
-  / kw:(LATERAL __) expr:(rows_from_expr / func_call) &postgres {
+  / kw:(LATERAL __) expr:(with_ordinality_expr / rows_from_expr / table_func_call) &postgres {
     return loc({
       type: "lateral_derived_table",
       lateralKw: read(kw),
+      expr,
+    });
+  }
+
+rows_from_expr
+  = kw:(ROWS __ FROM __) expr:paren$list$table_func_call &postgres {
+    return loc({
+      type: "rows_from_expr",
+      rowsFromKw: read(kw),
       expr,
     });
   }
@@ -492,24 +521,6 @@ table_without_inheritance
       type: "table_without_inheritance",
       onlyKw: read(kw),
       table: read(table),
-    });
-  }
-
-with_ordinality_expr
-  = expr:(func_call / rows_from_expr) kw:(__ WITH __ ORDINALITY) &postgres {
-    return loc({
-      type: "with_ordinality_expr",
-      expr,
-      withOrdinalityKw: read(kw),
-    });
-  }
-
-rows_from_expr
-  = kw:(ROWS __ FROM __) expr:paren$list$expr &postgres {
-    return loc({
-      type: "rows_from_expr",
-      rowsFromKw: read(kw),
-      expr,
     });
   }
 
@@ -4870,6 +4881,7 @@ paren$list$procedure_param = .
 paren$list$sort_specification = .
 paren$list$string_literal = .
 paren$list$tablesample_arg = .
+paren$list$table_func_call = .
 paren$postgresql_op = .
 paren$pivot_for_in = .
 paren$pragma_value = .
@@ -4920,6 +4932,7 @@ list$rename_action = .
 list$set_assignment = .
 list$sort_specification = .
 list$string_literal = .
+list$table_func_call = .
 list$table_or_alias = .
 list$tablesample_arg = .
 list$type_param = .

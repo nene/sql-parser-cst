@@ -13,6 +13,7 @@ import { Alias } from "./Alias";
 import { FrameClause } from "./WindowFrame";
 import { StringLiteral } from "./Literal";
 import { MysqlModifier } from "./dialects/Mysql";
+import { ColumnDefinition } from "./CreateTable";
 
 export type AllSelectNodes =
   | CompoundSelectStmt
@@ -52,6 +53,7 @@ export type AllSelectNodes =
   | PartitionedTable
   | TableWithInheritance
   | TableWithoutInheritance
+  | FuncCallWithColumnDefinitions
   | WithOrdinalityExpr
   | RowsFromExpr
   | UnnestWithOffsetExpr
@@ -355,7 +357,7 @@ export type TableOrSubquery =
   | EntityName
   | TableWithInheritance
   | TableWithoutInheritance
-  | FuncCall
+  | TableFuncCall
   | WithOrdinalityExpr
   | IndexedTable
   | NotIndexedTable
@@ -366,6 +368,8 @@ export type TableOrSubquery =
   | PartitionedTable
   | RowsFromExpr
   | Alias<TableOrSubquery>;
+
+export type TableFuncCall = FuncCall | FuncCallWithColumnDefinitions;
 
 // SQLite only
 export interface IndexedTable extends BaseNode {
@@ -384,7 +388,11 @@ export interface NotIndexedTable extends BaseNode {
 export interface LateralDerivedTable extends BaseNode {
   type: "lateral_derived_table";
   lateralKw: Keyword<"LATERAL">;
-  expr: ParenExpr<SubSelect> | FuncCall | RowsFromExpr;
+  expr:
+    | ParenExpr<SubSelect>
+    | TableFuncCall
+    | WithOrdinalityExpr
+    | RowsFromExpr;
 }
 
 // MySQL, MariaDB
@@ -412,14 +420,22 @@ export interface TableWithoutInheritance extends BaseNode {
 export interface RowsFromExpr extends BaseNode {
   type: "rows_from_expr";
   rowsFromKw: [Keyword<"ROWS">, Keyword<"FROM">];
-  expr: ParenExpr<ListExpr<FuncCall>>;
+  expr: ParenExpr<ListExpr<TableFuncCall>>;
 }
 
 // PostgreSQL
 export interface WithOrdinalityExpr extends BaseNode {
   type: "with_ordinality_expr";
-  expr: FuncCall | RowsFromExpr;
+  expr: TableFuncCall | RowsFromExpr;
   withOrdinalityKw: [Keyword<"WITH">, Keyword<"ORDINALITY">];
+}
+
+// PostgreSQL
+export interface FuncCallWithColumnDefinitions extends BaseNode {
+  type: "func_call_with_column_definitions";
+  funcCall: FuncCall;
+  asKw: Keyword<"AS">;
+  columns: ParenExpr<ListExpr<ColumnDefinition>>;
 }
 
 // BigQuery

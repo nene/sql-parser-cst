@@ -94,8 +94,24 @@ describe("select FROM", () => {
         testWc(`SELECT * FROM LATERAL table_func(1, 2, 3) AS t`);
       });
 
+      it("supports LATERAL table function with column definition", () => {
+        testWc(`SELECT * FROM LATERAL fn1(1) AS (col1 INT)`);
+      });
+
+      it("supports LATERAL table function with column definition and WITH ORDINALITY", () => {
+        testWc(`SELECT * FROM LATERAL fn1(1) AS (col1 INT) WITH ORDINALITY`);
+      });
+
+      it("supports LATERAL table function with column definition and WITH ORDINALITY and aliaas", () => {
+        testWc(`SELECT * FROM LATERAL fn1(1) AS (col1 INT) WITH ORDINALITY AS t`);
+      });
+
       it("supports LATERAL ROWS FROM ()", () => {
         testWc(`SELECT * FROM LATERAL ROWS FROM (fn1(), fn2()) AS t`);
+      });
+
+      it("supports LATERAL ROWS FROM () WITH ORDINALITY", () => {
+        testWc(`SELECT * FROM LATERAL ROWS FROM (fn1(), fn2()) WITH ORDINALITY AS t`);
       });
     });
   });
@@ -126,6 +142,14 @@ describe("select FROM", () => {
 
       it("supports ROWS FROM ... WITH ORDINALITY", () => {
         testWc(`SELECT * FROM ROWS FROM (fn1()) WITH ORDINALITY`);
+      });
+
+      it("supports column definitions", () => {
+        test("SELECT * FROM tbl_func(5, 10) AS (id INT, name TEXT)");
+      });
+
+      it("supports column definitions inside ROWS FROM", () => {
+        testWc(`SELECT * FROM ROWS FROM (fn1() AS (id INT, name TEXT), fn2() AS (id INT))`);
       });
     });
   });
