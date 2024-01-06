@@ -191,7 +191,8 @@ common_table_expr
     columns:(__ paren$list$column)?
     asKw:(__ AS)
     materialized:(__ cte_materialized)?
-    select:(__ paren$compound_select_stmt) {
+    select:(__ paren$compound_select_stmt)
+    search:(__ cte_search_clause)? {
       return loc({
         type: "common_table_expr",
         table: table,
@@ -199,11 +200,24 @@ common_table_expr
         asKw: read(asKw),
         materializedKw: read(materialized),
         expr: read(select),
+        search: read(search),
       });
     }
 
 cte_materialized
   = kws:(NOT __ MATERIALIZED / MATERIALIZED) { return read(kws); }
+
+cte_search_clause
+  = kw:(SEARCH __ (BREADTH / DEPTH) __ FIRST __ BY __) columns:list$ident
+    setKw:(__ SET __) result:ident &postgres {
+      return loc({
+        type: "cte_search_clause",
+        searchKw: read(kw),
+        columns: columns,
+        setKw: read(setKw),
+        resultColumn: result,
+      });
+    }
 
 // Other clauses of SELECT statement (besides WITH & SELECT)
 other_clause
@@ -5827,6 +5841,7 @@ BIT                 = kw:"BIT"i                 !ident_part { return loc(createK
 BLOB                = kw:"BLOB"i                !ident_part { return loc(createKeyword(kw)); }
 BOOL                = kw:"BOOL"i                !ident_part { return loc(createKeyword(kw)); }
 BOOLEAN             = kw:"BOOLEAN"i             !ident_part { return loc(createKeyword(kw)); }
+BREADTH             = kw:"BREADTH"i             !ident_part { return loc(createKeyword(kw)); }
 BREAK               = kw:"BREAK"i               !ident_part { return loc(createKeyword(kw)); }
 BTREE               = kw:"BTREE"i               !ident_part { return loc(createKeyword(kw)); }
 BY                  = kw:"BY"i                  !ident_part { return loc(createKeyword(kw)); }
@@ -5898,6 +5913,7 @@ DELAY_KEY_WRITE     = kw:"DELAY_KEY_WRITE"i     !ident_part { return loc(createK
 DELAYED             = kw:"DELAYED"i             !ident_part { return loc(createKeyword(kw)); }
 DELETE              = kw:"DELETE"i              !ident_part { return loc(createKeyword(kw)); }
 DENSE_RANK          = kw:"DENSE_RANK"i          !ident_part { return loc(createKeyword(kw)); }
+DEPTH               = kw:"DEPTH"i               !ident_part { return loc(createKeyword(kw)); }
 DESC                = kw:"DESC"i                !ident_part { return loc(createKeyword(kw)); }
 DESCRIBE            = kw:"DESCRIBE"i            !ident_part { return loc(createKeyword(kw)); }
 DETACH              = kw:"DETACH"i              !ident_part { return loc(createKeyword(kw)); }

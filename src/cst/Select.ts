@@ -21,6 +21,7 @@ export type AllSelectNodes =
   | SelectStmt
   | WithClause
   | CommonTableExpr
+  | CteSearchClause
   | SelectClause
   | SelectAll
   | SelectDistinct
@@ -145,6 +146,20 @@ export interface CommonTableExpr extends BaseNode {
     | Keyword<"MATERIALIZED">
     | [Keyword<"NOT">, Keyword<"MATERIALIZED">];
   expr: ParenExpr<SubSelect>;
+  search?: CteSearchClause;
+}
+
+export interface CteSearchClause extends BaseNode {
+  type: "cte_search_clause";
+  searchKw: [
+    Keyword<"SEARCH">,
+    Keyword<"BREADTH" | "DEPTH">,
+    Keyword<"FIRST">,
+    Keyword<"BY">
+  ];
+  columns: ListExpr<Identifier>;
+  setKw: Keyword<"SET">;
+  resultColumn: Identifier;
 }
 
 export interface SelectClause extends BaseNode {

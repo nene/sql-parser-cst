@@ -23,4 +23,24 @@ describe("select WITH", () => {
       testWc("WITH t1 AS NOT MATERIALIZED (SELECT 1) SELECT t1.name");
     });
   });
+
+  dialect("postgresql", () => {
+    it("supports SEARCH BREATH FIRST clause", () => {
+      testWc(`
+        WITH RECURSIVE tree AS (
+          SELECT 1
+        ) SEARCH BREADTH FIRST BY col1, col2 SET ordercol
+        SELECT * FROM tree ORDER BY ordercol
+      `);
+    });
+
+    it("supports SEARCH DEPTH FIRST clause", () => {
+      testWc(`
+        WITH RECURSIVE tree AS (
+          SELECT 1
+        ) SEARCH DEPTH FIRST BY col1 SET ordercol
+        SELECT * FROM tree ORDER BY ordercol
+      `);
+    });
+  });
 });
