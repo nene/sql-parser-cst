@@ -144,7 +144,7 @@ export interface CommonTableExpr extends BaseNode {
   materializedKw?:
     | Keyword<"MATERIALIZED">
     | [Keyword<"NOT">, Keyword<"MATERIALIZED">];
-  expr: Expr;
+  expr: ParenExpr<SubSelect>;
 }
 
 export interface SelectClause extends BaseNode {
