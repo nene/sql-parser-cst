@@ -72,5 +72,9 @@ describe("select WITH", () => {
     it("supports DELETE inside WITH", () => {
       testWc(`WITH t1 AS (DELETE FROM foo RETURNING *) SELECT * FROM t1`);
     });
+
+    it("supports VALUES inside WITH", () => {
+      testWc(`WITH t1 AS (VALUES (1, 2, 3)) SELECT * FROM t1`);
+    });
   });
 });
