@@ -11,7 +11,7 @@ import {
 } from "./Expr";
 import { Alias } from "./Alias";
 import { FrameClause } from "./WindowFrame";
-import { StringLiteral } from "./Literal";
+import { Literal, StringLiteral } from "./Literal";
 import { MysqlModifier } from "./dialects/Mysql";
 import { ColumnDefinition } from "./CreateTable";
 import { PostgresqlOperator, PostgresqlOperatorExpr } from "./Node";
@@ -22,6 +22,8 @@ export type AllSelectNodes =
   | WithClause
   | CommonTableExpr
   | CteSearchClause
+  | CteCycleClause
+  | CteCycleClauseValues
   | SelectClause
   | SelectAll
   | SelectDistinct
@@ -147,8 +149,10 @@ export interface CommonTableExpr extends BaseNode {
     | [Keyword<"NOT">, Keyword<"MATERIALIZED">];
   expr: ParenExpr<SubSelect>;
   search?: CteSearchClause;
+  cycle?: CteCycleClause;
 }
 
+// PostgreSQL
 export interface CteSearchClause extends BaseNode {
   type: "cte_search_clause";
   searchKw: [
@@ -160,6 +164,27 @@ export interface CteSearchClause extends BaseNode {
   columns: ListExpr<Identifier>;
   setKw: Keyword<"SET">;
   resultColumn: Identifier;
+}
+
+// PostgreSQL
+export interface CteCycleClause extends BaseNode {
+  type: "cte_cycle_clause";
+  cycleKw: Keyword<"CYCLE">;
+  columns: ListExpr<Identifier>;
+  setKw: Keyword<"SET">;
+  resultColumn: Identifier;
+  values?: CteCycleClauseValues;
+  usingKw: Keyword<"USING">;
+  pathColumn: Identifier;
+}
+
+// PostgreSQL
+export interface CteCycleClauseValues extends BaseNode {
+  type: "cte_cycle_clause_values";
+  toKw: Keyword<"TO">;
+  markValue: Literal;
+  defaultKw?: Keyword<"DEFAULT">;
+  defaultValue: Literal;
 }
 
 export interface SelectClause extends BaseNode {

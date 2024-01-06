@@ -15,9 +15,22 @@ export const selectMap: FullTransformMap<string, AllSelectNodes> = {
       node.materializedKw,
       node.expr,
       node.search,
+      node.cycle,
     ]),
   cte_search_clause: (node) =>
     show([node.searchKw, node.columns, node.setKw, node.resultColumn]),
+  cte_cycle_clause: (node) =>
+    show([
+      node.cycleKw,
+      node.columns,
+      node.setKw,
+      node.resultColumn,
+      node.values,
+      node.usingKw,
+      node.pathColumn,
+    ]),
+  cte_cycle_clause_values: (node) =>
+    show([node.toKw, node.markValue, node.defaultKw, node.defaultValue]),
   // SELECT
   select_clause: (node) => show([node.selectKw, node.modifiers, node.columns]),
   select_all: (node) => show(node.allKw),

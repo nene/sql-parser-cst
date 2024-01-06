@@ -42,5 +42,23 @@ describe("select WITH", () => {
         SELECT * FROM tree ORDER BY ordercol
       `);
     });
+
+    it("supports CYCLE clause", () => {
+      testWc(`
+        WITH RECURSIVE search_graph AS (
+          SELECT 1
+        ) CYCLE col1, col2 SET is_cycle USING path_col
+        SELECT * FROM search_graph
+      `);
+    });
+
+    it("supports CYCLE clause with TO..DEFAULT", () => {
+      testWc(`
+        WITH RECURSIVE search_graph AS (
+          SELECT 1
+        ) CYCLE col1 SET is_cycle TO true DEFAULT false USING path_col
+        SELECT * FROM search_graph
+      `);
+    });
   });
 });

@@ -192,7 +192,8 @@ common_table_expr
     asKw:(__ AS)
     materialized:(__ cte_materialized)?
     select:(__ paren$compound_select_stmt)
-    search:(__ cte_search_clause)? {
+    search:(__ cte_search_clause)?
+    cycle:(__ cte_cycle_clause)? {
       return loc({
         type: "common_table_expr",
         table: table,
@@ -201,6 +202,7 @@ common_table_expr
         materializedKw: read(materialized),
         expr: read(select),
         search: read(search),
+        cycle: read(cycle),
       });
     }
 
@@ -218,6 +220,33 @@ cte_search_clause
         resultColumn: result,
       });
     }
+
+cte_cycle_clause
+  = kw:(CYCLE __) columns:list$ident setKw:(__ SET __) resultColumn:ident
+    values:(__ cte_cycle_clause_values)?
+    usingKw:(__ USING __) pathColumn:ident &postgres {
+      return loc({
+        type: "cte_cycle_clause",
+        cycleKw: read(kw),
+        columns: columns,
+        setKw: read(setKw),
+        resultColumn: resultColumn,
+        values: read(values),
+        usingKw: read(usingKw),
+        pathColumn: pathColumn,
+      });
+    }
+
+cte_cycle_clause_values
+  = toKw:(TO __) markValue:literal defaultKw:(__ DEFAULT __) defaultValue:literal {
+    return loc({
+      type: "cte_cycle_clause_values",
+      toKw: read(toKw),
+      markValue: markValue,
+      defaultKw: read(defaultKw),
+      defaultValue: defaultValue,
+    });
+  }
 
 // Other clauses of SELECT statement (besides WITH & SELECT)
 other_clause
@@ -5890,6 +5919,7 @@ CURRENT_SCHEMA      = kw:"CURRENT_SCHEMA"i      !ident_part { return loc(createK
 CURRENT_TIME        = kw:"CURRENT_TIME"i        !ident_part { return loc(createKeyword(kw)); }
 CURRENT_TIMESTAMP   = kw:"CURRENT_TIMESTAMP"i   !ident_part { return loc(createKeyword(kw)); }
 CURRENT_USER        = kw:"CURRENT_USER"i        !ident_part { return loc(createKeyword(kw)); }
+CYCLE               = kw:"CYCLE"i               !ident_part { return loc(createKeyword(kw)); }
 DATA                = kw:"DATA"i                !ident_part { return loc(createKeyword(kw)); }
 DATABASE            = kw:"DATABASE"i            !ident_part { return loc(createKeyword(kw)); }
 DATE                = kw:"DATE"i                !ident_part { return loc(createKeyword(kw)); }
