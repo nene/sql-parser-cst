@@ -840,6 +840,13 @@ sort_direction
   / kw:DESC {
     return loc({ type: "sort_direction_desc", descKw: kw });
   }
+  / kw:(USING __) op:(postgresql_operator_expr / postgresql_operator) &postgres {
+    return loc({
+      type: "sort_direction_using_operator",
+      usingKw: read(kw),
+      operator: read(op),
+    });
+  }
 
 sort_specification_nulls
   = kws:(NULLS __ (FIRST / LAST)) (&sqlite / &postgres) {

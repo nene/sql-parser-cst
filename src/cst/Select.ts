@@ -14,6 +14,7 @@ import { FrameClause } from "./WindowFrame";
 import { StringLiteral } from "./Literal";
 import { MysqlModifier } from "./dialects/Mysql";
 import { ColumnDefinition } from "./CreateTable";
+import { PostgresqlOperator, PostgresqlOperatorExpr } from "./Node";
 
 export type AllSelectNodes =
   | CompoundSelectStmt
@@ -72,6 +73,7 @@ export type AllSelectNodes =
   | SortSpecification
   | SortDirectionAsc
   | SortDirectionDesc
+  | SortDirectionUsingOperator
   | ReturningClause
   | IntoTableClause
   | IntoVariablesClause
@@ -557,7 +559,7 @@ export interface JoinUsingSpecification extends BaseNode {
 export interface SortSpecification extends BaseNode {
   type: "sort_specification";
   expr: Expr;
-  direction?: SortDirectionAsc | SortDirectionDesc;
+  direction?: SortDirectionAsc | SortDirectionDesc | SortDirectionUsingOperator;
   nullHandlingKw?: [Keyword<"NULLS">, Keyword<"FIRST" | "LAST">]; // SQLite, PostgreSQL
 }
 
@@ -569,6 +571,12 @@ export interface SortDirectionAsc extends BaseNode {
 export interface SortDirectionDesc extends BaseNode {
   type: "sort_direction_desc";
   descKw: Keyword<"DESC">;
+}
+
+export interface SortDirectionUsingOperator extends BaseNode {
+  type: "sort_direction_using_operator";
+  usingKw: Keyword<"USING">;
+  operator: PostgresqlOperator | PostgresqlOperatorExpr;
 }
 
 // BigQuery

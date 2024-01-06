@@ -74,6 +74,7 @@ export const selectMap: FullTransformMap<string, AllSelectNodes> = {
     show([node.expr, node.direction, node.nullHandlingKw]),
   sort_direction_asc: (node) => show(node.ascKw),
   sort_direction_desc: (node) => show(node.descKw),
+  sort_direction_using_operator: (node) => show([node.usingKw, node.operator]),
   // WHERE .. GROUP BY .. HAVING .. QUALIFY ... ORDER BY .. PARTITION BY .. CLUSTER BY
   where_clause: (node) => show([node.whereKw, node.expr]),
   group_by_clause: (node) =>

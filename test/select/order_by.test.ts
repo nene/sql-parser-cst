@@ -29,6 +29,16 @@ describe("select ORDER BY", () => {
     });
   });
 
+  dialect("postgresql", () => {
+    it("supports USING operator", () => {
+      testClauseWc("ORDER BY name USING >, age USING <");
+    });
+
+    it("supports USING OPERATOR()", () => {
+      testClauseWc("ORDER BY name USING OPERATOR(>>)");
+    });
+  });
+
   it("parses ORDER BY clause", () => {
     expect(parseClause("ORDER BY col1 DESC")).toMatchInlineSnapshot(`
       {
