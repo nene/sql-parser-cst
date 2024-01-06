@@ -6,6 +6,10 @@ describe("table", () => {
       testWc("TABLE my_tbl");
     });
 
+    it("supports TABLE with namespaced table", () => {
+      testWc("TABLE my_schema.my_tbl");
+    });
+
     it("supports WITH ... TABLE", () => {
       testWc("WITH p AS (TABLE person) TABLE p");
     });
