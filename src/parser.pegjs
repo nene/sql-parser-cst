@@ -3613,7 +3613,7 @@ table_constraint_primary_key
     }
 
 column_constraint_primary_key
-  = kws:(PRIMARY __ KEY) direction:(__ sort_direction &sqlite)? confl:(__ on_conflict_clause)? {
+  = kws:(PRIMARY __ KEY) direction:(__ sqlite_sort_direction)? confl:(__ on_conflict_clause)? {
       return loc({
         type: "constraint_primary_key",
         primaryKeyKw: read(kws),
@@ -3621,6 +3621,9 @@ column_constraint_primary_key
         onConflict: read(confl),
       });
     }
+
+sqlite_sort_direction
+  = dir:sort_direction &sqlite { return dir; }
 
 table_constraint_unique
   = kws:(unique_key __)
