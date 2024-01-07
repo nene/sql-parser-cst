@@ -1,10 +1,10 @@
 import { BaseNode, Keyword } from "./Base";
-import { EntityName } from "./Expr";
+import { TableFactor } from "./Select";
 
 // TRUNCATE TABLE
 export interface TruncateStmt extends BaseNode {
   type: "truncate_stmt";
   truncateKw: Keyword<"TRUNCATE">;
   tableKw?: Keyword<"TABLE">;
-  table: EntityName;
+  table: TableFactor;
 }

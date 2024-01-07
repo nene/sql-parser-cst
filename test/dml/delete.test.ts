@@ -35,6 +35,17 @@ describe("delete from", () => {
     });
   });
 
+  dialect("postgresql", () => {
+    it("supports ONLY inheritance modifier on table name", () => {
+      testWc("DELETE FROM ONLY tbl");
+      testWc("DELETE FROM ONLY tbl AS t");
+    });
+    it("supports * inheritance modifier on table name", () => {
+      testWc("DELETE FROM tbl *");
+      testWc("DELETE FROM tbl * AS t");
+    });
+  });
+
   dialect(["sqlite", "mysql", "postgresql"], () => {
     it("supports WITH ... DELETE FROM ..", () => {
       testWc("WITH subsel AS (SELECT 1) DELETE FROM tbl");

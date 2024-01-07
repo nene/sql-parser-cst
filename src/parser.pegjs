@@ -1588,7 +1588,7 @@ other_delete_clause
  * ------------------------------------------------------------------------------------ *
  */
 truncate_stmt
-  = kw:(TRUNCATE __) tableKw:(TABLE __)? tbl:entity_name {
+  = kw:(TRUNCATE __) tableKw:(TABLE __)? tbl:table_factor {
     return loc({
       type: "truncate_stmt",
       truncateKw: read(kw),

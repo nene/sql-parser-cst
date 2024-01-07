@@ -35,6 +35,17 @@ describe("update", () => {
     });
   });
 
+  dialect("postgresql", () => {
+    it("supports ONLY inheritance modifier on table name", () => {
+      testWc("UPDATE ONLY tbl SET x=1");
+      testWc("UPDATE ONLY tbl AS t SET x=1");
+    });
+    it("supports * inheritance modifier on table name", () => {
+      testWc("UPDATE tbl * SET x=1");
+      testWc("UPDATE tbl * AS t SET x=1");
+    });
+  });
+
   dialect(["mysql", "mariadb"], () => {
     it("supports setting explicit default values", () => {
       testWc("UPDATE person SET age = DEFAULT");
