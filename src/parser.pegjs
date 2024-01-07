@@ -546,6 +546,15 @@ table_func_call
       columns: columns,
     });
   }
+  / alias:alias$func_call &{ return alias.type === "alias"; }
+    columns:(__ paren$list$column_definition) &postgres {
+      return loc({
+        type: "func_call_with_column_definitions",
+        funcCall: alias,
+        asKw: undefined,
+        columns: read(columns),
+      });
+    }
   / func_call
 
 with_ordinality_expr

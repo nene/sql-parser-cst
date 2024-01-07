@@ -505,8 +505,8 @@ export interface WithOrdinalityExpr extends BaseNode {
 // PostgreSQL
 export interface FuncCallWithColumnDefinitions extends BaseNode {
   type: "func_call_with_column_definitions";
-  funcCall: FuncCall;
-  asKw: Keyword<"AS">;
+  funcCall: Alias<FuncCall> | FuncCall;
+  asKw?: Keyword<"AS">;
   columns: ParenExpr<ListExpr<ColumnDefinition>>;
 }
 

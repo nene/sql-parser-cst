@@ -126,6 +126,10 @@ describe("select FROM", () => {
     it("supports combining table-functions with joins", () => {
       test("SELECT * FROM func1(5, 10) JOIN func2(8)");
     });
+    it("supports aliased table-function", () => {
+      test("SELECT * FROM func1(5, 10) AS foo");
+      test("SELECT * FROM func1(5, 10) foo");
+    });
 
     dialect("postgresql", () => {
       it("supports WITH ORDINALITY", () => {
@@ -146,6 +150,11 @@ describe("select FROM", () => {
 
       it("supports column definitions", () => {
         test("SELECT * FROM tbl_func(5, 10) AS (id INT, name TEXT)");
+      });
+
+      it("supports alias combined with column definitions", () => {
+        test("SELECT * FROM tbl_func(5, 10) AS alias (id INT, name TEXT)");
+        test("SELECT * FROM tbl_func(5, 10) alias (id INT, name TEXT)");
       });
 
       it("supports column definitions inside ROWS FROM", () => {
