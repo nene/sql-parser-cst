@@ -1588,12 +1588,12 @@ other_delete_clause
  * ------------------------------------------------------------------------------------ *
  */
 truncate_stmt
-  = kw:(TRUNCATE __) tableKw:(TABLE __)? tbl:table_factor {
+  = kw:(TRUNCATE __) tableKw:(TABLE __)? tables:list$table_factor {
     return loc({
       type: "truncate_stmt",
       truncateKw: read(kw),
       tableKw: read(tableKw),
-      table: tbl,
+      tables: tables,
     });
   }
 
@@ -5037,6 +5037,7 @@ list$rename_action = .
 list$set_assignment = .
 list$sort_specification = .
 list$string_literal = .
+list$table_factor = .
 list$table_func_call = .
 list$alias$relation_expr = .
 list$tablesample_arg = .

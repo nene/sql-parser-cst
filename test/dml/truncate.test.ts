@@ -15,11 +15,17 @@ describe("truncate table", () => {
   });
 
   dialect("postgresql", () => {
+    it("supports multi-table TRUNCATE statement", () => {
+      testWc("TRUNCATE TABLE tbl1, tbl2");
+    });
+
     it("supports ONLY inheritance modifier on table name", () => {
       testWc("TRUNCATE TABLE ONLY tbl");
+      testWc("TRUNCATE TABLE tbl1, ONLY tbl2");
     });
     it("supports * inheritance modifier on table name", () => {
       testWc("TRUNCATE TABLE tbl *");
+      testWc("TRUNCATE TABLE tbl1, tbl2 *, tbl3 *");
     });
   });
 
