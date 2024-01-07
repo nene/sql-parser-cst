@@ -9,4 +9,5 @@ export interface TruncateStmt extends BaseNode {
   tableKw?: Keyword<"TABLE">;
   tables: ListExpr<TableFactor>;
   restartOrContinueKw?: [Keyword<"RESTART" | "CONTINUE">, Keyword<"IDENTITY">];
+  cascadeOrRestrictKw?: Keyword<"CASCADE" | "RESTRICT">;
 }

@@ -34,6 +34,13 @@ describe("truncate table", () => {
     it("supports CONTINUE IDENTITY", () => {
       testWc("TRUNCATE TABLE tbl CONTINUE IDENTITY");
     });
+
+    it("supports CASCADE", () => {
+      testWc("TRUNCATE TABLE tbl CASCADE");
+    });
+    it("supports RESTRICT", () => {
+      testWc("TRUNCATE TABLE tbl RESTRICT");
+    });
   });
 
   dialect(["sqlite"], () => {

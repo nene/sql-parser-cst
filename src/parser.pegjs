@@ -1588,13 +1588,15 @@ other_delete_clause
  */
 truncate_stmt
   = kw:(TRUNCATE __) tableKw:(TABLE __)? tables:list$relation_expr
-    resConKw:(__ (RESTART / CONTINUE) __ IDENTITY)? {
+    resConKw:(__ (RESTART / CONTINUE) __ IDENTITY)?
+    casResKw:(__ (CASCADE / RESTRICT))? {
       return loc({
         type: "truncate_stmt",
         truncateKw: read(kw),
         tableKw: read(tableKw),
         tables: tables,
         restartOrContinueKw: read(resConKw),
+        cascadeOrRestrictKw: read(casResKw),
       });
     }
 
