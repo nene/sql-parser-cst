@@ -518,7 +518,6 @@ sqlite_not_indexed_table
       notIndexedKw: read(kw),
     });
   }
-  / alias$entity_name
 
 pg_table_with_inheritance
   = &postgres table:(entity_name __) "*" {
@@ -1588,14 +1587,16 @@ other_delete_clause
  * ------------------------------------------------------------------------------------ *
  */
 truncate_stmt
-  = kw:(TRUNCATE __) tableKw:(TABLE __)? tables:list$table_factor {
-    return loc({
-      type: "truncate_stmt",
-      truncateKw: read(kw),
-      tableKw: read(tableKw),
-      tables: tables,
-    });
-  }
+  = kw:(TRUNCATE __) tableKw:(TABLE __)? tables:list$relation_expr
+    resConKw:(__ (RESTART / CONTINUE) __ IDENTITY)? {
+      return loc({
+        type: "truncate_stmt",
+        truncateKw: read(kw),
+        tableKw: read(tableKw),
+        tables: tables,
+        restartOrContinueKw: read(resConKw),
+      });
+    }
 
 /**
  * ------------------------------------------------------------------------------------ *
@@ -5037,7 +5038,7 @@ list$rename_action = .
 list$set_assignment = .
 list$sort_specification = .
 list$string_literal = .
-list$table_factor = .
+list$relation_expr = .
 list$table_func_call = .
 list$alias$relation_expr = .
 list$tablesample_arg = .
@@ -6073,6 +6074,7 @@ HOUR                = kw:"HOUR"i                !ident_part { return loc(createK
 HOUR_MICROSECOND    = kw:"HOUR_MICROSECOND"     !ident_part { return loc(createKeyword(kw)); }
 HOUR_MINUTE         = kw:"HOUR_MINUTE"          !ident_part { return loc(createKeyword(kw)); }
 HOUR_SECOND         = kw:"HOUR_SECOND"          !ident_part { return loc(createKeyword(kw)); }
+IDENTITY            = kw:"IDENTITY"i            !ident_part { return loc(createKeyword(kw)); }
 IF                  = kw:"IF"i                  !ident_part { return loc(createKeyword(kw)); }
 IGNORE              = kw:"IGNORE"i              !ident_part { return loc(createKeyword(kw)); }
 ILIKE               = kw:"ILIKE"i               !ident_part { return loc(createKeyword(kw)); }
@@ -6241,6 +6243,7 @@ REPLACE             = kw:"REPLACE"i             !ident_part { return loc(createK
 REPLICATION         = kw:"REPLICATION"i         !ident_part { return loc(createKeyword(kw)); }
 RESERVATION         = kw:"RESERVATION"i         !ident_part { return loc(createKeyword(kw)); }
 RESPECT             = kw:"RESPECT"i             !ident_part { return loc(createKeyword(kw)); }
+RESTART             = kw:"RESTART"i             !ident_part { return loc(createKeyword(kw)); }
 RESTRICT            = kw:"RESTRICT"i            !ident_part { return loc(createKeyword(kw)); }
 RETURN              = kw:"RETURN"i              !ident_part { return loc(createKeyword(kw)); }
 RETURNING           = kw:"RETURNING"i           !ident_part { return loc(createKeyword(kw)); }

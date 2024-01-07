@@ -27,6 +27,13 @@ describe("truncate table", () => {
       testWc("TRUNCATE TABLE tbl *");
       testWc("TRUNCATE TABLE tbl1, tbl2 *, tbl3 *");
     });
+
+    it("supports RESTART IDENTITY", () => {
+      testWc("TRUNCATE TABLE tbl RESTART IDENTITY");
+    });
+    it("supports CONTINUE IDENTITY", () => {
+      testWc("TRUNCATE TABLE tbl CONTINUE IDENTITY");
+    });
   });
 
   dialect(["sqlite"], () => {
