@@ -69,7 +69,7 @@ describe("update", () => {
     });
   });
 
-  dialect("sqlite", () => {
+  dialect(["sqlite", "postgresql"], () => {
     it("supports assigning list of values to list of columns", () => {
       testWc("UPDATE tbl SET (id, name) = (1, 'John')");
     });
