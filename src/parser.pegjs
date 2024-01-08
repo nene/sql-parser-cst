@@ -1325,6 +1325,7 @@ lock_in_share_mode_clause
 insert_stmt
   = withCls:(with_clause __)?
     insertCls:insert_clause
+    overridingCls:(__ overriding_clause)?
     source:(__ insert_source)
     aliasCls:(__ row_alias_clause)?
     updateCls:(__ on_duplicate_key_update_clause)?
@@ -1335,6 +1336,7 @@ insert_stmt
         clauses: [
           read(withCls),
           insertCls,
+          read(overridingCls),
           read(source),
           read(aliasCls),
           read(updateCls),
@@ -1379,6 +1381,14 @@ or_alternate_action
 table_or_explicit_alias
   = t:entity_name alias:(__ explicit_alias)? {
     return loc(createAlias(t, alias));
+  }
+
+overriding_clause
+  = kw:(OVERRIDING __ (SYSTEM / USER) __ VALUE) &postgres {
+    return loc({
+      type: "overriding_clause",
+      overridingKw: read(kw),
+    });
   }
 
 insert_source
@@ -6231,6 +6241,7 @@ OUT                 = kw:"OUT"i                 !ident_part { return loc(createK
 OUTER               = kw:"OUTER"i               !ident_part { return loc(createKeyword(kw)); }
 OUTFILE             = kw:"OUTFILE"i             !ident_part { return loc(createKeyword(kw)); }
 OVER                = kw:"OVER"i                !ident_part { return loc(createKeyword(kw)); }
+OVERRIDING          = kw:"OVERRIDING"i          !ident_part { return loc(createKeyword(kw)); }
 OVERWRITE           = kw:"OVERWRITE"i           !ident_part { return loc(createKeyword(kw)); }
 PACK_KEYS           = kw:"PACK_KEYS"i           !ident_part { return loc(createKeyword(kw)); }
 PARSER              = kw:"PARSER"i              !ident_part { return loc(createKeyword(kw)); }

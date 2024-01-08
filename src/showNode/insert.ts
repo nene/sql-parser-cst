@@ -18,7 +18,10 @@ export const insertMap: FullTransformMap<string, AllInsertNodes> = {
   values_clause: (node) => show([node.valuesKw, node.values]),
   default_values: (node) => show(node.defaultValuesKw),
   default: (node) => show(node.defaultKw),
+  // OVERRIDING
+  overriding_clause: (node) => show(node.overridingKw),
 
+  // ON CONFLICT
   upsert_clause: (node) =>
     show([
       node.onConflictKw,

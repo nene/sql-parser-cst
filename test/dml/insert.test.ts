@@ -114,6 +114,13 @@ describe("insert into", () => {
     });
   });
 
+  dialect("postgresql", () => {
+    it("supports OVERRIDING clause", () => {
+      testWc("INSERT INTO tbl OVERRIDING SYSTEM VALUE VALUES (1)");
+      testWc("INSERT INTO tbl OVERRIDING USER VALUE VALUES (1)");
+    });
+  });
+
   dialect(["sqlite", "postgresql"], () => {
     describe("ON CONFLICT clause", () => {
       it("supports ON CONFLICT DO NOTHING", () => {

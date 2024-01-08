@@ -26,6 +26,7 @@ export type AllInsertNodes =
   | ValuesClause
   | DefaultValues
   | Default
+  | OverridingClause
   | RowAliasClause
   | UpsertClause
   | ConflictTargetOnConstraint
@@ -40,6 +41,7 @@ export interface InsertStmt extends BaseNode {
     | WithClause
     | InsertClause
     | (ValuesClause | SubSelect | DefaultValues | SetClause)
+    | OverridingClause
     | RowAliasClause
     | UpsertClause
     | OnDuplicateKeyUpdateClause
@@ -78,6 +80,16 @@ export interface DefaultValues extends BaseNode {
 export interface Default extends BaseNode {
   type: "default";
   defaultKw: Keyword<"DEFAULT">;
+}
+
+// PostgreSQL
+export interface OverridingClause extends BaseNode {
+  type: "overriding_clause";
+  overridingKw: [
+    Keyword<"OVERRIDING">,
+    Keyword<"SYSTEM" | "USER">,
+    Keyword<"VALUE">
+  ];
 }
 
 // SQLite, PostgreSQL
