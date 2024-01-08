@@ -8,11 +8,10 @@ import {
   OrderByClause,
   PartitionedTable,
   RelationExpr,
-  ReturningClause,
   WhereClause,
   WithClause,
 } from "./Select";
-import { WhereCurrentOfClause } from "./OtherClauses";
+import { ReturningClause, WhereCurrentOfClause } from "./OtherClauses";
 
 export type AllDeleteNodes = DeleteStmt | DeleteClause;
 

@@ -85,7 +85,6 @@ export type AllSelectNodes =
   | SortDirectionAsc
   | SortDirectionDesc
   | SortDirectionUsingOperator
-  | ReturningClause
   | IntoTableClause
   | IntoVariablesClause
   | IntoDumpfileClause
@@ -649,12 +648,6 @@ export interface QualifyClause extends BaseNode {
   type: "qualify_clause";
   qualifyKw: Keyword<"QUALIFY">;
   expr: Expr;
-}
-
-export interface ReturningClause extends BaseNode {
-  type: "returning_clause";
-  returningKw: Keyword<"RETURNING">;
-  columns: ListExpr<Expr | Alias<Expr>>;
 }
 
 // PostgreSQL

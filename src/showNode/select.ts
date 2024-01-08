@@ -144,8 +144,6 @@ export const selectMap: FullTransformMap<string, AllSelectNodes> = {
   offset_clause: (node) => show([node.offsetKw, node.offset, node.rowsKw]),
   fetch_clause: (node) =>
     show([node.fetchKw, node.count, node.rowsKw, node.withTiesKw]),
-  // returning clause
-  returning_clause: (node) => show([node.returningKw, node.columns]),
   // INTO ...
   into_table_clause: (node) =>
     show([

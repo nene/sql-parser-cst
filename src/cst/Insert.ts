@@ -10,7 +10,6 @@ import {
 import { Alias } from "./Alias";
 import {
   PartitionedTable,
-  ReturningClause,
   SortSpecification,
   SubSelect,
   WhereClause,
@@ -18,6 +17,7 @@ import {
 } from "./Select";
 import { ColumnAssignment, SetClause } from "./Update";
 import { MysqlModifier } from "./dialects/Mysql";
+import { ReturningClause } from "./OtherClauses";
 
 export type AllInsertNodes =
   | InsertStmt

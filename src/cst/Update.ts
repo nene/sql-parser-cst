@@ -8,10 +8,10 @@ import {
   LimitClause,
   OrderByClause,
   RelationExpr,
-  ReturningClause,
   WhereClause,
   WithClause,
 } from "./Select";
+import { ReturningClause } from "./OtherClauses";
 
 export type AllUpdateNodes =
   | UpdateStmt
