@@ -1142,6 +1142,19 @@ returning_clause
   }
 
 /**
+ * { UPDATE | DELETE } ... WHERE CURRENT OF cursor
+ * --------------------------------------------------------------------------------------
+ */
+where_current_of_clause
+  = kw:(WHERE __ CURRENT __ OF __) cursor:ident {
+    return loc({
+      type: "where_current_of_clause",
+      whereCurrentOfKw: read(kw),
+      cursor,
+    });
+  }
+
+/**
  * SELECT .. INTO
  * --------------------------------------------------------------------------------------
  */
@@ -1580,15 +1593,6 @@ other_delete_clause
   / limit_clause
   / x:from_using_clause (&mysql / &postgres) { return x; }
   / x:from_clause &mysql { return x; }
-
-where_current_of_clause
-  = kw:(WHERE __ CURRENT __ OF __) cursor:ident {
-    return loc({
-      type: "where_current_of_clause",
-      whereCurrentOfKw: read(kw),
-      cursor,
-    });
-  }
 
 /**
  * ------------------------------------------------------------------------------------ *
