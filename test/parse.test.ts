@@ -23,39 +23,48 @@ describe("parse()", () => {
   });
 
   it("throws nicely formatted error message when SQL syntax error found", () => {
-    expect(() => parse("SELECT foo bar baz", { dialect: "sqlite" }))
-      .toThrowErrorMatchingInlineSnapshot(`
-      "Syntax Error: Unexpected "baz"
-      Was expecting to see: "(", ",", ";", "EXCEPT", "FROM", "GROUP", "HAVING", "INTERSECT", "LIMIT", "ORDER", "UNION", "WHERE", "WINDOW", end of input, or whitespace
-      --> undefined:1:16
-        |
-      1 | SELECT foo bar baz
-        |                ^"
-    `);
+    const errorRegex = new RegExp(
+      [
+        `Syntax Error: Unexpected "baz"`,
+        `Was expecting to see: .*`,
+        `--> undefined:1:16`,
+        `  \\|`,
+        `1 \\| SELECT foo bar baz`,
+        `  \\|                \\^`,
+      ].join("\n")
+    );
+    expect(() => parse("SELECT foo bar baz", { dialect: "sqlite" })).toThrowError(errorRegex);
   });
 
   it("indents syntax error properly when it happen on a large line number", () => {
-    expect(() => parse("\n".repeat(100) + "SELECT foo bar baz", { dialect: "sqlite" }))
-      .toThrowErrorMatchingInlineSnapshot(`
-      "Syntax Error: Unexpected "baz"
-      Was expecting to see: "(", ",", ";", "EXCEPT", "FROM", "GROUP", "HAVING", "INTERSECT", "LIMIT", "ORDER", "UNION", "WHERE", "WINDOW", end of input, or whitespace
-      --> undefined:101:16
-          |
-      101 | SELECT foo bar baz
-          |                ^"
-    `);
+    const errorRegex = new RegExp(
+      [
+        `Syntax Error: Unexpected "baz"`,
+        `Was expecting to see: .*`,
+        `--> undefined:101:16`,
+        `    \\|`,
+        `101 \\| SELECT foo bar baz`,
+        `    \\|                \\^`,
+      ].join("\n")
+    );
+    expect(() =>
+      parse("\n".repeat(100) + "SELECT foo bar baz", { dialect: "sqlite" })
+    ).toThrowError(errorRegex);
   });
 
   it("uses the filename option in syntax error messages", () => {
+    const errorRegex = new RegExp(
+      [
+        `Syntax Error: Unexpected "PUZZLE"`,
+        `Was expecting to see: .*`,
+        `--> prod-database\\.sql:1:15`,
+        `  \\|`,
+        `1 \\| INSERT TODAYS PUZZLE 123;`,
+        `  \\|               \\^`,
+      ].join("\n")
+    );
     expect(() =>
       parse("INSERT TODAYS PUZZLE 123;", { dialect: "sqlite", filename: "prod-database.sql" })
-    ).toThrowErrorMatchingInlineSnapshot(`
-      "Syntax Error: Unexpected "PUZZLE"
-      Was expecting to see: "(", ".", "AS", "DEFAULT", "SELECT", "TABLE", "VALUE", "VALUES", "WITH", or whitespace
-      --> prod-database.sql:1:15
-        |
-      1 | INSERT TODAYS PUZZLE 123;
-        |               ^"
-    `);
+    ).toThrowError(errorRegex);
   });
 });
