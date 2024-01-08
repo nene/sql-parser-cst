@@ -28,6 +28,7 @@ export type AllInsertNodes =
   | Default
   | RowAliasClause
   | UpsertClause
+  | ConflictTargetOnConstraint
   | UpsertActionNothing
   | UpsertActionUpdate
   | OnDuplicateKeyUpdateClause;
@@ -83,10 +84,18 @@ export interface Default extends BaseNode {
 export interface UpsertClause extends BaseNode {
   type: "upsert_clause";
   onConflictKw: [Keyword<"ON">, Keyword<"CONFLICT">];
-  conflictTarget?: ParenExpr<ListExpr<SortSpecification | Identifier>>;
+  conflictTarget?:
+    | ConflictTargetOnConstraint
+    | ParenExpr<ListExpr<SortSpecification | Identifier>>;
   where?: WhereClause;
   doKw: Keyword<"DOR">;
   action: UpsertActionNothing | UpsertActionUpdate;
+}
+
+export interface ConflictTargetOnConstraint extends BaseNode {
+  type: "conflict_target_on_constraint";
+  onConstraintKw: [Keyword<"ON">, Keyword<"CONSTRAINT">];
+  constraint: Identifier;
 }
 
 // SQLite, PostgreSQL

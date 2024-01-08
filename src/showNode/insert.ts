@@ -27,6 +27,8 @@ export const insertMap: FullTransformMap<string, AllInsertNodes> = {
       node.doKw,
       node.action,
     ]),
+  conflict_target_on_constraint: (node) =>
+    show([node.onConstraintKw, node.constraint]),
   upsert_action_nothing: (node) => show(node.nothingKw),
   upsert_action_update: (node) => show([node.updateKw, node.set, node.where]),
 
