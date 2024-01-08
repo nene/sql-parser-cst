@@ -114,8 +114,8 @@ describe("insert into", () => {
     });
   });
 
-  dialect("sqlite", () => {
-    describe("upsert clause", () => {
+  dialect(["sqlite", "postgresql"], () => {
+    describe("ON CONFLICT clause", () => {
       it("supports ON CONFLICT DO NOTHING", () => {
         testWc("INSERT INTO tbl VALUES (1) ON CONFLICT DO NOTHING");
       });

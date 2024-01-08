@@ -79,7 +79,7 @@ export interface Default extends BaseNode {
   defaultKw: Keyword<"DEFAULT">;
 }
 
-// only in SQLite
+// SQLite, PostgreSQL
 export interface UpsertClause extends BaseNode {
   type: "upsert_clause";
   onConflictKw: [Keyword<"ON">, Keyword<"CONFLICT">];
@@ -89,11 +89,13 @@ export interface UpsertClause extends BaseNode {
   action: UpsertActionNothing | UpsertActionUpdate;
 }
 
+// SQLite, PostgreSQL
 export interface UpsertActionNothing extends BaseNode {
   type: "upsert_action_nothing";
   nothingKw: Keyword<"NOTHING">;
 }
 
+// SQLite, PostgreSQL
 export interface UpsertActionUpdate extends BaseNode {
   type: "upsert_action_update";
   updateKw: Keyword<"UPDATE">;

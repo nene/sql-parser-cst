@@ -1428,18 +1428,18 @@ default_values
     }
 
 upsert_clause
-  = &sqlite
-    kw:(ON __ CONFLICT __) columns:(paren$list$sort_specification __)? where:(where_clause __)?
-    doKw:DO action:(__ upsert_action) {
-    return loc({
-      type: "upsert_clause",
-      onConflictKw: read(kw),
-      columns: read(columns),
-      where: read(where),
-      doKw,
-      action: read(action),
-    });
-  }
+  = kw:(ON __ CONFLICT __) columns:(paren$list$sort_specification __)? where:(where_clause __)?
+    doKw:DO action:(__ upsert_action)
+    (&sqlite / &postgres) {
+      return loc({
+        type: "upsert_clause",
+        onConflictKw: read(kw),
+        columns: read(columns),
+        where: read(where),
+        doKw,
+        action: read(action),
+      });
+    }
 
 upsert_action
   = kw:NOTHING {
