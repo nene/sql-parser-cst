@@ -151,6 +151,14 @@ describe("insert into", () => {
           );
         });
 
+        it("supports ON CONFLICT (func())", () => {
+          testWc("INSERT INTO tbl VALUES (1) ON CONFLICT (func() ASC, fn2()) DO NOTHING");
+        });
+
+        it("supports ON CONFLICT ((expr))", () => {
+          testWc("INSERT INTO tbl VALUES (1) ON CONFLICT ((x + 8) ASC, (foo OR bar)) DO NOTHING");
+        });
+
         it("supports ON CONFLICT ON CONSTRAINT", () => {
           testWc("INSERT INTO tbl VALUES (1) ON CONFLICT ON CONSTRAINT tbl_pkey DO NOTHING");
         });
