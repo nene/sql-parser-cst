@@ -1,4 +1,4 @@
-import { dialect, testWc } from "../test_utils";
+import { dialect, parseStmt, testWc } from "../test_utils";
 
 describe("update", () => {
   it("supports UPDATE .. SET without where", () => {
@@ -76,6 +76,25 @@ describe("update", () => {
   dialect(["sqlite", "postgresql"], () => {
     it("supports assigning list of values to list of columns", () => {
       testWc("UPDATE tbl SET (id, name) = (1, 'John')");
+    });
+  });
+  dialect("postgresql", () => {
+    it("supports assigning ROW constructor to list of values", () => {
+      testWc("UPDATE tbl SET (id, name) = ROW (1, 'John')");
+      testWc("UPDATE tbl SET (id, name) = ROW (1, DEFAULT)");
+    });
+
+    it("correctly parses assigning of ROW constructor", () => {
+      const stmt = parseStmt("UPDATE tbl SET (a, b) = ROW (1, 2)");
+      if (stmt.type !== "update_stmt") {
+        throw new Error("Expected update_stmt");
+      }
+      const set = stmt.clauses[1];
+      if (set.type !== "set_clause") {
+        throw new Error("Expected set_clause");
+      }
+      const row = set.assignments.items[0].expr;
+      expect(row.type).toBe("row_constructor");
     });
   });
 
