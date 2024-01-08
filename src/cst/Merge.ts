@@ -1,7 +1,7 @@
 import { Alias } from "./Alias";
 import { BaseNode, Keyword } from "./Base";
 import { Expr, Identifier, ListExpr, ParenExpr, EntityName } from "./Expr";
-import { DefaultValues, ValuesClause } from "./Insert";
+import { DefaultValues, OverridingClause, ValuesClause } from "./Insert";
 import { SelectStmt, WithClause } from "./Select";
 import { SetClause } from "./Update";
 
@@ -82,7 +82,12 @@ export interface MergeActionInsert extends BaseNode {
   type: "merge_action_insert";
   insertKw: Keyword<"INSERT">;
   columns?: ParenExpr<ListExpr<Identifier>>;
-  clauses: (ValuesClause | DefaultValues | MergeActionInsertRowClause)[];
+  clauses: (
+    | OverridingClause
+    | ValuesClause
+    | DefaultValues
+    | MergeActionInsertRowClause
+  )[];
 }
 
 // BigQuery

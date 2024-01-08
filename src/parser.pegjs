@@ -1733,12 +1733,16 @@ merge_action_update
 
 merge_action_insert
   = insertKw:(INSERT __) columns:(paren$list$column __)?
+    overriding:(overriding_clause __)?
     values:(values_clause / default_values / merge_action_insert_row_clause) {
       return loc({
         type: "merge_action_insert",
         insertKw: read(insertKw),
         columns: read(columns),
-        clauses: [values],
+        clauses: [
+          read(overriding),
+          values
+        ].filter(identity),
       });
     }
 

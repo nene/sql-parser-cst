@@ -105,6 +105,19 @@ describe("merge into", () => {
         it("supports INSERT DEFAULT VALUES", () => {
           testWc("MERGE INTO foo USING bar ON x=y WHEN NOT MATCHED THEN INSERT DEFAULT VALUES");
         });
+
+        it("supports INSERT OVERRIDING SYSTEM/USER VALUE", () => {
+          testWc(`
+            MERGE INTO foo USING bar ON x=y
+            WHEN NOT MATCHED THEN
+            INSERT OVERRIDING SYSTEM VALUE VALUES (1, 2)
+          `);
+          testWc(`
+            MERGE INTO foo USING bar ON x=y
+            WHEN NOT MATCHED THEN
+            INSERT OVERRIDING USER VALUE VALUES (1, 2)
+          `);
+        });
       });
 
       dialect("bigquery", () => {
