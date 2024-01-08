@@ -37,7 +37,8 @@
     "perf:paren": "yarn ts-node perf/perf-test.ts paren",
     "perf:list": "yarn ts-node perf/perf-test.ts list",
     "perf:select": "yarn ts-node perf/perf-test.ts select",
-    "lint": "eslint src test scripts perf"
+    "lint": "eslint src test scripts perf",
+    "ts:check": "tsc --noEmit"
   },
   "devDependencies": {
     "@types/benchmark": "^2.1.2",
