@@ -10,6 +10,10 @@ describe("update", () => {
     testWc("UPDATE tbl SET x=1, y=2, z=3 WHERE id = 8");
   });
 
+  it("supports assignment of subselect", () => {
+    testWc("UPDATE tbl SET x = (SELECT 1) WHERE id = 3");
+  });
+
   // This is seemingly ambiguous syntax,
   // which was explicitly not supported in the original parser code.
   // But there's actually no ambiguity and its supported by actual databases.
