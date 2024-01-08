@@ -45,20 +45,26 @@ describe("merge into", () => {
         testWc("MERGE INTO foo USING bar ON x=y WHEN NOT MATCHED AND col>10 THEN DELETE");
       });
 
-      it("supports WHEN NOT MATCHED BY TARGET", () => {
-        testWc("MERGE INTO foo USING bar ON x=y WHEN NOT MATCHED BY TARGET THEN DELETE");
-      });
+      dialect("bigquery", () => {
+        it("supports WHEN NOT MATCHED BY TARGET", () => {
+          testWc("MERGE INTO foo USING bar ON x=y WHEN NOT MATCHED BY TARGET THEN DELETE");
+        });
 
-      it("supports WHEN NOT MATCHED BY TARGET AND condition", () => {
-        testWc("MERGE INTO foo USING bar ON x=y WHEN NOT MATCHED BY TARGET AND col>10 THEN DELETE");
-      });
+        it("supports WHEN NOT MATCHED BY TARGET AND condition", () => {
+          testWc(
+            "MERGE INTO foo USING bar ON x=y WHEN NOT MATCHED BY TARGET AND col>10 THEN DELETE"
+          );
+        });
 
-      it("supports WHEN NOT MATCHED BY SOURCE", () => {
-        testWc("MERGE INTO foo USING bar ON x=y WHEN NOT MATCHED BY SOURCE THEN DELETE");
-      });
+        it("supports WHEN NOT MATCHED BY SOURCE", () => {
+          testWc("MERGE INTO foo USING bar ON x=y WHEN NOT MATCHED BY SOURCE THEN DELETE");
+        });
 
-      it("supports WHEN NOT MATCHED BY SOURCE AND condition", () => {
-        testWc("MERGE INTO foo USING bar ON x=y WHEN NOT MATCHED BY SOURCE AND col>10 THEN DELETE");
+        it("supports WHEN NOT MATCHED BY SOURCE AND condition", () => {
+          testWc(
+            "MERGE INTO foo USING bar ON x=y WHEN NOT MATCHED BY SOURCE AND col>10 THEN DELETE"
+          );
+        });
       });
     });
 
@@ -81,9 +87,11 @@ describe("merge into", () => {
         );
       });
 
-      it("supports INSERT ROW", () => {
-        testWc("MERGE INTO foo USING bar ON x=y WHEN NOT MATCHED THEN INSERT ROW");
-        testWc("MERGE INTO foo USING bar ON x=y WHEN NOT MATCHED THEN INSERT (col1, col2) ROW");
+      dialect("bigquery", () => {
+        it("supports INSERT ROW", () => {
+          testWc("MERGE INTO foo USING bar ON x=y WHEN NOT MATCHED THEN INSERT ROW");
+          testWc("MERGE INTO foo USING bar ON x=y WHEN NOT MATCHED THEN INSERT (col1, col2) ROW");
+        });
       });
     });
 

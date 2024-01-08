@@ -1721,7 +1721,7 @@ merge_action_insert
   }
 
 merge_action_insert_row_clause
-  = rowKw:ROW {
+  = rowKw:ROW &bigquery {
     return loc({ type: "merge_action_insert_row_clause", rowKw });
   }
 
