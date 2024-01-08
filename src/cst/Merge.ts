@@ -14,6 +14,7 @@ export type AllMergeNodes =
   | MergeActionInsert
   | MergeActionInsertRowClause;
 
+// BigQuery, PostgreSQL
 export interface MergeStmt extends BaseNode {
   type: "merge_stmt";
   mergeKw: Keyword<"MERGE">;

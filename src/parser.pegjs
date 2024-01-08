@@ -95,7 +95,7 @@ dml_statement
   / update_stmt
   / delete_stmt
   / x:truncate_stmt (&bigquery / &mysql / &postgres) { return x; }
-  / x:merge_stmt &bigquery { return x; }
+  / x:merge_stmt (&bigquery / &postgres) { return x; }
 
 empty
   = (&. / end_of_file) {

@@ -1,7 +1,7 @@
 import { dialect, parse, testWc } from "../test_utils";
 
 describe("merge into", () => {
-  dialect("bigquery", () => {
+  dialect(["bigquery", "postgresql"], () => {
     it("supports MERGE", () => {
       testWc("MERGE foo USING bar ON x = y WHEN MATCHED THEN DELETE");
     });
@@ -85,7 +85,7 @@ describe("merge into", () => {
         ON T.product = S.product
         WHEN NOT MATCHED AND quantity < 20 THEN
           INSERT(product, quantity, supply_constrained, comments)
-          VALUES(product, quantity, true, ['2016-01-01', 'comment1'])
+          VALUES(product, quantity, true, NULL)
         WHEN NOT MATCHED THEN
           INSERT(product, quantity, supply_constrained)
           VALUES(product, quantity, false)
@@ -96,12 +96,6 @@ describe("merge into", () => {
   dialect(["mysql", "mariadb", "sqlite"], () => {
     it("does not support MERGE statement", () => {
       expect(() => parse("MERGE foo USING bar ON x = y WHEN MATCHED THEN DELETE")).toThrowError();
-    });
-  });
-
-  dialect("postgresql", () => {
-    it.skip("TODO:postgres", () => {
-      expect(true).toBe(true);
     });
   });
 });
