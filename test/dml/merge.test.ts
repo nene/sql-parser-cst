@@ -93,6 +93,13 @@ describe("merge into", () => {
           testWc("MERGE INTO foo USING bar ON x=y WHEN NOT MATCHED THEN INSERT (col1, col2) ROW");
         });
       });
+
+      dialect("postgresql", () => {
+        it("supports DO NOTHING", () => {
+          testWc("MERGE INTO foo USING bar ON x=y WHEN MATCHED THEN DO NOTHING");
+          testWc("MERGE INTO foo USING bar ON x=y WHEN NOT MATCHED THEN DO NOTHING");
+        });
+      });
     });
 
     it("supports multiple when-clauses", () => {

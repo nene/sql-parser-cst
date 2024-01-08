@@ -1689,9 +1689,18 @@ merge_when_condition
   }
 
 merge_action
-  = merge_action_delete
+  = x:merge_action_do_nothing &postgres { return x; }
+  / merge_action_delete
   / merge_action_update
   / merge_action_insert
+
+merge_action_do_nothing
+  = kw:(DO __ NOTHING) {
+    return loc({
+      type: "merge_action_do_nothing",
+      doNothingKw: read(kw),
+    });
+  }
 
 merge_action_delete
   = kw:DELETE {

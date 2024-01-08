@@ -9,6 +9,7 @@ export type AllMergeNodes =
   | MergeStmt
   | MergeWhenClause
   | MergeWhenCondition
+  | MergeActionDoNothing
   | MergeActionDelete
   | MergeActionUpdate
   | MergeActionInsert
@@ -39,7 +40,11 @@ export interface MergeWhenClause extends BaseNode {
     | [Keyword<"BY">, Keyword<"SOURCE">];
   condition?: MergeWhenCondition;
   thenKw: Keyword<"THEN">;
-  action: MergeActionDelete | MergeActionUpdate | MergeActionInsert;
+  action:
+    | MergeActionDoNothing
+    | MergeActionDelete
+    | MergeActionUpdate
+    | MergeActionInsert;
 }
 
 export interface MergeWhenCondition extends BaseNode {
@@ -48,17 +53,26 @@ export interface MergeWhenCondition extends BaseNode {
   expr: Expr;
 }
 
+// PostgreSQL
+export interface MergeActionDoNothing extends BaseNode {
+  type: "merge_action_do_nothing";
+  doNothingKw: [Keyword<"DO">, Keyword<"NOTHING">];
+}
+
+// PostgreSQL, BigQuery
 export interface MergeActionDelete extends BaseNode {
   type: "merge_action_delete";
   deleteKw: Keyword<"DELETE">;
 }
 
+// PostgreSQL, BigQuery
 export interface MergeActionUpdate extends BaseNode {
   type: "merge_action_update";
   updateKw: Keyword<"UPDATE">;
   set: SetClause;
 }
 
+// PostgreSQL, BigQuery
 export interface MergeActionInsert extends BaseNode {
   type: "merge_action_insert";
   insertKw: Keyword<"INSERT">;
