@@ -129,6 +129,15 @@ describe("merge into", () => {
           VALUES(product, quantity, false)
       `);
     });
+
+    dialect("postgresql", () => {
+      it("supports WITH clause", () => {
+        testWc(`
+          WITH bar AS (SELECT * FROM baz)
+          MERGE INTO foo USING bar ON x = y WHEN MATCHED THEN DELETE
+        `);
+      });
+    });
   });
 
   dialect(["mysql", "mariadb", "sqlite"], () => {

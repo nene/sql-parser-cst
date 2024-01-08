@@ -1647,12 +1647,25 @@ truncate_stmt
  * ------------------------------------------------------------------------------------ *
  */
 merge_stmt
-  = mergeKw:(MERGE __) intoKw:(INTO __)? target:(alias$relation_expr __)
-    usingKw:(USING __) source:((alias$relation_expr / alias$paren$compound_select_stmt) __)
-    onKw:(ON __) condition:expr
+  = withClause:(with_clause __)?
+    mergeClause:merge_clause
     clauses:(__ merge_when_clause)+ {
       return loc({
         type: "merge_stmt",
+        clauses: [
+          read(withClause),
+          read(mergeClause),
+          ...clauses.map(read),
+        ].filter(identity),
+      });
+    }
+
+merge_clause
+  = mergeKw:(MERGE __) intoKw:(INTO __)? target:(alias$relation_expr __)
+    usingKw:(USING __) source:((alias$relation_expr / alias$paren$compound_select_stmt) __)
+    onKw:(ON __) condition:expr {
+      return loc({
+        type: "merge_clause",
         mergeKw: read(mergeKw),
         intoKw: read(intoKw),
         target: read(target),
@@ -1660,7 +1673,6 @@ merge_stmt
         source: read(source),
         onKw: read(onKw),
         condition,
-        clauses: clauses.map(read),
       });
     }
 

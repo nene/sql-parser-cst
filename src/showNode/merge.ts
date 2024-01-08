@@ -3,7 +3,8 @@ import { AllMergeNodes } from "../cst/Node";
 import { FullTransformMap } from "../cstTransformer";
 
 export const mergeMap: FullTransformMap<string, AllMergeNodes> = {
-  merge_stmt: (node) =>
+  merge_stmt: (node) => show(node.clauses),
+  merge_clause: (node) =>
     show([
       node.mergeKw,
       node.intoKw,
@@ -12,7 +13,6 @@ export const mergeMap: FullTransformMap<string, AllMergeNodes> = {
       node.source,
       node.onKw,
       node.condition,
-      node.clauses,
     ]),
   merge_when_clause: (node) =>
     show([
