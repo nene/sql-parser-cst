@@ -46,7 +46,7 @@ describe("update", () => {
     });
   });
 
-  dialect(["mysql", "mariadb"], () => {
+  dialect(["mysql", "mariadb", "postgresql"], () => {
     it("supports setting explicit default values", () => {
       testWc("UPDATE person SET age = DEFAULT");
     });

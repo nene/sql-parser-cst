@@ -1540,8 +1540,8 @@ column_assignment
   }
 
 column_value
-  = expr
-  / x:default &mysql { return x; }
+  = x:default (&mysql / &postgres) { return x; }
+  / expr
 
 /**
  * ------------------------------------------------------------------------------------ *
