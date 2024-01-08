@@ -101,6 +101,12 @@ describe("merge into", () => {
         );
       });
 
+      dialect("postgresql", () => {
+        it("supports INSERT DEFAULT VALUES", () => {
+          testWc("MERGE INTO foo USING bar ON x=y WHEN NOT MATCHED THEN INSERT DEFAULT VALUES");
+        });
+      });
+
       dialect("bigquery", () => {
         it("supports INSERT ROW", () => {
           testWc("MERGE INTO foo USING bar ON x=y WHEN NOT MATCHED THEN INSERT ROW");
