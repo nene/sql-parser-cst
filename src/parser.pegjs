@@ -1573,12 +1573,22 @@ delete_clause_table
   / alias$relation_expr
 
 other_delete_clause
-  = where_clause
+  = where_current_of_clause
+  / where_clause
   / returning_clause
   / order_by_clause
   / limit_clause
   / x:from_using_clause (&mysql / &postgres) { return x; }
   / x:from_clause &mysql { return x; }
+
+where_current_of_clause
+  = kw:(WHERE __ CURRENT __ OF __) cursor:ident {
+    return loc({
+      type: "where_current_of_clause",
+      whereCurrentOfKw: read(kw),
+      cursor,
+    });
+  }
 
 /**
  * ------------------------------------------------------------------------------------ *

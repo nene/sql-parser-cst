@@ -10,6 +10,7 @@ import {
   RelationExpr,
   ReturningClause,
   WhereClause,
+  WhereCurrentOfClause,
   WithClause,
 } from "./Select";
 
@@ -22,6 +23,7 @@ export interface DeleteStmt extends BaseNode {
     | WithClause
     | DeleteClause
     | WhereClause
+    | WhereCurrentOfClause
     | ReturningClause
     | OrderByClause
     | LimitClause

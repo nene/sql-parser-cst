@@ -40,6 +40,7 @@ export type AllSelectNodes =
   | ReplaceColumns
   | FromClause
   | WhereClause
+  | WhereCurrentOfClause
   | GroupByClause
   | GroupByRollup
   | GroupByCube
@@ -268,6 +269,13 @@ export interface WhereClause extends BaseNode {
   type: "where_clause";
   whereKw: Keyword<"WHERE">;
   expr: Expr;
+}
+
+// PostgreSQL
+export interface WhereCurrentOfClause extends BaseNode {
+  type: "where_current_of_clause";
+  whereCurrentOfKw: [Keyword<"WHERE">, Keyword<"CURRENT">, Keyword<"OF">];
+  cursor: Identifier;
 }
 
 export interface GroupByClause extends BaseNode {

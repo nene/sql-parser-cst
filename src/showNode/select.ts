@@ -99,6 +99,7 @@ export const selectMap: FullTransformMap<string, AllSelectNodes> = {
   sort_direction_using_operator: (node) => show([node.usingKw, node.operator]),
   // WHERE .. GROUP BY .. HAVING .. QUALIFY ... ORDER BY .. PARTITION BY .. CLUSTER BY
   where_clause: (node) => show([node.whereKw, node.expr]),
+  where_current_of_clause: (node) => show([node.whereCurrentOfKw, node.cursor]),
   group_by_clause: (node) =>
     show([node.groupByKw, node.distinctKw, node.columns, node.withRollupKw]),
   group_by_rollup: (node) => show([node.rollupKw, node.columns]),

@@ -107,4 +107,10 @@ describe("delete from", () => {
       });
     });
   });
+
+  dialect("postgresql", () => {
+    it("supports WHERE CURRENT OF", () => {
+      testWc("DELETE FROM tbl WHERE CURRENT OF my_cursor");
+    });
+  });
 });
