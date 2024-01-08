@@ -28,6 +28,20 @@ describe("merge into", () => {
       testWc("MERGE INTO foo USING (SELECT * FROM bar) t ON x = y WHEN MATCHED THEN DELETE");
     });
 
+    dialect("postgresql", () => {
+      it("supports ONLY and * on target table", () => {
+        testWc("MERGE INTO ONLY foo USING bar ON x = y WHEN MATCHED THEN DELETE");
+        testWc("MERGE INTO foo * USING bar ON x = y WHEN MATCHED THEN DELETE");
+        testWc("MERGE INTO foo * AS f USING bar ON x = y WHEN MATCHED THEN DELETE");
+      });
+
+      it("supports ONLY and * on source table", () => {
+        testWc("MERGE INTO foo USING ONLY bar ON x = y WHEN MATCHED THEN DELETE");
+        testWc("MERGE INTO foo USING bar * ON x = y WHEN MATCHED THEN DELETE");
+        testWc("MERGE INTO foo USING bar * AS b ON x = y WHEN MATCHED THEN DELETE");
+      });
+    });
+
     describe("when condition", () => {
       it("supports WHEN MATCHED", () => {
         testWc("MERGE INTO foo USING bar ON x=y WHEN MATCHED THEN DELETE");
