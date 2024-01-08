@@ -1577,7 +1577,8 @@ other_delete_clause
   / returning_clause
   / order_by_clause
   / limit_clause
-  / &mysql x:(from_clause / from_using_clause) { return x; }
+  / x:from_using_clause (&mysql / &postgres) { return x; }
+  / x:from_clause &mysql { return x; }
 
 /**
  * ------------------------------------------------------------------------------------ *
