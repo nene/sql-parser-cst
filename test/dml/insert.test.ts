@@ -179,8 +179,9 @@ describe("insert into", () => {
 
   dialect(["sqlite", "mariadb", "postgresql"], () => {
     it("supports INSERT ... RETURNING ...", () => {
-      testWc("INSERT INTO tbl (col) VALUES (1) RETURNING col");
+      testWc("INSERT INTO tbl (col) VALUES (1) RETURNING *");
       testWc("INSERT INTO tbl (col1, col2) VALUES (1) RETURNING col2, col1");
+      testWc("INSERT INTO tbl (col1, col2) VALUES (1) RETURNING col2 AS a, col1 b");
     });
   });
 

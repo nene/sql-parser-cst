@@ -88,10 +88,11 @@ describe("update", () => {
     });
   });
 
-  dialect("sqlite", () => {
+  dialect(["sqlite", "postgresql"], () => {
     it("supports UPDATE ... RETURNING ...", () => {
-      testWc("UPDATE tbl SET col1 = 2 RETURNING col1, col2");
       testWc("UPDATE tbl SET col1 = 2 RETURNING *");
+      testWc("UPDATE tbl SET col1 = 2 RETURNING col1, col2");
+      testWc("UPDATE tbl SET col1 = 2 RETURNING col1 AS a, col2 b");
     });
   });
 
