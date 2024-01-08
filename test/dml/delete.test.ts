@@ -52,12 +52,15 @@ describe("delete from", () => {
     });
   });
 
-  dialect(["sqlite", "mysql", "mariadb"], () => {
+  dialect(["sqlite", "mysql", "mariadb", "postgresql"], () => {
     it("supports DELETE ... RETURNING ...", () => {
-      testWc("DELETE FROM tbl WHERE x > 0 RETURNING col1, col2");
       testWc("DELETE FROM tbl WHERE x > 0 RETURNING *");
+      testWc("DELETE FROM tbl WHERE x > 0 RETURNING col1, col2");
+      testWc("DELETE FROM tbl WHERE x > 0 RETURNING col1 AS a, col2 b");
     });
+  });
 
+  dialect(["sqlite", "mysql", "mariadb"], () => {
     it("supports DELETE ... LIMIT ...", () => {
       testWc("DELETE FROM tbl LIMIT 10");
     });
