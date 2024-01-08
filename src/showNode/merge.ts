@@ -27,7 +27,7 @@ export const mergeMap: FullTransformMap<string, AllMergeNodes> = {
   merge_action_do_nothing: (node) => show(node.doNothingKw),
   merge_action_delete: (node) => show([node.deleteKw]),
   merge_action_insert: (node) =>
-    show([node.insertKw, node.columns, node.values]),
+    show([node.insertKw, node.columns, node.clauses]),
   merge_action_update: (node) => show([node.updateKw, node.set]),
   merge_action_insert_row_clause: (node) => show(node.rowKw),
 };

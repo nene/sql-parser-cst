@@ -1738,7 +1738,7 @@ merge_action_insert
         type: "merge_action_insert",
         insertKw: read(insertKw),
         columns: read(columns),
-        values,
+        clauses: [values],
       });
     }
 

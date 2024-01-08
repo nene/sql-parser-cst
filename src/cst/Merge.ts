@@ -82,7 +82,7 @@ export interface MergeActionInsert extends BaseNode {
   type: "merge_action_insert";
   insertKw: Keyword<"INSERT">;
   columns?: ParenExpr<ListExpr<Identifier>>;
-  values: ValuesClause | DefaultValues | MergeActionInsertRowClause;
+  clauses: (ValuesClause | DefaultValues | MergeActionInsertRowClause)[];
 }
 
 // BigQuery
