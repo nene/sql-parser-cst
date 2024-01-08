@@ -82,7 +82,7 @@ describe("update", () => {
     });
   });
 
-  dialect(["sqlite", "bigquery"], () => {
+  dialect(["sqlite", "bigquery", "postgresql"], () => {
     it("supports UPDATE ... FROM ...", () => {
       testWc("UPDATE tbl SET col1 = 2 FROM foo JOIN bar USING (id) WHERE foo.age > 0");
     });
