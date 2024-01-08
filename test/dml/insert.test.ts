@@ -144,6 +144,14 @@ describe("insert into", () => {
         testWc("INSERT INTO tbl VALUES (1) ON CONFLICT (col1 ASC, col2 DESC) DO NOTHING");
       });
 
+      dialect("postgresql", () => {
+        it("supports ON CONFLICT (column ASC/DESC NULLS FIRST/LAST)", () => {
+          testWc(
+            "INSERT INTO tbl VALUES (1) ON CONFLICT (col1 ASC NULLS FIRST, col2 DESC NULLS LAST) DO NOTHING"
+          );
+        });
+      });
+
       it("supports multiple upsert clauses", () => {
         testWc(
           "INSERT INTO tbl VALUES (1) ON CONFLICT (col1) DO NOTHING ON CONFLICT (col2) DO UPDATE SET col2=0"
