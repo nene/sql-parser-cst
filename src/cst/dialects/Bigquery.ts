@@ -10,8 +10,9 @@ import {
   EntityName,
 } from "../Expr";
 import { StringLiteral } from "../Literal";
+import { ClusterByClause } from "../OtherClauses";
 import { AsClause, WithConnectionClause } from "../ProcClause";
-import { ClusterByClause, PartitionByClause, SubSelect } from "../Select";
+import { PartitionByClause, SubSelect } from "../Select";
 
 export type AllBigqueryNodes =
   | BigqueryOptions

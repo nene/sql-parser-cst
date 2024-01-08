@@ -14,12 +14,8 @@ import {
   FuncCall,
 } from "./Expr";
 import { AsClause, WithConnectionClause } from "./ProcClause";
-import {
-  ClusterByClause,
-  ForSystemTimeAsOfExpr,
-  PartitionByClause,
-  SubSelect,
-} from "./Select";
+import { ForSystemTimeAsOfExpr, PartitionByClause, SubSelect } from "./Select";
+import { ClusterByClause } from "./OtherClauses";
 
 export type AllCreateTableNodes =
   | CreateTableStmt

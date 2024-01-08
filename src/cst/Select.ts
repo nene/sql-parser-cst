@@ -51,7 +51,6 @@ export type AllSelectNodes =
   | WindowDefinition
   | OrderByClause
   | PartitionByClause
-  | ClusterByClause
   | LimitClause
   | LimitAll
   | LimitRowsExamined
@@ -338,13 +337,6 @@ export interface PartitionByClause extends BaseNode {
   type: "partition_by_clause";
   partitionByKw: [Keyword<"PARTITION">, Keyword<"BY">];
   specifications: ListExpr<Expr>;
-}
-
-// BigQuery
-export interface ClusterByClause extends BaseNode {
-  type: "cluster_by_clause";
-  clusterByKw: [Keyword<"CLUSTER">, Keyword<"BY">];
-  columns: ListExpr<Identifier>;
 }
 
 export interface LimitClause extends BaseNode {

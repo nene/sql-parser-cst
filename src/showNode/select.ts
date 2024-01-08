@@ -110,7 +110,6 @@ export const selectMap: FullTransformMap<string, AllSelectNodes> = {
     show([node.orderByKw, node.specifications, node.withRollupKw]),
   partition_by_clause: (node) =>
     show([node.partitionByKw, node.specifications]),
-  cluster_by_clause: (node) => show([node.clusterByKw, node.columns]),
   // WINDOW
   window_clause: (node) => show([node.windowKw, node.namedWindows]),
   named_window: (node) => show([node.name, node.asKw, node.window]),
