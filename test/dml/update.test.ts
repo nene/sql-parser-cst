@@ -104,4 +104,10 @@ describe("update", () => {
       testWc("UPDATE tbl SET col1 = 2 LIMIT 20");
     });
   });
+
+  dialect("postgresql", () => {
+    it("supports WHERE CURRENT OF", () => {
+      testWc("UPDATE tbl SET col1 = 2 WHERE CURRENT OF cursor_name");
+    });
+  });
 });

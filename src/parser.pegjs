@@ -1524,6 +1524,7 @@ set_clause
 
 other_update_clause
   = from_clause
+  / x:where_current_of_clause &postgres { return x; }
   / where_clause
   / returning_clause
   / order_by_clause
