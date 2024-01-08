@@ -1434,7 +1434,7 @@ upsert_clause
       return loc({
         type: "upsert_clause",
         onConflictKw: read(kw),
-        columns: read(columns),
+        conflictTarget: read(columns),
         where: read(where),
         doKw,
         action: read(action),

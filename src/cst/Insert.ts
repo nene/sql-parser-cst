@@ -83,7 +83,7 @@ export interface Default extends BaseNode {
 export interface UpsertClause extends BaseNode {
   type: "upsert_clause";
   onConflictKw: [Keyword<"ON">, Keyword<"CONFLICT">];
-  columns?: ParenExpr<ListExpr<SortSpecification | Identifier>>;
+  conflictTarget?: ParenExpr<ListExpr<SortSpecification | Identifier>>;
   where?: WhereClause;
   doKw: Keyword<"DOR">;
   action: UpsertActionNothing | UpsertActionUpdate;

@@ -20,7 +20,13 @@ export const insertMap: FullTransformMap<string, AllInsertNodes> = {
   default: (node) => show(node.defaultKw),
 
   upsert_clause: (node) =>
-    show([node.onConflictKw, node.columns, node.where, node.doKw, node.action]),
+    show([
+      node.onConflictKw,
+      node.conflictTarget,
+      node.where,
+      node.doKw,
+      node.action,
+    ]),
   upsert_action_nothing: (node) => show(node.nothingKw),
   upsert_action_update: (node) => show([node.updateKw, node.set, node.where]),
 
