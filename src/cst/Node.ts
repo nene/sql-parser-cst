@@ -19,6 +19,7 @@ export * from "./Literal";
 export * from "./Merge";
 export * from "./dialects/Mysql";
 export * from "./dialects/Postgresql";
+export * from "./OtherClauses";
 export * from "./PreparedStatements";
 export * from "./ProcClause";
 export * from "./Procedure";
@@ -51,6 +52,7 @@ import { AllIndexNodes } from "./Index";
 import { AllInsertNodes } from "./Insert";
 import { AllMergeNodes } from "./Merge";
 import { AllMysqlNodes } from "./dialects/Mysql";
+import { AllOtherClauses } from "./OtherClauses";
 import { AllPostgresqlNodes } from "./dialects/Postgresql";
 import { AllPreparedStatementNodes } from "./PreparedStatements";
 import { AllProcClauseNodes } from "./ProcClause";
@@ -81,6 +83,7 @@ export type Node =
   | AllInsertNodes
   | AllMergeNodes
   | AllMysqlNodes
+  | AllOtherClauses
   | AllPostgresqlNodes
   | AllPreparedStatementNodes
   | AllProcClauseNodes

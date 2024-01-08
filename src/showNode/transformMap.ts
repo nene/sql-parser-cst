@@ -28,6 +28,7 @@ import { viewMap } from "./view";
 import { frameMap } from "./window_frame";
 import { FullTransformMap } from "../cstTransformer";
 import { renameTableMap } from "./rename_table";
+import { otherClausesMap } from "./other_clauses";
 
 import { bigqueryMap } from "./dialects/bigquery";
 import { postgresqlMap } from "./dialects/postgresql";
@@ -72,6 +73,7 @@ export const transformMap: FullTransformMap<string> = {
   ...dclMap,
   ...proceduralLanguageMap,
   ...preparedStatementsMap,
+  ...otherClausesMap,
 
   // DB-specific statements
   ...sqliteMap,

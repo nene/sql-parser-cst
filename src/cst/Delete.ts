@@ -10,9 +10,9 @@ import {
   RelationExpr,
   ReturningClause,
   WhereClause,
-  WhereCurrentOfClause,
   WithClause,
 } from "./Select";
+import { WhereCurrentOfClause } from "./OtherClauses";
 
 export type AllDeleteNodes = DeleteStmt | DeleteClause;
 
