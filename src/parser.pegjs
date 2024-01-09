@@ -6443,7 +6443,7 @@ WORK                = kw:"WORK"i                !ident_part { return loc(createK
 WRITE               = kw:"WRITE"i               !ident_part { return loc(createKeyword(kw)); }
 XOR                 = kw:"XOR"i                 !ident_part { return loc(createKeyword(kw)); }
 YEAR                = kw:"YEAR"i                !ident_part { return loc(createKeyword(kw)); }
-YEAR_MONTH          = kw:"YEAR_MONTH"           !ident_part { return loc(createKeyword(kw)); }
+YEAR_MONTH          = kw:"YEAR_MONTH"i          !ident_part { return loc(createKeyword(kw)); }
 ZEROFILL            = kw:"ZEROFILL"i            !ident_part { return loc(createKeyword(kw)); }
 ZONE                = kw:"ZONE"i                !ident_part { return loc(createKeyword(kw)); }
 /*! keywords:end */
