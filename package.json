@@ -37,6 +37,7 @@
     "perf:paren": "yarn ts-node perf/perf-test.ts paren",
     "perf:list": "yarn ts-node perf/perf-test.ts list",
     "perf:select": "yarn ts-node perf/perf-test.ts select",
+    "perf:case": "yarn ts-node perf/perf-test.ts case",
     "lint": "eslint src test scripts perf",
     "ts:check": "tsc --noEmit"
   },

@@ -46,6 +46,12 @@ function createTestData(variant: string) {
       mysql: getTestData("select"),
       bigquery: getTestData("select"),
     };
+  } else if (variant === "case") {
+    return {
+      sqlite: getTestData("case"),
+      mysql: getTestData("case"),
+      bigquery: getTestData("case"),
+    };
   } else {
     throw new Error(`Unknown test data variant: ${variant}`);
   }
