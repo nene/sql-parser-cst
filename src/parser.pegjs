@@ -4090,10 +4090,13 @@ not_expr
  * 3. BETWEEN IN LIKE ILIKE SIMILAR
  */
 pg_is_expr
-  = left:pg_comparison_expr rightFn:_pg_is_expr_right {
-    return loc(rightFn(left));
+  = left:pg_comparison_expr rightFn:_pg_is_expr_right? {
+    if (rightFn) {
+      return loc(rightFn(left));
+    } else {
+      return left;
+    }
   }
-  / pg_comparison_expr
 
 _pg_is_expr_right
   = op:(__ unary_comparison_op) {
@@ -4104,16 +4107,18 @@ _pg_is_expr_right
   }
 
 pg_comparison_expr
-  = head:pg_in_expr tail:(__ (">=" / ">" / "<=" / "<>" / "<" / "=" / "!=") __ (quantifier_expr / pg_in_expr))+ {
+  = head:pg_in_expr tail:(__ (">=" / ">" / "<=" / "<>" / "<" / "=" / "!=") __ (quantifier_expr / pg_in_expr))* {
     return loc(createBinaryExprChain(head, tail));
   }
-  / pg_in_expr
 
 pg_in_expr
-  = left:sub_comparison_expr rightFn:_pg_in_expr_right {
-    return loc(rightFn(left));
+  = left:sub_comparison_expr rightFn:_pg_in_expr_right? {
+    if (rightFn) {
+      return loc(rightFn(left));
+    } else {
+      return left;
+    }
   }
-  / sub_comparison_expr
 
 _pg_in_expr_right
   = c1:__ op:(NOT __ IN / IN) c2:__ right:(paren$list$expr / sub_comparison_expr) {
@@ -4141,11 +4146,14 @@ pg_between_op
   = kws:(NOT __ BETWEEN __ SYMMETRIC / BETWEEN __ SYMMETRIC / NOT __ BETWEEN / BETWEEN) { return read(kws); }
 
 comparison_expr
-  = left:sub_comparison_expr rightFn:_comparison_expr_right {
-    return loc(rightFn(left));
+  = left:sub_comparison_expr rightFn:_comparison_expr_right? {
+    if (rightFn) {
+      return loc(rightFn(left));
+    } else {
+      return left;
+    }
   }
   / &mysql x:full_text_match_expr { return x; }
-  / sub_comparison_expr
 
 _comparison_expr_right
   = op:(__ unary_comparison_op) {
@@ -4409,7 +4417,7 @@ bigquery_bitwise_xor_expr
   = &bigquery head:bitwise_and_expr tail:(__ "^"  __ bitwise_and_expr)* {
     return createBinaryExprChain(head, tail);
   }
-  / bitwise_and_expr
+  / !bigquery x:bitwise_and_expr { return x; }
 
 bitwise_and_expr
   = head:bit_shift_expr tail:(__ "&"  __ bit_shift_expr)* {
@@ -4447,7 +4455,7 @@ mysql_bitwise_xor_expr
   = &mysql head:concat_or_json_expr tail:(__ "^"  __ concat_or_json_expr)* {
     return createBinaryExprChain(head, tail);
   }
-  / concat_or_json_expr
+  / !mysql x:concat_or_json_expr { return x; }
 
 concat_or_json_expr
   = head:binary_expr tail:(__ concat_or_json_op  __ binary_expr)* {
@@ -4469,7 +4477,7 @@ collate_expr
   = (&mysql / &sqlite) head:negation_expr tail:(__ COLLATE __ ident)* {
     return createBinaryExprChain(head, tail);
   }
-  / negation_expr
+  / !(&mysql / &sqlite) x:negation_expr { return x; }
 
 negation_expr
   = op:negation_operator right:(__ negation_expr) {
@@ -4484,14 +4492,13 @@ negation_operator
   / op:"!" &mysql { return op; }
 
 member_expr_or_func_call
-  = obj:primary props:(__ "." __ qualified_column / __ array_subscript / __ func_call_right)+ {
-    return createMemberExprChain(obj, props);
-  }
-  / name:func_name_kw fnRight:(__ func_call_right) {
+  = name:func_name_kw fnRight:(__ func_call_right) {
     return loc(createFuncCall(name, fnRight));
   }
   / paren_less_func_call
-  / primary
+  / obj:primary props:(__ "." __ qualified_column / __ array_subscript / __ func_call_right)* {
+    return createMemberExprChain(obj, props);
+  }
 
 // Plain member_expr node chain, without function calls and array subscripts
 member_expr
@@ -4785,7 +4792,7 @@ postgres_func_keyword
   / CURRENT_SCHEMA
 
 paren_less_func_call
-  = name:paren_less_func_name {
+  = name:paren_less_func_name !(__ "(") {
     return loc({
       type: "func_call",
       name,
