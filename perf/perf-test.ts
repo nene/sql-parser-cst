@@ -19,6 +19,7 @@ function createTestData(variant: string) {
       sqlite: sql,
       mysql: sql,
       bigquery: sql,
+      postgresql: sql,
     };
   } else if (variant === "paren") {
     const sql = "SELECT ((((((1))))))";
@@ -26,6 +27,7 @@ function createTestData(variant: string) {
       sqlite: sql,
       mysql: sql,
       bigquery: sql,
+      postgresql: sql,
     };
   } else if (variant === "list") {
     const sql = "SELECT ((1, 2, 3), (4, 5, 6), (7, 8, 9))";
@@ -33,24 +35,28 @@ function createTestData(variant: string) {
       sqlite: sql,
       mysql: sql,
       bigquery: sql,
+      postgresql: sql,
     };
   } else if (variant === "big") {
     return {
       sqlite: getTestData("sqlite"),
       mysql: getTestData("mysql"),
       bigquery: getTestData("bigquery"),
+      postgresql: getTestData("sqlite"), // TODO: postgresql
     };
   } else if (variant === "select") {
     return {
       sqlite: getTestData("select"),
       mysql: getTestData("select"),
       bigquery: getTestData("select"),
+      postgresql: getTestData("select"),
     };
   } else if (variant === "case") {
     return {
       sqlite: getTestData("case"),
       mysql: getTestData("case"),
       bigquery: getTestData("case"),
+      postgresql: getTestData("case"),
     };
   } else {
     throw new Error(`Unknown test data variant: ${variant}`);
@@ -68,6 +74,9 @@ suite.add("mysql", () => {
 });
 suite.add("bigquery", () => {
   parse(testData.bigquery, { dialect: "bigquery" });
+});
+suite.add("postgresql", () => {
+  parse(testData.postgresql, { dialect: "postgresql" });
 });
 suite.on("cycle", (event: benchmark.Event) => {
   console.log(String(event.target));
