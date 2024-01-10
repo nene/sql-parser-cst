@@ -4766,6 +4766,9 @@ func_name_kw
   / &postgres kw:postgres_func_keyword {
     return loc(createIdentifier(kw.text, kw.text));
   }
+  / &sqlite kw:sqlite_func_keyword {
+    return loc(createIdentifier(kw.text, kw.text));
+  }
 
 mysql_func_keyword
   = VALUES
@@ -4798,6 +4801,11 @@ postgres_func_keyword
   / LOCALTIME
   / LOCALTIMESTAMP
   / CURRENT_SCHEMA
+
+sqlite_func_keyword
+  = GLOB
+  / LIKE
+  / REPLACE
 
 paren_less_func_call
   = name:paren_less_func_name !(__ "(") {
