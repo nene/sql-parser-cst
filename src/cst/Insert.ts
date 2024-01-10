@@ -100,7 +100,7 @@ export interface UpsertClause extends BaseNode {
     | ConflictTargetOnConstraint
     | ParenExpr<ListExpr<SortSpecification | Identifier>>;
   where?: WhereClause;
-  doKw: Keyword<"DOR">;
+  doKw: Keyword<"DO">;
   action: UpsertActionNothing | UpsertActionUpdate;
 }
 
