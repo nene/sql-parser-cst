@@ -7,6 +7,7 @@ import {
   SortSpecification,
 } from "./Select";
 import { BigqueryOptions } from "./dialects/Bigquery";
+import { Default } from "./Insert";
 
 export type AllConstraintNodes =
   | Constraint<ColumnConstraint | TableConstraint>
@@ -26,6 +27,7 @@ export type AllConstraintNodes =
   | ConstraintColumnFormat
   | ConstraintStorage
   | ConstraintEngineAttribute
+  | ConstraintCompression
   | ConstraintPrimaryKey
   | ConstraintForeignKey
   | ConstraintUnique
@@ -81,6 +83,7 @@ export type ColumnConstraint =
   | ConstraintColumnFormat
   | ConstraintStorage
   | ConstraintEngineAttribute
+  | ConstraintCompression
   | BigqueryOptions;
 
 export interface ConstraintPrimaryKey extends BaseNode {
@@ -226,6 +229,13 @@ export interface ConstraintEngineAttribute extends BaseNode {
   engineAttributeKw: Keyword<"ENGINE_ATTRIBUTE" | "SECONDARY_ENGINE_ATTRIBUTE">;
   hasEq: boolean; // True when "=" sign is used
   value: StringLiteral;
+}
+
+// PostgreSQL
+export interface ConstraintCompression extends BaseNode {
+  type: "constraint_compression";
+  compressionKw: Keyword<"COMPRESSION">;
+  method: Identifier | Default;
 }
 
 export interface OnConflictClause extends BaseNode {

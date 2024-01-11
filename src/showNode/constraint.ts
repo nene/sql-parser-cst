@@ -33,5 +33,6 @@ export const constraintMap: FullTransformMap<string, AllConstraintNodes> = {
   constraint_storage: (node) => show([node.storageKw, node.typeKw]),
   constraint_engine_attribute: (node) =>
     show([node.engineAttributeKw, node.hasEq ? "=" : undefined, node.value]),
+  constraint_compression: (node) => show([node.compressionKw, node.method]),
   on_conflict_clause: (node) => show([node.onConflictKw, node.resolutionKw]),
 };

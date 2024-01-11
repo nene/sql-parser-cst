@@ -170,6 +170,14 @@ describe("constraints", () => {
       });
     });
 
+    dialect("postgresql", () => {
+      it("COMPRESSION", () => {
+        testColConstWc("COMPRESSION pglz");
+        testColConstWc("COMPRESSION lz4");
+        testColConstWc("COMPRESSION default");
+      });
+    });
+
     dialect("sqlite", () => {
       it("supports ON CONFLICT clause", () => {
         testColConstWc("UNIQUE ON CONFLICT ROLLBACK");

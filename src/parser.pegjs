@@ -3582,6 +3582,7 @@ column_constraint_type_mysql
 
 column_constraint_type_postgresql
   = constraint_storage
+  / constraint_compression
 
 constraint_not_null
   = kws:(NOT __ NULL) confl:(__ on_conflict_clause)? {
@@ -3663,6 +3664,15 @@ constraint_engine_attribute
       engineAttributeKw: eq ? trailing(kw, eq[0]) : kw,
       hasEq: !!eq,
       value: read(v),
+    });
+  }
+
+constraint_compression
+  = kw:(COMPRESSION __) method:(ident / default) {
+    return loc({
+      type: "constraint_compression",
+      compressionKw: read(kw),
+      method,
     });
   }
 
