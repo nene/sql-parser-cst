@@ -12,24 +12,30 @@ describe("constraints", () => {
       test(`CREATE TABLE t (id INT ${withComments(constraint)})`);
     }
 
-    dialect(["mysql", "mariadb", "sqlite", "postgresql"], () => {
-      it("NULL", () => {
-        testColConstWc("NULL");
+    describe("null / not null", () => {
+      dialect(["mysql", "mariadb", "sqlite", "postgresql"], () => {
+        it("NULL", () => {
+          testColConstWc("NULL");
+        });
+      });
+
+      it("NOT NULL", () => {
+        testColConstWc("NOT NULL");
       });
     });
 
-    it("NOT NULL", () => {
-      testColConstWc("NOT NULL");
+    describe("default", () => {
+      it("DEFAULT", () => {
+        testColConstWc("DEFAULT 10");
+        testColConstWc("DEFAULT (5 + 6 > 0 AND true)");
+      });
     });
 
-    it("DEFAULT", () => {
-      testColConstWc("DEFAULT 10");
-      testColConstWc("DEFAULT (5 + 6 > 0 AND true)");
-    });
-
-    dialect(["mysql", "mariadb", "sqlite", "postgresql"], () => {
-      it("PRIMARY KEY", () => {
-        testColConstWc("PRIMARY KEY");
+    describe("primary key", () => {
+      dialect(["mysql", "mariadb", "sqlite", "postgresql"], () => {
+        it("PRIMARY KEY", () => {
+          testColConstWc("PRIMARY KEY");
+        });
       });
 
       dialect("sqlite", () => {
@@ -42,35 +48,50 @@ describe("constraints", () => {
         });
       });
 
+      dialect(["mysql", "mariadb"], () => {
+        it("supports KEY as shorthand for PRIMARY KEY", () => {
+          testColConstWc("KEY");
+        });
+      });
+    });
+
+    dialect(["mysql", "mariadb", "sqlite", "postgresql"], () => {
       it("UNIQUE", () => {
         testColConstWc("UNIQUE");
         testColConstWc("UNIQUE KEY");
       });
+    });
 
+    dialect(["mysql", "mariadb", "sqlite", "postgresql"], () => {
       it("CHECK", () => {
         testColConstWc("CHECK (col > 10)");
       });
+    });
 
-      it("REFERENCES", () => {
-        // full syntax is tested under table constraints tests
-        testColConstWc("REFERENCES tbl2 (col1)");
+    describe("foreign key", () => {
+      dialect(["mysql", "mariadb", "sqlite", "postgresql"], () => {
+        it("REFERENCES", () => {
+          // full syntax is tested under table constraints tests
+          testColConstWc("REFERENCES tbl2 (col1)");
+        });
+      });
+      dialect("sqlite", () => {
+        it("supports deferrability in references clause", () => {
+          testColConstWc("REFERENCES tbl2 (id) DEFERRABLE");
+        });
       });
     });
 
-    dialect("sqlite", () => {
-      it("supports deferrability in references clause", () => {
-        testColConstWc("REFERENCES tbl2 (id) DEFERRABLE");
+    describe("collate", () => {
+      dialect(["mysql", "mariadb", "sqlite"], () => {
+        it("COLLATE", () => {
+          testColConstWc("COLLATE utf8mb4_bin");
+        });
       });
-    });
-
-    dialect(["mysql", "mariadb", "sqlite"], () => {
-      it("COLLATE", () => {
-        testColConstWc("COLLATE utf8mb4_bin");
-      });
-    });
-    dialect("bigquery", () => {
-      it("COLLATE", () => {
-        testColConstWc("COLLATE 'und:ci'");
+      dialect("bigquery", () => {
+        it("COLLATE", () => {
+          testColConstWc("COLLATE 'und:ci'");
+        });
       });
     });
 
@@ -88,31 +109,37 @@ describe("constraints", () => {
         testColConstWc("AUTO_INCREMENT");
         testColConstWc("AUTO_increment");
       });
+    });
 
+    dialect(["mysql", "mariadb"], () => {
       it("COMMENT", () => {
         testColConstWc("COMMENT 'Hello, world!'");
       });
+    });
 
-      it("KEY", () => {
-        testColConstWc("KEY");
-      });
-
+    dialect(["mysql", "mariadb"], () => {
       it("VISIBLE / INVISIBLE", () => {
         testColConstWc("VISIBLE");
         testColConstWc("INVISIBLE");
       });
+    });
 
+    dialect(["mysql", "mariadb"], () => {
       it("COLUMN_FORMAT", () => {
         testColConstWc("COLUMN_FORMAT FIXED");
         testColConstWc("COLUMN_FORMAT DYNAMIC");
         testColConstWc("COLUMN_FORMAT DEFAULT");
       });
+    });
 
+    dialect(["mysql", "mariadb"], () => {
       it("STORAGE", () => {
         testColConstWc("STORAGE DISK");
         testColConstWc("STORAGE MEMORY");
       });
+    });
 
+    dialect(["mysql", "mariadb"], () => {
       it("engine attributes", () => {
         testColConstWc("ENGINE_ATTRIBUTE = 'blah'");
         testColConstWc("ENGINE_ATTRIBUTE 'blah'");
