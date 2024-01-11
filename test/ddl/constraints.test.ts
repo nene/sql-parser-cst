@@ -143,10 +143,21 @@ describe("constraints", () => {
       });
     });
 
-    dialect(["mysql", "mariadb"], () => {
-      it("STORAGE", () => {
-        testColConstWc("STORAGE DISK");
-        testColConstWc("STORAGE MEMORY");
+    describe("storage", () => {
+      dialect(["mysql", "mariadb"], () => {
+        it("STORAGE", () => {
+          testColConstWc("STORAGE DISK");
+          testColConstWc("STORAGE MEMORY");
+        });
+      });
+      dialect("postgresql", () => {
+        it("STORAGE", () => {
+          testColConstWc("STORAGE PLAIN");
+          testColConstWc("STORAGE EXTERNAL");
+          testColConstWc("STORAGE EXTENDED");
+          testColConstWc("STORAGE MAIN");
+          testColConstWc("STORAGE DEFAULT");
+        });
       });
     });
 

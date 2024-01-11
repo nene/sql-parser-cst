@@ -3562,6 +3562,7 @@ column_constraint_type
   / !bigquery con:column_constraint_type_common { return con; }
   / &mysql con:column_constraint_type_mysql { return con; }
   / &bigquery con:bigquery_options { return con; }
+  / &postgres con:column_constraint_type_postgresql { return con; }
 
 column_constraint_type_common
   = column_constraint_primary_key
@@ -3578,6 +3579,9 @@ column_constraint_type_mysql
   / constraint_column_format
   / constraint_storage
   / constraint_engine_attribute
+
+column_constraint_type_postgresql
+  = constraint_storage
 
 constraint_not_null
   = kws:(NOT __ NULL) confl:(__ on_conflict_clause)? {
@@ -3640,13 +3644,17 @@ constraint_column_format
   }
 
 constraint_storage
-  = kw:(STORAGE __) t:(DISK / MEMORY) {
+  = kw:(STORAGE __) t:(mysql_storage_type / pg_storage_type) {
     return loc({
       type: "constraint_storage",
       storageKw: read(kw),
       typeKw: t,
     });
   }
+
+mysql_storage_type = t:(DISK / MEMORY) &mysql { return t; }
+
+pg_storage_type = t:(PLAIN / EXTERNAL / EXTENDED / MAIN / DEFAULT) &postgres { return t; }
 
 constraint_engine_attribute
   = kw:(ENGINE_ATTRIBUTE / SECONDARY_ENGINE_ATTRIBUTE) eq:(__ "=")? v:(__ string_literal) {
@@ -6124,6 +6132,7 @@ EXISTS              = kw:"EXISTS"i              !ident_part { return loc(createK
 EXPANSION           = kw:"EXPANSION"i           !ident_part { return loc(createKeyword(kw)); }
 EXPLAIN             = kw:"EXPLAIN"i             !ident_part { return loc(createKeyword(kw)); }
 EXPORT              = kw:"EXPORT"i              !ident_part { return loc(createKeyword(kw)); }
+EXTENDED            = kw:"EXTENDED"i            !ident_part { return loc(createKeyword(kw)); }
 EXTERNAL            = kw:"EXTERNAL"i            !ident_part { return loc(createKeyword(kw)); }
 EXTRACT             = kw:"EXTRACT"i             !ident_part { return loc(createKeyword(kw)); }
 FAIL                = kw:"FAIL"i                !ident_part { return loc(createKeyword(kw)); }
@@ -6223,6 +6232,7 @@ LONGBLOB            = kw:"LONGBLOB"i            !ident_part { return loc(createK
 LONGTEXT            = kw:"LONGTEXT"i            !ident_part { return loc(createKeyword(kw)); }
 LOOP                = kw:"LOOP"i                !ident_part { return loc(createKeyword(kw)); }
 LOW_PRIORITY        = kw:"LOW_PRIORITY"i        !ident_part { return loc(createKeyword(kw)); }
+MAIN                = kw:"MAIN"i                !ident_part { return loc(createKeyword(kw)); }
 MASTER              = kw:"MASTER"i              !ident_part { return loc(createKeyword(kw)); }
 MATCH               = kw:"MATCH"i               !ident_part { return loc(createKeyword(kw)); }
 MATCHED             = kw:"MATCHED"i             !ident_part { return loc(createKeyword(kw)); }
@@ -6302,6 +6312,7 @@ PERCENT_RANK        = kw:"PERCENT_RANK"i        !ident_part { return loc(createK
 PERSIST             = kw:"PERSIST"i             !ident_part { return loc(createKeyword(kw)); }
 PERSIST_ONLY        = kw:"PERSIST_ONLY"i        !ident_part { return loc(createKeyword(kw)); }
 PIVOT               = kw:"PIVOT"i               !ident_part { return loc(createKeyword(kw)); }
+PLAIN               = kw:"PLAIN"i               !ident_part { return loc(createKeyword(kw)); }
 PLAN                = kw:"PLAN"i                !ident_part { return loc(createKeyword(kw)); }
 POLICIES            = kw:"POLICIES"i            !ident_part { return loc(createKeyword(kw)); }
 POLICY              = kw:"POLICY"i              !ident_part { return loc(createKeyword(kw)); }

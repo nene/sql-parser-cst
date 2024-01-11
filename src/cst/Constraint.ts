@@ -204,11 +204,21 @@ export interface ConstraintColumnFormat extends BaseNode {
   formatKw: Keyword<"FIXED" | "DYNAMIC" | "DEFAULT">;
 }
 
-// MySQL, MariaDB
+// MySQL, MariaDB, PostgreSQL
 export interface ConstraintStorage extends BaseNode {
   type: "constraint_storage";
   storageKw: Keyword<"STORAGE">;
-  typeKw: Keyword<"DISK" | "MEMORY">;
+  typeKw: Keyword<
+    // MySQL, MariaDB
+    | "DISK"
+    | "MEMORY"
+    // PostgreSQL
+    | "PLAIN"
+    | "EXTERNAL"
+    | "EXTENDED"
+    | "MAIN"
+    | "DEFAULT"
+  >;
 }
 
 export interface ConstraintEngineAttribute extends BaseNode {
