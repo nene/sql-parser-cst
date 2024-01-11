@@ -144,7 +144,7 @@ export interface ConstraintIndex extends BaseNode {
   columns?: ParenExpr<ListExpr<Identifier>>;
 }
 
-// MySQL, MariaDB, SQLite
+// MySQL, MariaDB, SQLite, PostgreSQL
 export interface ConstraintNull extends BaseNode {
   type: "constraint_null";
   nullKw: Keyword<"NULL">;
@@ -184,7 +184,7 @@ export interface ConstraintGenerated extends BaseNode {
   storageKw?: Keyword<"STORED" | "VIRTUAL">;
 }
 
-// MySQL, MariaDB, SQLite, BigQuery
+// MySQL, MariaDB, SQLite, BigQuery, PostgreSQL
 export interface ConstraintCollate extends BaseNode {
   type: "constraint_collate";
   collateKw: Keyword<"COLLATE">;
