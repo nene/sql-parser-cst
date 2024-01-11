@@ -20,7 +20,7 @@ describe("create table", () => {
     testWc("CREATE TEMPORARY TABLE foo (id INT)");
   });
 
-  dialect(["sqlite", "bigquery"], () => {
+  dialect(["sqlite", "bigquery", "postgresql"], () => {
     it("supports CREATE TEMP TABLE", () => {
       testWc("CREATE TEMP TABLE foo (id INT)");
     });
