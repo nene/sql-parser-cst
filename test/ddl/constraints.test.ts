@@ -29,6 +29,12 @@ describe("constraints", () => {
         testColConstWc("DEFAULT 10");
         testColConstWc("DEFAULT (5 + 6 > 0 AND true)");
       });
+
+      dialect("postgresql", () => {
+        it("support DEFAULT expr, without needing parenthesis", () => {
+          testColConstWc("DEFAULT 5 + 8");
+        });
+      });
     });
 
     describe("primary key", () => {

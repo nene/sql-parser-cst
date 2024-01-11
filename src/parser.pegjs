@@ -3594,7 +3594,7 @@ constraint_null
   }
 
 constraint_default
-  = kw:DEFAULT e:(__ (literal / paren$expr)) {
+  = kw:DEFAULT e:(__ expr) {
     return loc({ type: "constraint_default", defaultKw: kw, expr: read(e) });
   }
 
