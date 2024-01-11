@@ -99,6 +99,11 @@ describe("constraints", () => {
           testColConstWc("COLLATE 'und:ci'");
         });
       });
+      dialect("postgresql", () => {
+        it("COLLATE", () => {
+          testColConstWc(`COLLATE "C"`);
+        });
+      });
     });
 
     dialect(["mysql", "mariadb", "sqlite"], () => {
