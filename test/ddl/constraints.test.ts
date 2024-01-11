@@ -12,7 +12,7 @@ describe("constraints", () => {
       test(`CREATE TABLE t (id INT ${withComments(constraint)})`);
     }
 
-    dialect(["mysql", "mariadb", "sqlite"], () => {
+    dialect(["mysql", "mariadb", "sqlite", "postgresql"], () => {
       it("NULL", () => {
         testColConstWc("NULL");
       });
