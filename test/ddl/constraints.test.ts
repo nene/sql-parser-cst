@@ -27,7 +27,7 @@ describe("constraints", () => {
       testColConstWc("DEFAULT (5 + 6 > 0 AND true)");
     });
 
-    dialect(["mysql", "mariadb", "sqlite"], () => {
+    dialect(["mysql", "mariadb", "sqlite", "postgresql"], () => {
       it("PRIMARY KEY", () => {
         testColConstWc("PRIMARY KEY");
       });
@@ -147,7 +147,9 @@ describe("constraints", () => {
         testColConstWc("CONSTRAINT UNIQUE");
         testColConstWc("CONSTRAINT CHECK (true)");
       });
+    });
 
+    dialect(["mysql", "mariadb", "sqlite", "postgresql"], () => {
       it("supports named column constraints for keys and check()", () => {
         testColConstWc("CONSTRAINT cname PRIMARY KEY");
         testColConstWc("CONSTRAINT cname UNIQUE");
@@ -176,7 +178,7 @@ describe("constraints", () => {
     });
   });
 
-  dialect(["mysql", "mariadb", "sqlite"], () => {
+  dialect(["mysql", "mariadb", "sqlite", "postgresql"], () => {
     describe("table constraints", () => {
       it("supports multiple table constraints inside CREATE TABLE", () => {
         test(`CREATE TABLE tbl (
@@ -220,7 +222,7 @@ describe("constraints", () => {
           testTblConstWc("FOREIGN KEY (id, name) REFERENCES tbl2 (id, name)");
         });
 
-        dialect("sqlite", () => {
+        dialect(["sqlite", "postgresql"], () => {
           it("column names are optional in REFERENCES-clause", () => {
             testTblConstWc("FOREIGN KEY (id) REFERENCES tbl2");
           });
@@ -293,7 +295,9 @@ describe("constraints", () => {
           testTblConstWc("CONSTRAINT CHECK (false)");
           testTblConstWc("CONSTRAINT FOREIGN KEY (id) REFERENCES tbl2 (id)");
         });
+      });
 
+      dialect(["mysql", "mariadb", "sqlite", "postgresql"], () => {
         it("supports named table constraints", () => {
           testTblConstWc("CONSTRAINT cname PRIMARY KEY (id)");
           testTblConstWc("CONSTRAINT cname UNIQUE KEY (id)");
