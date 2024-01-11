@@ -33,7 +33,7 @@ describe("drop table", () => {
     testWc("DROP TABLE tbl1, tbl2, tbl3");
   });
 
-  dialect(["mysql", "mariadb"], () => {
+  dialect(["mysql", "mariadb", "postgresql"], () => {
     it("with CASCADE/RESTRICT behavior", () => {
       testWc("DROP TABLE tbl CASCADE");
       testWc("DROP TABLE tbl RESTRICT");
