@@ -275,6 +275,10 @@ describe("constraints", () => {
           testColConstWc("GENERATED ALWAYS AS (10) STORED INITIALLY DEFERRED");
           testColConstWc("PRIMARY KEY INITIALLY IMMEDIATE");
         });
+
+        it("supports NO INHERIT modifier on CHECK() constraint", () => {
+          testColConstWc("CHECK (x > 10) NO INHERIT");
+        });
       });
     });
   });
@@ -390,6 +394,10 @@ describe("constraints", () => {
             testTblConstWc("CHECK (x > 10) NOT DEFERRABLE");
             testTblConstWc("UNIQUE (col) INITIALLY DEFERRED");
             testTblConstWc("PRIMARY KEY (id, name) INITIALLY IMMEDIATE");
+          });
+
+          it("supports NO INHERIT modifier on CHECK() constraint", () => {
+            testTblConstWc("CHECK (x > 10) NO INHERIT");
           });
         });
       });

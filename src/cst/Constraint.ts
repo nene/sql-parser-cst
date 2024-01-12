@@ -59,7 +59,8 @@ export interface ConstraintModifier extends BaseNode {
   kw:
     | Keyword<"DEFERRABLE">
     | [Keyword<"NOT">, Keyword<"DEFERRABLE">]
-    | [Keyword<"INITIALLY">, Keyword<"IMMEDIATE" | "DEFERRED">];
+    | [Keyword<"INITIALLY">, Keyword<"IMMEDIATE" | "DEFERRED">]
+    | [Keyword<"NO">, Keyword<"INHERIT">]; // PostgreSQL
 }
 
 export type TableConstraint =

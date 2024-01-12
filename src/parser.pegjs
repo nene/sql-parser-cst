@@ -3554,6 +3554,7 @@ constraint_modifier
         DEFERRABLE
       / NOT __ DEFERRABLE
       / INITIALLY __ (IMMEDIATE / DEFERRED)
+      / NO __ INHERIT
     ) {
       return loc({
         type: "constraint_modifier",
@@ -6223,6 +6224,7 @@ IN                  = kw:"IN"i                  !ident_part { return loc(createK
 INCLUDE             = kw:"INCLUDE"i             !ident_part { return loc(createKeyword(kw)); }
 INDEX               = kw:"INDEX"i               !ident_part { return loc(createKeyword(kw)); }
 INDEXED             = kw:"INDEXED"              !ident_part { return loc(createKeyword(kw)); }
+INHERIT             = kw:"INHERIT"i             !ident_part { return loc(createKeyword(kw)); }
 INITIALLY           = kw:"INITIALLY"i           !ident_part { return loc(createKeyword(kw)); }
 INNER               = kw:"INNER"i               !ident_part { return loc(createKeyword(kw)); }
 INOUT               = kw:"INOUT"i               !ident_part { return loc(createKeyword(kw)); }
