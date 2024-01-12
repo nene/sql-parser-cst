@@ -98,6 +98,7 @@ export interface ConstraintPrimaryKey extends BaseNode {
 export interface ConstraintForeignKey extends BaseNode {
   type: "constraint_foreign_key";
   foreignKeyKw: [Keyword<"FOREIGN">, Keyword<"KEY">];
+  indexName?: Identifier;
   columns: ParenExpr<ListExpr<Identifier>>;
   references: ReferencesSpecification;
 }

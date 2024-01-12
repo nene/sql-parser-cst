@@ -3782,12 +3782,13 @@ constraint_check
 
 constraint_foreign_key
   = kws:(FOREIGN __ KEY __)
-    i:(ident __)?
+    name:(ident __)?
     columns:paren$list$column
     ref:(__ references_specification) {
       return loc({
         type: "constraint_foreign_key",
         foreignKeyKw: read(kws),
+        indexName: read(name),
         columns,
         references: read(ref),
       });

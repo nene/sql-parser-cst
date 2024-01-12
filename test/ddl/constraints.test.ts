@@ -322,6 +322,11 @@ describe("constraints", () => {
             testTblConstWc("FOREIGN KEY (id) REFERENCES tbl2");
           });
         });
+        dialect(["mysql", "mariadb"], () => {
+          it("supports index name", () => {
+            testTblConstWc("FOREIGN KEY my_fk (id) REFERENCES tbl2 (id)");
+          });
+        });
 
         it("supports ON DELETE/UPDATE actions", () => {
           testTblConstWc("FOREIGN KEY (id) REFERENCES tbl2 (id) ON UPDATE RESTRICT");
