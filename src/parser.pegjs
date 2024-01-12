@@ -3808,12 +3808,13 @@ references_specification
     }
 
 referential_action
-  = onKw:(ON __) eventKw:((UPDATE / DELETE) __) actionKw:reference_action_type {
+  = onKw:(ON __) eventKw:((UPDATE / DELETE) __) actionKw:reference_action_type columns:(__ paren$list$column)? {
     return loc({
       type: "referential_action",
       onKw: read(onKw),
       eventKw: read(eventKw),
       actionKw,
+      columns: read(columns),
     });
   }
 

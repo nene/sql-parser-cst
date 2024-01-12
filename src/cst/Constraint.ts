@@ -118,6 +118,8 @@ export interface ReferentialAction extends BaseNode {
     | Keyword<"RESTRICT" | "CASCADE">
     | [Keyword<"SET">, Keyword<"NULL" | "DEFAULT">]
     | [Keyword<"NO">, Keyword<"ACTION">];
+  // PostgreSQL
+  columns?: ParenExpr<ListExpr<Identifier>>;
 }
 
 export interface ReferentialMatch extends BaseNode {

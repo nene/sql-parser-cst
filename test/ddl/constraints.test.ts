@@ -331,6 +331,14 @@ describe("constraints", () => {
             "FOREIGN KEY (id) REFERENCES tbl2 (id) ON DELETE SET DEFAULT ON UPDATE NO ACTION"
           );
         });
+        dialect("postgresql", () => {
+          it("supports columns list with SET NULL and SET DEFAULT", () => {
+            testTblConstWc("FOREIGN KEY (id) REFERENCES tbl2 (id) ON DELETE SET NULL (id)");
+            testTblConstWc(
+              "FOREIGN KEY (id) REFERENCES tbl2 (id) ON DELETE SET DEFAULT (id, name)"
+            );
+          });
+        });
 
         it("supports MATCH types", () => {
           testTblConstWc("FOREIGN KEY (id) REFERENCES tbl2 (id) MATCH FULL");

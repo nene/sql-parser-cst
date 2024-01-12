@@ -17,7 +17,8 @@ export const constraintMap: FullTransformMap<string, AllConstraintNodes> = {
     show([node.foreignKeyKw, node.columns, node.references]),
   references_specification: (node) =>
     show([node.referencesKw, node.table, node.columns, node.options]),
-  referential_action: (node) => show([node.onKw, node.eventKw, node.actionKw]),
+  referential_action: (node) =>
+    show([node.onKw, node.eventKw, node.actionKw, node.columns]),
   referential_match: (node) => show([node.matchKw, node.typeKw]),
   constraint_unique: (node) =>
     show([node.uniqueKw, node.nullsKw, node.columns, node.onConflict]),
