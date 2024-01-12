@@ -259,6 +259,24 @@ describe("constraints", () => {
         testColConstWc("CONSTRAINT cname REFERENCES tbl2 (col)");
       });
     });
+
+    describe("constraint modifiers", () => {
+      dialect(["sqlite", "postgresql"], () => {
+        it("supports deferrability of foreign keys", () => {
+          testColConstWc("REFERENCES tbl2 (id) DEFERRABLE INITIALLY DEFERRED");
+          testColConstWc("REFERENCES tbl2 (id) NOT DEFERRABLE INITIALLY IMMEDIATE");
+        });
+      });
+
+      dialect(["postgresql"], () => {
+        it("supports deferrability of all constraints", () => {
+          testColConstWc("NOT NULL NOT DEFERRABLE");
+          testColConstWc("DEFAULT 10 INITIALLY DEFERRED");
+          testColConstWc("GENERATED ALWAYS AS (10) STORED INITIALLY DEFERRED");
+          testColConstWc("PRIMARY KEY INITIALLY IMMEDIATE");
+        });
+      });
+    });
   });
 
   dialect(["mysql", "mariadb", "sqlite", "postgresql"], () => {
@@ -357,12 +375,22 @@ describe("constraints", () => {
         });
       });
 
-      dialect("sqlite", () => {
-        it("supports deferrability of foreign keys", () => {
-          testTblConstWc("FOREIGN KEY (id) REFERENCES tbl2 (id) DEFERRABLE");
-          testTblConstWc("FOREIGN KEY (id) REFERENCES tbl2 (id) NOT DEFERRABLE");
-          testTblConstWc("FOREIGN KEY (id) REFERENCES tbl2 (id) DEFERRABLE INITIALLY DEFERRED");
-          testTblConstWc("FOREIGN KEY (id) REFERENCES tbl2 (id) DEFERRABLE INITIALLY IMMEDIATE");
+      describe("constraint modifiers", () => {
+        dialect(["sqlite", "postgresql"], () => {
+          it("supports deferrability of foreign keys", () => {
+            testTblConstWc("FOREIGN KEY (id) REFERENCES tbl2 (id) DEFERRABLE");
+            testTblConstWc("FOREIGN KEY (id) REFERENCES tbl2 (id) NOT DEFERRABLE");
+            testTblConstWc("FOREIGN KEY (id) REFERENCES tbl2 (id) DEFERRABLE INITIALLY DEFERRED");
+            testTblConstWc("FOREIGN KEY (id) REFERENCES tbl2 (id) DEFERRABLE INITIALLY IMMEDIATE");
+          });
+        });
+
+        dialect(["postgresql"], () => {
+          it("supports deferrability of all constraints", () => {
+            testTblConstWc("CHECK (x > 10) NOT DEFERRABLE");
+            testTblConstWc("UNIQUE (col) INITIALLY DEFERRED");
+            testTblConstWc("PRIMARY KEY (id, name) INITIALLY IMMEDIATE");
+          });
         });
       });
 

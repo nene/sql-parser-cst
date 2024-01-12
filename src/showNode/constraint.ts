@@ -3,9 +3,9 @@ import { AllConstraintNodes } from "../cst/Node";
 import { FullTransformMap } from "../cstTransformer";
 
 export const constraintMap: FullTransformMap<string, AllConstraintNodes> = {
-  constraint: (node) => show([node.name, node.constraint, node.deferrable]),
+  constraint: (node) => show([node.name, node.constraint, node.modifiers]),
   constraint_name: (node) => show([node.constraintKw, node.name]),
-  constraint_deferrable: (node) => show([node.deferrableKw, node.initiallyKw]),
+  constraint_modifier: (node) => show(node.kw),
   constraint_null: (node) => show(node.nullKw),
   constraint_not_null: (node) => show([node.notNullKw, node.onConflict]),
   constraint_auto_increment: (node) => show(node.autoIncrementKw),

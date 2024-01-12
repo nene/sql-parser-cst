@@ -35,7 +35,7 @@ export type AllConstraintNodes =
   | ConstraintCheck
   | ConstraintIndex
   | ConstraintName
-  | ConstraintDeferrable
+  | ConstraintModifier
   | ReferencesSpecification
   | ReferentialAction
   | ReferentialMatch
@@ -45,7 +45,7 @@ export interface Constraint<T> extends BaseNode {
   type: "constraint";
   name?: ConstraintName;
   constraint: T;
-  deferrable?: ConstraintDeferrable;
+  modifiers: ConstraintModifier[];
 }
 
 export interface ConstraintName extends BaseNode {
@@ -54,10 +54,12 @@ export interface ConstraintName extends BaseNode {
   name?: Identifier;
 }
 
-export interface ConstraintDeferrable extends BaseNode {
-  type: "constraint_deferrable";
-  deferrableKw: Keyword<"DEFERRABLE"> | [Keyword<"NOT">, Keyword<"DEFERRABLE">];
-  initiallyKw?: [Keyword<"INITIALLY">, Keyword<"IMMEDIATE" | "DEFERRED">];
+export interface ConstraintModifier extends BaseNode {
+  type: "constraint_modifier";
+  kw:
+    | Keyword<"DEFERRABLE">
+    | [Keyword<"NOT">, Keyword<"DEFERRABLE">]
+    | [Keyword<"INITIALLY">, Keyword<"IMMEDIATE" | "DEFERRED">];
 }
 
 export type TableConstraint =

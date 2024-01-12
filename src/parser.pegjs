@@ -3512,30 +3512,30 @@ mysql_table_opt_value
 column_constraint
   = name:(constraint_name __)?
     constraint:column_constraint_type
-    defer:(__ constraint_deferrable)? {
-      if (!name && !defer) {
+    modifiers:(__ constraint_modifier)* {
+      if (!name && modifiers.length === 0) {
         return constraint;
       }
       return loc({
         type: "constraint",
         name: read(name),
         constraint,
-        deferrable: read(defer),
+        modifiers: modifiers.map(read),
       });
     }
 
 table_constraint
   = name:(constraint_name __)?
     constraint:table_constraint_type
-    defer:(__ constraint_deferrable)? {
-      if (!name && !defer) {
+    modifiers:(__ constraint_modifier)* {
+      if (!name && modifiers.length === 0) {
         return constraint;
       }
       return loc({
         type: "constraint",
         name: read(name),
         constraint,
-        deferrable: read(defer),
+        modifiers: modifiers.map(read),
       });
     }
 
@@ -3548,18 +3548,18 @@ constraint_name
     });
   }
 
-constraint_deferrable
-  = !bigquery kw:(DEFERRABLE / NOT __ DEFERRABLE)
-    init:(__ initially_immediate_or_deferred)? {
+constraint_modifier
+  = (&postgres / &sqlite)
+    kw:(
+        DEFERRABLE
+      / NOT __ DEFERRABLE
+      / INITIALLY __ (IMMEDIATE / DEFERRED)
+    ) {
       return loc({
-        type: "constraint_deferrable",
-        deferrableKw: read(kw),
-        initiallyKw: read(init),
+        type: "constraint_modifier",
+        kw: read(kw),
       });
     }
-
-initially_immediate_or_deferred
-  = kws:(INITIALLY __ (IMMEDIATE / DEFERRED)) { return read(kws); }
 
 column_constraint_type
   = constraint_not_null
