@@ -34,6 +34,12 @@ describe("create table", () => {
     });
   });
 
+  dialect("postgresql", () => {
+    it("supports UNLOGGED TABLE", () => {
+      testWc("CREATE UNLOGGED TABLE foo (id INT)");
+    });
+  });
+
   it("supports IF NOT EXISTS", () => {
     testWc("CREATE TABLE IF NOT EXISTS foo (id INT)");
   });

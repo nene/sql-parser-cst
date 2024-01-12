@@ -36,6 +36,7 @@ export interface CreateTableStmt extends BaseNode {
     | Keyword<"TEMP" | "TEMPORARY">
     // PostgreSQL deprecated syntax which has no effect
     | [Keyword<"GLOBAL" | "LOCAL">, Keyword<"TEMPORARY" | "TEMP">];
+  unloggedKw?: Keyword<"UNLOGGED">; // PostgreSQL
   externalKw?: Keyword<"EXTERNAL">;
   snapshotKw?: Keyword<"SNAPSHOT">;
   virtualKw?: Keyword<"VIRTUAL">;

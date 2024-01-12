@@ -1925,6 +1925,7 @@ create_table_stmt
   = createKw:CREATE
     replKw:(__ OR __ REPLACE)?
     tmpKw:(__ temporary_definition)?
+    unloggedKw:(__ UNLOGGED)?
     externalKw:(__ EXTERNAL)?
     snapshotKw:(__ SNAPSHOT)?
     virtualKw:(__ VIRTUAL)?
@@ -1940,6 +1941,7 @@ create_table_stmt
         createKw,
         orReplaceKw: read(replKw),
         temporaryKw: read(tmpKw),
+        unloggedKw: read(unloggedKw),
         externalKw: read(externalKw),
         snapshotKw: read(snapshotKw),
         virtualKw: read(virtualKw),

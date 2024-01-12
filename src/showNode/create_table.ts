@@ -8,6 +8,7 @@ export const createTableMap: FullTransformMap<string, AllCreateTableNodes> = {
       node.createKw,
       node.orReplaceKw,
       node.temporaryKw,
+      node.unloggedKw,
       node.externalKw,
       node.snapshotKw,
       node.virtualKw,
