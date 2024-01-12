@@ -22,6 +22,7 @@ export type AllConstraintNodes =
   | ConstraintCheck
   | ConstraintIndex
   | ConstraintGenerated
+  | IdentityColumn
   | ConstraintCollate
   | ConstraintVisible
   | ConstraintColumnFormat
@@ -181,10 +182,19 @@ export interface ConstraintComment extends BaseNode {
 // MySQL, MariaDB, SQLite
 export interface ConstraintGenerated extends BaseNode {
   type: "constraint_generated";
-  generatedKw?: [Keyword<"GENERATED">, Keyword<"ALWAYS">];
+  generatedKw?:
+    | [Keyword<"GENERATED">, Keyword<"ALWAYS">]
+    // PostgreSQL
+    | [Keyword<"GENERATED">, Keyword<"BY">, Keyword<"DEFAULT">];
   asKw: Keyword<"AS">;
-  expr: ParenExpr<Expr>;
+  expr: ParenExpr<Expr> | IdentityColumn;
   storageKw?: Keyword<"STORED" | "VIRTUAL">;
+}
+
+// PostgreSQL
+export interface IdentityColumn extends BaseNode {
+  type: "identity_column";
+  identityKw: Keyword<"IDENTITY">;
 }
 
 // MySQL, MariaDB, SQLite, BigQuery, PostgreSQL

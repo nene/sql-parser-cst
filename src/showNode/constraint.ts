@@ -26,6 +26,7 @@ export const constraintMap: FullTransformMap<string, AllConstraintNodes> = {
     show([node.indexTypeKw, node.indexKw, node.columns]),
   constraint_generated: (node) =>
     show([node.generatedKw, node.asKw, node.expr, node.storageKw]),
+  identity_column: (node) => show(node.identityKw),
   constraint_collate: (node) => show([node.collateKw, node.collation]),
   constraint_visible: (node) => show(node.visibleKw),
   constraint_column_format: (node) =>

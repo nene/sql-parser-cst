@@ -3583,6 +3583,7 @@ column_constraint_type_mysql
 column_constraint_type_postgresql
   = constraint_storage
   / constraint_compression
+  / constraint_generated_as_identity
 
 constraint_not_null
   = kws:(NOT __ NULL) confl:(__ on_conflict_clause)? {
@@ -3687,6 +3688,20 @@ constraint_generated
         storageKw: read(stKw),
       });
     }
+
+constraint_generated_as_identity
+  = kws:(GENERATED __ ALWAYS / GENERATED __ BY __ DEFAULT) asKw:(__ AS) identity:(__ identity_column) {
+    return loc({
+      type: "constraint_generated",
+      generatedKw: read(kws),
+      asKw: read(asKw),
+      expr: read(identity),
+    });
+  }
+
+identity_column = kw:IDENTITY {
+  return loc({ type: "identity_column", identityKw: kw });
+}
 
 table_constraint_type
   = table_constraint_primary_key
