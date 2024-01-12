@@ -1983,6 +1983,7 @@ create_table_clause
   / (&bigquery / &mysql) x:create_table_like_clause { return x; }
   / &bigquery x:create_table_clause_bigquery { return x; }
   / &sqlite x:create_table_using_clause { return x; }
+  / &postgres x:create_table_inherits_clause { return x; }
 
 create_table_like_clause
   = kw:(LIKE __) name:entity_name {
@@ -2046,6 +2047,15 @@ create_table_using_clause
       type: "create_table_using_clause",
       usingKw: read(usingKw),
       module: func.type === "identifier" ? { type: "func_call", name: func } : func,
+    });
+  }
+
+create_table_inherits_clause
+  = kw:(INHERITS __) tables:paren$list$entity_name {
+    return loc({
+      type: "create_table_inherits_clause",
+      inheritsKw: read(kw),
+      tables,
     });
   }
 
@@ -5115,6 +5125,7 @@ paren$list$alias$paren$list$column = .
 paren$list$column = .
 paren$list$column_definition = .
 paren$list$create_definition = .
+paren$list$entity_name = .
 paren$list$equals_expr = .
 paren$list$expr = .
 paren$list$expr_or_default = .
@@ -6225,6 +6236,7 @@ INCLUDE             = kw:"INCLUDE"i             !ident_part { return loc(createK
 INDEX               = kw:"INDEX"i               !ident_part { return loc(createKeyword(kw)); }
 INDEXED             = kw:"INDEXED"              !ident_part { return loc(createKeyword(kw)); }
 INHERIT             = kw:"INHERIT"i             !ident_part { return loc(createKeyword(kw)); }
+INHERITS            = kw:"INHERITS"i            !ident_part { return loc(createKeyword(kw)); }
 INITIALLY           = kw:"INITIALLY"i           !ident_part { return loc(createKeyword(kw)); }
 INNER               = kw:"INNER"i               !ident_part { return loc(createKeyword(kw)); }
 INOUT               = kw:"INOUT"i               !ident_part { return loc(createKeyword(kw)); }

@@ -25,7 +25,8 @@ export type AllCreateTableNodes =
   | CreateTableCopyClause
   | CreateTableCloneClause
   | WithPartitionColumnsClause
-  | CreateTableUsingClause;
+  | CreateTableUsingClause
+  | CreateTableInheritsClause;
 
 // CREATE TABLE
 export interface CreateTableStmt extends BaseNode {
@@ -115,7 +116,8 @@ type CreateTableClause =
   | AsClause<SubSelect>
   | CreateTableLikeClause
   | BigqueryCreateTableClause
-  | SqliteCreateTableClause;
+  | SqliteCreateTableClause
+  | PostgresqlCreateTableClause;
 
 export interface CreateTableLikeClause extends BaseNode {
   type: "create_table_like_clause";
@@ -161,4 +163,12 @@ export interface CreateTableUsingClause extends BaseNode {
   type: "create_table_using_clause";
   usingKw: Keyword<"USING">;
   module: FuncCall;
+}
+
+type PostgresqlCreateTableClause = CreateTableInheritsClause;
+
+export interface CreateTableInheritsClause extends BaseNode {
+  type: "create_table_inherits_clause";
+  inheritsKw: Keyword<"INHERITS">;
+  tables: ParenExpr<ListExpr<EntityName>>;
 }

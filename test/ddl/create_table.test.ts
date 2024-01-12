@@ -185,4 +185,11 @@ describe("create table", () => {
       testWc("CREATE VIRTUAL TABLE tbl USING my_module(1, 2, 3)");
     });
   });
+
+  dialect("postgresql", () => {
+    it("supports CREATE TABLE .. INHERITS", () => {
+      testWc("CREATE TABLE tbl (id INT) INHERITS (parent)");
+      testWc("CREATE TABLE tbl (id INT) INHERITS (parent1, parent2)");
+    });
+  });
 });
