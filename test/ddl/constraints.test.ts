@@ -61,10 +61,22 @@ describe("constraints", () => {
       });
     });
 
-    dialect(["mysql", "mariadb", "sqlite", "postgresql"], () => {
-      it("UNIQUE", () => {
-        testColConstWc("UNIQUE");
-        testColConstWc("UNIQUE KEY");
+    describe("unique", () => {
+      dialect(["mysql", "mariadb", "sqlite", "postgresql"], () => {
+        it("UNIQUE", () => {
+          testColConstWc("UNIQUE");
+        });
+      });
+      dialect(["mysql", "mariadb"], () => {
+        it("UNIQUE KEY", () => {
+          testColConstWc("UNIQUE KEY");
+        });
+      });
+      dialect(["postgresql"], () => {
+        it("NULLS [NOT] DISTINCT", () => {
+          testColConstWc("UNIQUE NULLS DISTINCT");
+          testColConstWc("UNIQUE NULLS NOT DISTINCT");
+        });
       });
     });
 
@@ -277,10 +289,22 @@ describe("constraints", () => {
         });
       });
 
-      it("UNIQUE", () => {
-        testTblConstWc("UNIQUE (id)");
-        testTblConstWc("UNIQUE KEY (id, name)");
-        testTblConstWc("UNIQUE INDEX (id)");
+      describe("unique", () => {
+        it("UNIQUE", () => {
+          testTblConstWc("UNIQUE (id)");
+        });
+        dialect(["mysql", "mariadb"], () => {
+          it("UNIQUE KEY/INDEX", () => {
+            testTblConstWc("UNIQUE KEY (id, name)");
+            testTblConstWc("UNIQUE INDEX (id)");
+          });
+        });
+        dialect(["postgresql"], () => {
+          it("NULLS [NOT] DISTINCT", () => {
+            testTblConstWc("UNIQUE NULLS DISTINCT (id)");
+            testTblConstWc("UNIQUE NULLS NOT DISTINCT (id, name)");
+          });
+        });
       });
 
       it("CHECK", () => {

@@ -129,6 +129,10 @@ export interface ReferentialMatch extends BaseNode {
 export interface ConstraintUnique extends BaseNode {
   type: "constraint_unique";
   uniqueKw: Keyword<"UNIQUE"> | [Keyword<"UNIQUE">, Keyword<"KEY" | "INDEX">];
+  // PostgreSQL
+  nullsKw?:
+    | [Keyword<"NULLS">, Keyword<"DISTINCT">]
+    | [Keyword<"NULLS">, Keyword<"NOT">, Keyword<"DISTINCT">];
   columns?: ParenExpr<ListExpr<Identifier>>;
   onConflict?: OnConflictClause;
 }

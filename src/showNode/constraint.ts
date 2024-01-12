@@ -20,7 +20,7 @@ export const constraintMap: FullTransformMap<string, AllConstraintNodes> = {
   referential_action: (node) => show([node.onKw, node.eventKw, node.actionKw]),
   referential_match: (node) => show([node.matchKw, node.typeKw]),
   constraint_unique: (node) =>
-    show([node.uniqueKw, node.columns, node.onConflict]),
+    show([node.uniqueKw, node.nullsKw, node.columns, node.onConflict]),
   constraint_check: (node) => show([node.checkKw, node.expr, node.onConflict]),
   constraint_index: (node) =>
     show([node.indexTypeKw, node.indexKw, node.columns]),

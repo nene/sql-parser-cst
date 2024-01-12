@@ -3737,24 +3737,31 @@ sqlite_sort_direction
 
 table_constraint_unique
   = kws:(unique_key __)
+    nullsKw:(nulls_distinctness __)?
     columns:paren$list$column
     confl:(__ on_conflict_clause)? {
       return loc({
         type: "constraint_unique",
         uniqueKw: read(kws),
+        nullsKw: read(nullsKw),
         columns,
         onConflict: read(confl),
       });
     }
 
 column_constraint_unique
-  = kws:unique_key confl:(__ on_conflict_clause)? {
+  = kws:unique_key nullsKw:(__ nulls_distinctness)?
+    confl:(__ on_conflict_clause)? {
       return loc({
         type: "constraint_unique",
         uniqueKw: kws,
+        nullsKw: read(nullsKw),
         onConflict: read(confl),
       });
     }
+
+nulls_distinctness
+  = kw:(NULLS __ DISTINCT / NULLS __ NOT __ DISTINCT) { return read(kw); }
 
 unique_key
   = kws:(UNIQUE __ (INDEX / KEY) / UNIQUE) {
