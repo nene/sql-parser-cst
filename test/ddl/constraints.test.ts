@@ -106,12 +106,18 @@ describe("constraints", () => {
       });
     });
 
-    dialect(["mysql", "mariadb", "sqlite"], () => {
-      it("GENERATED ALWAYS", () => {
-        testColConstWc("GENERATED ALWAYS AS (col1 + col2)");
-        testColConstWc("AS (col1 + col2)");
-        testColConstWc("GENERATED ALWAYS AS (true) STORED");
-        testColConstWc("GENERATED ALWAYS AS ( true ) VIRTUAL");
+    describe("generated", () => {
+      dialect(["mysql", "mariadb", "sqlite"], () => {
+        it("GENERATED ALWAYS", () => {
+          testColConstWc("GENERATED ALWAYS AS (col1 + col2)");
+          testColConstWc("AS (col1 + col2)");
+          testColConstWc("GENERATED ALWAYS AS ( true ) VIRTUAL");
+        });
+      });
+      dialect(["mysql", "mariadb", "sqlite", "postgresql"], () => {
+        it("GENERATED ALWAYS AS (expr) STORED", () => {
+          testColConstWc("GENERATED ALWAYS AS (true) STORED");
+        });
       });
     });
 
@@ -223,13 +229,15 @@ describe("constraints", () => {
         testColConstWc("CONSTRAINT GENERATED ALWAYS AS (x + y)");
         testColConstWc("CONSTRAINT REFERENCES tbl2 (col)");
       });
+    });
 
+    dialect(["sqlite", "postgresql"], () => {
       it("supports named column constraints", () => {
         testColConstWc("CONSTRAINT cname NULL");
         testColConstWc("CONSTRAINT cname NOT NULL");
         testColConstWc("CONSTRAINT cname DEFAULT 10");
         testColConstWc("CONSTRAINT cname COLLATE utf8");
-        testColConstWc("CONSTRAINT cname GENERATED ALWAYS AS (x + y)");
+        testColConstWc("CONSTRAINT cname GENERATED ALWAYS AS (x + y) STORED");
         testColConstWc("CONSTRAINT cname REFERENCES tbl2 (col)");
       });
     });
