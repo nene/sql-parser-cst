@@ -26,6 +26,14 @@ describe("create table", () => {
     });
   });
 
+  dialect("postgresql", () => {
+    // This syntax is deprecated and has no effect
+    it("supports [GLOBAL | LOCAL] TEMPORARY TABLE", () => {
+      testWc("CREATE GLOBAL TEMP TABLE foo (id INT)");
+      testWc("CREATE LOCAL TEMPORARY TABLE foo (id INT)");
+    });
+  });
+
   it("supports IF NOT EXISTS", () => {
     testWc("CREATE TABLE IF NOT EXISTS foo (id INT)");
   });

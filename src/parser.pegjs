@@ -1924,7 +1924,7 @@ drop_index_stmt
 create_table_stmt
   = createKw:CREATE
     replKw:(__ OR __ REPLACE)?
-    tmpKw:(__ (TEMPORARY / TEMP))?
+    tmpKw:(__ temporary_definition)?
     externalKw:(__ EXTERNAL)?
     snapshotKw:(__ SNAPSHOT)?
     virtualKw:(__ VIRTUAL)?
@@ -1951,6 +1951,11 @@ create_table_stmt
         clauses: clauses.map(read),
       });
     }
+
+temporary_definition
+  = TEMP
+  / TEMPORARY
+  / &postgres kw:((GLOBAL / LOCAL) __ (TEMPORARY / TEMP)) { return read(kw); }
 
 if_not_exists
   = kws:(IF __ NOT __ EXISTS) { return read(kws); }

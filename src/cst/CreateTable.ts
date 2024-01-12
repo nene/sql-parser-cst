@@ -32,7 +32,10 @@ export interface CreateTableStmt extends BaseNode {
   type: "create_table_stmt";
   createKw: Keyword<"CREATE">;
   orReplaceKw?: [Keyword<"OR">, Keyword<"REPLACE">];
-  temporaryKw?: Keyword<"TEMP" | "TEMPORARY">;
+  temporaryKw?:
+    | Keyword<"TEMP" | "TEMPORARY">
+    // PostgreSQL deprecated syntax which has no effect
+    | [Keyword<"GLOBAL" | "LOCAL">, Keyword<"TEMPORARY" | "TEMP">];
   externalKw?: Keyword<"EXTERNAL">;
   snapshotKw?: Keyword<"SNAPSHOT">;
   virtualKw?: Keyword<"VIRTUAL">;
