@@ -2108,7 +2108,7 @@ create_table_partition_bound_clause
   }
 
 partition_bound_from_to
-  = fromKw:(FROM __) from:paren$list$expr toKw:(__ TO __) to:paren$list$expr {
+  = fromKw:(FROM __) from:paren$list$bound_value toKw:(__ TO __) to:paren$list$bound_value {
     return loc({
       type: "partition_bound_from_to",
       fromKw: read(fromKw),
@@ -2117,6 +2117,11 @@ partition_bound_from_to
       to,
     });
   }
+
+bound_value
+  = kw:MINVALUE { return loc({ type: "minvalue", minvalueKw: kw }); }
+  / kw:MAXVALUE { return loc({ type: "maxvalue", maxvalueKw: kw }); }
+  / expr
 
 partition_bound_in
   = kw:(IN __) values:paren$list$expr {
@@ -5190,6 +5195,7 @@ paren$join_expr = .
 paren$list$alias$column = .
 paren$list$alias$expr = .
 paren$list$alias$paren$list$column = .
+paren$list$bound_value = .
 paren$list$column = .
 paren$list$column_definition = .
 paren$list$create_definition = .
@@ -5235,6 +5241,7 @@ list$alias$expr = .
 list$alias$func_call = .
 list$alias$paren$list$column = .
 list$alter_action = .
+list$bound_value = .
 list$column = .
 list$column_assignment = .
 list$column_definition = .
@@ -6363,6 +6370,7 @@ MATCHED             = kw:"MATCHED"i             !ident_part { return loc(createK
 MATERIALIZED        = kw:"MATERIALIZED"i        !ident_part { return loc(createKeyword(kw)); }
 MAX                 = kw:"MAX"i                 !ident_part { return loc(createKeyword(kw)); }
 MAX_ROWS            = kw:"MAX_ROWS"i            !ident_part { return loc(createKeyword(kw)); }
+MAXVALUE            = kw:"MAXVALUE"i            !ident_part { return loc(createKeyword(kw)); }
 MEDIUMBLOB          = kw:"MEDIUMBLOB"i          !ident_part { return loc(createKeyword(kw)); }
 MEDIUMINT           = kw:"MEDIUMINT"i           !ident_part { return loc(createKeyword(kw)); }
 MEDIUMTEXT          = kw:"MEDIUMTEXT"i          !ident_part { return loc(createKeyword(kw)); }
@@ -6380,6 +6388,7 @@ MIN_ROWS            = kw:"MIN_ROWS"i            !ident_part { return loc(createK
 MINUTE              = kw:"MINUTE"i              !ident_part { return loc(createKeyword(kw)); }
 MINUTE_MICROSECOND  = kw:"MINUTE_MICROSECOND"   !ident_part { return loc(createKeyword(kw)); }
 MINUTE_SECOND       = kw:"MINUTE_SECOND"        !ident_part { return loc(createKeyword(kw)); }
+MINVALUE            = kw:"MINVALUE"i            !ident_part { return loc(createKeyword(kw)); }
 MOD                 = kw:"MOD"i                 !ident_part { return loc(createKeyword(kw)); }
 MODE                = kw:"MODE"i                !ident_part { return loc(createKeyword(kw)); }
 MONDAY              = kw:"MONDAY"i              !ident_part { return loc(createKeyword(kw)); }
