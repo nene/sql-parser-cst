@@ -33,8 +33,8 @@ export type AllCreateTableNodes =
   | CreateTablePartitionOfClause
   | CreateTablePartitionBoundClause
   | PartitionBoundFromTo
-  | Minvalue
-  | Maxvalue
+  | PartitionBoundMinvalue
+  | PartitionBoundMaxvalue
   | PartitionBoundIn
   | PartitionBoundWith
   | PartitionBoundModulus
@@ -214,18 +214,22 @@ export interface CreateTablePartitionBoundClause extends BaseNode {
 export interface PartitionBoundFromTo extends BaseNode {
   type: "partition_bound_from_to";
   fromKw: Keyword<"FROM">;
-  from: ParenExpr<ListExpr<Expr | Minvalue | Maxvalue>>;
+  from: ParenExpr<
+    ListExpr<Expr | PartitionBoundMinvalue | PartitionBoundMaxvalue>
+  >;
   toKw: Keyword<"TO">;
-  to: ParenExpr<ListExpr<Expr | Minvalue | Maxvalue>>;
+  to: ParenExpr<
+    ListExpr<Expr | PartitionBoundMinvalue | PartitionBoundMaxvalue>
+  >;
 }
 
-export interface Minvalue extends BaseNode {
-  type: "minvalue";
+export interface PartitionBoundMinvalue extends BaseNode {
+  type: "partition_bound_minvalue";
   minvalueKw: Keyword<"MINVALUE">;
 }
 
-export interface Maxvalue extends BaseNode {
-  type: "maxvalue";
+export interface PartitionBoundMaxvalue extends BaseNode {
+  type: "partition_bound_maxvalue";
   maxvalueKw: Keyword<"MAXVALUE">;
 }
 

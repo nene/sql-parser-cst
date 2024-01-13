@@ -59,7 +59,7 @@ describe("create table (PostgreSQL)", () => {
                 "text": "MINVALUE",
                 "type": "keyword",
               },
-              "type": "minvalue",
+              "type": "partition_bound_minvalue",
             }
           `);
           expect(bound.bound.to.expr.items[0]).toMatchInlineSnapshot(`
@@ -69,7 +69,7 @@ describe("create table (PostgreSQL)", () => {
                 "text": "MAXVALUE",
                 "type": "keyword",
               },
-              "type": "maxvalue",
+              "type": "partition_bound_maxvalue",
             }
           `);
         });

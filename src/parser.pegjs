@@ -2108,19 +2108,20 @@ create_table_partition_bound_clause
   }
 
 partition_bound_from_to
-  = fromKw:(FROM __) from:paren$list$bound_value toKw:(__ TO __) to:paren$list$bound_value {
-    return loc({
-      type: "partition_bound_from_to",
-      fromKw: read(fromKw),
-      from,
-      toKw: read(toKw),
-      to,
-    });
-  }
+  = fromKw:(FROM __) from:paren$list$partition_bound_from_to_value
+    toKw:(__ TO __) to:paren$list$partition_bound_from_to_value {
+      return loc({
+        type: "partition_bound_from_to",
+        fromKw: read(fromKw),
+        from,
+        toKw: read(toKw),
+        to,
+      });
+    }
 
-bound_value
-  = kw:MINVALUE { return loc({ type: "minvalue", minvalueKw: kw }); }
-  / kw:MAXVALUE { return loc({ type: "maxvalue", maxvalueKw: kw }); }
+partition_bound_from_to_value
+  = kw:MINVALUE { return loc({ type: "partition_bound_minvalue", minvalueKw: kw }); }
+  / kw:MAXVALUE { return loc({ type: "partition_bound_maxvalue", maxvalueKw: kw }); }
   / expr
 
 partition_bound_in
@@ -5220,7 +5221,7 @@ paren$join_expr = .
 paren$list$alias$column = .
 paren$list$alias$expr = .
 paren$list$alias$paren$list$column = .
-paren$list$bound_value = .
+paren$list$partition_bound_from_to_value = .
 paren$list$column = .
 paren$list$column_definition = .
 paren$list$create_definition = .
@@ -5267,7 +5268,7 @@ list$alias$expr = .
 list$alias$func_call = .
 list$alias$paren$list$column = .
 list$alter_action = .
-list$bound_value = .
+list$partition_bound_from_to_value = .
 list$column = .
 list$column_assignment = .
 list$column_definition = .
