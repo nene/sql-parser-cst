@@ -1,6 +1,10 @@
-import { dialect, notDialect, testWc } from "../test_utils";
+import { dialect, notDialect, testWc, withComments } from "../test_utils";
 
 describe("create table (BigQuery)", () => {
+  function testClauseWc(options: string) {
+    test(`CREATE TABLE t (id INT) ${withComments(options)}`);
+  }
+
   dialect("bigquery", () => {
     describe("CREATE TABLE COPY", () => {
       it("supports basic CREATE TABLE ... COPY", () => {
@@ -82,6 +86,23 @@ describe("create table (BigQuery)", () => {
           OPTIONS(uris=['gs://bucket/path/*'], format='PARQUET')
         `);
       });
+    });
+
+    it("supports DEFAULT COLLATE", () => {
+      testClauseWc(`DEFAULT COLLATE 'und:ci'`);
+    });
+
+    it("supports OPTIONS()", () => {
+      testClauseWc(`OPTIONS(description = 'Hello', friendly_name = 'Blah')`);
+    });
+
+    it("supports PARTITION BY", () => {
+      testClauseWc(`PARTITION BY DATE(_PARTITIONTIME)`);
+      testClauseWc(`PARTITION BY _PARTITIONTIME`);
+    });
+
+    it("supports CLUSTER BY", () => {
+      testClauseWc(`CLUSTER BY col1, col2, col3`);
     });
   });
 

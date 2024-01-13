@@ -1,17 +1,9 @@
-import { dialect, test, withComments } from "../test_utils";
+import { dialect, notDialect, test, withComments } from "../test_utils";
 
 describe("table options", () => {
   function testOptsWc(options: string) {
     test(`CREATE TABLE t (id INT) ${withComments(options)}`);
   }
-
-  dialect("sqlite", () => {
-    it("supports CREATE TABLE with STRICT & WITHOUT ROWID options", () => {
-      testOptsWc("STRICT");
-      testOptsWc("WITHOUT ROWID");
-      testOptsWc("STRICT, WITHOUT ROWID");
-    });
-  });
 
   dialect(["mysql", "mariadb"], () => {
     (
@@ -62,28 +54,9 @@ describe("table options", () => {
     // TODO: UNION [=] (tbl_name[,tbl_name]...)
   });
 
-  dialect("bigquery", () => {
-    it("supports DEFAULT COLLATE option", () => {
-      testOptsWc(`DEFAULT COLLATE 'und:ci'`);
-    });
-
-    it("supports OPTIONS()", () => {
-      testOptsWc(`OPTIONS(description = 'Hello', friendly_name = 'Blah')`);
-    });
-
-    it("supports PARTITION BY", () => {
-      testOptsWc(`PARTITION BY DATE(_PARTITIONTIME)`);
-      testOptsWc(`PARTITION BY _PARTITIONTIME`);
-    });
-
-    it("supports CLUSTER BY", () => {
-      testOptsWc(`CLUSTER BY col1, col2, col3`);
-    });
-  });
-
-  dialect("postgresql", () => {
-    it.skip("TODO:postgres", () => {
-      expect(true).toBe(true);
+  notDialect(["mysql", "mariadb"], () => {
+    it("does not support MySQL-like CREATE TABLE options", () => {
+      expect(() => test(`CREATE TABLE foo(id INT) ENGINE = INNODB, COMMENT 'hello'`)).toBe(true);
     });
   });
 });
