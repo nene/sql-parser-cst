@@ -80,6 +80,13 @@ describe("create table (PostgreSQL)", () => {
             FOR VALUES IN ('2020-01-01', '2020-02-01')
           `);
         });
+
+        it("supports FOR VALUES WITH (.., ..)", () => {
+          testWc(`
+            CREATE TABLE sales_2020 PARTITION OF sales
+            FOR VALUES WITH ( MODULUS 5, REMAINDER 4 )
+          `);
+        });
       });
     });
   });

@@ -2099,7 +2099,7 @@ create_table_partition_by_clause
   }
 
 create_table_partition_bound_clause
-  = kw:(FOR __ VALUES __) bound:(partition_bound_from_to / partition_bound_in) {
+  = kw:(FOR __ VALUES __) bound:(partition_bound_from_to / partition_bound_in / partition_bound_with) {
     return loc({
       type: "create_table_partition_bound_clause",
       forValuesKw: read(kw),
@@ -2129,6 +2129,31 @@ partition_bound_in
       type: "partition_bound_in",
       inKw: read(kw),
       values,
+    });
+  }
+
+partition_bound_with
+  = kw:(WITH __) values:paren$list$partition_bound_with_value {
+    return loc({
+      type: "partition_bound_with",
+      withKw: read(kw),
+      values,
+    });
+  }
+
+partition_bound_with_value
+  = kw:(MODULUS __) value:number_literal {
+    return loc({
+      type: "partition_bound_modulus",
+      modulusKw: read(kw),
+      value,
+    });
+  }
+  / kw:(REMAINDER __) value:number_literal {
+    return loc({
+      type: "partition_bound_remainder",
+      remainderKw: read(kw),
+      value,
     });
   }
 
@@ -5207,6 +5232,7 @@ paren$list$func_param = .
 paren$list$grouping_element = .
 paren$list$ident = .
 paren$list$literal = .
+paren$list$partition_bound_with_value = .
 paren$list$procedure_param = .
 paren$list$sort_specification = .
 paren$list$string_literal = .
@@ -5261,6 +5287,7 @@ list$named_window = .
 list$number_literal = .
 list$procedure_param = .
 list$rename_action = .
+list$partition_bound_with_value = .
 list$set_assignment = .
 list$sort_specification = .
 list$string_literal = .
@@ -6391,6 +6418,7 @@ MINUTE_SECOND       = kw:"MINUTE_SECOND"        !ident_part { return loc(createK
 MINVALUE            = kw:"MINVALUE"i            !ident_part { return loc(createKeyword(kw)); }
 MOD                 = kw:"MOD"i                 !ident_part { return loc(createKeyword(kw)); }
 MODE                = kw:"MODE"i                !ident_part { return loc(createKeyword(kw)); }
+MODULUS             = kw:"MODULUS"i             !ident_part { return loc(createKeyword(kw)); }
 MONDAY              = kw:"MONDAY"i              !ident_part { return loc(createKeyword(kw)); }
 MONTH               = kw:"MONTH"i               !ident_part { return loc(createKeyword(kw)); }
 NATIVE              = kw:"NATIVE"i              !ident_part { return loc(createKeyword(kw)); }
@@ -6470,6 +6498,7 @@ REFERENCES          = kw:"REFERENCES"i          !ident_part { return loc(createK
 REGEXP              = kw:"REGEXP"i              !ident_part { return loc(createKeyword(kw)); }
 REINDEX             = kw:"REINDEX"i             !ident_part { return loc(createKeyword(kw)); }
 RELEASE             = kw:"RELEASE"i             !ident_part { return loc(createKeyword(kw)); }
+REMAINDER           = kw:"REMAINDER"i           !ident_part { return loc(createKeyword(kw)); }
 REMOTE              = kw:"REMOTE"i              !ident_part { return loc(createKeyword(kw)); }
 RENAME              = kw:"RENAME"i              !ident_part { return loc(createKeyword(kw)); }
 REPEAT              = kw:"REPEAT"i              !ident_part { return loc(createKeyword(kw)); }

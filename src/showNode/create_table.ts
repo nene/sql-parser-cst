@@ -50,4 +50,7 @@ export const createTableMap: FullTransformMap<string, AllCreateTableNodes> = {
   minvalue: (node) => show([node.minvalueKw]),
   maxvalue: (node) => show([node.maxvalueKw]),
   partition_bound_in: (node) => show([node.inKw, node.values]),
+  partition_bound_with: (node) => show([node.withKw, node.values]),
+  partition_bound_modulus: (node) => show([node.modulusKw, node.value]),
+  partition_bound_remainder: (node) => show([node.remainderKw, node.value]),
 };

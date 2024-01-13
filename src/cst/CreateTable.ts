@@ -17,6 +17,7 @@ import { AsClause, WithConnectionClause } from "./ProcClause";
 import { ForSystemTimeAsOfExpr, PartitionByClause, SubSelect } from "./Select";
 import { ClusterByClause } from "./OtherClauses";
 import { Default } from "./Insert";
+import { NumberLiteral } from "./Literal";
 
 export type AllCreateTableNodes =
   | CreateTableStmt
@@ -34,7 +35,10 @@ export type AllCreateTableNodes =
   | PartitionBoundFromTo
   | Minvalue
   | Maxvalue
-  | PartitionBoundIn;
+  | PartitionBoundIn
+  | PartitionBoundWith
+  | PartitionBoundModulus
+  | PartitionBoundRemainder;
 
 // CREATE TABLE
 export interface CreateTableStmt extends BaseNode {
@@ -204,7 +208,7 @@ export interface CreateTablePartitionOfClause extends BaseNode {
 export interface CreateTablePartitionBoundClause extends BaseNode {
   type: "create_table_partition_bound_clause";
   forValuesKw: [Keyword<"FOR">, Keyword<"VALUES">];
-  bound: PartitionBoundFromTo | PartitionBoundIn;
+  bound: PartitionBoundFromTo | PartitionBoundIn | PartitionBoundWith;
 }
 
 export interface PartitionBoundFromTo extends BaseNode {
@@ -229,4 +233,22 @@ export interface PartitionBoundIn extends BaseNode {
   type: "partition_bound_in";
   inKw: Keyword<"IN">;
   values: ParenExpr<ListExpr<Expr>>;
+}
+
+export interface PartitionBoundWith extends BaseNode {
+  type: "partition_bound_with";
+  withKw: Keyword<"WITH">;
+  values: ParenExpr<ListExpr<PartitionBoundModulus | PartitionBoundRemainder>>;
+}
+
+export interface PartitionBoundModulus extends BaseNode {
+  type: "partition_bound_modulus";
+  modulusKw: Keyword<"MODULUS">;
+  value: NumberLiteral;
+}
+
+export interface PartitionBoundRemainder extends BaseNode {
+  type: "partition_bound_remainder";
+  remainderKw: Keyword<"REMAINDER">;
+  value: NumberLiteral;
 }
