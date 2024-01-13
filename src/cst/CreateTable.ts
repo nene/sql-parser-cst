@@ -16,7 +16,6 @@ import {
 import { AsClause, WithConnectionClause } from "./ProcClause";
 import { ForSystemTimeAsOfExpr, PartitionByClause, SubSelect } from "./Select";
 import { ClusterByClause } from "./OtherClauses";
-import { Default } from "./Insert";
 import { NumberLiteral } from "./Literal";
 
 export type AllCreateTableNodes =
@@ -39,6 +38,7 @@ export type AllCreateTableNodes =
   | PartitionBoundWith
   | PartitionBoundModulus
   | PartitionBoundRemainder
+  | CreateTableDefaultPartitionClause
   | CreateTableOnCommitClause;
 
 // CREATE TABLE
@@ -183,7 +183,7 @@ type PostgresqlCreateTableClause =
   | CreateTableInheritsClause
   | CreateTablePartitionByClause
   | CreateTablePartitionBoundClause
-  | Default
+  | CreateTableDefaultPartitionClause
   | CreateTableOnCommitClause;
 
 export interface CreateTableInheritsClause extends BaseNode {
@@ -257,6 +257,11 @@ export interface PartitionBoundRemainder extends BaseNode {
   type: "partition_bound_remainder";
   remainderKw: Keyword<"REMAINDER">;
   value: NumberLiteral;
+}
+
+export interface CreateTableDefaultPartitionClause extends BaseNode {
+  type: "create_table_default_partition_clause";
+  defaultKw: Keyword<"DEFAULT">;
 }
 
 export interface CreateTableOnCommitClause extends BaseNode {

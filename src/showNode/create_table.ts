@@ -53,6 +53,7 @@ export const createTableMap: FullTransformMap<string, AllCreateTableNodes> = {
   partition_bound_with: (node) => show([node.withKw, node.values]),
   partition_bound_modulus: (node) => show([node.modulusKw, node.value]),
   partition_bound_remainder: (node) => show([node.remainderKw, node.value]),
+  create_table_default_partition_clause: (node) => show(node.defaultKw),
   create_table_on_commit_clause: (node) =>
     show([node.onCommitKw, node.actionKw]),
 };

@@ -2077,7 +2077,7 @@ create_table_clause_postgresql
   = create_table_inherits_clause
   / create_table_partition_by_clause
   / create_table_partition_bound_clause
-  / default
+  / create_table_default_partition_clause
   / create_table_on_commit_clause
 
 create_table_inherits_clause
@@ -2156,6 +2156,14 @@ partition_bound_with_value
       type: "partition_bound_remainder",
       remainderKw: read(kw),
       value,
+    });
+  }
+
+create_table_default_partition_clause
+  = kw:DEFAULT {
+    return loc({
+      type: "create_table_default_partition_clause",
+      defaultKw: read(kw),
     });
   }
 
