@@ -43,7 +43,8 @@ export type AllCreateTableNodes =
   | CreateTableOnCommitClause
   | CreateTableTablespaceClause
   | CreateTableUsingAccessMethodClause
-  | CreateTableWithClause;
+  | CreateTableWithClause
+  | CreateTableWithoutOidsClause;
 
 // CREATE TABLE
 export interface CreateTableStmt extends BaseNode {
@@ -201,7 +202,8 @@ type PostgresqlCreateTableClause =
   | CreateTableOnCommitClause
   | CreateTableTablespaceClause
   | CreateTableUsingAccessMethodClause
-  | CreateTableWithClause;
+  | CreateTableWithClause
+  | CreateTableWithoutOidsClause;
 
 export interface CreateTableInheritsClause extends BaseNode {
   type: "create_table_inherits_clause";
@@ -310,4 +312,9 @@ export interface CreateTableWithClause extends BaseNode {
       >
     >
   >;
+}
+
+export interface CreateTableWithoutOidsClause extends BaseNode {
+  type: "create_table_without_oids_clause";
+  withoutOidsKw: [Keyword<"WITHOUT">, Keyword<"OIDS">];
 }

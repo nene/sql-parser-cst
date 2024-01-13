@@ -2082,6 +2082,7 @@ create_table_clause_postgresql
   / create_table_tablespace_clause
   / create_table_using_access_method_clause
   / create_table_with_clause
+  / create_table_without_oids_clause
 
 create_table_inherits_clause
   = kw:(INHERITS __) tables:paren$list$entity_name {
@@ -2219,6 +2220,14 @@ table_option_postgresql
     return loc({
       type: "table_option",
       name: read(name),
+    });
+  }
+
+create_table_without_oids_clause
+  = kw:(WITHOUT __ OIDS) {
+    return loc({
+      type: "create_table_without_oids_clause",
+      withoutOidsKw: read(kw),
     });
   }
 
@@ -6519,6 +6528,7 @@ NVARCHAR            = kw:"NVARCHAR"i            !ident_part { return loc(createK
 OF                  = kw:"OF"i                  !ident_part { return loc(createKeyword(kw)); }
 OFF                 = kw:"OFF"i                 !ident_part { return loc(createKeyword(kw)); }
 OFFSET              = kw:"OFFSET"i              !ident_part { return loc(createKeyword(kw)); }
+OIDS                = kw:"OIDS"i                !ident_part { return loc(createKeyword(kw)); }
 ON                  = kw:"ON"i                  !ident_part { return loc(createKeyword(kw)); }
 ONLY                = kw:"ONLY"i                !ident_part { return loc(createKeyword(kw)); }
 OPERATOR            = kw:"OPERATOR"i            !ident_part { return loc(createKeyword(kw)); }

@@ -61,4 +61,5 @@ export const createTableMap: FullTransformMap<string, AllCreateTableNodes> = {
   create_table_using_access_method_clause: (node) =>
     show([node.usingKw, node.method]),
   create_table_with_clause: (node) => show([node.withKw, node.options]),
+  create_table_without_oids_clause: (node) => show(node.withoutOidsKw),
 };

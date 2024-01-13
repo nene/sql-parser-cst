@@ -122,6 +122,10 @@ describe("create table (PostgreSQL)", () => {
         testClauseWc(`WITH (vacuum_index_cleanup = OFF)`);
         testClauseWc(`WITH (toast.vacuum_index_cleanup = AUTO)`);
       });
+
+      it("supports WITHOUT OIDS clause", () => {
+        testClauseWc(`WITHOUT OIDS`);
+      });
     });
   });
 
