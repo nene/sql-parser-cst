@@ -36,6 +36,12 @@ describe("create table (MySQL)", () => {
         ["STATS_AUTO_RECALC", ["0", "1", "DEFAULT"]],
         ["STATS_PERSISTENT", ["0", "1", "DEFAULT"]],
         ["STATS_SAMPLE_PAGES", ["18"]],
+        // MySQL syntax diagram say that '=' can't be used with TABLESPACE,
+        // but then later it shows another syntax diagram that allows it.
+        ["TABLESPACE", ["ts_1"]],
+        // The STORAGE option is linked to TABLESPACE option before it according to MySQL docs,
+        // but really the syntax seems to allow any order, including separating them with commas.
+        ["STORAGE", ["DISK", "MEMORY"]],
       ] as [string, string[]][]
     ).forEach(([name, values]) => {
       values.forEach((value) => {
@@ -50,7 +56,6 @@ describe("create table (MySQL)", () => {
       testOptsWc(`START TRANSACTION`);
     });
 
-    // TODO: TABLESPACE tablespace_name [STORAGE {DISK | MEMORY}]
     // TODO: UNION [=] (tbl_name[,tbl_name]...)
   });
 

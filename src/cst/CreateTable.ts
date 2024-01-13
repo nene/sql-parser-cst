@@ -112,7 +112,9 @@ type TableOptionNameMysql =
   | Keyword<"SECONDARY_ENGINE_ATTRIBUTE">
   | Keyword<"STATS_AUTO_RECALC">
   | Keyword<"STATS_PERSISTENT">
-  | Keyword<"STATS_SAMPLE_PAGES">;
+  | Keyword<"STATS_SAMPLE_PAGES">
+  | Keyword<"TABLESPACE">
+  | Keyword<"STORAGE">;
 
 type TableOptionValueMysql = Keyword<
   | "DEFAULT"
@@ -124,6 +126,8 @@ type TableOptionValueMysql = Keyword<
   | "NO"
   | "FIRST"
   | "LAST"
+  | "DISK"
+  | "MEMORY"
 >;
 
 type CreateTableClause =

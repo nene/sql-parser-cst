@@ -3620,6 +3620,8 @@ mysql_table_opt_name
   / STATS_AUTO_RECALC
   / STATS_PERSISTENT
   / STATS_SAMPLE_PAGES
+  / TABLESPACE
+  / STORAGE
 
 mysql_table_opt_value
   = string_literal
@@ -3628,6 +3630,7 @@ mysql_table_opt_value
   / DEFAULT
   / DYNAMIC / FIXED / COMPRESSED / REDUNDANT / COMPACT  // for ROW_FORMAT
   / NO / FIRST / LAST  // for INSERT_METHOD
+  / DISK / MEMORY  // for STORAGE
 
 /**
  * ------------------------------------------------------------------------------------ *
@@ -6598,6 +6601,7 @@ SYSTEM_USER         = kw:"SYSTEM_USER"i         !ident_part { return loc(createK
 TABLE               = kw:"TABLE"i               !ident_part { return loc(createKeyword(kw)); }
 TABLES              = kw:"TABLES"i              !ident_part { return loc(createKeyword(kw)); }
 TABLESAMPLE         = kw:"TABLESAMPLE"i         !ident_part { return loc(createKeyword(kw)); }
+TABLESPACE          = kw:"TABLESPACE"i          !ident_part { return loc(createKeyword(kw)); }
 TARGET              = kw:"TARGET"i              !ident_part { return loc(createKeyword(kw)); }
 TEMP                = kw:"TEMP"i                !ident_part { return loc(createKeyword(kw)); }
 TEMPORARY           = kw:"TEMPORARY"i           !ident_part { return loc(createKeyword(kw)); }
