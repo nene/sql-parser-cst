@@ -26,7 +26,8 @@ export type AllCreateTableNodes =
   | CreateTableCloneClause
   | WithPartitionColumnsClause
   | CreateTableUsingClause
-  | CreateTableInheritsClause;
+  | CreateTableInheritsClause
+  | CreateTablePartitionByClause;
 
 // CREATE TABLE
 export interface CreateTableStmt extends BaseNode {
@@ -165,10 +166,19 @@ export interface CreateTableUsingClause extends BaseNode {
   module: FuncCall;
 }
 
-type PostgresqlCreateTableClause = CreateTableInheritsClause;
+type PostgresqlCreateTableClause =
+  | CreateTableInheritsClause
+  | CreateTablePartitionByClause;
 
 export interface CreateTableInheritsClause extends BaseNode {
   type: "create_table_inherits_clause";
   inheritsKw: Keyword<"INHERITS">;
   tables: ParenExpr<ListExpr<EntityName>>;
+}
+
+export interface CreateTablePartitionByClause extends BaseNode {
+  type: "create_table_partition_by_clause";
+  partitionByKw: [Keyword<"PARTITION">, Keyword<"BY">];
+  strategyKw: Keyword<"RANGE" | "LIST" | "HASH">;
+  columns: ParenExpr<ListExpr<Expr>>;
 }

@@ -1996,6 +1996,7 @@ create_table_clause
   / &bigquery x:create_table_clause_bigquery { return x; }
   / &sqlite x:create_table_using_clause { return x; }
   / &postgres x:create_table_inherits_clause { return x; }
+  / &postgres x:create_table_partition_by_clause { return x; }
 
 create_table_like_clause
   = kw:(LIKE __) name:entity_name {
@@ -2068,6 +2069,16 @@ create_table_inherits_clause
       type: "create_table_inherits_clause",
       inheritsKw: read(kw),
       tables,
+    });
+  }
+
+create_table_partition_by_clause
+  = kw:(PARTITION __ BY __) strategyKw:((RANGE / LIST / HASH) __) columns:paren$list$expr {
+    return loc({
+      type: "create_table_partition_by_clause",
+      partitionByKw: read(kw),
+      strategyKw: read(strategyKw),
+      columns,
     });
   }
 
@@ -6288,6 +6299,7 @@ LEFT                = kw:"LEFT"i                !ident_part { return loc(createK
 LIKE                = kw:"LIKE"i                !ident_part { return loc(createKeyword(kw)); }
 LIMIT               = kw:"LIMIT"i               !ident_part { return loc(createKeyword(kw)); }
 LINES               = kw:"LINES"i               !ident_part { return loc(createKeyword(kw)); }
+LIST                = kw:"LIST"i                !ident_part { return loc(createKeyword(kw)); }
 LOAD                = kw:"LOAD"i                !ident_part { return loc(createKeyword(kw)); }
 LOCAL               = kw:"LOCAL"i               !ident_part { return loc(createKeyword(kw)); }
 LOCALTIME           = kw:"LOCALTIME"i           !ident_part { return loc(createKeyword(kw)); }
