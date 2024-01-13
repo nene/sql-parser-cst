@@ -1,23 +1,27 @@
-import { dialect, notDialect, parseStmt, testWc } from "../test_utils";
+import { dialect, notDialect, parseStmt, test, testWc, withComments } from "../test_utils";
 
 describe("create table (PostgreSQL)", () => {
+  function testClauseWc(clause: string) {
+    test(`CREATE TABLE t (id INT) ${withComments(clause)}`);
+  }
+
   dialect("postgresql", () => {
     it("supports CREATE TABLE .. INHERITS", () => {
-      testWc("CREATE TABLE tbl (id INT) INHERITS (parent)");
-      testWc("CREATE TABLE tbl (id INT) INHERITS (parent1, parent2)");
+      testClauseWc("INHERITS (parent)");
+      testClauseWc("INHERITS (parent1, parent2)");
     });
 
     describe("partitioning", () => {
       describe("creating partitioned table", () => {
         it("supports PARTITION BY strategy (...)", () => {
-          testWc("CREATE TABLE tbl (id INT) PARTITION BY RANGE (id)");
-          testWc("CREATE TABLE tbl (id INT) PARTITION BY LIST (id, name)");
-          testWc("CREATE TABLE tbl (id INT) PARTITION BY HASH (id, (a + b))");
+          testClauseWc("PARTITION BY RANGE (id)");
+          testClauseWc("PARTITION BY LIST (id, name)");
+          testClauseWc("PARTITION BY HASH (id, (a + b))");
         });
 
         it("supports PARTITION BY with COLLATE", () => {
-          testWc(`CREATE TABLE tbl (id INT) PARTITION BY RANGE (id COLLATE "en_US")`);
-          testWc(`CREATE TABLE tbl (id INT) PARTITION BY RANGE ((a || b) COLLATE "C")`);
+          testClauseWc(`PARTITION BY RANGE (id COLLATE "en_US")`);
+          testClauseWc(`PARTITION BY RANGE ((a || b) COLLATE "C")`);
         });
       });
 
@@ -91,27 +95,27 @@ describe("create table (PostgreSQL)", () => {
     });
 
     it("supports ON COMMIT clause", () => {
-      testWc(`CREATE TABLE tbl (id INT) ON COMMIT PRESERVE ROWS`);
-      testWc(`CREATE TABLE tbl (id INT) ON COMMIT DELETE ROWS`);
-      testWc(`CREATE TABLE tbl (id INT) ON COMMIT DROP`);
+      testClauseWc(`ON COMMIT PRESERVE ROWS`);
+      testClauseWc(`ON COMMIT DELETE ROWS`);
+      testClauseWc(`ON COMMIT DROP`);
     });
 
     it("supports TABLESPACE clause", () => {
-      testWc(`CREATE TABLE tbl (id INT) TABLESPACE ts_1`);
+      testClauseWc(`TABLESPACE ts_1`);
     });
 
     it("supports USING clause", () => {
-      testWc(`CREATE TABLE tbl (id INT) USING "SP-GiST"`);
+      testClauseWc(`USING "SP-GiST"`);
     });
   });
 
   notDialect("postgresql", () => {
     it("does not support CREATE TABLE INHERITS", () => {
-      expect(() => testWc("CREATE TABLE tbl (id INT) INHERITS (parent)")).toThrowError();
+      expect(() => testClauseWc("INHERITS (parent)")).toThrowError();
     });
 
     it("does not support CREATE TABLE .. PARTITION BY", () => {
-      expect(() => testWc("CREATE TABLE tbl (id INT) PARTITION BY RANGE (id)")).toThrowError();
+      expect(() => testClauseWc("PARTITION BY RANGE (id)")).toThrowError();
     });
   });
 });
