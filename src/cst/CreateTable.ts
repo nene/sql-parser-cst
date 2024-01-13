@@ -40,7 +40,8 @@ export type AllCreateTableNodes =
   | PartitionBoundRemainder
   | CreateTableDefaultPartitionClause
   | CreateTableOnCommitClause
-  | CreateTableTablespaceClause;
+  | CreateTableTablespaceClause
+  | CreateTableUsingAccessMethodClause;
 
 // CREATE TABLE
 export interface CreateTableStmt extends BaseNode {
@@ -191,7 +192,8 @@ type PostgresqlCreateTableClause =
   | CreateTablePartitionBoundClause
   | CreateTableDefaultPartitionClause
   | CreateTableOnCommitClause
-  | CreateTableTablespaceClause;
+  | CreateTableTablespaceClause
+  | CreateTableUsingAccessMethodClause;
 
 export interface CreateTableInheritsClause extends BaseNode {
   type: "create_table_inherits_clause";
@@ -281,4 +283,10 @@ export interface CreateTableTablespaceClause extends BaseNode {
   type: "create_table_tablespace_clause";
   tablespaceKw: Keyword<"TABLESPACE">;
   name: Identifier;
+}
+
+export interface CreateTableUsingAccessMethodClause extends BaseNode {
+  type: "create_table_using_access_method_clause";
+  usingKw: Keyword<"USING">;
+  method: Identifier;
 }

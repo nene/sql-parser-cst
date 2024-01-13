@@ -2080,6 +2080,7 @@ create_table_clause_postgresql
   / create_table_default_partition_clause
   / create_table_on_commit_clause
   / create_table_tablespace_clause
+  / create_table_using_access_method_clause
 
 create_table_inherits_clause
   = kw:(INHERITS __) tables:paren$list$entity_name {
@@ -2183,6 +2184,15 @@ create_table_tablespace_clause
       type: "create_table_tablespace_clause",
       tablespaceKw: read(kw),
       name,
+    });
+  }
+
+create_table_using_access_method_clause
+  = kw:(USING __) method:ident {
+    return loc({
+      type: "create_table_using_access_method_clause",
+      usingKw: read(kw),
+      method,
     });
   }
 

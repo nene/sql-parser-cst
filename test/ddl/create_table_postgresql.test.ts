@@ -99,6 +99,10 @@ describe("create table (PostgreSQL)", () => {
     it("supports TABLESPACE clause", () => {
       testWc(`CREATE TABLE tbl (id INT) TABLESPACE ts_1`);
     });
+
+    it("supports USING clause", () => {
+      testWc(`CREATE TABLE tbl (id INT) USING "SP-GiST"`);
+    });
   });
 
   notDialect("postgresql", () => {
