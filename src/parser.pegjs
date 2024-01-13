@@ -1159,7 +1159,7 @@ where_current_of_clause
  * --------------------------------------------------------------------------------------
  */
 into_table_clause
-  = kw:(INTO __) temp:((TEMPORARY / TEMP) __)? unlogged:(UNLOGGED __)? tableKw:(TABLE __)? name:entity_name {
+  = kw:(INTO __) temp:((TEMPORARY / TEMP) __)? unlogged:(unlogged_definition __)? tableKw:(TABLE __)? name:entity_name {
     return loc({
       type: "into_table_clause",
       intoKw: read(kw),
@@ -1925,9 +1925,9 @@ create_table_stmt
   = createKw:CREATE
     replKw:(__ OR __ REPLACE)?
     tmpKw:(__ temporary_definition)?
-    unloggedKw:(__ UNLOGGED)?
+    unloggedKw:(__ unlogged_definition)?
     externalKw:(__ external_definition)?
-    snapshotKw:(__ SNAPSHOT)?
+    snapshotKw:(__ snapshot_definition)?
     virtualKw:(__ virtual_definition)?
     tableKw:(__ TABLE)
     ifKw:(__ if_not_exists)?
@@ -1959,8 +1959,14 @@ temporary_definition
   / TEMPORARY
   / &postgres kw:((GLOBAL / LOCAL) __ (TEMPORARY / TEMP)) { return read(kw); }
 
+unlogged_definition
+  = kw:UNLOGGED &postgres { return kw; }
+
 external_definition
   = kw:EXTERNAL &bigquery { return kw; }
+
+snapshot_definition
+  = kw:SNAPSHOT &bigquery { return kw; }
 
 virtual_definition
   = kw:VIRTUAL &sqlite { return kw; }
@@ -2103,7 +2109,7 @@ bigquery_option_default_collate
 drop_table_stmt
   = dropKw:(DROP __)
     temporaryKw:(TEMPORARY __)?
-    snapshotKw:(SNAPSHOT __)?
+    snapshotKw:(snapshot_definition __)?
     externalKw:(external_definition __)?
     tableKw:(TABLE __)
     ifExistsKw:(if_exists __)?
