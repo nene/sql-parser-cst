@@ -2078,6 +2078,7 @@ create_table_clause_postgresql
   / create_table_partition_by_clause
   / create_table_partition_bound_clause
   / default
+  / create_table_on_commit_clause
 
 create_table_inherits_clause
   = kw:(INHERITS __) tables:paren$list$entity_name {
@@ -2155,6 +2156,15 @@ partition_bound_with_value
       type: "partition_bound_remainder",
       remainderKw: read(kw),
       value,
+    });
+  }
+
+create_table_on_commit_clause
+  = kw:(ON __ COMMIT __) actionKw:(PRESERVE __ ROWS / DELETE __ ROWS / DROP) {
+    return loc({
+      type: "create_table_on_commit_clause",
+      onCommitKw: read(kw),
+      actionKw: read(actionKw),
     });
   }
 
@@ -6481,6 +6491,7 @@ POLICY              = kw:"POLICY"i              !ident_part { return loc(createK
 PRAGMA              = kw:"PRAGMA"i              !ident_part { return loc(createKeyword(kw)); }
 PRECEDING           = kw:"PRECEDING"i           !ident_part { return loc(createKeyword(kw)); }
 PRECISION           = kw:"PRECISION"i           !ident_part { return loc(createKeyword(kw)); }
+PRESERVE            = kw:"PRESERVE"i            !ident_part { return loc(createKeyword(kw)); }
 PRIMARY             = kw:"PRIMARY"i             !ident_part { return loc(createKeyword(kw)); }
 PROCEDURE           = kw:"PROCEDURE"i           !ident_part { return loc(createKeyword(kw)); }
 PROJECT             = kw:"PROJECT"i             !ident_part { return loc(createKeyword(kw)); }

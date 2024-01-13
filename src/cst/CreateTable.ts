@@ -38,7 +38,8 @@ export type AllCreateTableNodes =
   | PartitionBoundIn
   | PartitionBoundWith
   | PartitionBoundModulus
-  | PartitionBoundRemainder;
+  | PartitionBoundRemainder
+  | CreateTableOnCommitClause;
 
 // CREATE TABLE
 export interface CreateTableStmt extends BaseNode {
@@ -182,7 +183,8 @@ type PostgresqlCreateTableClause =
   | CreateTableInheritsClause
   | CreateTablePartitionByClause
   | CreateTablePartitionBoundClause
-  | Default;
+  | Default
+  | CreateTableOnCommitClause;
 
 export interface CreateTableInheritsClause extends BaseNode {
   type: "create_table_inherits_clause";
@@ -255,4 +257,10 @@ export interface PartitionBoundRemainder extends BaseNode {
   type: "partition_bound_remainder";
   remainderKw: Keyword<"REMAINDER">;
   value: NumberLiteral;
+}
+
+export interface CreateTableOnCommitClause extends BaseNode {
+  type: "create_table_on_commit_clause";
+  onCommitKw: [Keyword<"ON">, Keyword<"COMMIT">];
+  actionKw: [Keyword<"DELETE" | "PRESERVE">, Keyword<"ROWS">] | Keyword<"DROP">;
 }

@@ -89,6 +89,12 @@ describe("create table (PostgreSQL)", () => {
         });
       });
     });
+
+    it("supports ON COMMIT clause", () => {
+      testWc(`CREATE TABLE tbl (id INT) ON COMMIT PRESERVE ROWS`);
+      testWc(`CREATE TABLE tbl (id INT) ON COMMIT DELETE ROWS`);
+      testWc(`CREATE TABLE tbl (id INT) ON COMMIT DROP`);
+    });
   });
 
   notDialect("postgresql", () => {
