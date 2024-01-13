@@ -1,6 +1,6 @@
 import { dialect, notDialect, test, withComments } from "../test_utils";
 
-describe("table options", () => {
+describe("create table (MySQL)", () => {
   function testOptsWc(options: string) {
     test(`CREATE TABLE t (id INT) ${withComments(options)}`);
   }
