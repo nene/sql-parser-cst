@@ -42,6 +42,7 @@ describe("create table (MySQL)", () => {
         // The STORAGE option is linked to TABLESPACE option before it according to MySQL docs,
         // but really the syntax seems to allow any order, including separating them with commas.
         ["STORAGE", ["DISK", "MEMORY"]],
+        ["UNION", ["(t1, t2, my_schema.t3)"]],
       ] as [string, string[]][]
     ).forEach(([name, values]) => {
       values.forEach((value) => {

@@ -3622,11 +3622,13 @@ mysql_table_opt_name
   / STATS_SAMPLE_PAGES
   / TABLESPACE
   / STORAGE
+  / UNION
 
 mysql_table_opt_value
   = string_literal
   / number_literal
   / ident
+  / paren$list$entity_name // for UNION
   / DEFAULT
   / DYNAMIC / FIXED / COMPRESSED / REDUNDANT / COMPACT  // for ROW_FORMAT
   / NO / FIRST / LAST  // for INSERT_METHOD

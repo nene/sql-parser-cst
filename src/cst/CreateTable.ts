@@ -114,7 +114,8 @@ type TableOptionNameMysql =
   | Keyword<"STATS_PERSISTENT">
   | Keyword<"STATS_SAMPLE_PAGES">
   | Keyword<"TABLESPACE">
-  | Keyword<"STORAGE">;
+  | Keyword<"STORAGE">
+  | Keyword<"UNION">;
 
 type TableOptionValueMysql = Keyword<
   | "DEFAULT"
