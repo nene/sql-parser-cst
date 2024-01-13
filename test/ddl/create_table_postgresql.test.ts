@@ -94,6 +94,11 @@ describe("create table (PostgreSQL)", () => {
       });
     });
 
+    it("supports CREATE TABLE .. OF type", () => {
+      testWc("CREATE TABLE client OF client_type");
+      testWc("CREATE TABLE foo OF schm.my_type");
+    });
+
     it("supports ON COMMIT clause", () => {
       testClauseWc(`ON COMMIT PRESERVE ROWS`);
       testClauseWc(`ON COMMIT DELETE ROWS`);

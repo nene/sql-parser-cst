@@ -44,7 +44,8 @@ export type AllCreateTableNodes =
   | CreateTableTablespaceClause
   | CreateTableUsingAccessMethodClause
   | CreateTableWithClause
-  | CreateTableWithoutOidsClause;
+  | CreateTableWithoutOidsClause
+  | CreateTableOfTypeClause;
 
 // CREATE TABLE
 export interface CreateTableStmt extends BaseNode {
@@ -63,6 +64,7 @@ export interface CreateTableStmt extends BaseNode {
   ifNotExistsKw?: [Keyword<"IF">, Keyword<"NOT">, Keyword<"EXISTS">];
   name: EntityName;
   partitionOf?: CreateTablePartitionOfClause;
+  ofType?: CreateTableOfTypeClause;
   columns?: ParenExpr<
     ListExpr<ColumnDefinition | TableConstraint | Constraint<TableConstraint>>
   >;
@@ -218,14 +220,6 @@ export interface CreateTablePartitionByClause extends BaseNode {
   columns: ParenExpr<ListExpr<Expr>>;
 }
 
-// PostgreSQL (we're not including this to PostgresqlCreateTableClause because
-// it comes right after table name, unlike other clauses that come after the column definitions)
-export interface CreateTablePartitionOfClause extends BaseNode {
-  type: "create_table_partition_of_clause";
-  partitionOfKw: [Keyword<"PARTITION">, Keyword<"OF">];
-  table: EntityName;
-}
-
 export interface CreateTablePartitionBoundClause extends BaseNode {
   type: "create_table_partition_bound_clause";
   forValuesKw: [Keyword<"FOR">, Keyword<"VALUES">];
@@ -317,4 +311,22 @@ export interface CreateTableWithClause extends BaseNode {
 export interface CreateTableWithoutOidsClause extends BaseNode {
   type: "create_table_without_oids_clause";
   withoutOidsKw: [Keyword<"WITHOUT">, Keyword<"OIDS">];
+}
+
+// PostgreSQL
+//
+// We're not including `PARTITION OF` and `OF type` clauses
+// PostgresqlCreateTableClause because it comes right after table name,
+// unlike other clauses that come after the column definitions.
+
+export interface CreateTablePartitionOfClause extends BaseNode {
+  type: "create_table_partition_of_clause";
+  partitionOfKw: [Keyword<"PARTITION">, Keyword<"OF">];
+  table: EntityName;
+}
+
+export interface CreateTableOfTypeClause extends BaseNode {
+  type: "create_table_of_type_clause";
+  ofKw: Keyword<"OF">;
+  typeName: EntityName;
 }

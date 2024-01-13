@@ -1933,6 +1933,7 @@ create_table_stmt
     ifKw:(__ if_not_exists)?
     name:(__ entity_name)
     partitionOf:(__ create_table_partition_of_clause)?
+    ofType:(__ create_table_of_type_clause)?
     columns:(__ paren$list$create_definition)?
     options:(__ table_options)?
     clauses:(__ create_table_clause)*
@@ -1950,6 +1951,7 @@ create_table_stmt
         ifNotExistsKw: read(ifKw),
         name: read(name),
         partitionOf: read(partitionOf),
+        ofType: read(ofType),
         columns: read(columns),
         options: read(options),
         clauses: clauses.map(read),
@@ -1993,11 +1995,20 @@ column_definition
     }
 
 create_table_partition_of_clause
-  = kw:(PARTITION __ OF __) table:entity_name {
+  = kw:(PARTITION __ OF __) table:entity_name &postgres {
     return loc({
       type: "create_table_partition_of_clause",
       partitionOfKw: read(kw),
       table,
+    });
+  }
+
+create_table_of_type_clause
+  = kw:(OF __) typeName:entity_name &postgres {
+    return loc({
+      type: "create_table_of_type_clause",
+      ofKw: read(kw),
+      typeName,
     });
   }
 
