@@ -107,6 +107,22 @@ describe("create table (PostgreSQL)", () => {
     it("supports USING clause", () => {
       testClauseWc(`USING "SP-GiST"`);
     });
+
+    describe("storage parameters", () => {
+      it("supports WITH clause", () => {
+        testClauseWc(`WITH ( OIDS = FALSE, fillfactor = 50, toast.autovacuum_enabled = FALSE )`);
+      });
+
+      it("supports value-less parameters", () => {
+        testClauseWc(`WITH ( autovacuum_enabled, vacuum_truncate )`);
+      });
+
+      it("supports ON/OFF/AUTO values for the vacuum_index_cleanup parameter", () => {
+        testClauseWc(`WITH (vacuum_index_cleanup = ON)`);
+        testClauseWc(`WITH (vacuum_index_cleanup = OFF)`);
+        testClauseWc(`WITH (toast.vacuum_index_cleanup = AUTO)`);
+      });
+    });
   });
 
   notDialect("postgresql", () => {

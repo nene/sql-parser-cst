@@ -2081,6 +2081,7 @@ create_table_clause_postgresql
   / create_table_on_commit_clause
   / create_table_tablespace_clause
   / create_table_using_access_method_clause
+  / create_table_with_clause
 
 create_table_inherits_clause
   = kw:(INHERITS __) tables:paren$list$entity_name {
@@ -2193,6 +2194,31 @@ create_table_using_access_method_clause
       type: "create_table_using_access_method_clause",
       usingKw: read(kw),
       method,
+    });
+  }
+
+create_table_with_clause
+  = kw:(WITH __) options:paren$list$table_option_postgresql {
+    return loc({
+      type: "create_table_with_clause",
+      withKw: read(kw),
+      options,
+    });
+  }
+
+table_option_postgresql
+  = name:(member_expr __) "=" v:(__ (literal / ON / OFF / AUTO)) {
+    return loc({
+      type: "table_option",
+      name: read(name),
+      hasEq: true,
+      value: read(v),
+    });
+  }
+  / name:member_expr {
+    return loc({
+      type: "table_option",
+      name: read(name),
     });
   }
 
@@ -5282,6 +5308,7 @@ paren$list$sort_specification = .
 paren$list$string_literal = .
 paren$list$tablesample_arg = .
 paren$list$table_func_call = .
+paren$list$table_option_postgresql = .
 paren$postgresql_op = .
 paren$pivot_for_in = .
 paren$pragma_value = .
@@ -5339,6 +5366,7 @@ list$relation_expr = .
 list$table_func_call = .
 list$alias$relation_expr = .
 list$tablesample_arg = .
+list$table_option_postgresql = .
 list$type_param = .
 list$values_row = .
 list$variable = .
@@ -6194,6 +6222,7 @@ ASSERT              = kw:"ASSERT"i              !ident_part { return loc(createK
 ASSIGNMENT          = kw:"ASSIGNMENT"i          !ident_part { return loc(createKeyword(kw)); }
 AT                  = kw:"AT"i                  !ident_part { return loc(createKeyword(kw)); }
 ATTACH              = kw:"ATTACH"i              !ident_part { return loc(createKeyword(kw)); }
+AUTO                = kw:"AUTO"i                !ident_part { return loc(createKeyword(kw)); }
 AUTO_INCREMENT      = kw:"AUTO_INCREMENT"i      !ident_part { return loc(createKeyword(kw)); }
 AUTOEXTEND_SIZE     = kw:"AUTOEXTEND_SIZE"i     !ident_part { return loc(createKeyword(kw)); }
 AUTOINCREMENT       = kw:"AUTOINCREMENT"i       !ident_part { return loc(createKeyword(kw)); }
@@ -6488,6 +6517,7 @@ NULLS               = kw:"NULLS"i               !ident_part { return loc(createK
 NUMERIC             = kw:"NUMERIC"i             !ident_part { return loc(createKeyword(kw)); }
 NVARCHAR            = kw:"NVARCHAR"i            !ident_part { return loc(createKeyword(kw)); }
 OF                  = kw:"OF"i                  !ident_part { return loc(createKeyword(kw)); }
+OFF                 = kw:"OFF"i                 !ident_part { return loc(createKeyword(kw)); }
 OFFSET              = kw:"OFFSET"i              !ident_part { return loc(createKeyword(kw)); }
 ON                  = kw:"ON"i                  !ident_part { return loc(createKeyword(kw)); }
 ONLY                = kw:"ONLY"i                !ident_part { return loc(createKeyword(kw)); }

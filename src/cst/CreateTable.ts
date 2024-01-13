@@ -12,6 +12,7 @@ import {
   ParenExpr,
   EntityName,
   FuncCall,
+  MemberExpr,
 } from "./Expr";
 import { AsClause, WithConnectionClause } from "./ProcClause";
 import { ForSystemTimeAsOfExpr, PartitionByClause, SubSelect } from "./Select";
@@ -21,7 +22,7 @@ import { NumberLiteral } from "./Literal";
 export type AllCreateTableNodes =
   | CreateTableStmt
   | ColumnDefinition
-  | TableOption
+  | TableOption<Keyword | Keyword[] | Identifier | MemberExpr, Keyword | Expr>
   | CreateTableLikeClause
   | CreateTableCopyClause
   | CreateTableCloneClause
@@ -41,7 +42,8 @@ export type AllCreateTableNodes =
   | CreateTableDefaultPartitionClause
   | CreateTableOnCommitClause
   | CreateTableTablespaceClause
-  | CreateTableUsingAccessMethodClause;
+  | CreateTableUsingAccessMethodClause
+  | CreateTableWithClause;
 
 // CREATE TABLE
 export interface CreateTableStmt extends BaseNode {
@@ -63,7 +65,12 @@ export interface CreateTableStmt extends BaseNode {
   columns?: ParenExpr<
     ListExpr<ColumnDefinition | TableConstraint | Constraint<TableConstraint>>
   >;
-  options?: ListExpr<TableOption>;
+  options?: ListExpr<
+    TableOption<
+      TableOptionNameSqlite | TableOptionNameMysql,
+      TableOptionValueMysql | Expr
+    >
+  >;
   clauses: CreateTableClause[];
 }
 
@@ -74,11 +81,11 @@ export interface ColumnDefinition extends BaseNode {
   constraints: (ColumnConstraint | Constraint<ColumnConstraint>)[];
 }
 
-export interface TableOption extends BaseNode {
+export interface TableOption<TKey, TValue> extends BaseNode {
   type: "table_option";
-  name: TableOptionNameSqlite | TableOptionNameMysql;
+  name: TKey;
   hasEq?: boolean; // True when "=" sign is used
-  value?: TableOptionValueMysql | Expr;
+  value?: TValue;
 }
 
 type TableOptionNameSqlite =
@@ -193,7 +200,8 @@ type PostgresqlCreateTableClause =
   | CreateTableDefaultPartitionClause
   | CreateTableOnCommitClause
   | CreateTableTablespaceClause
-  | CreateTableUsingAccessMethodClause;
+  | CreateTableUsingAccessMethodClause
+  | CreateTableWithClause;
 
 export interface CreateTableInheritsClause extends BaseNode {
   type: "create_table_inherits_clause";
@@ -289,4 +297,17 @@ export interface CreateTableUsingAccessMethodClause extends BaseNode {
   type: "create_table_using_access_method_clause";
   usingKw: Keyword<"USING">;
   method: Identifier;
+}
+
+export interface CreateTableWithClause extends BaseNode {
+  type: "create_table_with_clause";
+  withKw: Keyword<"WITH">;
+  options: ParenExpr<
+    ListExpr<
+      TableOption<
+        Identifier | MemberExpr,
+        Expr | Keyword<"ON" | "OFF" | "AUTO">
+      >
+    >
+  >;
 }
