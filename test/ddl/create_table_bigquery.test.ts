@@ -1,4 +1,4 @@
-import { dialect, notDialect, testWc, withComments } from "../test_utils";
+import { dialect, notDialect, test, testWc, withComments } from "../test_utils";
 
 describe("create table (BigQuery)", () => {
   function testClauseWc(options: string) {
