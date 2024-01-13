@@ -16,6 +16,7 @@ import {
 import { AsClause, WithConnectionClause } from "./ProcClause";
 import { ForSystemTimeAsOfExpr, PartitionByClause, SubSelect } from "./Select";
 import { ClusterByClause } from "./OtherClauses";
+import { Default } from "./Insert";
 
 export type AllCreateTableNodes =
   | CreateTableStmt
@@ -27,7 +28,11 @@ export type AllCreateTableNodes =
   | WithPartitionColumnsClause
   | CreateTableUsingClause
   | CreateTableInheritsClause
-  | CreateTablePartitionByClause;
+  | CreateTablePartitionByClause
+  | CreateTablePartitionOfClause
+  | CreateTablePartitionBoundClause
+  | PartitionBoundFromTo
+  | PartitionBoundIn;
 
 // CREATE TABLE
 export interface CreateTableStmt extends BaseNode {
@@ -45,6 +50,7 @@ export interface CreateTableStmt extends BaseNode {
   tableKw: Keyword<"TABLE">;
   ifNotExistsKw?: [Keyword<"IF">, Keyword<"NOT">, Keyword<"EXISTS">];
   name: EntityName;
+  partitionOf?: CreateTablePartitionOfClause;
   columns?: ParenExpr<
     ListExpr<ColumnDefinition | TableConstraint | Constraint<TableConstraint>>
   >;
@@ -168,7 +174,9 @@ export interface CreateTableUsingClause extends BaseNode {
 
 type PostgresqlCreateTableClause =
   | CreateTableInheritsClause
-  | CreateTablePartitionByClause;
+  | CreateTablePartitionByClause
+  | CreateTablePartitionBoundClause
+  | Default;
 
 export interface CreateTableInheritsClause extends BaseNode {
   type: "create_table_inherits_clause";
@@ -181,4 +189,32 @@ export interface CreateTablePartitionByClause extends BaseNode {
   partitionByKw: [Keyword<"PARTITION">, Keyword<"BY">];
   strategyKw: Keyword<"RANGE" | "LIST" | "HASH">;
   columns: ParenExpr<ListExpr<Expr>>;
+}
+
+// PostgreSQL (we're not including this to PostgresqlCreateTableClause because
+// it comes right after table name, unlike other clauses that come after the column definitions)
+export interface CreateTablePartitionOfClause extends BaseNode {
+  type: "create_table_partition_of_clause";
+  partitionOfKw: [Keyword<"PARTITION">, Keyword<"OF">];
+  table: EntityName;
+}
+
+export interface CreateTablePartitionBoundClause extends BaseNode {
+  type: "create_table_partition_bound_clause";
+  forValuesKw: [Keyword<"FOR">, Keyword<"VALUES">];
+  bound: PartitionBoundFromTo | PartitionBoundIn;
+}
+
+export interface PartitionBoundFromTo extends BaseNode {
+  type: "partition_bound_from_to";
+  fromKw: Keyword<"FROM">;
+  from: ParenExpr<ListExpr<Expr>>;
+  toKw: Keyword<"TO">;
+  to: ParenExpr<ListExpr<Expr>>;
+}
+
+export interface PartitionBoundIn extends BaseNode {
+  type: "partition_bound_in";
+  inKw: Keyword<"IN">;
+  values: ParenExpr<ListExpr<Expr>>;
 }

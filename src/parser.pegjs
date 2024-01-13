@@ -1932,6 +1932,7 @@ create_table_stmt
     tableKw:(__ TABLE)
     ifKw:(__ if_not_exists)?
     name:(__ entity_name)
+    partitionOf:(__ create_table_partition_of_clause)?
     columns:(__ paren$list$create_definition)?
     options:(__ table_options)?
     clauses:(__ create_table_clause)*
@@ -1948,6 +1949,7 @@ create_table_stmt
         tableKw: read(tableKw),
         ifNotExistsKw: read(ifKw),
         name: read(name),
+        partitionOf: read(partitionOf),
         columns: read(columns),
         options: read(options),
         clauses: clauses.map(read),
@@ -1990,13 +1992,21 @@ column_definition
       });
     }
 
+create_table_partition_of_clause
+  = kw:(PARTITION __ OF __) table:entity_name {
+    return loc({
+      type: "create_table_partition_of_clause",
+      partitionOfKw: read(kw),
+      table,
+    });
+  }
+
 create_table_clause
   = as_clause$compound_select_stmt
   / (&bigquery / &mysql) x:create_table_like_clause { return x; }
   / &bigquery x:create_table_clause_bigquery { return x; }
   / &sqlite x:create_table_using_clause { return x; }
-  / &postgres x:create_table_inherits_clause { return x; }
-  / &postgres x:create_table_partition_by_clause { return x; }
+  / &postgres x:create_table_clause_postgresql { return x; }
 
 create_table_like_clause
   = kw:(LIKE __) name:entity_name {
@@ -2063,6 +2073,12 @@ create_table_using_clause
     });
   }
 
+create_table_clause_postgresql
+  = create_table_inherits_clause
+  / create_table_partition_by_clause
+  / create_table_partition_bound_clause
+  / default
+
 create_table_inherits_clause
   = kw:(INHERITS __) tables:paren$list$entity_name {
     return loc({
@@ -2079,6 +2095,35 @@ create_table_partition_by_clause
       partitionByKw: read(kw),
       strategyKw: read(strategyKw),
       columns,
+    });
+  }
+
+create_table_partition_bound_clause
+  = kw:(FOR __ VALUES __) bound:(partition_bound_from_to / partition_bound_in) {
+    return loc({
+      type: "create_table_partition_bound_clause",
+      forValuesKw: read(kw),
+      bound: read(bound),
+    });
+  }
+
+partition_bound_from_to
+  = fromKw:(FROM __) from:paren$list$expr toKw:(__ TO __) to:paren$list$expr {
+    return loc({
+      type: "partition_bound_from_to",
+      fromKw: read(fromKw),
+      from,
+      toKw: read(toKw),
+      to,
+    });
+  }
+
+partition_bound_in
+  = kw:(IN __) values:paren$list$expr {
+    return loc({
+      type: "partition_bound_in",
+      inKw: read(kw),
+      values,
     });
   }
 

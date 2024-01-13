@@ -15,6 +15,7 @@ export const createTableMap: FullTransformMap<string, AllCreateTableNodes> = {
       node.tableKw,
       node.ifNotExistsKw,
       node.name,
+      node.partitionOf,
       node.columns,
       node.options,
       node.clauses,
@@ -40,4 +41,11 @@ export const createTableMap: FullTransformMap<string, AllCreateTableNodes> = {
   create_table_inherits_clause: (node) => show([node.inheritsKw, node.tables]),
   create_table_partition_by_clause: (node) =>
     show([node.partitionByKw, node.strategyKw, node.columns]),
+  create_table_partition_of_clause: (node) =>
+    show([node.partitionOfKw, node.table]),
+  create_table_partition_bound_clause: (node) =>
+    show([node.forValuesKw, node.bound]),
+  partition_bound_from_to: (node) =>
+    show([node.fromKw, node.from, node.toKw, node.to]),
+  partition_bound_in: (node) => show([node.inKw, node.values]),
 };

@@ -8,15 +8,37 @@ describe("create table (PostgreSQL)", () => {
     });
 
     describe("partitioning", () => {
-      it("supports PARTITION BY strategy (...)", () => {
-        testWc("CREATE TABLE tbl (id INT) PARTITION BY RANGE (id)");
-        testWc("CREATE TABLE tbl (id INT) PARTITION BY LIST (id, name)");
-        testWc("CREATE TABLE tbl (id INT) PARTITION BY HASH (id, (a + b))");
+      describe("creating partitioned table", () => {
+        it("supports PARTITION BY strategy (...)", () => {
+          testWc("CREATE TABLE tbl (id INT) PARTITION BY RANGE (id)");
+          testWc("CREATE TABLE tbl (id INT) PARTITION BY LIST (id, name)");
+          testWc("CREATE TABLE tbl (id INT) PARTITION BY HASH (id, (a + b))");
+        });
+
+        it("supports PARTITION BY with COLLATE", () => {
+          testWc(`CREATE TABLE tbl (id INT) PARTITION BY RANGE (id COLLATE "en_US")`);
+          testWc(`CREATE TABLE tbl (id INT) PARTITION BY RANGE ((a || b) COLLATE "C")`);
+        });
       });
 
-      it("supports PARTITION BY with COLLATE", () => {
-        testWc(`CREATE TABLE tbl (id INT) PARTITION BY RANGE (id COLLATE "en_US")`);
-        testWc(`CREATE TABLE tbl (id INT) PARTITION BY RANGE ((a || b) COLLATE "C")`);
+      describe("creating individual partitions with PARTITION OF", () => {
+        it("supports creation of default partition", () => {
+          testWc(`CREATE TABLE sales_2020 PARTITION OF sales DEFAULT`);
+        });
+
+        it("supports FOR VALUES FROM .. TO ..", () => {
+          testWc(`
+            CREATE TABLE sales_2020 PARTITION OF sales
+            FOR VALUES FROM ('2020-01-01') TO ('2021-01-01')
+          `);
+        });
+
+        it("supports FOR VALUES IN (.., ..)", () => {
+          testWc(`
+            CREATE TABLE sales_2020 PARTITION OF sales
+            FOR VALUES IN ('2020-01-01', '2020-02-01')
+          `);
+        });
       });
     });
   });
