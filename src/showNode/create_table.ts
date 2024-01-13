@@ -56,4 +56,6 @@ export const createTableMap: FullTransformMap<string, AllCreateTableNodes> = {
   create_table_default_partition_clause: (node) => show(node.defaultKw),
   create_table_on_commit_clause: (node) =>
     show([node.onCommitKw, node.actionKw]),
+  create_table_tablespace_clause: (node) =>
+    show([node.tablespaceKw, node.name]),
 };

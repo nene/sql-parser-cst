@@ -95,6 +95,10 @@ describe("create table (PostgreSQL)", () => {
       testWc(`CREATE TABLE tbl (id INT) ON COMMIT DELETE ROWS`);
       testWc(`CREATE TABLE tbl (id INT) ON COMMIT DROP`);
     });
+
+    it("supports TABLESPACE clause", () => {
+      testWc(`CREATE TABLE tbl (id INT) TABLESPACE ts_1`);
+    });
   });
 
   notDialect("postgresql", () => {
