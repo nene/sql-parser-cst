@@ -56,13 +56,13 @@ describe("create table (MySQL)", () => {
     it("supports START TRANSACTION option", () => {
       testOptsWc(`START TRANSACTION`);
     });
-
-    // TODO: UNION [=] (tbl_name[,tbl_name]...)
   });
 
   notDialect(["mysql", "mariadb"], () => {
     it("does not support MySQL-like CREATE TABLE options", () => {
-      expect(() => test(`CREATE TABLE foo(id INT) ENGINE = INNODB, COMMENT 'hello'`)).toBe(true);
+      expect(() =>
+        test(`CREATE TABLE foo(id INT) ENGINE = INNODB, COMMENT 'hello'`)
+      ).toThrowError();
     });
   });
 });
