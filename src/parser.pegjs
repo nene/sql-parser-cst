@@ -1926,9 +1926,9 @@ create_table_stmt
     replKw:(__ OR __ REPLACE)?
     tmpKw:(__ temporary_definition)?
     unloggedKw:(__ UNLOGGED)?
-    externalKw:(__ EXTERNAL)?
+    externalKw:(__ external_definition)?
     snapshotKw:(__ SNAPSHOT)?
-    virtualKw:(__ VIRTUAL)?
+    virtualKw:(__ virtual_definition)?
     tableKw:(__ TABLE)
     ifKw:(__ if_not_exists)?
     name:(__ entity_name)
@@ -1958,6 +1958,12 @@ temporary_definition
   = TEMP
   / TEMPORARY
   / &postgres kw:((GLOBAL / LOCAL) __ (TEMPORARY / TEMP)) { return read(kw); }
+
+external_definition
+  = kw:EXTERNAL &bigquery { return kw; }
+
+virtual_definition
+  = kw:VIRTUAL &sqlite { return kw; }
 
 if_not_exists
   = kws:(IF __ NOT __ EXISTS) { return read(kws); }
@@ -2098,7 +2104,7 @@ drop_table_stmt
   = dropKw:(DROP __)
     temporaryKw:(TEMPORARY __)?
     snapshotKw:(SNAPSHOT __)?
-    externalKw:(EXTERNAL __)?
+    externalKw:(external_definition __)?
     tableKw:(TABLE __)
     ifExistsKw:(if_exists __)?
     tables:list$entity_name
