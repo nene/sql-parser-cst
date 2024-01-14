@@ -3791,8 +3791,7 @@ column_constraint_type_common
   / constraint_auto_increment
 
 column_constraint_type_mysql
-  = column_constraint_index
-  / constraint_comment
+  = constraint_comment
   / constraint_visible
   / constraint_column_format
   / constraint_storage
@@ -3942,7 +3941,7 @@ table_constraint_primary_key
     }
 
 column_constraint_primary_key
-  = kws:(PRIMARY __ KEY) direction:(__ sqlite_sort_direction)? confl:(__ on_conflict_clause)? {
+  = kws:primary_key_keyword direction:(__ sqlite_sort_direction)? confl:(__ on_conflict_clause)? {
       return loc({
         type: "constraint_primary_key",
         primaryKeyKw: read(kws),
@@ -3950,6 +3949,10 @@ column_constraint_primary_key
         onConflict: read(confl),
       });
     }
+
+primary_key_keyword
+  = PRIMARY __ KEY
+  / kw:KEY &mysql { return kw; }
 
 sqlite_sort_direction
   = dir:sort_direction &sqlite { return dir; }
@@ -4092,14 +4095,6 @@ exclusion_param
       operator,
     });
   }
-
-column_constraint_index
-  = kw:KEY {
-      return loc({
-        type: "constraint_index",
-        indexKw: kw,
-      });
-    }
 
 on_conflict_clause
   = kws:(ON __ CONFLICT __) res:(ROLLBACK / ABORT / FAIL / IGNORE / REPLACE) {

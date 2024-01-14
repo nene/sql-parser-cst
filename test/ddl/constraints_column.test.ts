@@ -1,4 +1,4 @@
-import { dialect, test, withComments } from "../test_utils";
+import { dialect, parseStmt, test, withComments } from "../test_utils";
 
 describe("column constraints", () => {
   function testColConstWc(constraint: string) {
@@ -56,6 +56,19 @@ describe("column constraints", () => {
     dialect(["mysql", "mariadb"], () => {
       it("supports KEY as shorthand for PRIMARY KEY", () => {
         testColConstWc("KEY");
+      });
+
+      it("parses KEY as constraint_primary_key", () => {
+        const stmt = parseStmt("CREATE TABLE foo (id INT KEY)");
+        if (stmt.type !== "create_table_stmt") {
+          throw new Error("Expected create_table_stmt");
+        }
+        const columnDef = stmt.columns?.expr.items[0];
+        if (columnDef?.type !== "column_definition") {
+          throw new Error("Expected column_definition");
+        }
+        const constraint = columnDef.constraints[0];
+        expect(constraint.type).toBe("constraint_primary_key");
       });
     });
   });

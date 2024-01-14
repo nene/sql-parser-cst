@@ -101,7 +101,7 @@ export type ColumnConstraint =
 
 export interface ConstraintPrimaryKey extends BaseNode {
   type: "constraint_primary_key";
-  primaryKeyKw: [Keyword<"PRIMARY">, Keyword<"KEY">];
+  primaryKeyKw: [Keyword<"PRIMARY">, Keyword<"KEY">] | Keyword<"KEY">;
   direction?: SortDirectionAsc | SortDirectionDesc; // SQLite
   columns?: ParenExpr<ListExpr<SortSpecification | Identifier>>;
   onConflict?: OnConflictClause;
