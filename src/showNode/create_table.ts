@@ -7,11 +7,7 @@ export const createTableMap: FullTransformMap<string, AllCreateTableNodes> = {
     show([
       node.createKw,
       node.orReplaceKw,
-      node.temporaryKw,
-      node.unloggedKw,
-      node.externalKw,
-      node.snapshotKw,
-      node.virtualKw,
+      node.kind,
       node.tableKw,
       node.ifNotExistsKw,
       node.name,
@@ -21,6 +17,7 @@ export const createTableMap: FullTransformMap<string, AllCreateTableNodes> = {
       node.options,
       node.clauses,
     ]),
+  table_kind: (node) => show(node.kindKw),
   column_definition: (node) =>
     show([
       node.name,

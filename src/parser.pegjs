@@ -1159,7 +1159,7 @@ where_current_of_clause
  * --------------------------------------------------------------------------------------
  */
 into_table_clause
-  = kw:(INTO __) temp:((TEMPORARY / TEMP) __)? unlogged:(unlogged_definition __)? tableKw:(TABLE __)? name:entity_name {
+  = kw:(INTO __) temp:((TEMPORARY / TEMP) __)? unlogged:(UNLOGGED __)? tableKw:(TABLE __)? name:entity_name {
     return loc({
       type: "into_table_clause",
       intoKw: read(kw),
@@ -1924,11 +1924,7 @@ drop_index_stmt
 create_table_stmt
   = createKw:CREATE
     replKw:(__ OR __ REPLACE)?
-    tmpKw:(__ temporary_definition)?
-    unloggedKw:(__ unlogged_definition)?
-    externalKw:(__ external_definition)?
-    snapshotKw:(__ snapshot_definition)?
-    virtualKw:(__ virtual_definition)?
+    kind:(__ table_kind)?
     tableKw:(__ TABLE)
     ifKw:(__ if_not_exists)?
     name:(__ entity_name)
@@ -1942,11 +1938,7 @@ create_table_stmt
         type: "create_table_stmt",
         createKw,
         orReplaceKw: read(replKw),
-        temporaryKw: read(tmpKw),
-        unloggedKw: read(unloggedKw),
-        externalKw: read(externalKw),
-        snapshotKw: read(snapshotKw),
-        virtualKw: read(virtualKw),
+        kind: read(kind),
         tableKw: read(tableKw),
         ifNotExistsKw: read(ifKw),
         name: read(name),
@@ -1958,22 +1950,22 @@ create_table_stmt
       });
     }
 
-temporary_definition
-  = TEMP
-  / TEMPORARY
-  / &postgres kw:((GLOBAL / LOCAL) __ (TEMPORARY / TEMP)) { return read(kw); }
-
-unlogged_definition
-  = kw:UNLOGGED &postgres { return kw; }
-
-external_definition
-  = kw:EXTERNAL &bigquery { return kw; }
-
-snapshot_definition
-  = kw:SNAPSHOT &bigquery { return kw; }
-
-virtual_definition
-  = kw:VIRTUAL &sqlite { return kw; }
+table_kind
+  = kw:(TEMP / TEMPORARY) {
+    return loc({ type: "table_kind", kindKw: kw });
+  }
+  / kw:((GLOBAL / LOCAL) __ (TEMPORARY / TEMP)) &postgres {
+    return loc({ type: "table_kind", kindKw: read(kw) });
+  }
+  / kw:UNLOGGED &postgres {
+    return loc({ type: "table_kind", kindKw: kw });
+  }
+  / kw:(EXTERNAL / SNAPSHOT) &bigquery {
+    return loc({ type: "table_kind", kindKw: kw });
+  }
+  / kw:VIRTUAL &sqlite {
+    return loc({ type: "table_kind", kindKw: kw });
+  }
 
 if_not_exists
   = kws:(IF __ NOT __ EXISTS) { return read(kws); }
@@ -2303,8 +2295,8 @@ bigquery_option_default_collate
 drop_table_stmt
   = dropKw:(DROP __)
     temporaryKw:(TEMPORARY __)?
-    snapshotKw:(snapshot_definition __)?
-    externalKw:(external_definition __)?
+    snapshotKw:(SNAPSHOT __)?
+    externalKw:(EXTERNAL __)?
     tableKw:(TABLE __)
     ifExistsKw:(if_exists __)?
     tables:list$entity_name

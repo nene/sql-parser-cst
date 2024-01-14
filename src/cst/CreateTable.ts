@@ -21,6 +21,7 @@ import { NumberLiteral } from "./Literal";
 
 export type AllCreateTableNodes =
   | CreateTableStmt
+  | TableKind
   | ColumnDefinition
   | TableOption<Keyword | Keyword[] | Identifier | MemberExpr, Keyword | Expr>
   | CreateTableLikeClause
@@ -54,14 +55,7 @@ export interface CreateTableStmt extends BaseNode {
   type: "create_table_stmt";
   createKw: Keyword<"CREATE">;
   orReplaceKw?: [Keyword<"OR">, Keyword<"REPLACE">];
-  temporaryKw?:
-    | Keyword<"TEMP" | "TEMPORARY">
-    // PostgreSQL deprecated syntax which has no effect
-    | [Keyword<"GLOBAL" | "LOCAL">, Keyword<"TEMPORARY" | "TEMP">];
-  unloggedKw?: Keyword<"UNLOGGED">; // PostgreSQL
-  externalKw?: Keyword<"EXTERNAL">;
-  snapshotKw?: Keyword<"SNAPSHOT">;
-  virtualKw?: Keyword<"VIRTUAL">;
+  kind?: TableKind;
   tableKw: Keyword<"TABLE">;
   ifNotExistsKw?: [Keyword<"IF">, Keyword<"NOT">, Keyword<"EXISTS">];
   name: EntityName;
@@ -82,6 +76,18 @@ export interface CreateTableStmt extends BaseNode {
     >
   >;
   clauses: CreateTableClause[];
+}
+
+export interface TableKind extends BaseNode {
+  type: "table_kind";
+  kindKw:
+    | Keyword<"TEMP" | "TEMPORARY">
+    // PostgreSQL deprecated syntax which has the same effect as just TEMPORARY
+    | [Keyword<"GLOBAL" | "LOCAL">, Keyword<"TEMPORARY" | "TEMP">]
+    | Keyword<"UNLOGGED"> // PostgreSQL
+    | Keyword<"EXTERNAL"> // BigQuery
+    | Keyword<"SNAPSHOT"> // BigQuery
+    | Keyword<"VIRTUAL">; // SQLite
 }
 
 export interface ColumnDefinition extends BaseNode {
