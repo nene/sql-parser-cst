@@ -5,6 +5,18 @@ describe("column constraints", () => {
     test(`CREATE TABLE t (id INT ${withComments(constraint)})`);
   }
 
+  function parseColConstraint(constraint: string) {
+    const stmt = parseStmt(`CREATE TABLE t (id INT ${constraint})`);
+    if (stmt.type !== "create_table_stmt") {
+      throw new Error("Expected create_table_stmt");
+    }
+    const columnDef = stmt.columns?.expr.items[0];
+    if (columnDef?.type !== "column_definition") {
+      throw new Error("Expected column_definition");
+    }
+    return columnDef.constraints[0];
+  }
+
   it("parses multiple constraints after column data type", () => {
     test(`CREATE TABLE foo (
         id INT  NOT NULL  DEFAULT 5
@@ -59,16 +71,7 @@ describe("column constraints", () => {
       });
 
       it("parses KEY as constraint_primary_key", () => {
-        const stmt = parseStmt("CREATE TABLE foo (id INT KEY)");
-        if (stmt.type !== "create_table_stmt") {
-          throw new Error("Expected create_table_stmt");
-        }
-        const columnDef = stmt.columns?.expr.items[0];
-        if (columnDef?.type !== "column_definition") {
-          throw new Error("Expected column_definition");
-        }
-        const constraint = columnDef.constraints[0];
-        expect(constraint.type).toBe("constraint_primary_key");
+        expect(parseColConstraint("KEY").type).toBe("constraint_primary_key");
       });
     });
   });

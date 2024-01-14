@@ -1,8 +1,19 @@
-import { dialect, withComments, test } from "../test_utils";
+import { dialect, withComments, test, parseStmt } from "../test_utils";
 
 describe("table constraints", () => {
   function testTblConstWc(constraint: string) {
     test(`CREATE TABLE t (${withComments(constraint)})`);
+  }
+
+  function parseTblConstraint(constraint: string) {
+    const stmt = parseStmt(`CREATE TABLE t (${constraint})`);
+    if (stmt.type !== "create_table_stmt") {
+      throw new Error("Expected create_table_stmt");
+    }
+    if (!stmt.columns) {
+      throw new Error("Expected columns");
+    }
+    return stmt.columns.expr.items[0];
   }
 
   dialect(["mysql", "mariadb", "sqlite", "postgresql"], () => {
@@ -139,6 +150,11 @@ describe("table constraints", () => {
         testTblConstWc("KEY (id)");
         testTblConstWc("INDEX (id)");
         testTblConstWc("KEY (id, name)");
+      });
+
+      it("parses KEY and INDEX as constraint_index", () => {
+        expect(parseTblConstraint("KEY (id)").type).toBe("constraint_index");
+        expect(parseTblConstraint("INDEX (id)").type).toBe("constraint_index");
       });
 
       it("FULLTEXT INDEX", () => {
