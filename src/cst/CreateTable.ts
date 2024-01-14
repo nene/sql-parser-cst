@@ -42,7 +42,7 @@ export type AllCreateTableNodes =
   | CreateTableDefaultPartitionClause
   | CreateTableOnCommitClause
   | CreateTableTablespaceClause
-  | CreateTableUsingAccessMethodClause
+  | UsingAccessMethodClause
   | CreateTableWithClause
   | CreateTableWithoutOidsClause
   | CreateTableOfTypeClause;
@@ -203,7 +203,7 @@ type PostgresqlCreateTableClause =
   | CreateTableDefaultPartitionClause
   | CreateTableOnCommitClause
   | CreateTableTablespaceClause
-  | CreateTableUsingAccessMethodClause
+  | UsingAccessMethodClause
   | CreateTableWithClause
   | CreateTableWithoutOidsClause;
 
@@ -289,8 +289,8 @@ export interface CreateTableTablespaceClause extends BaseNode {
   name: Identifier;
 }
 
-export interface CreateTableUsingAccessMethodClause extends BaseNode {
-  type: "create_table_using_access_method_clause";
+export interface UsingAccessMethodClause extends BaseNode {
+  type: "using_access_method_clause";
   usingKw: Keyword<"USING">;
   method: Identifier;
 }

@@ -2091,7 +2091,7 @@ create_table_clause_postgresql
   / create_table_default_partition_clause
   / create_table_on_commit_clause
   / create_table_tablespace_clause
-  / create_table_using_access_method_clause
+  / using_access_method_clause
   / create_table_with_clause
   / create_table_without_oids_clause
 
@@ -2200,10 +2200,10 @@ create_table_tablespace_clause
     });
   }
 
-create_table_using_access_method_clause
+using_access_method_clause
   = kw:(USING __) method:ident {
     return loc({
-      type: "create_table_using_access_method_clause",
+      type: "using_access_method_clause",
       usingKw: read(kw),
       method,
     });
@@ -4059,7 +4059,7 @@ table_constraint_index
     }
 
 table_constraint_exclude
-  = kw:(EXCLUDE __) using:(create_table_using_access_method_clause __)?
+  = kw:(EXCLUDE __) using:(using_access_method_clause __)?
     params:paren$list$exclusion_param
     where:(__ where_clause)? {
       return loc({

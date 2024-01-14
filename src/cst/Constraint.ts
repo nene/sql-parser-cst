@@ -10,7 +10,7 @@ import {
 import { BigqueryOptions } from "./dialects/Bigquery";
 import { Default } from "./Insert";
 import {
-  CreateTableUsingAccessMethodClause,
+  UsingAccessMethodClause,
   PostgresqlOperator,
   PostgresqlOperatorExpr,
 } from "./Node";
@@ -272,7 +272,7 @@ export interface ConstraintCompression extends BaseNode {
 export interface ConstraintExclude extends BaseNode {
   type: "constraint_exclude";
   excludeKw: Keyword<"EXCLUDE">;
-  using?: CreateTableUsingAccessMethodClause;
+  using?: UsingAccessMethodClause;
   params: ParenExpr<ListExpr<ExclusionParam>>;
   where?: WhereClause;
 }
