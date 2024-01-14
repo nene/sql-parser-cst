@@ -74,6 +74,11 @@ describe("create table", () => {
       it("supports CREATE TABLE ...(columns) AS select", () => {
         testWc("CREATE TABLE foo (id, name) AS SELECT 1, 'John'");
       });
+
+      it("supports WITH [NO] DATA", () => {
+        testWc("CREATE TABLE foo AS SELECT 1 WITH DATA");
+        testWc("CREATE TABLE foo AS SELECT 1 WITH NO DATA");
+      });
     });
   });
 

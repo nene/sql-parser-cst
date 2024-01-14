@@ -2108,6 +2108,7 @@ create_table_clause_postgresql
   / using_access_method_clause
   / with_storage_parameters_clause
   / create_table_without_oids_clause
+  / create_table_with_data_clause
 
 create_table_inherits_clause
   = kw:(INHERITS __) tables:paren$list$entity_name {
@@ -2253,6 +2254,14 @@ create_table_without_oids_clause
     return loc({
       type: "create_table_without_oids_clause",
       withoutOidsKw: read(kw),
+    });
+  }
+
+create_table_with_data_clause
+  = kw:(WITH __ DATA / WITH __ NO __ DATA) {
+    return loc({
+      type: "create_table_with_data_clause",
+      withDataKw: read(kw),
     });
   }
 
