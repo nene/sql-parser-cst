@@ -69,6 +69,12 @@ describe("create table", () => {
         testWc("CREATE TABLE foo (id INT) AS SELECT 1");
       });
     });
+
+    dialect("postgresql", () => {
+      it("supports CREATE TABLE ...(columns) AS select", () => {
+        testWc("CREATE TABLE foo (id, name) AS SELECT 1, 'John'");
+      });
+    });
   });
 
   describe("CREATE TABLE LIKE", () => {
