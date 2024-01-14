@@ -87,6 +87,7 @@ export interface ColumnDefinition extends BaseNode {
   type: "column_definition";
   name: Identifier;
   dataType?: DataType;
+  withOptionsKw?: [Keyword<"WITH">, Keyword<"OPTIONS">];
   constraints: (ColumnConstraint | Constraint<ColumnConstraint>)[];
 }
 

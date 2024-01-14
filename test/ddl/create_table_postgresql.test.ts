@@ -91,12 +91,32 @@ describe("create table (PostgreSQL)", () => {
             FOR VALUES WITH ( MODULUS 5, REMAINDER 4 )
           `);
         });
+
+        it("supports columns list with optional WITH OPTIONS instead of type", () => {
+          testWc(`
+            CREATE TABLE sales_2020 PARTITION OF sales (
+              id PRIMARY KEY,
+              name WITH OPTIONS DEFAULT 'unknown'
+            )
+          `);
+        });
       });
     });
 
-    it("supports CREATE TABLE .. OF type", () => {
-      testWc("CREATE TABLE client OF client_type");
-      testWc("CREATE TABLE foo OF schm.my_type");
+    describe("typed table", () => {
+      it("supports CREATE TABLE .. OF type", () => {
+        testWc("CREATE TABLE client OF client_type");
+        testWc("CREATE TABLE foo OF schm.my_type");
+      });
+
+      it("supports columns list with optional WITH OPTIONS instead of type", () => {
+        testWc(`
+          CREATE TABLE sales OF sales_type (
+            id PRIMARY KEY,
+            name WITH OPTIONS DEFAULT 'unknown'
+          )
+        `);
+      });
     });
 
     it("supports ON COMMIT clause", () => {

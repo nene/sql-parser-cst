@@ -1984,13 +1984,15 @@ create_definition
   / column_definition
 
 column_definition
-  = name:(ident __)
-    type:data_type?
+  = name:ident
+    type:(__ data_type)?
+    withOptionsKw:(__ WITH __ OPTIONS)?
     constraints:(__ column_constraint)* {
       return loc({
         type: "column_definition",
-        name: read(name),
+        name,
         dataType: read(type),
+        withOptionsKw: read(withOptionsKw),
         constraints: constraints.map(read),
       });
     }

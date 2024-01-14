@@ -25,6 +25,7 @@ export const createTableMap: FullTransformMap<string, AllCreateTableNodes> = {
     show([
       node.name,
       node.dataType,
+      node.withOptionsKw,
       node.constraints.length > 0 ? node.constraints : undefined,
     ]),
 
