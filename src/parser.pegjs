@@ -1159,12 +1159,11 @@ where_current_of_clause
  * --------------------------------------------------------------------------------------
  */
 into_table_clause
-  = kw:(INTO __) temp:((TEMPORARY / TEMP) __)? unlogged:(UNLOGGED __)? tableKw:(TABLE __)? name:entity_name {
+  = kw:(INTO __) kind:(table_kind __)? tableKw:(TABLE __)? name:entity_name {
     return loc({
       type: "into_table_clause",
       intoKw: read(kw),
-      temporaryKw: read(temp),
-      unloggedKw: read(unlogged),
+      kind: read(kind),
       tableKw: read(tableKw),
       name,
     });
