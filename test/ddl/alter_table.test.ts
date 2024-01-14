@@ -9,7 +9,7 @@ describe("alter table", () => {
     testWc("ALTER TABLE schm.my_tbl RENAME TO new_name");
   });
 
-  dialect("bigquery", () => {
+  dialect(["bigquery", "postgresql"], () => {
     it("supports ALTER TABLE IF EXISTS", () => {
       testWc("ALTER TABLE IF EXISTS my_tbl RENAME TO new_name");
     });
@@ -43,7 +43,7 @@ describe("alter table", () => {
       testAlterWc("RENAME COLUMN col1 TO col2");
     });
 
-    dialect("sqlite", () => {
+    dialect(["sqlite", "postgresql"], () => {
       it("supports RENAME col1 TO col2", () => {
         testAlterWc("RENAME col1 TO col2");
       });
@@ -61,13 +61,13 @@ describe("alter table", () => {
       testAlterWc("ADD COLUMN col1 INT NOT NULL");
     });
 
-    dialect(["mysql", "mariadb", "sqlite"], () => {
+    dialect(["mysql", "mariadb", "sqlite", "postgresql"], () => {
       it("supports plain ADD", () => {
         testAlterWc("ADD col1 INT");
       });
     });
 
-    dialect("bigquery", () => {
+    dialect(["bigquery", "postgresql"], () => {
       it("supports ADD COLUMN IF NOT EXISTS", () => {
         testAlterWc("ADD COLUMN IF NOT EXISTS col1 INT");
       });
@@ -79,13 +79,13 @@ describe("alter table", () => {
       testAlterWc("DROP COLUMN col1");
     });
 
-    dialect(["mysql", "mariadb", "sqlite"], () => {
+    dialect(["mysql", "mariadb", "sqlite", "postgresql"], () => {
       it("supports plain DROP", () => {
         testAlterWc("DROP col1");
       });
     });
 
-    dialect("bigquery", () => {
+    dialect(["bigquery", "postgresql"], () => {
       it("supports DROP COLUMN IF EXISTS", () => {
         testAlterWc("DROP COLUMN IF EXISTS col1");
       });
@@ -99,7 +99,7 @@ describe("alter table", () => {
       });
     });
 
-    dialect(["mysql", "mariadb", "bigquery"], () => {
+    dialect(["mysql", "mariadb", "bigquery", "postgresql"], () => {
       it("supports SET DEFAULT", () => {
         testAlterWc("ALTER COLUMN foo SET DEFAULT 125");
       });
@@ -109,7 +109,7 @@ describe("alter table", () => {
       });
     });
 
-    dialect("bigquery", () => {
+    dialect(["bigquery", "postgresql"], () => {
       it("supports DROP NOT NULL", () => {
         testAlterWc("ALTER COLUMN foo DROP NOT NULL");
       });

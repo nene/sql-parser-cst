@@ -2339,7 +2339,7 @@ alter_action
   / alter_action_drop_column
   / alter_action_rename_column
   / alter_action_rename_table
-  / x:alter_action_alter_column (&mysql / &bigquery) { return x; }
+  / x:alter_action_alter_column (&mysql / &bigquery / &postgres) { return x; }
   / x:alter_action_set_default_collate &bigquery { return x; }
   / x:alter_action_set_options &bigquery { return x; }
 
@@ -2391,7 +2391,7 @@ alter_action_rename_column
 
 rename_column_kw
   = kw:(RENAME __ COLUMN) { return read(kw); }
-  / kw:RENAME &sqlite { return kw; }
+  / kw:RENAME (&sqlite / &postgres) { return kw; }
 
 alter_action_alter_column
   = alterKw:(alter_column_kw __) ifKw:(if_exists __)? column:(column __) action:alter_column_action {
@@ -2429,7 +2429,7 @@ alter_action_set_options
 alter_column_action
   = alter_action_set_default
   / alter_action_drop_default
-  / x:alter_action_drop_not_null &bigquery { return x; }
+  / x:alter_action_drop_not_null (&bigquery / &postgres) { return x; }
   / x:alter_action_set_data_type &bigquery { return x; }
   / x:alter_action_set_options &bigquery { return x; }
 
