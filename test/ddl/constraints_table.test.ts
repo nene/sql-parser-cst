@@ -94,6 +94,23 @@ describe("table constraints", () => {
       });
     });
 
+    describe("exclusion constraint", () => {
+      dialect("postgresql", () => {
+        it("supports EXCLUDE constraint", () => {
+          testTblConstWc("EXCLUDE (room_id WITH =, tsrange(booking_start, booking_end) WITH &&)");
+          testTblConstWc("EXCLUDE (room_id WITH OPERATOR(=))");
+        });
+
+        it("supports USING clause", () => {
+          testTblConstWc("EXCLUDE USING gist ( col WITH = )");
+        });
+
+        it("supports WHERE clause", () => {
+          testTblConstWc("EXCLUDE (col WITH =) WHERE (true)");
+        });
+      });
+    });
+
     describe("constraint modifiers", () => {
       dialect(["sqlite", "postgresql"], () => {
         it("supports deferrability of foreign keys", () => {

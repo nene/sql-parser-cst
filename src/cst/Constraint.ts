@@ -5,9 +5,15 @@ import {
   SortDirectionAsc,
   SortDirectionDesc,
   SortSpecification,
+  WhereClause,
 } from "./Select";
 import { BigqueryOptions } from "./dialects/Bigquery";
 import { Default } from "./Insert";
+import {
+  CreateTableUsingAccessMethodClause,
+  PostgresqlOperator,
+  PostgresqlOperatorExpr,
+} from "./Node";
 
 export type AllConstraintNodes =
   | Constraint<ColumnConstraint | TableConstraint>
@@ -36,6 +42,8 @@ export type AllConstraintNodes =
   | ConstraintIndex
   | ConstraintName
   | ConstraintModifier
+  | ConstraintExclude
+  | ExclusionParam
   | ReferencesSpecification
   | ReferentialAction
   | ReferentialMatch
@@ -68,7 +76,8 @@ export type TableConstraint =
   | ConstraintForeignKey
   | ConstraintUnique
   | ConstraintCheck
-  | ConstraintIndex;
+  | ConstraintIndex
+  | ConstraintExclude;
 
 export type ColumnConstraint =
   | ConstraintNull
@@ -244,6 +253,7 @@ export interface ConstraintStorage extends BaseNode {
   >;
 }
 
+// MySQL
 export interface ConstraintEngineAttribute extends BaseNode {
   type: "constraint_engine_attribute";
   engineAttributeKw: Keyword<"ENGINE_ATTRIBUTE" | "SECONDARY_ENGINE_ATTRIBUTE">;
@@ -256,6 +266,22 @@ export interface ConstraintCompression extends BaseNode {
   type: "constraint_compression";
   compressionKw: Keyword<"COMPRESSION">;
   method: Identifier | Default;
+}
+
+// PostgreSQL
+export interface ConstraintExclude extends BaseNode {
+  type: "constraint_exclude";
+  excludeKw: Keyword<"EXCLUDE">;
+  using?: CreateTableUsingAccessMethodClause;
+  params: ParenExpr<ListExpr<ExclusionParam>>;
+  where?: WhereClause;
+}
+
+export interface ExclusionParam extends BaseNode {
+  type: "exclusion_param";
+  expr: Expr;
+  withKw: Keyword<"WITH">;
+  operator: PostgresqlOperatorExpr | PostgresqlOperator;
 }
 
 export interface OnConflictClause extends BaseNode {

@@ -3915,6 +3915,7 @@ table_constraint_type
   / constraint_foreign_key
   / constraint_check
   / &mysql con:table_constraint_index { return con; }
+  / &postgres con:table_constraint_exclude { return con; }
 
 table_constraint_primary_key
   = kws:(PRIMARY __ KEY __)
@@ -4056,6 +4057,29 @@ table_constraint_index
         columns,
       });
     }
+
+table_constraint_exclude
+  = kw:(EXCLUDE __) using:(create_table_using_access_method_clause __)?
+    params:paren$list$exclusion_param
+    where:(__ where_clause)? {
+      return loc({
+        type: "constraint_exclude",
+        excludeKw: read(kw),
+        using: read(using),
+        params,
+        where: read(where),
+      });
+    }
+
+exclusion_param
+  = expr:expr withKw:(__ WITH __) operator:(postgresql_operator / postgresql_operator_expr) {
+    return loc({
+      type: "exclusion_param",
+      expr,
+      withKw: read(withKw),
+      operator,
+    });
+  }
 
 column_constraint_index
   = kw:KEY {
@@ -5316,6 +5340,7 @@ paren$list$column_definition = .
 paren$list$create_definition = .
 paren$list$entity_name = .
 paren$list$equals_expr = .
+paren$list$exclusion_param = .
 paren$list$expr = .
 paren$list$expr_or_default = .
 paren$list$func_param = .
@@ -5367,6 +5392,7 @@ list$create_definition = .
 list$delete_clause_table = .
 list$entity_name = .
 list$equals_expr = .
+list$exclusion_param = .
 list$expr = .
 list$expr_or_default = .
 list$expr_or_explicit_alias = .
