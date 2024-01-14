@@ -3931,7 +3931,7 @@ table_constraint_type
 table_constraint_primary_key
   = kws:(PRIMARY __ KEY __)
     columns:paren$list$sort_specification
-    clauses:(__ on_conflict_clause)|0..1| {
+    clauses:(__ (on_conflict_clause / index_parameter_clause))* {
       return loc({
         type: "constraint_primary_key",
         primaryKeyKw: read(kws),
@@ -3941,7 +3941,8 @@ table_constraint_primary_key
     }
 
 column_constraint_primary_key
-  = kws:primary_key_keyword direction:(__ sqlite_sort_direction)? clauses:(__ on_conflict_clause)|0..1| {
+  = kws:primary_key_keyword direction:(__ sqlite_sort_direction)?
+    clauses:(__ (on_conflict_clause / index_parameter_clause))* {
       return loc({
         type: "constraint_primary_key",
         primaryKeyKw: read(kws),
@@ -3961,7 +3962,7 @@ table_constraint_unique
   = kws:(unique_key __)
     nullsKw:(nulls_distinctness __)?
     columns:paren$list$column
-    clauses:(__ on_conflict_clause)|0..1| {
+    clauses:(__ (on_conflict_clause / index_parameter_clause))* {
       return loc({
         type: "constraint_unique",
         uniqueKw: read(kws),
@@ -3973,7 +3974,7 @@ table_constraint_unique
 
 column_constraint_unique
   = kws:unique_key nullsKw:(__ nulls_distinctness)?
-    clauses:(__ on_conflict_clause)|0..1| {
+    clauses:(__ (on_conflict_clause / index_parameter_clause))* {
       return loc({
         type: "constraint_unique",
         uniqueKw: kws,
@@ -4076,13 +4077,13 @@ table_constraint_index
 table_constraint_exclude
   = kw:(EXCLUDE __) using:(using_access_method_clause __)?
     params:paren$list$exclusion_param
-    where:(__ where_clause)? {
+    clauses:(__ (index_parameter_clause / where_clause))*  {
       return loc({
         type: "constraint_exclude",
         excludeKw: read(kw),
         using: read(using),
         params,
-        where: read(where),
+        clauses: clauses.map(read),
       });
     }
 
@@ -4102,6 +4103,29 @@ on_conflict_clause
       type: "on_conflict_clause",
       onConflictKw: read(kws),
       resolutionKw: res,
+    });
+  }
+
+index_parameter_clause
+  = index_include_clause
+  / create_table_with_clause
+  / index_tablespace_clause
+
+index_include_clause
+  = kw:(INCLUDE __) columns:paren$list$column {
+    return loc({
+      type: "index_include_clause",
+      includeKw: read(kw),
+      columns,
+    });
+  }
+
+index_tablespace_clause
+  = kw:(USING __ INDEX __ TABLESPACE __) name:ident {
+    return loc({
+      type: "index_tablespace_clause",
+      usingIndexTablespaceKw: read(kw),
+      name,
     });
   }
 
