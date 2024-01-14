@@ -13,7 +13,7 @@ import {
   UsingAccessMethodClause,
   PostgresqlOperator,
   PostgresqlOperatorExpr,
-  CreateTableWithClause,
+  WithStorageParametersClause,
 } from "./Node";
 
 export type AllConstraintNodes =
@@ -297,7 +297,7 @@ export interface OnConflictClause extends BaseNode {
 // PostgreSQL
 type IndexParameterClause =
   | IndexIncludeClause
-  | CreateTableWithClause
+  | WithStorageParametersClause
   | IndexTablespaceClause;
 
 export interface IndexIncludeClause extends BaseNode {

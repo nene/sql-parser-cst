@@ -44,7 +44,7 @@ export type AllCreateTableNodes =
   | CreateTableOnCommitClause
   | CreateTableTablespaceClause
   | UsingAccessMethodClause
-  | CreateTableWithClause
+  | WithStorageParametersClause
   | CreateTableWithoutOidsClause
   | CreateTableOfTypeClause;
 
@@ -226,7 +226,7 @@ type PostgresqlCreateTableClause =
   | CreateTableOnCommitClause
   | CreateTableTablespaceClause
   | UsingAccessMethodClause
-  | CreateTableWithClause
+  | WithStorageParametersClause
   | CreateTableWithoutOidsClause;
 
 export interface CreateTableInheritsClause extends BaseNode {
@@ -317,8 +317,8 @@ export interface UsingAccessMethodClause extends BaseNode {
   method: Identifier;
 }
 
-export interface CreateTableWithClause extends BaseNode {
-  type: "create_table_with_clause";
+export interface WithStorageParametersClause extends BaseNode {
+  type: "with_storage_parameters_clause";
   withKw: Keyword<"WITH">;
   options: ParenExpr<
     ListExpr<
