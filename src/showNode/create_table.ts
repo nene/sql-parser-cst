@@ -33,7 +33,10 @@ export const createTableMap: FullTransformMap<string, AllCreateTableNodes> = {
     show([node.name, node.hasEq ? "=" : undefined, node.value]),
 
   // additional clauses
-  create_table_like_clause: (node) => show([node.likeKw, node.name]),
+  create_table_like_clause: (node) =>
+    show([node.likeKw, node.name, node.options]),
+  table_like_option: (node) =>
+    show([node.includingOrExcludingKw, node.optionKw]),
   create_table_copy_clause: (node) => show([node.copyKw, node.name]),
   create_table_clone_clause: (node) => show([node.cloneKw, node.table]),
   with_partition_columns_clause: (node) =>

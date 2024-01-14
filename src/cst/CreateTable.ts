@@ -24,6 +24,7 @@ export type AllCreateTableNodes =
   | ColumnDefinition
   | TableOption<Keyword | Keyword[] | Identifier | MemberExpr, Keyword | Expr>
   | CreateTableLikeClause
+  | TableLikeOption
   | CreateTableCopyClause
   | CreateTableCloneClause
   | WithPartitionColumnsClause
@@ -159,6 +160,22 @@ export interface CreateTableLikeClause extends BaseNode {
   type: "create_table_like_clause";
   likeKw: Keyword<"LIKE">;
   name: EntityName;
+  options: TableLikeOption[];
+}
+
+export interface TableLikeOption extends BaseNode {
+  type: "table_like_option";
+  includingOrExcludingKw: Keyword<"INCLUDING" | "EXCLUDING">;
+  optionKw: Keyword<
+    | "COMMENTS"
+    | "CONSTRAINTS"
+    | "DEFAULTS"
+    | "GENERATED"
+    | "IDENTITY"
+    | "INDEXES"
+    | "STATISTICS"
+    | "STORAGE"
+  >;
 }
 
 type BigqueryCreateTableClause =

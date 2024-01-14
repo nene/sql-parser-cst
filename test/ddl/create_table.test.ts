@@ -89,13 +89,13 @@ describe("create table", () => {
     });
 
     dialect(["postgresql", "mysql", "sqlite"], () => {
-      it("supports CREATE TABLE ... (LIKE ...)", () => {
+      it("supports (LIKE ...)", () => {
         testWc("CREATE TABLE foo (LIKE bar)");
       });
     });
 
     dialect("postgresql", () => {
-      it("supports CREATE TABLE ... (LIKE ...) combined with columns and constraints", () => {
+      it("supports LIKE combined with columns and constraints", () => {
         testWc(`
           CREATE TABLE foo (
             id INT,
@@ -104,6 +104,21 @@ describe("create table", () => {
             CONSTRAINT foo_id CHECK (id > 0)
           )
         `);
+      });
+
+      it("supports LIKE with options", () => {
+        testWc(`CREATE TABLE foo ( LIKE bar INCLUDING COMMENTS )`);
+        testWc(`CREATE TABLE foo ( LIKE bar INCLUDING COMPRESSION )`);
+        testWc(`CREATE TABLE foo ( LIKE bar INCLUDING CONSTRAINTS )`);
+        testWc(`CREATE TABLE foo ( LIKE bar INCLUDING DEFAULTS )`);
+        testWc(`CREATE TABLE foo ( LIKE bar INCLUDING GENERATED )`);
+        testWc(`CREATE TABLE foo ( LIKE bar INCLUDING IDENTITY )`);
+        testWc(`CREATE TABLE foo ( LIKE bar INCLUDING INDEXES )`);
+        testWc(`CREATE TABLE foo ( LIKE bar INCLUDING STATISTICS )`);
+        testWc(`CREATE TABLE foo ( LIKE bar INCLUDING STORAGE )`);
+        testWc(`CREATE TABLE foo ( LIKE bar INCLUDING ALL )`);
+
+        testWc(`CREATE TABLE foo ( LIKE bar INCLUDING ALL EXCLUDING STORAGE INCLUDING COMMENTS )`);
       });
     });
   });
