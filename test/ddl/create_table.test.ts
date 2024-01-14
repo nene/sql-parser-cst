@@ -88,7 +88,7 @@ describe("create table", () => {
       });
     });
 
-    dialect(["postgresql", "mysql", "sqlite"], () => {
+    dialect(["postgresql", "mysql", "mariadb"], () => {
       it("supports (LIKE ...)", () => {
         testWc("CREATE TABLE foo (LIKE bar)");
       });
