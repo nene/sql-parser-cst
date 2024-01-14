@@ -16,6 +16,12 @@ describe("table constraints", () => {
     return stmt.columns.expr.items[0];
   }
 
+  function testWithIndexParameters(constraint: string) {
+    testTblConstWc(`${constraint} INCLUDE (col1, col2)`);
+    testTblConstWc(`${constraint} WITH (fillfactor = 70, autovacuum_enabled)`);
+    testTblConstWc(`${constraint} USING INDEX TABLESPACE my_tablespace`);
+  }
+
   dialect(["mysql", "mariadb", "sqlite", "postgresql"], () => {
     it("supports multiple table constraints inside CREATE TABLE", () => {
       test(`CREATE TABLE tbl (
@@ -25,17 +31,25 @@ describe("table constraints", () => {
       )`);
     });
 
-    it("PRIMARY KEY", () => {
-      testTblConstWc("PRIMARY KEY (id)");
-      testTblConstWc("PRIMARY KEY ( id, name )");
-    });
-
-    dialect("sqlite", () => {
-      it("supports ASC/DESC in primary key columns", () => {
-        testTblConstWc("PRIMARY KEY (id ASC, name DESC)");
+    describe("primary key", () => {
+      it("PRIMARY KEY", () => {
+        testTblConstWc("PRIMARY KEY (id)");
+        testTblConstWc("PRIMARY KEY ( id, name )");
       });
-      it("supports COLLATE in primary key columns", () => {
-        testTblConstWc("PRIMARY KEY (name COLLATE utf8)");
+
+      dialect("sqlite", () => {
+        it("supports ASC/DESC in primary key columns", () => {
+          testTblConstWc("PRIMARY KEY (id ASC, name DESC)");
+        });
+        it("supports COLLATE in primary key columns", () => {
+          testTblConstWc("PRIMARY KEY (name COLLATE utf8)");
+        });
+      });
+
+      dialect("postgresql", () => {
+        it("supports index parameters", () => {
+          testWithIndexParameters("PRIMARY KEY (id)");
+        });
       });
     });
 
@@ -53,6 +67,10 @@ describe("table constraints", () => {
         it("NULLS [NOT] DISTINCT", () => {
           testTblConstWc("UNIQUE NULLS DISTINCT (id)");
           testTblConstWc("UNIQUE NULLS NOT DISTINCT (id, name)");
+        });
+
+        it("supports index parameters", () => {
+          testWithIndexParameters("UNIQUE (id)");
         });
       });
     });
@@ -118,6 +136,13 @@ describe("table constraints", () => {
 
         it("supports WHERE clause", () => {
           testTblConstWc("EXCLUDE (col WITH =) WHERE (true)");
+        });
+
+        it("supports index parameters", () => {
+          testWithIndexParameters("EXCLUDE (col WITH =)");
+        });
+        it("supports index parameters before WHERE clause", () => {
+          testTblConstWc("EXCLUDE (col WITH =) INCLUDE (col2) WHERE (true)");
         });
       });
     });

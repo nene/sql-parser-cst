@@ -7,12 +7,12 @@ export const constraintMap: FullTransformMap<string, AllConstraintNodes> = {
   constraint_name: (node) => show([node.constraintKw, node.name]),
   constraint_modifier: (node) => show(node.kw),
   constraint_null: (node) => show(node.nullKw),
-  constraint_not_null: (node) => show([node.notNullKw, node.onConflict]),
+  constraint_not_null: (node) => show([node.notNullKw, node.clauses]),
   constraint_auto_increment: (node) => show(node.autoIncrementKw),
   constraint_default: (node) => show([node.defaultKw, node.expr]),
   constraint_comment: (node) => show([node.commentKw, node.value]),
   constraint_primary_key: (node) =>
-    show([node.primaryKeyKw, node.direction, node.columns, node.onConflict]),
+    show([node.primaryKeyKw, node.direction, node.columns, node.clauses]),
   constraint_foreign_key: (node) =>
     show([node.foreignKeyKw, node.indexName, node.columns, node.references]),
   references_specification: (node) =>
@@ -21,8 +21,8 @@ export const constraintMap: FullTransformMap<string, AllConstraintNodes> = {
     show([node.onKw, node.eventKw, node.actionKw, node.columns]),
   referential_match: (node) => show([node.matchKw, node.typeKw]),
   constraint_unique: (node) =>
-    show([node.uniqueKw, node.nullsKw, node.columns, node.onConflict]),
-  constraint_check: (node) => show([node.checkKw, node.expr, node.onConflict]),
+    show([node.uniqueKw, node.nullsKw, node.columns, node.clauses]),
+  constraint_check: (node) => show([node.checkKw, node.expr, node.clauses]),
   constraint_index: (node) =>
     show([node.indexTypeKw, node.indexKw, node.columns]),
   constraint_generated: (node) =>
@@ -37,7 +37,10 @@ export const constraintMap: FullTransformMap<string, AllConstraintNodes> = {
     show([node.engineAttributeKw, node.hasEq ? "=" : undefined, node.value]),
   constraint_compression: (node) => show([node.compressionKw, node.method]),
   constraint_exclude: (node) =>
-    show([node.excludeKw, node.using, node.params, node.where]),
+    show([node.excludeKw, node.using, node.params, node.clauses]),
   exclusion_param: (node) => show([node.expr, node.withKw, node.operator]),
   on_conflict_clause: (node) => show([node.onConflictKw, node.resolutionKw]),
+  index_include_clause: (node) => show([node.includeKw, node.columns]),
+  index_tablespace_clause: (node) =>
+    show([node.usingIndexTablespaceKw, node.name]),
 };

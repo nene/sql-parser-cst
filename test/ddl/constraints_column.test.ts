@@ -17,6 +17,12 @@ describe("column constraints", () => {
     return columnDef.constraints[0];
   }
 
+  function testWithIndexParameters(constraint: string) {
+    testColConstWc(`${constraint} INCLUDE (col1, col2)`);
+    testColConstWc(`${constraint} WITH (fillfactor = 70, autovacuum_enabled)`);
+    testColConstWc(`${constraint} USING INDEX TABLESPACE my_tablespace`);
+  }
+
   it("parses multiple constraints after column data type", () => {
     test(`CREATE TABLE foo (
         id INT  NOT NULL  DEFAULT 5
@@ -74,6 +80,12 @@ describe("column constraints", () => {
         expect(parseColConstraint("KEY").type).toBe("constraint_primary_key");
       });
     });
+
+    dialect("postgresql", () => {
+      it("supports index parameters", () => {
+        testWithIndexParameters("PRIMARY KEY");
+      });
+    });
   });
 
   describe("unique", () => {
@@ -91,6 +103,11 @@ describe("column constraints", () => {
       it("NULLS [NOT] DISTINCT", () => {
         testColConstWc("UNIQUE NULLS DISTINCT");
         testColConstWc("UNIQUE NULLS NOT DISTINCT");
+      });
+
+      it("supports index parameters", () => {
+        testWithIndexParameters("UNIQUE");
+        testWithIndexParameters("UNIQUE NULLS DISTINCT");
       });
     });
   });

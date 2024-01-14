@@ -3803,11 +3803,11 @@ column_constraint_type_postgresql
   / constraint_generated_as_identity
 
 constraint_not_null
-  = kws:(NOT __ NULL) confl:(__ on_conflict_clause)? {
+  = kws:(NOT __ NULL) clauses:(__ on_conflict_clause)|0..1| {
     return loc({
       type: "constraint_not_null",
       notNullKw: read(kws),
-      onConflict: read(confl),
+      clauses: clauses.map(read),
     });
   }
 
@@ -3931,22 +3931,22 @@ table_constraint_type
 table_constraint_primary_key
   = kws:(PRIMARY __ KEY __)
     columns:paren$list$sort_specification
-    confl:(__ on_conflict_clause)? {
+    clauses:(__ on_conflict_clause)|0..1| {
       return loc({
         type: "constraint_primary_key",
         primaryKeyKw: read(kws),
         columns,
-        onConflict: read(confl),
+        clauses: clauses.map(read),
       });
     }
 
 column_constraint_primary_key
-  = kws:primary_key_keyword direction:(__ sqlite_sort_direction)? confl:(__ on_conflict_clause)? {
+  = kws:primary_key_keyword direction:(__ sqlite_sort_direction)? clauses:(__ on_conflict_clause)|0..1| {
       return loc({
         type: "constraint_primary_key",
         primaryKeyKw: read(kws),
         direction: read(direction),
-        onConflict: read(confl),
+        clauses: clauses.map(read),
       });
     }
 
@@ -3961,24 +3961,24 @@ table_constraint_unique
   = kws:(unique_key __)
     nullsKw:(nulls_distinctness __)?
     columns:paren$list$column
-    confl:(__ on_conflict_clause)? {
+    clauses:(__ on_conflict_clause)|0..1| {
       return loc({
         type: "constraint_unique",
         uniqueKw: read(kws),
         nullsKw: read(nullsKw),
         columns,
-        onConflict: read(confl),
+        clauses: clauses.map(read),
       });
     }
 
 column_constraint_unique
   = kws:unique_key nullsKw:(__ nulls_distinctness)?
-    confl:(__ on_conflict_clause)? {
+    clauses:(__ on_conflict_clause)|0..1| {
       return loc({
         type: "constraint_unique",
         uniqueKw: kws,
         nullsKw: read(nullsKw),
-        onConflict: read(confl),
+        clauses: clauses.map(read),
       });
     }
 
@@ -3993,12 +3993,12 @@ unique_key
 constraint_check
   = kw:CHECK expr:(__ paren$expr)
     ((__ NOT)? __ ENFORCED)?
-    confl:(__ on_conflict_clause)? {
+    clauses:(__ on_conflict_clause)|0..1| {
       return loc({
         type: "constraint_check",
         checkKw: kw,
         expr: read(expr),
-        onConflict: read(confl),
+        clauses: clauses.map(read),
       });
     }
 

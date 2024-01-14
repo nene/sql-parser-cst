@@ -13,6 +13,7 @@ import {
   UsingAccessMethodClause,
   PostgresqlOperator,
   PostgresqlOperatorExpr,
+  CreateTableWithClause,
 } from "./Node";
 
 export type AllConstraintNodes =
@@ -47,7 +48,9 @@ export type AllConstraintNodes =
   | ReferencesSpecification
   | ReferentialAction
   | ReferentialMatch
-  | OnConflictClause;
+  | OnConflictClause
+  | IndexIncludeClause
+  | IndexTablespaceClause;
 
 export interface Constraint<T> extends BaseNode {
   type: "constraint";
@@ -104,7 +107,7 @@ export interface ConstraintPrimaryKey extends BaseNode {
   primaryKeyKw: [Keyword<"PRIMARY">, Keyword<"KEY">] | Keyword<"KEY">;
   direction?: SortDirectionAsc | SortDirectionDesc; // SQLite
   columns?: ParenExpr<ListExpr<SortSpecification | Identifier>>;
-  onConflict?: OnConflictClause;
+  clauses: (IndexParameterClause | OnConflictClause)[];
 }
 
 export interface ConstraintForeignKey extends BaseNode {
@@ -149,14 +152,14 @@ export interface ConstraintUnique extends BaseNode {
     | [Keyword<"NULLS">, Keyword<"DISTINCT">]
     | [Keyword<"NULLS">, Keyword<"NOT">, Keyword<"DISTINCT">];
   columns?: ParenExpr<ListExpr<Identifier>>;
-  onConflict?: OnConflictClause;
+  clauses: (IndexParameterClause | OnConflictClause)[];
 }
 
 export interface ConstraintCheck extends BaseNode {
   type: "constraint_check";
   checkKw: Keyword<"CHECK">;
   expr: ParenExpr<Expr>;
-  onConflict?: OnConflictClause;
+  clauses: OnConflictClause[];
 }
 
 // MySQL, MariaDB
@@ -176,7 +179,7 @@ export interface ConstraintNull extends BaseNode {
 export interface ConstraintNotNull extends BaseNode {
   type: "constraint_not_null";
   notNullKw: [Keyword<"NOT">, Keyword<"NULL">];
-  onConflict?: OnConflictClause;
+  clauses: OnConflictClause[];
 }
 
 export interface ConstraintDefault extends BaseNode {
@@ -274,7 +277,7 @@ export interface ConstraintExclude extends BaseNode {
   excludeKw: Keyword<"EXCLUDE">;
   using?: UsingAccessMethodClause;
   params: ParenExpr<ListExpr<ExclusionParam>>;
-  where?: WhereClause;
+  clauses: (IndexParameterClause | WhereClause)[];
 }
 
 export interface ExclusionParam extends BaseNode {
@@ -284,8 +287,31 @@ export interface ExclusionParam extends BaseNode {
   operator: PostgresqlOperatorExpr | PostgresqlOperator;
 }
 
+// SQLite
 export interface OnConflictClause extends BaseNode {
   type: "on_conflict_clause";
   onConflictKw: [Keyword<"ON">, Keyword<"CONFLICT">];
   resolutionKw: Keyword<"ROLLBACK" | "ABORT" | "FAIL" | "IGNORE" | "REPLACE">;
+}
+
+// PostgreSQL
+type IndexParameterClause =
+  | IndexIncludeClause
+  | CreateTableWithClause
+  | IndexTablespaceClause;
+
+export interface IndexIncludeClause extends BaseNode {
+  type: "index_include_clause";
+  includeKw: Keyword<"INCLUDE">;
+  columns: ParenExpr<ListExpr<Identifier>>;
+}
+
+export interface IndexTablespaceClause extends BaseNode {
+  type: "index_tablespace_clause";
+  usingIndexTablespaceKw: [
+    Keyword<"USING">,
+    Keyword<"INDEX">,
+    Keyword<"TABLESPACE">
+  ];
+  name: Identifier;
 }
