@@ -49,9 +49,8 @@ describe("drop table", () => {
           "text": "DROP",
           "type": "keyword",
         },
-        "externalKw": undefined,
         "ifExistsKw": undefined,
-        "snapshotKw": undefined,
+        "kind": undefined,
         "tableKw": {
           "name": "TABLE",
           "text": "TABLE",
@@ -67,7 +66,6 @@ describe("drop table", () => {
           ],
           "type": "list_expr",
         },
-        "temporaryKw": undefined,
         "type": "drop_table_stmt",
       }
     `);

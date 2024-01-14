@@ -2294,9 +2294,7 @@ bigquery_option_default_collate
  */
 drop_table_stmt
   = dropKw:(DROP __)
-    temporaryKw:(TEMPORARY __)?
-    snapshotKw:(SNAPSHOT __)?
-    externalKw:(EXTERNAL __)?
+    kind:(table_kind __)?
     tableKw:(TABLE __)
     ifExistsKw:(if_exists __)?
     tables:list$entity_name
@@ -2305,9 +2303,7 @@ drop_table_stmt
       return loc({
         type: "drop_table_stmt",
         dropKw: read(dropKw),
-        temporaryKw: read(temporaryKw),
-        snapshotKw: read(snapshotKw),
-        externalKw: read(externalKw),
+        kind: read(kind),
         tableKw: read(tableKw),
         ifExistsKw: read(ifExistsKw),
         tables,

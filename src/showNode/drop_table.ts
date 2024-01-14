@@ -6,9 +6,7 @@ export const dropTableMap: FullTransformMap<string, DropTableStmt> = {
   drop_table_stmt: (node) =>
     show([
       node.dropKw,
-      node.temporaryKw,
-      node.snapshotKw,
-      node.externalKw,
+      node.kind,
       node.tableKw,
       node.ifExistsKw,
       node.tables,
