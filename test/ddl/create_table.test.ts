@@ -87,5 +87,24 @@ describe("create table", () => {
         `);
       });
     });
+
+    dialect(["postgresql", "mysql", "sqlite"], () => {
+      it("supports CREATE TABLE ... (LIKE ...)", () => {
+        testWc("CREATE TABLE foo (LIKE bar)");
+      });
+    });
+
+    dialect("postgresql", () => {
+      it("supports CREATE TABLE ... (LIKE ...) combined with columns and constraints", () => {
+        testWc(`
+          CREATE TABLE foo (
+            id INT,
+            PRIMARY KEY (id),
+            LIKE bar,
+            CONSTRAINT foo_id CHECK (id > 0)
+          )
+        `);
+      });
+    });
   });
 });

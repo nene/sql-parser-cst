@@ -66,7 +66,12 @@ export interface CreateTableStmt extends BaseNode {
   partitionOf?: CreateTablePartitionOfClause;
   ofType?: CreateTableOfTypeClause;
   columns?: ParenExpr<
-    ListExpr<ColumnDefinition | TableConstraint | Constraint<TableConstraint>>
+    ListExpr<
+      | ColumnDefinition
+      | TableConstraint
+      | Constraint<TableConstraint>
+      | CreateTableLikeClause // PostgreSQL, MariaDB, MySQL
+    >
   >;
   options?: ListExpr<
     TableOption<

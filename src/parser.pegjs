@@ -1980,6 +1980,7 @@ if_not_exists
 
 create_definition
   = !bigquery c:table_constraint { return c; }
+  / (&postgres / &mysql) c:create_table_like_clause { return c; }
   / column_definition
 
 column_definition
