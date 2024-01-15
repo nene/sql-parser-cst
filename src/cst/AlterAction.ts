@@ -73,6 +73,7 @@ export interface AlterActionSetOptions extends BaseNode {
 export type AlterColumnAction =
   | AlterActionSetDefault
   | AlterActionDropDefault
+  | AlterActionSetNotNull
   | AlterActionDropNotNull
   | AlterActionSetDataType
   | AlterActionSetOptions;
@@ -86,6 +87,11 @@ export interface AlterActionSetDefault extends BaseNode {
 export interface AlterActionDropDefault extends BaseNode {
   type: "alter_action_drop_default";
   dropDefaultKw: [Keyword<"DROP">, Keyword<"DEFAULT">];
+}
+
+export interface AlterActionSetNotNull extends BaseNode {
+  type: "alter_action_set_not_null";
+  setNotNullKw: [Keyword<"SET">, Keyword<"NOT">, Keyword<"NULL">];
 }
 
 export interface AlterActionDropNotNull extends BaseNode {

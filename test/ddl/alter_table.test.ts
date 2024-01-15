@@ -107,6 +107,11 @@ describe("alter table", () => {
   });
 
   describe("alter column", () => {
+    dialect(["sqlite", "postgresql"], () => {
+      it("supports ALTER colname", () => {
+        testAlterWc("ALTER col1 DROP DEFAULT");
+      });
+    });
     dialect("bigquery", () => {
       it("supports ALTER COLUMN IF EXISTS", () => {
         testAlterWc("ALTER COLUMN IF EXISTS col1 DROP DEFAULT");
@@ -123,6 +128,11 @@ describe("alter table", () => {
       });
     });
 
+    dialect(["postgresql"], () => {
+      it("supports SET NOT NULL", () => {
+        testAlterWc("ALTER COLUMN foo SET NOT NULL");
+      });
+    });
     dialect(["bigquery", "postgresql"], () => {
       it("supports DROP NOT NULL", () => {
         testAlterWc("ALTER COLUMN foo DROP NOT NULL");

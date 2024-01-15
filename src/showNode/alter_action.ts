@@ -23,6 +23,7 @@ export const alterActionMap: FullTransformMap<string, AllAlterActionNodes> = {
   alter_action_set_options: (node) => show([node.setKw, node.options]),
   alter_action_set_default: (node) => show([node.setDefaultKw, node.expr]),
   alter_action_drop_default: (node) => show([node.dropDefaultKw]),
+  alter_action_set_not_null: (node) => show([node.setNotNullKw]),
   alter_action_drop_not_null: (node) => show([node.dropNotNullKw]),
   alter_action_set_data_type: (node) =>
     show([node.setDataTypeKw, node.dataType]),

@@ -2424,7 +2424,7 @@ alter_action_alter_column
 
 alter_column_kw
   = kw:(ALTER __ COLUMN) { return read(kw); }
-  / kw:ALTER &sqlite { return kw; }
+  / kw:ALTER (&sqlite / &postgres) { return kw; }
 
 alter_action_set_default_collate
   = kw:(SET __ DEFAULT __ COLLATE __) collation:string_literal {
@@ -2447,6 +2447,7 @@ alter_action_set_options
 alter_column_action
   = alter_action_set_default
   / alter_action_drop_default
+  / x:alter_action_set_not_null &postgres { return x; }
   / x:alter_action_drop_not_null (&bigquery / &postgres) { return x; }
   / x:alter_action_set_data_type &bigquery { return x; }
   / x:alter_action_set_options &bigquery { return x; }
@@ -2459,6 +2460,11 @@ alter_action_set_default
 alter_action_drop_default
   = kw:(DROP __ DEFAULT) {
     return loc({ type: "alter_action_drop_default", dropDefaultKw: read(kw) });
+  }
+
+alter_action_set_not_null
+  = kw:(SET __ NOT __ NULL) {
+    return loc({ type: "alter_action_set_not_null", setNotNullKw: read(kw) });
   }
 
 alter_action_drop_not_null
