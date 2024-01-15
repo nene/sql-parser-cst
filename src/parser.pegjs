@@ -1881,13 +1881,13 @@ create_index_stmt
     }
 
 index_type_kw
-  = x:UNIQUE (&mysql / &sqlite) { return x; }
+  = x:UNIQUE (&mysql / &sqlite / &postgres) { return x; }
   / x:FULLTEXT &mysql { return x; }
   / x:SPATIAL &mysql { return x; }
   / x:SEARCH &bigquery { return x; }
 
 create_index_subclause
-  = &sqlite x:where_clause { return x; }
+  = (&sqlite / &postgres) x:where_clause { return x; }
   / &bigquery x:bigquery_options { return x; }
 
 verbose_all_columns
@@ -1897,7 +1897,7 @@ verbose_all_columns
 
 // DROP INDEX
 drop_index_stmt
-  = &sqlite
+  = (&sqlite / &postgres)
     kw:(DROP __)
     indexKw:(INDEX __)
     ifKw:(if_exists __)?
