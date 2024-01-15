@@ -101,6 +101,8 @@ export interface AlterActionDropNotNull extends BaseNode {
 
 export interface AlterActionSetDataType extends BaseNode {
   type: "alter_action_set_data_type";
-  setDataTypeKw: [Keyword<"SET">, Keyword<"DATA">, Keyword<"TYPE">];
+  setDataTypeKw:
+    | [Keyword<"SET">, Keyword<"DATA">, Keyword<"TYPE">]
+    | Keyword<"TYPE">;
   dataType: DataType;
 }

@@ -2449,7 +2449,7 @@ alter_column_action
   / alter_action_drop_default
   / x:alter_action_set_not_null &postgres { return x; }
   / x:alter_action_drop_not_null (&bigquery / &postgres) { return x; }
-  / x:alter_action_set_data_type &bigquery { return x; }
+  / x:alter_action_set_data_type (&bigquery / &postgres) { return x; }
   / x:alter_action_set_options &bigquery { return x; }
 
 alter_action_set_default
@@ -2473,7 +2473,7 @@ alter_action_drop_not_null
   }
 
 alter_action_set_data_type
-  = kw:(SET __ DATA __ TYPE __) type:data_type {
+  = kw:(SET __ DATA __ TYPE __ / TYPE __) type:data_type {
     return loc({ type: "alter_action_set_data_type", setDataTypeKw: read(kw), dataType: type });
   }
 

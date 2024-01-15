@@ -139,10 +139,15 @@ describe("alter table", () => {
       });
     });
 
-    dialect("bigquery", () => {
+    dialect(["bigquery", "postgresql"], () => {
       it("supports SET DATA TYPE", () => {
         testAlterWc("ALTER COLUMN foo SET DATA TYPE INT");
-        testAlterWc("ALTER COLUMN foo SET DATA TYPE ARRAY<INT64>");
+        testAlterWc("ALTER COLUMN foo SET DATA TYPE DECIMAL(5, 8)");
+      });
+      dialect("postgresql", () => {
+        it("supports just TYPE", () => {
+          testAlterWc("ALTER COLUMN foo TYPE DECIMAL(5, 8)");
+        });
       });
     });
 
