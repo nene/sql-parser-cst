@@ -157,6 +157,11 @@ describe("insert into", () => {
             "INSERT INTO tbl VALUES (1) ON CONFLICT (col1 ASC NULLS FIRST, col2 DESC NULLS LAST) DO NOTHING"
           );
         });
+        it("supports ON CONFLICT (column opclass)", () => {
+          testWc(
+            "INSERT INTO tbl VALUES (1) ON CONFLICT (col1 opclass DESC, col2 my.opclass) DO NOTHING"
+          );
+        });
 
         it("supports ON CONFLICT (func())", () => {
           testWc("INSERT INTO tbl VALUES (1) ON CONFLICT (func() ASC, fn2()) DO NOTHING");

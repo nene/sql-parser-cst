@@ -1,12 +1,7 @@
 import { BaseNode, Keyword } from "./Base";
 import { StringLiteral } from "./Literal";
 import { Expr, Identifier, ListExpr, ParenExpr, EntityName } from "./Expr";
-import {
-  SortDirectionAsc,
-  SortDirectionDesc,
-  SortSpecification,
-  WhereClause,
-} from "./Select";
+import { SortDirectionAsc, SortDirectionDesc, WhereClause } from "./Select";
 import { BigqueryOptions } from "./dialects/Bigquery";
 import { Default } from "./Insert";
 import {
@@ -14,6 +9,7 @@ import {
   PostgresqlOperator,
   PostgresqlOperatorExpr,
   WithStorageParametersClause,
+  PostgresqlOperatorClass,
 } from "./Node";
 
 export type AllConstraintNodes =
@@ -24,6 +20,7 @@ export type AllConstraintNodes =
   | ConstraintAutoIncrement
   | ConstraintUnique
   | ConstraintPrimaryKey
+  | IndexSpecification
   | ReferencesSpecification
   | ConstraintComment
   | ConstraintCheck
@@ -106,8 +103,16 @@ export interface ConstraintPrimaryKey extends BaseNode {
   type: "constraint_primary_key";
   primaryKeyKw: [Keyword<"PRIMARY">, Keyword<"KEY">] | Keyword<"KEY">;
   direction?: SortDirectionAsc | SortDirectionDesc; // SQLite
-  columns?: ParenExpr<ListExpr<SortSpecification | Identifier>>;
+  columns?: ParenExpr<ListExpr<IndexSpecification>>;
   clauses: (IndexParameterClause | OnConflictClause)[];
+}
+
+export interface IndexSpecification extends BaseNode {
+  type: "index_specification";
+  expr: Expr;
+  opclass?: PostgresqlOperatorClass;
+  direction?: SortDirectionAsc | SortDirectionDesc;
+  nullHandlingKw: [Keyword<"NULLS">, Keyword<"FIRST" | "LAST">];
 }
 
 export interface ConstraintForeignKey extends BaseNode {
@@ -282,7 +287,7 @@ export interface ConstraintExclude extends BaseNode {
 
 export interface ExclusionParam extends BaseNode {
   type: "exclusion_param";
-  expr: Expr;
+  index: IndexSpecification;
   withKw: Keyword<"WITH">;
   operator: PostgresqlOperatorExpr | PostgresqlOperator;
 }

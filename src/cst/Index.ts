@@ -1,7 +1,8 @@
 import { BaseNode, Keyword } from "./Base";
+import { IndexSpecification } from "./Constraint";
 import { BigqueryOptions } from "./dialects/Bigquery";
-import { Identifier, ListExpr, ParenExpr, EntityName } from "./Expr";
-import { SortSpecification, WhereClause } from "./Select";
+import { ListExpr, ParenExpr, EntityName } from "./Expr";
+import { WhereClause } from "./Select";
 
 export type AllIndexNodes = AllIndexStatements | VerboseAllColumns;
 
@@ -18,7 +19,7 @@ export interface CreateIndexStmt extends BaseNode {
   onKw: Keyword<"ON">;
   table: EntityName;
   columns:
-    | ParenExpr<ListExpr<SortSpecification | Identifier>>
+    | ParenExpr<ListExpr<IndexSpecification>>
     | ParenExpr<VerboseAllColumns>;
   clauses: (WhereClause | BigqueryOptions)[];
 }

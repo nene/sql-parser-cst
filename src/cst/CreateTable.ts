@@ -3,7 +3,12 @@ import {
   BigqueryOptionDefaultCollate,
   BigqueryOptions,
 } from "./dialects/Bigquery";
-import { ColumnConstraint, Constraint, TableConstraint } from "./Constraint";
+import {
+  ColumnConstraint,
+  Constraint,
+  IndexSpecification,
+  TableConstraint,
+} from "./Constraint";
 import { DataType } from "./DataType";
 import {
   Expr,
@@ -248,7 +253,7 @@ export interface CreateTablePartitionByClause extends BaseNode {
   type: "create_table_partition_by_clause";
   partitionByKw: [Keyword<"PARTITION">, Keyword<"BY">];
   strategyKw: Keyword<"RANGE" | "LIST" | "HASH">;
-  columns: ParenExpr<ListExpr<Expr>>;
+  columns: ParenExpr<ListExpr<IndexSpecification>>;
 }
 
 export interface CreateTablePartitionBoundClause extends BaseNode {

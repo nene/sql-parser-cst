@@ -144,6 +144,9 @@ describe("table constraints", () => {
         it("supports index parameters before WHERE clause", () => {
           testTblConstWc("EXCLUDE (col WITH =) INCLUDE (col2) WHERE (true)");
         });
+        it("supports full index specification syntax: opclass, dir, nulls", () => {
+          testTblConstWc("EXCLUDE (col ASC NULLS FIRST WITH =, col2 my.opclass DESC WITH >)");
+        });
       });
     });
 

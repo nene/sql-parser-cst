@@ -899,7 +899,7 @@ order_by_clause
   }
 
 sort_specification
-  = e:expr direction:(__ sort_direction)? nullsKw:(__ sort_specification_nulls)? {
+  = e:expr direction:(__ sort_direction)? nullsKw:(__ null_handling_keyword)? {
     // don't create full sort_specification node when dealing with just a column name
     if (!direction && !nullsKw && e.type === "identifier") {
       return e;
@@ -910,6 +910,19 @@ sort_specification
       expr: read(e),
       direction: read(direction),
       ...(nullsKw ? {nullHandlingKw: read(nullsKw)} : {}),
+    });
+  }
+
+// Very similar to sort_specification, but used when referring to indexes.
+// Includes PostgreSQL-specific operator class.
+index_specification
+  = expr:expr opclass:(__ postgresql_operator_class)? direction:(__ sort_direction)? nullsKw:(__ null_handling_keyword)? {
+    return loc({
+      type: "index_specification",
+      expr,
+      opclass: read(opclass),
+      direction: read(direction),
+      nullHandlingKw: read(nullsKw),
     });
   }
 
@@ -928,11 +941,15 @@ sort_direction
     });
   }
 
-sort_specification_nulls
+null_handling_keyword
   = kws:(NULLS __ (FIRST / LAST)) (&sqlite / &postgres) {
     return read(kws);
   }
 
+postgresql_operator_class
+  = name:member_expr &postgres {
+    return loc({ type: "postgresql_operator_class", name });
+  }
 
 /**
  * SELECT .. LIMIT
@@ -1451,7 +1468,7 @@ upsert_clause
     }
 
 conflict_target
-  = paren$list$sort_specification
+  = paren$list$index_specification
   / conflict_target_on_constraint
 
 conflict_target_on_constraint
@@ -1847,7 +1864,7 @@ create_index_stmt
     name:(entity_name __)
     onKw:(ON __)
     table:(entity_name __)
-    columns:(paren$list$sort_specification / paren$verbose_all_columns)
+    columns:(paren$list$index_specification / paren$verbose_all_columns)
     clauses: (__ create_index_subclause)* {
       return loc({
         type: "create_index_stmt",
@@ -2111,7 +2128,7 @@ create_table_inherits_clause
   }
 
 create_table_partition_by_clause
-  = kw:(PARTITION __ BY __) strategyKw:((RANGE / LIST / HASH) __) columns:paren$list$expr {
+  = kw:(PARTITION __ BY __) strategyKw:((RANGE / LIST / HASH) __) columns:paren$list$index_specification {
     return loc({
       type: "create_table_partition_by_clause",
       partitionByKw: read(kw),
@@ -3928,7 +3945,7 @@ table_constraint_type
 
 table_constraint_primary_key
   = kws:(PRIMARY __ KEY __)
-    columns:paren$list$sort_specification
+    columns:paren$list$index_specification
     clauses:(__ (on_conflict_clause / index_parameter_clause))* {
       return loc({
         type: "constraint_primary_key",
@@ -4086,10 +4103,10 @@ table_constraint_exclude
     }
 
 exclusion_param
-  = expr:expr withKw:(__ WITH __) operator:(postgresql_operator / postgresql_operator_expr) {
+  = index:index_specification withKw:(__ WITH __) operator:(postgresql_operator / postgresql_operator_expr) {
     return loc({
       type: "exclusion_param",
-      expr,
+      index,
       withKw: read(withKw),
       operator,
     });
@@ -5375,6 +5392,7 @@ paren$list$expr_or_default = .
 paren$list$func_param = .
 paren$list$grouping_element = .
 paren$list$ident = .
+paren$list$index_specification = .
 paren$list$literal = .
 paren$list$partition_bound_with_value = .
 paren$list$procedure_param = .
@@ -5428,6 +5446,7 @@ list$expr_or_explicit_alias = .
 list$func_param = .
 list$grouping_element = .
 list$ident = .
+list$index_specification = .
 list$literal = .
 list$named_window = .
 list$number_literal = .

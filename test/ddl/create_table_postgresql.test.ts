@@ -23,6 +23,10 @@ describe("create table (PostgreSQL)", () => {
           testClauseWc(`PARTITION BY RANGE (id COLLATE "en_US")`);
           testClauseWc(`PARTITION BY RANGE ((a || b) COLLATE "C")`);
         });
+
+        it("supports PARTITION BY with opclass", () => {
+          testClauseWc(`PARTITION BY RANGE (id my.opclass)`);
+        });
       });
 
       describe("creating individual partitions with PARTITION OF", () => {

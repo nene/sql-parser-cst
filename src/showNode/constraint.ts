@@ -38,9 +38,11 @@ export const constraintMap: FullTransformMap<string, AllConstraintNodes> = {
   constraint_compression: (node) => show([node.compressionKw, node.method]),
   constraint_exclude: (node) =>
     show([node.excludeKw, node.using, node.params, node.clauses]),
-  exclusion_param: (node) => show([node.expr, node.withKw, node.operator]),
+  exclusion_param: (node) => show([node.index, node.withKw, node.operator]),
   on_conflict_clause: (node) => show([node.onConflictKw, node.resolutionKw]),
   index_include_clause: (node) => show([node.includeKw, node.columns]),
   index_tablespace_clause: (node) =>
     show([node.usingIndexTablespaceKw, node.name]),
+  index_specification: (node) =>
+    show([node.expr, node.opclass, node.direction, node.nullHandlingKw]),
 };

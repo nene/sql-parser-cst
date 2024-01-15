@@ -8,16 +8,11 @@ import {
   RowConstructor,
 } from "./Expr";
 import { Alias } from "./Alias";
-import {
-  PartitionedTable,
-  SortSpecification,
-  SubSelect,
-  WhereClause,
-  WithClause,
-} from "./Select";
+import { PartitionedTable, SubSelect, WhereClause, WithClause } from "./Select";
 import { ColumnAssignment, SetClause } from "./Update";
 import { MysqlModifier } from "./dialects/Mysql";
 import { ReturningClause } from "./OtherClauses";
+import { IndexSpecification } from "./Constraint";
 
 export type AllInsertNodes =
   | InsertStmt
@@ -98,7 +93,7 @@ export interface UpsertClause extends BaseNode {
   onConflictKw: [Keyword<"ON">, Keyword<"CONFLICT">];
   conflictTarget?:
     | ConflictTargetOnConstraint
-    | ParenExpr<ListExpr<SortSpecification | Identifier>>;
+    | ParenExpr<ListExpr<IndexSpecification>>;
   where?: WhereClause;
   doKw: Keyword<"DO">;
   action: UpsertActionNothing | UpsertActionUpdate;
