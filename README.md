@@ -22,8 +22,7 @@ Supports the following SQL dialects:
 - **SQLite** - full support.
 - **BigQuery** - full support.
 - **MySQL** - experimental
-  (see [#5](https://github.com/nene/sql-parser-cst/issues/5)
-  and [#7](https://github.com/nene/sql-parser-cst/issues/7) for implementation progress).
+  (see [#7](https://github.com/nene/sql-parser-cst/issues/7) for implementation progress).
 - **MariaDB** - experimental
   (see [#32](https://github.com/nene/sql-parser-cst/issues/32) for implementation progress).
 - **PostgreSQL** - experimental
