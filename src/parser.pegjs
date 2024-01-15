@@ -2371,12 +2371,13 @@ alter_action_add_column
     }
 
 alter_action_drop_column
-  = kw:(DROP __ COLUMN __ / DROP __) ifKw:(if_exists __)? col:ident {
+  = kw:(DROP __ COLUMN __ / DROP __) ifKw:(if_exists __)? col:ident behaviorKw:(__ (CASCADE / RESTRICT))? {
       return loc({
         type: "alter_action_drop_column",
         dropKw: read(kw),
         ifExistsKw: read(ifKw),
         column: col,
+        behaviorKw: read(behaviorKw),
       })
     }
 

@@ -97,6 +97,13 @@ describe("alter table", () => {
         testAlterWc("DROP COLUMN IF EXISTS col1");
       });
     });
+
+    dialect(["postgresql"], () => {
+      it("supports DROP COLUMN [CASCADE | RESTRICT]", () => {
+        testAlterWc("DROP COLUMN col1 CASCADE");
+        testAlterWc("DROP COLUMN col2 RESTRICT");
+      });
+    });
   });
 
   describe("alter column", () => {

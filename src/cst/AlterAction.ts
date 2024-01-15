@@ -47,6 +47,7 @@ export interface AlterActionDropColumn extends BaseNode {
   dropKw: Keyword<"DROP"> | [Keyword<"DROP">, Keyword<"COLUMN">];
   ifExistsKw?: [Keyword<"IF">, Keyword<"EXISTS">];
   column: Identifier;
+  behaviorKw?: Keyword<"CASCADE" | "RESTRICT">;
 }
 
 export interface AlterActionAlterColumn extends BaseNode {
