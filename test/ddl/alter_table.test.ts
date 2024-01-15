@@ -15,6 +15,13 @@ describe("alter table", () => {
     });
   });
 
+  dialect(["postgresql"], () => {
+    it("supports ALTER TABLE [ONLY] name [*]", () => {
+      testWc("ALTER TABLE ONLY my_tbl RENAME TO new_name");
+      testWc("ALTER TABLE my_tbl * RENAME TO new_name");
+    });
+  });
+
   it("supports multiple alter actions", () => {
     testWc(`
       ALTER TABLE tbl

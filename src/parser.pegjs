@@ -2340,13 +2340,13 @@ if_exists
 alter_table_stmt
   = kw:(ALTER __ TABLE __)
     ifKw:(if_exists __)?
-    t:(entity_name __)
+    table:(relation_expr __)
     actions:list$alter_action {
       return loc({
         type: "alter_table_stmt",
         alterTableKw: read(kw),
         ifExistsKw: read(ifKw),
-        table: read(t),
+        table: read(table),
         actions,
       });
     }
