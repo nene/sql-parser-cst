@@ -171,6 +171,13 @@ describe("table constraints", () => {
           testTblConstWc("CHECK (x > 10) NO INHERIT");
         });
       });
+
+      dialect(["mysql"], () => {
+        it("supports [NOT] ENFORCED on CHECK constraint", () => {
+          testTblConstWc("CHECK (x > 10) NOT ENFORCED");
+          testTblConstWc("CHECK (x > 10) ENFORCED");
+        });
+      });
     });
 
     dialect(["mysql", "mariadb"], () => {

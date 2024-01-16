@@ -3856,6 +3856,12 @@ constraint_modifier
         kw: read(kw),
       });
     }
+  / &only_mysql kw:(ENFORCED / NOT __ ENFORCED) {
+      return loc({
+        type: "constraint_modifier",
+        kw: read(kw),
+      });
+    }
 
 column_constraint_type
   = constraint_not_null
@@ -4078,7 +4084,6 @@ unique_key
 
 constraint_check
   = kw:CHECK expr:(__ paren$expr)
-    ((__ NOT)? __ ENFORCED)?
     clauses:(__ on_conflict_clause)|0..1| {
       return loc({
         type: "constraint_check",

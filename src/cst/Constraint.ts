@@ -68,6 +68,8 @@ export interface ConstraintModifier extends BaseNode {
     | Keyword<"DEFERRABLE">
     | [Keyword<"NOT">, Keyword<"DEFERRABLE">]
     | [Keyword<"INITIALLY">, Keyword<"IMMEDIATE" | "DEFERRED">]
+    | Keyword<"ENFORCED"> // MySQL only
+    | [Keyword<"NOT">, Keyword<"ENFORCED">] // MySQL only
     | [Keyword<"NO">, Keyword<"INHERIT">] // PostgreSQL
     | [Keyword<"NOT">, Keyword<"VALID">]; // PostgreSQL
 }
