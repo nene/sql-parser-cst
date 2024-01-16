@@ -2447,12 +2447,23 @@ alter_action_set_options
 alter_column_action
   = alter_action_set_default
   / alter_action_drop_default
-  / x:alter_action_set_not_null &postgres { return x; }
-  / x:alter_action_drop_not_null (&bigquery / &postgres) { return x; }
-  / x:alter_action_set_data_type (&bigquery / &postgres) { return x; }
-  / x:alter_action_set_options &bigquery { return x; }
-  / x:alter_action_set_visible &mysql { return x; }
-  / x:alter_action_set_invisible &mysql { return x; }
+  / &bigquery x:alter_column_action_bigquery { return x; }
+  / &mysql x:alter_column_action_mysql { return x; }
+  / &postgres x:alter_column_action_postgres { return x; }
+
+alter_column_action_bigquery
+  = alter_action_drop_not_null
+  / alter_action_set_data_type
+  / alter_action_set_options
+
+alter_column_action_mysql
+  = alter_action_set_visible
+  / alter_action_set_invisible
+
+alter_column_action_postgres
+  = alter_action_set_not_null
+  / alter_action_drop_not_null
+  / alter_action_set_data_type
 
 alter_action_set_default
   = kw:(SET __ DEFAULT __) expr:expr {
