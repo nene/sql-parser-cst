@@ -211,4 +211,24 @@ describe("alter table", () => {
       testAlterWc("ADD CONSTRAINT ch CHECK (col1 > 0) NOT VALID");
     });
   });
+
+  dialect(["mysql", "mariadb", "postgresql"], () => {
+    it("supports DROP CONSTRAINT", () => {
+      testAlterWc("DROP CONSTRAINT my_constraint");
+    });
+  });
+  dialect(["mysql", "mariadb"], () => {
+    it("supports DROP CHECK (equivalent to DROP CONSTRAINT)", () => {
+      testAlterWc("DROP CHECK my_constraint");
+    });
+  });
+  dialect(["postgresql"], () => {
+    it("supports DROP CONSTRAINT [IF EXISTS]", () => {
+      testAlterWc("DROP CONSTRAINT IF EXISTS my_constraint");
+    });
+    it("supports DROP CONSTRAINT [RESTRICT | CASCADE]", () => {
+      testAlterWc("DROP CONSTRAINT my_constraint RESTRICT");
+      testAlterWc("DROP CONSTRAINT my_constraint CASCADE");
+    });
+  });
 });

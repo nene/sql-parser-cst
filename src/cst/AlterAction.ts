@@ -16,7 +16,8 @@ export type AlterTableAction =
   | AlterActionAlterColumn
   | AlterActionSetDefaultCollate
   | AlterActionSetOptions
-  | AlterActionAddConstraint;
+  | AlterActionAddConstraint
+  | AlterActionDropConstraint;
 
 export type AlterSchemaAction =
   | AlterActionSetDefaultCollate
@@ -77,6 +78,15 @@ export interface AlterActionAddConstraint extends BaseNode {
   type: "alter_action_add_constraint";
   addKw: Keyword<"ADD">;
   constraint: Constraint<TableConstraint>;
+}
+
+// MySQL, MariaDB, PostgreSQL
+export interface AlterActionDropConstraint extends BaseNode {
+  type: "alter_action_drop_constraint";
+  dropConstraintKw: [Keyword<"DROP">, Keyword<"CONSTRAINT" | "CHECK">];
+  ifExistsKw?: [Keyword<"IF">, Keyword<"EXISTS">];
+  constraint: Identifier;
+  behaviorKw?: Keyword<"CASCADE" | "RESTRICT">;
 }
 
 export type AlterColumnAction =
