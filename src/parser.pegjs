@@ -2376,6 +2376,7 @@ alter_action_postgres
   / alter_action_add_constraint
   / alter_action_drop_constraint
   / alter_action_alter_constraint
+  / alter_action_rename_constraint
 
 alter_action_add_column
   = addKw:(ADD __ COLUMN __ / ADD __) ifKw:(if_not_exists __)? col:column_definition {
@@ -2490,6 +2491,17 @@ alter_action_alter_constraint
         modifiers: modifiers.map(read),
       })
     }
+
+alter_action_rename_constraint
+  = kw:(RENAME __ CONSTRAINT __) oldName:(ident __) toKw:(TO __) newName:ident {
+    return loc({
+      type: "alter_action_rename_constraint",
+      renameConstraintKw: read(kw),
+      oldName: read(oldName),
+      toKw: read(toKw),
+      newName,
+    });
+  }
 
 alter_column_action
   = alter_action_set_default

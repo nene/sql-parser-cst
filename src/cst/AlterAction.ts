@@ -18,7 +18,8 @@ export type AlterTableAction =
   | AlterActionSetOptions
   | AlterActionAddConstraint
   | AlterActionDropConstraint
-  | AlterActionAlterConstraint;
+  | AlterActionAlterConstraint
+  | AlterActionRenameConstraint;
 
 export type AlterSchemaAction =
   | AlterActionSetDefaultCollate
@@ -96,6 +97,14 @@ export interface AlterActionAlterConstraint extends BaseNode {
   alterConstraintKw: [Keyword<"ALTER">, Keyword<"CONSTRAINT" | "CHECK">];
   constraint: Identifier;
   modifiers: ConstraintModifier[];
+}
+
+export interface AlterActionRenameConstraint extends BaseNode {
+  type: "alter_action_rename_constraint";
+  renameConstraintKw: [Keyword<"RENAME">, Keyword<"CONSTRAINT">];
+  oldName: Identifier;
+  toKw: Keyword<"TO">;
+  newName: Identifier;
 }
 
 export type AlterColumnAction =

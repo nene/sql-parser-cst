@@ -253,4 +253,10 @@ describe("alter table", () => {
       testAlterWc("ALTER CHECK my_constraint NOT ENFORCED");
     });
   });
+
+  dialect("postgresql", () => {
+    it("supports RENAME CONSTRAINT", () => {
+      testAlterWc("RENAME CONSTRAINT foo TO bar");
+    });
+  });
 });
