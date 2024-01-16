@@ -2356,10 +2356,22 @@ alter_action
   / alter_action_drop_column
   / alter_action_rename_column
   / alter_action_rename_table
-  / x:alter_action_alter_column (&mysql / &bigquery / &postgres) { return x; }
-  / x:alter_action_set_default_collate &bigquery { return x; }
-  / x:alter_action_set_options &bigquery { return x; }
-  / x:alter_action_add_constraint (&mysql / &postgres) { return x; }
+  / &bigquery x:alter_action_bigquery { return x; }
+  / &mysql x:alter_action_mysql { return x; }
+  / &postgres x:alter_action_postgres { return x; }
+
+alter_action_bigquery
+  = alter_action_alter_column
+  / alter_action_set_default_collate
+  / alter_action_set_options
+
+alter_action_mysql
+  = alter_action_alter_column
+  / alter_action_add_constraint
+
+alter_action_postgres
+  = alter_action_alter_column
+  / alter_action_add_constraint
 
 alter_action_add_column
   = addKw:(ADD __ COLUMN __ / ADD __) ifKw:(if_not_exists __)? col:column_definition {
