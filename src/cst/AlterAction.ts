@@ -76,7 +76,9 @@ export type AlterColumnAction =
   | AlterActionSetNotNull
   | AlterActionDropNotNull
   | AlterActionSetDataType
-  | AlterActionSetOptions;
+  | AlterActionSetOptions
+  | AlterActionSetVisible
+  | AlterActionSetInvisible;
 
 export interface AlterActionSetDefault extends BaseNode {
   type: "alter_action_set_default";
@@ -105,4 +107,16 @@ export interface AlterActionSetDataType extends BaseNode {
     | [Keyword<"SET">, Keyword<"DATA">, Keyword<"TYPE">]
     | Keyword<"TYPE">;
   dataType: DataType;
+}
+
+// MySQL, MariaDB
+export interface AlterActionSetVisible extends BaseNode {
+  type: "alter_action_set_visible";
+  setVisibleKw: [Keyword<"SET">, Keyword<"VISIBLE">];
+}
+
+// MySQL, MariaDB
+export interface AlterActionSetInvisible extends BaseNode {
+  type: "alter_action_set_invisible";
+  setInvisibleKw: [Keyword<"SET">, Keyword<"INVISIBLE">];
 }

@@ -27,4 +27,6 @@ export const alterActionMap: FullTransformMap<string, AllAlterActionNodes> = {
   alter_action_drop_not_null: (node) => show([node.dropNotNullKw]),
   alter_action_set_data_type: (node) =>
     show([node.setDataTypeKw, node.dataType]),
+  alter_action_set_visible: (node) => show([node.setVisibleKw]),
+  alter_action_set_invisible: (node) => show([node.setInvisibleKw]),
 };

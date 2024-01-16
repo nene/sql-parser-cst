@@ -161,6 +161,13 @@ describe("alter table", () => {
         testAlterWc("ALTER COLUMN foo SET OPTIONS ( description = 'Blah' )");
       });
     });
+
+    dialect(["mysql", "mariadb"], () => {
+      it("supports SET VISIBLE / INVISIBLE", () => {
+        testAlterWc("ALTER COLUMN foo SET VISIBLE");
+        testAlterWc("ALTER COLUMN foo SET INVISIBLE");
+      });
+    });
   });
 
   dialect("bigquery", () => {
