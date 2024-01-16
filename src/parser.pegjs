@@ -2359,6 +2359,7 @@ alter_action
   / x:alter_action_alter_column (&mysql / &bigquery / &postgres) { return x; }
   / x:alter_action_set_default_collate &bigquery { return x; }
   / x:alter_action_set_options &bigquery { return x; }
+  / x:alter_action_add_constraint (&mysql / &postgres) { return x; }
 
 alter_action_add_column
   = addKw:(ADD __ COLUMN __ / ADD __) ifKw:(if_not_exists __)? col:column_definition {
@@ -2441,6 +2442,15 @@ alter_action_set_options
       type: "alter_action_set_options",
       setKw: read(kw),
       options,
+    });
+  }
+
+alter_action_add_constraint
+  = kw:(ADD __) constraint:table_constraint {
+    return loc({
+      type: "alter_action_add_constraint",
+      addKw: read(kw),
+      constraint,
     });
   }
 
@@ -3809,8 +3819,13 @@ constraint_modifier
         DEFERRABLE
       / NOT __ DEFERRABLE
       / INITIALLY __ (IMMEDIATE / DEFERRED)
-      / NO __ INHERIT
     ) {
+      return loc({
+        type: "constraint_modifier",
+        kw: read(kw),
+      });
+    }
+  / &postgres kw:( NO __ INHERIT / NOT __ VALID) {
       return loc({
         type: "constraint_modifier",
         kw: read(kw),
@@ -6826,6 +6841,7 @@ USE                 = kw:"USE"i                 !ident_part { return loc(createK
 USER                = kw:"USER"i                !ident_part { return loc(createKeyword(kw)); }
 USING               = kw:"USING"i               !ident_part { return loc(createKeyword(kw)); }
 VACUUM              = kw:"VACUUM"i              !ident_part { return loc(createKeyword(kw)); }
+VALID               = kw:"VALID"i               !ident_part { return loc(createKeyword(kw)); }
 VALUE               = kw:"VALUE"i               !ident_part { return loc(createKeyword(kw)); }
 VALUES              = kw:"VALUES"i              !ident_part { return loc(createKeyword(kw)); }
 VARBINARY           = kw:"VARBINARY"i           !ident_part { return loc(createKeyword(kw)); }

@@ -195,4 +195,20 @@ describe("alter table", () => {
       `);
     });
   });
+
+  dialect(["mysql", "mariadb", "postgresql"], () => {
+    it("supports ADD CONSTRAINT", () => {
+      testAlterWc("ADD CONSTRAINT pk PRIMARY KEY (col1)");
+      testAlterWc("ADD PRIMARY KEY (col1)");
+      testAlterWc("ADD FOREIGN KEY (col1) REFERENCES tbl (col2)");
+      testAlterWc("ADD UNIQUE (col1)");
+      testAlterWc("ADD CHECK (col1 > 0)");
+    });
+  });
+  dialect(["postgresql"], () => {
+    it("supports ADD CONSTRAINT .. [NOT VALID]", () => {
+      testAlterWc("ADD FOREIGN KEY (col1) REFERENCES tbl (col2) NOT VALID");
+      testAlterWc("ADD CONSTRAINT ch CHECK (col1 > 0) NOT VALID");
+    });
+  });
 });

@@ -4,6 +4,7 @@ import { ColumnDefinition } from "./CreateTable";
 import { DataType } from "./DataType";
 import { Expr, Identifier, EntityName } from "./Expr";
 import { StringLiteral } from "./Literal";
+import { Constraint, TableConstraint } from "./Constraint";
 
 export type AllAlterActionNodes = AlterTableAction | AlterColumnAction;
 
@@ -14,7 +15,8 @@ export type AlterTableAction =
   | AlterActionDropColumn
   | AlterActionAlterColumn
   | AlterActionSetDefaultCollate
-  | AlterActionSetOptions;
+  | AlterActionSetOptions
+  | AlterActionAddConstraint;
 
 export type AlterSchemaAction =
   | AlterActionSetDefaultCollate
@@ -68,6 +70,13 @@ export interface AlterActionSetOptions extends BaseNode {
   type: "alter_action_set_options";
   setKw: Keyword<"SET">;
   options: BigqueryOptions;
+}
+
+// MySQL, MariaDB, PostgreSQL
+export interface AlterActionAddConstraint extends BaseNode {
+  type: "alter_action_add_constraint";
+  addKw: Keyword<"ADD">;
+  constraint: Constraint<TableConstraint>;
 }
 
 export type AlterColumnAction =

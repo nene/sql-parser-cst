@@ -16,6 +16,7 @@ export const alterActionMap: FullTransformMap<string, AllAlterActionNodes> = {
     show([node.addKw, node.ifNotExistsKw, node.column]),
   alter_action_drop_column: (node) =>
     show([node.dropKw, node.ifExistsKw, node.column, node.behaviorKw]),
+  alter_action_add_constraint: (node) => show([node.addKw, node.constraint]),
   alter_action_alter_column: (node) =>
     show([node.alterKw, node.ifExistsKw, node.column, node.action]),
   alter_action_set_default_collate: (node) =>
