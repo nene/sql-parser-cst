@@ -162,7 +162,7 @@ describe("alter table", () => {
       });
     });
 
-    dialect(["mysql", "mariadb"], () => {
+    dialect(["mysql"], () => {
       it("supports SET VISIBLE / INVISIBLE", () => {
         testAlterWc("ALTER COLUMN foo SET VISIBLE");
         testAlterWc("ALTER COLUMN foo SET INVISIBLE");

@@ -2495,7 +2495,7 @@ alter_column_action
   = alter_action_set_default
   / alter_action_drop_default
   / &bigquery x:alter_column_action_bigquery { return x; }
-  / &mysql x:alter_column_action_mysql { return x; }
+  / &only_mysql x:alter_column_action_mysql { return x; }
   / &postgres x:alter_column_action_postgres { return x; }
 
 alter_column_action_bigquery

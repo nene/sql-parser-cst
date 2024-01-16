@@ -137,13 +137,13 @@ export interface AlterActionSetDataType extends BaseNode {
   dataType: DataType;
 }
 
-// MySQL, MariaDB
+// MySQL only
 export interface AlterActionSetVisible extends BaseNode {
   type: "alter_action_set_visible";
   setVisibleKw: [Keyword<"SET">, Keyword<"VISIBLE">];
 }
 
-// MySQL, MariaDB
+// MySQL only
 export interface AlterActionSetInvisible extends BaseNode {
   type: "alter_action_set_invisible";
   setInvisibleKw: [Keyword<"SET">, Keyword<"INVISIBLE">];
