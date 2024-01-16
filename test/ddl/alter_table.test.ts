@@ -35,10 +35,13 @@ describe("alter table", () => {
       testAlterWc("RENAME TO new_name");
     });
 
-    dialect(["mysql", "mariadb"], () => {
+    dialect(["mysql"], () => {
       it("supports RENAME AS", () => {
         testAlterWc("RENAME AS new_name");
       });
+    });
+
+    dialect(["mysql", "mariadb"], () => {
       it("supports plain RENAME", () => {
         testAlterWc("RENAME new_name");
       });

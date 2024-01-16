@@ -2409,7 +2409,7 @@ alter_action_rename_table
 
 rename_table_kw
   = kw:(RENAME __ TO) { return read(kw); }
-  / kw:(RENAME __ AS) &mysql { return read(kw); }
+  / kw:(RENAME __ AS) &only_mysql { return read(kw); }
   / kw:RENAME &mysql { return kw; }
 
 alter_action_rename_column
