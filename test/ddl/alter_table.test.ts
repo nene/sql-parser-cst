@@ -112,7 +112,7 @@ describe("alter table", () => {
         testAlterWc("ALTER COLUMN col1 DROP DEFAULT");
       });
     });
-    dialect(["postgresql"], () => {
+    dialect(["mysql", "mariadb", "postgresql"], () => {
       it("supports ALTER colname", () => {
         testAlterWc("ALTER col1 DROP DEFAULT");
       });

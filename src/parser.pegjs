@@ -2424,7 +2424,7 @@ alter_action_alter_column
 
 alter_column_kw
   = kw:(ALTER __ COLUMN) { return read(kw); }
-  / kw:ALTER &postgres { return kw; }
+  / kw:ALTER (&postgres / &mysql) { return kw; }
 
 alter_action_set_default_collate
   = kw:(SET __ DEFAULT __ COLLATE __) collation:string_literal {
