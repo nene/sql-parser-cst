@@ -19,7 +19,8 @@ export type AlterTableAction =
   | AlterActionAddConstraint
   | AlterActionDropConstraint
   | AlterActionAlterConstraint
-  | AlterActionRenameConstraint;
+  | AlterActionRenameConstraint
+  | AlterActionValidateConstraint;
 
 export type AlterSchemaAction =
   | AlterActionSetDefaultCollate
@@ -99,12 +100,20 @@ export interface AlterActionAlterConstraint extends BaseNode {
   modifiers: ConstraintModifier[];
 }
 
+// PostgreSQL
 export interface AlterActionRenameConstraint extends BaseNode {
   type: "alter_action_rename_constraint";
   renameConstraintKw: [Keyword<"RENAME">, Keyword<"CONSTRAINT">];
   oldName: Identifier;
   toKw: Keyword<"TO">;
   newName: Identifier;
+}
+
+// PostgreSQL
+export interface AlterActionValidateConstraint extends BaseNode {
+  type: "alter_action_validate_constraint";
+  validateConstraintKw: [Keyword<"VALIDATE">, Keyword<"CONSTRAINT">];
+  constraint: Identifier;
 }
 
 export type AlterColumnAction =

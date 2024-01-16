@@ -2377,6 +2377,7 @@ alter_action_postgres
   / alter_action_drop_constraint
   / alter_action_alter_constraint
   / alter_action_rename_constraint
+  / alter_action_validate_constraint
 
 alter_action_add_column
   = addKw:(ADD __ COLUMN __ / ADD __) ifKw:(if_not_exists __)? col:column_definition {
@@ -2500,6 +2501,15 @@ alter_action_rename_constraint
       oldName: read(oldName),
       toKw: read(toKw),
       newName,
+    });
+  }
+
+alter_action_validate_constraint
+  = kw:(VALIDATE __ CONSTRAINT __) constraint:ident {
+    return loc({
+      type: "alter_action_validate_constraint",
+      validateConstraintKw: read(kw),
+      constraint,
     });
   }
 
@@ -6896,6 +6906,7 @@ USER                = kw:"USER"i                !ident_part { return loc(createK
 USING               = kw:"USING"i               !ident_part { return loc(createKeyword(kw)); }
 VACUUM              = kw:"VACUUM"i              !ident_part { return loc(createKeyword(kw)); }
 VALID               = kw:"VALID"i               !ident_part { return loc(createKeyword(kw)); }
+VALIDATE            = kw:"VALIDATE"i            !ident_part { return loc(createKeyword(kw)); }
 VALUE               = kw:"VALUE"i               !ident_part { return loc(createKeyword(kw)); }
 VALUES              = kw:"VALUES"i              !ident_part { return loc(createKeyword(kw)); }
 VARBINARY           = kw:"VARBINARY"i           !ident_part { return loc(createKeyword(kw)); }
