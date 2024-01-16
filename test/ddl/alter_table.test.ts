@@ -74,7 +74,7 @@ describe("alter table", () => {
       });
     });
 
-    dialect(["bigquery", "postgresql"], () => {
+    dialect(["bigquery", "postgresql", "mariadb"], () => {
       it("supports ADD COLUMN IF NOT EXISTS", () => {
         testAlterWc("ADD COLUMN IF NOT EXISTS col1 INT");
       });
@@ -217,15 +217,17 @@ describe("alter table", () => {
       testAlterWc("DROP CONSTRAINT my_constraint");
     });
   });
-  dialect(["mysql", "mariadb"], () => {
+  dialect(["mysql"], () => {
     it("supports DROP CHECK (equivalent to DROP CONSTRAINT)", () => {
       testAlterWc("DROP CHECK my_constraint");
     });
   });
-  dialect(["postgresql"], () => {
+  dialect(["postgresql", "mariadb"], () => {
     it("supports DROP CONSTRAINT [IF EXISTS]", () => {
       testAlterWc("DROP CONSTRAINT IF EXISTS my_constraint");
     });
+  });
+  dialect(["postgresql"], () => {
     it("supports DROP CONSTRAINT [RESTRICT | CASCADE]", () => {
       testAlterWc("DROP CONSTRAINT my_constraint RESTRICT");
       testAlterWc("DROP CONSTRAINT my_constraint CASCADE");
