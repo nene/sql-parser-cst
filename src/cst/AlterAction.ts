@@ -4,7 +4,7 @@ import { ColumnDefinition } from "./CreateTable";
 import { DataType } from "./DataType";
 import { Expr, Identifier, EntityName } from "./Expr";
 import { StringLiteral } from "./Literal";
-import { Constraint, TableConstraint } from "./Constraint";
+import { Constraint, ConstraintModifier, TableConstraint } from "./Constraint";
 
 export type AllAlterActionNodes = AlterTableAction | AlterColumnAction;
 
@@ -17,7 +17,8 @@ export type AlterTableAction =
   | AlterActionSetDefaultCollate
   | AlterActionSetOptions
   | AlterActionAddConstraint
-  | AlterActionDropConstraint;
+  | AlterActionDropConstraint
+  | AlterActionAlterConstraint;
 
 export type AlterSchemaAction =
   | AlterActionSetDefaultCollate
@@ -87,6 +88,14 @@ export interface AlterActionDropConstraint extends BaseNode {
   ifExistsKw?: [Keyword<"IF">, Keyword<"EXISTS">];
   constraint: Identifier;
   behaviorKw?: Keyword<"CASCADE" | "RESTRICT">;
+}
+
+// MySQL, PostgreSQL
+export interface AlterActionAlterConstraint extends BaseNode {
+  type: "alter_action_alter_constraint";
+  alterConstraintKw: [Keyword<"ALTER">, Keyword<"CONSTRAINT" | "CHECK">];
+  constraint: Identifier;
+  modifiers: ConstraintModifier[];
 }
 
 export type AlterColumnAction =

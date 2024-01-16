@@ -2369,11 +2369,13 @@ alter_action_mysql
   = alter_action_alter_column
   / alter_action_add_constraint
   / alter_action_drop_constraint
+  / &only_mysql x:alter_action_alter_constraint { return x; }
 
 alter_action_postgres
   = alter_action_alter_column
   / alter_action_add_constraint
   / alter_action_drop_constraint
+  / alter_action_alter_constraint
 
 alter_action_add_column
   = addKw:(ADD __ COLUMN __ / ADD __) ifKw:(if_not_exists __)? col:column_definition {
@@ -2469,13 +2471,23 @@ alter_action_add_constraint
   }
 
 alter_action_drop_constraint
-  = kw:(DROP __ (CONSTRAINT / CHECK) __) ifKw:(if_exists __)? con:ident behaviorKw:(__ (CASCADE / RESTRICT))? {
+  = kw:(DROP __ (CONSTRAINT / CHECK) __) ifKw:(if_exists __)? constraint:ident behaviorKw:(__ (CASCADE / RESTRICT))? {
       return loc({
         type: "alter_action_drop_constraint",
         dropConstraintKw: read(kw),
         ifExistsKw: read(ifKw),
-        constraint: con,
+        constraint,
         behaviorKw: read(behaviorKw),
+      })
+    }
+
+alter_action_alter_constraint
+  = kw:(ALTER __ (CONSTRAINT / CHECK) __) constraint:ident modifiers:(__ constraint_modifier)+ {
+      return loc({
+        type: "alter_action_alter_constraint",
+        alterConstraintKw: read(kw),
+        constraint,
+        modifiers: modifiers.map(read),
       })
     }
 

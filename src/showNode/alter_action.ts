@@ -27,6 +27,8 @@ export const alterActionMap: FullTransformMap<string, AllAlterActionNodes> = {
       node.constraint,
       node.behaviorKw,
     ]),
+  alter_action_alter_constraint: (node) =>
+    show([node.alterConstraintKw, node.constraint, node.modifiers]),
 
   // ALTER COLUMN ...
   alter_action_alter_column: (node) =>

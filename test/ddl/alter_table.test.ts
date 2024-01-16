@@ -231,4 +231,21 @@ describe("alter table", () => {
       testAlterWc("DROP CONSTRAINT my_constraint CASCADE");
     });
   });
+
+  dialect("postgresql", () => {
+    it("supports ALTER CONSTRAINT", () => {
+      testAlterWc("ALTER CONSTRAINT my_constraint DEFERRABLE");
+      testAlterWc("ALTER CONSTRAINT my_constraint NOT DEFERRABLE");
+      testAlterWc("ALTER CONSTRAINT my_constraint INITIALLY DEFERRED");
+      testAlterWc("ALTER CONSTRAINT my_constraint DEFERRABLE INITIALLY IMMEDIATE");
+    });
+  });
+  dialect("mysql", () => {
+    it("supports ALTER CONSTRAINT", () => {
+      testAlterWc("ALTER CONSTRAINT my_constraint ENFORCED");
+      testAlterWc("ALTER CONSTRAINT my_constraint NOT ENFORCED");
+      testAlterWc("ALTER CHECK my_constraint ENFORCED");
+      testAlterWc("ALTER CHECK my_constraint NOT ENFORCED");
+    });
+  });
 });
