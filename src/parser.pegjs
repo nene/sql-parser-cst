@@ -2753,7 +2753,8 @@ schema_kw
  * ------------------------------------------------------------------------------------ *
  */
 create_function_stmt
-  = kw:(CREATE __)
+  = &bigquery
+    kw:(CREATE __)
     orKw:(OR __ REPLACE __)?
     tempKw:((TEMPORARY / TEMP) __)?
     tableKw:(TABLE __)?
@@ -2770,6 +2771,23 @@ create_function_stmt
         tableKw: read(tableKw),
         functionKw: read(funKw),
         ifNotExistsKw: read(ifKw),
+        name: read(name),
+        params,
+        clauses: clauses.map(read),
+      });
+    }
+  / &postgres
+    kw:(CREATE __)
+    orKw:(OR __ REPLACE __)?
+    funKw:(FUNCTION __)
+    name:(entity_name __)
+    params:(paren$list$func_param / paren$empty_list)
+    clauses:(__ create_function_clause)+ {
+      return loc({
+        type: "create_function_stmt",
+        createKw: read(kw),
+        orReplaceKw: read(orKw),
+        functionKw: read(funKw),
         name: read(name),
         params,
         clauses: clauses.map(read),
