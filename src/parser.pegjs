@@ -2787,12 +2787,19 @@ func_param
 
 create_function_clause
   = returns_clause
-  / x:return_clause &postgres { return x; }
-  / determinism_clause
   / language_clause
+  / &postgres x:create_function_clause_postgres { return x; }
+  / &bigquery x:create_function_clause_bigquery { return x; }
+
+create_function_clause_bigquery
+  = determinism_clause
   / as_clause$sql_expr_or_code_string
   / with_connection_clause
   / bigquery_options
+
+create_function_clause_postgres
+  = return_clause
+  / as_clause$expr
 
 returns_clause
   = kw:(RETURNS __) type:data_type {
@@ -5632,6 +5639,7 @@ as_clause$__template__
 as_clause$compound_select_stmt = .
 as_clause$string_literal = .
 as_clause$sql_expr_or_code_string = .
+as_clause$expr = .
 
 // Utility placeholder rule used by the rule-templates system
 __template__ = .
