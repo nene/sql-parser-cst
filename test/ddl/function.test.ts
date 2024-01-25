@@ -115,6 +115,22 @@ describe("function", () => {
       it("supports OR REPLACE", () => {
         testWc("CREATE OR REPLACE FUNCTION foo() RETURNS INT RETURN 1");
       });
+
+      describe("functions in other languages", () => {
+        it("supports LANGUAGE SQL", () => {
+          testWc("CREATE FUNCTION foo() RETURNS INT LANGUAGE SQL AS 'SELECT 1'");
+        });
+
+        it("supports LANGUAGE PL/pgSQL", () => {
+          testWc(`
+            CREATE FUNCTION foo() RETURNS INT AS $$
+              BEGIN
+                RETURN 1;
+              END;
+            $$ LANGUAGE plpgsql;
+          `);
+        });
+      });
     });
   });
 
