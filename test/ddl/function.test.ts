@@ -153,6 +153,11 @@ describe("function", () => {
       });
 
       dialect(["postgresql"], () => {
+        it("supports parameter list", () => {
+          testWc("DROP FUNCTION foo ( )");
+          testWc("DROP FUNCTION bar ( id INT, name VARCHAR(255) )");
+        });
+
         it("supports CASCADE|RESTRICT", () => {
           testWc("DROP FUNCTION foo CASCADE");
           testWc("DROP FUNCTION bar RESTRICT");

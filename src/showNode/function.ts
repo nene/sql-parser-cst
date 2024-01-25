@@ -24,6 +24,7 @@ export const functionMap: FullTransformMap<string, AllFunctionNodes> = {
       node.functionKw,
       node.ifExistsKw,
       node.name,
+      node.params,
       node.behaviorKw,
     ]),
 };
