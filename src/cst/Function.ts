@@ -12,7 +12,10 @@ import {
 } from "./ProcClause";
 import { SubSelect } from "./Select";
 
-export type AllFunctionNodes = AllFunctionStatements | FunctionParam;
+export type AllFunctionNodes =
+  | AllFunctionStatements
+  | FunctionParam
+  | ReturnClause;
 
 export type AllFunctionStatements = CreateFunctionStmt | DropFunctionStmt;
 
@@ -38,11 +41,20 @@ export interface FunctionParam extends BaseNode {
 
 type CreateFunctionClause =
   | ReturnsClause
+  | ReturnClause
   | DeterminismClause
   | LanguageClause
   | AsClause<ParenExpr<Expr> | StringLiteral | SubSelect>
   | BigqueryOptions
   | WithConnectionClause;
+
+// PostgreSQL
+// Note: Do not confuse this with "returns_clause", which defines the return type.
+export interface ReturnClause extends BaseNode {
+  type: "return_clause";
+  returnKw: Keyword<"RETURN">;
+  expr: Expr;
+}
 
 export interface DropFunctionStmt extends BaseNode {
   type: "drop_function_stmt";

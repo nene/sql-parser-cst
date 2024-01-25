@@ -16,6 +16,7 @@ export const functionMap: FullTransformMap<string, AllFunctionNodes> = {
       node.clauses,
     ]),
   function_param: (node) => show([node.name, node.dataType]),
+  return_clause: (node) => show([node.returnKw, node.expr]),
   drop_function_stmt: (node) =>
     show([
       node.dropKw,

@@ -79,7 +79,7 @@ ddl_statement
   / x:alter_view_stmt (&bigquery / &mysql) { return x; }
   / create_index_stmt
   / drop_index_stmt
-  / x:(create_function_stmt / drop_function_stmt) &bigquery { return x; }
+  / x:(create_function_stmt / drop_function_stmt) (&bigquery / &postgres) { return x; }
   / x:(create_procedure_stmt / drop_procedure_stmt) &bigquery { return x; }
   / create_table_stmt
   / drop_table_stmt
@@ -2787,6 +2787,7 @@ func_param
 
 create_function_clause
   = returns_clause
+  / x:return_clause &postgres { return x; }
   / determinism_clause
   / language_clause
   / as_clause$sql_expr_or_code_string
@@ -2799,6 +2800,15 @@ returns_clause
       type: "returns_clause",
       returnsKw: read(kw),
       dataType: type,
+    });
+  }
+
+return_clause
+  = kw:(RETURN __) expr:expr {
+    return loc({
+      type: "return_clause",
+      returnKw: read(kw),
+      expr,
     });
   }
 

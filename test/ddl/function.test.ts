@@ -1,7 +1,7 @@
 import { dialect, test, testWc } from "../test_utils";
 
 describe("function", () => {
-  dialect("bigquery", () => {
+  dialect(["bigquery"], () => {
     describe("CREATE FUNCTION", () => {
       it("supports basic CREATE FUNCTION", () => {
         testWc("CREATE FUNCTION foo ( ) AS (1 * 2)");
@@ -99,7 +99,26 @@ describe("function", () => {
         });
       });
     });
+  });
 
+  dialect(["postgresql"], () => {
+    describe("CREATE FUNCTION", () => {
+      it("supports basic CREATE FUNCTION", () => {
+        testWc("CREATE FUNCTION foo ( ) RETURNS INT RETURN 1 * 2");
+        testWc("CREATE FUNCTION schm.baz ( ) RETURNS INT RETURN 1");
+      });
+
+      it("supports parameters", () => {
+        testWc("CREATE FUNCTION multiplicate ( x INT , y INT ) RETURNS INT RETURN (x * y)");
+      });
+
+      it("supports OR REPLACE", () => {
+        testWc("CREATE OR REPLACE FUNCTION foo() RETURNS INT RETURN 1");
+      });
+    });
+  });
+
+  dialect(["bigquery", "postgresql"], () => {
     describe("DROP FUNCTION", () => {
       it("supports basic DROP FUNCTION", () => {
         testWc("DROP FUNCTION foo");
@@ -110,9 +129,11 @@ describe("function", () => {
         testWc("DROP FUNCTION IF EXISTS foo");
       });
 
-      it("supports DROP TABlE FUNCTION", () => {
-        testWc("DROP TABLE FUNCTION foo");
-        testWc("DROP TABLE FUNCTION IF EXISTS foo.bar.baz");
+      dialect(["bigquery"], () => {
+        it("supports DROP TABlE FUNCTION", () => {
+          testWc("DROP TABLE FUNCTION foo");
+          testWc("DROP TABLE FUNCTION IF EXISTS foo.bar.baz");
+        });
       });
     });
   });
@@ -120,12 +141,6 @@ describe("function", () => {
   dialect(["mysql", "mariadb", "sqlite"], () => {
     it("does not support CREATE FUNCTION", () => {
       expect(() => test("CREATE FUNCTION foo() AS (1 + 2)")).toThrowError();
-    });
-  });
-
-  dialect("postgresql", () => {
-    it.skip("TODO:postgres", () => {
-      expect(true).toBe(true);
     });
   });
 });
