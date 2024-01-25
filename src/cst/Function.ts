@@ -63,4 +63,5 @@ export interface DropFunctionStmt extends BaseNode {
   functionKw: Keyword<"FUNCTION">;
   ifExistsKw?: [Keyword<"IF">, Keyword<"EXISTS">];
   name: EntityName;
+  behaviorKw?: Keyword<"CASCADE" | "RESTRICT">;
 }

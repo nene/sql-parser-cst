@@ -151,6 +151,13 @@ describe("function", () => {
           testWc("DROP TABLE FUNCTION IF EXISTS foo.bar.baz");
         });
       });
+
+      dialect(["postgresql"], () => {
+        it("supports CASCADE|RESTRICT", () => {
+          testWc("DROP FUNCTION foo CASCADE");
+          testWc("DROP FUNCTION bar RESTRICT");
+        });
+      });
     });
   });
 

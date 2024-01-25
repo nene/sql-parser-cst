@@ -2868,7 +2868,7 @@ with_connection_clause
 
 drop_function_stmt
   = kw:(DROP __) tableKw:(TABLE __)? funKw:(FUNCTION __)
-    ifKw:(if_exists __)? name:entity_name {
+    ifKw:(if_exists __)? name:entity_name behaviorKw:(__ (CASCADE / RESTRICT))? {
       return loc({
         type: "drop_function_stmt",
         dropKw: read(kw),
@@ -2876,6 +2876,7 @@ drop_function_stmt
         functionKw: read(funKw),
         ifExistsKw: read(ifKw),
         name,
+        behaviorKw: read(behaviorKw),
       });
     }
 
