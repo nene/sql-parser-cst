@@ -2922,7 +2922,7 @@ create_procedure_stmt
     }
 
 procedure_param
-  = mode:(argmode_kw __)? name:(ident __) type:data_type {
+  = &bigquery mode:((INOUT / IN / OUT) __)? name:(ident __) type:data_type {
     return loc({
       type: "function_param",
       mode: read(mode),
@@ -2930,12 +2930,21 @@ procedure_param
       dataType: type,
     });
   }
-
-argmode_kw
-  = INOUT
-  / IN
-  / OUT
-  / x:VARIADIC &postgres { return x; }
+  / &postgres mode:((INOUT / IN / OUT / VARIADIC) __)? name:(ident __) type:data_type {
+    return loc({
+      type: "function_param",
+      mode: read(mode),
+      name: read(name),
+      dataType: type,
+    });
+  }
+  / &postgres mode:((INOUT / IN / OUT / VARIADIC) __)? type:data_type {
+    return loc({
+      type: "function_param",
+      mode: read(mode),
+      dataType: type,
+    });
+  }
 
 create_procedure_clause
   = bigquery_options

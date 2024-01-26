@@ -52,6 +52,13 @@ describe("procedure", () => {
             END
           `);
         });
+
+        it("supports optional parameter names", () => {
+          testWc(`
+            CREATE PROCEDURE foo(INT, IN INT, OUT INT, OUT INT)
+            AS $$ SELECT $1, $2; $$
+          `);
+        });
       });
 
       it("supports OR REPLACE", () => {

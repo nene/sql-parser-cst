@@ -23,6 +23,13 @@ describe("function", () => {
             ${body}
           `);
         });
+
+        it("supports optional parameter names", () => {
+          testWc(`
+            CREATE FUNCTION foo(INT, IN INT, OUT INT[])
+            AS $$ SELECT ARRAY[$1, $2]; $$
+          `);
+        });
       });
 
       it("supports OR REPLACE", () => {
