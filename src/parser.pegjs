@@ -2799,12 +2799,15 @@ create_function_stmt
     }
 
 func_param
-  = name:(ident __) type:data_type {
-    return loc({
-      type: "function_param",
-      name: read(name),
-      dataType: type,
-    });
+  = &bigquery name:(ident __) type:data_type {
+      return loc({
+        type: "function_param",
+        name: read(name),
+        dataType: type,
+      });
+    }
+  / &postgres p:procedure_param {
+    return p;
   }
 
 create_function_clause
@@ -2921,7 +2924,7 @@ create_procedure_stmt
 procedure_param
   = mode:(argmode_kw __)? name:(ident __) type:data_type {
     return loc({
-      type: "procedure_param",
+      type: "function_param",
       mode: read(mode),
       name: read(name),
       dataType: type,

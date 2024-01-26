@@ -1,12 +1,12 @@
 import { BaseNode, Keyword } from "./Base";
 import { BigqueryOptions } from "./dialects/Bigquery";
-import { DataType } from "./DataType";
-import { Identifier, ListExpr, ParenExpr, EntityName } from "./Expr";
+import { ListExpr, ParenExpr, EntityName } from "./Expr";
 import { StringLiteral } from "./Literal";
 import { AsClause, LanguageClause, WithConnectionClause } from "./ProcClause";
 import { BlockStmt } from "./ProceduralLanguage";
+import { FunctionParam } from "./Function";
 
-export type AllProcedureNodes = AllProcedureStatements | ProcedureParam;
+export type AllProcedureNodes = AllProcedureStatements;
 
 export type AllProcedureStatements = CreateProcedureStmt | DropProcedureStmt;
 
@@ -18,15 +18,8 @@ export interface CreateProcedureStmt extends BaseNode {
   procedureKw: Keyword<"PROCEDURE">;
   ifNotExistsKw?: [Keyword<"IF">, Keyword<"NOT">, Keyword<"EXISTS">];
   name: EntityName;
-  params: ParenExpr<ListExpr<ProcedureParam>>;
+  params: ParenExpr<ListExpr<FunctionParam>>;
   clauses: CreateProcedureClause[];
-}
-
-export interface ProcedureParam extends BaseNode {
-  type: "procedure_param";
-  mode?: Keyword<"IN" | "OUT" | "INOUT" | "VARIADIC">;
-  name: Identifier;
-  dataType: DataType;
 }
 
 type CreateProcedureClause =
@@ -43,6 +36,6 @@ export interface DropProcedureStmt extends BaseNode {
   procedureKw: Keyword<"PROCEDURE">;
   ifExistsKw?: [Keyword<"IF">, Keyword<"EXISTS">];
   name: EntityName;
-  params?: ParenExpr<ListExpr<ProcedureParam>>;
+  params?: ParenExpr<ListExpr<FunctionParam>>;
   behaviorKw?: Keyword<"RESTRICT" | "CASCADE">;
 }

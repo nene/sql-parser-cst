@@ -11,6 +11,19 @@ describe("function", () => {
       it("supports parameters", () => {
         testWc(`CREATE FUNCTION multiplicate ( x INT , y INT ) ${body}`);
       });
+      dialect("postgresql", () => {
+        it("supports IN, OUT, INOUT & VARIADIC parameters", () => {
+          testWc(`
+            CREATE FUNCTION multiplicate(
+              IN x INT,
+              OUT y INT,
+              INOUT z INT,
+              VARIADIC numbers INT[]
+            )
+            ${body}
+          `);
+        });
+      });
 
       it("supports OR REPLACE", () => {
         testWc(`CREATE OR REPLACE FUNCTION foo() ${body}`);

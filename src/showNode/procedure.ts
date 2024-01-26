@@ -13,7 +13,6 @@ export const procedureMap: FullTransformMap<string, AllProcedureNodes> = {
       node.params,
       node.clauses,
     ]),
-  procedure_param: (node) => show([node.mode, node.name, node.dataType]),
   drop_procedure_stmt: (node) =>
     show([
       node.dropKw,

@@ -36,6 +36,7 @@ export interface CreateFunctionStmt extends BaseNode {
 
 export interface FunctionParam extends BaseNode {
   type: "function_param";
+  mode?: Keyword<"IN" | "OUT" | "INOUT" | "VARIADIC">;
   name: Identifier;
   dataType: DataType;
 }
