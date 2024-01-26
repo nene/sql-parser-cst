@@ -52,6 +52,7 @@ export interface LabeledStmt extends BaseNode {
 export interface BlockStmt extends BaseNode {
   type: "block_stmt";
   beginKw: Keyword<"BEGIN">;
+  atomicKw?: Keyword<"ATOMIC">;
   program: Program;
   exception?: ExceptionClause;
   endKw: Keyword<"END">;

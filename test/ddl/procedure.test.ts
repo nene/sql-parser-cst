@@ -1,12 +1,12 @@
 import { dialect, test, testWc } from "../test_utils";
 
 describe("procedure", () => {
-  dialect(["bigquery", "postgresql"], () => {
+  function testCreateProcedure(BEGIN: string) {
     describe("CREATE PROCEDURE", () => {
       it("supports basic CREATE PROCEDURE", () => {
         testWc(`
           CREATE PROCEDURE foo.bar.baz ( )
-          BEGIN
+          ${BEGIN}
             SELECT 1;
           END
         `);
@@ -15,7 +15,7 @@ describe("procedure", () => {
       it("supports multiple statements in procedure body", () => {
         test(`
           CREATE PROCEDURE tmp_table_query()
-          BEGIN
+          ${BEGIN}
             CREATE TEMP TABLE entries (id INT, name STRING);
             INSERT INTO entries VALUES (1, 'John');
             INSERT INTO entries VALUES (2, 'Mary');
@@ -26,7 +26,7 @@ describe("procedure", () => {
       });
 
       it("supports parameters", () => {
-        testWc("CREATE PROCEDURE multiplicate ( x INT , y INT ) BEGIN SELECT 1; END");
+        testWc(`CREATE PROCEDURE multiplicate ( x INT , y INT ) ${BEGIN} SELECT 1; END`);
       });
 
       it("supports IN/OUT/INOUT parameters", () => {
@@ -36,14 +36,14 @@ describe("procedure", () => {
             INOUT y INT,
             OUT result INT
           )
-          BEGIN
+          ${BEGIN}
             SELECT x*y;
           END
         `);
       });
 
       it("supports OR REPLACE", () => {
-        testWc("CREATE OR REPLACE PROCEDURE foo() BEGIN SELECT 1; END");
+        testWc(`CREATE OR REPLACE PROCEDURE foo() ${BEGIN} SELECT 1; END`);
       });
 
       dialect(["bigquery"], () => {
@@ -116,6 +116,13 @@ describe("procedure", () => {
         });
       });
     });
+  }
+
+  dialect("bigquery", () => {
+    testCreateProcedure("BEGIN");
+  });
+  dialect("postgresql", () => {
+    testCreateProcedure("BEGIN ATOMIC");
   });
 
   dialect(["mysql", "mariadb", "sqlite"], () => {

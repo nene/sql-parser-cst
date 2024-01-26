@@ -3178,15 +3178,22 @@ labeled$repeat_stmt = .
 labeled$for_stmt = .
 
 block_stmt
-  = beginKw:(BEGIN __) program:inner_program exception:(__ exception_clause)? endKw:(__ END) {
-    return loc({
-      type: "block_stmt",
-      beginKw: read(beginKw),
-      program,
-      exception: read(exception),
-      endKw: read(endKw),
-    });
-  }
+  = beginKw:(BEGIN __) atomicKw:(atomic_kw __)?
+    program:inner_program
+    exception:(__ exception_clause)?
+    endKw:(__ END) {
+      return loc({
+        type: "block_stmt",
+        beginKw: read(beginKw),
+        atomicKw: read(atomicKw),
+        program,
+        exception: read(exception),
+        endKw: read(endKw),
+      });
+    }
+
+atomic_kw
+  = kw:ATOMIC &postgres { return kw; }
 
 exception_clause
   = &bigquery kw:(EXCEPTION __) whenKw:(WHEN __) cond:(error_category __) thenKw:(THEN __) program:inner_program {
@@ -6474,6 +6481,7 @@ ASC                 = kw:"ASC"i                 !ident_part { return loc(createK
 ASSERT              = kw:"ASSERT"i              !ident_part { return loc(createKeyword(kw)); }
 ASSIGNMENT          = kw:"ASSIGNMENT"i          !ident_part { return loc(createKeyword(kw)); }
 AT                  = kw:"AT"i                  !ident_part { return loc(createKeyword(kw)); }
+ATOMIC              = kw:"ATOMIC"i              !ident_part { return loc(createKeyword(kw)); }
 ATTACH              = kw:"ATTACH"i              !ident_part { return loc(createKeyword(kw)); }
 AUTO                = kw:"AUTO"i                !ident_part { return loc(createKeyword(kw)); }
 AUTO_INCREMENT      = kw:"AUTO_INCREMENT"i      !ident_part { return loc(createKeyword(kw)); }

@@ -9,7 +9,13 @@ export const proceduralLanguageMap: FullTransformMap<
   labeled_stmt: (node) =>
     show([node.beginLabel, ":", node.statement, node.endLabel]),
   block_stmt: (node) =>
-    show([node.beginKw, node.program, node.exception, node.endKw]),
+    show([
+      node.beginKw,
+      node.atomicKw,
+      node.program,
+      node.exception,
+      node.endKw,
+    ]),
   exception_clause: (node) =>
     show([
       node.exceptionKw,
