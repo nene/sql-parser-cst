@@ -116,6 +116,27 @@ describe("function", () => {
         testWc("CREATE OR REPLACE FUNCTION foo() RETURNS INT RETURN 1");
       });
 
+      describe.skip("begin..end block", () => {
+        it("supports BEGIN ATOMIC .. END block", () => {
+          testWc(`
+            CREATE FUNCTION foo() RETURNS INT
+            BEGIN ATOMIC
+              SELECT 1;
+            END
+          `);
+        });
+
+        it("supports RETURN inside begin..end block", () => {
+          testWc(`
+            CREATE FUNCTION foo() RETURNS INT
+            BEGIN ATOMIC
+              SELECT * INTO result FROM bar;
+              RETURN result;
+            END
+          `);
+        });
+      });
+
       describe("functions in other languages", () => {
         it("supports LANGUAGE SQL", () => {
           testWc("CREATE FUNCTION foo() RETURNS INT LANGUAGE SQL AS 'SELECT 1'");
