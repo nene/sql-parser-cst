@@ -43,6 +43,11 @@ describe("function", () => {
       it("supports RETURNS", () => {
         testWc(`CREATE FUNCTION foo() RETURNS INT ${body}`);
       });
+      dialect("postgresql", () => {
+        it("supports RETURNS TABLE", () => {
+          testWc(`CREATE FUNCTION foo() RETURNS TABLE (x INT, y TEXT) ${body}`);
+        });
+      });
 
       dialect("bigquery", () => {
         it("supports TEMPORARY FUNCTION", () => {

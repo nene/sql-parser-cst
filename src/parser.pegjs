@@ -2828,7 +2828,7 @@ create_function_clause_postgres
   / as_clause$expr
 
 returns_clause
-  = kw:(RETURNS __) type:data_type {
+  = kw:(RETURNS __) type:(table_data_type / data_type) {
     return loc({
       type: "returns_clause",
       returnsKw: read(kw),
@@ -4426,6 +4426,11 @@ array_type_param
       dataType,
       constraints: constraints.map(read),
     });
+  }
+
+table_data_type
+  = &postgres kw:(TABLE __) columns:paren$list$column_definition {
+    return loc({ type: "table_data_type", tableKw: read(kw), columns });
   }
 
 type_name

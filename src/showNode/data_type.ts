@@ -12,4 +12,5 @@ export const dataTypeMap: FullTransformMap<string, AllDataTypeNodes> = {
   array_type_param: (node) => show([node.dataType, node.constraints]),
   struct_type_param: (node) =>
     show([node.name, node.dataType, node.constraints]),
+  table_data_type: (node) => show([node.tableKw, node.columns]),
 };

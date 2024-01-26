@@ -1,5 +1,6 @@
 import { BaseNode, Empty, Keyword } from "./Base";
 import { ColumnConstraint } from "./Constraint";
+import { ColumnDefinition } from "./CreateTable";
 import { Identifier, ListExpr, ParenExpr } from "./Expr";
 import { Literal, NumberLiteral } from "./Literal";
 
@@ -10,7 +11,11 @@ export type AllDataTypeNodes =
   | StructTypeParam
   | ArrayBounds;
 
-export type DataType = NamedDataType | ArrayDataType | WithTimeZoneDataType;
+export type DataType =
+  | NamedDataType
+  | ArrayDataType
+  | WithTimeZoneDataType
+  | TableDataType;
 
 export interface NamedDataType extends BaseNode {
   type: "named_data_type";
@@ -61,4 +66,11 @@ export interface StructTypeParam extends BaseNode {
   name: Identifier;
   dataType: DataType;
   constraints: ColumnConstraint[];
+}
+
+// PostgreSQL
+export interface TableDataType extends BaseNode {
+  type: "table_data_type";
+  tableKw: Keyword<"TABLE">;
+  columns: ParenExpr<ListExpr<ColumnDefinition>>;
 }
