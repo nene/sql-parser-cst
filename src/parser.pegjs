@@ -80,7 +80,7 @@ ddl_statement
   / create_index_stmt
   / drop_index_stmt
   / x:(create_function_stmt / drop_function_stmt) (&bigquery / &postgres) { return x; }
-  / x:(create_procedure_stmt / drop_procedure_stmt) &bigquery { return x; }
+  / x:(create_procedure_stmt / drop_procedure_stmt) (&bigquery / &postgres) { return x; }
   / create_table_stmt
   / drop_table_stmt
   / alter_table_stmt
