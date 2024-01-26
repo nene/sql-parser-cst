@@ -2931,15 +2931,22 @@ create_procedure_clause
   / as_clause$sql_expr_or_code_string
 
 drop_procedure_stmt
-  = kw:(DROP __) procKw:(PROCEDURE __) ifKw:(if_exists __)? name:entity_name {
-    return loc({
-      type: "drop_procedure_stmt",
-      dropKw: read(kw),
-      procedureKw: read(procKw),
-      ifExistsKw: read(ifKw),
-      name,
-    });
-  }
+  = kw:(DROP __)
+    procKw:(PROCEDURE __)
+    ifKw:(if_exists __)?
+    name:entity_name
+    params:(__ (paren$list$procedure_param / paren$empty_list))?
+    behaviorKw:(__ (CASCADE / RESTRICT))? {
+      return loc({
+        type: "drop_procedure_stmt",
+        dropKw: read(kw),
+        procedureKw: read(procKw),
+        ifExistsKw: read(ifKw),
+        name,
+        params: read(params),
+        behaviorKw: read(behaviorKw),
+      });
+    }
 
 /**
  * ------------------------------------------------------------------------------------ *

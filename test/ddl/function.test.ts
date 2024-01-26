@@ -160,7 +160,7 @@ describe("function", () => {
 
         it("supports CASCADE|RESTRICT", () => {
           testWc("DROP FUNCTION foo CASCADE");
-          testWc("DROP FUNCTION bar RESTRICT");
+          testWc("DROP FUNCTION bar() RESTRICT");
         });
       });
     });

@@ -43,4 +43,6 @@ export interface DropProcedureStmt extends BaseNode {
   procedureKw: Keyword<"PROCEDURE">;
   ifExistsKw?: [Keyword<"IF">, Keyword<"EXISTS">];
   name: EntityName;
+  params?: ParenExpr<ListExpr<ProcedureParam>>;
+  behaviorKw?: Keyword<"RESTRICT" | "CASCADE">;
 }

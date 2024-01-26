@@ -103,6 +103,18 @@ describe("procedure", () => {
       it("supports IF EXISTS", () => {
         testWc("DROP PROCEDURE IF EXISTS foo");
       });
+
+      dialect(["postgresql"], () => {
+        it("supports parameter list", () => {
+          testWc("DROP PROCEDURE foo ( )");
+          testWc("DROP PROCEDURE bar ( id INT, name VARCHAR(255) )");
+        });
+
+        it("supports CASCADE|RESTRICT", () => {
+          testWc("DROP PROCEDURE foo CASCADE");
+          testWc("DROP PROCEDURE bar() RESTRICT");
+        });
+      });
     });
   });
 

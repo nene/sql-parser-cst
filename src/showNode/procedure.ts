@@ -15,5 +15,12 @@ export const procedureMap: FullTransformMap<string, AllProcedureNodes> = {
     ]),
   procedure_param: (node) => show([node.mode, node.name, node.dataType]),
   drop_procedure_stmt: (node) =>
-    show([node.dropKw, node.procedureKw, node.ifExistsKw, node.name]),
+    show([
+      node.dropKw,
+      node.procedureKw,
+      node.ifExistsKw,
+      node.name,
+      node.params,
+      node.behaviorKw,
+    ]),
 };
