@@ -2817,6 +2817,7 @@ create_function_clause_bigquery
 
 create_function_clause_postgres
   = return_clause
+  / block_stmt
   / as_clause$expr
 
 returns_clause

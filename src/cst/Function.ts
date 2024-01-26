@@ -11,6 +11,7 @@ import {
   ReturnsClause,
 } from "./ProcClause";
 import { SubSelect } from "./Select";
+import { BlockStmt } from "./ProceduralLanguage";
 
 export type AllFunctionNodes =
   | AllFunctionStatements
@@ -42,6 +43,7 @@ export interface FunctionParam extends BaseNode {
 type CreateFunctionClause =
   | ReturnsClause
   | ReturnClause
+  | BlockStmt
   | DeterminismClause
   | LanguageClause
   | AsClause<ParenExpr<Expr> | StringLiteral | SubSelect>
