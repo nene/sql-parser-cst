@@ -92,6 +92,20 @@ describe("procedure", () => {
           });
         });
       });
+
+      dialect(["postgresql"], () => {
+        it("supports procedures in PL/pgSQL", () => {
+          test(`
+            CREATE PROCEDURE my_proc()
+            LANGUAGE plpgsql
+            AS $$
+            BEGIN
+              SELECT 1;
+            END;
+            $$
+          `);
+        });
+      });
     });
 
     describe("DROP PROCEDURE", () => {
