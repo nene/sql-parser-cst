@@ -30,6 +30,10 @@ describe("function", () => {
             AS $$ SELECT ARRAY[$1, $2]; $$
           `);
         });
+
+        it("supports default values", () => {
+          testWc(`CREATE FUNCTION foo(IN x INT = 1, y INT DEFAULT 2, INT = 3) ${body}`);
+        });
       });
 
       it("supports OR REPLACE", () => {

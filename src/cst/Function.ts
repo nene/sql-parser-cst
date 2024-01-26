@@ -16,6 +16,7 @@ import { BlockStmt } from "./ProceduralLanguage";
 export type AllFunctionNodes =
   | AllFunctionStatements
   | FunctionParam
+  | FunctionParamDefault
   | ReturnClause;
 
 export type AllFunctionStatements = CreateFunctionStmt | DropFunctionStmt;
@@ -39,6 +40,13 @@ export interface FunctionParam extends BaseNode {
   mode?: Keyword<"IN" | "OUT" | "INOUT" | "VARIADIC">;
   name?: Identifier;
   dataType: DataType;
+  default?: FunctionParamDefault;
+}
+
+export interface FunctionParamDefault extends BaseNode {
+  type: "function_param_default";
+  operator: Keyword<"DEFAULT"> | "=";
+  expr: Expr;
 }
 
 type CreateFunctionClause =

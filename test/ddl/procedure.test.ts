@@ -59,6 +59,10 @@ describe("procedure", () => {
             AS $$ SELECT $1, $2; $$
           `);
         });
+
+        it("supports default values", () => {
+          testWc(`CREATE PROCEDURE foo(x INT = 1, OUT y INT DEFAULT 2) ${BEGIN} SELECT 1; END`);
+        });
       });
 
       it("supports OR REPLACE", () => {

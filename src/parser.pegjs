@@ -2930,19 +2930,30 @@ procedure_param
       dataType: type,
     });
   }
-  / &postgres mode:((INOUT / IN / OUT / VARIADIC) __)? name:(ident __) type:data_type {
+  / &postgres mode:((INOUT / IN / OUT / VARIADIC) __)? name:(ident __) type:data_type def:(__ function_param_default)? {
     return loc({
       type: "function_param",
       mode: read(mode),
       name: read(name),
       dataType: type,
+      default: read(def),
     });
   }
-  / &postgres mode:((INOUT / IN / OUT / VARIADIC) __)? type:data_type {
+  / &postgres mode:((INOUT / IN / OUT / VARIADIC) __)? type:data_type def:(__ function_param_default)? {
     return loc({
       type: "function_param",
       mode: read(mode),
       dataType: type,
+      default: read(def),
+    });
+  }
+
+function_param_default
+  = operator:(DEFAULT / "=") expr:(__ expr) {
+    return loc({
+      type: "function_param_default",
+      operator,
+      expr: read(expr),
     });
   }
 
