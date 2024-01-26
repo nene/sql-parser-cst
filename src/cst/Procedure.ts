@@ -4,7 +4,7 @@ import { ListExpr, ParenExpr, EntityName } from "./Expr";
 import { StringLiteral } from "./Literal";
 import { AsClause, LanguageClause, WithConnectionClause } from "./ProcClause";
 import { BlockStmt } from "./ProceduralLanguage";
-import { FunctionParam } from "./Function";
+import { DynamicallyLoadedFunction, FunctionParam } from "./Function";
 
 export type AllProcedureNodes = AllProcedureStatements;
 
@@ -27,7 +27,7 @@ type CreateProcedureClause =
   | BigqueryOptions
   | WithConnectionClause
   | LanguageClause
-  | AsClause<StringLiteral>;
+  | AsClause<StringLiteral | DynamicallyLoadedFunction>;
 
 // DROP PROCEDURE
 export interface DropProcedureStmt extends BaseNode {

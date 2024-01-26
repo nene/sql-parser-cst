@@ -128,6 +128,10 @@ describe("procedure", () => {
             $$
           `);
         });
+
+        it("supports C procedures from shared library file", () => {
+          testWc("CREATE PROCEDURE foo() LANGUAGE C AS 'mylib', 'myfunc'");
+        });
       });
     });
 

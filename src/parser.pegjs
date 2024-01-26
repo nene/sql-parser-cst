@@ -2818,14 +2818,14 @@ create_function_clause
 
 create_function_clause_bigquery
   = determinism_clause
-  / as_clause$sql_expr_or_code_string
+  / as_clause$func_as_expr_bigquery
   / with_connection_clause
   / bigquery_options
 
 create_function_clause_postgres
   = return_clause
   / block_stmt
-  / as_clause$expr
+  / as_clause$func_as_expr_postgresql
 
 returns_clause
   = kw:(RETURNS __) type:(table_data_type / data_type) {
@@ -2862,8 +2862,20 @@ language_clause
     });
   }
 
-sql_expr_or_code_string
+func_as_expr_bigquery
   = paren$expr / string_literal / compound_select_stmt
+
+func_as_expr_postgresql
+  = dynamically_loaded_function / string_literal
+
+dynamically_loaded_function
+  = objectFile:(string_literal __) "," symbol:(__ string_literal) {
+    return loc({
+      type: "dynamically_loaded_function",
+      objectFile: read(objectFile),
+      symbol: read(symbol),
+    });
+  }
 
 with_connection_clause
   = kw:(REMOTE __ WITH __ CONNECTION __ / WITH __ CONNECTION __) name:entity_name {
@@ -2962,7 +2974,8 @@ create_procedure_clause
   / block_stmt
   / with_connection_clause
   / language_clause
-  / as_clause$sql_expr_or_code_string
+  / &bigquery x:as_clause$func_as_expr_bigquery { return x; }
+  / &postgres x:as_clause$func_as_expr_postgresql { return x; }
 
 drop_procedure_stmt
   = kw:(DROP __)
@@ -5715,8 +5728,9 @@ as_clause$__template__
   }
 
 as_clause$compound_select_stmt = .
+as_clause$func_as_expr_bigquery = .
+as_clause$func_as_expr_postgresql = .
 as_clause$string_literal = .
-as_clause$sql_expr_or_code_string = .
 as_clause$expr = .
 
 // Utility placeholder rule used by the rule-templates system

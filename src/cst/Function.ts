@@ -17,7 +17,8 @@ export type AllFunctionNodes =
   | AllFunctionStatements
   | FunctionParam
   | FunctionParamDefault
-  | ReturnClause;
+  | ReturnClause
+  | DynamicallyLoadedFunction;
 
 export type AllFunctionStatements = CreateFunctionStmt | DropFunctionStmt;
 
@@ -55,7 +56,12 @@ type CreateFunctionClause =
   | BlockStmt
   | DeterminismClause
   | LanguageClause
-  | AsClause<ParenExpr<Expr> | StringLiteral | SubSelect>
+  | AsClause<
+      | StringLiteral
+      | ParenExpr<Expr> // BigQuery
+      | SubSelect // BigQuery
+      | DynamicallyLoadedFunction // PostgreSQL
+    >
   | BigqueryOptions
   | WithConnectionClause;
 
@@ -65,6 +71,14 @@ export interface ReturnClause extends BaseNode {
   type: "return_clause";
   returnKw: Keyword<"RETURN">;
   expr: Expr;
+}
+
+// PostgreSQL
+// Represents two comma-separated string literals.
+export interface DynamicallyLoadedFunction extends BaseNode {
+  type: "dynamically_loaded_function";
+  objectFile: StringLiteral;
+  symbol: StringLiteral;
 }
 
 export interface DropFunctionStmt extends BaseNode {

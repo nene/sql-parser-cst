@@ -173,6 +173,14 @@ describe("function", () => {
             `);
           });
         });
+
+        it("supports C functions from shared library file", () => {
+          testWc(`
+            CREATE FUNCTION add_one() RETURNS DOUBLE PRECISION
+            AS 'DIRECTORY/funcs' , 'add_one_float8'
+            LANGUAGE C;
+          `);
+        });
       });
     });
   }
