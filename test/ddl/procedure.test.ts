@@ -41,6 +41,18 @@ describe("procedure", () => {
           END
         `);
       });
+      dialect("postgresql", () => {
+        it("supports VARIADIC parameters", () => {
+          testWc(`
+            CREATE PROCEDURE first(
+              VARIADIC numbers INT[]
+            )
+            ${BEGIN}
+              SELECT numbers[1];
+            END
+          `);
+        });
+      });
 
       it("supports OR REPLACE", () => {
         testWc(`CREATE OR REPLACE PROCEDURE foo() ${BEGIN} SELECT 1; END`);

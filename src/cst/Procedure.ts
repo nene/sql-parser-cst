@@ -24,7 +24,7 @@ export interface CreateProcedureStmt extends BaseNode {
 
 export interface ProcedureParam extends BaseNode {
   type: "procedure_param";
-  mode?: Keyword<"IN" | "OUT" | "INOUT">;
+  mode?: Keyword<"IN" | "OUT" | "INOUT" | "VARIADIC">;
   name: Identifier;
   dataType: DataType;
 }

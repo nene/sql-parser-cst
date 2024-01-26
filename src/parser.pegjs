@@ -2919,7 +2919,7 @@ create_procedure_stmt
     }
 
 procedure_param
-  = mode:((INOUT / IN / OUT) __)? name:(ident __) type:data_type {
+  = mode:(argmode_kw __)? name:(ident __) type:data_type {
     return loc({
       type: "procedure_param",
       mode: read(mode),
@@ -2927,6 +2927,12 @@ procedure_param
       dataType: type,
     });
   }
+
+argmode_kw
+  = INOUT
+  / IN
+  / OUT
+  / x:VARIADIC &postgres { return x; }
 
 create_procedure_clause
   = bigquery_options
@@ -6974,6 +6980,7 @@ VALUE               = kw:"VALUE"i               !ident_part { return loc(createK
 VALUES              = kw:"VALUES"i              !ident_part { return loc(createKeyword(kw)); }
 VARBINARY           = kw:"VARBINARY"i           !ident_part { return loc(createKeyword(kw)); }
 VARCHAR             = kw:"VARCHAR"i             !ident_part { return loc(createKeyword(kw)); }
+VARIADIC            = kw:"VARIADIC"i            !ident_part { return loc(createKeyword(kw)); }
 VARYING             = kw:"VARYING"i             !ident_part { return loc(createKeyword(kw)); }
 VIEW                = kw:"VIEW"i                !ident_part { return loc(createKeyword(kw)); }
 VIRTUAL             = kw:"VIRTUAL"i             !ident_part { return loc(createKeyword(kw)); }
