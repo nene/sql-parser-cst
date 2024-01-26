@@ -103,7 +103,7 @@ empty
   }
 
 inner_program
-  = head:statement tail:(__ ";" __ (statement / empty))+ {
+  = head:inner_program_statement tail:(__ ";" __ (inner_program_statement / empty))+ {
     return loc({
       type: "program",
       statements: readCommaSepList(head, tail),
@@ -115,6 +115,10 @@ inner_program
       statements: [],
     });
   }
+
+inner_program_statement
+  = statement
+  / &postgres x:return_stmt { return x; }
 
 /**
  * ------------------------------------------------------------------------------------ *
@@ -3404,7 +3408,7 @@ call_stmt
   }
 
 return_stmt
-  = &mysql kw:(RETURN __) expr:expr {
+  = (&mysql / &postgres) kw:(RETURN __) expr:expr {
     return loc({ type: "return_stmt", returnKw: read(kw), expr });
   }
   / &bigquery kw:RETURN {

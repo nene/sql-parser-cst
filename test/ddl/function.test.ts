@@ -126,7 +126,7 @@ describe("function", () => {
           `);
         });
 
-        it.skip("supports RETURN inside begin..end block", () => {
+        it("supports RETURN inside begin..end block", () => {
           testWc(`
             CREATE FUNCTION foo() RETURNS INT
             BEGIN ATOMIC
