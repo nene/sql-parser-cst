@@ -223,6 +223,10 @@ describe("function", () => {
         it("supports COST clause", () => {
           testFunctionClauseWc("COST 125");
         });
+
+        it("supports ROWS clause", () => {
+          testFunctionClauseWc("ROWS 5200");
+        });
       });
     });
   }

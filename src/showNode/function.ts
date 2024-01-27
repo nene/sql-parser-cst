@@ -25,6 +25,7 @@ export const functionMap: FullTransformMap<string, AllFunctionNodes> = {
   function_behavior_clause: (node) => show([node.behaviorKw]),
   function_security_clause: (node) => show([node.externalKw, node.securityKw]),
   function_cost_clause: (node) => show([node.costKw, node.cost]),
+  function_rows_clause: (node) => show([node.rowsKw, node.rows]),
   drop_function_stmt: (node) =>
     show([
       node.dropKw,

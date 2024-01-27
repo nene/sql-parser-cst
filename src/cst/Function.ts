@@ -22,7 +22,8 @@ export type AllFunctionNodes =
   | FunctionWindowClause
   | FunctionBehaviorClause
   | FunctionSecurityClause
-  | FunctionCostClause;
+  | FunctionCostClause
+  | FunctionRowsClause;
 
 export type AllFunctionStatements = CreateFunctionStmt | DropFunctionStmt;
 
@@ -71,7 +72,8 @@ type CreateFunctionClause =
   | FunctionWindowClause
   | FunctionBehaviorClause
   | FunctionSecurityClause
-  | FunctionCostClause;
+  | FunctionCostClause
+  | FunctionRowsClause;
 
 // PostgreSQL
 // Note: Do not confuse this with "returns_clause", which defines the return type.
@@ -128,6 +130,13 @@ export interface FunctionCostClause extends BaseNode {
   type: "function_cost_clause";
   costKw: Keyword<"COST">;
   cost: NumberLiteral;
+}
+
+// PostgreSQL
+export interface FunctionRowsClause extends BaseNode {
+  type: "function_rows_clause";
+  rowsKw: Keyword<"ROWS">;
+  rows: NumberLiteral;
 }
 
 export interface DropFunctionStmt extends BaseNode {

@@ -2830,6 +2830,7 @@ create_function_clause_postgres
   / function_behavior_clause
   / function_security_clause
   / function_cost_clause
+  / function_rows_clause
 
 returns_clause
   = kw:(RETURNS __) type:(table_data_type / data_type) {
@@ -2928,6 +2929,15 @@ function_cost_clause
       type: "function_cost_clause",
       costKw: read(kw),
       cost,
+    });
+  }
+
+function_rows_clause
+  = kw:(ROWS __) rows:number_literal {
+    return loc({
+      type: "function_rows_clause",
+      rowsKw: read(kw),
+      rows,
     });
   }
 
