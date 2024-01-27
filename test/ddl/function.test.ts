@@ -215,6 +215,10 @@ describe("function", () => {
           testWc("CREATE FUNCTION passwd() RETURNS INT EXTERNAL SECURITY DEFINER RETURN 1;");
           testWc("CREATE FUNCTION passwd() RETURNS INT EXTERNAL SECURITY INVOKER RETURN 1;");
         });
+
+        it("supports COST clause", () => {
+          testWc("CREATE FUNCTION passwd() RETURNS INT RETURN 1 COST 125;");
+        });
       });
     });
   }

@@ -2829,6 +2829,7 @@ create_function_clause_postgres
   / function_window_clause
   / function_behavior_clause
   / function_security_clause
+  / function_cost_clause
 
 returns_clause
   = kw:(RETURNS __) type:(table_data_type / data_type) {
@@ -2918,6 +2919,15 @@ function_security_clause
       type: "function_security_clause",
       externalKw: read(externalKw),
       securityKw: read(securityKw),
+    });
+  }
+
+function_cost_clause
+  = kw:(COST __) cost:number_literal {
+    return loc({
+      type: "function_cost_clause",
+      costKw: read(kw),
+      cost,
     });
   }
 
@@ -6637,6 +6647,7 @@ CONSTRAINT          = kw:"CONSTRAINT"i          !ident_part { return loc(createK
 CONSTRAINTS         = kw:"CONSTRAINTS"i         !ident_part { return loc(createKeyword(kw)); }
 CONTINUE            = kw:"CONTINUE"i            !ident_part { return loc(createKeyword(kw)); }
 COPY                = kw:"COPY"i                !ident_part { return loc(createKeyword(kw)); }
+COST                = kw:"COST"i                !ident_part { return loc(createKeyword(kw)); }
 COUNT               = kw:"COUNT"i               !ident_part { return loc(createKeyword(kw)); }
 CREATE              = kw:"CREATE"i              !ident_part { return loc(createKeyword(kw)); }
 CROSS               = kw:"CROSS"i               !ident_part { return loc(createKeyword(kw)); }

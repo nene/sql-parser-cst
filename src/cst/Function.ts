@@ -2,7 +2,7 @@ import { BaseNode, Keyword } from "./Base";
 import { BigqueryOptions } from "./dialects/Bigquery";
 import { DataType } from "./DataType";
 import { Expr, Identifier, ListExpr, ParenExpr, EntityName } from "./Expr";
-import { StringLiteral } from "./Literal";
+import { NumberLiteral, StringLiteral } from "./Literal";
 import {
   AsClause,
   DeterminismClause,
@@ -21,7 +21,8 @@ export type AllFunctionNodes =
   | DynamicallyLoadedFunction
   | FunctionWindowClause
   | FunctionBehaviorClause
-  | FunctionSecurityClause;
+  | FunctionSecurityClause
+  | FunctionCostClause;
 
 export type AllFunctionStatements = CreateFunctionStmt | DropFunctionStmt;
 
@@ -69,7 +70,8 @@ type CreateFunctionClause =
   | WithConnectionClause
   | FunctionWindowClause
   | FunctionBehaviorClause
-  | FunctionSecurityClause;
+  | FunctionSecurityClause
+  | FunctionCostClause;
 
 // PostgreSQL
 // Note: Do not confuse this with "returns_clause", which defines the return type.
@@ -119,6 +121,13 @@ export interface FunctionSecurityClause extends BaseNode {
   type: "function_security_clause";
   externalKw?: Keyword<"EXTERNAL">;
   securityKw: [Keyword<"SECURITY">, Keyword<"DEFINER" | "INVOKER">];
+}
+
+// PostgreSQL
+export interface FunctionCostClause extends BaseNode {
+  type: "function_cost_clause";
+  costKw: Keyword<"COST">;
+  cost: NumberLiteral;
 }
 
 export interface DropFunctionStmt extends BaseNode {
