@@ -18,7 +18,8 @@ export type AllFunctionNodes =
   | FunctionParam
   | FunctionParamDefault
   | ReturnClause
-  | DynamicallyLoadedFunction;
+  | DynamicallyLoadedFunction
+  | CreateFunctionWindowClause;
 
 export type AllFunctionStatements = CreateFunctionStmt | DropFunctionStmt;
 
@@ -63,7 +64,8 @@ type CreateFunctionClause =
       | DynamicallyLoadedFunction // PostgreSQL
     >
   | BigqueryOptions
-  | WithConnectionClause;
+  | WithConnectionClause
+  | CreateFunctionWindowClause;
 
 // PostgreSQL
 // Note: Do not confuse this with "returns_clause", which defines the return type.
@@ -79,6 +81,12 @@ export interface DynamicallyLoadedFunction extends BaseNode {
   type: "dynamically_loaded_function";
   objectFile: StringLiteral;
   symbol: StringLiteral;
+}
+
+// PostgreSQL
+export interface CreateFunctionWindowClause extends BaseNode {
+  type: "create_function_window_clause";
+  windowKw: Keyword<"WINDOW">;
 }
 
 export interface DropFunctionStmt extends BaseNode {

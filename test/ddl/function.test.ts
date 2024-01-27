@@ -181,6 +181,15 @@ describe("function", () => {
             `);
           });
         });
+
+        it("supports creating WINDOW functions", () => {
+          // Currently PostgreSQL only supports creating WINDOW functions from C functions.
+          testWc(`
+            CREATE FUNCTION foo() RETURNS INT
+            WINDOW AS 'DIRECTORY/win_funcs' , 'my_win_func'
+            LANGUAGE C;
+          `);
+        });
       });
     });
   }

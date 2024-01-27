@@ -2826,6 +2826,7 @@ create_function_clause_postgres
   = return_clause
   / block_stmt
   / as_clause$func_as_expr_postgresql
+  / create_function_window_clause
 
 returns_clause
   = kw:(RETURNS __) type:(table_data_type / data_type) {
@@ -2884,6 +2885,11 @@ with_connection_clause
       withConnectionKw: read(kw),
       connection: name,
     });
+  }
+
+create_function_window_clause
+  = windowKw:WINDOW {
+    return loc({ type: "create_function_window_clause", windowKw });
   }
 
 drop_function_stmt
