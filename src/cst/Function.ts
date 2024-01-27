@@ -19,7 +19,7 @@ export type AllFunctionNodes =
   | FunctionParamDefault
   | ReturnClause
   | DynamicallyLoadedFunction
-  | CreateFunctionWindowClause
+  | FunctionWindowClause
   | FunctionBehaviorClause
   | FunctionSecurityClause;
 
@@ -67,7 +67,7 @@ type CreateFunctionClause =
     >
   | BigqueryOptions
   | WithConnectionClause
-  | CreateFunctionWindowClause
+  | FunctionWindowClause
   | FunctionBehaviorClause
   | FunctionSecurityClause;
 
@@ -88,8 +88,8 @@ export interface DynamicallyLoadedFunction extends BaseNode {
 }
 
 // PostgreSQL
-export interface CreateFunctionWindowClause extends BaseNode {
-  type: "create_function_window_clause";
+export interface FunctionWindowClause extends BaseNode {
+  type: "function_window_clause";
   windowKw: Keyword<"WINDOW">;
 }
 

@@ -2826,7 +2826,7 @@ create_function_clause_postgres
   = return_clause
   / block_stmt
   / as_clause$func_as_expr_postgresql
-  / create_function_window_clause
+  / function_window_clause
   / function_behavior_clause
   / function_security_clause
 
@@ -2889,9 +2889,9 @@ with_connection_clause
     });
   }
 
-create_function_window_clause
+function_window_clause
   = windowKw:WINDOW {
-    return loc({ type: "create_function_window_clause", windowKw });
+    return loc({ type: "function_window_clause", windowKw });
   }
 
 function_behavior_clause
