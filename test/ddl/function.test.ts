@@ -208,6 +208,13 @@ describe("function", () => {
             testWc(`CREATE FUNCTION foo() RETURNS INT ${attr} RETURN 1;`);
           });
         });
+
+        it("supports security privilege clause", () => {
+          testWc("CREATE FUNCTION passwd() RETURNS INT SECURITY DEFINER RETURN 1;");
+          testWc("CREATE FUNCTION passwd() RETURNS INT SECURITY INVOKER RETURN 1;");
+          testWc("CREATE FUNCTION passwd() RETURNS INT EXTERNAL SECURITY DEFINER RETURN 1;");
+          testWc("CREATE FUNCTION passwd() RETURNS INT EXTERNAL SECURITY INVOKER RETURN 1;");
+        });
       });
     });
   }

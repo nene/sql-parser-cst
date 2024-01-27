@@ -138,6 +138,13 @@ describe("procedure", () => {
             testWc("CREATE PROCEDURE foo() LANGUAGE C AS 'mylib', 'myfunc'");
           });
         });
+
+        it("supports security privilege clause", () => {
+          testWc("CREATE PROCEDURE passwd() SECURITY DEFINER AS 'SELECT 1'");
+          testWc("CREATE PROCEDURE passwd() SECURITY INVOKER AS 'SELECT 1'");
+          testWc("CREATE PROCEDURE passwd() EXTERNAL SECURITY DEFINER AS 'SELECT 1'");
+          testWc("CREATE PROCEDURE passwd() EXTERNAL SECURITY INVOKER AS 'SELECT 1'");
+        });
       });
     });
 

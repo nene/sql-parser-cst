@@ -2828,6 +2828,7 @@ create_function_clause_postgres
   / as_clause$func_as_expr_postgresql
   / create_function_window_clause
   / create_function_behavior_clause
+  / function_security_clause
 
 returns_clause
   = kw:(RETURNS __) type:(table_data_type / data_type) {
@@ -2908,6 +2909,15 @@ create_function_behavior_clause
     return loc({
       type: "create_function_behavior_clause",
       behaviorKw: read(kw),
+    });
+  }
+
+function_security_clause
+  = externalKw:(EXTERNAL __)? securityKw:(SECURITY __ (DEFINER / INVOKER)) {
+    return loc({
+      type: "function_security_clause",
+      externalKw: read(externalKw),
+      securityKw: read(securityKw),
     });
   }
 
@@ -3007,6 +3017,7 @@ create_procedure_clause_bigquery
 
 create_procedure_clause_postgresql
   = as_clause$func_as_expr_postgresql
+  / function_security_clause
 
 drop_procedure_stmt
   = kw:(DROP __)

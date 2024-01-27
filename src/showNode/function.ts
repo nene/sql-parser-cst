@@ -23,6 +23,7 @@ export const functionMap: FullTransformMap<string, AllFunctionNodes> = {
     show([node.objectFile, ",", node.symbol]),
   create_function_window_clause: (node) => show([node.windowKw]),
   create_function_behavior_clause: (node) => show([node.behaviorKw]),
+  function_security_clause: (node) => show([node.externalKw, node.securityKw]),
   drop_function_stmt: (node) =>
     show([
       node.dropKw,
