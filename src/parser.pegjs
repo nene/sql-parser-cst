@@ -2833,6 +2833,8 @@ create_function_clause_postgres
   / function_rows_clause
   / function_support_clause
   / function_transform_clause
+  / set_parameter_clause
+  / set_parameter_from_current_clause
 
 returns_clause
   = kw:(RETURNS __) type:(table_data_type / data_type) {
@@ -2967,6 +2969,30 @@ transform_type
       type: "transform_type",
       forTypeKw: read(kw),
       dataType,
+    });
+  }
+
+set_parameter_clause
+  = kw:(SET __) name:(ident __) op:("=" / TO) value:(__ list$config_parameter_value) {
+    return loc({
+      type: "set_parameter_clause",
+      setKw: read(kw),
+      name: read(name),
+      operator: op,
+      value: read(value),
+    });
+  }
+
+config_parameter_value
+  = literal / default / ident
+
+set_parameter_from_current_clause
+  = kw:(SET __) name:ident fromCurrentKw:(__ FROM __ CURRENT) {
+    return loc({
+      type: "set_parameter_from_current_clause",
+      setKw: read(kw),
+      name,
+      fromCurrentKw: read(fromCurrentKw),
     });
   }
 
@@ -5744,6 +5770,7 @@ list$column = .
 list$column_assignment = .
 list$column_definition = .
 list$common_table_expr = .
+list$config_parameter_value = .
 list$create_definition = .
 list$delete_clause_table = .
 list$entity_name = .

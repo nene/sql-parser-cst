@@ -9,6 +9,8 @@ import {
   FunctionParam,
   FunctionSecurityClause,
   FunctionTransformClause,
+  SetParameterClause,
+  SetParameterFromCurrentClause,
 } from "./Function";
 
 export type AllProcedureNodes = AllProcedureStatements;
@@ -34,7 +36,9 @@ type CreateProcedureClause =
   | LanguageClause
   | AsClause<StringLiteral | DynamicallyLoadedFunction>
   | FunctionSecurityClause
-  | FunctionTransformClause;
+  | FunctionTransformClause
+  | SetParameterClause
+  | SetParameterFromCurrentClause;
 
 // DROP PROCEDURE
 export interface DropProcedureStmt extends BaseNode {

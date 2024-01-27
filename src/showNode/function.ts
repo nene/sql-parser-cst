@@ -29,6 +29,10 @@ export const functionMap: FullTransformMap<string, AllFunctionNodes> = {
   function_support_clause: (node) => show([node.supportKw, node.name]),
   function_transform_clause: (node) => show([node.transformKw, node.types]),
   transform_type: (node) => show([node.forTypeKw, node.dataType]),
+  set_parameter_clause: (node) =>
+    show([node.setKw, node.name, node.operator, node.value]),
+  set_parameter_from_current_clause: (node) =>
+    show([node.setKw, node.name, node.fromCurrentKw]),
   drop_function_stmt: (node) =>
     show([
       node.dropKw,

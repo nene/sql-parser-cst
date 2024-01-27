@@ -2,7 +2,7 @@ import { BaseNode, Keyword } from "./Base";
 import { BigqueryOptions } from "./dialects/Bigquery";
 import { DataType } from "./DataType";
 import { Expr, Identifier, ListExpr, ParenExpr, EntityName } from "./Expr";
-import { NumberLiteral, StringLiteral } from "./Literal";
+import { Literal, NumberLiteral, StringLiteral } from "./Literal";
 import {
   AsClause,
   DeterminismClause,
@@ -12,6 +12,7 @@ import {
 } from "./ProcClause";
 import { SubSelect } from "./Select";
 import { BlockStmt } from "./ProceduralLanguage";
+import { Default } from "./Insert";
 
 export type AllFunctionNodes =
   | AllFunctionStatements
@@ -26,7 +27,9 @@ export type AllFunctionNodes =
   | FunctionRowsClause
   | FunctionSupportClause
   | FunctionTransformClause
-  | TransformType;
+  | TransformType
+  | SetParameterClause
+  | SetParameterFromCurrentClause;
 
 export type AllFunctionStatements = CreateFunctionStmt | DropFunctionStmt;
 
@@ -78,7 +81,9 @@ type CreateFunctionClause =
   | FunctionCostClause
   | FunctionRowsClause
   | FunctionSupportClause
-  | FunctionTransformClause;
+  | FunctionTransformClause
+  | SetParameterClause
+  | SetParameterFromCurrentClause;
 
 // PostgreSQL
 // Note: Do not confuse this with "returns_clause", which defines the return type.
@@ -158,10 +163,28 @@ export interface FunctionTransformClause extends BaseNode {
   types: ListExpr<TransformType>;
 }
 
+// PostgreSQL
 export interface TransformType extends BaseNode {
   type: "transform_type";
   forTypeKw: [Keyword<"FOR">, Keyword<"TYPE">];
   dataType: DataType;
+}
+
+// PostgreSQL
+export interface SetParameterClause extends BaseNode {
+  type: "set_parameter_clause";
+  setKw: Keyword<"SET">;
+  name: Identifier;
+  operator: Keyword<"TO"> | "=";
+  value: ListExpr<Literal | Identifier | Default>;
+}
+
+// PostgreSQL
+export interface SetParameterFromCurrentClause extends BaseNode {
+  type: "set_parameter_from_current_clause";
+  setKw: Keyword<"SET">;
+  name: Identifier;
+  fromCurrentKw: [Keyword<"FROM">, Keyword<"CURRENT">];
 }
 
 export interface DropFunctionStmt extends BaseNode {

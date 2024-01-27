@@ -154,6 +154,15 @@ describe("procedure", () => {
           testProcedureClauseWc("TRANSFORM FOR TYPE INT");
           testProcedureClauseWc("TRANSFORM FOR TYPE character varying, FOR TYPE decimal(3, 5)");
         });
+
+        it("supports SET clause for parameters", () => {
+          // See CREATE FUNCTION tests for more tests of this clause.
+          testProcedureClauseWc("SET search_path = 'foo', bar, baz");
+        });
+
+        it("supports SET .. FROM CURRENT clause", () => {
+          testProcedureClauseWc("SET search_path FROM CURRENT");
+        });
       });
     });
 

@@ -237,6 +237,21 @@ describe("function", () => {
           testFunctionClauseWc("TRANSFORM FOR TYPE INT");
           testFunctionClauseWc("TRANSFORM FOR TYPE character varying, FOR TYPE decimal(3, 5)");
         });
+
+        it("supports SET clause for parameters", () => {
+          testFunctionClauseWc("SET log_destination = 'stderr'");
+          testFunctionClauseWc("SET statement_timeout = 1000");
+          testFunctionClauseWc("SET datestyle TO 'ISO, MDY'");
+          testFunctionClauseWc("SET lock_timeout TO DEFAULT");
+          testFunctionClauseWc("SET lock_timeout = DEFAULT");
+          testFunctionClauseWc("SET client_min_messages TO warning");
+          testFunctionClauseWc("SET search_path TO myschema, public");
+          testFunctionClauseWc("SET search_path = 'foo', 'bar'");
+        });
+
+        it("supports SET .. FROM CURRENT clause", () => {
+          testFunctionClauseWc("SET search_path FROM CURRENT");
+        });
       });
     });
   }
