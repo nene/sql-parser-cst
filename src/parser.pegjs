@@ -3094,6 +3094,8 @@ create_procedure_clause_postgresql
   = as_clause$func_as_expr_postgresql
   / function_security_clause
   / function_transform_clause
+  / set_parameter_clause
+  / set_parameter_from_current_clause
 
 drop_procedure_stmt
   = kw:(DROP __)
