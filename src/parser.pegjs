@@ -2831,6 +2831,7 @@ create_function_clause_postgres
   / function_security_clause
   / function_cost_clause
   / function_rows_clause
+  / function_support_clause
 
 returns_clause
   = kw:(RETURNS __) type:(table_data_type / data_type) {
@@ -2938,6 +2939,15 @@ function_rows_clause
       type: "function_rows_clause",
       rowsKw: read(kw),
       rows,
+    });
+  }
+
+function_support_clause
+  = kw:(SUPPORT __) name:entity_name {
+    return loc({
+      type: "function_support_clause",
+      supportKw: read(kw),
+      name,
     });
   }
 
@@ -7039,6 +7049,7 @@ STRING              = kw:"STRING"i              !ident_part { return loc(createK
 STRUCT              = kw:"STRUCT"i              !ident_part { return loc(createKeyword(kw)); }
 SUM                 = kw:"SUM"i                 !ident_part { return loc(createKeyword(kw)); }
 SUNDAY              = kw:"SUNDAY"i              !ident_part { return loc(createKeyword(kw)); }
+SUPPORT             = kw:"SUPPORT"i             !ident_part { return loc(createKeyword(kw)); }
 SYMMETRIC           = kw:"SYMMETRIC"i           !ident_part { return loc(createKeyword(kw)); }
 SYSTEM              = kw:"SYSTEM"i              !ident_part { return loc(createKeyword(kw)); }
 SYSTEM_TIME         = kw:"SYSTEM_TIME"i         !ident_part { return loc(createKeyword(kw)); }

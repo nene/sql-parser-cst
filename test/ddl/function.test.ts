@@ -227,6 +227,11 @@ describe("function", () => {
         it("supports ROWS clause", () => {
           testFunctionClauseWc("ROWS 5200");
         });
+
+        it("supports SUPPORT clause", () => {
+          testFunctionClauseWc("SUPPORT my_func");
+          testFunctionClauseWc("SUPPORT schm.my_func");
+        });
       });
     });
   }
