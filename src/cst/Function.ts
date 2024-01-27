@@ -20,7 +20,7 @@ export type AllFunctionNodes =
   | ReturnClause
   | DynamicallyLoadedFunction
   | CreateFunctionWindowClause
-  | CreateFunctionBehaviorClause
+  | FunctionBehaviorClause
   | FunctionSecurityClause;
 
 export type AllFunctionStatements = CreateFunctionStmt | DropFunctionStmt;
@@ -68,7 +68,7 @@ type CreateFunctionClause =
   | BigqueryOptions
   | WithConnectionClause
   | CreateFunctionWindowClause
-  | CreateFunctionBehaviorClause
+  | FunctionBehaviorClause
   | FunctionSecurityClause;
 
 // PostgreSQL
@@ -94,8 +94,8 @@ export interface CreateFunctionWindowClause extends BaseNode {
 }
 
 // PostgreSQL
-export interface CreateFunctionBehaviorClause extends BaseNode {
-  type: "create_function_behavior_clause";
+export interface FunctionBehaviorClause extends BaseNode {
+  type: "function_behavior_clause";
   behaviorKw:
     | Keyword<"VOLATILE">
     | Keyword<"STABLE">

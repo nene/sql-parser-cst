@@ -2827,7 +2827,7 @@ create_function_clause_postgres
   / block_stmt
   / as_clause$func_as_expr_postgresql
   / create_function_window_clause
-  / create_function_behavior_clause
+  / function_behavior_clause
   / function_security_clause
 
 returns_clause
@@ -2894,7 +2894,7 @@ create_function_window_clause
     return loc({ type: "create_function_window_clause", windowKw });
   }
 
-create_function_behavior_clause
+function_behavior_clause
   = kw:(
         IMMUTABLE
       / STABLE
@@ -2907,7 +2907,7 @@ create_function_behavior_clause
       / PARALLEL __ (UNSAFE / RESTRICTED / SAFE)
     ) {
     return loc({
-      type: "create_function_behavior_clause",
+      type: "function_behavior_clause",
       behaviorKw: read(kw),
     });
   }
