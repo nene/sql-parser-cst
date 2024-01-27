@@ -2970,12 +2970,18 @@ function_param_default
   }
 
 create_procedure_clause
-  = bigquery_options
-  / block_stmt
-  / with_connection_clause
+  = block_stmt
   / language_clause
-  / &bigquery x:as_clause$func_as_expr_bigquery { return x; }
-  / &postgres x:as_clause$func_as_expr_postgresql { return x; }
+  / &bigquery x:create_procedure_clause_bigquery { return x; }
+  / &postgres x:create_procedure_clause_postgresql { return x; }
+
+create_procedure_clause_bigquery
+  = as_clause$func_as_expr_bigquery
+  / with_connection_clause
+  / bigquery_options
+
+create_procedure_clause_postgresql
+  = as_clause$func_as_expr_postgresql
 
 drop_procedure_stmt
   = kw:(DROP __)
