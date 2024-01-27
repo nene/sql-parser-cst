@@ -191,6 +191,10 @@ describe("function", () => {
           `);
         });
 
+        const testFunctionClauseWc = (clause: string) => {
+          testWc(`CREATE FUNCTION foo() ${clause} RETURN 42`);
+        };
+
         [
           "VOLATILE",
           "STABLE",
@@ -205,19 +209,19 @@ describe("function", () => {
           "PARALLEL SAFE",
         ].forEach((attr) => {
           it(`supports function behavior attribute: ${attr}`, () => {
-            testWc(`CREATE FUNCTION foo() RETURNS INT ${attr} RETURN 1;`);
+            testFunctionClauseWc(attr);
           });
         });
 
         it("supports security privilege clause", () => {
-          testWc("CREATE FUNCTION passwd() RETURNS INT SECURITY DEFINER RETURN 1;");
-          testWc("CREATE FUNCTION passwd() RETURNS INT SECURITY INVOKER RETURN 1;");
-          testWc("CREATE FUNCTION passwd() RETURNS INT EXTERNAL SECURITY DEFINER RETURN 1;");
-          testWc("CREATE FUNCTION passwd() RETURNS INT EXTERNAL SECURITY INVOKER RETURN 1;");
+          testFunctionClauseWc("SECURITY DEFINER");
+          testFunctionClauseWc("SECURITY INVOKER");
+          testFunctionClauseWc("EXTERNAL SECURITY DEFINER");
+          testFunctionClauseWc("EXTERNAL SECURITY INVOKER");
         });
 
         it("supports COST clause", () => {
-          testWc("CREATE FUNCTION passwd() RETURNS INT RETURN 1 COST 125;");
+          testFunctionClauseWc("COST 125");
         });
       });
     });

@@ -139,11 +139,15 @@ describe("procedure", () => {
           });
         });
 
+        const testProcedureClauseWc = (clause: string) => {
+          testWc(`CREATE PROCEDURE foo() ${clause} AS 'SELECT 1'`);
+        };
+
         it("supports security privilege clause", () => {
-          testWc("CREATE PROCEDURE passwd() SECURITY DEFINER AS 'SELECT 1'");
-          testWc("CREATE PROCEDURE passwd() SECURITY INVOKER AS 'SELECT 1'");
-          testWc("CREATE PROCEDURE passwd() EXTERNAL SECURITY DEFINER AS 'SELECT 1'");
-          testWc("CREATE PROCEDURE passwd() EXTERNAL SECURITY INVOKER AS 'SELECT 1'");
+          testProcedureClauseWc("SECURITY DEFINER");
+          testProcedureClauseWc("SECURITY INVOKER");
+          testProcedureClauseWc("EXTERNAL SECURITY DEFINER");
+          testProcedureClauseWc("EXTERNAL SECURITY INVOKER");
         });
       });
     });
