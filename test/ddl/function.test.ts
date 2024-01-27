@@ -232,6 +232,11 @@ describe("function", () => {
           testFunctionClauseWc("SUPPORT my_func");
           testFunctionClauseWc("SUPPORT schm.my_func");
         });
+
+        it("supports TRANSFORM clause", () => {
+          testFunctionClauseWc("TRANSFORM FOR TYPE INT");
+          testFunctionClauseWc("TRANSFORM FOR TYPE character varying, FOR TYPE decimal(3, 5)");
+        });
       });
     });
   }

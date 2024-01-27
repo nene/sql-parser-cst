@@ -2832,6 +2832,7 @@ create_function_clause_postgres
   / function_cost_clause
   / function_rows_clause
   / function_support_clause
+  / function_transform_clause
 
 returns_clause
   = kw:(RETURNS __) type:(table_data_type / data_type) {
@@ -2951,6 +2952,24 @@ function_support_clause
     });
   }
 
+function_transform_clause
+  = kw:(TRANSFORM __) types:list$transform_type {
+    return loc({
+      type: "function_transform_clause",
+      transformKw: read(kw),
+      types,
+    });
+  }
+
+transform_type
+  = kw:(FOR __ TYPE __) dataType:data_type {
+    return loc({
+      type: "transform_type",
+      forTypeKw: read(kw),
+      dataType,
+    });
+  }
+
 drop_function_stmt
   = kw:(DROP __)
     tableKw:(TABLE __)?
@@ -3048,6 +3067,7 @@ create_procedure_clause_bigquery
 create_procedure_clause_postgresql
   = as_clause$func_as_expr_postgresql
   / function_security_clause
+  / function_transform_clause
 
 drop_procedure_stmt
   = kw:(DROP __)
@@ -5750,6 +5770,7 @@ list$table_func_call = .
 list$alias$relation_expr = .
 list$tablesample_arg = .
 list$table_option_postgresql = .
+list$transform_type = .
 list$type_param = .
 list$values_row = .
 list$variable = .
@@ -7077,6 +7098,7 @@ TINYINT             = kw:"TINYINT"i             !ident_part { return loc(createK
 TINYTEXT            = kw:"TINYTEXT"i            !ident_part { return loc(createKeyword(kw)); }
 TO                  = kw:"TO"i                  !ident_part { return loc(createKeyword(kw)); }
 TRANSACTION         = kw:"TRANSACTION"i         !ident_part { return loc(createKeyword(kw)); }
+TRANSFORM           = kw:"TRANSFORM"i           !ident_part { return loc(createKeyword(kw)); }
 TRIGGER             = kw:"TRIGGER"i             !ident_part { return loc(createKeyword(kw)); }
 TRUE                = kw:"TRUE"i                !ident_part { return loc(createKeyword(kw)); }
 TRUNCATE            = kw:"TRUNCATE"i            !ident_part { return loc(createKeyword(kw)); }

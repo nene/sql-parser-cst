@@ -149,6 +149,11 @@ describe("procedure", () => {
           testProcedureClauseWc("EXTERNAL SECURITY DEFINER");
           testProcedureClauseWc("EXTERNAL SECURITY INVOKER");
         });
+
+        it("supports TRANSFORM clause", () => {
+          testProcedureClauseWc("TRANSFORM FOR TYPE INT");
+          testProcedureClauseWc("TRANSFORM FOR TYPE character varying, FOR TYPE decimal(3, 5)");
+        });
       });
     });
 
