@@ -2827,6 +2827,7 @@ create_function_clause_postgres
   / block_stmt
   / as_clause$func_as_expr_postgresql
   / create_function_window_clause
+  / create_function_behavior_clause
 
 returns_clause
   = kw:(RETURNS __) type:(table_data_type / data_type) {
@@ -2890,6 +2891,24 @@ with_connection_clause
 create_function_window_clause
   = windowKw:WINDOW {
     return loc({ type: "create_function_window_clause", windowKw });
+  }
+
+create_function_behavior_clause
+  = kw:(
+        IMMUTABLE
+      / STABLE
+      / VOLATILE
+      / LEAKPROOF
+      / NOT __ LEAKPROOF
+      / CALLED __ ON __ NULL __ INPUT
+      / RETURNS __ NULL __ ON __ NULL __ INPUT
+      / STRICT
+      / PARALLEL __ (UNSAFE / RESTRICTED / SAFE)
+    ) {
+    return loc({
+      type: "create_function_behavior_clause",
+      behaviorKw: read(kw),
+    });
   }
 
 drop_function_stmt
@@ -6575,6 +6594,7 @@ BY                  = kw:"BY"i                  !ident_part { return loc(createK
 BYTEINT             = kw:"BYTEINT"i             !ident_part { return loc(createKeyword(kw)); }
 BYTES               = kw:"BYTES"i               !ident_part { return loc(createKeyword(kw)); }
 CALL                = kw:"CALL"i                !ident_part { return loc(createKeyword(kw)); }
+CALLED              = kw:"CALLED"i              !ident_part { return loc(createKeyword(kw)); }
 CAPACITY            = kw:"CAPACITY"i            !ident_part { return loc(createKeyword(kw)); }
 CASCADE             = kw:"CASCADE"i             !ident_part { return loc(createKeyword(kw)); }
 CASCADED            = kw:"CASCADED"i            !ident_part { return loc(createKeyword(kw)); }
@@ -6736,6 +6756,7 @@ IF                  = kw:"IF"i                  !ident_part { return loc(createK
 IGNORE              = kw:"IGNORE"i              !ident_part { return loc(createKeyword(kw)); }
 ILIKE               = kw:"ILIKE"i               !ident_part { return loc(createKeyword(kw)); }
 IMMEDIATE           = kw:"IMMEDIATE"i           !ident_part { return loc(createKeyword(kw)); }
+IMMUTABLE           = kw:"IMMUTABLE"i           !ident_part { return loc(createKeyword(kw)); }
 IN                  = kw:"IN"i                  !ident_part { return loc(createKeyword(kw)); }
 INCLUDE             = kw:"INCLUDE"i             !ident_part { return loc(createKeyword(kw)); }
 INCLUDING           = kw:"INCLUDING"i           !ident_part { return loc(createKeyword(kw)); }
@@ -6748,6 +6769,7 @@ INITIALLY           = kw:"INITIALLY"i           !ident_part { return loc(createK
 INNER               = kw:"INNER"i               !ident_part { return loc(createKeyword(kw)); }
 INOUT               = kw:"INOUT"i               !ident_part { return loc(createKeyword(kw)); }
 INPLACE             = kw:"INPLACE"i             !ident_part { return loc(createKeyword(kw)); }
+INPUT               = kw:"INPUT"i               !ident_part { return loc(createKeyword(kw)); }
 INSERT              = kw:"INSERT"i              !ident_part { return loc(createKeyword(kw)); }
 INSERT_METHOD       = kw:"INSERT_METHOD"i       !ident_part { return loc(createKeyword(kw)); }
 INSTANT             = kw:"INSTANT"i             !ident_part { return loc(createKeyword(kw)); }
@@ -6778,6 +6800,7 @@ LAST                = kw:"LAST"i                !ident_part { return loc(createK
 LAST_VALUE          = kw:"LAST_VALUE"i          !ident_part { return loc(createKeyword(kw)); }
 LATERAL             = kw:"LATERAL"i             !ident_part { return loc(createKeyword(kw)); }
 LEAD                = kw:"LEAD"i                !ident_part { return loc(createKeyword(kw)); }
+LEAKPROOF           = kw:"LEAKPROOF"i           !ident_part { return loc(createKeyword(kw)); }
 LEAVE               = kw:"LEAVE"i               !ident_part { return loc(createKeyword(kw)); }
 LEFT                = kw:"LEFT"i                !ident_part { return loc(createKeyword(kw)); }
 LIKE                = kw:"LIKE"i                !ident_part { return loc(createKeyword(kw)); }
@@ -6871,6 +6894,7 @@ OVER                = kw:"OVER"i                !ident_part { return loc(createK
 OVERRIDING          = kw:"OVERRIDING"i          !ident_part { return loc(createKeyword(kw)); }
 OVERWRITE           = kw:"OVERWRITE"i           !ident_part { return loc(createKeyword(kw)); }
 PACK_KEYS           = kw:"PACK_KEYS"i           !ident_part { return loc(createKeyword(kw)); }
+PARALLEL            = kw:"PARALLEL"i            !ident_part { return loc(createKeyword(kw)); }
 PARSER              = kw:"PARSER"i              !ident_part { return loc(createKeyword(kw)); }
 PARTIAL             = kw:"PARTIAL"i             !ident_part { return loc(createKeyword(kw)); }
 PARTITION           = kw:"PARTITION"i           !ident_part { return loc(createKeyword(kw)); }
@@ -6917,6 +6941,7 @@ RESERVATION         = kw:"RESERVATION"i         !ident_part { return loc(createK
 RESPECT             = kw:"RESPECT"i             !ident_part { return loc(createKeyword(kw)); }
 RESTART             = kw:"RESTART"i             !ident_part { return loc(createKeyword(kw)); }
 RESTRICT            = kw:"RESTRICT"i            !ident_part { return loc(createKeyword(kw)); }
+RESTRICTED          = kw:"RESTRICTED"i          !ident_part { return loc(createKeyword(kw)); }
 RETURN              = kw:"RETURN"i              !ident_part { return loc(createKeyword(kw)); }
 RETURNING           = kw:"RETURNING"i           !ident_part { return loc(createKeyword(kw)); }
 RETURNS             = kw:"RETURNS"i             !ident_part { return loc(createKeyword(kw)); }
@@ -6930,6 +6955,7 @@ ROW_FORMAT          = kw:"ROW_FORMAT"i          !ident_part { return loc(createK
 ROW_NUMBER          = kw:"ROW_NUMBER"i          !ident_part { return loc(createKeyword(kw)); }
 ROWID               = kw:"ROWID"i               !ident_part { return loc(createKeyword(kw)); }
 ROWS                = kw:"ROWS"i                !ident_part { return loc(createKeyword(kw)); }
+SAFE                = kw:"SAFE"i                !ident_part { return loc(createKeyword(kw)); }
 SAFE_CAST           = kw:"SAFE_CAST"i           !ident_part { return loc(createKeyword(kw)); }
 SAFE_OFFSET         = kw:"SAFE_OFFSET"i         !ident_part { return loc(createKeyword(kw)); }
 SAFE_ORDINAL        = kw:"SAFE_ORDINAL"i        !ident_part { return loc(createKeyword(kw)); }
@@ -6966,6 +6992,7 @@ SQL_CACHE           = kw:"SQL_CACHE"i           !ident_part { return loc(createK
 SQL_CALC_FOUND_ROWS = kw:"SQL_CALC_FOUND_ROWS"i !ident_part { return loc(createKeyword(kw)); }
 SQL_NO_CACHE        = kw:"SQL_NO_CACHE"i        !ident_part { return loc(createKeyword(kw)); }
 SQL_SMALL_RESULT    = kw:"SQL_SMALL_RESULT"i    !ident_part { return loc(createKeyword(kw)); }
+STABLE              = kw:"STABLE"i              !ident_part { return loc(createKeyword(kw)); }
 START               = kw:"START"i               !ident_part { return loc(createKeyword(kw)); }
 STARTING            = kw:"STARTING"i            !ident_part { return loc(createKeyword(kw)); }
 STATISTICS          = kw:"STATISTICS"i          !ident_part { return loc(createKeyword(kw)); }
@@ -7021,6 +7048,7 @@ UNLOCK              = kw:"UNLOCK"i              !ident_part { return loc(createK
 UNLOGGED            = kw:"UNLOGGED"i            !ident_part { return loc(createKeyword(kw)); }
 UNNEST              = kw:"UNNEST"i              !ident_part { return loc(createKeyword(kw)); }
 UNPIVOT             = kw:"UNPIVOT"              !ident_part { return loc(createKeyword(kw)); }
+UNSAFE              = kw:"UNSAFE"i              !ident_part { return loc(createKeyword(kw)); }
 UNSIGNED            = kw:"UNSIGNED"i            !ident_part { return loc(createKeyword(kw)); }
 UNTIL               = kw:"UNTIL"i               !ident_part { return loc(createKeyword(kw)); }
 UPDATE              = kw:"UPDATE"i              !ident_part { return loc(createKeyword(kw)); }
@@ -7039,6 +7067,7 @@ VARYING             = kw:"VARYING"i             !ident_part { return loc(createK
 VIEW                = kw:"VIEW"i                !ident_part { return loc(createKeyword(kw)); }
 VIRTUAL             = kw:"VIRTUAL"i             !ident_part { return loc(createKeyword(kw)); }
 VISIBLE             = kw:"VISIBLE"i             !ident_part { return loc(createKeyword(kw)); }
+VOLATILE            = kw:"VOLATILE"i            !ident_part { return loc(createKeyword(kw)); }
 WAIT                = kw:"WAIT"i                !ident_part { return loc(createKeyword(kw)); }
 WEDNESDAY           = kw:"WEDNESDAY"i           !ident_part { return loc(createKeyword(kw)); }
 WEEK                = kw:"WEEK"i                !ident_part { return loc(createKeyword(kw)); }

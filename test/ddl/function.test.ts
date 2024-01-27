@@ -190,6 +190,24 @@ describe("function", () => {
             LANGUAGE C;
           `);
         });
+
+        [
+          "VOLATILE",
+          "STABLE",
+          "IMMUTABLE",
+          "LEAKPROOF",
+          "NOT LEAKPROOF",
+          "CALLED ON NULL INPUT",
+          "RETURNS NULL ON NULL INPUT",
+          "STRICT",
+          "PARALLEL UNSAFE",
+          "PARALLEL RESTRICTED",
+          "PARALLEL SAFE",
+        ].forEach((attr) => {
+          it(`supports function behavior attribute: ${attr}`, () => {
+            testWc(`CREATE FUNCTION foo() RETURNS INT ${attr} RETURN 1;`);
+          });
+        });
       });
     });
   }

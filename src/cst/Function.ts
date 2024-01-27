@@ -19,7 +19,8 @@ export type AllFunctionNodes =
   | FunctionParamDefault
   | ReturnClause
   | DynamicallyLoadedFunction
-  | CreateFunctionWindowClause;
+  | CreateFunctionWindowClause
+  | CreateFunctionBehaviorClause;
 
 export type AllFunctionStatements = CreateFunctionStmt | DropFunctionStmt;
 
@@ -65,7 +66,8 @@ type CreateFunctionClause =
     >
   | BigqueryOptions
   | WithConnectionClause
-  | CreateFunctionWindowClause;
+  | CreateFunctionWindowClause
+  | CreateFunctionBehaviorClause;
 
 // PostgreSQL
 // Note: Do not confuse this with "returns_clause", which defines the return type.
@@ -87,6 +89,27 @@ export interface DynamicallyLoadedFunction extends BaseNode {
 export interface CreateFunctionWindowClause extends BaseNode {
   type: "create_function_window_clause";
   windowKw: Keyword<"WINDOW">;
+}
+
+// PostgreSQL
+export interface CreateFunctionBehaviorClause extends BaseNode {
+  type: "create_function_behavior_clause";
+  behaviorKw:
+    | Keyword<"VOLATILE">
+    | Keyword<"STABLE">
+    | Keyword<"IMMUTABLE">
+    | Keyword<"LEAKPROOF">
+    | [Keyword<"NOT">, Keyword<"LEAKPROOF">]
+    | [Keyword<"CALLED">, Keyword<"ON">, Keyword<"NULL">, Keyword<"INPUT">]
+    | [
+        Keyword<"RETURNS">,
+        Keyword<"NULL">,
+        Keyword<"ON">,
+        Keyword<"NULL">,
+        Keyword<"INPUT">
+      ]
+    | Keyword<"STRICT">
+    | [Keyword<"PARALLEL">, Keyword<"UNSAFE" | "SAFE" | "RESTRICTED">];
 }
 
 export interface DropFunctionStmt extends BaseNode {
