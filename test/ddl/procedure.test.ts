@@ -117,20 +117,26 @@ describe("procedure", () => {
       });
 
       dialect(["postgresql"], () => {
-        it("supports procedures in PL/pgSQL", () => {
-          test(`
-            CREATE PROCEDURE my_proc()
-            LANGUAGE plpgsql
-            AS $$
-            BEGIN
-              SELECT 1;
-            END;
-            $$
-          `);
-        });
+        describe("procedures in other languages", () => {
+          it("supports LANGUAGE SQL", () => {
+            testWc("CREATE PROCEDURE foo() AS 'SELECT 1' LANGUAGE SQL");
+          });
 
-        it("supports C procedures from shared library file", () => {
-          testWc("CREATE PROCEDURE foo() LANGUAGE C AS 'mylib', 'myfunc'");
+          it("supports procedures in PL/pgSQL", () => {
+            test(`
+              CREATE PROCEDURE my_proc()
+              LANGUAGE plpgsql
+              AS $$
+              BEGIN
+                SELECT 1;
+              END;
+              $$
+            `);
+          });
+
+          it("supports C procedures from shared library file", () => {
+            testWc("CREATE PROCEDURE foo() LANGUAGE C AS 'mylib', 'myfunc'");
+          });
         });
       });
     });
