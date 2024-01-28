@@ -53,7 +53,8 @@ export type AllCreateTableNodes =
   | WithStorageParametersClause
   | CreateTableWithoutOidsClause
   | CreateTableWithDataClause
-  | CreateTableOfTypeClause;
+  | CreateTableOfTypeClause
+  | CreateTableServerClause;
 
 // CREATE TABLE
 export interface CreateTableStmt extends BaseNode {
@@ -90,6 +91,7 @@ export interface TableKind extends BaseNode {
     // PostgreSQL deprecated syntax which has the same effect as just TEMPORARY
     | [Keyword<"GLOBAL" | "LOCAL">, Keyword<"TEMPORARY" | "TEMP">]
     | Keyword<"UNLOGGED"> // PostgreSQL
+    | Keyword<"FOREIGN"> // PostgreSQL
     | Keyword<"EXTERNAL"> // BigQuery
     | Keyword<"SNAPSHOT"> // BigQuery
     | Keyword<"VIRTUAL">; // SQLite
@@ -241,7 +243,8 @@ type PostgresqlCreateTableClause =
   | UsingAccessMethodClause
   | WithStorageParametersClause
   | CreateTableWithoutOidsClause
-  | CreateTableWithDataClause;
+  | CreateTableWithDataClause
+  | CreateTableServerClause;
 
 export interface CreateTableInheritsClause extends BaseNode {
   type: "create_table_inherits_clause";
@@ -356,9 +359,15 @@ export interface CreateTableWithDataClause extends BaseNode {
     | [Keyword<"WITH">, Keyword<"NO">, Keyword<"DATA">];
 }
 
+export interface CreateTableServerClause extends BaseNode {
+  type: "create_table_server_clause";
+  serverKw: Keyword<"SERVER">;
+  name: Identifier;
+}
+
 // PostgreSQL
 //
-// We're not including `PARTITION OF` and `OF type` clauses
+// We're not including `PARTITION OF` and `OF type` clauses to
 // PostgresqlCreateTableClause because it comes right after table name,
 // unlike other clauses that come after the column definitions.
 

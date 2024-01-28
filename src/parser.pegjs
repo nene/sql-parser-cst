@@ -1977,7 +1977,7 @@ table_kind
   / kw:((GLOBAL / LOCAL) __ (TEMPORARY / TEMP)) &postgres {
     return loc({ type: "table_kind", kindKw: read(kw) });
   }
-  / kw:UNLOGGED &postgres {
+  / kw:(UNLOGGED / FOREIGN) &postgres {
     return loc({ type: "table_kind", kindKw: kw });
   }
   / kw:(EXTERNAL / SNAPSHOT) &bigquery {
@@ -2121,6 +2121,7 @@ create_table_clause_postgresql
   / with_storage_parameters_clause
   / create_table_without_oids_clause
   / create_table_with_data_clause
+  / create_table_server_clause
 
 create_table_inherits_clause
   = kw:(INHERITS __) tables:paren$list$entity_name {
@@ -2274,6 +2275,15 @@ create_table_with_data_clause
     return loc({
       type: "create_table_with_data_clause",
       withDataKw: read(kw),
+    });
+  }
+
+create_table_server_clause
+  = kw:(SERVER __) name:ident {
+    return loc({
+      type: "create_table_server_clause",
+      serverKw: read(kw),
+      name,
     });
   }
 
@@ -7060,6 +7070,7 @@ SECOND_MICROSECOND  = kw:"SECOND_MICROSECOND"   !ident_part { return loc(createK
 SECONDARY_ENGINE_ATTRIBUTE = kw:"SECONDARY_ENGINE_ATTRIBUTE"i !ident_part { return loc(createKeyword(kw)); }
 SECURITY            = kw:"SECURITY"i            !ident_part { return loc(createKeyword(kw)); }
 SELECT              = kw:"SELECT"i              !ident_part { return loc(createKeyword(kw)); }
+SERVER              = kw:"SERVER"i              !ident_part { return loc(createKeyword(kw)); }
 SESSION             = kw:"SESSION"i             !ident_part { return loc(createKeyword(kw)); }
 SESSION_USER        = kw:"SESSION_USER"i        !ident_part { return loc(createKeyword(kw)); }
 SET                 = kw:"SET"i                 !ident_part { return loc(createKeyword(kw)); }

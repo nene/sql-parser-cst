@@ -156,6 +156,17 @@ describe("create table (PostgreSQL)", () => {
         testClauseWc(`WITHOUT OIDS`);
       });
     });
+
+    describe("foreign tables", () => {
+      it("supports CREATE FOREIGN TABLE", () => {
+        testWc(`
+          CREATE FOREIGN TABLE foo (
+            id INT,
+            name TEXT
+          ) SERVER myserver
+        `);
+      });
+    });
   });
 
   notDialect("postgresql", () => {
