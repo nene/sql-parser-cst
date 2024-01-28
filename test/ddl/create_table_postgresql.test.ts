@@ -166,6 +166,15 @@ describe("create table (PostgreSQL)", () => {
           ) SERVER myserver
         `);
       });
+
+      it("supports OPTIONS(...) on table", () => {
+        testWc(`
+          CREATE FOREIGN TABLE foo (
+            id INT,
+            name TEXT
+          ) SERVER myserver OPTIONS (key1 'value1', key2 'value2')
+        `);
+      });
     });
   });
 

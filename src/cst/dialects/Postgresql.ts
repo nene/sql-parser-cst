@@ -1,10 +1,13 @@
 import { BaseNode, Keyword } from "../Base";
-import { Identifier, MemberExpr, ParenExpr } from "../Expr";
+import { Identifier, ListExpr, MemberExpr, ParenExpr } from "../Expr";
+import { StringLiteral } from "../Literal";
 
 export type AllPostgresqlNodes =
   | PostgresqlOperatorExpr
   | PostgresqlOperator
-  | PostgresqlOperatorClass;
+  | PostgresqlOperatorClass
+  | PostgresqlOptions
+  | PostgresqlOptionElement;
 
 export interface PostgresqlOperatorExpr extends BaseNode {
   type: "postgresql_operator_expr";
@@ -20,4 +23,16 @@ export interface PostgresqlOperator extends BaseNode {
 export interface PostgresqlOperatorClass extends BaseNode {
   type: "postgresql_operator_class";
   name: MemberExpr | Identifier;
+}
+
+export interface PostgresqlOptions extends BaseNode {
+  type: "postgresql_options";
+  optionsKw: Keyword<"OPTIONS">;
+  options: ParenExpr<ListExpr<PostgresqlOptionElement>>;
+}
+
+export interface PostgresqlOptionElement extends BaseNode {
+  type: "postgresql_option_element";
+  name: Identifier;
+  value: StringLiteral;
 }

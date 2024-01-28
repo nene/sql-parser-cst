@@ -2287,6 +2287,24 @@ create_table_server_clause
     });
   }
 
+postgresql_options
+  = kw:(OPTIONS __) options:paren$list$postgresql_option_element {
+    return loc({
+      type: "postgresql_options",
+      optionsKw: read(kw),
+      options,
+    });
+  }
+
+postgresql_option_element
+  = name:(ident __) value:string_literal {
+    return loc({
+      type: "postgresql_option_element",
+      name: read(name),
+      value,
+    });
+  }
+
 bigquery_options
   = kw:(OPTIONS __) options:paren$list$equals_expr {
     return loc({
