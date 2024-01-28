@@ -175,6 +175,15 @@ describe("create table (PostgreSQL)", () => {
           ) SERVER myserver OPTIONS (key1 'value1', key2 'value2')
         `);
       });
+
+      it("supports OPTIONS(...) as column constraint", () => {
+        testWc(`
+          CREATE FOREIGN TABLE foo (
+            id INT OPTIONS (key1 'value1', key2 'value2'),
+            name TEXT OPTIONS(key3 'value3') COLLATE "C"
+          ) SERVER myserver
+        `);
+      });
     });
   });
 

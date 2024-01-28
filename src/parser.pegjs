@@ -4178,6 +4178,7 @@ column_constraint_type_postgresql
   = constraint_storage
   / constraint_compression
   / constraint_generated_as_identity
+  / postgresql_options
 
 constraint_not_null
   = kws:(NOT __ NULL) clauses:(__ on_conflict_clause)|0..1| {

@@ -10,6 +10,7 @@ import {
   PostgresqlOperatorExpr,
   WithStorageParametersClause,
   PostgresqlOperatorClass,
+  PostgresqlOptions,
 } from "./Node";
 
 export type AllConstraintNodes =
@@ -100,7 +101,8 @@ export type ColumnConstraint =
   | ConstraintStorage
   | ConstraintEngineAttribute
   | ConstraintCompression
-  | BigqueryOptions;
+  | BigqueryOptions
+  | PostgresqlOptions;
 
 export interface ConstraintPrimaryKey extends BaseNode {
   type: "constraint_primary_key";
