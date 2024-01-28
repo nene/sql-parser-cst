@@ -4,18 +4,8 @@ import {
   toLines,
   fromLines,
   caseInsensitiveStringCompare,
+  extractRules,
 } from "./utils";
-
-function extractKeywordsRules(lines: string[]) {
-  const startIndex =
-    lines.findIndex((line) => /^\/\*! keywords:start /.test(line)) + 1;
-  const endIndex = lines.findIndex((line) => /^\/\*! keywords:end /.test(line));
-  return {
-    before: lines.slice(0, startIndex),
-    keywordRules: lines.slice(startIndex, endIndex),
-    after: lines.slice(endIndex),
-  };
-}
 
 // Creates a rule for matching a keyword in the following format:
 //
@@ -28,14 +18,14 @@ function createKeywordRule(keyword: string): string {
 }
 
 function addKeywordsToGrammarFile(keywords: string[]) {
-  const { before, keywordRules, after } = extractKeywordsRules(
-    toLines(readGrammar())
+  const { before, rules, after } = extractRules(
+    toLines(readGrammar()),
+    "keywords"
   );
 
-  const newKeywordRules = [
-    ...keywordRules,
-    ...keywords.map(createKeywordRule),
-  ].sort(caseInsensitiveStringCompare);
+  const newKeywordRules = [...rules, ...keywords.map(createKeywordRule)].sort(
+    caseInsensitiveStringCompare
+  );
 
   writeGrammar(fromLines([...before, ...newKeywordRules, ...after]));
 }

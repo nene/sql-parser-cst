@@ -4,21 +4,8 @@ import {
   toLines,
   fromLines,
   caseInsensitiveStringCompare,
+  extractRules,
 } from "./utils";
-
-function extractTemplateRules(lines: string[], type: string) {
-  const startRegex = new RegExp(`^\\/\\*! ${type}:start `);
-  const endRegex = new RegExp(`^\\/\\*! ${type}:end `);
-
-  const startIndex = lines.findIndex((line) => startRegex.test(line)) + 1;
-  const endIndex = lines.findIndex((line) => endRegex.test(line));
-
-  return {
-    before: lines.slice(0, startIndex),
-    rules: lines.slice(startIndex, endIndex),
-    after: lines.slice(endIndex),
-  };
-}
 
 // Creates a rule for a template type, e.g.:
 //
@@ -42,10 +29,7 @@ function addTemplateRuleToGrammarFile(ruleName: string) {
     name = parts[0];
   }
 
-  const { before, rules, after } = extractTemplateRules(
-    toLines(readGrammar()),
-    type
-  );
+  const { before, rules, after } = extractRules(toLines(readGrammar()), type);
 
   const newRules = [...rules, createTemplateRule(type, name)].sort(
     caseInsensitiveStringCompare

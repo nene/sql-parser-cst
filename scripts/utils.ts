@@ -28,3 +28,20 @@ export function caseInsensitiveStringCompare(a: string, b: string): -1 | 0 | 1 {
   const bb = b.toLowerCase();
   return aa < bb ? -1 : aa > bb ? 1 : 0;
 }
+
+/**
+ * Extracts the lines between the start and end comments for a given type.
+ */
+export function extractRules(lines: string[], type: string) {
+  const startRegex = new RegExp(`^\\/\\*! ${type}:start `);
+  const endRegex = new RegExp(`^\\/\\*! ${type}:end `);
+
+  const startIndex = lines.findIndex((line) => startRegex.test(line)) + 1;
+  const endIndex = lines.findIndex((line) => endRegex.test(line));
+
+  return {
+    before: lines.slice(0, startIndex),
+    rules: lines.slice(startIndex, endIndex),
+    after: lines.slice(endIndex),
+  };
+}
