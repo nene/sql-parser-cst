@@ -21,6 +21,7 @@
     "prepublishOnly": "yarn lint && yarn test && yarn build",
     "pretty": "prettier --write .",
     "add:keyword": "ts-node ./scripts/add-keyword.ts",
+    "add:template": "ts-node ./scripts/add-template.ts",
     "generate": "ts-node ./scripts/generate.ts",
     "generate:fast": "ts-node ./scripts/generate.ts --fast",
     "watch:generate": "npm-watch",
