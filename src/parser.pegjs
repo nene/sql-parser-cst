@@ -2122,6 +2122,7 @@ create_table_clause_postgresql
   / create_table_without_oids_clause
   / create_table_with_data_clause
   / create_table_server_clause
+  / postgresql_options
 
 create_table_inherits_clause
   = kw:(INHERITS __) tables:paren$list$entity_name {
