@@ -2743,17 +2743,17 @@ drop_trigger_stmt
  * ------------------------------------------------------------------------------------ *
  */
 create_schema_stmt
-  = kw:(CREATE __ schema_kw __) ifKw:(if_not_exists __)? name:entity_name options:(__ create_schema_option)* {
+  = kw:(CREATE __ schema_kw __) ifKw:(if_not_exists __)? name:entity_name clauses:(__ create_schema_clause)* {
     return loc({
       type: "create_schema_stmt",
       createSchemaKw: read(kw),
       ifNotExistsKw: read(ifKw),
       name,
-      options: options.map(read),
+      clauses: clauses.map(read),
     });
   }
 
-create_schema_option
+create_schema_clause
   = x:bigquery_options &bigquery { return x; }
   / x:bigquery_option_default_collate &bigquery { return x; }
 

@@ -17,10 +17,10 @@ export interface CreateSchemaStmt extends BaseNode {
   createSchemaKw: [Keyword<"CREATE">, Keyword<"SCHEMA" | "DATABASE">];
   ifNotExistsKw?: [Keyword<"IF">, Keyword<"NOT">, Keyword<"EXISTS">];
   name: EntityName;
-  options: CreateSchemaOption[];
+  clauses: CreateSchemaClause[];
 }
 
-type CreateSchemaOption = BigqueryOptions | BigqueryOptionDefaultCollate;
+type CreateSchemaClause = BigqueryOptions | BigqueryOptionDefaultCollate;
 
 // DROP SCHEMA
 export interface DropSchemaStmt extends BaseNode {
