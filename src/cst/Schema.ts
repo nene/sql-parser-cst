@@ -4,7 +4,7 @@ import {
   BigqueryOptionDefaultCollate,
   BigqueryOptions,
 } from "./dialects/Bigquery";
-import { EntityName } from "./Expr";
+import { EntityName, ListExpr } from "./Expr";
 
 export type AllSchemaStatements =
   | CreateSchemaStmt
@@ -27,7 +27,7 @@ export interface DropSchemaStmt extends BaseNode {
   type: "drop_schema_stmt";
   dropSchemaKw: [Keyword<"DROP">, Keyword<"SCHEMA" | "DATABASE">];
   ifExistsKw?: [Keyword<"IF">, Keyword<"EXISTS">];
-  name: EntityName;
+  schemas: ListExpr<EntityName>;
   behaviorKw?: Keyword<"CASCADE" | "RESTRICT">;
 }
 

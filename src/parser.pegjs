@@ -2749,12 +2749,12 @@ create_schema_option
   / x:bigquery_option_default_collate &bigquery { return x; }
 
 drop_schema_stmt
-  = kw:(DROP __ schema_kw __) ifKw:(if_exists __)? name:entity_name behaviorKw:(__ (CASCADE / RESTRICT))? {
+  = kw:(DROP __ schema_kw __) ifKw:(if_exists __)? schemas:list$entity_name behaviorKw:(__ (CASCADE / RESTRICT))? {
     return loc({
       type: "drop_schema_stmt",
       dropSchemaKw: read(kw),
       ifExistsKw: read(ifKw),
-      name,
+      schemas,
       behaviorKw: read(behaviorKw)
     });
   }

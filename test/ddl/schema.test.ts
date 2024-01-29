@@ -49,6 +49,12 @@ describe("schema", () => {
         });
       });
 
+      dialect("postgresql", () => {
+        it("supports dropping multiple schemas", () => {
+          testWc("DROP SCHEMA schema1, schema2, my.schema3");
+        });
+      });
+
       dialect(["bigquery", "postgresql"], () => {
         it("supports CASCADE / RESTRICT", () => {
           testWc("DROP SCHEMA my_schema CASCADE");
