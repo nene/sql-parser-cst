@@ -2754,8 +2754,18 @@ create_schema_stmt
   }
 
 create_schema_clause
-  = x:bigquery_options &bigquery { return x; }
-  / x:bigquery_option_default_collate &bigquery { return x; }
+  = &bigquery x:bigquery_options { return x; }
+  / &bigquery x:bigquery_option_default_collate { return x; }
+  / &postgres x:create_schema_authorization_clause { return x; }
+
+create_schema_authorization_clause
+  = kw:(AUTHORIZATION __) role:(paren_less_func_call / ident) {
+    return loc({
+      type: "create_schema_authorization_clause",
+      authorizationKw: read(kw),
+      role,
+    });
+  }
 
 drop_schema_stmt
   = kw:(DROP __ schema_kw __) ifKw:(if_exists __)? schemas:list$entity_name behaviorKw:(__ (CASCADE / RESTRICT))? {
@@ -6721,6 +6731,7 @@ ASSIGNMENT          = kw:"ASSIGNMENT"i          !ident_part { return loc(createK
 AT                  = kw:"AT"i                  !ident_part { return loc(createKeyword(kw)); }
 ATOMIC              = kw:"ATOMIC"i              !ident_part { return loc(createKeyword(kw)); }
 ATTACH              = kw:"ATTACH"i              !ident_part { return loc(createKeyword(kw)); }
+AUTHORIZATION       = kw:"AUTHORIZATION"i       !ident_part { return loc(createKeyword(kw)); }
 AUTO                = kw:"AUTO"i                !ident_part { return loc(createKeyword(kw)); }
 AUTO_INCREMENT      = kw:"AUTO_INCREMENT"i      !ident_part { return loc(createKeyword(kw)); }
 AUTOEXTEND_SIZE     = kw:"AUTOEXTEND_SIZE"i     !ident_part { return loc(createKeyword(kw)); }

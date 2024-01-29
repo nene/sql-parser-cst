@@ -4,10 +4,11 @@ import {
   BigqueryOptionDefaultCollate,
   BigqueryOptions,
 } from "./dialects/Bigquery";
-import { EntityName, ListExpr } from "./Expr";
+import { EntityName, FuncCall, Identifier, ListExpr } from "./Expr";
 
 export type AllSchemaStatements =
   | CreateSchemaStmt
+  | CreateSchemaAuthorizationClause
   | DropSchemaStmt
   | AlterSchemaStmt;
 
@@ -20,7 +21,17 @@ export interface CreateSchemaStmt extends BaseNode {
   clauses: CreateSchemaClause[];
 }
 
-type CreateSchemaClause = BigqueryOptions | BigqueryOptionDefaultCollate;
+type CreateSchemaClause =
+  | BigqueryOptions
+  | BigqueryOptionDefaultCollate
+  | CreateSchemaAuthorizationClause;
+
+// PostgreSQL
+export interface CreateSchemaAuthorizationClause extends BaseNode {
+  type: "create_schema_authorization_clause";
+  authorizationKw: Keyword<"AUTHORIZATION">;
+  role: Identifier | FuncCall;
+}
 
 // DROP SCHEMA
 export interface DropSchemaStmt extends BaseNode {

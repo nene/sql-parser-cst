@@ -31,6 +31,15 @@ describe("schema", () => {
           testWc("CREATE SCHEMA my_schema OPTIONS(description='Hello') DEFAULT COLLATE 'udn:ci'");
         });
       });
+
+      dialect("postgresql", () => {
+        it("supports AUTHORIZATION clause", () => {
+          testWc("CREATE SCHEMA my_schema AUTHORIZATION some_user");
+          testWc("CREATE SCHEMA my_schema AUTHORIZATION CURRENT_USER");
+          testWc("CREATE SCHEMA my_schema AUTHORIZATION SESSION_USER");
+          testWc("CREATE SCHEMA my_schema AUTHORIZATION CURRENT_ROLE");
+        });
+      });
     });
 
     describe("DROP SCHEMA", () => {
