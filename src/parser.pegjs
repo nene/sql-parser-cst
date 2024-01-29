@@ -2388,7 +2388,7 @@ alter_action
   = alter_action_add_column
   / alter_action_drop_column
   / alter_action_rename_column
-  / alter_action_rename_table
+  / alter_action_rename
   / &bigquery x:alter_action_bigquery { return x; }
   / &mysql x:alter_action_mysql { return x; }
   / &postgres x:alter_action_postgres { return x; }
@@ -2433,10 +2433,10 @@ alter_action_drop_column
       })
     }
 
-alter_action_rename_table
+alter_action_rename
   = kw:(rename_table_kw __) t:entity_name {
     return loc({
-      type: "alter_action_rename_table",
+      type: "alter_action_rename",
       renameKw: read(kw),
       newName: t,
     });

@@ -3,7 +3,7 @@ import { AllAlterActionNodes } from "../cst/Node";
 import { FullTransformMap } from "../cstTransformer";
 
 export const alterActionMap: FullTransformMap<string, AllAlterActionNodes> = {
-  alter_action_rename_table: (node) => show([node.renameKw, node.newName]),
+  alter_action_rename: (node) => show([node.renameKw, node.newName]),
   alter_action_rename_column: (node) =>
     show([
       node.renameKw,

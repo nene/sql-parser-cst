@@ -9,7 +9,7 @@ import { Constraint, ConstraintModifier, TableConstraint } from "./Constraint";
 export type AllAlterActionNodes = AlterTableAction | AlterColumnAction;
 
 export type AlterTableAction =
-  | AlterActionRenameTable
+  | AlterActionRename
   | AlterActionRenameColumn
   | AlterActionAddColumn
   | AlterActionDropColumn
@@ -26,8 +26,8 @@ export type AlterSchemaAction =
   | AlterActionSetDefaultCollate
   | AlterActionSetOptions;
 
-export interface AlterActionRenameTable extends BaseNode {
-  type: "alter_action_rename_table";
+export interface AlterActionRename extends BaseNode {
+  type: "alter_action_rename";
   renameKw: Keyword<"RENAME"> | [Keyword<"RENAME">, Keyword<"TO" | "AS">];
   newName: EntityName;
 }
