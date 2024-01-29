@@ -11,20 +11,20 @@ describe("view", () => {
       testWc("CREATE VIEW my_view (col1, col2) AS SELECT 1, 2");
     });
 
-    dialect(["mysql", "mariadb", "bigquery"], () => {
+    dialect(["mysql", "mariadb", "bigquery", "postgresql"], () => {
       it("supports OR REPLACE", () => {
         testWc("CREATE OR REPLACE VIEW my_view AS SELECT 1");
       });
     });
 
-    dialect("sqlite", () => {
+    dialect(["sqlite", "postgresql"], () => {
       it("TEMPORARY view", () => {
         testWc("CREATE TEMP VIEW my_view AS SELECT 1");
         testWc("CREATE TEMPORARY VIEW my_view AS SELECT 1");
       });
     });
 
-    dialect(["sqlite", "bigquery", "mariadb"], () => {
+    dialect(["sqlite", "bigquery", "mariadb", "postgresql"], () => {
       it("supports IF NOT EXISTS", () => {
         testWc("CREATE VIEW IF NOT EXISTS my_view AS SELECT 1");
       });
@@ -37,32 +37,34 @@ describe("view", () => {
       });
     });
 
-    dialect("bigquery", () => {
+    dialect(["bigquery", "postgresql"], () => {
       describe("materialized view", () => {
         it("supports CREATE MATERIALIZED VIEW", () => {
           testWc("CREATE MATERIALIZED VIEW my_view AS SELECT 1");
         });
 
-        it("supports PARTITION BY option", () => {
-          testWc("CREATE MATERIALIZED VIEW my_view PARTITION BY timestamp_col AS SELECT 1");
-        });
+        dialect("bigquery", () => {
+          it("supports PARTITION BY option", () => {
+            testWc("CREATE MATERIALIZED VIEW my_view PARTITION BY timestamp_col AS SELECT 1");
+          });
 
-        it("supports CLUSTER BY option", () => {
-          testWc("CREATE MATERIALIZED VIEW my_view CLUSTER BY col1, col2 AS SELECT 1");
-        });
+          it("supports CLUSTER BY option", () => {
+            testWc("CREATE MATERIALIZED VIEW my_view CLUSTER BY col1, col2 AS SELECT 1");
+          });
 
-        it("supports OPTIONS(...)", () => {
-          testWc("CREATE MATERIALIZED VIEW my_view OPTIONS(description='Hi') AS SELECT 1");
-        });
+          it("supports OPTIONS(...)", () => {
+            testWc("CREATE MATERIALIZED VIEW my_view OPTIONS(description='Hi') AS SELECT 1");
+          });
 
-        it("supports combination of multiple view options", () => {
-          testWc(`
-            CREATE MATERIALIZED VIEW my_view
-            PARTITION BY timestamp_col
-            CLUSTER BY col1, col2
-            OPTIONS(description='Hi')
-            AS SELECT 1
-          `);
+          it("supports combination of multiple view options", () => {
+            testWc(`
+              CREATE MATERIALIZED VIEW my_view
+              PARTITION BY timestamp_col
+              CLUSTER BY col1, col2
+              OPTIONS(description='Hi')
+              AS SELECT 1
+            `);
+          });
         });
       });
     });
@@ -82,13 +84,13 @@ describe("view", () => {
       testWc("DROP VIEW view1, view2, view3");
     });
 
-    dialect("bigquery", () => {
+    dialect(["bigquery", "postgresql"], () => {
       it("supports DROP MATERIALIZED VIEW", () => {
         testWc("DROP MATERIALIZED VIEW my_view");
       });
     });
 
-    dialect(["mysql", "mariadb"], () => {
+    dialect(["mysql", "mariadb", "postgresql"], () => {
       it("with CASCADE/RESTRICT behavior", () => {
         testWc("DROP VIEW v1 CASCADE");
         testWc("DROP VIEW v1 RESTRICT");
