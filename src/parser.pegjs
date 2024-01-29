@@ -2773,6 +2773,7 @@ alter_schema_stmt
 alter_schema_action
   = &bigquery ac:alter_action_set_options { return ac; }
   / &bigquery ac:alter_action_set_default_collate { return ac; }
+  / &postgres ac:alter_action_rename { return ac; }
 
 schema_kw
   = SCHEMA

@@ -77,6 +77,16 @@ describe("schema", () => {
           testWc("ALTER SCHEMA my_schm SET DEFAULT COLLATE 'mycollation'");
         });
       });
+
+      dialect("postgresql", () => {
+        it("supports IF EXISTS", () => {
+          testWc("ALTER SCHEMA IF EXISTS foo RENAME TO bar");
+        });
+
+        it("supports RENAME TO", () => {
+          testWc("ALTER SCHEMA my_schm RENAME TO my_other_schema");
+        });
+      });
     });
   });
 

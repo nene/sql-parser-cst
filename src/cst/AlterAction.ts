@@ -24,7 +24,8 @@ export type AlterTableAction =
 
 export type AlterSchemaAction =
   | AlterActionSetDefaultCollate
-  | AlterActionSetOptions;
+  | AlterActionSetOptions
+  | AlterActionRename;
 
 export interface AlterActionRename extends BaseNode {
   type: "alter_action_rename";
