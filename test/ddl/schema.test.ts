@@ -1,7 +1,7 @@
 import { dialect, test, testWc } from "../test_utils";
 
 describe("schema", () => {
-  dialect(["mysql", "mariadb", "bigquery"], () => {
+  dialect(["mysql", "mariadb", "bigquery", "postgresql"], () => {
     describe("CREATE SCHEMA", () => {
       it("supports CREATE SCHEMA statement", () => {
         testWc("CREATE SCHEMA my_schema");
@@ -77,12 +77,6 @@ describe("schema", () => {
     it("does not support CREATE/DROP SCHEMA", () => {
       expect(() => test("CREATE SCHEMA my_schema")).toThrowError();
       expect(() => test("DROP SCHEMA my_schema")).toThrowError();
-    });
-  });
-
-  dialect("postgresql", () => {
-    it.skip("TODO:postgres", () => {
-      expect(true).toBe(true);
     });
   });
 });

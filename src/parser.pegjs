@@ -87,7 +87,7 @@ ddl_statement
   / x:rename_table_stmt &mysql { return x; }
   / x:create_trigger_stmt (&mysql / &sqlite) { return x; }
   / x:drop_trigger_stmt (&mysql / &sqlite) { return x; }
-  / x:(create_schema_stmt / drop_schema_stmt / alter_schema_stmt) (&mysql / &bigquery) { return x; }
+  / x:(create_schema_stmt / drop_schema_stmt / alter_schema_stmt) (&mysql / &bigquery/ &postgres) { return x; }
 
 dml_statement
   = compound_select_stmt
