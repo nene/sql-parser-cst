@@ -2743,12 +2743,12 @@ drop_trigger_stmt
  * ------------------------------------------------------------------------------------ *
  */
 create_schema_stmt
-  = kw:(CREATE __ schema_kw __) ifKw:(if_not_exists __)? name:entity_name clauses:(__ create_schema_clause)* {
+  = kw:(CREATE __ schema_kw) ifKw:(__ if_not_exists)? name:(__ entity_name)? clauses:(__ create_schema_clause)* {
     return loc({
       type: "create_schema_stmt",
       createSchemaKw: read(kw),
       ifNotExistsKw: read(ifKw),
-      name,
+      name: read(name),
       clauses: clauses.map(read),
     });
   }

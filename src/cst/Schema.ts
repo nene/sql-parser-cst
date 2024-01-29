@@ -17,7 +17,7 @@ export interface CreateSchemaStmt extends BaseNode {
   type: "create_schema_stmt";
   createSchemaKw: [Keyword<"CREATE">, Keyword<"SCHEMA" | "DATABASE">];
   ifNotExistsKw?: [Keyword<"IF">, Keyword<"NOT">, Keyword<"EXISTS">];
-  name: EntityName;
+  name?: EntityName;
   clauses: CreateSchemaClause[];
 }
 

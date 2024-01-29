@@ -39,6 +39,10 @@ describe("schema", () => {
           testWc("CREATE SCHEMA my_schema AUTHORIZATION SESSION_USER");
           testWc("CREATE SCHEMA my_schema AUTHORIZATION CURRENT_ROLE");
         });
+
+        it("supports optional schema name", () => {
+          testWc("CREATE SCHEMA AUTHORIZATION some_user");
+        });
       });
     });
 
