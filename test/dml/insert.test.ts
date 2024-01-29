@@ -171,7 +171,7 @@ describe("insert into", () => {
           testWc("INSERT INTO tbl VALUES (1) ON CONFLICT ((x + 8) ASC, (foo OR bar)) DO NOTHING");
         });
 
-        it.skip("supports ON CONFLICT (col opclass)", () => {
+        it("supports ON CONFLICT (col opclass)", () => {
           testWc("INSERT INTO tbl VALUES (1) ON CONFLICT (col1 int4_ops) DO NOTHING");
         });
 
