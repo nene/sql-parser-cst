@@ -45,4 +45,7 @@ export const alterActionMap: FullTransformMap<string, AllAlterActionNodes> = {
     show([node.setDataTypeKw, node.dataType]),
   alter_action_set_visible: (node) => show([node.setVisibleKw]),
   alter_action_set_invisible: (node) => show([node.setInvisibleKw]),
+
+  // ALTER SCHEMA ...
+  alter_action_owner_to: (node) => show([node.ownerToKw, node.owner]),
 };

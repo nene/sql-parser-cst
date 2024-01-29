@@ -2,11 +2,14 @@ import { BaseNode, Keyword } from "./Base";
 import { BigqueryOptions } from "./dialects/Bigquery";
 import { ColumnDefinition } from "./CreateTable";
 import { DataType } from "./DataType";
-import { Expr, Identifier, EntityName } from "./Expr";
+import { Expr, Identifier, EntityName, FuncCall } from "./Expr";
 import { StringLiteral } from "./Literal";
 import { Constraint, ConstraintModifier, TableConstraint } from "./Constraint";
 
-export type AllAlterActionNodes = AlterTableAction | AlterColumnAction;
+export type AllAlterActionNodes =
+  | AlterTableAction
+  | AlterColumnAction
+  | AlterSchemaAction;
 
 export type AlterTableAction =
   | AlterActionRename
@@ -25,7 +28,8 @@ export type AlterTableAction =
 export type AlterSchemaAction =
   | AlterActionSetDefaultCollate
   | AlterActionSetOptions
-  | AlterActionRename;
+  | AlterActionRename
+  | AlterActionOwnerTo;
 
 export interface AlterActionRename extends BaseNode {
   type: "alter_action_rename";
@@ -166,4 +170,11 @@ export interface AlterActionSetVisible extends BaseNode {
 export interface AlterActionSetInvisible extends BaseNode {
   type: "alter_action_set_invisible";
   setInvisibleKw: [Keyword<"SET">, Keyword<"INVISIBLE">];
+}
+
+// PostgreSQL
+export interface AlterActionOwnerTo extends BaseNode {
+  type: "alter_action_owner_to";
+  ownerToKw: [Keyword<"OWNER">, Keyword<"TO">];
+  owner: Identifier | FuncCall;
 }

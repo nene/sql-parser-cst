@@ -2546,6 +2546,15 @@ alter_action_validate_constraint
     });
   }
 
+alter_action_owner_to
+  = kw:(OWNER __ TO __) owner:(paren_less_func_call / ident) {
+    return loc({
+      type: "alter_action_owner_to",
+      ownerToKw: read(kw),
+      owner,
+    });
+  }
+
 alter_column_action
   = alter_action_set_default
   / alter_action_drop_default
@@ -2774,6 +2783,7 @@ alter_schema_action
   = &bigquery ac:alter_action_set_options { return ac; }
   / &bigquery ac:alter_action_set_default_collate { return ac; }
   / &postgres ac:alter_action_rename { return ac; }
+  / &postgres ac:alter_action_owner_to { return ac; }
 
 schema_kw
   = SCHEMA
@@ -7038,6 +7048,7 @@ OUTFILE             = kw:"OUTFILE"i             !ident_part { return loc(createK
 OVER                = kw:"OVER"i                !ident_part { return loc(createKeyword(kw)); }
 OVERRIDING          = kw:"OVERRIDING"i          !ident_part { return loc(createKeyword(kw)); }
 OVERWRITE           = kw:"OVERWRITE"i           !ident_part { return loc(createKeyword(kw)); }
+OWNER               = kw:"OWNER"i               !ident_part { return loc(createKeyword(kw)); }
 PACK_KEYS           = kw:"PACK_KEYS"i           !ident_part { return loc(createKeyword(kw)); }
 PARALLEL            = kw:"PARALLEL"i            !ident_part { return loc(createKeyword(kw)); }
 PARSER              = kw:"PARSER"i              !ident_part { return loc(createKeyword(kw)); }

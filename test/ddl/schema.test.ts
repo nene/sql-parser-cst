@@ -1,4 +1,4 @@
-import { dialect, test, testWc } from "../test_utils";
+import { dialect, parseStmt, test, testWc } from "../test_utils";
 
 describe("schema", () => {
   dialect(["mysql", "mariadb", "bigquery", "postgresql"], () => {
@@ -85,6 +85,25 @@ describe("schema", () => {
 
         it("supports RENAME TO", () => {
           testWc("ALTER SCHEMA my_schm RENAME TO my_other_schema");
+        });
+
+        it("supports OWNER TO", () => {
+          testWc("ALTER SCHEMA my_schm OWNER TO some_user");
+          testWc("ALTER SCHEMA my_schm OWNER TO CURRENT_USER");
+          testWc("ALTER SCHEMA my_schm OWNER TO SESSION_USER");
+          testWc("ALTER SCHEMA my_schm OWNER TO CURRENT_ROLE");
+        });
+
+        it("parses CURRENT_USER in OWNER TO as function call", () => {
+          const stmt = parseStmt("ALTER SCHEMA my_schm OWNER TO CURRENT_USER");
+          if (stmt.type !== "alter_schema_stmt") {
+            throw new Error("Expected alter_schema_stmt");
+          }
+          const action = stmt.actions[0];
+          if (action.type !== "alter_action_owner_to") {
+            throw new Error("Expected alter_action_owner_to");
+          }
+          expect(action.owner.type).toBe("func_call");
         });
       });
     });
