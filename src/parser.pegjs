@@ -2547,7 +2547,7 @@ alter_action_validate_constraint
   }
 
 alter_action_owner_to
-  = kw:(OWNER __ TO __) owner:(paren_less_func_call / ident) {
+  = kw:(OWNER __ TO __) owner:role_specification {
     return loc({
       type: "alter_action_owner_to",
       ownerToKw: read(kw),
@@ -2759,7 +2759,7 @@ create_schema_clause
   / &postgres x:create_schema_authorization_clause { return x; }
 
 create_schema_authorization_clause
-  = kw:(AUTHORIZATION __) role:(paren_less_func_call / ident) {
+  = kw:(AUTHORIZATION __) role:role_specification {
     return loc({
       type: "create_schema_authorization_clause",
       authorizationKw: read(kw),
@@ -3353,6 +3353,18 @@ resource_type_kw
   / TABLE
   / VIEW
   / kw:(EXTERNAL __ TABLE) { return read(kw); }
+
+/**
+ * ------------------------------------------------------------------------------------ *
+ *                                                                                      *
+ * Roles                                                                                *
+ *                                                                                      *
+ * ------------------------------------------------------------------------------------ *
+ */
+
+// user_name or CURRENT_USER, SESSION_USER, CURRENT_ROLE
+role_specification
+  = paren_less_func_call / ident
 
 /**
  * ------------------------------------------------------------------------------------ *
