@@ -49,9 +49,10 @@ describe("schema", () => {
         });
       });
 
-      dialect("bigquery", () => {
+      dialect(["bigquery", "postgresql"], () => {
         it("supports CASCADE / RESTRICT", () => {
           testWc("DROP SCHEMA my_schema CASCADE");
+          testWc("DROP SCHEMA my_schema RESTRICT");
         });
       });
     });
