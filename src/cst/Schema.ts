@@ -1,10 +1,15 @@
 import { AlterSchemaAction } from "./AlterAction";
 import { BaseNode, Keyword } from "./Base";
+import { CreateTableStmt } from "./CreateTable";
+import { GrantStmt } from "./Dcl";
 import {
   BigqueryOptionDefaultCollate,
   BigqueryOptions,
 } from "./dialects/Bigquery";
 import { EntityName, FuncCall, Identifier, ListExpr } from "./Expr";
+import { CreateIndexStmt } from "./Index";
+import { CreateTriggerStmt } from "./Trigger";
+import { CreateViewStmt } from "./View";
 
 export type AllSchemaStatements =
   | CreateSchemaStmt
@@ -19,12 +24,21 @@ export interface CreateSchemaStmt extends BaseNode {
   ifNotExistsKw?: [Keyword<"IF">, Keyword<"NOT">, Keyword<"EXISTS">];
   name?: EntityName;
   clauses: CreateSchemaClause[];
+  statements: SchemaScopedStatement[];
 }
 
 type CreateSchemaClause =
   | BigqueryOptions
   | BigqueryOptionDefaultCollate
   | CreateSchemaAuthorizationClause;
+
+type SchemaScopedStatement =
+  | CreateTableStmt
+  | CreateViewStmt
+  | CreateIndexStmt
+  // TODO: CreateSequenceStmt
+  | CreateTriggerStmt
+  | GrantStmt;
 
 // PostgreSQL
 export interface CreateSchemaAuthorizationClause extends BaseNode {

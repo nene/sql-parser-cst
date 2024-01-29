@@ -4,7 +4,13 @@ import { FullTransformMap } from "../cstTransformer";
 
 export const schemaMap: FullTransformMap<string, AllSchemaStatements> = {
   create_schema_stmt: (node) =>
-    show([node.createSchemaKw, node.ifNotExistsKw, node.name, node.clauses]),
+    show([
+      node.createSchemaKw,
+      node.ifNotExistsKw,
+      node.name,
+      node.clauses,
+      node.statements,
+    ]),
   create_schema_authorization_clause: (node) =>
     show([node.authorizationKw, node.role]),
   drop_schema_stmt: (node) =>

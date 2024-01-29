@@ -40,6 +40,16 @@ describe("schema", () => {
           testWc("CREATE SCHEMA my_schema AUTHORIZATION CURRENT_ROLE");
         });
 
+        it("supports schema-scoped statements", () => {
+          testWc(`
+            CREATE SCHEMA my_schema
+              CREATE TABLE my_table (id INT)
+              CREATE VIEW my_view AS SELECT 1
+              CREATE INDEX my_index ON my_table(id)
+          `);
+          // TODO: CREATE SEQUENCE, CREATE TRIGGER, GRANT
+        });
+
         it("supports optional schema name", () => {
           testWc("CREATE SCHEMA AUTHORIZATION some_user");
         });

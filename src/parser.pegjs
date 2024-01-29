@@ -2743,15 +2743,18 @@ drop_trigger_stmt
  * ------------------------------------------------------------------------------------ *
  */
 create_schema_stmt
-  = kw:(CREATE __ schema_kw) ifKw:(__ if_not_exists)? name:(__ entity_name)? clauses:(__ create_schema_clause)* {
-    return loc({
-      type: "create_schema_stmt",
-      createSchemaKw: read(kw),
-      ifNotExistsKw: read(ifKw),
-      name: read(name),
-      clauses: clauses.map(read),
-    });
-  }
+  = kw:(CREATE __ schema_kw) ifKw:(__ if_not_exists)? name:(__ entity_name)?
+    clauses:(__ create_schema_clause)*
+    statements:(__ schema_scoped_statement)* {
+      return loc({
+        type: "create_schema_stmt",
+        createSchemaKw: read(kw),
+        ifNotExistsKw: read(ifKw),
+        name: read(name),
+        clauses: clauses.map(read),
+        statements: statements.map(read),
+      });
+    }
 
 create_schema_clause
   = &bigquery x:bigquery_options { return x; }
@@ -2766,6 +2769,9 @@ create_schema_authorization_clause
       role,
     });
   }
+
+schema_scoped_statement
+  = &postgres x:(create_table_stmt / create_view_stmt / create_index_stmt) { return x; }
 
 drop_schema_stmt
   = kw:(DROP __ schema_kw __) ifKw:(if_exists __)? schemas:list$entity_name behaviorKw:(__ (CASCADE / RESTRICT))? {
