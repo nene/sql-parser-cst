@@ -268,4 +268,10 @@ describe("alter table", () => {
       testAlterWc("OWNER TO CURRENT_ROLE");
     });
   });
+
+  dialect("postgresql", () => {
+    it("supports SET SCHEMA", () => {
+      testAlterWc("SET SCHEMA my_schema");
+    });
+  });
 });

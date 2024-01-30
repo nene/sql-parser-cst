@@ -195,6 +195,10 @@ describe("view", () => {
         testAlterViewActionWc("ALTER COLUMN col1 DROP DEFAULT");
         testAlterViewActionWc("ALTER col1 DROP DEFAULT");
       });
+
+      it("supports SET SCHEMA", () => {
+        testAlterViewActionWc("SET SCHEMA foo");
+      });
     });
   });
 });

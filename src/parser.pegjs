@@ -1881,6 +1881,7 @@ alter_view_action_postgres
   / alter_action_rename_column
   / alter_action_owner_to
   / alter_action_alter_column
+  / alter_action_set_schema
 
 /**
  * ------------------------------------------------------------------------------------ *
@@ -2398,6 +2399,7 @@ alter_action_postgres
   / alter_action_rename_constraint
   / alter_action_validate_constraint
   / alter_action_owner_to
+  / alter_action_set_schema
 
 alter_action_add_column
   = addKw:(ADD __ COLUMN __ / ADD __) ifKw:(if_not_exists __)? col:column_definition {
@@ -2539,6 +2541,15 @@ alter_action_owner_to
       type: "alter_action_owner_to",
       ownerToKw: read(kw),
       owner,
+    });
+  }
+
+alter_action_set_schema
+  = kw:(SET __ SCHEMA __) schema:ident {
+    return loc({
+      type: "alter_action_set_schema",
+      setSchemaKw: read(kw),
+      schema,
     });
   }
 

@@ -24,7 +24,8 @@ export type AlterTableAction =
   | AlterActionAlterConstraint
   | AlterActionRenameConstraint
   | AlterActionValidateConstraint
-  | AlterActionOwnerTo;
+  | AlterActionOwnerTo
+  | AlterActionSetSchema;
 
 export type AlterSchemaAction =
   | AlterActionSetDefaultCollate
@@ -37,7 +38,8 @@ export type AlterViewAction =
   | AlterActionRename
   | AlterActionRenameColumn
   | AlterActionOwnerTo
-  | AlterActionAlterColumn;
+  | AlterActionAlterColumn
+  | AlterActionSetSchema;
 
 export interface AlterActionRename extends BaseNode {
   type: "alter_action_rename";
@@ -134,6 +136,13 @@ export interface AlterActionOwnerTo extends BaseNode {
   type: "alter_action_owner_to";
   ownerToKw: [Keyword<"OWNER">, Keyword<"TO">];
   owner: Identifier | FuncCall;
+}
+
+// PostgreSQL
+export interface AlterActionSetSchema extends BaseNode {
+  type: "alter_action_set_schema";
+  setSchemaKw: [Keyword<"SET">, Keyword<"SCHEMA">];
+  schema: Identifier;
 }
 
 export type AlterColumnAction =

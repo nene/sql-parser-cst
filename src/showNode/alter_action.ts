@@ -33,6 +33,8 @@ export const alterActionMap: FullTransformMap<string, AllAlterActionNodes> = {
     show([node.renameConstraintKw, node.oldName, node.toKw, node.newName]),
   alter_action_validate_constraint: (node) =>
     show([node.validateConstraintKw, node.constraint]),
+  alter_action_owner_to: (node) => show([node.ownerToKw, node.owner]),
+  alter_action_set_schema: (node) => show([node.setSchemaKw, node.schema]),
 
   // ALTER COLUMN ...
   alter_action_alter_column: (node) =>
@@ -45,7 +47,4 @@ export const alterActionMap: FullTransformMap<string, AllAlterActionNodes> = {
     show([node.setDataTypeKw, node.dataType]),
   alter_action_set_visible: (node) => show([node.setVisibleKw]),
   alter_action_set_invisible: (node) => show([node.setInvisibleKw]),
-
-  // ALTER SCHEMA ...
-  alter_action_owner_to: (node) => show([node.ownerToKw, node.owner]),
 };
