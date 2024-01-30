@@ -1882,6 +1882,7 @@ alter_view_action_postgres
   / alter_action_owner_to
   / alter_action_alter_column
   / alter_action_set_schema
+  / alter_action_set_tablespace
 
 /**
  * ------------------------------------------------------------------------------------ *
@@ -2404,6 +2405,7 @@ alter_action_postgres
   / alter_action_disable
   / alter_action_force
   / alter_action_no_force
+  / alter_action_set_tablespace
 
 alter_action_add_column
   = addKw:(ADD __ COLUMN __ / ADD __) ifKw:(if_not_exists __)? col:column_definition {
@@ -2591,6 +2593,15 @@ alter_action_no_force
       type: "alter_action_no_force",
       noForceKw: read(kw),
       item,
+    });
+  }
+
+alter_action_set_tablespace
+  = kw:(SET __ TABLESPACE __) name:ident {
+    return loc({
+      type: "alter_action_set_tablespace",
+      setTablespaceKw: read(kw),
+      name,
     });
   }
 

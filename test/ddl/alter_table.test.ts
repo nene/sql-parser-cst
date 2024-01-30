@@ -302,4 +302,10 @@ describe("alter table", () => {
       testAlterWc(`DISABLE RULE bar`);
     });
   });
+
+  dialect("postgresql", () => {
+    it("supports SET TABLESPACE", () => {
+      testAlterWc(`SET TABLESPACE my_space`);
+    });
+  });
 });

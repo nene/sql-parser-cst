@@ -30,7 +30,8 @@ export type AlterTableAction =
   | AlterActionEnable
   | AlterActionDisable
   | AlterActionForce
-  | AlterActionNoForce;
+  | AlterActionNoForce
+  | AlterActionSetTablespace;
 
 export type AlterSchemaAction =
   | AlterActionSetDefaultCollate
@@ -44,7 +45,8 @@ export type AlterViewAction =
   | AlterActionRenameColumn
   | AlterActionOwnerTo
   | AlterActionAlterColumn
-  | AlterActionSetSchema;
+  | AlterActionSetSchema
+  | AlterActionSetTablespace;
 
 export interface AlterActionRename extends BaseNode {
   type: "alter_action_rename";
@@ -177,6 +179,13 @@ export interface AlterActionNoForce extends BaseNode {
   type: "alter_action_no_force";
   noForceKw: [Keyword<"NO">, Keyword<"FORCE">];
   item: ToggleRowLevelSecurity;
+}
+
+// PostgreSQL
+export interface AlterActionSetTablespace extends BaseNode {
+  type: "alter_action_set_tablespace";
+  setTablespaceKw: [Keyword<"SET">, Keyword<"TABLESPACE">];
+  name: Identifier;
 }
 
 export type AlterColumnAction =

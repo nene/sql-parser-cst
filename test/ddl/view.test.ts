@@ -201,4 +201,16 @@ describe("view", () => {
       });
     });
   });
+
+  describe("ALTER MATERIALIZED VIEW", () => {
+    dialect("postgresql", () => {
+      function testAlterMatWc(action: string) {
+        testWc(`ALTER MATERIALIZED VIEW my_view ${action}`);
+      }
+
+      it("supports SET TABLESPACE", () => {
+        testAlterMatWc("SET TABLESPACE foo");
+      });
+    });
+  });
 });
