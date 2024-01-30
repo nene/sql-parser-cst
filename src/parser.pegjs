@@ -1820,7 +1820,7 @@ postgres_create_view_clause
   = postgresql_with_options
   / with_check_option_clause
   / using_access_method_clause
-  / create_table_tablespace_clause
+  / tablespace_clause
   / create_table_with_data_clause
 
 with_check_option_clause
@@ -2138,7 +2138,7 @@ create_table_clause_postgresql
   / create_table_partition_bound_clause
   / create_table_default_partition_clause
   / create_table_on_commit_clause
-  / create_table_tablespace_clause
+  / tablespace_clause
   / using_access_method_clause
   / postgresql_with_options
   / create_table_without_oids_clause
@@ -2242,10 +2242,10 @@ create_table_on_commit_clause
     });
   }
 
-create_table_tablespace_clause
+tablespace_clause
   = kw:(TABLESPACE __) name:ident {
     return loc({
-      type: "create_table_tablespace_clause",
+      type: "tablespace_clause",
       tablespaceKw: read(kw),
       name,
     });

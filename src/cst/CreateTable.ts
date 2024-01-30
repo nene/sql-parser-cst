@@ -49,7 +49,7 @@ export type AllCreateTableNodes =
   | PartitionBoundRemainder
   | CreateTableDefaultPartitionClause
   | CreateTableOnCommitClause
-  | CreateTableTablespaceClause
+  | TablespaceClause
   | UsingAccessMethodClause
   | CreateTableWithoutOidsClause
   | CreateTableWithDataClause
@@ -239,7 +239,7 @@ type PostgresqlCreateTableClause =
   | CreateTablePartitionBoundClause
   | CreateTableDefaultPartitionClause
   | CreateTableOnCommitClause
-  | CreateTableTablespaceClause
+  | TablespaceClause
   | UsingAccessMethodClause
   | PostgresqlWithOptions
   | CreateTableWithoutOidsClause
@@ -322,8 +322,8 @@ export interface CreateTableOnCommitClause extends BaseNode {
   actionKw: [Keyword<"DELETE" | "PRESERVE">, Keyword<"ROWS">] | Keyword<"DROP">;
 }
 
-export interface CreateTableTablespaceClause extends BaseNode {
-  type: "create_table_tablespace_clause";
+export interface TablespaceClause extends BaseNode {
+  type: "tablespace_clause";
   tablespaceKw: Keyword<"TABLESPACE">;
   name: Identifier;
 }

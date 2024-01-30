@@ -1,7 +1,7 @@
 import { AlterActionSetOptions } from "./AlterAction";
 import { BaseNode, Keyword } from "./Base";
 import {
-  CreateTableTablespaceClause,
+  TablespaceClause,
   CreateTableWithDataClause,
   UsingAccessMethodClause,
 } from "./CreateTable";
@@ -41,7 +41,7 @@ type CreateViewClause =
   | ClusterByClause
   | PartitionByClause
   | UsingAccessMethodClause
-  | CreateTableTablespaceClause
+  | TablespaceClause
   | CreateTableWithDataClause
   | AsClause<SubSelect>;
 
