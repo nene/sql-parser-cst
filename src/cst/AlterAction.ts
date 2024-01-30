@@ -31,6 +31,13 @@ export type AlterSchemaAction =
   | AlterActionRename
   | AlterActionOwnerTo;
 
+export type AlterViewAction =
+  | AlterActionSetOptions
+  | AlterActionRename
+  | AlterActionRenameColumn
+  | AlterActionOwnerTo
+  | AlterActionAlterColumn;
+
 export interface AlterActionRename extends BaseNode {
   type: "alter_action_rename";
   renameKw: Keyword<"RENAME"> | [Keyword<"RENAME">, Keyword<"TO" | "AS">];

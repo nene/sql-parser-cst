@@ -76,7 +76,7 @@ statement
 ddl_statement
   = create_view_stmt
   / drop_view_stmt
-  / x:alter_view_stmt (&bigquery / &mysql) { return x; }
+  / x:alter_view_stmt (&bigquery / &mysql / &postgres) { return x; }
   / create_index_stmt
   / drop_index_stmt
   / x:(create_function_stmt / drop_function_stmt) (&bigquery / &postgres) { return x; }
@@ -1874,6 +1874,13 @@ alter_view_stmt
 alter_view_action
   = &bigquery ac:alter_action_set_options { return ac; }
   / &mysql ac:as_clause$compound_select_stmt { return ac; }
+  / &postgres ac:alter_view_action_postgres { return ac; }
+
+alter_view_action_postgres
+  = alter_action_rename
+  / alter_action_rename_column
+  / alter_action_owner_to
+  / alter_action_alter_column
 
 /**
  * ------------------------------------------------------------------------------------ *

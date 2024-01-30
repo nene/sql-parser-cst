@@ -1,4 +1,4 @@
-import { AlterActionSetOptions } from "./AlterAction";
+import { AlterViewAction } from "./AlterAction";
 import { BaseNode, Keyword } from "./Base";
 import {
   TablespaceClause,
@@ -73,5 +73,5 @@ export interface AlterViewStmt extends BaseNode {
   ifExistsKw?: [Keyword<"IF">, Keyword<"EXISTS">];
   name: EntityName;
   columns?: ParenExpr<ListExpr<Identifier>>;
-  actions: (AlterActionSetOptions | AsClause<SubSelect>)[];
+  actions: (AlterViewAction | AsClause<SubSelect>)[];
 }

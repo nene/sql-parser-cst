@@ -160,5 +160,41 @@ describe("view", () => {
         testWc("ALTER VIEW my_view (col1, col2) AS SELECT 2");
       });
     });
+
+    dialect("postgresql", () => {
+      it("supports IF EXISTS", () => {
+        testWc("ALTER VIEW IF EXISTS my_view RENAME TO new_view");
+      });
+
+      function testAlterViewActionWc(action: string) {
+        testWc(`ALTER VIEW my_view ${action}`);
+      }
+
+      it("supports RENAME TO", () => {
+        testAlterViewActionWc("RENAME TO new_view");
+      });
+
+      it("supports OWNER TO", () => {
+        testAlterViewActionWc("OWNER TO some_user");
+        testAlterViewActionWc("OWNER TO CURRENT_USER");
+        testAlterViewActionWc("OWNER TO SESSION_USER");
+        testAlterViewActionWc("OWNER TO CURRENT_ROLE");
+      });
+
+      it("supports RENAME [COLUMN] .. TO ..", () => {
+        testAlterViewActionWc("RENAME old_name TO new_name");
+        testAlterViewActionWc("RENAME COLUMN old_name TO new_name");
+      });
+
+      it("supports ALTER [COLUMN] .. SET DEFAULT ..", () => {
+        testAlterViewActionWc("ALTER COLUMN col1 SET DEFAULT 1");
+        testAlterViewActionWc("ALTER col1 SET DEFAULT 15 + 8");
+      });
+
+      it("supports ALTER [COLUMN] .. DROP DEFAULT", () => {
+        testAlterViewActionWc("ALTER COLUMN col1 DROP DEFAULT");
+        testAlterViewActionWc("ALTER col1 DROP DEFAULT");
+      });
+    });
   });
 });
