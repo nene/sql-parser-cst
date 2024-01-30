@@ -1835,7 +1835,7 @@ with_check_option_clause
 
 drop_view_stmt
   = dropKw:DROP
-    materKw:(__ MATERIALIZED)?
+    kind:(__ view_kind)?
     viewKw:(__ VIEW)
     ifKw:(__ if_exists)?
     views:(__ list$entity_name)
@@ -1843,7 +1843,7 @@ drop_view_stmt
       return loc({
         type: "drop_view_stmt",
         dropKw: read(dropKw),
-        materializedKw: read(materKw),
+        kind: read(kind),
         viewKw: read(viewKw),
         ifExistsKw: read(ifKw),
         views: read(views),
@@ -1853,7 +1853,7 @@ drop_view_stmt
 
 alter_view_stmt
   = alterKw:ALTER
-    materKw:(__ MATERIALIZED)?
+    kind:(__ view_kind)?
     viewKw:(__ VIEW)
     ifKw:(__ if_exists)?
     name:(__ entity_name)
@@ -1862,7 +1862,7 @@ alter_view_stmt
       return loc({
         type: "alter_view_stmt",
         alterKw,
-        materializedKw: read(materKw),
+        kind: read(kind),
         viewKw: read(viewKw),
         ifExistsKw: read(ifKw),
         name: read(name),

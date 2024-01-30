@@ -57,7 +57,7 @@ export interface WithCheckOptionClause extends BaseNode {
 export interface DropViewStmt extends BaseNode {
   type: "drop_view_stmt";
   dropKw: Keyword<"DROP">;
-  materializedKw?: Keyword<"MATERIALIZED">;
+  kind?: ViewKind;
   viewKw: Keyword<"VIEW">;
   ifExistsKw?: [Keyword<"IF">, Keyword<"EXISTS">];
   views: ListExpr<EntityName>;
@@ -68,7 +68,7 @@ export interface DropViewStmt extends BaseNode {
 export interface AlterViewStmt extends BaseNode {
   type: "alter_view_stmt";
   alterKw: Keyword<"ALTER">;
-  materializedKw?: Keyword<"MATERIALIZED">;
+  kind?: ViewKind;
   viewKw: Keyword<"VIEW">;
   ifExistsKw?: [Keyword<"IF">, Keyword<"EXISTS">];
   name: EntityName;

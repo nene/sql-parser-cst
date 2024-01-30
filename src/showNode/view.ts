@@ -21,7 +21,7 @@ export const viewMap: FullTransformMap<string, AllViewNodes> = {
   drop_view_stmt: (node) =>
     show([
       node.dropKw,
-      node.materializedKw,
+      node.kind,
       node.viewKw,
       node.ifExistsKw,
       node.views,
@@ -30,7 +30,7 @@ export const viewMap: FullTransformMap<string, AllViewNodes> = {
   alter_view_stmt: (node) =>
     show([
       node.alterKw,
-      node.materializedKw,
+      node.kind,
       node.viewKw,
       node.ifExistsKw,
       node.name,
