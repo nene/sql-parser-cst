@@ -7,7 +7,7 @@ import { ClusterByClause } from "./OtherClauses";
 import { AsClause } from "./ProcClause";
 import { PartitionByClause, SubSelect } from "./Select";
 
-export type AllViewNodes = AllViewStatements | WithCheckOptionClause;
+export type AllViewNodes = AllViewStatements | ViewKind | WithCheckOptionClause;
 
 export type AllViewStatements = CreateViewStmt | DropViewStmt | AlterViewStmt;
 
@@ -16,14 +16,17 @@ export interface CreateViewStmt extends BaseNode {
   type: "create_view_stmt";
   createKw: Keyword<"CREATE">;
   orReplaceKw?: [Keyword<"OR">, Keyword<"REPLACE">];
-  temporaryKw?: Keyword<"TEMP" | "TEMPORARY">;
-  recursiveKw?: Keyword<"RECURSIVE">;
-  materializedKw?: Keyword<"MATERIALIZED">;
+  kinds: ViewKind[];
   viewKw: Keyword<"VIEW">;
   ifNotExistsKw?: [Keyword<"IF">, Keyword<"NOT">, Keyword<"EXISTS">];
   name: EntityName;
   columns?: ParenExpr<ListExpr<Identifier>>;
   clauses: CreateViewClause[];
+}
+
+export interface ViewKind extends BaseNode {
+  type: "view_kind";
+  kindKw: Keyword<"TEMP" | "TEMPORARY" | "MATERIALIZED" | "RECURSIVE">;
 }
 
 type CreateViewClause =

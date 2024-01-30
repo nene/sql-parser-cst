@@ -1776,9 +1776,7 @@ merge_action_insert_row_clause
 create_view_stmt
   = createKw:CREATE
     repKw:(__ OR __ REPLACE)?
-    tmpKw:(__ (TEMP / TEMPORARY))?
-    recursiveKw:(__ RECURSIVE)?
-    materKw:(__ MATERIALIZED)?
+    kinds:(__ view_kind)*
     viewKw:(__ VIEW)
     ifKw:(__ if_not_exists)?
     name:(__ entity_name)
@@ -1788,9 +1786,7 @@ create_view_stmt
         type: "create_view_stmt",
         createKw,
         orReplaceKw: read(repKw),
-        temporaryKw: read(tmpKw),
-        recursiveKw: read(recursiveKw),
-        materializedKw: read(materKw),
+        kinds: kinds.map(read),
         viewKw: read(viewKw),
         ifNotExistsKw: read(ifKw),
         name: read(name),
@@ -1798,6 +1794,17 @@ create_view_stmt
         clauses: clauses.map(read),
       });
     }
+
+view_kind
+  = kw:(TEMP / TEMPORARY) (&sqlite / &postgres) {
+    return loc({ type: "table_kind", kindKw: kw });
+  }
+  / kw:RECURSIVE &postgres {
+    return loc({ type: "table_kind", kindKw: read(kw) });
+  }
+  / kw:MATERIALIZED (&bigquery / &postgres) {
+    return loc({ type: "table_kind", kindKw: kw });
+  }
 
 create_view_clause
   = as_clause$compound_select_stmt
