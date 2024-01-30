@@ -91,6 +91,12 @@ describe("view", () => {
             `);
           });
         });
+
+        dialect("postgresql", () => {
+          it("supports USING clause", () => {
+            testWc(`CREATE MATERIALIZED VIEW my_view USING "SP-GiST" AS SELECT 1`);
+          });
+        });
       });
     });
   });

@@ -1,8 +1,9 @@
 import { AlterActionSetOptions } from "./AlterAction";
 import { BaseNode, Keyword } from "./Base";
+import { UsingAccessMethodClause } from "./CreateTable";
 import { BigqueryOptions } from "./dialects/Bigquery";
+import { PostgresqlWithOptions } from "./dialects/Postgresql";
 import { Identifier, ListExpr, ParenExpr, EntityName } from "./Expr";
-import { PostgresqlWithOptions } from "./Node";
 import { ClusterByClause } from "./OtherClauses";
 import { AsClause } from "./ProcClause";
 import { PartitionByClause, SubSelect } from "./Select";
@@ -35,6 +36,7 @@ type CreateViewClause =
   | WithCheckOptionClause
   | ClusterByClause
   | PartitionByClause
+  | UsingAccessMethodClause
   | AsClause<SubSelect>;
 
 // PostgreSQL
