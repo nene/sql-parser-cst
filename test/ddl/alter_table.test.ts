@@ -274,4 +274,27 @@ describe("alter table", () => {
       testAlterWc("SET SCHEMA my_schema");
     });
   });
+
+  dialect("postgresql", () => {
+    it("supports {ENABLE | DISABLE} ROW LEVEL SECURITY", () => {
+      testAlterWc(`ENABLE ROW LEVEL SECURITY`);
+      testAlterWc(`DISABLE ROW LEVEL SECURITY`);
+    });
+
+    it("supports {ENABLE | DISABLE} TRIGGER", () => {
+      testAlterWc(`ENABLE TRIGGER foo`);
+      testAlterWc(`ENABLE TRIGGER ALL`);
+      testAlterWc(`ENABLE TRIGGER USER`);
+      testAlterWc(`ENABLE REPLICA TRIGGER foo`);
+      testAlterWc(`ENABLE ALWAYS TRIGGER foo`);
+      testAlterWc(`DISABLE TRIGGER bar`);
+    });
+
+    it("supports {ENABLE | DISABLE} RULE", () => {
+      testAlterWc(`ENABLE RULE my_rule`);
+      testAlterWc(`ENABLE REPLICA RULE foo`);
+      testAlterWc(`ENABLE ALWAYS RULE foo`);
+      testAlterWc(`DISABLE RULE bar`);
+    });
+  });
 });

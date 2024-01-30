@@ -2400,6 +2400,8 @@ alter_action_postgres
   / alter_action_validate_constraint
   / alter_action_owner_to
   / alter_action_set_schema
+  / alter_action_enable
+  / alter_action_disable
 
 alter_action_add_column
   = addKw:(ADD __ COLUMN __ / ADD __) ifKw:(if_not_exists __)? col:column_definition {
@@ -2553,6 +2555,25 @@ alter_action_set_schema
     });
   }
 
+alter_action_enable
+  = kw:(ENABLE __) modeKw:((ALWAYS / REPLICA) __)? item:toggle_item {
+    return loc({
+      type: "alter_action_enable",
+      enableKw: read(kw),
+      modeKw: read(modeKw),
+      item,
+    });
+  }
+
+alter_action_disable
+  = kw:(DISABLE __) item:toggle_item {
+    return loc({
+      type: "alter_action_disable",
+      disableKw: read(kw),
+      item,
+    });
+  }
+
 alter_column_action
   = alter_action_set_default
   / alter_action_drop_default
@@ -2607,6 +2628,26 @@ alter_action_set_visible
 alter_action_set_invisible
   = kw:(SET __ INVISIBLE) {
     return loc({ type: "alter_action_set_invisible", setInvisibleKw: read(kw) });
+  }
+
+toggle_item
+  = toggle_row_level_security
+  / toggle_trigger
+  / toggle_rule
+
+toggle_row_level_security
+  = kw:(ROW __ LEVEL __ SECURITY) {
+    return loc({ type: "toggle_row_level_security", rowLevelSecurityKw: read(kw) });
+  }
+
+toggle_trigger
+  = kw:(TRIGGER __) name:(ALL / USER / ident) {
+    return loc({ type: "toggle_trigger", triggerKw: read(kw), name });
+  }
+
+toggle_rule
+  = kw:(RULE __) name:ident {
+    return loc({ type: "toggle_rule", ruleKw: read(kw), name });
   }
 
 /**
@@ -6916,6 +6957,7 @@ DESCRIBE            = kw:"DESCRIBE"i            !ident_part { return loc(createK
 DETACH              = kw:"DETACH"i              !ident_part { return loc(createKeyword(kw)); }
 DETERMINISTIC       = kw:"DETERMINISTIC"i       !ident_part { return loc(createKeyword(kw)); }
 DIRECTORY           = kw:"DIRECTORY"i           !ident_part { return loc(createKeyword(kw)); }
+DISABLE             = kw:"DISABLE"i             !ident_part { return loc(createKeyword(kw)); }
 DISK                = kw:"DISK"i                !ident_part { return loc(createKeyword(kw)); }
 DISTINCT            = kw:"DISTINCT"i            !ident_part { return loc(createKeyword(kw)); }
 DISTINCTROW         = kw:"DISTINCTROW"i         !ident_part { return loc(createKeyword(kw)); }
@@ -6932,6 +6974,7 @@ DYNAMIC             = kw:"DYNAMIC"i             !ident_part { return loc(createK
 EACH                = kw:"EACH"i                !ident_part { return loc(createKeyword(kw)); }
 ELSE                = kw:"ELSE"i                !ident_part { return loc(createKeyword(kw)); }
 ELSEIF              = kw:"ELSEIF"i              !ident_part { return loc(createKeyword(kw)); }
+ENABLE              = kw:"ENABLE"i              !ident_part { return loc(createKeyword(kw)); }
 ENCLOSED            = kw:"ENCLOSED"i            !ident_part { return loc(createKeyword(kw)); }
 ENCRYPTION          = kw:"ENCRYPTION"i          !ident_part { return loc(createKeyword(kw)); }
 END                 = kw:"END"i                 !ident_part { return loc(createKeyword(kw)); }
@@ -7048,6 +7091,7 @@ LEAD                = kw:"LEAD"i                !ident_part { return loc(createK
 LEAKPROOF           = kw:"LEAKPROOF"i           !ident_part { return loc(createKeyword(kw)); }
 LEAVE               = kw:"LEAVE"i               !ident_part { return loc(createKeyword(kw)); }
 LEFT                = kw:"LEFT"i                !ident_part { return loc(createKeyword(kw)); }
+LEVEL               = kw:"LEVEL"i               !ident_part { return loc(createKeyword(kw)); }
 LIKE                = kw:"LIKE"i                !ident_part { return loc(createKeyword(kw)); }
 LIMIT               = kw:"LIMIT"i               !ident_part { return loc(createKeyword(kw)); }
 LINES               = kw:"LINES"i               !ident_part { return loc(createKeyword(kw)); }
@@ -7182,6 +7226,7 @@ RENAME              = kw:"RENAME"i              !ident_part { return loc(createK
 REPEAT              = kw:"REPEAT"i              !ident_part { return loc(createKeyword(kw)); }
 REPEATABLE          = kw:"REPEATABLE"i          !ident_part { return loc(createKeyword(kw)); }
 REPLACE             = kw:"REPLACE"i             !ident_part { return loc(createKeyword(kw)); }
+REPLICA             = kw:"REPLICA"i             !ident_part { return loc(createKeyword(kw)); }
 REPLICATION         = kw:"REPLICATION"i         !ident_part { return loc(createKeyword(kw)); }
 RESERVATION         = kw:"RESERVATION"i         !ident_part { return loc(createKeyword(kw)); }
 RESPECT             = kw:"RESPECT"i             !ident_part { return loc(createKeyword(kw)); }
@@ -7201,6 +7246,7 @@ ROW_FORMAT          = kw:"ROW_FORMAT"i          !ident_part { return loc(createK
 ROW_NUMBER          = kw:"ROW_NUMBER"i          !ident_part { return loc(createKeyword(kw)); }
 ROWID               = kw:"ROWID"i               !ident_part { return loc(createKeyword(kw)); }
 ROWS                = kw:"ROWS"i                !ident_part { return loc(createKeyword(kw)); }
+RULE                = kw:"RULE"i                !ident_part { return loc(createKeyword(kw)); }
 SAFE                = kw:"SAFE"i                !ident_part { return loc(createKeyword(kw)); }
 SAFE_CAST           = kw:"SAFE_CAST"i           !ident_part { return loc(createKeyword(kw)); }
 SAFE_OFFSET         = kw:"SAFE_OFFSET"i         !ident_part { return loc(createKeyword(kw)); }

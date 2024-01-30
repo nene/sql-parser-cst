@@ -35,6 +35,8 @@ export const alterActionMap: FullTransformMap<string, AllAlterActionNodes> = {
     show([node.validateConstraintKw, node.constraint]),
   alter_action_owner_to: (node) => show([node.ownerToKw, node.owner]),
   alter_action_set_schema: (node) => show([node.setSchemaKw, node.schema]),
+  alter_action_enable: (node) => show([node.enableKw, node.modeKw, node.item]),
+  alter_action_disable: (node) => show([node.disableKw, node.item]),
 
   // ALTER COLUMN ...
   alter_action_alter_column: (node) =>
@@ -47,4 +49,9 @@ export const alterActionMap: FullTransformMap<string, AllAlterActionNodes> = {
     show([node.setDataTypeKw, node.dataType]),
   alter_action_set_visible: (node) => show([node.setVisibleKw]),
   alter_action_set_invisible: (node) => show([node.setInvisibleKw]),
+
+  // ENABLE/DISABLE
+  toggle_row_level_security: (node) => show([node.rowLevelSecurityKw]),
+  toggle_trigger: (node) => show([node.triggerKw, node.name]),
+  toggle_rule: (node) => show([node.ruleKw, node.name]),
 };

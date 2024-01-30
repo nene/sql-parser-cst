@@ -9,7 +9,8 @@ import { Constraint, ConstraintModifier, TableConstraint } from "./Constraint";
 export type AllAlterActionNodes =
   | AlterTableAction
   | AlterColumnAction
-  | AlterSchemaAction;
+  | AlterSchemaAction
+  | ToggleItem;
 
 export type AlterTableAction =
   | AlterActionRename
@@ -25,7 +26,9 @@ export type AlterTableAction =
   | AlterActionRenameConstraint
   | AlterActionValidateConstraint
   | AlterActionOwnerTo
-  | AlterActionSetSchema;
+  | AlterActionSetSchema
+  | AlterActionEnable
+  | AlterActionDisable;
 
 export type AlterSchemaAction =
   | AlterActionSetDefaultCollate
@@ -145,6 +148,21 @@ export interface AlterActionSetSchema extends BaseNode {
   schema: Identifier;
 }
 
+// PostgreSQL
+export interface AlterActionEnable extends BaseNode {
+  type: "alter_action_enable";
+  enableKw: Keyword<"ENABLE">;
+  modeKw?: Keyword<"REPLICA" | "ALWAYS">;
+  item: ToggleItem;
+}
+
+// PostgreSQL
+export interface AlterActionDisable extends BaseNode {
+  type: "alter_action_disable";
+  disableKw: Keyword<"DISABLE">;
+  item: ToggleItem;
+}
+
 export type AlterColumnAction =
   | AlterActionSetDefault
   | AlterActionDropDefault
@@ -194,4 +212,24 @@ export interface AlterActionSetVisible extends BaseNode {
 export interface AlterActionSetInvisible extends BaseNode {
   type: "alter_action_set_invisible";
   setInvisibleKw: [Keyword<"SET">, Keyword<"INVISIBLE">];
+}
+
+// Used with ENABLE/DISABLE
+export type ToggleItem = ToggleRowLevelSecurity | ToggleTrigger | ToggleRule;
+
+export interface ToggleRowLevelSecurity extends BaseNode {
+  type: "toggle_row_level_security";
+  rowLevelSecurityKw: [Keyword<"ROW">, Keyword<"LEVEL">, Keyword<"SECURITY">];
+}
+
+export interface ToggleTrigger extends BaseNode {
+  type: "toggle_trigger";
+  triggerKw: Keyword<"TRIGGER">;
+  name: Identifier | Keyword<"ALL" | "USER">;
+}
+
+export interface ToggleRule extends BaseNode {
+  type: "toggle_rule";
+  ruleKw: Keyword<"RULE">;
+  name: Identifier;
 }
