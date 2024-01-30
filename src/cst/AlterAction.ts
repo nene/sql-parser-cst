@@ -186,6 +186,7 @@ export interface AlterActionSetTablespace extends BaseNode {
   type: "alter_action_set_tablespace";
   setTablespaceKw: [Keyword<"SET">, Keyword<"TABLESPACE">];
   name: Identifier;
+  nowaitKw?: Keyword<"NOWAIT">;
 }
 
 export type AlterColumnAction =

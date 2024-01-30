@@ -2597,11 +2597,12 @@ alter_action_no_force
   }
 
 alter_action_set_tablespace
-  = kw:(SET __ TABLESPACE __) name:ident {
+  = kw:(SET __ TABLESPACE __) name:ident nowaitKw:(__ NOWAIT)? {
     return loc({
       type: "alter_action_set_tablespace",
       setTablespaceKw: read(kw),
       name,
+      nowaitKw: read(nowaitKw),
     });
   }
 

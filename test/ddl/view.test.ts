@@ -210,6 +210,7 @@ describe("view", () => {
 
       it("supports SET TABLESPACE", () => {
         testAlterMatWc("SET TABLESPACE foo");
+        testAlterMatWc("SET TABLESPACE foo NOWAIT");
       });
     });
   });

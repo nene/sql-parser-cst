@@ -306,6 +306,7 @@ describe("alter table", () => {
   dialect("postgresql", () => {
     it("supports SET TABLESPACE", () => {
       testAlterWc(`SET TABLESPACE my_space`);
+      testAlterWc(`SET TABLESPACE my_space NOWAIT`);
     });
   });
 });
