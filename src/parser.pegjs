@@ -1800,11 +1800,15 @@ create_view_stmt
 create_view_clause
   = as_clause$compound_select_stmt
   / &bigquery op:bigquery_create_view_clause { return op; }
+  / &postgres op:postgres_create_view_clause { return op; }
 
 bigquery_create_view_clause
   = bigquery_options
   / cluster_by_clause
   / partition_by_clause
+
+postgres_create_view_clause
+  = postgresql_with_options
 
 drop_view_stmt
   = dropKw:DROP
@@ -3999,7 +4003,7 @@ postgresql_with_options
   }
 
 table_option_postgresql
-  = name:(member_expr __) "=" v:(__ (literal / ON / OFF / AUTO)) {
+  = name:(member_expr __) "=" v:(__ (literal / keyword)) {
     return loc({
       type: "table_option",
       name: read(name),
@@ -4737,11 +4741,6 @@ type_name_sqlite
       return head;
     }
     return [head, ...tail.map(read)];
-  }
-
-unreserved_keyword
-  = name:ident_name !{ return isReservedKeyword(name); } {
-    return loc(createKeyword(name));
   }
 
 /**
@@ -6727,6 +6726,19 @@ mysql = &{ return isMysql() || isMariadb(); } // 99% of MariaDB and MySQL syntax
 only_mysql = &{ return isMysql(); } // 99% of MariaDB and MySQL syntax is the same
 only_mariadb = &{ return isMariadb(); } // 99% of MariaDB and MySQL syntax is the same
 postgres = &{ return isPostgresql(); }
+
+/**
+ * Generic keyword rules
+ */
+keyword
+  = name:ident_name {
+    return loc(createKeyword(name));
+  }
+
+unreserved_keyword
+  = name:ident_name !{ return isReservedKeyword(name); } {
+    return loc(createKeyword(name));
+  }
 
 /**
  * Note: To add keyword rules to the list below use the command:

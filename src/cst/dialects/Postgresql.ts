@@ -43,11 +43,6 @@ export interface PostgresqlWithOptions extends BaseNode {
   type: "postgresql_with_options";
   withKw: Keyword<"WITH">;
   options: ParenExpr<
-    ListExpr<
-      TableOption<
-        Identifier | MemberExpr,
-        Expr | Keyword<"ON" | "OFF" | "AUTO">
-      >
-    >
+    ListExpr<TableOption<Identifier | MemberExpr, Expr | Keyword>>
   >;
 }

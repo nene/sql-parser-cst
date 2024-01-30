@@ -37,6 +37,18 @@ describe("view", () => {
       });
     });
 
+    dialect("postgresql", () => {
+      it("supports WITH ( ..options.. )", () => {
+        testWc(`
+          CREATE VIEW my_view WITH (
+            check_option = LOCAL,
+            security_barrier = true,
+            check_option = CASCADED,
+            security_invoker = false
+          ) AS SELECT 1`);
+      });
+    });
+
     dialect(["bigquery", "postgresql"], () => {
       describe("materialized view", () => {
         it("supports CREATE MATERIALIZED VIEW", () => {

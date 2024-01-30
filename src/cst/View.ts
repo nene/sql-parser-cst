@@ -2,6 +2,7 @@ import { AlterActionSetOptions } from "./AlterAction";
 import { BaseNode, Keyword } from "./Base";
 import { BigqueryOptions } from "./dialects/Bigquery";
 import { Identifier, ListExpr, ParenExpr, EntityName } from "./Expr";
+import { PostgresqlWithOptions } from "./Node";
 import { ClusterByClause } from "./OtherClauses";
 import { AsClause } from "./ProcClause";
 import { PartitionByClause, SubSelect } from "./Select";
@@ -24,6 +25,7 @@ export interface CreateViewStmt extends BaseNode {
 
 type CreateViewClause =
   | BigqueryOptions
+  | PostgresqlWithOptions
   | ClusterByClause
   | PartitionByClause
   | AsClause<SubSelect>;
