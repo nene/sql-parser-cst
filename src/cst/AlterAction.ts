@@ -187,7 +187,7 @@ export interface AlterActionNoForce extends BaseNode {
 export interface AlterActionSetTablespace extends BaseNode {
   type: "alter_action_set_tablespace";
   setTablespaceKw: [Keyword<"SET">, Keyword<"TABLESPACE">];
-  name: Identifier;
+  tablespace: Identifier;
   nowaitKw?: Keyword<"NOWAIT">;
 }
 
