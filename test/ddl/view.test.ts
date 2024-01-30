@@ -23,6 +23,12 @@ describe("view", () => {
         testWc("CREATE TEMPORARY VIEW my_view AS SELECT 1");
       });
     });
+    dialect("postgresql", () => {
+      it("RECURSIVE view", () => {
+        testWc("CREATE RECURSIVE VIEW my_view AS SELECT * FROM my_view");
+        testWc("CREATE TEMPORARY RECURSIVE VIEW my_view AS SELECT * FROM my_view");
+      });
+    });
 
     dialect(["sqlite", "bigquery", "mariadb", "postgresql"], () => {
       it("supports IF NOT EXISTS", () => {

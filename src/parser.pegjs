@@ -1777,6 +1777,7 @@ create_view_stmt
   = createKw:CREATE
     repKw:(__ OR __ REPLACE)?
     tmpKw:(__ (TEMP / TEMPORARY))?
+    recursiveKw:(__ RECURSIVE)?
     materKw:(__ MATERIALIZED)?
     viewKw:(__ VIEW)
     ifKw:(__ if_not_exists)?
@@ -1788,6 +1789,7 @@ create_view_stmt
         createKw,
         orReplaceKw: read(repKw),
         temporaryKw: read(tmpKw),
+        recursiveKw: read(recursiveKw),
         materializedKw: read(materKw),
         viewKw: read(viewKw),
         ifNotExistsKw: read(ifKw),

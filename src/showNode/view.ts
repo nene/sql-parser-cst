@@ -8,6 +8,7 @@ export const viewMap: FullTransformMap<string, AllViewNodes> = {
       node.createKw,
       node.orReplaceKw,
       node.temporaryKw,
+      node.recursiveKw,
       node.materializedKw,
       node.viewKw,
       node.ifNotExistsKw,
