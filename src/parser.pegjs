@@ -2118,7 +2118,7 @@ create_table_clause_postgresql
   / create_table_on_commit_clause
   / create_table_tablespace_clause
   / using_access_method_clause
-  / with_storage_parameters_clause
+  / postgresql_with_options
   / create_table_without_oids_clause
   / create_table_with_data_clause
   / create_table_server_clause
@@ -2238,10 +2238,10 @@ using_access_method_clause
     });
   }
 
-with_storage_parameters_clause
+postgresql_with_options
   = kw:(WITH __) options:paren$list$table_option_postgresql {
     return loc({
-      type: "with_storage_parameters_clause",
+      type: "postgresql_with_options",
       withKw: read(kw),
       options,
     });
@@ -4524,7 +4524,7 @@ on_conflict_clause
 
 index_parameter_clause
   = index_include_clause
-  / with_storage_parameters_clause
+  / postgresql_with_options
   / index_tablespace_clause
 
 index_include_clause

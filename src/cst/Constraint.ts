@@ -4,14 +4,14 @@ import { Expr, Identifier, ListExpr, ParenExpr, EntityName } from "./Expr";
 import { SortDirectionAsc, SortDirectionDesc, WhereClause } from "./Select";
 import { BigqueryOptions } from "./dialects/Bigquery";
 import { Default } from "./Insert";
+import { UsingAccessMethodClause } from "./CreateTable";
 import {
-  UsingAccessMethodClause,
   PostgresqlOperator,
   PostgresqlOperatorExpr,
-  WithStorageParametersClause,
   PostgresqlOperatorClass,
   PostgresqlOptions,
-} from "./Node";
+  PostgresqlWithOptions,
+} from "./dialects/Postgresql";
 
 export type AllConstraintNodes =
   | Constraint<ColumnConstraint | TableConstraint>
@@ -307,7 +307,7 @@ export interface OnConflictClause extends BaseNode {
 // PostgreSQL
 type IndexParameterClause =
   | IndexIncludeClause
-  | WithStorageParametersClause
+  | PostgresqlWithOptions
   | IndexTablespaceClause;
 
 export interface IndexIncludeClause extends BaseNode {

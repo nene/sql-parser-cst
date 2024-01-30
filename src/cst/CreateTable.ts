@@ -3,6 +3,7 @@ import {
   BigqueryOptionDefaultCollate,
   BigqueryOptions,
 } from "./dialects/Bigquery";
+import { PostgresqlWithOptions } from "./dialects/Postgresql";
 import {
   ColumnConstraint,
   Constraint,
@@ -50,7 +51,6 @@ export type AllCreateTableNodes =
   | CreateTableOnCommitClause
   | CreateTableTablespaceClause
   | UsingAccessMethodClause
-  | WithStorageParametersClause
   | CreateTableWithoutOidsClause
   | CreateTableWithDataClause
   | CreateTableOfTypeClause
@@ -241,7 +241,7 @@ type PostgresqlCreateTableClause =
   | CreateTableOnCommitClause
   | CreateTableTablespaceClause
   | UsingAccessMethodClause
-  | WithStorageParametersClause
+  | PostgresqlWithOptions
   | CreateTableWithoutOidsClause
   | CreateTableWithDataClause
   | CreateTableServerClause;
@@ -332,19 +332,6 @@ export interface UsingAccessMethodClause extends BaseNode {
   type: "using_access_method_clause";
   usingKw: Keyword<"USING">;
   method: Identifier;
-}
-
-export interface WithStorageParametersClause extends BaseNode {
-  type: "with_storage_parameters_clause";
-  withKw: Keyword<"WITH">;
-  options: ParenExpr<
-    ListExpr<
-      TableOption<
-        Identifier | MemberExpr,
-        Expr | Keyword<"ON" | "OFF" | "AUTO">
-      >
-    >
-  >;
 }
 
 export interface CreateTableWithoutOidsClause extends BaseNode {
