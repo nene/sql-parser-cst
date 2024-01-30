@@ -100,6 +100,11 @@ describe("view", () => {
           it("supports TABLESPACE clause", () => {
             testWc(`CREATE MATERIALIZED VIEW my_view TABLESPACE ts_2 AS SELECT 1`);
           });
+
+          it("supports WITH [NO] DATA clause", () => {
+            testWc(`CREATE MATERIALIZED VIEW my_view AS SELECT 1 WITH DATA`);
+            testWc(`CREATE MATERIALIZED VIEW my_view AS SELECT 1 WITH NO DATA`);
+          });
         });
       });
     });

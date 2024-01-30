@@ -2,6 +2,7 @@ import { AlterActionSetOptions } from "./AlterAction";
 import { BaseNode, Keyword } from "./Base";
 import {
   CreateTableTablespaceClause,
+  CreateTableWithDataClause,
   UsingAccessMethodClause,
 } from "./CreateTable";
 import { BigqueryOptions } from "./dialects/Bigquery";
@@ -41,6 +42,7 @@ type CreateViewClause =
   | PartitionByClause
   | UsingAccessMethodClause
   | CreateTableTablespaceClause
+  | CreateTableWithDataClause
   | AsClause<SubSelect>;
 
 // PostgreSQL
