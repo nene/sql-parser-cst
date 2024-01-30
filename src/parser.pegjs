@@ -950,11 +950,6 @@ null_handling_keyword
     return read(kws);
   }
 
-postgresql_operator_class
-  = name:member_expr &postgres {
-    return loc({ type: "postgresql_operator_class", name });
-  }
-
 /**
  * SELECT .. LIMIT
  * --------------------------------------------------------------------------------------
@@ -2238,31 +2233,6 @@ using_access_method_clause
     });
   }
 
-postgresql_with_options
-  = kw:(WITH __) options:paren$list$table_option_postgresql {
-    return loc({
-      type: "postgresql_with_options",
-      withKw: read(kw),
-      options,
-    });
-  }
-
-table_option_postgresql
-  = name:(member_expr __) "=" v:(__ (literal / ON / OFF / AUTO)) {
-    return loc({
-      type: "table_option",
-      name: read(name),
-      hasEq: true,
-      value: read(v),
-    });
-  }
-  / name:member_expr {
-    return loc({
-      type: "table_option",
-      name: read(name),
-    });
-  }
-
 create_table_without_oids_clause
   = kw:(WITHOUT __ OIDS) {
     return loc({
@@ -2285,24 +2255,6 @@ create_table_server_clause
       type: "create_table_server_clause",
       serverKw: read(kw),
       name,
-    });
-  }
-
-postgresql_options
-  = kw:(OPTIONS __) options:paren$list$postgresql_option_element {
-    return loc({
-      type: "postgresql_options",
-      optionsKw: read(kw),
-      options,
-    });
-  }
-
-postgresql_option_element
-  = name:(ident __) value:string_literal {
-    return loc({
-      type: "postgresql_option_element",
-      name: read(name),
-      value,
     });
   }
 
@@ -4028,6 +3980,61 @@ from_files_options
       fromFilesKw: read(kw),
       options,
     });
+  }
+
+/**
+ * ------------------------------------------------------------------------------------ *
+ *                                                                                      *
+ * PostgreSQL                                                                           *
+ *                                                                                      *
+ * ------------------------------------------------------------------------------------ *
+ */
+postgresql_with_options
+  = kw:(WITH __) options:paren$list$table_option_postgresql {
+    return loc({
+      type: "postgresql_with_options",
+      withKw: read(kw),
+      options,
+    });
+  }
+
+table_option_postgresql
+  = name:(member_expr __) "=" v:(__ (literal / ON / OFF / AUTO)) {
+    return loc({
+      type: "table_option",
+      name: read(name),
+      hasEq: true,
+      value: read(v),
+    });
+  }
+  / name:member_expr {
+    return loc({
+      type: "table_option",
+      name: read(name),
+    });
+  }
+
+postgresql_options
+  = kw:(OPTIONS __) options:paren$list$postgresql_option_element {
+    return loc({
+      type: "postgresql_options",
+      optionsKw: read(kw),
+      options,
+    });
+  }
+
+postgresql_option_element
+  = name:(ident __) value:string_literal {
+    return loc({
+      type: "postgresql_option_element",
+      name: read(name),
+      value,
+    });
+  }
+
+postgresql_operator_class
+  = &postgres name:member_expr {
+    return loc({ type: "postgresql_operator_class", name });
   }
 
 /**
