@@ -7,6 +7,8 @@ import { ClusterByClause } from "./OtherClauses";
 import { AsClause } from "./ProcClause";
 import { PartitionByClause, SubSelect } from "./Select";
 
+export type AllViewNodes = AllViewStatements | WithCheckOptionClause;
+
 export type AllViewStatements = CreateViewStmt | DropViewStmt | AlterViewStmt;
 
 // CREATE VIEW
@@ -26,9 +28,18 @@ export interface CreateViewStmt extends BaseNode {
 type CreateViewClause =
   | BigqueryOptions
   | PostgresqlWithOptions
+  | WithCheckOptionClause
   | ClusterByClause
   | PartitionByClause
   | AsClause<SubSelect>;
+
+// PostgreSQL
+export interface WithCheckOptionClause extends BaseNode {
+  type: "with_check_option_clause";
+  withKw: Keyword<"WITH">;
+  levelKw?: Keyword<"CASCADED" | "LOCAL">;
+  checkOptionKw: [Keyword<"CHECK">, Keyword<"OPTION">];
+}
 
 // DROP VIEW
 export interface DropViewStmt extends BaseNode {

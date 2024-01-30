@@ -45,7 +45,14 @@ describe("view", () => {
             security_barrier = true,
             check_option = CASCADED,
             security_invoker = false
-          ) AS SELECT 1`);
+          ) AS SELECT 1
+        `);
+      });
+
+      it("supports WITH [CASCADED|LOCAL] CHECK OPTION", () => {
+        testWc(`CREATE VIEW my_view AS SELECT 1 WITH CHECK OPTION`);
+        testWc(`CREATE VIEW my_view AS SELECT 1 WITH CASCADED CHECK OPTION`);
+        testWc(`CREATE VIEW my_view AS SELECT 1 WITH LOCAL CHECK OPTION`);
       });
     });
 

@@ -1,8 +1,8 @@
 import { show } from "../show";
-import { AllViewStatements } from "../cst/Node";
+import { AllViewNodes } from "../cst/Node";
 import { FullTransformMap } from "../cstTransformer";
 
-export const viewMap: FullTransformMap<string, AllViewStatements> = {
+export const viewMap: FullTransformMap<string, AllViewNodes> = {
   create_view_stmt: (node) =>
     show([
       node.createKw,
@@ -15,6 +15,8 @@ export const viewMap: FullTransformMap<string, AllViewStatements> = {
       node.columns,
       node.clauses,
     ]),
+  with_check_option_clause: (node) =>
+    show([node.withKw, node.levelKw, node.checkOptionKw]),
   // DROP VIEW statement
   drop_view_stmt: (node) =>
     show([
