@@ -28,7 +28,9 @@ export type AlterTableAction =
   | AlterActionOwnerTo
   | AlterActionSetSchema
   | AlterActionEnable
-  | AlterActionDisable;
+  | AlterActionDisable
+  | AlterActionForce
+  | AlterActionNoForce;
 
 export type AlterSchemaAction =
   | AlterActionSetDefaultCollate
@@ -161,6 +163,20 @@ export interface AlterActionDisable extends BaseNode {
   type: "alter_action_disable";
   disableKw: Keyword<"DISABLE">;
   item: ToggleItem;
+}
+
+// PostgreSQL
+export interface AlterActionForce extends BaseNode {
+  type: "alter_action_force";
+  forceKw: Keyword<"FORCE">;
+  item: ToggleRowLevelSecurity;
+}
+
+// PostgreSQL
+export interface AlterActionNoForce extends BaseNode {
+  type: "alter_action_no_force";
+  noForceKw: [Keyword<"NO">, Keyword<"FORCE">];
+  item: ToggleRowLevelSecurity;
 }
 
 export type AlterColumnAction =

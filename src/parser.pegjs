@@ -2402,6 +2402,8 @@ alter_action_postgres
   / alter_action_set_schema
   / alter_action_enable
   / alter_action_disable
+  / alter_action_force
+  / alter_action_no_force
 
 alter_action_add_column
   = addKw:(ADD __ COLUMN __ / ADD __) ifKw:(if_not_exists __)? col:column_definition {
@@ -2570,6 +2572,24 @@ alter_action_disable
     return loc({
       type: "alter_action_disable",
       disableKw: read(kw),
+      item,
+    });
+  }
+
+alter_action_force
+  = kw:(FORCE __) item:toggle_row_level_security {
+    return loc({
+      type: "alter_action_force",
+      forceKw: read(kw),
+      item,
+    });
+  }
+
+alter_action_no_force
+  = kw:(NO __ FORCE __) item:toggle_row_level_security {
+    return loc({
+      type: "alter_action_no_force",
+      noForceKw: read(kw),
       item,
     });
   }
@@ -7014,6 +7034,7 @@ FLOAT               = kw:"FLOAT"i               !ident_part { return loc(createK
 FLOAT64             = kw:"FLOAT64"i             !ident_part { return loc(createKeyword(kw)); }
 FOLLOWING           = kw:"FOLLOWING"i           !ident_part { return loc(createKeyword(kw)); }
 FOR                 = kw:"FOR"i                 !ident_part { return loc(createKeyword(kw)); }
+FORCE               = kw:"FORCE"i               !ident_part { return loc(createKeyword(kw)); }
 FOREIGN             = kw:"FOREIGN"i             !ident_part { return loc(createKeyword(kw)); }
 FORMAT              = kw:"FORMAT"i              !ident_part { return loc(createKeyword(kw)); }
 FRIDAY              = kw:"FRIDAY"i              !ident_part { return loc(createKeyword(kw)); }

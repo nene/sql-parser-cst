@@ -276,6 +276,11 @@ describe("alter table", () => {
   });
 
   dialect("postgresql", () => {
+    it("supports [NO] FORCE ROW LEVEL SECURITY", () => {
+      testAlterWc(`FORCE ROW LEVEL SECURITY`);
+      testAlterWc(`NO FORCE ROW LEVEL SECURITY`);
+    });
+
     it("supports {ENABLE | DISABLE} ROW LEVEL SECURITY", () => {
       testAlterWc(`ENABLE ROW LEVEL SECURITY`);
       testAlterWc(`DISABLE ROW LEVEL SECURITY`);
