@@ -1883,6 +1883,7 @@ alter_view_action_postgres
   / alter_action_alter_column
   / alter_action_set_schema
   / alter_action_set_tablespace
+  / alter_action_set_access_method
 
 /**
  * ------------------------------------------------------------------------------------ *
@@ -2406,6 +2407,7 @@ alter_action_postgres
   / alter_action_force
   / alter_action_no_force
   / alter_action_set_tablespace
+  / alter_action_set_access_method
 
 alter_action_add_column
   = addKw:(ADD __ COLUMN __ / ADD __) ifKw:(if_not_exists __)? col:column_definition {
@@ -2603,6 +2605,15 @@ alter_action_set_tablespace
       setTablespaceKw: read(kw),
       name,
       nowaitKw: read(nowaitKw),
+    });
+  }
+
+alter_action_set_access_method
+  = kw:(SET __ ACCESS __ METHOD __) method:ident {
+    return loc({
+      type: "alter_action_set_access_method",
+      setAccessMethodKw: read(kw),
+      method,
     });
   }
 
@@ -7155,6 +7166,7 @@ MEMBER              = kw:"MEMBER"i              !ident_part { return loc(createK
 MEMORY              = kw:"MEMORY"i              !ident_part { return loc(createKeyword(kw)); }
 MERGE               = kw:"MERGE"i               !ident_part { return loc(createKeyword(kw)); }
 MESSAGE             = kw:"MESSAGE"i             !ident_part { return loc(createKeyword(kw)); }
+METHOD              = kw:"METHOD"i              !ident_part { return loc(createKeyword(kw)); }
 MICROSECOND         = kw:"MICROSECOND"i         !ident_part { return loc(createKeyword(kw)); }
 MICROSECONDS        = kw:"MICROSECONDS"i        !ident_part { return loc(createKeyword(kw)); }
 MILLENNIUM          = kw:"MILLENNIUM"i          !ident_part { return loc(createKeyword(kw)); }

@@ -308,5 +308,9 @@ describe("alter table", () => {
       testAlterWc(`SET TABLESPACE my_space`);
       testAlterWc(`SET TABLESPACE my_space NOWAIT`);
     });
+
+    it("supports SET ACCESS METHOD", () => {
+      testAlterWc(`SET ACCESS METHOD "SP-GiST"`);
+    });
   });
 });

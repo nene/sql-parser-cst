@@ -31,7 +31,8 @@ export type AlterTableAction =
   | AlterActionDisable
   | AlterActionForce
   | AlterActionNoForce
-  | AlterActionSetTablespace;
+  | AlterActionSetTablespace
+  | AlterActionSetAccessMethod;
 
 export type AlterSchemaAction =
   | AlterActionSetDefaultCollate
@@ -46,7 +47,8 @@ export type AlterViewAction =
   | AlterActionOwnerTo
   | AlterActionAlterColumn
   | AlterActionSetSchema
-  | AlterActionSetTablespace;
+  | AlterActionSetTablespace
+  | AlterActionSetAccessMethod;
 
 export interface AlterActionRename extends BaseNode {
   type: "alter_action_rename";
@@ -187,6 +189,13 @@ export interface AlterActionSetTablespace extends BaseNode {
   setTablespaceKw: [Keyword<"SET">, Keyword<"TABLESPACE">];
   name: Identifier;
   nowaitKw?: Keyword<"NOWAIT">;
+}
+
+// PostgreSQL
+export interface AlterActionSetAccessMethod extends BaseNode {
+  type: "alter_action_set_access_method";
+  setAccessMethodKw: [Keyword<"SET">, Keyword<"ACCESS">, Keyword<"METHOD">];
+  method: Identifier;
 }
 
 export type AlterColumnAction =

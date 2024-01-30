@@ -41,6 +41,8 @@ export const alterActionMap: FullTransformMap<string, AllAlterActionNodes> = {
   alter_action_no_force: (node) => show([node.noForceKw, node.item]),
   alter_action_set_tablespace: (node) =>
     show([node.setTablespaceKw, node.name, node.nowaitKw]),
+  alter_action_set_access_method: (node) =>
+    show([node.setAccessMethodKw, node.method]),
 
   // ALTER COLUMN ...
   alter_action_alter_column: (node) =>

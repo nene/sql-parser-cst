@@ -212,6 +212,10 @@ describe("view", () => {
         testAlterMatWc("SET TABLESPACE foo");
         testAlterMatWc("SET TABLESPACE foo NOWAIT");
       });
+
+      it("supports SET ACCESS METHOD", () => {
+        testAlterMatWc(`SET ACCESS METHOD "SP-GiST"`);
+      });
     });
   });
 });
