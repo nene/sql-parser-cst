@@ -1,6 +1,9 @@
 import { AlterActionSetOptions } from "./AlterAction";
 import { BaseNode, Keyword } from "./Base";
-import { UsingAccessMethodClause } from "./CreateTable";
+import {
+  CreateTableTablespaceClause,
+  UsingAccessMethodClause,
+} from "./CreateTable";
 import { BigqueryOptions } from "./dialects/Bigquery";
 import { PostgresqlWithOptions } from "./dialects/Postgresql";
 import { Identifier, ListExpr, ParenExpr, EntityName } from "./Expr";
@@ -37,6 +40,7 @@ type CreateViewClause =
   | ClusterByClause
   | PartitionByClause
   | UsingAccessMethodClause
+  | CreateTableTablespaceClause
   | AsClause<SubSelect>;
 
 // PostgreSQL

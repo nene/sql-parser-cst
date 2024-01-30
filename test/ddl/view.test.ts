@@ -96,6 +96,10 @@ describe("view", () => {
           it("supports USING clause", () => {
             testWc(`CREATE MATERIALIZED VIEW my_view USING "SP-GiST" AS SELECT 1`);
           });
+
+          it("supports TABLESPACE clause", () => {
+            testWc(`CREATE MATERIALIZED VIEW my_view TABLESPACE ts_2 AS SELECT 1`);
+          });
         });
       });
     });

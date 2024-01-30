@@ -1820,6 +1820,7 @@ postgres_create_view_clause
   = postgresql_with_options
   / with_check_option_clause
   / using_access_method_clause
+  / create_table_tablespace_clause
 
 with_check_option_clause
   = kw:(WITH __) levelKw:((LOCAL / CASCADED) __)? checkOptionKw:(CHECK __ OPTION) {
