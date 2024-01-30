@@ -23,7 +23,8 @@ export type AlterTableAction =
   | AlterActionDropConstraint
   | AlterActionAlterConstraint
   | AlterActionRenameConstraint
-  | AlterActionValidateConstraint;
+  | AlterActionValidateConstraint
+  | AlterActionOwnerTo;
 
 export type AlterSchemaAction =
   | AlterActionSetDefaultCollate
@@ -128,6 +129,13 @@ export interface AlterActionValidateConstraint extends BaseNode {
   constraint: Identifier;
 }
 
+// PostgreSQL
+export interface AlterActionOwnerTo extends BaseNode {
+  type: "alter_action_owner_to";
+  ownerToKw: [Keyword<"OWNER">, Keyword<"TO">];
+  owner: Identifier | FuncCall;
+}
+
 export type AlterColumnAction =
   | AlterActionSetDefault
   | AlterActionDropDefault
@@ -177,11 +185,4 @@ export interface AlterActionSetVisible extends BaseNode {
 export interface AlterActionSetInvisible extends BaseNode {
   type: "alter_action_set_invisible";
   setInvisibleKw: [Keyword<"SET">, Keyword<"INVISIBLE">];
-}
-
-// PostgreSQL
-export interface AlterActionOwnerTo extends BaseNode {
-  type: "alter_action_owner_to";
-  ownerToKw: [Keyword<"OWNER">, Keyword<"TO">];
-  owner: Identifier | FuncCall;
 }

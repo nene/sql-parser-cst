@@ -2397,6 +2397,7 @@ alter_action_postgres
   / alter_action_alter_constraint
   / alter_action_rename_constraint
   / alter_action_validate_constraint
+  / alter_action_owner_to
 
 alter_action_add_column
   = addKw:(ADD __ COLUMN __ / ADD __) ifKw:(if_not_exists __)? col:column_definition {

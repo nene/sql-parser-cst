@@ -259,4 +259,13 @@ describe("alter table", () => {
       testAlterWc("RENAME CONSTRAINT foo TO bar");
     });
   });
+
+  dialect("postgresql", () => {
+    it("supports OWNER TO", () => {
+      testAlterWc("OWNER TO my_user");
+      testAlterWc("OWNER TO CURRENT_USER");
+      testAlterWc("OWNER TO SESSION_USER");
+      testAlterWc("OWNER TO CURRENT_ROLE");
+    });
+  });
 });
