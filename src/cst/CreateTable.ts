@@ -52,7 +52,7 @@ export type AllCreateTableNodes =
   | TablespaceClause
   | UsingAccessMethodClause
   | CreateTableWithoutOidsClause
-  | CreateTableWithDataClause
+  | WithDataClause
   | CreateTableOfTypeClause
   | CreateTableServerClause;
 
@@ -243,7 +243,7 @@ type PostgresqlCreateTableClause =
   | UsingAccessMethodClause
   | PostgresqlWithOptions
   | CreateTableWithoutOidsClause
-  | CreateTableWithDataClause
+  | WithDataClause
   | CreateTableServerClause;
 
 export interface CreateTableInheritsClause extends BaseNode {
@@ -339,8 +339,8 @@ export interface CreateTableWithoutOidsClause extends BaseNode {
   withoutOidsKw: [Keyword<"WITHOUT">, Keyword<"OIDS">];
 }
 
-export interface CreateTableWithDataClause extends BaseNode {
-  type: "create_table_with_data_clause";
+export interface WithDataClause extends BaseNode {
+  type: "with_data_clause";
   withDataKw:
     | [Keyword<"WITH">, Keyword<"DATA">]
     | [Keyword<"WITH">, Keyword<"NO">, Keyword<"DATA">];

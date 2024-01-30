@@ -1821,7 +1821,7 @@ postgres_create_view_clause
   / with_check_option_clause
   / using_access_method_clause
   / tablespace_clause
-  / create_table_with_data_clause
+  / with_data_clause
 
 with_check_option_clause
   = kw:(WITH __) levelKw:((LOCAL / CASCADED) __)? checkOptionKw:(CHECK __ OPTION) {
@@ -2142,7 +2142,7 @@ create_table_clause_postgresql
   / using_access_method_clause
   / postgresql_with_options
   / create_table_without_oids_clause
-  / create_table_with_data_clause
+  / with_data_clause
   / create_table_server_clause
   / postgresql_options
 
@@ -2268,10 +2268,10 @@ create_table_without_oids_clause
     });
   }
 
-create_table_with_data_clause
+with_data_clause
   = kw:(WITH __ DATA / WITH __ NO __ DATA) {
     return loc({
-      type: "create_table_with_data_clause",
+      type: "with_data_clause",
       withDataKw: read(kw),
     });
   }
