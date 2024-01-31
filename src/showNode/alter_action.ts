@@ -44,6 +44,7 @@ export const alterActionMap: FullTransformMap<string, AllAlterActionNodes> = {
   alter_action_set_access_method: (node) =>
     show([node.setAccessMethodKw, node.method]),
   alter_action_set_without_cluster: (node) => show([node.setWithoutClusterKw]),
+  alter_action_set_without_oids: (node) => show([node.setWithoutOidsKw]),
 
   // ALTER COLUMN ...
   alter_action_alter_column: (node) =>

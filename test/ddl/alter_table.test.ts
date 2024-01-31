@@ -316,5 +316,9 @@ describe("alter table", () => {
     it("supports SET WITHOUT CLUSTER", () => {
       testAlterWc(`SET WITHOUT CLUSTER`);
     });
+
+    it("supports SET WITHOUT OIDS", () => {
+      testAlterWc(`SET WITHOUT OIDS`);
+    });
   });
 });

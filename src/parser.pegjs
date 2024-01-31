@@ -2410,6 +2410,7 @@ alter_action_postgres
   / alter_action_set_tablespace
   / alter_action_set_access_method
   / alter_action_set_without_cluster
+  / alter_action_set_without_oids
 
 alter_action_add_column
   = addKw:(ADD __ COLUMN __ / ADD __) ifKw:(if_not_exists __)? col:column_definition {
@@ -2624,6 +2625,14 @@ alter_action_set_without_cluster
     return loc({
       type: "alter_action_set_without_cluster",
       setWithoutClusterKw: read(kw),
+    });
+  }
+
+alter_action_set_without_oids
+  = kw:(SET __ WITHOUT __ OIDS) {
+    return loc({
+      type: "alter_action_set_without_oids",
+      setWithoutOidsKw: read(kw),
     });
   }
 
