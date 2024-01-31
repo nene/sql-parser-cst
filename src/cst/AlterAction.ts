@@ -3,7 +3,7 @@ import { BigqueryOptions } from "./dialects/Bigquery";
 import { ColumnDefinition } from "./CreateTable";
 import { DataType } from "./DataType";
 import { Expr, Identifier, EntityName, FuncCall } from "./Expr";
-import { StringLiteral } from "./Literal";
+import { NumberLiteral, StringLiteral } from "./Literal";
 import { Constraint, ConstraintModifier, TableConstraint } from "./Constraint";
 import { Default } from "./Insert";
 
@@ -284,7 +284,8 @@ export type AlterColumnAction =
   | AlterActionSetVisible
   | AlterActionSetInvisible
   | AlterActionSetCompression
-  | AlterActionSetStorage;
+  | AlterActionSetStorage
+  | AlterActionSetStatistics;
 
 export interface AlterActionSetDefault extends BaseNode {
   type: "alter_action_set_default";
@@ -339,6 +340,13 @@ export interface AlterActionSetStorage extends BaseNode {
   type: "alter_action_set_storage";
   setStorageKw: [Keyword<"SET">, Keyword<"STORAGE">];
   typeKw: Keyword<"PLAIN" | "EXTERNAL" | "EXTENDED" | "MAIN" | "DEFAULT">;
+}
+
+// PostgreSQL
+export interface AlterActionSetStatistics extends BaseNode {
+  type: "alter_action_set_statistics";
+  setStatisticsKw: [Keyword<"SET">, Keyword<"STATISTICS">];
+  value: NumberLiteral;
 }
 
 // Used with ENABLE/DISABLE

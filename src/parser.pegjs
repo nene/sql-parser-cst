@@ -2726,6 +2726,7 @@ alter_column_action_postgres
   / alter_action_set_data_type
   / alter_action_set_compression
   / alter_action_set_storage
+  / alter_action_set_statistics
 
 alter_action_set_default
   = kw:(SET __ DEFAULT __) expr:expr {
@@ -2770,6 +2771,11 @@ alter_action_set_compression
 alter_action_set_storage
   = kw:(SET __ STORAGE __) typeKw:pg_storage_type {
     return loc({ type: "alter_action_set_storage", setStorageKw: read(kw), typeKw });
+  }
+
+alter_action_set_statistics
+  = kw:(SET __ STATISTICS __) value:number_literal {
+    return loc({ type: "alter_action_set_statistics", setStatisticsKw: read(kw), value });
   }
 
 toggle_item

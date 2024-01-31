@@ -188,6 +188,12 @@ describe("alter table", () => {
         testAlterWc("ALTER COLUMN foo SET STORAGE DEFAULT");
       });
     });
+
+    dialect("postgresql", () => {
+      it("supports SET STATISTICS", () => {
+        testAlterWc("ALTER COLUMN foo SET STATISTICS 100");
+      });
+    });
   });
 
   dialect("bigquery", () => {

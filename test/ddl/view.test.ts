@@ -238,6 +238,10 @@ describe("view", () => {
           testAlterMatWc("ALTER COLUMN foo SET STORAGE MAIN");
           testAlterMatWc("ALTER COLUMN foo SET STORAGE DEFAULT");
         });
+
+        it("supports SET STATISTICS", () => {
+          testAlterMatWc("ALTER COLUMN foo SET STATISTICS 50");
+        });
       });
     });
   });
