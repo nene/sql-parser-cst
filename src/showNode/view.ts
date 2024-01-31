@@ -27,6 +27,7 @@ export const viewMap: FullTransformMap<string, AllViewNodes> = {
       node.views,
       node.behaviorKw,
     ]),
+  // ALTER VIEW statement
   alter_view_stmt: (node) =>
     show([
       node.alterKw,
@@ -36,5 +37,13 @@ export const viewMap: FullTransformMap<string, AllViewNodes> = {
       node.name,
       node.columns,
       node.actions,
+    ]),
+  // REFRSH MATERIALIZED VIEW statement
+  refresh_materialized_view_stmt: (node) =>
+    show([
+      node.refreshMaterializedViewKw,
+      node.concurrentlyKw,
+      node.name,
+      node.clauses,
     ]),
 };

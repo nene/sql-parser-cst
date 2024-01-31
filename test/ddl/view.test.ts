@@ -287,4 +287,21 @@ describe("view", () => {
       });
     });
   });
+
+  dialect("postgresql", () => {
+    describe("REFRESH MATERIALIZED VIEW", () => {
+      it("supports basic REFRESH MATERIALIZED VIEW statement", () => {
+        testWc("REFRESH MATERIALIZED VIEW my_schema.my_view");
+      });
+
+      it("supports CONCURRENTLY", () => {
+        testWc("REFRESH MATERIALIZED VIEW CONCURRENTLY my_view");
+      });
+
+      it("supports WITH [NO] DATA", () => {
+        testWc("REFRESH MATERIALIZED VIEW my_view WITH DATA");
+        testWc("REFRESH MATERIALIZED VIEW my_view WITH NO DATA");
+      });
+    });
+  });
 });

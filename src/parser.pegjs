@@ -77,6 +77,7 @@ ddl_statement
   = create_view_stmt
   / drop_view_stmt
   / x:alter_view_stmt (&bigquery / &mysql / &postgres) { return x; }
+  / x:refresh_materialized_view_stmt (&postgres) { return x; }
   / create_index_stmt
   / drop_index_stmt
   / x:(create_function_stmt / drop_function_stmt) (&bigquery / &postgres) { return x; }
@@ -1890,6 +1891,20 @@ alter_view_action_postgres
   / alter_action_reset_postgresql_options
   / alter_action_depends_on_extension
   / alter_action_no_depends_on_extension
+
+refresh_materialized_view_stmt
+  = kw:(REFRESH __ MATERIALIZED __ VIEW __)
+    concurrentlyKw:(CONCURRENTLY __)?
+    name:entity_name
+    clauses:(__ with_data_clause)|0..1| {
+      return loc({
+        type: "refresh_materialized_view_stmt",
+        refreshMaterializedViewKw: read(kw),
+        concurrentlyKw: read(concurrentlyKw),
+        name,
+        clauses: clauses.map(read),
+      });
+    }
 
 /**
  * ------------------------------------------------------------------------------------ *
@@ -7100,6 +7115,7 @@ COMMIT              = kw:"COMMIT"i              !ident_part { return loc(createK
 COMPACT             = kw:"COMPACT"i             !ident_part { return loc(createKeyword(kw)); }
 COMPRESSED          = kw:"COMPRESSED"i          !ident_part { return loc(createKeyword(kw)); }
 COMPRESSION         = kw:"COMPRESSION"i         !ident_part { return loc(createKeyword(kw)); }
+CONCURRENTLY        = kw:"CONCURRENTLY"i        !ident_part { return loc(createKeyword(kw)); }
 CONFLICT            = kw:"CONFLICT"i            !ident_part { return loc(createKeyword(kw)); }
 CONNECTION          = kw:"CONNECTION"i          !ident_part { return loc(createKeyword(kw)); }
 CONSTRAINT          = kw:"CONSTRAINT"i          !ident_part { return loc(createKeyword(kw)); }
@@ -7417,6 +7433,7 @@ REAL                = kw:"REAL"i                !ident_part { return loc(createK
 RECURSIVE           = kw:"RECURSIVE"            !ident_part { return loc(createKeyword(kw)); }
 REDUNDANT           = kw:"REDUNDANT"i           !ident_part { return loc(createKeyword(kw)); }
 REFERENCES          = kw:"REFERENCES"i          !ident_part { return loc(createKeyword(kw)); }
+REFRESH             = kw:"REFRESH"i             !ident_part { return loc(createKeyword(kw)); }
 REGEXP              = kw:"REGEXP"i              !ident_part { return loc(createKeyword(kw)); }
 REINDEX             = kw:"REINDEX"i             !ident_part { return loc(createKeyword(kw)); }
 RELEASE             = kw:"RELEASE"i             !ident_part { return loc(createKeyword(kw)); }

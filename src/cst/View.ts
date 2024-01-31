@@ -14,7 +14,11 @@ import { PartitionByClause, SubSelect } from "./Select";
 
 export type AllViewNodes = AllViewStatements | ViewKind | WithCheckOptionClause;
 
-export type AllViewStatements = CreateViewStmt | DropViewStmt | AlterViewStmt;
+export type AllViewStatements =
+  | CreateViewStmt
+  | DropViewStmt
+  | AlterViewStmt
+  | RefreshMaterializedViewStmt;
 
 // CREATE VIEW
 export interface CreateViewStmt extends BaseNode {
@@ -74,4 +78,17 @@ export interface AlterViewStmt extends BaseNode {
   name: EntityName;
   columns?: ParenExpr<ListExpr<Identifier>>;
   actions: ListExpr<AlterViewAction | AsClause<SubSelect>>;
+}
+
+// REFRESH MATERIALIZED VIEW
+export interface RefreshMaterializedViewStmt extends BaseNode {
+  type: "refresh_materialized_view_stmt";
+  refreshMaterializedViewKw: [
+    Keyword<"REFRESH">,
+    Keyword<"MATERIALIZED">,
+    Keyword<"VIEW">
+  ];
+  concurrentlyKw?: Keyword<"CONCURRENTLY">;
+  name: EntityName;
+  clauses: WithDataClause[];
 }
