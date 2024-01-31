@@ -50,6 +50,8 @@ export const alterActionMap: FullTransformMap<string, AllAlterActionNodes> = {
   alter_action_set_unlogged: (node) => show([node.setUnloggedKw]),
   alter_action_inherit: (node) => show([node.inheritKw, node.table]),
   alter_action_no_inherit: (node) => show([node.noInheritKw, node.table]),
+  alter_action_of_type: (node) => show([node.ofKw, node.typeName]),
+  alter_action_not_of_type: (node) => show([node.notOfKw]),
 
   // ALTER COLUMN ...
   alter_action_alter_column: (node) =>

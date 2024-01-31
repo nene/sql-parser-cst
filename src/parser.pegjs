@@ -2417,6 +2417,8 @@ alter_action_postgres
   / alter_action_set_unlogged
   / alter_action_inherit
   / alter_action_no_inherit
+  / alter_action_of_type
+  / alter_action_not_of_type
 
 alter_action_add_column
   = addKw:(ADD __ COLUMN __ / ADD __) ifKw:(if_not_exists __)? col:column_definition {
@@ -2682,6 +2684,23 @@ alter_action_no_inherit
       type: "alter_action_no_inherit",
       noInheritKw: read(kw),
       table,
+    });
+  }
+
+alter_action_of_type
+  = kw:(OF __ ) typeName:entity_name {
+    return loc({
+      type: "alter_action_of_type",
+      ofKw: read(kw),
+      typeName,
+    });
+  }
+
+alter_action_not_of_type
+  = kw:(NOT __ OF) {
+    return loc({
+      type: "alter_action_not_of_type",
+      notOfKw: read(kw),
     });
   }
 

@@ -39,7 +39,9 @@ export type AlterTableAction =
   | AlterActionSetLogged
   | AlterActionSetUnlogged
   | AlterActionInherit
-  | AlterActionNoInherit;
+  | AlterActionNoInherit
+  | AlterActionOfType
+  | AlterActionNotOfType;
 
 export type AlterSchemaAction =
   | AlterActionSetDefaultCollate
@@ -256,6 +258,19 @@ export interface AlterActionNoInherit extends BaseNode {
   type: "alter_action_no_inherit";
   noInheritKw: [Keyword<"NO">, Keyword<"INHERIT">];
   table: EntityName;
+}
+
+// PostgreSQL
+export interface AlterActionOfType extends BaseNode {
+  type: "alter_action_of_type";
+  ofKw: Keyword<"OF">;
+  typeName: EntityName;
+}
+
+// PostgreSQL
+export interface AlterActionNotOfType extends BaseNode {
+  type: "alter_action_not_of_type";
+  notOfKw: [Keyword<"NOT">, Keyword<"OF">];
 }
 
 export type AlterColumnAction =

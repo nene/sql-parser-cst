@@ -340,5 +340,14 @@ describe("alter table", () => {
     it("supports NO INHERIT", () => {
       testAlterWc(`NO INHERIT my_schema.my_table`);
     });
+
+    it("supports OF type", () => {
+      testAlterWc(`OF my_type`);
+      testAlterWc(`OF my_schema.my_type`);
+    });
+
+    it("supports NOT OF type", () => {
+      testAlterWc(`NOT OF`);
+    });
   });
 });
