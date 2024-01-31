@@ -20,6 +20,7 @@ export type AllAlterActionNodes =
   | AlterTableAction
   | AlterColumnAction
   | AlterSchemaAction
+  | AlterViewAction
   | ToggleItem;
 
 export type AlterTableAction =
@@ -73,7 +74,9 @@ export type AlterViewAction =
   | AlterActionSetTablespace
   | AlterActionSetAccessMethod
   | AlterActionClusterOn
-  | AlterActionSetWithoutCluster;
+  | AlterActionSetWithoutCluster
+  | AlterActionDependsOnExtension
+  | AlterActionNoDependsOnExtension;
 
 export interface AlterActionRename extends BaseNode {
   type: "alter_action_rename";
@@ -300,6 +303,29 @@ export interface AlterActionOfType extends BaseNode {
 export interface AlterActionNotOfType extends BaseNode {
   type: "alter_action_not_of_type";
   notOfKw: [Keyword<"NOT">, Keyword<"OF">];
+}
+
+// PostgreSQL
+export interface AlterActionDependsOnExtension extends BaseNode {
+  type: "alter_action_depends_on_extension";
+  dependsOnExtensionKw: [
+    Keyword<"DEPENDS">,
+    Keyword<"ON">,
+    Keyword<"EXTENSION">
+  ];
+  extension: Identifier;
+}
+
+// PostgreSQL
+export interface AlterActionNoDependsOnExtension extends BaseNode {
+  type: "alter_action_no_depends_on_extension";
+  noDependsOnExtensionKw: [
+    Keyword<"NO">,
+    Keyword<"DEPENDS">,
+    Keyword<"ON">,
+    Keyword<"EXTENSION">
+  ];
+  extension: Identifier;
 }
 
 export type AlterColumnAction =

@@ -56,6 +56,10 @@ export const alterActionMap: FullTransformMap<string, AllAlterActionNodes> = {
   alter_action_no_inherit: (node) => show([node.noInheritKw, node.table]),
   alter_action_of_type: (node) => show([node.ofKw, node.typeName]),
   alter_action_not_of_type: (node) => show([node.notOfKw]),
+  alter_action_depends_on_extension: (node) =>
+    show([node.dependsOnExtensionKw, node.extension]),
+  alter_action_no_depends_on_extension: (node) =>
+    show([node.noDependsOnExtensionKw, node.extension]),
 
   // ALTER COLUMN ...
   alter_action_alter_column: (node) =>

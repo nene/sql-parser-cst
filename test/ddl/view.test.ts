@@ -227,6 +227,11 @@ describe("view", () => {
         `);
       });
 
+      it("supports [NO] DEPENDS ON EXTENSION", () => {
+        testAlterMatWc("DEPENDS ON EXTENSION my_extension");
+        testAlterMatWc("NO DEPENDS ON EXTENSION my_extension");
+      });
+
       it("supports SET TABLESPACE", () => {
         testAlterMatWc("SET TABLESPACE foo");
         testAlterMatWc("SET TABLESPACE foo NOWAIT");

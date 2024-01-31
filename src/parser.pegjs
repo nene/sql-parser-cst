@@ -1888,6 +1888,8 @@ alter_view_action_postgres
   / alter_action_set_without_cluster
   / alter_action_set_postgresql_options
   / alter_action_reset_postgresql_options
+  / alter_action_depends_on_extension
+  / alter_action_no_depends_on_extension
 
 /**
  * ------------------------------------------------------------------------------------ *
@@ -2723,6 +2725,24 @@ alter_action_not_of_type
     return loc({
       type: "alter_action_not_of_type",
       notOfKw: read(kw),
+    });
+  }
+
+alter_action_depends_on_extension
+  = kw:(DEPENDS __ ON __ EXTENSION __) extension:ident {
+    return loc({
+      type: "alter_action_depends_on_extension",
+      dependsOnExtensionKw: read(kw),
+      extension,
+    });
+  }
+
+alter_action_no_depends_on_extension
+  = kw:(NO __ DEPENDS __ ON __ EXTENSION __) extension:ident {
+    return loc({
+      type: "alter_action_no_depends_on_extension",
+      noDependsOnExtensionKw: read(kw),
+      extension,
     });
   }
 
@@ -7126,6 +7146,7 @@ DELAY_KEY_WRITE     = kw:"DELAY_KEY_WRITE"i     !ident_part { return loc(createK
 DELAYED             = kw:"DELAYED"i             !ident_part { return loc(createKeyword(kw)); }
 DELETE              = kw:"DELETE"i              !ident_part { return loc(createKeyword(kw)); }
 DENSE_RANK          = kw:"DENSE_RANK"i          !ident_part { return loc(createKeyword(kw)); }
+DEPENDS             = kw:"DEPENDS"i             !ident_part { return loc(createKeyword(kw)); }
 DEPTH               = kw:"DEPTH"i               !ident_part { return loc(createKeyword(kw)); }
 DESC                = kw:"DESC"i                !ident_part { return loc(createKeyword(kw)); }
 DESCRIBE            = kw:"DESCRIBE"i            !ident_part { return loc(createKeyword(kw)); }
@@ -7174,6 +7195,7 @@ EXPANSION           = kw:"EXPANSION"i           !ident_part { return loc(createK
 EXPLAIN             = kw:"EXPLAIN"i             !ident_part { return loc(createKeyword(kw)); }
 EXPORT              = kw:"EXPORT"i              !ident_part { return loc(createKeyword(kw)); }
 EXTENDED            = kw:"EXTENDED"i            !ident_part { return loc(createKeyword(kw)); }
+EXTENSION           = kw:"EXTENSION"i           !ident_part { return loc(createKeyword(kw)); }
 EXTERNAL            = kw:"EXTERNAL"i            !ident_part { return loc(createKeyword(kw)); }
 EXTRACT             = kw:"EXTRACT"i             !ident_part { return loc(createKeyword(kw)); }
 FAIL                = kw:"FAIL"i                !ident_part { return loc(createKeyword(kw)); }
