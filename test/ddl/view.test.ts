@@ -219,6 +219,14 @@ describe("view", () => {
         testWc(`ALTER MATERIALIZED VIEW my_view ${action}`);
       }
 
+      it("supports multiple alter-actions", () => {
+        testWc(`
+          ALTER MATERIALIZED VIEW my_view
+            CLUSTER ON my_index,
+            SET TABLESPACE foo
+        `);
+      });
+
       it("supports SET TABLESPACE", () => {
         testAlterMatWc("SET TABLESPACE foo");
         testAlterMatWc("SET TABLESPACE foo NOWAIT");

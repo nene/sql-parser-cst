@@ -1858,7 +1858,7 @@ alter_view_stmt
     ifKw:(__ if_exists)?
     name:(__ entity_name)
     cols:(__ paren$list$column)?
-    actions:(__ alter_view_action)+ {
+    actions:(__ list$alter_view_action) {
       return loc({
         type: "alter_view_stmt",
         alterKw,
@@ -1867,7 +1867,7 @@ alter_view_stmt
         ifExistsKw: read(ifKw),
         name: read(name),
         columns: read(cols),
-        actions: actions.map(read),
+        actions: read(actions),
       });
     }
 
@@ -6109,6 +6109,7 @@ list$alias$func_call = .
 list$alias$paren$list$column = .
 list$alias$relation_expr = .
 list$alter_action = .
+list$alter_view_action = .
 list$column = .
 list$column_assignment = .
 list$column_definition = .
