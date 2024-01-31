@@ -5,6 +5,7 @@ import { DataType } from "./DataType";
 import { Expr, Identifier, EntityName, FuncCall } from "./Expr";
 import { StringLiteral } from "./Literal";
 import { Constraint, ConstraintModifier, TableConstraint } from "./Constraint";
+import { Default } from "./Insert";
 
 export type AllAlterActionNodes =
   | AlterTableAction
@@ -281,7 +282,8 @@ export type AlterColumnAction =
   | AlterActionSetDataType
   | AlterActionSetOptions
   | AlterActionSetVisible
-  | AlterActionSetInvisible;
+  | AlterActionSetInvisible
+  | AlterActionSetCompression;
 
 export interface AlterActionSetDefault extends BaseNode {
   type: "alter_action_set_default";
@@ -322,6 +324,13 @@ export interface AlterActionSetVisible extends BaseNode {
 export interface AlterActionSetInvisible extends BaseNode {
   type: "alter_action_set_invisible";
   setInvisibleKw: [Keyword<"SET">, Keyword<"INVISIBLE">];
+}
+
+// PostgreSQL
+export interface AlterActionSetCompression extends BaseNode {
+  type: "alter_action_set_compression";
+  setCompressionKw: [Keyword<"SET">, Keyword<"COMPRESSION">];
+  method: Identifier | Default;
 }
 
 // Used with ENABLE/DISABLE

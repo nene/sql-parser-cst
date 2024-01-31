@@ -64,6 +64,8 @@ export const alterActionMap: FullTransformMap<string, AllAlterActionNodes> = {
     show([node.setDataTypeKw, node.dataType]),
   alter_action_set_visible: (node) => show([node.setVisibleKw]),
   alter_action_set_invisible: (node) => show([node.setInvisibleKw]),
+  alter_action_set_compression: (node) =>
+    show([node.setCompressionKw, node.method]),
 
   // ENABLE/DISABLE
   toggle_row_level_security: (node) => show([node.rowLevelSecurityKw]),

@@ -171,6 +171,13 @@ describe("alter table", () => {
         testAlterWc("ALTER COLUMN foo SET INVISIBLE");
       });
     });
+
+    dialect("postgresql", () => {
+      it("supports SET COMPRESSION", () => {
+        testAlterWc("ALTER COLUMN foo SET COMPRESSION zstd");
+        testAlterWc("ALTER COLUMN foo SET COMPRESSION DEFAULT");
+      });
+    });
   });
 
   dialect("bigquery", () => {

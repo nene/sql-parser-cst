@@ -224,6 +224,13 @@ describe("view", () => {
       it("supports SET WITHOUT CLUSTER", () => {
         testAlterMatWc(`SET WITHOUT CLUSTER`);
       });
+
+      describe("alter column", () => {
+        it("supports ALTER COLUMN .. SET COMPRESSION", () => {
+          testAlterMatWc(`ALTER COLUMN col1 SET COMPRESSION zstd`);
+          testAlterMatWc(`ALTER col1 SET COMPRESSION DEFAULT`);
+        });
+      });
     });
   });
 });
