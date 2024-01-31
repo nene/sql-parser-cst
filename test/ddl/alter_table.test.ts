@@ -396,4 +396,13 @@ describe("alter table", () => {
       testAlterWc(`NOT OF`);
     });
   });
+
+  dialect("postgresql", () => {
+    it("supports REPLICA IDENTITY", () => {
+      testAlterWc(`REPLICA IDENTITY DEFAULT`);
+      testAlterWc(`REPLICA IDENTITY FULL`);
+      testAlterWc(`REPLICA IDENTITY NOTHING`);
+      testAlterWc(`REPLICA IDENTITY USING INDEX my_index`);
+    });
+  });
 });

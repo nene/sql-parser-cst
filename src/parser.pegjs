@@ -2440,6 +2440,7 @@ alter_action_postgres
   / alter_action_not_of_type
   / alter_action_set_postgresql_options
   / alter_action_reset_postgresql_options
+  / alter_action_replica_identity
 
 alter_action_add_column
   = addKw:(ADD __ COLUMN __ / ADD __) ifKw:(if_not_exists __)? col:column_definition {
@@ -2758,6 +2759,24 @@ alter_action_no_depends_on_extension
       type: "alter_action_no_depends_on_extension",
       noDependsOnExtensionKw: read(kw),
       extension,
+    });
+  }
+
+alter_action_replica_identity
+  = kw:(REPLICA __ IDENTITY __) identity:(DEFAULT / NOTHING / FULL / replica_identity_using_index) {
+    return loc({
+      type: "alter_action_replica_identity",
+      replicaIdentityKw: read(kw),
+      identity,
+    });
+  }
+
+replica_identity_using_index
+  = kw:(USING __ INDEX __) index:ident {
+    return loc({
+      type: "replica_identity_using_index",
+      usingIndexKw: read(kw),
+      index,
     });
   }
 

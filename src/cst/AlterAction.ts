@@ -21,7 +21,8 @@ export type AllAlterActionNodes =
   | AlterColumnAction
   | AlterSchemaAction
   | AlterViewAction
-  | ToggleItem;
+  | ToggleItem
+  | ReplicaIdentityUsingIndex;
 
 export type AlterTableAction =
   | AlterActionRename
@@ -54,7 +55,8 @@ export type AlterTableAction =
   | AlterActionInherit
   | AlterActionNoInherit
   | AlterActionOfType
-  | AlterActionNotOfType;
+  | AlterActionNotOfType
+  | AlterActionReplicaIdentity;
 
 export type AlterSchemaAction =
   | AlterActionSetDefaultCollate
@@ -326,6 +328,19 @@ export interface AlterActionNoDependsOnExtension extends BaseNode {
     Keyword<"EXTENSION">
   ];
   extension: Identifier;
+}
+
+// PostgreSQL
+export interface AlterActionReplicaIdentity extends BaseNode {
+  type: "alter_action_replica_identity";
+  replicaIdentityKw: [Keyword<"REPLICA">, Keyword<"IDENTITY">];
+  identity: Keyword<"DEFAULT" | "FULL" | "NOTHING"> | ReplicaIdentityUsingIndex;
+}
+
+export interface ReplicaIdentityUsingIndex extends BaseNode {
+  type: "replica_identity_using_index";
+  usingIndexKw: [Keyword<"USING">, Keyword<"INDEX">];
+  index: Identifier;
 }
 
 export type AlterColumnAction =

@@ -60,6 +60,8 @@ export const alterActionMap: FullTransformMap<string, AllAlterActionNodes> = {
     show([node.dependsOnExtensionKw, node.extension]),
   alter_action_no_depends_on_extension: (node) =>
     show([node.noDependsOnExtensionKw, node.extension]),
+  alter_action_replica_identity: (node) =>
+    show([node.replicaIdentityKw, node.identity]),
 
   // ALTER COLUMN ...
   alter_action_alter_column: (node) =>
@@ -82,4 +84,7 @@ export const alterActionMap: FullTransformMap<string, AllAlterActionNodes> = {
   toggle_row_level_security: (node) => show([node.rowLevelSecurityKw]),
   toggle_trigger: (node) => show([node.triggerKw, node.name]),
   toggle_rule: (node) => show([node.ruleKw, node.name]),
+
+  // REPLICA IDENTITY USING INDEX
+  replica_identity_using_index: (node) => show([node.usingIndexKw, node.index]),
 };
