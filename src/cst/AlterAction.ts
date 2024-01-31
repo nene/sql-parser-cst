@@ -22,7 +22,9 @@ export type AllAlterActionNodes =
   | AlterSchemaAction
   | AlterViewAction
   | ToggleItem
-  | ReplicaIdentityUsingIndex;
+  | ReplicaIdentityUsingIndex
+  | SetDataTypeCollateClause
+  | SetDataTypeUsingClause;
 
 export type AlterTableAction =
   | AlterActionRename
@@ -385,6 +387,19 @@ export interface AlterActionSetDataType extends BaseNode {
     | [Keyword<"SET">, Keyword<"DATA">, Keyword<"TYPE">]
     | Keyword<"TYPE">;
   dataType: DataType;
+  clauses: (SetDataTypeCollateClause | SetDataTypeUsingClause)[];
+}
+
+export interface SetDataTypeCollateClause extends BaseNode {
+  type: "set_data_type_collate_clause";
+  collateKw: Keyword<"COLLATE">;
+  collation: StringLiteral;
+}
+
+export interface SetDataTypeUsingClause extends BaseNode {
+  type: "set_data_type_using_clause";
+  usingKw: Keyword<"USING">;
+  expr: Expr;
 }
 
 // MySQL only

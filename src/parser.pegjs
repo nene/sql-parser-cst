@@ -2827,8 +2827,25 @@ alter_action_drop_not_null
   }
 
 alter_action_set_data_type
-  = kw:(SET __ DATA __ TYPE __ / TYPE __) type:data_type {
-    return loc({ type: "alter_action_set_data_type", setDataTypeKw: read(kw), dataType: type });
+  = kw:(SET __ DATA __ TYPE __ / TYPE __)
+    type:data_type
+    clauses:(__ (set_data_type_collate_clause / set_data_type_using_clause))* {
+      return loc({
+        type: "alter_action_set_data_type",
+        setDataTypeKw: read(kw),
+        dataType: type,
+        clauses: clauses.map(read),
+      });
+    }
+
+set_data_type_collate_clause
+  = collate:constraint_collate {
+    return loc({ type: "set_data_type_collate_clause", ...collate });
+  }
+
+set_data_type_using_clause
+  = kw:(USING __) expr:expr {
+    return loc({ type: "set_data_type_using_clause", usingKw: read(kw), expr });
   }
 
 alter_action_set_visible

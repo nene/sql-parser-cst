@@ -71,7 +71,7 @@ export const alterActionMap: FullTransformMap<string, AllAlterActionNodes> = {
   alter_action_set_not_null: (node) => show([node.setNotNullKw]),
   alter_action_drop_not_null: (node) => show([node.dropNotNullKw]),
   alter_action_set_data_type: (node) =>
-    show([node.setDataTypeKw, node.dataType]),
+    show([node.setDataTypeKw, node.dataType, node.clauses]),
   alter_action_set_visible: (node) => show([node.setVisibleKw]),
   alter_action_set_invisible: (node) => show([node.setInvisibleKw]),
   alter_action_set_compression: (node) =>
@@ -87,4 +87,9 @@ export const alterActionMap: FullTransformMap<string, AllAlterActionNodes> = {
 
   // REPLICA IDENTITY USING INDEX
   replica_identity_using_index: (node) => show([node.usingIndexKw, node.index]),
+
+  // SET DATA TYPE ...
+  set_data_type_collate_clause: (node) =>
+    show([node.collateKw, node.collation]),
+  set_data_type_using_clause: (node) => show([node.usingKw, node.expr]),
 };

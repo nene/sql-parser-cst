@@ -152,9 +152,19 @@ describe("alter table", () => {
         testAlterWc("ALTER COLUMN foo SET DATA TYPE INT");
         testAlterWc("ALTER COLUMN foo SET DATA TYPE DECIMAL(5, 8)");
       });
+
       dialect("postgresql", () => {
         it("supports just TYPE", () => {
           testAlterWc("ALTER COLUMN foo TYPE DECIMAL(5, 8)");
+        });
+
+        it("supports additional clauses", () => {
+          testAlterWc(`ALTER COLUMN foo SET DATA TYPE text COLLATE "C"`);
+          testAlterWc(`
+            ALTER COLUMN foo
+              SET DATA TYPE timestamp with time zone
+              USING foo_timestamp + INTERVAL '1 second'`);
+          testAlterWc(`ALTER COLUMN foo TYPE text COLLATE "C" USING bar || '!'`);
         });
       });
     });
