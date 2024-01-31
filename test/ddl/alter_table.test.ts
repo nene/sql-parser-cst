@@ -178,6 +178,16 @@ describe("alter table", () => {
         testAlterWc("ALTER COLUMN foo SET COMPRESSION DEFAULT");
       });
     });
+
+    dialect("postgresql", () => {
+      it("supports SET STORAGE", () => {
+        testAlterWc("ALTER COLUMN foo SET STORAGE PLAIN");
+        testAlterWc("ALTER COLUMN foo SET STORAGE EXTERNAL");
+        testAlterWc("ALTER COLUMN foo SET STORAGE EXTENDED");
+        testAlterWc("ALTER COLUMN foo SET STORAGE MAIN");
+        testAlterWc("ALTER COLUMN foo SET STORAGE DEFAULT");
+      });
+    });
   });
 
   dialect("bigquery", () => {

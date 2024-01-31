@@ -230,6 +230,14 @@ describe("view", () => {
           testAlterMatWc(`ALTER COLUMN col1 SET COMPRESSION zstd`);
           testAlterMatWc(`ALTER col1 SET COMPRESSION DEFAULT`);
         });
+
+        it("supports SET STORAGE", () => {
+          testAlterMatWc("ALTER COLUMN foo SET STORAGE PLAIN");
+          testAlterMatWc("ALTER COLUMN foo SET STORAGE EXTERNAL");
+          testAlterMatWc("ALTER COLUMN foo SET STORAGE EXTENDED");
+          testAlterMatWc("ALTER COLUMN foo SET STORAGE MAIN");
+          testAlterMatWc("ALTER COLUMN foo SET STORAGE DEFAULT");
+        });
       });
     });
   });

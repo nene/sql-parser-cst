@@ -283,7 +283,8 @@ export type AlterColumnAction =
   | AlterActionSetOptions
   | AlterActionSetVisible
   | AlterActionSetInvisible
-  | AlterActionSetCompression;
+  | AlterActionSetCompression
+  | AlterActionSetStorage;
 
 export interface AlterActionSetDefault extends BaseNode {
   type: "alter_action_set_default";
@@ -331,6 +332,13 @@ export interface AlterActionSetCompression extends BaseNode {
   type: "alter_action_set_compression";
   setCompressionKw: [Keyword<"SET">, Keyword<"COMPRESSION">];
   method: Identifier | Default;
+}
+
+// PostgreSQL
+export interface AlterActionSetStorage extends BaseNode {
+  type: "alter_action_set_storage";
+  setStorageKw: [Keyword<"SET">, Keyword<"STORAGE">];
+  typeKw: Keyword<"PLAIN" | "EXTERNAL" | "EXTENDED" | "MAIN" | "DEFAULT">;
 }
 
 // Used with ENABLE/DISABLE

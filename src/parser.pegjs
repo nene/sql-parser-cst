@@ -2725,6 +2725,7 @@ alter_column_action_postgres
   / alter_action_drop_not_null
   / alter_action_set_data_type
   / alter_action_set_compression
+  / alter_action_set_storage
 
 alter_action_set_default
   = kw:(SET __ DEFAULT __) expr:expr {
@@ -2764,6 +2765,11 @@ alter_action_set_invisible
 alter_action_set_compression
   = kw:(SET __ COMPRESSION __) method:(ident / default) {
     return loc({ type: "alter_action_set_compression", setCompressionKw: read(kw), method });
+  }
+
+alter_action_set_storage
+  = kw:(SET __ STORAGE __) typeKw:pg_storage_type {
+    return loc({ type: "alter_action_set_storage", setStorageKw: read(kw), typeKw });
   }
 
 toggle_item
