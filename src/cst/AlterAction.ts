@@ -35,7 +35,9 @@ export type AlterTableAction =
   | AlterActionSetAccessMethod
   | AlterActionClusterOn
   | AlterActionSetWithoutCluster
-  | AlterActionSetWithoutOids;
+  | AlterActionSetWithoutOids
+  | AlterActionSetLogged
+  | AlterActionSetUnlogged;
 
 export type AlterSchemaAction =
   | AlterActionSetDefaultCollate
@@ -226,6 +228,18 @@ export interface AlterActionSetWithoutCluster extends BaseNode {
 export interface AlterActionSetWithoutOids extends BaseNode {
   type: "alter_action_set_without_oids";
   setWithoutOidsKw: [Keyword<"SET">, Keyword<"WITHOUT">, Keyword<"OIDS">];
+}
+
+// PostgreSQL
+export interface AlterActionSetLogged extends BaseNode {
+  type: "alter_action_set_logged";
+  setLoggedKw: [Keyword<"SET">, Keyword<"LOGGED">];
+}
+
+// PostgreSQL
+export interface AlterActionSetUnlogged extends BaseNode {
+  type: "alter_action_set_unlogged";
+  setUnloggedKw: [Keyword<"SET">, Keyword<"UNLOGGED">];
 }
 
 export type AlterColumnAction =

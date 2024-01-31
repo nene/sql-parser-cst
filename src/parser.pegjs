@@ -2413,6 +2413,8 @@ alter_action_postgres
   / alter_action_cluster_on
   / alter_action_set_without_cluster
   / alter_action_set_without_oids
+  / alter_action_set_logged
+  / alter_action_set_unlogged
 
 alter_action_add_column
   = addKw:(ADD __ COLUMN __ / ADD __) ifKw:(if_not_exists __)? col:column_definition {
@@ -2644,6 +2646,22 @@ alter_action_set_without_oids
     return loc({
       type: "alter_action_set_without_oids",
       setWithoutOidsKw: read(kw),
+    });
+  }
+
+alter_action_set_logged
+  = kw:(SET __ LOGGED) {
+    return loc({
+      type: "alter_action_set_logged",
+      setLoggedKw: read(kw),
+    });
+  }
+
+alter_action_set_unlogged
+  = kw:(SET __ UNLOGGED) {
+    return loc({
+      type: "alter_action_set_unlogged",
+      setUnloggedKw: read(kw),
     });
   }
 
@@ -7176,6 +7194,7 @@ LOCALTIME           = kw:"LOCALTIME"i           !ident_part { return loc(createK
 LOCALTIMESTAMP      = kw:"LOCALTIMESTAMP"i      !ident_part { return loc(createKeyword(kw)); }
 LOCK                = kw:"LOCK"i                !ident_part { return loc(createKeyword(kw)); }
 LOCKED              = kw:"LOCKED"i              !ident_part { return loc(createKeyword(kw)); }
+LOGGED              = kw:"LOGGED"i              !ident_part { return loc(createKeyword(kw)); }
 LOGS                = kw:"LOGS"i                !ident_part { return loc(createKeyword(kw)); }
 LONGBLOB            = kw:"LONGBLOB"i            !ident_part { return loc(createKeyword(kw)); }
 LONGTEXT            = kw:"LONGTEXT"i            !ident_part { return loc(createKeyword(kw)); }

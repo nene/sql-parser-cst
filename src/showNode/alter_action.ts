@@ -46,6 +46,8 @@ export const alterActionMap: FullTransformMap<string, AllAlterActionNodes> = {
   alter_action_cluster_on: (node) => show([node.clusterOnKw, node.index]),
   alter_action_set_without_cluster: (node) => show([node.setWithoutClusterKw]),
   alter_action_set_without_oids: (node) => show([node.setWithoutOidsKw]),
+  alter_action_set_logged: (node) => show([node.setLoggedKw]),
+  alter_action_set_unlogged: (node) => show([node.setUnloggedKw]),
 
   // ALTER COLUMN ...
   alter_action_alter_column: (node) =>

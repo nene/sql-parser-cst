@@ -324,5 +324,10 @@ describe("alter table", () => {
     it("supports SET WITHOUT OIDS", () => {
       testAlterWc(`SET WITHOUT OIDS`);
     });
+
+    it("supports SET {LOGGED | UNLOGGED}", () => {
+      testAlterWc(`SET LOGGED`);
+      testAlterWc(`SET UNLOGGED`);
+    });
   });
 });
