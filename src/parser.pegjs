@@ -1887,6 +1887,7 @@ alter_view_action_postgres
   / alter_action_cluster_on
   / alter_action_set_without_cluster
   / alter_action_set_postgresql_options
+  / alter_action_reset_postgresql_options
 
 /**
  * ------------------------------------------------------------------------------------ *
@@ -2421,6 +2422,7 @@ alter_action_postgres
   / alter_action_of_type
   / alter_action_not_of_type
   / alter_action_set_postgresql_options
+  / alter_action_reset_postgresql_options
 
 alter_action_add_column
   = addKw:(ADD __ COLUMN __ / ADD __) ifKw:(if_not_exists __)? col:column_definition {
@@ -2511,6 +2513,15 @@ alter_action_set_postgresql_options
     return loc({
       type: "alter_action_set_postgresql_options",
       setKw: read(kw),
+      options,
+    });
+  }
+
+alter_action_reset_postgresql_options
+  = kw:(RESET __ ) options:paren$list$member_expr {
+    return loc({
+      type: "alter_action_reset_postgresql_options",
+      resetKw: read(kw),
       options,
     });
   }
@@ -2739,6 +2750,7 @@ alter_column_action_postgres
   / alter_action_set_storage
   / alter_action_set_statistics
   / alter_action_set_postgresql_options
+  / alter_action_reset_postgresql_options
 
 alter_action_set_default
   = kw:(SET __ DEFAULT __) expr:expr {
@@ -6052,6 +6064,7 @@ paren$list$grouping_element = .
 paren$list$ident = .
 paren$list$index_specification = .
 paren$list$literal = .
+paren$list$member_expr = .
 paren$list$partition_bound_from_to_value = .
 paren$list$partition_bound_with_value = .
 paren$list$postgresql_option_element = .
@@ -6114,6 +6127,7 @@ list$grouping_element = .
 list$ident = .
 list$index_specification = .
 list$literal = .
+list$member_expr = .
 list$named_window = .
 list$number_literal = .
 list$partition_bound_from_to_value = .
@@ -7392,6 +7406,7 @@ REPLACE             = kw:"REPLACE"i             !ident_part { return loc(createK
 REPLICA             = kw:"REPLICA"i             !ident_part { return loc(createKeyword(kw)); }
 REPLICATION         = kw:"REPLICATION"i         !ident_part { return loc(createKeyword(kw)); }
 RESERVATION         = kw:"RESERVATION"i         !ident_part { return loc(createKeyword(kw)); }
+RESET               = kw:"RESET"i               !ident_part { return loc(createKeyword(kw)); }
 RESPECT             = kw:"RESPECT"i             !ident_part { return loc(createKeyword(kw)); }
 RESTART             = kw:"RESTART"i             !ident_part { return loc(createKeyword(kw)); }
 RESTRICT            = kw:"RESTRICT"i            !ident_part { return loc(createKeyword(kw)); }

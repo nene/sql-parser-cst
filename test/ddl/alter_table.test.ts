@@ -168,6 +168,9 @@ describe("alter table", () => {
       it("supports SET (..postgresql options..)", () => {
         testAlterWc("ALTER COLUMN foo SET (n_distinct = 100, n_distinct_inherited = -1)");
       });
+      it("supports RESET (..postgresql options..)", () => {
+        testAlterWc("ALTER COLUMN foo SET (n_distinct, n_distinct_inherited)");
+      });
     });
 
     dialect(["mysql"], () => {
@@ -235,6 +238,10 @@ describe("alter table", () => {
         vacuum_truncate,
         vacuum_index_cleanup = ON
       )`);
+    });
+
+    it("supports RESET (..postgresql storage parameters..)", () => {
+      testAlterWc(`RESET (fillfactor, toast.autovacuum_enabled)`);
     });
   });
 

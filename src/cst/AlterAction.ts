@@ -9,6 +9,7 @@ import {
   FuncCall,
   ParenExpr,
   ListExpr,
+  MemberExpr,
 } from "./Expr";
 import { NumberLiteral, StringLiteral } from "./Literal";
 import { Constraint, ConstraintModifier, TableConstraint } from "./Constraint";
@@ -30,6 +31,7 @@ export type AlterTableAction =
   | AlterActionSetDefaultCollate
   | AlterActionSetBigqueryOptions
   | AlterActionSetPostgresqlOptions
+  | AlterActionResetPostgresqlOptions
   | AlterActionAddConstraint
   | AlterActionDropConstraint
   | AlterActionAlterConstraint
@@ -62,6 +64,7 @@ export type AlterSchemaAction =
 export type AlterViewAction =
   | AlterActionSetBigqueryOptions
   | AlterActionSetPostgresqlOptions
+  | AlterActionResetPostgresqlOptions
   | AlterActionRename
   | AlterActionRenameColumn
   | AlterActionOwnerTo
@@ -128,6 +131,13 @@ export interface AlterActionSetPostgresqlOptions extends BaseNode {
   type: "alter_action_set_postgresql_options";
   setKw: Keyword<"SET">;
   options: ParenExpr<ListExpr<PostgresqlTableOption>>;
+}
+
+// PostgreSQL
+export interface AlterActionResetPostgresqlOptions extends BaseNode {
+  type: "alter_action_reset_postgresql_options";
+  resetKw: Keyword<"RESET">;
+  options: ParenExpr<ListExpr<Identifier | MemberExpr>>;
 }
 
 // MySQL, MariaDB, PostgreSQL
@@ -299,6 +309,8 @@ export type AlterColumnAction =
   | AlterActionDropNotNull
   | AlterActionSetDataType
   | AlterActionSetBigqueryOptions
+  | AlterActionSetPostgresqlOptions
+  | AlterActionResetPostgresqlOptions
   | AlterActionSetVisible
   | AlterActionSetInvisible
   | AlterActionSetCompression

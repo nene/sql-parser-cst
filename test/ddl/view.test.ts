@@ -207,6 +207,9 @@ describe("view", () => {
           vacuum_index_cleanup = ON
         )`);
       });
+      it("supports RESET (..storage parameters..)", () => {
+        testAlterWc(`RESET (autovacuum_enabled, vacuum_index_cleanup)`);
+      });
     });
   });
 
@@ -240,6 +243,9 @@ describe("view", () => {
           vacuum_index_cleanup = ON
         )`);
       });
+      it("supports RESET (..storage parameters..)", () => {
+        testAlterMatWc(`RESET (autovacuum_enabled, vacuum_index_cleanup)`);
+      });
 
       describe("alter column", () => {
         it("supports ALTER COLUMN .. SET COMPRESSION", () => {
@@ -261,6 +267,9 @@ describe("view", () => {
 
         it("supports SET (..options..)", () => {
           testAlterMatWc("ALTER COLUMN foo SET (n_distinct = 100, n_distinct_inherited = -1)");
+        });
+        it("supports RESET (..options..)", () => {
+          testAlterMatWc("ALTER COLUMN foo RESET (n_distinct)");
         });
       });
     });
