@@ -32,7 +32,8 @@ export type AlterTableAction =
   | AlterActionForce
   | AlterActionNoForce
   | AlterActionSetTablespace
-  | AlterActionSetAccessMethod;
+  | AlterActionSetAccessMethod
+  | AlterActionSetWithoutCluster;
 
 export type AlterSchemaAction =
   | AlterActionSetDefaultCollate
@@ -48,7 +49,8 @@ export type AlterViewAction =
   | AlterActionAlterColumn
   | AlterActionSetSchema
   | AlterActionSetTablespace
-  | AlterActionSetAccessMethod;
+  | AlterActionSetAccessMethod
+  | AlterActionSetWithoutCluster;
 
 export interface AlterActionRename extends BaseNode {
   type: "alter_action_rename";
@@ -196,6 +198,12 @@ export interface AlterActionSetAccessMethod extends BaseNode {
   type: "alter_action_set_access_method";
   setAccessMethodKw: [Keyword<"SET">, Keyword<"ACCESS">, Keyword<"METHOD">];
   method: Identifier;
+}
+
+// PostgreSQL
+export interface AlterActionSetWithoutCluster extends BaseNode {
+  type: "alter_action_set_without_cluster";
+  setWithoutClusterKw: [Keyword<"SET">, Keyword<"WITHOUT">, Keyword<"CLUSTER">];
 }
 
 export type AlterColumnAction =

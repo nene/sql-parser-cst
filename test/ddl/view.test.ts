@@ -216,6 +216,10 @@ describe("view", () => {
       it("supports SET ACCESS METHOD", () => {
         testAlterMatWc(`SET ACCESS METHOD "SP-GiST"`);
       });
+
+      it("supports SET WITHOUT CLUSTER", () => {
+        testAlterMatWc(`SET WITHOUT CLUSTER`);
+      });
     });
   });
 });

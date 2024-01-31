@@ -312,5 +312,9 @@ describe("alter table", () => {
     it("supports SET ACCESS METHOD", () => {
       testAlterWc(`SET ACCESS METHOD "SP-GiST"`);
     });
+
+    it("supports SET WITHOUT CLUSTER", () => {
+      testAlterWc(`SET WITHOUT CLUSTER`);
+    });
   });
 });

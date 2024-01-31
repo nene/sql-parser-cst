@@ -1884,6 +1884,7 @@ alter_view_action_postgres
   / alter_action_set_schema
   / alter_action_set_tablespace
   / alter_action_set_access_method
+  / alter_action_set_without_cluster
 
 /**
  * ------------------------------------------------------------------------------------ *
@@ -2408,6 +2409,7 @@ alter_action_postgres
   / alter_action_no_force
   / alter_action_set_tablespace
   / alter_action_set_access_method
+  / alter_action_set_without_cluster
 
 alter_action_add_column
   = addKw:(ADD __ COLUMN __ / ADD __) ifKw:(if_not_exists __)? col:column_definition {
@@ -2614,6 +2616,14 @@ alter_action_set_access_method
       type: "alter_action_set_access_method",
       setAccessMethodKw: read(kw),
       method,
+    });
+  }
+
+alter_action_set_without_cluster
+  = kw:(SET __ WITHOUT __ CLUSTER) {
+    return loc({
+      type: "alter_action_set_without_cluster",
+      setWithoutClusterKw: read(kw),
     });
   }
 
