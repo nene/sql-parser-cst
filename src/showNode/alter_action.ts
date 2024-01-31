@@ -19,6 +19,8 @@ export const alterActionMap: FullTransformMap<string, AllAlterActionNodes> = {
   alter_action_set_default_collate: (node) =>
     show([node.setDefaultCollateKw, node.collation]),
   alter_action_set_bigquery_options: (node) => show([node.setKw, node.options]),
+  alter_action_set_postgresql_options: (node) =>
+    show([node.setKw, node.options]),
   alter_action_add_constraint: (node) => show([node.addKw, node.constraint]),
   alter_action_drop_constraint: (node) =>
     show([

@@ -1886,6 +1886,7 @@ alter_view_action_postgres
   / alter_action_set_access_method
   / alter_action_cluster_on
   / alter_action_set_without_cluster
+  / alter_action_set_postgresql_options
 
 /**
  * ------------------------------------------------------------------------------------ *
@@ -2419,6 +2420,7 @@ alter_action_postgres
   / alter_action_no_inherit
   / alter_action_of_type
   / alter_action_not_of_type
+  / alter_action_set_postgresql_options
 
 alter_action_add_column
   = addKw:(ADD __ COLUMN __ / ADD __) ifKw:(if_not_exists __)? col:column_definition {
@@ -2499,6 +2501,15 @@ alter_action_set_bigquery_options
   = kw:(SET __ ) options:bigquery_options {
     return loc({
       type: "alter_action_set_bigquery_options",
+      setKw: read(kw),
+      options,
+    });
+  }
+
+alter_action_set_postgresql_options
+  = kw:(SET __ ) options:paren$list$table_option_postgresql {
+    return loc({
+      type: "alter_action_set_postgresql_options",
       setKw: read(kw),
       options,
     });
@@ -2727,6 +2738,7 @@ alter_column_action_postgres
   / alter_action_set_compression
   / alter_action_set_storage
   / alter_action_set_statistics
+  / alter_action_set_postgresql_options
 
 alter_action_set_default
   = kw:(SET __ DEFAULT __) expr:expr {
@@ -4234,7 +4246,7 @@ postgresql_with_options
   }
 
 table_option_postgresql
-  = name:(member_expr __) "=" v:(__ (literal / keyword)) {
+  = name:(member_expr __) "=" v:(__ (expr / keyword)) {
     return loc({
       type: "table_option",
       name: read(name),

@@ -199,6 +199,14 @@ describe("view", () => {
       it("supports SET SCHEMA", () => {
         testAlterWc("SET SCHEMA foo");
       });
+
+      it("supports SET (..storage parameters..)", () => {
+        testAlterWc(`SET (
+          autovacuum_enabled,
+          toast.autovacuum_enabled = FALSE,
+          vacuum_index_cleanup = ON
+        )`);
+      });
     });
   });
 
@@ -225,6 +233,14 @@ describe("view", () => {
         testAlterMatWc(`SET WITHOUT CLUSTER`);
       });
 
+      it("supports SET (..storage parameters..)", () => {
+        testAlterMatWc(`SET (
+          autovacuum_enabled,
+          toast.autovacuum_enabled = FALSE,
+          vacuum_index_cleanup = ON
+        )`);
+      });
+
       describe("alter column", () => {
         it("supports ALTER COLUMN .. SET COMPRESSION", () => {
           testAlterMatWc(`ALTER COLUMN col1 SET COMPRESSION zstd`);
@@ -241,6 +257,10 @@ describe("view", () => {
 
         it("supports SET STATISTICS", () => {
           testAlterMatWc("ALTER COLUMN foo SET STATISTICS 50");
+        });
+
+        it("supports SET (..options..)", () => {
+          testAlterMatWc("ALTER COLUMN foo SET (n_distinct = 100, n_distinct_inherited = -1)");
         });
       });
     });

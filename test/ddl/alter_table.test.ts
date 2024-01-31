@@ -164,6 +164,11 @@ describe("alter table", () => {
         testAlterWc("ALTER COLUMN foo SET OPTIONS ( description = 'Blah' )");
       });
     });
+    dialect("postgresql", () => {
+      it("supports SET (..postgresql options..)", () => {
+        testAlterWc("ALTER COLUMN foo SET (n_distinct = 100, n_distinct_inherited = -1)");
+      });
+    });
 
     dialect(["mysql"], () => {
       it("supports SET VISIBLE / INVISIBLE", () => {
@@ -219,6 +224,17 @@ describe("alter table", () => {
           labels = [("org_unit", "development")]
         )
       `);
+    });
+  });
+
+  dialect("postgresql", () => {
+    it("supports SET (..postgresql storage parameters..)", () => {
+      testAlterWc(`SET (
+        fillfactor = 50,
+        toast.autovacuum_enabled = FALSE,
+        vacuum_truncate,
+        vacuum_index_cleanup = ON
+      )`);
     });
   });
 

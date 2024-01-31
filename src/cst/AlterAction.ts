@@ -2,10 +2,18 @@ import { BaseNode, Keyword } from "./Base";
 import { BigqueryOptions } from "./dialects/Bigquery";
 import { ColumnDefinition } from "./CreateTable";
 import { DataType } from "./DataType";
-import { Expr, Identifier, EntityName, FuncCall } from "./Expr";
+import {
+  Expr,
+  Identifier,
+  EntityName,
+  FuncCall,
+  ParenExpr,
+  ListExpr,
+} from "./Expr";
 import { NumberLiteral, StringLiteral } from "./Literal";
 import { Constraint, ConstraintModifier, TableConstraint } from "./Constraint";
 import { Default } from "./Insert";
+import { PostgresqlTableOption } from "./Node";
 
 export type AllAlterActionNodes =
   | AlterTableAction
@@ -21,6 +29,7 @@ export type AlterTableAction =
   | AlterActionAlterColumn
   | AlterActionSetDefaultCollate
   | AlterActionSetBigqueryOptions
+  | AlterActionSetPostgresqlOptions
   | AlterActionAddConstraint
   | AlterActionDropConstraint
   | AlterActionAlterConstraint
@@ -52,6 +61,7 @@ export type AlterSchemaAction =
 
 export type AlterViewAction =
   | AlterActionSetBigqueryOptions
+  | AlterActionSetPostgresqlOptions
   | AlterActionRename
   | AlterActionRenameColumn
   | AlterActionOwnerTo
@@ -106,10 +116,18 @@ export interface AlterActionSetDefaultCollate extends BaseNode {
   collation: StringLiteral;
 }
 
+// BigQuery
 export interface AlterActionSetBigqueryOptions extends BaseNode {
   type: "alter_action_set_bigquery_options";
   setKw: Keyword<"SET">;
   options: BigqueryOptions;
+}
+
+// PostgreSQL
+export interface AlterActionSetPostgresqlOptions extends BaseNode {
+  type: "alter_action_set_postgresql_options";
+  setKw: Keyword<"SET">;
+  options: ParenExpr<ListExpr<PostgresqlTableOption>>;
 }
 
 // MySQL, MariaDB, PostgreSQL
