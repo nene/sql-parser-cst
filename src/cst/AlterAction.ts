@@ -37,7 +37,9 @@ export type AlterTableAction =
   | AlterActionSetWithoutCluster
   | AlterActionSetWithoutOids
   | AlterActionSetLogged
-  | AlterActionSetUnlogged;
+  | AlterActionSetUnlogged
+  | AlterActionInherit
+  | AlterActionNoInherit;
 
 export type AlterSchemaAction =
   | AlterActionSetDefaultCollate
@@ -240,6 +242,20 @@ export interface AlterActionSetLogged extends BaseNode {
 export interface AlterActionSetUnlogged extends BaseNode {
   type: "alter_action_set_unlogged";
   setUnloggedKw: [Keyword<"SET">, Keyword<"UNLOGGED">];
+}
+
+// PostgreSQL
+export interface AlterActionInherit extends BaseNode {
+  type: "alter_action_inherit";
+  inheritKw: Keyword<"INHERIT">;
+  table: EntityName;
+}
+
+// PostgreSQL
+export interface AlterActionNoInherit extends BaseNode {
+  type: "alter_action_no_inherit";
+  noInheritKw: [Keyword<"NO">, Keyword<"INHERIT">];
+  table: EntityName;
 }
 
 export type AlterColumnAction =

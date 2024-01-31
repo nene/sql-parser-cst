@@ -2415,6 +2415,8 @@ alter_action_postgres
   / alter_action_set_without_oids
   / alter_action_set_logged
   / alter_action_set_unlogged
+  / alter_action_inherit
+  / alter_action_no_inherit
 
 alter_action_add_column
   = addKw:(ADD __ COLUMN __ / ADD __) ifKw:(if_not_exists __)? col:column_definition {
@@ -2662,6 +2664,24 @@ alter_action_set_unlogged
     return loc({
       type: "alter_action_set_unlogged",
       setUnloggedKw: read(kw),
+    });
+  }
+
+alter_action_inherit
+  = kw:(INHERIT __) table:entity_name {
+    return loc({
+      type: "alter_action_inherit",
+      inheritKw: read(kw),
+      table,
+    });
+  }
+
+alter_action_no_inherit
+  = kw:(NO __ INHERIT __) table:entity_name {
+    return loc({
+      type: "alter_action_no_inherit",
+      noInheritKw: read(kw),
+      table,
     });
   }
 

@@ -330,4 +330,15 @@ describe("alter table", () => {
       testAlterWc(`SET UNLOGGED`);
     });
   });
+
+  dialect("postgresql", () => {
+    it("supports INHERIT", () => {
+      testAlterWc(`INHERIT my_table`);
+      testAlterWc(`INHERIT my_schema.my_table`);
+    });
+
+    it("supports NO INHERIT", () => {
+      testAlterWc(`NO INHERIT my_schema.my_table`);
+    });
+  });
 });
