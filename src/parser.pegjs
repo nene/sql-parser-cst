@@ -1884,6 +1884,7 @@ alter_view_action_postgres
   / alter_action_set_schema
   / alter_action_set_tablespace
   / alter_action_set_access_method
+  / alter_action_cluster_on
   / alter_action_set_without_cluster
 
 /**
@@ -2409,6 +2410,7 @@ alter_action_postgres
   / alter_action_no_force
   / alter_action_set_tablespace
   / alter_action_set_access_method
+  / alter_action_cluster_on
   / alter_action_set_without_cluster
   / alter_action_set_without_oids
 
@@ -2617,6 +2619,15 @@ alter_action_set_access_method
       type: "alter_action_set_access_method",
       setAccessMethodKw: read(kw),
       method,
+    });
+  }
+
+alter_action_cluster_on
+  = kw:(CLUSTER __ ON __) index:ident {
+    return loc({
+      type: "alter_action_cluster_on",
+      clusterOnKw: read(kw),
+      index,
     });
   }
 

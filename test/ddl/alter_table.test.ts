@@ -313,6 +313,10 @@ describe("alter table", () => {
       testAlterWc(`SET ACCESS METHOD "SP-GiST"`);
     });
 
+    it("supports CLUSTER ON", () => {
+      testAlterWc(`CLUSTER ON my_index`);
+    });
+
     it("supports SET WITHOUT CLUSTER", () => {
       testAlterWc(`SET WITHOUT CLUSTER`);
     });

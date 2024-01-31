@@ -33,6 +33,7 @@ export type AlterTableAction =
   | AlterActionNoForce
   | AlterActionSetTablespace
   | AlterActionSetAccessMethod
+  | AlterActionClusterOn
   | AlterActionSetWithoutCluster
   | AlterActionSetWithoutOids;
 
@@ -51,6 +52,7 @@ export type AlterViewAction =
   | AlterActionSetSchema
   | AlterActionSetTablespace
   | AlterActionSetAccessMethod
+  | AlterActionClusterOn
   | AlterActionSetWithoutCluster;
 
 export interface AlterActionRename extends BaseNode {
@@ -192,6 +194,13 @@ export interface AlterActionSetTablespace extends BaseNode {
   setTablespaceKw: [Keyword<"SET">, Keyword<"TABLESPACE">];
   tablespace: Identifier;
   nowaitKw?: Keyword<"NOWAIT">;
+}
+
+// PostgreSQL
+export interface AlterActionClusterOn extends BaseNode {
+  type: "alter_action_cluster_on";
+  clusterOnKw: [Keyword<"CLUSTER">, Keyword<"ON">];
+  index: Identifier;
 }
 
 // PostgreSQL

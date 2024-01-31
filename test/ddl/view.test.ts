@@ -217,6 +217,10 @@ describe("view", () => {
         testAlterMatWc(`SET ACCESS METHOD "SP-GiST"`);
       });
 
+      it("supports CLUSTER ON", () => {
+        testAlterMatWc(`CLUSTER ON my_index`);
+      });
+
       it("supports SET WITHOUT CLUSTER", () => {
         testAlterMatWc(`SET WITHOUT CLUSTER`);
       });
