@@ -20,7 +20,7 @@ export type AlterTableAction =
   | AlterActionDropColumn
   | AlterActionAlterColumn
   | AlterActionSetDefaultCollate
-  | AlterActionSetOptions
+  | AlterActionSetBigqueryOptions
   | AlterActionAddConstraint
   | AlterActionDropConstraint
   | AlterActionAlterConstraint
@@ -46,12 +46,12 @@ export type AlterTableAction =
 
 export type AlterSchemaAction =
   | AlterActionSetDefaultCollate
-  | AlterActionSetOptions
+  | AlterActionSetBigqueryOptions
   | AlterActionRename
   | AlterActionOwnerTo;
 
 export type AlterViewAction =
-  | AlterActionSetOptions
+  | AlterActionSetBigqueryOptions
   | AlterActionRename
   | AlterActionRenameColumn
   | AlterActionOwnerTo
@@ -106,8 +106,8 @@ export interface AlterActionSetDefaultCollate extends BaseNode {
   collation: StringLiteral;
 }
 
-export interface AlterActionSetOptions extends BaseNode {
-  type: "alter_action_set_options";
+export interface AlterActionSetBigqueryOptions extends BaseNode {
+  type: "alter_action_set_bigquery_options";
   setKw: Keyword<"SET">;
   options: BigqueryOptions;
 }
@@ -280,7 +280,7 @@ export type AlterColumnAction =
   | AlterActionSetNotNull
   | AlterActionDropNotNull
   | AlterActionSetDataType
-  | AlterActionSetOptions
+  | AlterActionSetBigqueryOptions
   | AlterActionSetVisible
   | AlterActionSetInvisible
   | AlterActionSetCompression

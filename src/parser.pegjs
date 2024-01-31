@@ -1872,7 +1872,7 @@ alter_view_stmt
     }
 
 alter_view_action
-  = &bigquery ac:alter_action_set_options { return ac; }
+  = &bigquery ac:alter_action_set_bigquery_options { return ac; }
   / &mysql ac:as_clause$compound_select_stmt { return ac; }
   / &postgres ac:alter_view_action_postgres { return ac; }
 
@@ -2387,7 +2387,7 @@ alter_action
 alter_action_bigquery
   = alter_action_alter_column
   / alter_action_set_default_collate
-  / alter_action_set_options
+  / alter_action_set_bigquery_options
 
 alter_action_mysql
   = alter_action_alter_column
@@ -2495,10 +2495,10 @@ alter_action_set_default_collate
     });
   }
 
-alter_action_set_options
+alter_action_set_bigquery_options
   = kw:(SET __ ) options:bigquery_options {
     return loc({
-      type: "alter_action_set_options",
+      type: "alter_action_set_bigquery_options",
       setKw: read(kw),
       options,
     });
@@ -2714,7 +2714,7 @@ alter_column_action
 alter_column_action_bigquery
   = alter_action_drop_not_null
   / alter_action_set_data_type
-  / alter_action_set_options
+  / alter_action_set_bigquery_options
 
 alter_column_action_mysql
   = alter_action_set_visible
@@ -2983,7 +2983,7 @@ alter_schema_stmt
   }
 
 alter_schema_action
-  = &bigquery ac:alter_action_set_options { return ac; }
+  = &bigquery ac:alter_action_set_bigquery_options { return ac; }
   / &bigquery ac:alter_action_set_default_collate { return ac; }
   / &postgres ac:alter_action_rename { return ac; }
   / &postgres ac:alter_action_owner_to { return ac; }
@@ -4117,7 +4117,7 @@ drop_row_access_policy_stmt
     }
 
 alter_organization_stmt
-  = kw:(ALTER __ ORGANIZATION __) action:alter_action_set_options {
+  = kw:(ALTER __ ORGANIZATION __) action:alter_action_set_bigquery_options {
     return loc({
       type: "alter_organization_stmt",
       alterOrganizationKw: read(kw),
@@ -4126,7 +4126,7 @@ alter_organization_stmt
   }
 
 alter_project_stmt
-  = kw:(ALTER __ PROJECT __) name:(ident __) action:alter_action_set_options {
+  = kw:(ALTER __ PROJECT __) name:(ident __) action:alter_action_set_bigquery_options {
     return loc({
       type: "alter_project_stmt",
       alterProjectKw: read(kw),
@@ -4136,7 +4136,7 @@ alter_project_stmt
   }
 
 alter_bi_capacity_stmt
-  = kw:(ALTER __ BI_CAPACITY __) name:(entity_name __) action:alter_action_set_options {
+  = kw:(ALTER __ BI_CAPACITY __) name:(entity_name __) action:alter_action_set_bigquery_options {
     return loc({
       type: "alter_bi_capacity_stmt",
       alterBiCapacityKw: read(kw),
@@ -4146,7 +4146,7 @@ alter_bi_capacity_stmt
   }
 
 alter_capacity_stmt
-  = kw:(ALTER __ CAPACITY __) name:(entity_name __) action:alter_action_set_options {
+  = kw:(ALTER __ CAPACITY __) name:(entity_name __) action:alter_action_set_bigquery_options {
     return loc({
       type: "alter_capacity_stmt",
       alterCapacityKw: read(kw),
@@ -4156,7 +4156,7 @@ alter_capacity_stmt
   }
 
 alter_reservation_stmt
-  = kw:(ALTER __ RESERVATION __) name:(entity_name __) action:alter_action_set_options {
+  = kw:(ALTER __ RESERVATION __) name:(entity_name __) action:alter_action_set_bigquery_options {
     return loc({
       type: "alter_reservation_stmt",
       alterReservationKw: read(kw),

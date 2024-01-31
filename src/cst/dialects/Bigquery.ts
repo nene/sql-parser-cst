@@ -1,4 +1,4 @@
-import { AlterActionSetOptions } from "../AlterAction";
+import { AlterActionSetBigqueryOptions } from "../AlterAction";
 import { BaseNode, Keyword } from "../Base";
 import { ColumnDefinition, WithPartitionColumnsClause } from "../CreateTable";
 import {
@@ -143,7 +143,7 @@ export interface DropRowAccessPolicyStmt extends BaseNode {
 export interface AlterOrganizationStmt extends BaseNode {
   type: "alter_organization_stmt";
   alterOrganizationKw: [Keyword<"ALTER">, Keyword<"ORGANIZATION">];
-  actions: AlterActionSetOptions[];
+  actions: AlterActionSetBigqueryOptions[];
 }
 
 // ALTER PROJECT
@@ -151,7 +151,7 @@ export interface AlterProjectStmt extends BaseNode {
   type: "alter_project_stmt";
   alterProjectKw: [Keyword<"ALTER">, Keyword<"PROJECT">];
   name: Identifier;
-  actions: AlterActionSetOptions[];
+  actions: AlterActionSetBigqueryOptions[];
 }
 
 // ALTER BI_CAPACITY
@@ -159,7 +159,7 @@ export interface AlterBiCapacityStmt extends BaseNode {
   type: "alter_bi_capacity_stmt";
   alterBiCapacityKw: [Keyword<"ALTER">, Keyword<"BI_CAPACITY">];
   name: EntityName;
-  actions: AlterActionSetOptions[];
+  actions: AlterActionSetBigqueryOptions[];
 }
 
 // ALTER CAPACITY
@@ -167,7 +167,7 @@ export interface AlterCapacityStmt extends BaseNode {
   type: "alter_capacity_stmt";
   alterCapacityKw: [Keyword<"ALTER">, Keyword<"CAPACITY">];
   name: EntityName;
-  actions: AlterActionSetOptions[];
+  actions: AlterActionSetBigqueryOptions[];
 }
 
 // ALTER RESERVATION
@@ -175,7 +175,7 @@ export interface AlterReservationStmt extends BaseNode {
   type: "alter_reservation_stmt";
   alterReservationKw: [Keyword<"ALTER">, Keyword<"RESERVATION">];
   name: EntityName;
-  actions: AlterActionSetOptions[];
+  actions: AlterActionSetBigqueryOptions[];
 }
 
 // ASSERT
