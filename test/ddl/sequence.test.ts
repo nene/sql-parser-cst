@@ -21,6 +21,26 @@ describe("sequence", () => {
         testWc("CREATE UNLOGGED SEQUENCE seq1");
       });
     });
+
+    describe("DROP SEQUENCE", () => {
+      it("supports basic DROP SEQUENCE statement", () => {
+        testWc("DROP SEQUENCE my_seq");
+        testWc("DROP SEQUENCE my_schema.seq");
+      });
+
+      it("supports IF EXISTS", () => {
+        testWc("DROP SEQUENCE IF EXISTS my_seq");
+      });
+
+      it("supports multiple sequences", () => {
+        testWc("DROP SEQUENCE seq1, seq2");
+      });
+
+      it("supports CASCADE/RESTRICT", () => {
+        testWc("DROP SEQUENCE seq1 CASCADE");
+        testWc("DROP SEQUENCE seq1 RESTRICT");
+      });
+    });
   });
 
   notDialect("postgresql", () => {

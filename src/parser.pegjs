@@ -140,6 +140,7 @@ ddl_statement_postgres
   / drop_schema_stmt
   / alter_schema_stmt
   / create_sequence_stmt
+  / drop_sequence_stmt
 
 dml_statement
   = compound_select_stmt
@@ -3601,6 +3602,22 @@ sequence_kind
   = kw:(TEMP / TEMPORARY / UNLOGGED) {
     return loc({ type: "sequence_kind", kindKw: kw });
   }
+
+drop_sequence_stmt
+  = kw:(DROP __)
+    sequenceKw:(SEQUENCE __)
+    ifExistsKw:(if_exists __)?
+    sequences:list$entity_name
+    behaviorKw:(__ (CASCADE / RESTRICT))? {
+      return loc({
+        type: "drop_sequence_stmt",
+        dropKw: read(kw),
+        sequenceKw: read(sequenceKw),
+        ifExistsKw: read(ifExistsKw),
+        sequences,
+        behaviorKw: read(behaviorKw),
+      });
+    }
 
 /**
  * ------------------------------------------------------------------------------------ *
