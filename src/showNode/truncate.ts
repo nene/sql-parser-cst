@@ -9,6 +9,6 @@ export const truncateMap: FullTransformMap<string, TruncateStmt> = {
       node.tableKw,
       node.tables,
       node.restartOrContinueKw,
-      node.cascadeOrRestrictKw,
+      node.behaviorKw,
     ]),
 };

@@ -76,20 +76,50 @@ statement
 ddl_statement
   = create_view_stmt
   / drop_view_stmt
-  / x:alter_view_stmt (&bigquery / &mysql / &postgres) { return x; }
-  / x:refresh_materialized_view_stmt (&postgres) { return x; }
   / create_index_stmt
   / drop_index_stmt
-  / x:(create_function_stmt / drop_function_stmt) (&bigquery / &postgres) { return x; }
-  / x:(create_procedure_stmt / drop_procedure_stmt) (&bigquery / &postgres) { return x; }
   / create_table_stmt
   / drop_table_stmt
   / alter_table_stmt
-  / x:alter_table_all_in_tablespace_stmt &postgres { return x; }
-  / x:rename_table_stmt &mysql { return x; }
-  / x:create_trigger_stmt (&mysql / &sqlite) { return x; }
-  / x:drop_trigger_stmt (&mysql / &sqlite) { return x; }
-  / x:(create_schema_stmt / drop_schema_stmt / alter_schema_stmt) (&mysql / &bigquery/ &postgres) { return x; }
+  / &sqlite x:ddl_statement_sqlite { return x; }
+  / &mysql x:ddl_statement_mysql { return x; }
+  / &bigquery x:ddl_statement_bigquery { return x; }
+  / &postgres x:ddl_statement_postgres { return x; }
+
+ddl_statement_sqlite
+  = create_trigger_stmt
+  / drop_trigger_stmt
+
+ddl_statement_mysql
+  = alter_view_stmt
+  / rename_table_stmt
+  / create_trigger_stmt
+  / drop_trigger_stmt
+  / create_schema_stmt
+  / drop_schema_stmt
+  / alter_schema_stmt
+
+ddl_statement_bigquery
+  = alter_view_stmt
+  / create_function_stmt
+  / drop_function_stmt
+  / create_procedure_stmt
+  / drop_procedure_stmt
+  / create_schema_stmt
+  / drop_schema_stmt
+  / alter_schema_stmt
+
+ddl_statement_postgres
+  = alter_view_stmt
+  / refresh_materialized_view_stmt
+  / create_function_stmt
+  / drop_function_stmt
+  / create_procedure_stmt
+  / drop_procedure_stmt
+  / alter_table_all_in_tablespace_stmt
+  / create_schema_stmt
+  / drop_schema_stmt
+  / alter_schema_stmt
 
 dml_statement
   = compound_select_stmt
