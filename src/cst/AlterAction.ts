@@ -480,7 +480,7 @@ export interface AlterActionRestart extends BaseNode {
   type: "alter_action_restart";
   restartKw: Keyword<"RESTART">;
   withKw?: Keyword<"WITH">;
-  value: NumberLiteral;
+  value?: Expr;
 }
 
 // Used with ENABLE/DISABLE

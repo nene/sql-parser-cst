@@ -3008,11 +3008,8 @@ alter_action_set_generated
   }
 
 alter_action_restart
-  = kw:(RESTART __) withKw:(WITH __) value:number_literal {
-    return loc({ type: "alter_action_restart", restartKw: read(kw), withKw: read(withKw), value });
-  }
-  / kw:RESTART value:(__ number_literal)? {
-    return loc({ type: "alter_action_restart", restartKw: read(kw), value: read(value) });
+  = sequenceRestart:sequence_option_restart {
+    return loc({ ...sequenceRestart, type: "alter_action_restart" });
   }
 
 /**
