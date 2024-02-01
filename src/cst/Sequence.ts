@@ -37,7 +37,9 @@ type SequenceOption =
   | SequenceOptionMinvalue
   | SequenceOptionMaxvalue
   | SequenceOptionNoMinvalue
-  | SequenceOptionNoMaxvalue;
+  | SequenceOptionNoMaxvalue
+  | SequenceOptionCache
+  | SequenceOptionNoCache;
 
 interface SequenceOptionAsType extends BaseNode {
   type: "sequence_option_as_type";
@@ -86,6 +88,17 @@ interface SequenceOptionNoMinvalue extends BaseNode {
 interface SequenceOptionNoMaxvalue extends BaseNode {
   type: "sequence_option_no_maxvalue";
   noMaxvalueKw: [Keyword<"NO">, Keyword<"MAXVALUE">];
+}
+
+interface SequenceOptionCache extends BaseNode {
+  type: "sequence_option_cache";
+  cacheKw: Keyword<"CACHE">;
+  value: Expr;
+}
+
+interface SequenceOptionNoCache extends BaseNode {
+  type: "sequence_option_no_cache";
+  noCacheKw: [Keyword<"NO">, Keyword<"CACHE">];
 }
 
 export interface AlterSequenceStmt extends BaseNode {

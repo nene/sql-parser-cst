@@ -3612,6 +3612,8 @@ sequence_option
   / sequence_option_maxvalue
   / sequence_option_no_minvalue
   / sequence_option_no_maxvalue
+  / sequence_option_cache
+  / sequence_option_no_cache
 
 sequence_option_as_type
   = kw:(AS __) type:data_type {
@@ -3668,6 +3670,16 @@ sequence_option_no_minvalue
 sequence_option_no_maxvalue
   = kw:(NO __ MAXVALUE) {
     return loc({ type: "sequence_option_no_maxvalue", noMaxvalueKw: read(kw) });
+  }
+
+sequence_option_cache
+  = kw:(CACHE __) value:signed_number_literal {
+    return loc({ type: "sequence_option_cache", cacheKw: read(kw), value });
+  }
+
+sequence_option_no_cache
+  = kw:(NO __ CACHE) {
+    return loc({ type: "sequence_option_no_cache", noCacheKw: read(kw) });
   }
 
 alter_sequence_stmt
@@ -7398,6 +7410,7 @@ BTREE               = kw:"BTREE"i               !ident_part { return loc(createK
 BY                  = kw:"BY"i                  !ident_part { return loc(createKeyword(kw)); }
 BYTEINT             = kw:"BYTEINT"i             !ident_part { return loc(createKeyword(kw)); }
 BYTES               = kw:"BYTES"i               !ident_part { return loc(createKeyword(kw)); }
+CACHE               = kw:"CACHE"i               !ident_part { return loc(createKeyword(kw)); }
 CALL                = kw:"CALL"i                !ident_part { return loc(createKeyword(kw)); }
 CALLED              = kw:"CALLED"i              !ident_part { return loc(createKeyword(kw)); }
 CAPACITY            = kw:"CAPACITY"i            !ident_part { return loc(createKeyword(kw)); }

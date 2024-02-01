@@ -9,6 +9,7 @@ describe("sequence", () => {
       RESTART: ["RESTART WITH 1", "RESTART 1", "RESTART -5"],
       MINVALUE: ["MINVALUE 1", "MINVALUE -5", "NO MINVALUE"],
       MAXVALUE: ["MAXVALUE 100", "MAXVALUE -5", "NO MAXVALUE"],
+      CACHE: ["CACHE 10", "CACHE -1", "NO CACHE"], // Negative makes no sense, but Postgres allows it
     };
 
     describe("CREATE SEQUENCE", () => {
