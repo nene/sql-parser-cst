@@ -3583,17 +3583,24 @@ drop_procedure_stmt
  */
 create_sequence_stmt
   = kw:(CREATE __)
+    kind:(sequence_kind __)?
     sequenceKw:(SEQUENCE __)
     ifNotExistsKw:(if_not_exists __)?
     name:entity_name {
       return loc({
         type: "create_sequence_stmt",
         createKw: read(kw),
+        kind: read(kind),
         sequenceKw: read(sequenceKw),
         ifNotExistsKw: read(ifNotExistsKw),
         name,
       });
     }
+
+sequence_kind
+  = kw:(TEMP / TEMPORARY / UNLOGGED) {
+    return loc({ type: "sequence_kind", kindKw: kw });
+  }
 
 /**
  * ------------------------------------------------------------------------------------ *

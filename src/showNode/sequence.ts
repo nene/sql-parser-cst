@@ -4,5 +4,12 @@ import { AllSequenceNodes } from "../cst/Node";
 
 export const sequenceMap: FullTransformMap<string, AllSequenceNodes> = {
   create_sequence_stmt: (node) =>
-    show([node.createKw, node.sequenceKw, node.ifNotExistsKw, node.name]),
+    show([
+      node.createKw,
+      node.kind,
+      node.sequenceKw,
+      node.ifNotExistsKw,
+      node.name,
+    ]),
+  sequence_kind: (node) => show(node.kindKw),
 };
