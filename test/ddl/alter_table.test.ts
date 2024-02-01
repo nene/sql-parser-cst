@@ -212,6 +212,13 @@ describe("alter table", () => {
         testAlterWc("ALTER COLUMN foo SET STATISTICS 100");
       });
     });
+
+    dialect("postgresql", () => {
+      it("supports DROP EXPRESSION [IF EXISTS]", () => {
+        testAlterWc("ALTER COLUMN foo DROP EXPRESSION");
+        testAlterWc("ALTER COLUMN foo DROP EXPRESSION IF EXISTS");
+      });
+    });
   });
 
   dialect("bigquery", () => {

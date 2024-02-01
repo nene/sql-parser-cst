@@ -2805,6 +2805,7 @@ alter_column_action_postgres
   / alter_action_set_statistics
   / alter_action_set_postgresql_options
   / alter_action_reset_postgresql_options
+  / alter_action_drop_expression
 
 alter_action_set_default
   = kw:(SET __ DEFAULT __) expr:expr {
@@ -2871,6 +2872,11 @@ alter_action_set_storage
 alter_action_set_statistics
   = kw:(SET __ STATISTICS __) value:number_literal {
     return loc({ type: "alter_action_set_statistics", setStatisticsKw: read(kw), value });
+  }
+
+alter_action_drop_expression
+  = kw:(DROP __ EXPRESSION) ifExistsKw:(__ if_exists)? {
+    return loc({ type: "alter_action_drop_expression", dropExpressionKw: read(kw), ifExistsKw: read(ifExistsKw) });
   }
 
 toggle_item
@@ -7246,6 +7252,7 @@ EXISTS              = kw:"EXISTS"i              !ident_part { return loc(createK
 EXPANSION           = kw:"EXPANSION"i           !ident_part { return loc(createKeyword(kw)); }
 EXPLAIN             = kw:"EXPLAIN"i             !ident_part { return loc(createKeyword(kw)); }
 EXPORT              = kw:"EXPORT"i              !ident_part { return loc(createKeyword(kw)); }
+EXPRESSION          = kw:"EXPRESSION"i          !ident_part { return loc(createKeyword(kw)); }
 EXTENDED            = kw:"EXTENDED"i            !ident_part { return loc(createKeyword(kw)); }
 EXTENSION           = kw:"EXTENSION"i           !ident_part { return loc(createKeyword(kw)); }
 EXTERNAL            = kw:"EXTERNAL"i            !ident_part { return loc(createKeyword(kw)); }

@@ -358,7 +358,8 @@ export type AlterColumnAction =
   | AlterActionSetInvisible
   | AlterActionSetCompression
   | AlterActionSetStorage
-  | AlterActionSetStatistics;
+  | AlterActionSetStatistics
+  | AlterActionDropExpression;
 
 export interface AlterActionSetDefault extends BaseNode {
   type: "alter_action_set_default";
@@ -433,6 +434,13 @@ export interface AlterActionSetStatistics extends BaseNode {
   type: "alter_action_set_statistics";
   setStatisticsKw: [Keyword<"SET">, Keyword<"STATISTICS">];
   value: NumberLiteral;
+}
+
+// PostgreSQL
+export interface AlterActionDropExpression extends BaseNode {
+  type: "alter_action_drop_expression";
+  dropExpressionKw: [Keyword<"DROP">, Keyword<"EXPRESSION">];
+  ifExistsKw?: [Keyword<"IF">, Keyword<"EXISTS">];
 }
 
 // Used with ENABLE/DISABLE
