@@ -3613,7 +3613,8 @@ sequence_option
   / sequence_option_no_minvalue
   / sequence_option_no_maxvalue
   / sequence_option_cache
-  / sequence_option_no_cache
+  / sequence_option_cycle
+  / sequence_option_no_cycle
   / sequence_option_owned_by
 
 sequence_option_as_type
@@ -3678,9 +3679,14 @@ sequence_option_cache
     return loc({ type: "sequence_option_cache", cacheKw: read(kw), value });
   }
 
-sequence_option_no_cache
-  = kw:(NO __ CACHE) {
-    return loc({ type: "sequence_option_no_cache", noCacheKw: read(kw) });
+sequence_option_cycle
+  = cycleKw:CYCLE {
+    return loc({ type: "sequence_option_cycle", cycleKw });
+  }
+
+sequence_option_no_cycle
+  = kw:(NO __ CYCLE) {
+    return loc({ type: "sequence_option_no_cycle", noCycleKw: read(kw) });
   }
 
 sequence_option_owned_by
