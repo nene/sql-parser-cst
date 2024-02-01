@@ -17,6 +17,8 @@ export const sequenceMap: FullTransformMap<string, AllSequenceNodes> = {
   sequence_option_as_type: (node) => show([node.asKw, node.dataType]),
   sequence_option_increment: (node) =>
     show([node.incrementKw, node.byKw, node.value]),
+  sequence_option_start: (node) =>
+    show([node.startKw, node.withKw, node.value]),
   sequence_option_restart: (node) =>
     show([node.restartKw, node.withKw, node.value]),
 

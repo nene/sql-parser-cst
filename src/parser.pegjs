@@ -3605,6 +3605,7 @@ sequence_kind
 sequence_option
   = sequence_option_as_type
   / sequence_option_increment
+  / sequence_option_start
   / sequence_option_restart
 
 sequence_option_as_type
@@ -3622,6 +3623,16 @@ sequence_option_increment
       type: "sequence_option_increment",
       incrementKw: read(kw),
       byKw: read(byKw),
+      value,
+    });
+  }
+
+sequence_option_start
+  = kw:(START __) withKw:(WITH __)? value:signed_number_literal {
+    return loc({
+      type: "sequence_option_start",
+      startKw: read(kw),
+      withKw: read(withKw),
       value,
     });
   }

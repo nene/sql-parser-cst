@@ -28,6 +28,7 @@ export interface SequenceKind extends BaseNode {
 type SequenceOption =
   | SequenceOptionAsType
   | SequenceOptionIncrement
+  | SequenceOptionStart
   | SequenceOptionRestart;
 
 interface SequenceOptionAsType extends BaseNode {
@@ -40,6 +41,13 @@ interface SequenceOptionIncrement extends BaseNode {
   type: "sequence_option_increment";
   incrementKw: Keyword<"INCREMENT">;
   byKw?: Keyword<"BY">;
+  value: Expr;
+}
+
+interface SequenceOptionStart extends BaseNode {
+  type: "sequence_option_start";
+  startKw: Keyword<"START">;
+  withKw?: Keyword<"WITH">;
   value: Expr;
 }
 
