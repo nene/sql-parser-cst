@@ -65,11 +65,11 @@ statement
   = dml_statement
   / ddl_statement
   / dcl_statement
-  / transaction_statement
   / &sqlite x:statement_sqlite { return x; }
   / &mysql x:statement_mysql { return x; }
   / &bigquery x:statement_bigquery { return x; }
   / &postgres x:statement_postgres { return x; }
+  / transaction_statement // math BEGIN transaction after BEGIN..END block
 
 statement_sqlite
   = analyze_stmt
@@ -97,13 +97,13 @@ ddl_statement
   / drop_view_stmt
   / create_index_stmt
   / drop_index_stmt
-  / create_table_stmt
-  / drop_table_stmt
-  / alter_table_stmt
   / &sqlite x:ddl_statement_sqlite { return x; }
   / &mysql x:ddl_statement_mysql { return x; }
   / &bigquery x:ddl_statement_bigquery { return x; }
   / &postgres x:ddl_statement_postgres { return x; }
+  / create_table_stmt // CREATE TABLE must be matched after CREATE TABLE FUNCTION
+  / drop_table_stmt
+  / alter_table_stmt
 
 ddl_statement_sqlite
   = create_trigger_stmt
