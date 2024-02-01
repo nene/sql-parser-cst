@@ -21,6 +21,10 @@ export const sequenceMap: FullTransformMap<string, AllSequenceNodes> = {
     show([node.startKw, node.withKw, node.value]),
   sequence_option_restart: (node) =>
     show([node.restartKw, node.withKw, node.value]),
+  sequence_option_minvalue: (node) => show([node.minvalueKw, node.value]),
+  sequence_option_maxvalue: (node) => show([node.maxvalueKw, node.value]),
+  sequence_option_no_minvalue: (node) => show(node.noMinvalueKw),
+  sequence_option_no_maxvalue: (node) => show(node.noMaxvalueKw),
 
   // ALTER SEQUENCE
   alter_sequence_stmt: (node) =>

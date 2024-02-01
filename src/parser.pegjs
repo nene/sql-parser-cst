@@ -3608,6 +3608,10 @@ sequence_option
   / sequence_option_increment
   / sequence_option_start
   / sequence_option_restart
+  / sequence_option_minvalue
+  / sequence_option_maxvalue
+  / sequence_option_no_minvalue
+  / sequence_option_no_maxvalue
 
 sequence_option_as_type
   = kw:(AS __) type:data_type {
@@ -3644,6 +3648,26 @@ sequence_option_restart
   }
   / kw:RESTART value:(__ signed_number_literal)? {
     return loc({ type: "sequence_option_restart", restartKw: read(kw), value: read(value) });
+  }
+
+sequence_option_minvalue
+  = kw:(MINVALUE __) value:signed_number_literal {
+    return loc({ type: "sequence_option_minvalue", minvalueKw: read(kw), value });
+  }
+
+sequence_option_maxvalue
+  = kw:(MAXVALUE __) value:signed_number_literal {
+    return loc({ type: "sequence_option_maxvalue", maxvalueKw: read(kw), value });
+  }
+
+sequence_option_no_minvalue
+  = kw:(NO __ MINVALUE) {
+    return loc({ type: "sequence_option_no_minvalue", noMinvalueKw: read(kw) });
+  }
+
+sequence_option_no_maxvalue
+  = kw:(NO __ MAXVALUE) {
+    return loc({ type: "sequence_option_no_maxvalue", noMaxvalueKw: read(kw) });
   }
 
 alter_sequence_stmt

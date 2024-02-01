@@ -7,6 +7,8 @@ describe("sequence", () => {
       "INCREMENT BY": ["INCREMENT BY 1", "INCREMENT +10", "INCREMENT -1"],
       START: ["START WITH 10", "START 1", "START -5"],
       RESTART: ["RESTART WITH 1", "RESTART 1", "RESTART -5"],
+      MINVALUE: ["MINVALUE 1", "MINVALUE -5", "NO MINVALUE"],
+      MAXVALUE: ["MAXVALUE 100", "MAXVALUE -5", "NO MAXVALUE"],
     };
 
     describe("CREATE SEQUENCE", () => {

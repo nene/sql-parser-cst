@@ -33,7 +33,11 @@ type SequenceOption =
   | SequenceOptionAsType
   | SequenceOptionIncrement
   | SequenceOptionStart
-  | SequenceOptionRestart;
+  | SequenceOptionRestart
+  | SequenceOptionMinvalue
+  | SequenceOptionMaxvalue
+  | SequenceOptionNoMinvalue
+  | SequenceOptionNoMaxvalue;
 
 interface SequenceOptionAsType extends BaseNode {
   type: "sequence_option_as_type";
@@ -60,6 +64,28 @@ interface SequenceOptionRestart extends BaseNode {
   restartKw: Keyword<"RESTART">;
   withKw?: Keyword<"WITH">;
   value?: Expr;
+}
+
+interface SequenceOptionMinvalue extends BaseNode {
+  type: "sequence_option_minvalue";
+  minvalueKw: Keyword<"MINVALUE">;
+  value: Expr;
+}
+
+interface SequenceOptionMaxvalue extends BaseNode {
+  type: "sequence_option_maxvalue";
+  maxvalueKw: Keyword<"MAXVALUE">;
+  value: Expr;
+}
+
+interface SequenceOptionNoMinvalue extends BaseNode {
+  type: "sequence_option_no_minvalue";
+  noMinvalueKw: [Keyword<"NO">, Keyword<"MINVALUE">];
+}
+
+interface SequenceOptionNoMaxvalue extends BaseNode {
+  type: "sequence_option_no_maxvalue";
+  noMaxvalueKw: [Keyword<"NO">, Keyword<"MAXVALUE">];
 }
 
 export interface AlterSequenceStmt extends BaseNode {
