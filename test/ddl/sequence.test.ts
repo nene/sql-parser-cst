@@ -5,6 +5,7 @@ describe("sequence", () => {
     const sequenceOptions = {
       "AS type": ["AS int", "AS varchar(100)"],
       "INCREMENT BY": ["INCREMENT BY 1", "INCREMENT +10", "INCREMENT -1"],
+      RESTART: ["RESTART WITH 1", "RESTART 1", "RESTART -5"],
     };
 
     describe("CREATE SEQUENCE", () => {

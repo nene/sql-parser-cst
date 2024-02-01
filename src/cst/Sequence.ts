@@ -25,7 +25,10 @@ export interface SequenceKind extends BaseNode {
   kindKw: Keyword<"TEMP" | "TEMPORARY" | "UNLOGGED">;
 }
 
-type SequenceOption = SequenceOptionAsType | SequenceOptionIncrement;
+type SequenceOption =
+  | SequenceOptionAsType
+  | SequenceOptionIncrement
+  | SequenceOptionRestart;
 
 interface SequenceOptionAsType extends BaseNode {
   type: "sequence_option_as_type";
@@ -38,6 +41,13 @@ interface SequenceOptionIncrement extends BaseNode {
   incrementKw: Keyword<"INCREMENT">;
   byKw?: Keyword<"BY">;
   value: Expr;
+}
+
+interface SequenceOptionRestart extends BaseNode {
+  type: "sequence_option_restart";
+  restartKw: Keyword<"RESTART">;
+  withKw?: Keyword<"WITH">;
+  value?: Expr;
 }
 
 // DROP SEQUENCE
