@@ -83,6 +83,13 @@ export type AlterViewAction =
   | AlterActionDependsOnExtension
   | AlterActionNoDependsOnExtension;
 
+export type AlterSequenceAction =
+  | AlterActionSetLogged
+  | AlterActionSetUnlogged
+  | AlterActionOwnerTo
+  | AlterActionRename
+  | AlterActionSetSchema;
+
 export interface AlterActionRename extends BaseNode {
   type: "alter_action_rename";
   renameKw: Keyword<"RENAME"> | [Keyword<"RENAME">, Keyword<"TO" | "AS">];

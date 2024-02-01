@@ -1,3 +1,4 @@
+import { AlterSequenceAction } from "./AlterAction";
 import { BaseNode, Keyword } from "./Base";
 import { DataType } from "./DataType";
 import { EntityName, Expr, ListExpr } from "./Expr";
@@ -67,7 +68,7 @@ export interface AlterSequenceStmt extends BaseNode {
   sequenceKw: Keyword<"SEQUENCE">;
   ifExistsKw?: [Keyword<"IF">, Keyword<"EXISTS">];
   sequence: EntityName;
-  actions: SequenceOption[];
+  actions: (SequenceOption | AlterSequenceAction)[];
 }
 
 // DROP SEQUENCE

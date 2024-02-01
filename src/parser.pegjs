@@ -3651,7 +3651,7 @@ alter_sequence_stmt
     sequenceKw:(SEQUENCE __)
     ifExistsKw:(if_exists __)?
     sequence:entity_name
-    actions:(__ sequence_option)* {
+    actions:(__ (sequence_option / alter_sequence_action))+ {
       return loc({
         type: "alter_sequence_stmt",
         alterKw: read(kw),
@@ -3661,6 +3661,13 @@ alter_sequence_stmt
         actions: actions.map(read),
       });
     }
+
+alter_sequence_action
+  = alter_action_set_logged
+  / alter_action_set_unlogged
+  / alter_action_owner_to
+  / alter_action_rename
+  / alter_action_set_schema
 
 drop_sequence_stmt
   = kw:(DROP __)

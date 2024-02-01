@@ -39,12 +39,12 @@ describe("sequence", () => {
 
     describe("ALTER SEQUENCE", () => {
       it("supports basic ALTER SEQUENCE statement", () => {
-        testWc("ALTER SEQUENCE my_seq");
-        testWc("ALTER SEQUENCE my_schema.seq");
+        testWc("ALTER SEQUENCE my_seq RESTART");
+        testWc("ALTER SEQUENCE my_schema.seq RESTART");
       });
 
       it("supports IF EXISTS", () => {
-        testWc("ALTER SEQUENCE IF EXISTS my_seq");
+        testWc("ALTER SEQUENCE IF EXISTS my_seq RESTART");
       });
 
       Object.entries(sequenceOptions).forEach(([option, examples]) => {
@@ -53,6 +53,26 @@ describe("sequence", () => {
             testWc(`ALTER SEQUENCE seq1 ${example}`);
           });
         });
+      });
+
+      it("supports SET {LOGGED|UNLOGGED}", () => {
+        testWc("ALTER SEQUENCE seq1 SET LOGGED");
+        testWc("ALTER SEQUENCE seq1 SET UNLOGGED");
+      });
+
+      it("supports OWNER TO", () => {
+        testWc("ALTER SEQUENCE seq1 OWNER TO my_role");
+        testWc("ALTER SEQUENCE seq1 OWNER TO CURRENT_USER");
+        testWc("ALTER SEQUENCE seq1 OWNER TO SESSION_USER");
+        testWc("ALTER SEQUENCE seq1 OWNER TO CURRENT_ROLE");
+      });
+
+      it("supports RENAME TO", () => {
+        testWc("ALTER SEQUENCE seq1 RENAME TO seq2");
+      });
+
+      it("supports SET SCHEMA", () => {
+        testWc("ALTER SEQUENCE seq1 SET SCHEMA my_schema");
       });
     });
 
