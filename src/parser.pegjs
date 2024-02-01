@@ -139,6 +139,7 @@ ddl_statement_postgres
   / create_schema_stmt
   / drop_schema_stmt
   / alter_schema_stmt
+  / create_sequence_stmt
 
 dml_statement
   = compound_select_stmt
@@ -3570,6 +3571,27 @@ drop_procedure_stmt
         name,
         params: read(params),
         behaviorKw: read(behaviorKw),
+      });
+    }
+
+/**
+ * ------------------------------------------------------------------------------------ *
+ *                                                                                      *
+ * CREATE SEQUENCE / DROP SEQUENCE                                                      *
+ *                                                                                      *
+ * ------------------------------------------------------------------------------------ *
+ */
+create_sequence_stmt
+  = kw:(CREATE __)
+    sequenceKw:(SEQUENCE __)
+    ifNotExistsKw:(if_not_exists __)?
+    name:entity_name {
+      return loc({
+        type: "create_sequence_stmt",
+        createKw: read(kw),
+        sequenceKw: read(sequenceKw),
+        ifNotExistsKw: read(ifNotExistsKw),
+        name,
       });
     }
 
@@ -7646,6 +7668,7 @@ SECOND_MICROSECOND  = kw:"SECOND_MICROSECOND"   !ident_part { return loc(createK
 SECONDARY_ENGINE_ATTRIBUTE = kw:"SECONDARY_ENGINE_ATTRIBUTE"i !ident_part { return loc(createKeyword(kw)); }
 SECURITY            = kw:"SECURITY"i            !ident_part { return loc(createKeyword(kw)); }
 SELECT              = kw:"SELECT"i              !ident_part { return loc(createKeyword(kw)); }
+SEQUENCE            = kw:"SEQUENCE"i            !ident_part { return loc(createKeyword(kw)); }
 SERVER              = kw:"SERVER"i              !ident_part { return loc(createKeyword(kw)); }
 SESSION             = kw:"SESSION"i             !ident_part { return loc(createKeyword(kw)); }
 SESSION_USER        = kw:"SESSION_USER"i        !ident_part { return loc(createKeyword(kw)); }

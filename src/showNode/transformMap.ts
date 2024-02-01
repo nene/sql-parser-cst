@@ -20,6 +20,7 @@ import { procedureMap } from "./procedure";
 import { procClauseMap } from "./proc_clause";
 import { schemaMap } from "./schema";
 import { selectMap } from "./select";
+import { sequenceMap } from "./sequence";
 import { transactionMap } from "./transaction";
 import { triggerMap } from "./trigger";
 import { truncateMap } from "./truncate";
@@ -55,11 +56,12 @@ export const transformMap: FullTransformMap<string> = {
   ...dropTableMap,
   ...renameTableMap,
 
-  // CREATE/DROP/ALTER SCHEMA/VIEW/INDEX/TRIGGER
+  // CREATE/DROP/ALTER SCHEMA/VIEW/INDEX/TRIGGER/SEQUENCE
   ...schemaMap,
   ...viewMap,
   ...indexMap,
   ...triggerMap,
+  ...sequenceMap,
 
   // CREATE/DROP FUNCTION/PROCEDURE
   ...functionMap,

@@ -28,6 +28,7 @@ export * from "./Program";
 export * from "./RenameTable";
 export * from "./Schema";
 export * from "./Select";
+export * from "./Sequence";
 export * from "./dialects/Sqlite";
 export * from "./Statement";
 export * from "./Transaction";
@@ -61,6 +62,7 @@ import { AllProceduralNodes } from "./ProceduralLanguage";
 import { AllProcedureNodes } from "./Procedure";
 import { AllRenameTableNodes } from "./RenameTable";
 import { AllSelectNodes } from "./Select";
+import { AllSequenceNodes } from "./Sequence";
 import { AllSqliteNodes } from "./dialects/Sqlite";
 import { AllTransactionNodes } from "./Transaction";
 import { AllTriggerNodes } from "./Trigger";
@@ -94,6 +96,7 @@ export type Node =
   | AllProcedureNodes
   | AllRenameTableNodes
   | AllSelectNodes
+  | AllSequenceNodes
   | AllSqliteNodes
   | AllTransactionNodes
   | AllTriggerNodes
