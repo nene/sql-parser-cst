@@ -27,6 +27,7 @@ export const sequenceMap: FullTransformMap<string, AllSequenceNodes> = {
   sequence_option_no_maxvalue: (node) => show(node.noMaxvalueKw),
   sequence_option_cache: (node) => show([node.cacheKw, node.value]),
   sequence_option_no_cache: (node) => show(node.noCacheKw),
+  sequence_option_owned_by: (node) => show([node.ownedByKw, node.owner]),
 
   // ALTER SEQUENCE
   alter_sequence_stmt: (node) =>

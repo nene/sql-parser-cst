@@ -10,6 +10,7 @@ describe("sequence", () => {
       MINVALUE: ["MINVALUE 1", "MINVALUE -5", "NO MINVALUE"],
       MAXVALUE: ["MAXVALUE 100", "MAXVALUE -5", "NO MAXVALUE"],
       CACHE: ["CACHE 10", "CACHE -1", "NO CACHE"], // Negative makes no sense, but Postgres allows it
+      "OWNED BY": ["OWNED BY blah", "OWNED BY foo.bar", "OWNED BY NONE"],
     };
 
     describe("CREATE SEQUENCE", () => {

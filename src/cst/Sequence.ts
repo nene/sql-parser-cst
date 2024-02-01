@@ -39,7 +39,8 @@ type SequenceOption =
   | SequenceOptionNoMinvalue
   | SequenceOptionNoMaxvalue
   | SequenceOptionCache
-  | SequenceOptionNoCache;
+  | SequenceOptionNoCache
+  | SequenceOptionOwnedBy;
 
 interface SequenceOptionAsType extends BaseNode {
   type: "sequence_option_as_type";
@@ -99,6 +100,12 @@ interface SequenceOptionCache extends BaseNode {
 interface SequenceOptionNoCache extends BaseNode {
   type: "sequence_option_no_cache";
   noCacheKw: [Keyword<"NO">, Keyword<"CACHE">];
+}
+
+interface SequenceOptionOwnedBy extends BaseNode {
+  type: "sequence_option_owned_by";
+  ownedByKw: [Keyword<"OWNED">, Keyword<"BY">];
+  owner: EntityName;
 }
 
 export interface AlterSequenceStmt extends BaseNode {

@@ -3614,6 +3614,7 @@ sequence_option
   / sequence_option_no_maxvalue
   / sequence_option_cache
   / sequence_option_no_cache
+  / sequence_option_owned_by
 
 sequence_option_as_type
   = kw:(AS __) type:data_type {
@@ -3680,6 +3681,11 @@ sequence_option_cache
 sequence_option_no_cache
   = kw:(NO __ CACHE) {
     return loc({ type: "sequence_option_no_cache", noCacheKw: read(kw) });
+  }
+
+sequence_option_owned_by
+  = kw:(OWNED __ BY __) owner:entity_name {
+    return loc({ type: "sequence_option_owned_by", ownedByKw: read(kw), owner });
   }
 
 alter_sequence_stmt
