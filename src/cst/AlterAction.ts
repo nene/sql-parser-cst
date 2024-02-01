@@ -21,6 +21,7 @@ export type AllAlterActionNodes =
   | AlterColumnAction
   | AlterSchemaAction
   | AlterViewAction
+  | AlterIdentityAction
   | ToggleItem
   | ReplicaIdentityUsingIndex
   | SetDataTypeCollateClause
@@ -361,7 +362,8 @@ export type AlterColumnAction =
   | AlterActionSetStatistics
   | AlterActionDropExpression
   | AlterActionDropIdentity
-  | AlterActionAddIdentity;
+  | AlterActionAddIdentity
+  | AlterActionAlterIdentity;
 
 export interface AlterActionSetDefault extends BaseNode {
   type: "alter_action_set_default";
@@ -458,6 +460,27 @@ export interface AlterActionAddIdentity extends BaseNode {
   addGeneratedKw: [Keyword<"ADD">, Keyword<"GENERATED">];
   whenKw?: Keyword<"ALWAYS"> | [Keyword<"BY">, Keyword<"DEFAULT">];
   asIdentityKw: [Keyword<"AS">, Keyword<"IDENTITY">];
+}
+
+// PostgreSQL
+export interface AlterActionAlterIdentity extends BaseNode {
+  type: "alter_action_alter_identity";
+  actions: AlterIdentityAction[];
+}
+
+type AlterIdentityAction = AlterActionSetGenerated | AlterActionRestart;
+
+export interface AlterActionSetGenerated extends BaseNode {
+  type: "alter_action_set_generated";
+  setGeneratedKw: [Keyword<"SET">, Keyword<"GENERATED">];
+  whenKw?: Keyword<"ALWAYS"> | [Keyword<"BY">, Keyword<"DEFAULT">];
+}
+
+export interface AlterActionRestart extends BaseNode {
+  type: "alter_action_restart";
+  restartKw: Keyword<"RESTART">;
+  withKw?: Keyword<"WITH">;
+  value: NumberLiteral;
 }
 
 // Used with ENABLE/DISABLE

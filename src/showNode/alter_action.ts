@@ -85,6 +85,7 @@ export const alterActionMap: FullTransformMap<string, AllAlterActionNodes> = {
     show([node.dropIdentityKw, node.ifExistsKw]),
   alter_action_add_identity: (node) =>
     show([node.addGeneratedKw, node.whenKw, node.asIdentityKw]),
+  alter_action_alter_identity: (node) => show(node.actions),
 
   // ENABLE/DISABLE
   toggle_row_level_security: (node) => show([node.rowLevelSecurityKw]),
@@ -98,4 +99,10 @@ export const alterActionMap: FullTransformMap<string, AllAlterActionNodes> = {
   set_data_type_collate_clause: (node) =>
     show([node.collateKw, node.collation]),
   set_data_type_using_clause: (node) => show([node.usingKw, node.expr]),
+
+  // alter identity actions
+  alter_action_set_generated: (node) =>
+    show([node.setGeneratedKw, node.whenKw]),
+  alter_action_restart: (node) =>
+    show([node.restartKw, node.withKw, node.value]),
 };

@@ -2808,6 +2808,7 @@ alter_column_action_postgres
   / alter_action_drop_expression
   / alter_action_drop_identity
   / alter_action_add_identity
+  / alter_action_alter_identity
 
 alter_action_set_default
   = kw:(SET __ DEFAULT __) expr:expr {
@@ -2891,6 +2892,14 @@ alter_action_add_identity
     return loc({ type: "alter_action_add_identity", addGeneratedKw: read(kw), whenKw: read(whenKw), asIdentityKw: read(asIdentityKw) });
   }
 
+alter_action_alter_identity
+  = action1:alter_identity_action actions:(__ alter_identity_action)* {
+    return loc({
+      type: "alter_action_alter_identity",
+      actions: [action1, ...actions.map(read)],
+    });
+  }
+
 toggle_item
   = toggle_row_level_security
   / toggle_trigger
@@ -2909,6 +2918,23 @@ toggle_trigger
 toggle_rule
   = kw:(RULE __) name:ident {
     return loc({ type: "toggle_rule", ruleKw: read(kw), name });
+  }
+
+alter_identity_action
+  = alter_action_set_generated
+  / alter_action_restart
+
+alter_action_set_generated
+  = kw:(SET __ GENERATED __) whenKw:(ALWAYS / BY __ DEFAULT) {
+    return loc({ type: "alter_action_set_generated", setGeneratedKw: read(kw), whenKw: read(whenKw) });
+  }
+
+alter_action_restart
+  = kw:(RESTART __) withKw:(WITH __) value:number_literal {
+    return loc({ type: "alter_action_restart", restartKw: read(kw), withKw: read(withKw), value });
+  }
+  / kw:RESTART value:(__ number_literal)? {
+    return loc({ type: "alter_action_restart", restartKw: read(kw), value: read(value) });
   }
 
 /**
