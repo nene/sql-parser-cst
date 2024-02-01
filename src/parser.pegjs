@@ -65,13 +65,32 @@ statement
   = dml_statement
   / ddl_statement
   / dcl_statement
-  / x:proc_statement (&mysql / &bigquery) { return x; }
-  / x:analyze_stmt (&mysql / &sqlite / &postgres) { return x; }
-  / x:explain_stmt (&mysql / &sqlite / &postgres) { return x; }
   / transaction_statement
-  / x:execute_stmt (&mysql / &bigquery / &postgres) { return x; }
-  / x:sqlite_statement &sqlite { return x; }
-  / x:bigquery_statement &bigquery { return x; }
+  / &sqlite x:statement_sqlite { return x; }
+  / &mysql x:statement_mysql { return x; }
+  / &bigquery x:statement_bigquery { return x; }
+  / &postgres x:statement_postgres { return x; }
+
+statement_sqlite
+  = analyze_stmt
+  / explain_stmt
+  / sqlite_statement
+
+statement_mysql
+  = proc_statement
+  / analyze_stmt
+  / explain_stmt
+  / execute_stmt
+
+statement_bigquery
+  = proc_statement
+  / execute_stmt
+  / bigquery_statement
+
+statement_postgres
+  = analyze_stmt
+  / explain_stmt
+  / execute_stmt
 
 ddl_statement
   = create_view_stmt
@@ -126,8 +145,8 @@ dml_statement
   / insert_stmt
   / update_stmt
   / delete_stmt
-  / x:truncate_stmt (&bigquery / &mysql / &postgres) { return x; }
-  / x:merge_stmt (&bigquery / &postgres) { return x; }
+  / (&bigquery / &mysql / &postgres) x:truncate_stmt { return x; }
+  / (&bigquery / &postgres) x:merge_stmt { return x; }
 
 empty
   = (&. / end_of_file) {
