@@ -15,6 +15,8 @@ export const sequenceMap: FullTransformMap<string, AllSequenceNodes> = {
     ]),
   sequence_kind: (node) => show(node.kindKw),
   sequence_option_as_type: (node) => show([node.asKw, node.dataType]),
+  sequence_option_increment: (node) =>
+    show([node.incrementKw, node.byKw, node.value]),
 
   // DROP SEQUENCE
   drop_sequence_stmt: (node) =>

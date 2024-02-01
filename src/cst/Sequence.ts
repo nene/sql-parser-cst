@@ -1,6 +1,6 @@
 import { BaseNode, Keyword } from "./Base";
 import { DataType } from "./DataType";
-import { EntityName, ListExpr } from "./Expr";
+import { EntityName, Expr, ListExpr } from "./Expr";
 
 export type AllSequenceNodes =
   | AllSequenceStatements
@@ -25,12 +25,19 @@ export interface SequenceKind extends BaseNode {
   kindKw: Keyword<"TEMP" | "TEMPORARY" | "UNLOGGED">;
 }
 
-type SequenceOption = SequenceOptionAsType;
+type SequenceOption = SequenceOptionAsType | SequenceOptionIncrement;
 
 interface SequenceOptionAsType extends BaseNode {
   type: "sequence_option_as_type";
   asKw: Keyword<"AS">;
   dataType: DataType;
+}
+
+interface SequenceOptionIncrement extends BaseNode {
+  type: "sequence_option_increment";
+  incrementKw: Keyword<"INCREMENT">;
+  byKw?: Keyword<"BY">;
+  value: Expr;
 }
 
 // DROP SEQUENCE

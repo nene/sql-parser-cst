@@ -4,6 +4,7 @@ describe("sequence", () => {
   dialect("postgresql", () => {
     const sequenceOptions = {
       "AS type": ["AS int", "AS varchar(100)"],
+      "INCREMENT BY": ["INCREMENT BY 1", "INCREMENT +10", "INCREMENT -1"],
     };
 
     describe("CREATE SEQUENCE", () => {

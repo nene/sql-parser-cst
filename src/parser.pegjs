@@ -3607,6 +3607,7 @@ sequence_kind
 
 sequence_option
   = sequence_option_as_type
+  / sequence_option_increment
 
 sequence_option_as_type
   = kw:(AS __) type:data_type {
@@ -3614,6 +3615,16 @@ sequence_option_as_type
       type: "sequence_option_as_type",
       asKw: read(kw),
       dataType: type,
+    });
+  }
+
+sequence_option_increment
+  = kw:(INCREMENT __) byKw:(BY __)? value:signed_number_literal {
+    return loc({
+      type: "sequence_option_increment",
+      incrementKw: read(kw),
+      byKw: read(byKw),
+      value,
     });
   }
 
@@ -7097,6 +7108,14 @@ blob_literal_bit_string
     });
   }
 
+// number_literal rule is without a sign,
+// this rule allows for signed numbers
+signed_number_literal
+  = op:("-" / "+") right:(__ number_literal) {
+    return loc(createPrefixOpExpr(op, read(right)));
+  }
+  / number_literal
+
 number_literal "number"
   = number_literal_decimal
   / n:number_literal_hex (&sqlite / &bigquery / &postgres) { return n; }
@@ -7489,6 +7508,7 @@ IMMUTABLE           = kw:"IMMUTABLE"i           !ident_part { return loc(createK
 IN                  = kw:"IN"i                  !ident_part { return loc(createKeyword(kw)); }
 INCLUDE             = kw:"INCLUDE"i             !ident_part { return loc(createKeyword(kw)); }
 INCLUDING           = kw:"INCLUDING"i           !ident_part { return loc(createKeyword(kw)); }
+INCREMENT           = kw:"INCREMENT"i           !ident_part { return loc(createKeyword(kw)); }
 INDEX               = kw:"INDEX"i               !ident_part { return loc(createKeyword(kw)); }
 INDEXED             = kw:"INDEXED"              !ident_part { return loc(createKeyword(kw)); }
 INDEXES             = kw:"INDEXES"i             !ident_part { return loc(createKeyword(kw)); }
