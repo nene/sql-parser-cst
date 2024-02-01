@@ -37,6 +37,25 @@ describe("sequence", () => {
       });
     });
 
+    describe("ALTER SEQUENCE", () => {
+      it("supports basic ALTER SEQUENCE statement", () => {
+        testWc("ALTER SEQUENCE my_seq");
+        testWc("ALTER SEQUENCE my_schema.seq");
+      });
+
+      it("supports IF EXISTS", () => {
+        testWc("ALTER SEQUENCE IF EXISTS my_seq");
+      });
+
+      Object.entries(sequenceOptions).forEach(([option, examples]) => {
+        it(`supports ${option}`, () => {
+          examples.forEach((example) => {
+            testWc(`ALTER SEQUENCE seq1 ${example}`);
+          });
+        });
+      });
+    });
+
     describe("DROP SEQUENCE", () => {
       it("supports basic DROP SEQUENCE statement", () => {
         testWc("DROP SEQUENCE my_seq");

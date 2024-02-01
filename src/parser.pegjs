@@ -140,6 +140,7 @@ ddl_statement_postgres
   / drop_schema_stmt
   / alter_schema_stmt
   / create_sequence_stmt
+  / alter_sequence_stmt
   / drop_sequence_stmt
 
 dml_statement
@@ -3575,7 +3576,7 @@ drop_procedure_stmt
 /**
  * ------------------------------------------------------------------------------------ *
  *                                                                                      *
- * CREATE SEQUENCE / DROP SEQUENCE                                                      *
+ * CREATE/ALTER/DROP SEQUENCE                                                           *
  *                                                                                      *
  * ------------------------------------------------------------------------------------ *
  */
@@ -3644,6 +3645,22 @@ sequence_option_restart
   / kw:RESTART value:(__ signed_number_literal)? {
     return loc({ type: "sequence_option_restart", restartKw: read(kw), value: read(value) });
   }
+
+alter_sequence_stmt
+  = kw:(ALTER __)
+    sequenceKw:(SEQUENCE __)
+    ifExistsKw:(if_exists __)?
+    sequence:entity_name
+    actions:(__ sequence_option)* {
+      return loc({
+        type: "alter_sequence_stmt",
+        alterKw: read(kw),
+        sequenceKw: read(sequenceKw),
+        ifExistsKw: read(ifExistsKw),
+        sequence,
+        actions: actions.map(read),
+      });
+    }
 
 drop_sequence_stmt
   = kw:(DROP __)

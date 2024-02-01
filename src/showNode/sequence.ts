@@ -22,6 +22,16 @@ export const sequenceMap: FullTransformMap<string, AllSequenceNodes> = {
   sequence_option_restart: (node) =>
     show([node.restartKw, node.withKw, node.value]),
 
+  // ALTER SEQUENCE
+  alter_sequence_stmt: (node) =>
+    show([
+      node.alterKw,
+      node.sequenceKw,
+      node.ifExistsKw,
+      node.sequence,
+      node.actions,
+    ]),
+
   // DROP SEQUENCE
   drop_sequence_stmt: (node) =>
     show([

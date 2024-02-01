@@ -7,7 +7,10 @@ export type AllSequenceNodes =
   | SequenceKind
   | SequenceOption;
 
-export type AllSequenceStatements = CreateSequenceStmt | DropSequenceStmt;
+export type AllSequenceStatements =
+  | CreateSequenceStmt
+  | AlterSequenceStmt
+  | DropSequenceStmt;
 
 // CREATE SEQUENCE
 export interface CreateSequenceStmt extends BaseNode {
@@ -56,6 +59,15 @@ interface SequenceOptionRestart extends BaseNode {
   restartKw: Keyword<"RESTART">;
   withKw?: Keyword<"WITH">;
   value?: Expr;
+}
+
+export interface AlterSequenceStmt extends BaseNode {
+  type: "alter_sequence_stmt";
+  alterKw: Keyword<"ALTER">;
+  sequenceKw: Keyword<"SEQUENCE">;
+  ifExistsKw?: [Keyword<"IF">, Keyword<"EXISTS">];
+  sequence: EntityName;
+  actions: SequenceOption[];
 }
 
 // DROP SEQUENCE
