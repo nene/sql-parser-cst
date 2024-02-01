@@ -1,3 +1,4 @@
+import { AllAlterTableStatements } from "./AlterTable";
 import { AllBigqueryStatements } from "./dialects/Bigquery";
 import { AllDclStatements } from "./Dcl";
 import { AllFunctionStatements } from "./Function";
@@ -9,7 +10,6 @@ import { AllSqliteStatements } from "./dialects/Sqlite";
 import { AllTransactionStatements } from "./Transaction";
 import { AllTriggerStatements } from "./Trigger";
 import { AllViewStatements } from "./View";
-import { AlterTableStmt } from "./AlterTable";
 import { AnalyzeStmt } from "./Analyze";
 import { CompoundSelectStmt, SelectStmt } from "./Select";
 import { CreateTableStmt } from "./CreateTable";
@@ -24,6 +24,7 @@ import { UpdateStmt } from "./Update";
 import { AllPreparedStatements } from "./PreparedStatements";
 
 export type Statement =
+  | AllAlterTableStatements
   | AllBigqueryStatements
   | AllDclStatements
   | AllFunctionStatements
@@ -36,7 +37,6 @@ export type Statement =
   | AllTransactionStatements
   | AllTriggerStatements
   | AllViewStatements
-  | AlterTableStmt
   | AnalyzeStmt
   | CompoundSelectStmt
   | CreateTableStmt

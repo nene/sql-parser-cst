@@ -39,6 +39,7 @@ export * from "./WindowFrame";
 
 import { Alias } from "./Alias";
 import { AllAlterActionNodes } from "./AlterAction";
+import { AllAlterTableNodes } from "./AlterTable";
 import { AllBigqueryNodes } from "./dialects/Bigquery";
 import { AllColumns, Keyword } from "./Base";
 import { AllConstraintNodes } from "./Constraint";
@@ -71,6 +72,7 @@ import { Statement } from "./Statement";
 export type Node =
   | Alias
   | AllAlterActionNodes
+  | AllAlterTableNodes
   | AllBigqueryNodes
   | AllColumns
   | AllConstraintNodes

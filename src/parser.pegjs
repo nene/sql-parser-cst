@@ -85,6 +85,7 @@ ddl_statement
   / create_table_stmt
   / drop_table_stmt
   / alter_table_stmt
+  / x:alter_table_all_in_tablespace_stmt &postgres { return x; }
   / x:rename_table_stmt &mysql { return x; }
   / x:create_trigger_stmt (&mysql / &sqlite) { return x; }
   / x:drop_trigger_stmt (&mysql / &sqlite) { return x; }
@@ -2393,6 +2394,32 @@ alter_table_stmt
         actions,
       });
     }
+
+alter_table_all_in_tablespace_stmt
+  = kw:(ALTER __ TABLE __)
+    allInTablespaceKw:(ALL __ IN __ TABLESPACE __)
+    tablespace:(ident __)
+    ownedBy:(owned_by_clause __)?
+    action:alter_action_set_tablespace
+    {
+    return loc({
+      type: "alter_table_all_in_tablespace_stmt",
+      alterTableKw: read(kw),
+      allInTablespaceKw: read(allInTablespaceKw),
+      tablespace: read(tablespace),
+      ownedBy: read(ownedBy),
+      action,
+    });
+  }
+
+owned_by_clause
+  = kw:(OWNED __ BY __) owners:list$role_specification {
+    return loc({
+      type: "owned_by_clause",
+      ownedByKw: read(kw),
+      owners,
+    });
+  }
 
 alter_action
   = alter_action_add_column
@@ -6252,6 +6279,7 @@ list$postgresql_option_element = .
 list$procedure_param = .
 list$relation_expr = .
 list$rename_action = .
+list$role_specification = .
 list$set_assignment = .
 list$sort_specification = .
 list$string_literal = .
@@ -7479,6 +7507,7 @@ OUTFILE             = kw:"OUTFILE"i             !ident_part { return loc(createK
 OVER                = kw:"OVER"i                !ident_part { return loc(createKeyword(kw)); }
 OVERRIDING          = kw:"OVERRIDING"i          !ident_part { return loc(createKeyword(kw)); }
 OVERWRITE           = kw:"OVERWRITE"i           !ident_part { return loc(createKeyword(kw)); }
+OWNED               = kw:"OWNED"i               !ident_part { return loc(createKeyword(kw)); }
 OWNER               = kw:"OWNER"i               !ident_part { return loc(createKeyword(kw)); }
 PACK_KEYS           = kw:"PACK_KEYS"i           !ident_part { return loc(createKeyword(kw)); }
 PARALLEL            = kw:"PARALLEL"i            !ident_part { return loc(createKeyword(kw)); }

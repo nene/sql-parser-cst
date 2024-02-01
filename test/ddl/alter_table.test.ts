@@ -450,4 +450,23 @@ describe("alter table", () => {
       testAlterWc(`REPLICA IDENTITY USING INDEX my_index`);
     });
   });
+
+  dialect("postgresql", () => {
+    describe("ALTER TABLE ALL IN TABLESPACE", () => {
+      it("supports ALTER TABLE ALL IN TABLESPACE", () => {
+        testWc(`
+          ALTER TABLE ALL IN TABLESPACE my_tspace
+            SET TABLESPACE new_tablespace
+        `);
+      });
+
+      it("supports OWNED BY clause", () => {
+        testWc(`
+          ALTER TABLE ALL IN TABLESPACE my_tspace
+            OWNED BY user1, CURRENT_ROLE, user2
+            SET TABLESPACE new_tablespace NOWAIT
+        `);
+      });
+    });
+  });
 });
