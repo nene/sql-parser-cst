@@ -3608,6 +3608,14 @@ sequence_kind
     return loc({ type: "sequence_kind", kindKw: kw });
   }
 
+sequence_option_list
+  = op1:sequence_option options:(__ sequence_option)* {
+    return loc({
+      type: "sequence_option_list",
+      options: [op1, ...options.map(read)],
+    });
+  }
+
 sequence_option
   = sequence_option_as_type
   / sequence_option_increment
@@ -4946,14 +4954,17 @@ constraint_generated
     }
 
 constraint_generated_as_identity
-  = kws:(GENERATED __ ALWAYS / GENERATED __ BY __ DEFAULT) asKw:(__ AS) identity:(__ identity_column) {
-    return loc({
-      type: "constraint_generated",
-      generatedKw: read(kws),
-      asKw: read(asKw),
-      expr: read(identity),
-    });
-  }
+  = kws:(GENERATED __ ALWAYS / GENERATED __ BY __ DEFAULT)
+    asKw:(__ AS) identity:(__ identity_column)
+    sequenceOptions:(__ paren$sequence_option_list)? {
+      return loc({
+        type: "constraint_generated",
+        generatedKw: read(kws),
+        asKw: read(asKw),
+        expr: read(identity),
+        sequenceOptions: read(sequenceOptions),
+      });
+    }
 
 identity_column = kw:IDENTITY {
   return loc({ type: "identity_column", identityKw: kw });
@@ -6443,6 +6454,7 @@ paren$pivot_for_in = .
 paren$postgresql_op = .
 paren$pragma_value = .
 paren$raise_args = .
+paren$sequence_option_list = .
 paren$string_literal = .
 paren$unpivot_for_in = .
 paren$verbose_all_columns = .

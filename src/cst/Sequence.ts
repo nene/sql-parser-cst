@@ -6,6 +6,7 @@ import { EntityName, Expr, ListExpr } from "./Expr";
 export type AllSequenceNodes =
   | AllSequenceStatements
   | SequenceKind
+  | SequenceOptionList
   | SequenceOption;
 
 export type AllSequenceStatements =
@@ -27,6 +28,12 @@ export interface CreateSequenceStmt extends BaseNode {
 export interface SequenceKind extends BaseNode {
   type: "sequence_kind";
   kindKw: Keyword<"TEMP" | "TEMPORARY" | "UNLOGGED">;
+}
+
+// A container to allow usage inside ParenExpr
+export interface SequenceOptionList extends BaseNode {
+  type: "sequence_option_list";
+  options: SequenceOption[];
 }
 
 type SequenceOption =

@@ -12,6 +12,7 @@ import {
   PostgresqlOptions,
   PostgresqlWithOptions,
 } from "./dialects/Postgresql";
+import { SequenceOptionList } from "./Sequence";
 
 export type AllConstraintNodes =
   | Constraint<ColumnConstraint | TableConstraint>
@@ -229,6 +230,7 @@ export interface ConstraintGenerated extends BaseNode {
   asKw: Keyword<"AS">;
   expr: ParenExpr<Expr> | IdentityColumn;
   storageKw?: Keyword<"STORED" | "VIRTUAL">;
+  sequenceOptions?: ParenExpr<SequenceOptionList>;
 }
 
 // PostgreSQL
