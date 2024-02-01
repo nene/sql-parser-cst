@@ -2922,7 +2922,7 @@ alter_action_set_data_type
 
 set_data_type_collate_clause
   = collate:constraint_collate {
-    return loc({ type: "set_data_type_collate_clause", ...collate });
+    return loc({ ...collate, type: "set_data_type_collate_clause" });
   }
 
 set_data_type_using_clause
