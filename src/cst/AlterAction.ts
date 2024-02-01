@@ -14,7 +14,7 @@ import {
 import { NumberLiteral, StringLiteral } from "./Literal";
 import { Constraint, ConstraintModifier, TableConstraint } from "./Constraint";
 import { Default } from "./Insert";
-import { PostgresqlTableOption } from "./Node";
+import { PostgresqlTableOption, SequenceOptionList } from "./Node";
 
 export type AllAlterActionNodes =
   | AlterTableAction
@@ -467,6 +467,7 @@ export interface AlterActionAddIdentity extends BaseNode {
   addGeneratedKw: [Keyword<"ADD">, Keyword<"GENERATED">];
   whenKw?: Keyword<"ALWAYS"> | [Keyword<"BY">, Keyword<"DEFAULT">];
   asIdentityKw: [Keyword<"AS">, Keyword<"IDENTITY">];
+  sequenceOptions?: ParenExpr<SequenceOptionList>;
 }
 
 // PostgreSQL

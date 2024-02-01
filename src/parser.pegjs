@@ -2967,9 +2967,18 @@ alter_action_drop_identity
   }
 
 alter_action_add_identity
-  = kw:(ADD __ GENERATED __) whenKw:(ALWAYS / BY __ DEFAULT) asIdentityKw:(__ AS __ IDENTITY) {
-    return loc({ type: "alter_action_add_identity", addGeneratedKw: read(kw), whenKw: read(whenKw), asIdentityKw: read(asIdentityKw) });
-  }
+  = kw:(ADD __ GENERATED __)
+    whenKw:(ALWAYS / BY __ DEFAULT)
+    asIdentityKw:(__ AS __ IDENTITY)
+    sequenceOptions:(__ paren$sequence_option_list)? {
+      return loc({
+        type: "alter_action_add_identity",
+        addGeneratedKw: read(kw),
+        whenKw: read(whenKw),
+        asIdentityKw: read(asIdentityKw),
+        sequenceOptions: read(sequenceOptions),
+      });
+    }
 
 alter_action_alter_identity
   = action1:alter_identity_action actions:(__ alter_identity_action)* {
