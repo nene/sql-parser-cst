@@ -218,6 +218,11 @@ describe("alter table", () => {
         testAlterWc("ALTER COLUMN foo DROP EXPRESSION");
         testAlterWc("ALTER COLUMN foo DROP EXPRESSION IF EXISTS");
       });
+
+      it("supports DROP IDENTITY [IF EXISTS]", () => {
+        testAlterWc("ALTER COLUMN foo DROP IDENTITY");
+        testAlterWc("ALTER COLUMN foo DROP IDENTITY IF EXISTS");
+      });
     });
   });
 

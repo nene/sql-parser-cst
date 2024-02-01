@@ -359,7 +359,8 @@ export type AlterColumnAction =
   | AlterActionSetCompression
   | AlterActionSetStorage
   | AlterActionSetStatistics
-  | AlterActionDropExpression;
+  | AlterActionDropExpression
+  | AlterActionDropIdentity;
 
 export interface AlterActionSetDefault extends BaseNode {
   type: "alter_action_set_default";
@@ -440,6 +441,13 @@ export interface AlterActionSetStatistics extends BaseNode {
 export interface AlterActionDropExpression extends BaseNode {
   type: "alter_action_drop_expression";
   dropExpressionKw: [Keyword<"DROP">, Keyword<"EXPRESSION">];
+  ifExistsKw?: [Keyword<"IF">, Keyword<"EXISTS">];
+}
+
+// PostgreSQL
+export interface AlterActionDropIdentity extends BaseNode {
+  type: "alter_action_drop_identity";
+  dropIdentityKw: [Keyword<"DROP">, Keyword<"IDENTITY">];
   ifExistsKw?: [Keyword<"IF">, Keyword<"EXISTS">];
 }
 
