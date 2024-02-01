@@ -108,6 +108,7 @@ export const alterActionMap: FullTransformMap<string, AllAlterActionNodes> = {
   // alter identity actions
   alter_action_set_generated: (node) =>
     show([node.setGeneratedKw, node.whenKw]),
+  alter_action_set_sequence_option: (node) => show([node.setKw, node.option]),
   alter_action_restart: (node) =>
     show([node.restartKw, node.withKw, node.value]),
 };

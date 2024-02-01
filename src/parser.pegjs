@@ -3010,11 +3010,17 @@ toggle_rule
 
 alter_identity_action
   = alter_action_set_generated
+  / alter_action_set_sequence_option
   / alter_action_restart
 
 alter_action_set_generated
   = kw:(SET __ GENERATED __) whenKw:(ALWAYS / BY __ DEFAULT) {
     return loc({ type: "alter_action_set_generated", setGeneratedKw: read(kw), whenKw: read(whenKw) });
+  }
+
+alter_action_set_sequence_option
+  = kw:(SET __) option:sequence_option {
+    return loc({ type: "alter_action_set_sequence_option", setKw: read(kw), option });
   }
 
 alter_action_restart

@@ -36,7 +36,7 @@ export interface SequenceOptionList extends BaseNode {
   options: SequenceOption[];
 }
 
-type SequenceOption =
+export type SequenceOption =
   | SequenceOptionAsType
   | SequenceOptionIncrement
   | SequenceOptionStart

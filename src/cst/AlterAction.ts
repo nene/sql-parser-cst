@@ -14,7 +14,11 @@ import {
 import { NumberLiteral, StringLiteral } from "./Literal";
 import { Constraint, ConstraintModifier, TableConstraint } from "./Constraint";
 import { Default } from "./Insert";
-import { PostgresqlTableOption, SequenceOptionList } from "./Node";
+import {
+  PostgresqlTableOption,
+  SequenceOption,
+  SequenceOptionList,
+} from "./Node";
 
 export type AllAlterActionNodes =
   | AlterTableAction
@@ -476,12 +480,21 @@ export interface AlterActionAlterIdentity extends BaseNode {
   actions: AlterIdentityAction[];
 }
 
-type AlterIdentityAction = AlterActionSetGenerated | AlterActionRestart;
+type AlterIdentityAction =
+  | AlterActionSetGenerated
+  | AlterActionSetSequenceOption
+  | AlterActionRestart;
 
 export interface AlterActionSetGenerated extends BaseNode {
   type: "alter_action_set_generated";
   setGeneratedKw: [Keyword<"SET">, Keyword<"GENERATED">];
   whenKw?: Keyword<"ALWAYS"> | [Keyword<"BY">, Keyword<"DEFAULT">];
+}
+
+export interface AlterActionSetSequenceOption extends BaseNode {
+  type: "alter_action_set_sequence_option";
+  setKw: Keyword<"SET">;
+  option: SequenceOption;
 }
 
 export interface AlterActionRestart extends BaseNode {
