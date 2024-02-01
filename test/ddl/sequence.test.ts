@@ -2,6 +2,10 @@ import { dialect, notDialect, test, testWc } from "../test_utils";
 
 describe("sequence", () => {
   dialect("postgresql", () => {
+    const sequenceOptions = {
+      "AS type": ["AS int", "AS varchar(100)"],
+    };
+
     describe("CREATE SEQUENCE", () => {
       it("supports basic CREATE SEQUENCE statement", () => {
         testWc("CREATE SEQUENCE my_seq");
@@ -19,6 +23,14 @@ describe("sequence", () => {
 
       it("supports UNLOGGED", () => {
         testWc("CREATE UNLOGGED SEQUENCE seq1");
+      });
+
+      Object.entries(sequenceOptions).forEach(([option, examples]) => {
+        it(`supports ${option}`, () => {
+          examples.forEach((example) => {
+            testWc(`CREATE SEQUENCE seq1 ${example}`);
+          });
+        });
       });
     });
 

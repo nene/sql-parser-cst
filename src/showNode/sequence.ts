@@ -3,6 +3,7 @@ import { FullTransformMap } from "../cstTransformer";
 import { AllSequenceNodes } from "../cst/Node";
 
 export const sequenceMap: FullTransformMap<string, AllSequenceNodes> = {
+  // CREATE SEQUENCE
   create_sequence_stmt: (node) =>
     show([
       node.createKw,
@@ -10,8 +11,12 @@ export const sequenceMap: FullTransformMap<string, AllSequenceNodes> = {
       node.sequenceKw,
       node.ifNotExistsKw,
       node.name,
+      node.options,
     ]),
   sequence_kind: (node) => show(node.kindKw),
+  sequence_option_as_type: (node) => show([node.asKw, node.dataType]),
+
+  // DROP SEQUENCE
   drop_sequence_stmt: (node) =>
     show([
       node.dropKw,

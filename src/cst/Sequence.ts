@@ -1,7 +1,11 @@
 import { BaseNode, Keyword } from "./Base";
+import { DataType } from "./DataType";
 import { EntityName, ListExpr } from "./Expr";
 
-export type AllSequenceNodes = AllSequenceStatements | SequenceKind;
+export type AllSequenceNodes =
+  | AllSequenceStatements
+  | SequenceKind
+  | SequenceOption;
 
 export type AllSequenceStatements = CreateSequenceStmt | DropSequenceStmt;
 
@@ -13,11 +17,20 @@ export interface CreateSequenceStmt extends BaseNode {
   sequenceKw: Keyword<"SEQUENCE">;
   ifNotExistsKw?: [Keyword<"IF">, Keyword<"NOT">, Keyword<"EXISTS">];
   name: EntityName;
+  options: SequenceOption[];
 }
 
 export interface SequenceKind extends BaseNode {
   type: "sequence_kind";
   kindKw: Keyword<"TEMP" | "TEMPORARY" | "UNLOGGED">;
+}
+
+type SequenceOption = SequenceOptionAsType;
+
+interface SequenceOptionAsType extends BaseNode {
+  type: "sequence_option_as_type";
+  asKw: Keyword<"AS">;
+  dataType: DataType;
 }
 
 // DROP SEQUENCE

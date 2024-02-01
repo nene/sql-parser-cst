@@ -3587,7 +3587,8 @@ create_sequence_stmt
     kind:(sequence_kind __)?
     sequenceKw:(SEQUENCE __)
     ifNotExistsKw:(if_not_exists __)?
-    name:entity_name {
+    name:entity_name
+    options:(__ sequence_option)* {
       return loc({
         type: "create_sequence_stmt",
         createKw: read(kw),
@@ -3595,12 +3596,25 @@ create_sequence_stmt
         sequenceKw: read(sequenceKw),
         ifNotExistsKw: read(ifNotExistsKw),
         name,
+        options: options.map(read),
       });
     }
 
 sequence_kind
   = kw:(TEMP / TEMPORARY / UNLOGGED) {
     return loc({ type: "sequence_kind", kindKw: kw });
+  }
+
+sequence_option
+  = sequence_option_as_type
+
+sequence_option_as_type
+  = kw:(AS __) type:data_type {
+    return loc({
+      type: "sequence_option_as_type",
+      asKw: read(kw),
+      dataType: type,
+    });
   }
 
 drop_sequence_stmt
