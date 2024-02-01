@@ -3173,7 +3173,12 @@ create_schema_authorization_clause
   }
 
 schema_scoped_statement
-  = &postgres x:(create_table_stmt / create_view_stmt / create_index_stmt) { return x; }
+  = &postgres x:(
+      create_table_stmt
+    / create_view_stmt
+    / create_index_stmt
+    / create_sequence_stmt
+  ) { return x; }
 
 drop_schema_stmt
   = kw:(DROP __ schema_kw __) ifKw:(if_exists __)? schemas:list$entity_name behaviorKw:(__ (CASCADE / RESTRICT))? {

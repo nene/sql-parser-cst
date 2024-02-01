@@ -46,8 +46,9 @@ describe("schema", () => {
               CREATE TABLE my_table (id INT)
               CREATE VIEW my_view AS SELECT 1
               CREATE INDEX my_index ON my_table(id)
+              CREATE SEQUENCE my_seq
           `);
-          // TODO: CREATE SEQUENCE, CREATE TRIGGER, GRANT
+          // TODO: CREATE TRIGGER, GRANT
         });
 
         it("supports optional schema name", () => {

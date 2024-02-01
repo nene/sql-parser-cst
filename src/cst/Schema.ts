@@ -8,6 +8,7 @@ import {
 } from "./dialects/Bigquery";
 import { EntityName, FuncCall, Identifier, ListExpr } from "./Expr";
 import { CreateIndexStmt } from "./Index";
+import { CreateSequenceStmt } from "./Sequence";
 import { CreateTriggerStmt } from "./Trigger";
 import { CreateViewStmt } from "./View";
 
@@ -36,7 +37,7 @@ type SchemaScopedStatement =
   | CreateTableStmt
   | CreateViewStmt
   | CreateIndexStmt
-  // TODO: CreateSequenceStmt
+  | CreateSequenceStmt
   | CreateTriggerStmt
   | GrantStmt;
 
