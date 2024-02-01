@@ -304,6 +304,16 @@ describe("alter table", () => {
       testAlterWc("ADD FOREIGN KEY (col1) REFERENCES tbl (col2) NOT VALID");
       testAlterWc("ADD CONSTRAINT ch CHECK (col1 > 0) NOT VALID");
     });
+
+    it("supports ADD PRIMARY KEY USING INDEX", () => {
+      testAlterWc("ADD PRIMARY KEY USING INDEX my_index");
+      testAlterWc("ADD CONSTRAINT ch PRIMARY KEY USING INDEX my_index DEFERRABLE");
+    });
+
+    it("supports ADD UNIQUE USING INDEX", () => {
+      testAlterWc("ADD UNIQUE USING INDEX my_index");
+      testAlterWc("ADD CONSTRAINT ch UNIQUE USING INDEX my_index DEFERRABLE");
+    });
   });
 
   dialect(["mysql", "mariadb", "postgresql"], () => {

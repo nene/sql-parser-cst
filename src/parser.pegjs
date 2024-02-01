@@ -4755,7 +4755,7 @@ table_constraint_type
 
 table_constraint_primary_key
   = kws:(PRIMARY __ KEY __)
-    columns:paren$list$index_specification
+    columns:(paren$list$index_specification / existing_index)
     clauses:(__ (on_conflict_clause / index_parameter_clause))* {
       return loc({
         type: "constraint_primary_key",
@@ -4783,10 +4783,19 @@ primary_key_keyword
 sqlite_sort_direction
   = dir:sort_direction &sqlite { return dir; }
 
+existing_index
+  = kw:(USING __ INDEX __) index:ident {
+    return loc({
+      type: "existing_index",
+      usingIndexKw: read(kw),
+      index,
+    });
+  }
+
 table_constraint_unique
   = kws:(unique_key __)
     nullsKw:(nulls_distinctness __)?
-    columns:paren$list$column
+    columns:(paren$list$column / existing_index)
     clauses:(__ (on_conflict_clause / index_parameter_clause))* {
       return loc({
         type: "constraint_unique",

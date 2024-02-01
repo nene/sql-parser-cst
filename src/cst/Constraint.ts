@@ -22,6 +22,7 @@ export type AllConstraintNodes =
   | ConstraintUnique
   | ConstraintPrimaryKey
   | IndexSpecification
+  | ExistingIndex
   | ReferencesSpecification
   | ConstraintComment
   | ConstraintCheck
@@ -108,7 +109,7 @@ export interface ConstraintPrimaryKey extends BaseNode {
   type: "constraint_primary_key";
   primaryKeyKw: [Keyword<"PRIMARY">, Keyword<"KEY">] | Keyword<"KEY">;
   direction?: SortDirectionAsc | SortDirectionDesc; // SQLite
-  columns?: ParenExpr<ListExpr<IndexSpecification>>;
+  columns?: ParenExpr<ListExpr<IndexSpecification>> | ExistingIndex;
   clauses: (IndexParameterClause | OnConflictClause)[];
 }
 
@@ -118,6 +119,13 @@ export interface IndexSpecification extends BaseNode {
   opclass?: PostgresqlOperatorClass;
   direction?: SortDirectionAsc | SortDirectionDesc;
   nullHandlingKw: [Keyword<"NULLS">, Keyword<"FIRST" | "LAST">];
+}
+
+// PostgreSQL
+export interface ExistingIndex extends BaseNode {
+  type: "existing_index";
+  usingIndexKw: [Keyword<"USING">, Keyword<"INDEX">];
+  index: Identifier;
 }
 
 export interface ConstraintForeignKey extends BaseNode {
@@ -161,7 +169,7 @@ export interface ConstraintUnique extends BaseNode {
   nullsKw?:
     | [Keyword<"NULLS">, Keyword<"DISTINCT">]
     | [Keyword<"NULLS">, Keyword<"NOT">, Keyword<"DISTINCT">];
-  columns?: ParenExpr<ListExpr<Identifier>>;
+  columns?: ParenExpr<ListExpr<Identifier>> | ExistingIndex;
   clauses: (IndexParameterClause | OnConflictClause)[];
 }
 
