@@ -360,7 +360,8 @@ export type AlterColumnAction =
   | AlterActionSetStorage
   | AlterActionSetStatistics
   | AlterActionDropExpression
-  | AlterActionDropIdentity;
+  | AlterActionDropIdentity
+  | AlterActionAddIdentity;
 
 export interface AlterActionSetDefault extends BaseNode {
   type: "alter_action_set_default";
@@ -449,6 +450,14 @@ export interface AlterActionDropIdentity extends BaseNode {
   type: "alter_action_drop_identity";
   dropIdentityKw: [Keyword<"DROP">, Keyword<"IDENTITY">];
   ifExistsKw?: [Keyword<"IF">, Keyword<"EXISTS">];
+}
+
+// PostgreSQL
+export interface AlterActionAddIdentity extends BaseNode {
+  type: "alter_action_add_identity";
+  addGeneratedKw: [Keyword<"ADD">, Keyword<"GENERATED">];
+  whenKw?: Keyword<"ALWAYS"> | [Keyword<"BY">, Keyword<"DEFAULT">];
+  asIdentityKw: [Keyword<"AS">, Keyword<"IDENTITY">];
 }
 
 // Used with ENABLE/DISABLE

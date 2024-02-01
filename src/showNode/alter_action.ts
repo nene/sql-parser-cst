@@ -83,6 +83,8 @@ export const alterActionMap: FullTransformMap<string, AllAlterActionNodes> = {
     show([node.dropExpressionKw, node.ifExistsKw]),
   alter_action_drop_identity: (node) =>
     show([node.dropIdentityKw, node.ifExistsKw]),
+  alter_action_add_identity: (node) =>
+    show([node.addGeneratedKw, node.whenKw, node.asIdentityKw]),
 
   // ENABLE/DISABLE
   toggle_row_level_security: (node) => show([node.rowLevelSecurityKw]),

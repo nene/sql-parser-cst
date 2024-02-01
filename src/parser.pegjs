@@ -2807,6 +2807,7 @@ alter_column_action_postgres
   / alter_action_reset_postgresql_options
   / alter_action_drop_expression
   / alter_action_drop_identity
+  / alter_action_add_identity
 
 alter_action_set_default
   = kw:(SET __ DEFAULT __) expr:expr {
@@ -2883,6 +2884,11 @@ alter_action_drop_expression
 alter_action_drop_identity
   = kw:(DROP __ IDENTITY) ifExistsKw:(__ if_exists)? {
     return loc({ type: "alter_action_drop_identity", dropIdentityKw: read(kw), ifExistsKw: read(ifExistsKw) });
+  }
+
+alter_action_add_identity
+  = kw:(ADD __ GENERATED __) whenKw:(ALWAYS / BY __ DEFAULT) asIdentityKw:(__ AS __ IDENTITY) {
+    return loc({ type: "alter_action_add_identity", addGeneratedKw: read(kw), whenKw: read(whenKw), asIdentityKw: read(asIdentityKw) });
   }
 
 toggle_item
