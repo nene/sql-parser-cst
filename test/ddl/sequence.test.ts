@@ -35,6 +35,10 @@ describe("sequence", () => {
           });
         });
       });
+
+      it("supports multiple sequence options", () => {
+        testWc("CREATE SEQUENCE seq1 START WITH 1 INCREMENT BY 1");
+      });
     });
 
     describe("ALTER SEQUENCE", () => {
@@ -53,6 +57,10 @@ describe("sequence", () => {
             testWc(`ALTER SEQUENCE seq1 ${example}`);
           });
         });
+      });
+
+      it("supports multiple sequence options", () => {
+        testWc("ALTER SEQUENCE seq1 INCREMENT BY 2 RESTART");
       });
 
       it("supports SET {LOGGED|UNLOGGED}", () => {
