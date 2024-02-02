@@ -1,0 +1,12 @@
+{{#each releases}}
+  ## {{title}}
+
+  {{#commit-list commits heading="### Breaking changes" message="BREAKING!"}}
+    - {{subject}} ({{shorthash}})
+  {{/commit-list}}
+
+  {{#commit-list commits heading="### Other changes" exclude="BREAKING!"}}
+    - {{subject}}
+  {{/commit-list}}
+
+{{/each}}

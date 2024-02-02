@@ -40,7 +40,8 @@
     "perf:select": "yarn ts-node perf/perf-test.ts select",
     "perf:case": "yarn ts-node perf/perf-test.ts case",
     "lint": "eslint src test scripts perf",
-    "ts:check": "tsc --noEmit"
+    "ts:check": "tsc --noEmit",
+    "changelog": "auto-changelog -p"
   },
   "devDependencies": {
     "@types/benchmark": "^2.1.2",
@@ -61,5 +62,17 @@
   },
   "watch": {
     "generate:fast": "src/parser.pegjs"
+  },
+  "auto-changelog": {
+    "stdout": true,
+    "startingVersion": "v0.25.0",
+    "endingVersion": "v0.25.0",
+    "breakingPattern": "BREAKING!",
+    "commitLimit": false,
+    "template": "changelog.hbs",
+    "replaceText": {
+      "BREAKING! ": ""
+    },
+    "sortCommits": "date-desc"
   }
 }
