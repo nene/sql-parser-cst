@@ -101,6 +101,10 @@ describe("index", () => {
     });
 
     dialect("postgresql", () => {
+      it("supports INCLUDE (columns) clause", () => {
+        testWc("CREATE INDEX my_idx ON tbl (col) INCLUDE (foo, bar, baz)");
+      });
+
       it("supports WITH (storage parameters) clause", () => {
         testWc("CREATE INDEX my_idx ON tbl (col) WITH (deduplicate_items = TRUE)");
       });

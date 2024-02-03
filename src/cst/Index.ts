@@ -2,11 +2,14 @@ import { BaseNode, Keyword } from "./Base";
 import { IndexSpecification } from "./Constraint";
 import { TablespaceClause, UsingAccessMethodClause } from "./CreateTable";
 import { BigqueryOptions } from "./dialects/Bigquery";
-import { ListExpr, ParenExpr, EntityName } from "./Expr";
+import { ListExpr, ParenExpr, EntityName, Identifier } from "./Expr";
 import { PostgresqlWithOptions } from "./Node";
 import { TableWithoutInheritance, WhereClause } from "./Select";
 
-export type AllIndexNodes = AllIndexStatements | VerboseAllColumns;
+export type AllIndexNodes =
+  | AllIndexStatements
+  | VerboseAllColumns
+  | IndexIncludeClause;
 
 export type AllIndexStatements = CreateIndexStmt | DropIndexStmt;
 
@@ -31,6 +34,7 @@ export interface CreateIndexStmt extends BaseNode {
 type CreateIndexClause =
   | WhereClause
   | BigqueryOptions
+  | IndexIncludeClause
   | TablespaceClause
   | PostgresqlWithOptions;
 
@@ -38,6 +42,12 @@ type CreateIndexClause =
 export interface VerboseAllColumns extends BaseNode {
   type: "verbose_all_columns";
   allColumnsKw: [Keyword<"ALL">, Keyword<"COLUMNS">];
+}
+
+export interface IndexIncludeClause extends BaseNode {
+  type: "index_include_clause";
+  includeKw: Keyword<"INCLUDE">;
+  columns: ParenExpr<ListExpr<Identifier>>;
 }
 
 // DROP INDEX

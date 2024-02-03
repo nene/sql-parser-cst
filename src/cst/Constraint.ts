@@ -13,6 +13,7 @@ import {
   PostgresqlWithOptions,
 } from "./dialects/Postgresql";
 import { SequenceOptionList } from "./Sequence";
+import { IndexIncludeClause } from "./Index";
 
 export type AllConstraintNodes =
   | Constraint<ColumnConstraint | TableConstraint>
@@ -49,7 +50,6 @@ export type AllConstraintNodes =
   | ReferentialAction
   | ReferentialMatch
   | OnConflictClause
-  | IndexIncludeClause
   | IndexTablespaceClause;
 
 export interface Constraint<T> extends BaseNode {
@@ -319,12 +319,6 @@ type IndexParameterClause =
   | IndexIncludeClause
   | PostgresqlWithOptions
   | IndexTablespaceClause;
-
-export interface IndexIncludeClause extends BaseNode {
-  type: "index_include_clause";
-  includeKw: Keyword<"INCLUDE">;
-  columns: ParenExpr<ListExpr<Identifier>>;
-}
 
 export interface IndexTablespaceClause extends BaseNode {
   type: "index_tablespace_clause";

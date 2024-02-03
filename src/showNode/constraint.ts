@@ -46,7 +46,6 @@ export const constraintMap: FullTransformMap<string, AllConstraintNodes> = {
     show([node.excludeKw, node.using, node.params, node.clauses]),
   exclusion_param: (node) => show([node.index, node.withKw, node.operator]),
   on_conflict_clause: (node) => show([node.onConflictKw, node.resolutionKw]),
-  index_include_clause: (node) => show([node.includeKw, node.columns]),
   index_tablespace_clause: (node) =>
     show([node.usingIndexTablespaceKw, node.name]),
   index_specification: (node) =>

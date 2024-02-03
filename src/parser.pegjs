@@ -2030,11 +2030,21 @@ create_index_subclause
   / &postgres x:(
       tablespace_clause
     / postgresql_with_options
+    / index_include_clause
   ) { return x; }
 
 verbose_all_columns
   = &bigquery kws:(ALL __ COLUMNS) {
     return loc({ type: "verbose_all_columns", allColumnsKw: read(kws) })
+  }
+
+index_include_clause
+  = kw:(INCLUDE __) columns:paren$list$column {
+    return loc({
+      type: "index_include_clause",
+      includeKw: read(kw),
+      columns,
+    });
   }
 
 // DROP INDEX
@@ -5218,15 +5228,6 @@ index_parameter_clause
   = index_include_clause
   / postgresql_with_options
   / index_tablespace_clause
-
-index_include_clause
-  = kw:(INCLUDE __) columns:paren$list$column {
-    return loc({
-      type: "index_include_clause",
-      includeKw: read(kw),
-      columns,
-    });
-  }
 
 index_tablespace_clause
   = kw:(USING __ INDEX __ TABLESPACE __) name:ident {
