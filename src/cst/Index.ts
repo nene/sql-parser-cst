@@ -1,5 +1,6 @@
 import { BaseNode, Keyword } from "./Base";
 import { IndexSpecification } from "./Constraint";
+import { UsingAccessMethodClause } from "./CreateTable";
 import { BigqueryOptions } from "./dialects/Bigquery";
 import { ListExpr, ParenExpr, EntityName } from "./Expr";
 import { TableWithoutInheritance, WhereClause } from "./Select";
@@ -19,6 +20,7 @@ export interface CreateIndexStmt extends BaseNode {
   name?: EntityName;
   onKw: Keyword<"ON">;
   table: EntityName | TableWithoutInheritance;
+  using?: UsingAccessMethodClause;
   columns:
     | ParenExpr<ListExpr<IndexSpecification>>
     | ParenExpr<VerboseAllColumns>;

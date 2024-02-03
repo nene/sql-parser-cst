@@ -32,6 +32,10 @@ describe("index", () => {
         it("supports ON ONLY table_name", () => {
           testWc("CREATE INDEX foo ON ONLY tbl_with_inheritance (col)");
         });
+
+        it("supports USING clause", () => {
+          testWc(`CREATE INDEX foo ON tbl USING btree (col)`);
+        });
       });
 
       dialect(["sqlite", "postgresql"], () => {

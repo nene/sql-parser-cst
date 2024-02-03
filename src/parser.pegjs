@@ -1975,6 +1975,7 @@ create_index_stmt
     name:(entity_name __)?
     onKw:(ON __)
     table:((pg_table_without_inheritance / entity_name) __)
+    using:(using_access_method_clause __)?
     columns:(paren$list$index_specification / paren$verbose_all_columns)
     clauses: (__ create_index_subclause)* {
       return loc({
@@ -1987,6 +1988,7 @@ create_index_stmt
         name: read(name),
         onKw: read(onKw),
         table: read(table),
+        using: read(using),
         columns,
         clauses: clauses.map(read),
       });

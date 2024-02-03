@@ -13,6 +13,7 @@ export const indexMap: FullTransformMap<string, AllIndexNodes> = {
       node.name,
       node.onKw,
       node.table,
+      node.using,
       node.columns,
       node.clauses,
     ]),
