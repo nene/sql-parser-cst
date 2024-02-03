@@ -4671,8 +4671,8 @@ postgresql_option_element
   }
 
 postgresql_operator_class
-  = &postgres name:member_expr {
-    return loc({ type: "postgresql_operator_class", name });
+  = &postgres name:member_expr options:(__ paren$list$table_option_postgresql)? {
+    return loc({ type: "postgresql_operator_class", name, options: read(options) });
   }
 
 /**

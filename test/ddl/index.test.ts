@@ -36,11 +36,24 @@ describe("index", () => {
           it("supports arbitrary expressions in columns list", () => {
             testWc("CREATE INDEX idx ON tbl ((col1 + col2), foo())");
           });
+
           it("supports NULLS in columns list", () => {
             testWc("CREATE INDEX idx ON tbl (col ASC NULLS FIRST)");
           });
+
           it("supports opclass in columns list", () => {
             testWc("CREATE INDEX idx ON tbl (col my.opclass DESC NULLS LAST)");
+          });
+          it("supports opclass (arguments)", () => {
+            testWc(`
+              CREATE INDEX idx ON tbl ( col opcls (foo, foo.bar, zip = 1, zip.zap = 2) )
+            `);
+          });
+          it("supports opclass with various argument values", () => {
+            testWc(`CREATE INDEX idx ON tbl ( col opcls (foo = NONE) )`);
+            testWc(`CREATE INDEX idx ON tbl ( col opcls (foo = 'hello') )`);
+            testWc(`CREATE INDEX idx ON tbl ( col opcls (foo = SELECT) )`);
+            testWc(`CREATE INDEX idx ON tbl ( col opcls (foo = TRUE) )`);
           });
         });
       });
