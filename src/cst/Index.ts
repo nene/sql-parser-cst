@@ -16,7 +16,7 @@ export interface CreateIndexStmt extends BaseNode {
   indexKw: Keyword<"INDEX">;
   concurrentlyKw?: Keyword<"CONCURRENTLY">;
   ifNotExistsKw?: [Keyword<"IF">, Keyword<"NOT">, Keyword<"EXISTS">];
-  name: EntityName;
+  name?: EntityName;
   onKw: Keyword<"ON">;
   table: EntityName;
   columns:

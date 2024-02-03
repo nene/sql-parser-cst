@@ -1972,7 +1972,7 @@ create_index_stmt
     indexKw:(INDEX __)
     concurrentlyKw:(CONCURRENTLY __)?
     ifKw:(if_not_exists __)?
-    name:(entity_name __)
+    name:(entity_name __)?
     onKw:(ON __)
     table:(entity_name __)
     columns:(paren$list$index_specification / paren$verbose_all_columns)

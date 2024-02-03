@@ -22,7 +22,15 @@ describe("index", () => {
         it("supports IF NOT EXISTS", () => {
           testWc("CREATE INDEX IF NOT EXISTS idx ON tbl (col)");
         });
+      });
 
+      dialect("postgresql", () => {
+        it("supports optional index name", () => {
+          testWc("CREATE INDEX ON tbl (col)");
+        });
+      });
+
+      dialect(["sqlite", "postgresql"], () => {
         it("supports WHERE clause", () => {
           testWc("CREATE INDEX idx ON tbl (col) WHERE x > 10");
         });
