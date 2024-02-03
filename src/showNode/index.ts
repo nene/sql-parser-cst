@@ -18,6 +18,8 @@ export const indexMap: FullTransformMap<string, AllIndexNodes> = {
       node.clauses,
     ]),
   verbose_all_columns: (node) => show(node.allColumnsKw),
+  index_specification: (node) =>
+    show([node.expr, node.opclass, node.direction, node.nullHandlingKw]),
   index_include_clause: (node) => show([node.includeKw, node.columns]),
 
   drop_index_stmt: (node) =>

@@ -1,14 +1,22 @@
 import { BaseNode, Keyword } from "./Base";
-import { IndexSpecification } from "./Constraint";
 import { TablespaceClause, UsingAccessMethodClause } from "./CreateTable";
 import { BigqueryOptions } from "./dialects/Bigquery";
-import { ListExpr, ParenExpr, EntityName, Identifier } from "./Expr";
-import { PostgresqlWithOptions } from "./Node";
-import { TableWithoutInheritance, WhereClause } from "./Select";
+import { ListExpr, ParenExpr, EntityName, Identifier, Expr } from "./Expr";
+import {
+  PostgresqlOperatorClass,
+  PostgresqlWithOptions,
+} from "./dialects/Postgresql";
+import {
+  SortDirectionAsc,
+  SortDirectionDesc,
+  TableWithoutInheritance,
+  WhereClause,
+} from "./Select";
 
 export type AllIndexNodes =
   | AllIndexStatements
   | VerboseAllColumns
+  | IndexSpecification
   | IndexIncludeClause;
 
 export type AllIndexStatements = CreateIndexStmt | DropIndexStmt;
@@ -42,6 +50,14 @@ type CreateIndexClause =
 export interface VerboseAllColumns extends BaseNode {
   type: "verbose_all_columns";
   allColumnsKw: [Keyword<"ALL">, Keyword<"COLUMNS">];
+}
+
+export interface IndexSpecification extends BaseNode {
+  type: "index_specification";
+  expr: Expr;
+  opclass?: PostgresqlOperatorClass;
+  direction?: SortDirectionAsc | SortDirectionDesc;
+  nullHandlingKw: [Keyword<"NULLS">, Keyword<"FIRST" | "LAST">];
 }
 
 export interface IndexIncludeClause extends BaseNode {

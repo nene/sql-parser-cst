@@ -4,12 +4,7 @@ import {
   BigqueryOptions,
 } from "./dialects/Bigquery";
 import { PostgresqlWithOptions } from "./dialects/Postgresql";
-import {
-  ColumnConstraint,
-  Constraint,
-  IndexSpecification,
-  TableConstraint,
-} from "./Constraint";
+import { ColumnConstraint, Constraint, TableConstraint } from "./Constraint";
 import { DataType } from "./DataType";
 import {
   Expr,
@@ -24,6 +19,7 @@ import { AsClause, WithConnectionClause } from "./ProcClause";
 import { ForSystemTimeAsOfExpr, PartitionByClause, SubSelect } from "./Select";
 import { ClusterByClause } from "./OtherClauses";
 import { NumberLiteral } from "./Literal";
+import { IndexSpecification } from "./Index";
 
 export type AllCreateTableNodes =
   | CreateTableStmt

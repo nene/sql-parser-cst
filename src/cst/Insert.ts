@@ -12,7 +12,7 @@ import { PartitionedTable, SubSelect, WhereClause, WithClause } from "./Select";
 import { ColumnAssignment, SetClause } from "./Update";
 import { MysqlModifier } from "./dialects/Mysql";
 import { ReturningClause } from "./OtherClauses";
-import { IndexSpecification } from "./Constraint";
+import { IndexSpecification } from "./Index";
 
 export type AllInsertNodes =
   | InsertStmt

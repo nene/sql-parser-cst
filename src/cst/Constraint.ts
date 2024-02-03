@@ -8,12 +8,11 @@ import { UsingAccessMethodClause } from "./CreateTable";
 import {
   PostgresqlOperator,
   PostgresqlOperatorExpr,
-  PostgresqlOperatorClass,
   PostgresqlOptions,
   PostgresqlWithOptions,
 } from "./dialects/Postgresql";
 import { SequenceOptionList } from "./Sequence";
-import { IndexIncludeClause } from "./Index";
+import { IndexIncludeClause, IndexSpecification } from "./Index";
 
 export type AllConstraintNodes =
   | Constraint<ColumnConstraint | TableConstraint>
@@ -23,7 +22,6 @@ export type AllConstraintNodes =
   | ConstraintAutoIncrement
   | ConstraintUnique
   | ConstraintPrimaryKey
-  | IndexSpecification
   | ExistingIndex
   | ReferencesSpecification
   | ConstraintComment
@@ -112,14 +110,6 @@ export interface ConstraintPrimaryKey extends BaseNode {
   direction?: SortDirectionAsc | SortDirectionDesc; // SQLite
   columns?: ParenExpr<ListExpr<IndexSpecification>> | ExistingIndex;
   clauses: (IndexParameterClause | OnConflictClause)[];
-}
-
-export interface IndexSpecification extends BaseNode {
-  type: "index_specification";
-  expr: Expr;
-  opclass?: PostgresqlOperatorClass;
-  direction?: SortDirectionAsc | SortDirectionDesc;
-  nullHandlingKw: [Keyword<"NULLS">, Keyword<"FIRST" | "LAST">];
 }
 
 // PostgreSQL

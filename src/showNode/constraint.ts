@@ -48,7 +48,5 @@ export const constraintMap: FullTransformMap<string, AllConstraintNodes> = {
   on_conflict_clause: (node) => show([node.onConflictKw, node.resolutionKw]),
   index_tablespace_clause: (node) =>
     show([node.usingIndexTablespaceKw, node.name]),
-  index_specification: (node) =>
-    show([node.expr, node.opclass, node.direction, node.nullHandlingKw]),
   existing_index: (node) => show([node.usingIndexKw, node.index]),
 };
