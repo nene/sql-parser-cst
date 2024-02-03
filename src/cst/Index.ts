@@ -2,7 +2,7 @@ import { BaseNode, Keyword } from "./Base";
 import { IndexSpecification } from "./Constraint";
 import { BigqueryOptions } from "./dialects/Bigquery";
 import { ListExpr, ParenExpr, EntityName } from "./Expr";
-import { WhereClause } from "./Select";
+import { TableWithoutInheritance, WhereClause } from "./Select";
 
 export type AllIndexNodes = AllIndexStatements | VerboseAllColumns;
 
@@ -18,7 +18,7 @@ export interface CreateIndexStmt extends BaseNode {
   ifNotExistsKw?: [Keyword<"IF">, Keyword<"NOT">, Keyword<"EXISTS">];
   name?: EntityName;
   onKw: Keyword<"ON">;
-  table: EntityName;
+  table: EntityName | TableWithoutInheritance;
   columns:
     | ParenExpr<ListExpr<IndexSpecification>>
     | ParenExpr<VerboseAllColumns>;

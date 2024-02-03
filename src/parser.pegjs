@@ -1974,7 +1974,7 @@ create_index_stmt
     ifKw:(if_not_exists __)?
     name:(entity_name __)?
     onKw:(ON __)
-    table:(entity_name __)
+    table:((pg_table_without_inheritance / entity_name) __)
     columns:(paren$list$index_specification / paren$verbose_all_columns)
     clauses: (__ create_index_subclause)* {
       return loc({

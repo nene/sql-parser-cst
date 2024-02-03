@@ -28,6 +28,10 @@ describe("index", () => {
         it("supports optional index name", () => {
           testWc("CREATE INDEX ON tbl (col)");
         });
+
+        it("supports ON ONLY table_name", () => {
+          testWc("CREATE INDEX foo ON ONLY tbl_with_inheritance (col)");
+        });
       });
 
       dialect(["sqlite", "postgresql"], () => {
