@@ -2027,6 +2027,10 @@ index_type_kw
 create_index_subclause
   = (&sqlite / &postgres) x:where_clause { return x; }
   / &bigquery x:bigquery_options { return x; }
+  / &postgres x:(
+      tablespace_clause
+    / postgresql_with_options
+  ) { return x; }
 
 verbose_all_columns
   = &bigquery kws:(ALL __ COLUMNS) {

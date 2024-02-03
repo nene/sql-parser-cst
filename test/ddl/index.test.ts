@@ -38,12 +38,6 @@ describe("index", () => {
         });
       });
 
-      dialect(["sqlite", "postgresql"], () => {
-        it("supports WHERE clause", () => {
-          testWc("CREATE INDEX idx ON tbl (col) WHERE x > 10");
-        });
-      });
-
       describe("columns list", () => {
         dialect(["sqlite", "postgresql"], () => {
           it("supports ASC/DESC in columns list", () => {
@@ -103,6 +97,22 @@ describe("index", () => {
       it("supports FULLTEXT & SPATIAL index", () => {
         testWc("CREATE FULLTEXT INDEX my_idx ON tbl (col)");
         testWc("CREATE SPATIAL INDEX my_idx ON tbl (col)");
+      });
+    });
+
+    dialect("postgresql", () => {
+      it("supports WITH (storage parameters) clause", () => {
+        testWc("CREATE INDEX my_idx ON tbl (col) WITH (deduplicate_items = TRUE)");
+      });
+
+      it("supports TABLESPACE clause", () => {
+        testWc("CREATE INDEX my_idx ON tbl (col) TABLESPACE my_space");
+      });
+    });
+
+    dialect(["sqlite", "postgresql"], () => {
+      it("supports WHERE clause", () => {
+        testWc("CREATE INDEX idx ON tbl (col) WHERE x > 10");
       });
     });
   });

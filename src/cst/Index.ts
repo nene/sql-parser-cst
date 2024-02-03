@@ -1,8 +1,9 @@
 import { BaseNode, Keyword } from "./Base";
 import { IndexSpecification } from "./Constraint";
-import { UsingAccessMethodClause } from "./CreateTable";
+import { TablespaceClause, UsingAccessMethodClause } from "./CreateTable";
 import { BigqueryOptions } from "./dialects/Bigquery";
 import { ListExpr, ParenExpr, EntityName } from "./Expr";
+import { PostgresqlWithOptions } from "./Node";
 import { TableWithoutInheritance, WhereClause } from "./Select";
 
 export type AllIndexNodes = AllIndexStatements | VerboseAllColumns;
@@ -24,8 +25,14 @@ export interface CreateIndexStmt extends BaseNode {
   columns:
     | ParenExpr<ListExpr<IndexSpecification>>
     | ParenExpr<VerboseAllColumns>;
-  clauses: (WhereClause | BigqueryOptions)[];
+  clauses: CreateIndexClause[];
 }
+
+type CreateIndexClause =
+  | WhereClause
+  | BigqueryOptions
+  | TablespaceClause
+  | PostgresqlWithOptions;
 
 // In contrast to normal AllColumns node, which represents the star (*)
 export interface VerboseAllColumns extends BaseNode {
