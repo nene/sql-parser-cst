@@ -110,6 +110,11 @@ describe("index", () => {
         it("supports multiple indexes", () => {
           testWc("DROP INDEX my_idx, schm.idx");
         });
+
+        it("supports CASCADE/RESTRICT", () => {
+          testWc("DROP INDEX my_idx CASCADE");
+          testWc("DROP INDEX my_idx RESTRICT");
+        });
       });
     });
 

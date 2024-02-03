@@ -27,5 +27,6 @@ export const indexMap: FullTransformMap<string, AllIndexNodes> = {
       node.indexes,
       node.onKw,
       node.table,
+      node.behaviorKw,
     ]),
 };

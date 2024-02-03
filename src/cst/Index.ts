@@ -42,4 +42,5 @@ export interface DropIndexStmt extends BaseNode {
   indexes: ListExpr<EntityName>;
   onKw?: Keyword<"ON">;
   table?: EntityName;
+  behaviorKw?: Keyword<"CASCADE" | "RESTRICT">;
 }

@@ -2014,14 +2014,15 @@ drop_index_stmt
     indexKw:(INDEX __)
     concurrentlyKw:(CONCURRENTLY __)?
     ifKw:(if_exists __)?
-    indexes:list$entity_name {
+    indexes:list$entity_name behaviorKw:(__ (CASCADE / RESTRICT))? {
       return loc({
         type: "drop_index_stmt",
         dropKw: read(kw),
         indexKw: read(indexKw),
         concurrentlyKw: read(concurrentlyKw),
         ifExistsKw: read(ifKw),
-        indexes: read(indexes)
+        indexes: read(indexes),
+        behaviorKw: read(behaviorKw),
       });
     }
   / (&mysql / &bigquery)
