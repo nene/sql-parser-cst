@@ -1967,7 +1967,31 @@ refresh_materialized_view_stmt
  * ------------------------------------------------------------------------------------ *
  */
 create_index_stmt
-  = kw:(CREATE __)
+  = (&mysql / &sqlite / &bigquery)
+    kw:(CREATE __)
+    typeKw:(index_type_kw __)?
+    indexKw:(INDEX __)
+    ifKw:(if_not_exists __)?
+    name:(entity_name __)?
+    onKw:(ON __)
+    table:(entity_name __)
+    columns:(paren$list$index_specification / paren$verbose_all_columns)
+    clauses:(__ create_index_subclause)* {
+      return loc({
+        type: "create_index_stmt",
+        createKw: read(kw),
+        indexTypeKw: read(typeKw),
+        indexKw: read(indexKw),
+        ifNotExistsKw: read(ifKw),
+        name: read(name),
+        onKw: read(onKw),
+        table: read(table),
+        columns,
+        clauses: clauses.map(read),
+      });
+    }
+  / &postgres
+    kw:(CREATE __)
     typeKw:(index_type_kw __)?
     indexKw:(INDEX __)
     concurrentlyKw:(CONCURRENTLY __)?
@@ -1976,8 +2000,8 @@ create_index_stmt
     onKw:(ON __)
     table:((pg_table_without_inheritance / entity_name) __)
     using:(using_access_method_clause __)?
-    columns:(paren$list$index_specification / paren$verbose_all_columns)
-    clauses: (__ create_index_subclause)* {
+    columns:paren$list$index_specification
+    clauses:(__ create_index_subclause)* {
       return loc({
         type: "create_index_stmt",
         createKw: read(kw),
