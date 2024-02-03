@@ -1970,6 +1970,7 @@ create_index_stmt
   = kw:(CREATE __)
     typeKw:(index_type_kw __)?
     indexKw:(INDEX __)
+    concurrentlyKw:(CONCURRENTLY __)?
     ifKw:(if_not_exists __)?
     name:(entity_name __)
     onKw:(ON __)
@@ -1981,6 +1982,7 @@ create_index_stmt
         createKw: read(kw),
         indexTypeKw: read(typeKw),
         indexKw: read(indexKw),
+        concurrentlyKw: read(concurrentlyKw),
         ifNotExistsKw: read(ifKw),
         name: read(name),
         onKw: read(onKw),
@@ -2010,12 +2012,14 @@ drop_index_stmt
   = (&sqlite / &postgres)
     kw:(DROP __)
     indexKw:(INDEX __)
+    concurrentlyKw:(CONCURRENTLY __)?
     ifKw:(if_exists __)?
     indexes:list$entity_name {
       return loc({
         type: "drop_index_stmt",
         dropKw: read(kw),
         indexKw: read(indexKw),
+        concurrentlyKw: read(concurrentlyKw),
         ifExistsKw: read(ifKw),
         indexes: read(indexes)
       });

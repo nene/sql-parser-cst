@@ -12,6 +12,12 @@ describe("index", () => {
         testWc("CREATE UNIQUE INDEX my_idx ON tbl (col)");
       });
 
+      dialect("postgresql", () => {
+        it("supports CONCURRENTLY", () => {
+          testWc("CREATE INDEX CONCURRENTLY idx ON tbl (col)");
+        });
+      });
+
       dialect(["sqlite", "postgresql"], () => {
         it("supports IF NOT EXISTS", () => {
           testWc("CREATE INDEX IF NOT EXISTS idx ON tbl (col)");
@@ -97,6 +103,10 @@ describe("index", () => {
       });
 
       dialect("postgresql", () => {
+        it("supports CONCURRENTLY", () => {
+          testWc("DROP INDEX CONCURRENTLY my_idx");
+        });
+
         it("supports multiple indexes", () => {
           testWc("DROP INDEX my_idx, schm.idx");
         });

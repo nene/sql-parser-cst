@@ -25,7 +25,7 @@ export interface PostgresqlOperator extends BaseNode {
 export interface PostgresqlOperatorClass extends BaseNode {
   type: "postgresql_operator_class";
   name: MemberExpr | Identifier;
-  options: ParenExpr<ListExpr<PostgresqlTableOption>>;
+  options?: ParenExpr<ListExpr<PostgresqlTableOption>>;
 }
 
 export interface PostgresqlOptions extends BaseNode {

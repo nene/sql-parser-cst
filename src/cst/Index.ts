@@ -14,6 +14,7 @@ export interface CreateIndexStmt extends BaseNode {
   createKw: Keyword<"CREATE">;
   indexTypeKw?: Keyword<"UNIQUE" | "FULLTEXT" | "SPATIAL" | "SEARCH">;
   indexKw: Keyword<"INDEX">;
+  concurrentlyKw?: Keyword<"CONCURRENTLY">;
   ifNotExistsKw?: [Keyword<"IF">, Keyword<"NOT">, Keyword<"EXISTS">];
   name: EntityName;
   onKw: Keyword<"ON">;
@@ -36,6 +37,7 @@ export interface DropIndexStmt extends BaseNode {
   dropKw: Keyword<"DROP">;
   indexTypeKw?: Keyword<"SEARCH">;
   indexKw: Keyword<"INDEX">;
+  concurrentlyKw?: Keyword<"CONCURRENTLY">;
   ifExistsKw?: [Keyword<"IF">, Keyword<"EXISTS">];
   indexes: ListExpr<EntityName>;
   onKw?: Keyword<"ON">;
