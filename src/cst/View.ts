@@ -4,6 +4,7 @@ import {
   TablespaceClause,
   WithDataClause,
   UsingAccessMethodClause,
+  RelationKind,
 } from "./CreateTable";
 import { BigqueryOptions } from "./dialects/Bigquery";
 import { PostgresqlWithOptions } from "./dialects/Postgresql";
@@ -12,7 +13,7 @@ import { ClusterByClause } from "./OtherClauses";
 import { AsClause } from "./ProcClause";
 import { PartitionByClause, SubSelect } from "./Select";
 
-export type AllViewNodes = AllViewStatements | ViewKind | WithCheckOptionClause;
+export type AllViewNodes = AllViewStatements | WithCheckOptionClause;
 
 export type AllViewStatements =
   | CreateViewStmt
@@ -25,17 +26,12 @@ export interface CreateViewStmt extends BaseNode {
   type: "create_view_stmt";
   createKw: Keyword<"CREATE">;
   orReplaceKw?: [Keyword<"OR">, Keyword<"REPLACE">];
-  kinds: ViewKind[];
+  kinds: RelationKind[];
   viewKw: Keyword<"VIEW">;
   ifNotExistsKw?: [Keyword<"IF">, Keyword<"NOT">, Keyword<"EXISTS">];
   name: EntityName;
   columns?: ParenExpr<ListExpr<Identifier>>;
   clauses: CreateViewClause[];
-}
-
-export interface ViewKind extends BaseNode {
-  type: "view_kind";
-  kindKw: Keyword<"TEMP" | "TEMPORARY" | "MATERIALIZED" | "RECURSIVE">;
 }
 
 type CreateViewClause =
@@ -61,7 +57,7 @@ export interface WithCheckOptionClause extends BaseNode {
 export interface DropViewStmt extends BaseNode {
   type: "drop_view_stmt";
   dropKw: Keyword<"DROP">;
-  kind?: ViewKind;
+  kind?: RelationKind;
   viewKw: Keyword<"VIEW">;
   ifExistsKw?: [Keyword<"IF">, Keyword<"EXISTS">];
   views: ListExpr<EntityName>;
@@ -72,7 +68,7 @@ export interface DropViewStmt extends BaseNode {
 export interface AlterViewStmt extends BaseNode {
   type: "alter_view_stmt";
   alterKw: Keyword<"ALTER">;
-  kind?: ViewKind;
+  kind?: RelationKind;
   viewKw: Keyword<"VIEW">;
   ifExistsKw?: [Keyword<"IF">, Keyword<"EXISTS">];
   name: EntityName;

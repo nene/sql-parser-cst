@@ -27,7 +27,7 @@ import { NumberLiteral } from "./Literal";
 
 export type AllCreateTableNodes =
   | CreateTableStmt
-  | TableKind
+  | RelationKind
   | ColumnDefinition
   | TableOption<Keyword | Keyword[] | Identifier | MemberExpr, Keyword | Expr>
   | CreateTableLikeClause
@@ -61,7 +61,7 @@ export interface CreateTableStmt extends BaseNode {
   type: "create_table_stmt";
   createKw: Keyword<"CREATE">;
   orReplaceKw?: [Keyword<"OR">, Keyword<"REPLACE">];
-  kind?: TableKind;
+  kind?: RelationKind;
   tableKw: Keyword<"TABLE">;
   ifNotExistsKw?: [Keyword<"IF">, Keyword<"NOT">, Keyword<"EXISTS">];
   name: EntityName;
@@ -84,17 +84,19 @@ export interface CreateTableStmt extends BaseNode {
   clauses: CreateTableClause[];
 }
 
-export interface TableKind extends BaseNode {
-  type: "table_kind";
+export interface RelationKind extends BaseNode {
+  type: "relation_kind";
   kindKw:
-    | Keyword<"TEMP" | "TEMPORARY">
+    | Keyword<"TEMP" | "TEMPORARY"> // for TABLE, VIEW, SEQUENCE
     // PostgreSQL deprecated syntax which has the same effect as just TEMPORARY
     | [Keyword<"GLOBAL" | "LOCAL">, Keyword<"TEMPORARY" | "TEMP">]
-    | Keyword<"UNLOGGED"> // PostgreSQL
+    | Keyword<"UNLOGGED"> // PostgreSQL (TABLE, SEQUENCE)
     | Keyword<"FOREIGN"> // PostgreSQL
     | Keyword<"EXTERNAL"> // BigQuery
     | Keyword<"SNAPSHOT"> // BigQuery
-    | Keyword<"VIRTUAL">; // SQLite
+    | Keyword<"VIRTUAL"> // SQLite
+    | Keyword<"MATERIALIZED"> // PostgreSQL (VIEW)
+    | Keyword<"RECURSIVE">; // PostgreSQL (VIEW)
 }
 
 export interface ColumnDefinition extends BaseNode {

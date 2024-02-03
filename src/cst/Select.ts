@@ -13,7 +13,7 @@ import { Alias } from "./Alias";
 import { FrameClause } from "./WindowFrame";
 import { Literal, StringLiteral } from "./Literal";
 import { MysqlModifier } from "./dialects/Mysql";
-import { ColumnDefinition, TableKind } from "./CreateTable";
+import { ColumnDefinition, RelationKind } from "./CreateTable";
 import {
   DeleteStmt,
   InsertStmt,
@@ -646,7 +646,7 @@ export interface QualifyClause extends BaseNode {
 export interface IntoTableClause extends BaseNode {
   type: "into_table_clause";
   intoKw: Keyword<"INTO">;
-  kind?: TableKind;
+  kind?: RelationKind;
   tableKw?: Keyword<"TABLE">;
   name: EntityName;
 }

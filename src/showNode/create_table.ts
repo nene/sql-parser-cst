@@ -17,7 +17,7 @@ export const createTableMap: FullTransformMap<string, AllCreateTableNodes> = {
       node.options,
       node.clauses,
     ]),
-  table_kind: (node) => show(node.kindKw),
+  relation_kind: (node) => show(node.kindKw),
   column_definition: (node) =>
     show([
       node.name,

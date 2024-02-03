@@ -1,11 +1,11 @@
 import { AlterSequenceAction } from "./AlterAction";
 import { BaseNode, Keyword } from "./Base";
+import { RelationKind } from "./CreateTable";
 import { DataType } from "./DataType";
 import { EntityName, Expr, ListExpr } from "./Expr";
 
 export type AllSequenceNodes =
   | AllSequenceStatements
-  | SequenceKind
   | SequenceOptionList
   | SequenceOption;
 
@@ -18,16 +18,11 @@ export type AllSequenceStatements =
 export interface CreateSequenceStmt extends BaseNode {
   type: "create_sequence_stmt";
   createKw: Keyword<"CREATE">;
-  kind?: SequenceKind;
+  kind?: RelationKind;
   sequenceKw: Keyword<"SEQUENCE">;
   ifNotExistsKw?: [Keyword<"IF">, Keyword<"NOT">, Keyword<"EXISTS">];
   name: EntityName;
   options: SequenceOption[];
-}
-
-export interface SequenceKind extends BaseNode {
-  type: "sequence_kind";
-  kindKw: Keyword<"TEMP" | "TEMPORARY" | "UNLOGGED">;
 }
 
 // A container to allow usage inside ParenExpr

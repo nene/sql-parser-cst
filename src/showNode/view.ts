@@ -14,7 +14,6 @@ export const viewMap: FullTransformMap<string, AllViewNodes> = {
       node.columns,
       node.clauses,
     ]),
-  view_kind: (node) => show([node.kindKw]),
   with_check_option_clause: (node) =>
     show([node.withKw, node.levelKw, node.checkOptionKw]),
   // DROP VIEW statement

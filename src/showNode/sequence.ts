@@ -13,7 +13,6 @@ export const sequenceMap: FullTransformMap<string, AllSequenceNodes> = {
       node.name,
       node.options,
     ]),
-  sequence_kind: (node) => show(node.kindKw),
   sequence_option_list: (node) => show(node.options),
   sequence_option_as_type: (node) => show([node.asKw, node.dataType]),
   sequence_option_increment: (node) =>

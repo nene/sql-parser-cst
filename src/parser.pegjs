@@ -1851,13 +1851,13 @@ create_view_stmt
 
 view_kind
   = kw:(TEMP / TEMPORARY) (&sqlite / &postgres) {
-    return loc({ type: "table_kind", kindKw: kw });
+    return loc({ type: "relation_kind", kindKw: kw });
   }
   / kw:RECURSIVE &postgres {
-    return loc({ type: "table_kind", kindKw: read(kw) });
+    return loc({ type: "relation_kind", kindKw: read(kw) });
   }
   / kw:MATERIALIZED (&bigquery / &postgres) {
-    return loc({ type: "table_kind", kindKw: kw });
+    return loc({ type: "relation_kind", kindKw: kw });
   }
 
 create_view_clause
@@ -2078,19 +2078,19 @@ create_table_stmt
 
 table_kind
   = kw:(TEMP / TEMPORARY) {
-    return loc({ type: "table_kind", kindKw: kw });
+    return loc({ type: "relation_kind", kindKw: kw });
   }
   / kw:((GLOBAL / LOCAL) __ (TEMPORARY / TEMP)) &postgres {
-    return loc({ type: "table_kind", kindKw: read(kw) });
+    return loc({ type: "relation_kind", kindKw: read(kw) });
   }
   / kw:(UNLOGGED / FOREIGN) &postgres {
-    return loc({ type: "table_kind", kindKw: kw });
+    return loc({ type: "relation_kind", kindKw: kw });
   }
   / kw:(EXTERNAL / SNAPSHOT) &bigquery {
-    return loc({ type: "table_kind", kindKw: kw });
+    return loc({ type: "relation_kind", kindKw: kw });
   }
   / kw:VIRTUAL &sqlite {
-    return loc({ type: "table_kind", kindKw: kw });
+    return loc({ type: "relation_kind", kindKw: kw });
   }
 
 if_not_exists
@@ -3620,7 +3620,7 @@ create_sequence_stmt
 
 sequence_kind
   = kw:(TEMP / TEMPORARY / UNLOGGED) {
-    return loc({ type: "sequence_kind", kindKw: kw });
+    return loc({ type: "relation_kind", kindKw: kw });
   }
 
 sequence_option_list
