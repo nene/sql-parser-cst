@@ -97,6 +97,7 @@ ddl_statement
   / drop_view_stmt
   / create_index_stmt
   / drop_index_stmt
+  / &postgres x:alter_index_stmt { return x; }
   / &sqlite x:ddl_statement_sqlite { return x; }
   / &mysql x:ddl_statement_mysql { return x; }
   / &bigquery x:ddl_statement_bigquery { return x; }
@@ -2096,6 +2097,29 @@ drop_index_stmt
         table,
       });
     }
+
+alter_index_stmt
+  = kw:(ALTER __) indexKw:(INDEX __) ifExistsKw:(if_exists __)?
+    index:entity_name
+    action:(__ alter_index_action) {
+      return loc({
+        type: "alter_index_stmt",
+        alterKw: read(kw),
+        indexKw: read(indexKw),
+        ifExistsKw: read(ifExistsKw),
+        index,
+        action: read(action),
+      });
+    }
+
+alter_index_action
+  = alter_action_rename
+  / alter_action_set_tablespace
+  / alter_action_depends_on_extension
+  / alter_action_no_depends_on_extension
+  / alter_action_set_postgresql_options
+  / alter_action_reset_postgresql_options
+  / alter_action_alter_column
 
 /**
  * ------------------------------------------------------------------------------------ *

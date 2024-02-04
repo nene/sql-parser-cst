@@ -36,4 +36,13 @@ export const indexMap: FullTransformMap<string, AllIndexNodes> = {
       node.table,
       node.behaviorKw,
     ]),
+
+  alter_index_stmt: (node) =>
+    show([
+      node.alterKw,
+      node.indexKw,
+      node.ifExistsKw,
+      node.index,
+      node.action,
+    ]),
 };

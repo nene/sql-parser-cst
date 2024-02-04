@@ -12,6 +12,7 @@ import {
   TableWithoutInheritance,
   WhereClause,
 } from "./Select";
+import { AlterIndexAction } from "./AlterAction";
 
 export type AllIndexNodes =
   | AllIndexStatements
@@ -21,7 +22,10 @@ export type AllIndexNodes =
   | IndexNullsDistinctClause
   | IndexNullsNotDistinctClause;
 
-export type AllIndexStatements = CreateIndexStmt | DropIndexStmt;
+export type AllIndexStatements =
+  | CreateIndexStmt
+  | DropIndexStmt
+  | AlterIndexStmt;
 
 // CREATE INDEX
 export interface CreateIndexStmt extends BaseNode {
@@ -92,4 +96,14 @@ export interface DropIndexStmt extends BaseNode {
   onKw?: Keyword<"ON">;
   table?: EntityName;
   behaviorKw?: Keyword<"CASCADE" | "RESTRICT">;
+}
+
+// ALTER INDEX
+export interface AlterIndexStmt extends BaseNode {
+  type: "alter_index_stmt";
+  alterKw: Keyword<"ALTER">;
+  indexKw: Keyword<"INDEX">;
+  ifExistsKw?: [Keyword<"IF">, Keyword<"EXISTS">];
+  index: EntityName;
+  action: AlterIndexAction;
 }

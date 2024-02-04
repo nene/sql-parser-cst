@@ -171,4 +171,37 @@ describe("index", () => {
       });
     });
   });
+
+  describe("alter index", () => {
+    dialect("postgresql", () => {
+      it("supports IF EXISTS", () => {
+        testWc("ALTER INDEX IF EXISTS my_idx RENAME TO new_idx");
+      });
+
+      it("supports RENAME TO", () => {
+        testWc("ALTER INDEX my_idx RENAME TO new_idx");
+      });
+
+      it("supports SET TABLESPACE", () => {
+        testWc("ALTER INDEX my_idx SET TABLESPACE my_space");
+      });
+
+      it("supports [NO] DEPENDS ON EXTENSION", () => {
+        testWc("ALTER INDEX my_idx DEPENDS ON EXTENSION my_ext");
+        testWc("ALTER INDEX my_idx NO DEPENDS ON EXTENSION my_ext");
+      });
+
+      it("supports SET (storage parameters)", () => {
+        testWc("ALTER INDEX my_idx SET (fillfactor = 50, autovacuum_enabled)");
+      });
+
+      it("supports RESET (storage parameters)", () => {
+        testWc("ALTER INDEX my_idx RESET (fillfactor, autovacuum_enabled)");
+      });
+
+      it("supports ALTER COLUMN .. SET STATISTICS", () => {
+        testWc("ALTER INDEX my_idx ALTER COLUMN col SET STATISTICS 100");
+      });
+    });
+  });
 });
