@@ -186,6 +186,11 @@ describe("index", () => {
         testWc("ALTER INDEX my_idx SET TABLESPACE my_space");
       });
 
+      it("supports ATTACH PARTITION", () => {
+        testWc("ALTER INDEX my_idx ATTACH PARTITION my_part");
+        testWc("ALTER INDEX my_idx ATTACH PARTITION tbl.part");
+      });
+
       it("supports [NO] DEPENDS ON EXTENSION", () => {
         testWc("ALTER INDEX my_idx DEPENDS ON EXTENSION my_ext");
         testWc("ALTER INDEX my_idx NO DEPENDS ON EXTENSION my_ext");

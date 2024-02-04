@@ -2120,6 +2120,7 @@ alter_index_action
   / alter_action_set_postgresql_options
   / alter_action_reset_postgresql_options
   / alter_action_alter_column
+  / alter_action_attach_partition
 
 /**
  * ------------------------------------------------------------------------------------ *
@@ -2936,6 +2937,15 @@ replica_identity_using_index
     return loc({
       type: "replica_identity_using_index",
       usingIndexKw: read(kw),
+      index,
+    });
+  }
+
+alter_action_attach_partition
+  = kw:(ATTACH __ PARTITION __) index:entity_name {
+    return loc({
+      type: "alter_action_attach_partition",
+      attachPartitionKw: read(kw),
       index,
     });
   }

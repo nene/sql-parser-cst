@@ -26,6 +26,7 @@ export type AllAlterActionNodes =
   | AlterSchemaAction
   | AlterViewAction
   | AlterIdentityAction
+  | AlterIndexAction
   | ToggleItem
   | ReplicaIdentityUsingIndex
   | SetDataTypeCollateClause
@@ -101,7 +102,8 @@ export type AlterIndexAction =
   | AlterActionNoDependsOnExtension
   | AlterActionSetPostgresqlOptions
   | AlterActionResetPostgresqlOptions
-  | AlterActionAlterColumn;
+  | AlterActionAlterColumn
+  | AlterActionAttachPartition;
 
 export interface AlterActionRename extends BaseNode {
   type: "alter_action_rename";
@@ -360,10 +362,18 @@ export interface AlterActionReplicaIdentity extends BaseNode {
   identity: Keyword<"DEFAULT" | "FULL" | "NOTHING"> | ReplicaIdentityUsingIndex;
 }
 
+// PostgreSQL
 export interface ReplicaIdentityUsingIndex extends BaseNode {
   type: "replica_identity_using_index";
   usingIndexKw: [Keyword<"USING">, Keyword<"INDEX">];
   index: Identifier;
+}
+
+// PostgreSQL
+export interface AlterActionAttachPartition extends BaseNode {
+  type: "alter_action_attach_partition";
+  attachPartitionKw: [Keyword<"ATTACH">, Keyword<"PARTITION">];
+  index: EntityName;
 }
 
 export type AlterColumnAction =
