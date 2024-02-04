@@ -19,13 +19,13 @@ with the goal of being able to re-create the exact original source code.
 
 Supports the following SQL dialects:
 
-- **SQLite** - full support.
-- **BigQuery** - full support.
-- **MySQL** - experimental
+- **SQLite** - full support (version 3.45)
+- **BigQuery** - full support (as of 15 Nov 2022).
+- **MySQL** - experimental (version 8)
   (see [#7](https://github.com/nene/sql-parser-cst/issues/7) for implementation progress).
-- **MariaDB** - experimental
+- **MariaDB** - experimental (version 10)
   (see [#32](https://github.com/nene/sql-parser-cst/issues/32) for implementation progress).
-- **PostgreSQL** - experimental
+- **PostgreSQL** - experimental (version 16)
   (see [#40](https://github.com/nene/sql-parser-cst/issues/40) for implementation progress).
 
 **Note:** This software is in very active development.
