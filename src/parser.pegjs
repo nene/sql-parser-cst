@@ -98,6 +98,7 @@ ddl_statement
   / create_index_stmt
   / drop_index_stmt
   / &postgres x:alter_index_stmt { return x; }
+  / &postgres x:alter_index_all_in_tablespace_stmt { return x; }
   / &sqlite x:ddl_statement_sqlite { return x; }
   / &mysql x:ddl_statement_mysql { return x; }
   / &bigquery x:ddl_statement_bigquery { return x; }
@@ -2121,6 +2122,22 @@ alter_index_action
   / alter_action_reset_postgresql_options
   / alter_action_alter_column
   / alter_action_attach_partition
+
+alter_index_all_in_tablespace_stmt
+  = kw:(ALTER __ INDEX __)
+    allInTablespaceKw:(ALL __ IN __ TABLESPACE __)
+    tablespace:(ident __)
+    ownedBy:(owned_by_clause __)?
+    action:alter_action_set_tablespace {
+      return loc({
+        type: "alter_index_all_in_tablespace_stmt",
+        alterIndexKw: read(kw),
+        allInTablespaceKw: read(allInTablespaceKw),
+        tablespace: read(tablespace),
+        ownedBy: read(ownedBy),
+        action,
+      });
+    }
 
 /**
  * ------------------------------------------------------------------------------------ *

@@ -207,6 +207,17 @@ describe("index", () => {
       it("supports ALTER COLUMN .. SET STATISTICS", () => {
         testWc("ALTER INDEX my_idx ALTER COLUMN col SET STATISTICS 100");
       });
+
+      it("supports ALTER INDEX ALL IN TABLESPACE", () => {
+        testWc("ALTER INDEX ALL IN TABLESPACE my_space SET TABLESPACE new_space");
+      });
+
+      it("supports ALTER INDEX ALL IN TABLESPACE .. OWNED BY", () => {
+        testWc(`
+          ALTER INDEX ALL IN TABLESPACE my_space OWNED BY foo, bar
+          SET TABLESPACE new_space NOWAIT
+        `);
+      });
     });
   });
 });

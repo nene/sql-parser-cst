@@ -12,7 +12,8 @@ import {
   TableWithoutInheritance,
   WhereClause,
 } from "./Select";
-import { AlterIndexAction } from "./AlterAction";
+import { AlterActionSetTablespace, AlterIndexAction } from "./AlterAction";
+import { OwnedByClause } from "./AlterTable";
 
 export type AllIndexNodes =
   | AllIndexStatements
@@ -25,7 +26,8 @@ export type AllIndexNodes =
 export type AllIndexStatements =
   | CreateIndexStmt
   | DropIndexStmt
-  | AlterIndexStmt;
+  | AlterIndexStmt
+  | AlterIndexAllInTablespaceStmt;
 
 // CREATE INDEX
 export interface CreateIndexStmt extends BaseNode {
@@ -98,7 +100,7 @@ export interface DropIndexStmt extends BaseNode {
   behaviorKw?: Keyword<"CASCADE" | "RESTRICT">;
 }
 
-// ALTER INDEX
+// ALTER INDEX ... PostgreSQL
 export interface AlterIndexStmt extends BaseNode {
   type: "alter_index_stmt";
   alterKw: Keyword<"ALTER">;
@@ -106,4 +108,14 @@ export interface AlterIndexStmt extends BaseNode {
   ifExistsKw?: [Keyword<"IF">, Keyword<"EXISTS">];
   index: EntityName;
   action: AlterIndexAction;
+}
+
+// PostgreSQL
+export interface AlterIndexAllInTablespaceStmt extends BaseNode {
+  type: "alter_index_all_in_tablespace_stmt";
+  alterIndexKw: [Keyword<"ALTER">, Keyword<"INDEX">];
+  allInTablespaceKw: [Keyword<"ALL">, Keyword<"IN">, Keyword<"TABLESPACE">];
+  tablespace: Identifier;
+  ownedBy?: OwnedByClause;
+  action: AlterActionSetTablespace;
 }

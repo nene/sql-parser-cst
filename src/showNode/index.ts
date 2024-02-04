@@ -45,4 +45,12 @@ export const indexMap: FullTransformMap<string, AllIndexNodes> = {
       node.index,
       node.action,
     ]),
+  alter_index_all_in_tablespace_stmt: (node) =>
+    show([
+      node.alterIndexKw,
+      node.allInTablespaceKw,
+      node.tablespace,
+      node.ownedBy,
+      node.action,
+    ]),
 };
