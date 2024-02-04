@@ -105,6 +105,11 @@ describe("index", () => {
         testWc("CREATE INDEX my_idx ON tbl (col) INCLUDE (foo, bar, baz)");
       });
 
+      it("supports NULLS [NOT] DISTINCT clause", () => {
+        testWc("CREATE INDEX my_idx ON tbl (col) NULLS DISTINCT");
+        testWc("CREATE INDEX my_idx ON tbl (col) NULLS NOT DISTINCT");
+      });
+
       it("supports WITH (storage parameters) clause", () => {
         testWc("CREATE INDEX my_idx ON tbl (col) WITH (deduplicate_items = TRUE)");
       });

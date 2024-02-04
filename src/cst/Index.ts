@@ -17,7 +17,9 @@ export type AllIndexNodes =
   | AllIndexStatements
   | VerboseAllColumns
   | IndexSpecification
-  | IndexIncludeClause;
+  | IndexIncludeClause
+  | IndexNullsDistinctClause
+  | IndexNullsNotDistinctClause;
 
 export type AllIndexStatements = CreateIndexStmt | DropIndexStmt;
 
@@ -43,6 +45,8 @@ type CreateIndexClause =
   | WhereClause
   | BigqueryOptions
   | IndexIncludeClause
+  | IndexNullsDistinctClause
+  | IndexNullsNotDistinctClause
   | TablespaceClause
   | PostgresqlWithOptions;
 
@@ -64,6 +68,16 @@ export interface IndexIncludeClause extends BaseNode {
   type: "index_include_clause";
   includeKw: Keyword<"INCLUDE">;
   columns: ParenExpr<ListExpr<Identifier>>;
+}
+
+export interface IndexNullsDistinctClause extends BaseNode {
+  type: "index_nulls_distinct_clause";
+  nullsDistinctKw: [Keyword<"NULLS">, Keyword<"DISTINCT">];
+}
+
+export interface IndexNullsNotDistinctClause extends BaseNode {
+  type: "index_nulls_not_distinct_clause";
+  nullsNotDistinctKw: [Keyword<"NULLS">, Keyword<"NOT">, Keyword<"DISTINCT">];
 }
 
 // DROP INDEX

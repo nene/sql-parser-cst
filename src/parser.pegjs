@@ -2031,6 +2031,8 @@ create_index_subclause
       tablespace_clause
     / postgresql_with_options
     / index_include_clause
+    / index_nulls_distinct_clause
+    / index_nulls_not_distinct_clause
   ) { return x; }
 
 verbose_all_columns
@@ -2045,6 +2047,16 @@ index_include_clause
       includeKw: read(kw),
       columns,
     });
+  }
+
+index_nulls_distinct_clause
+  = kw:(NULLS __ DISTINCT) {
+    return loc({ type: "index_nulls_distinct_clause", nullsDistinctKw: read(kw) });
+  }
+
+index_nulls_not_distinct_clause
+  = kw:(NULLS __ NOT __ DISTINCT) {
+    return loc({ type: "index_nulls_not_distinct_clause", nullsNotDistinctKw: read(kw) });
   }
 
 // DROP INDEX
