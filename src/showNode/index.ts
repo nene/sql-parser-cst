@@ -55,5 +55,15 @@ export const indexMap: FullTransformMap<string, AllIndexNodes> = {
     ]),
 
   reindex_stmt: (node) =>
-    show([node.reindexKw, node.targetKw, node.concurrentlyKw, node.name]),
+    show([
+      node.reindexKw,
+      node.options,
+      node.targetKw,
+      node.concurrentlyKw,
+      node.name,
+    ]),
+  reindex_option_concurrently: (node) =>
+    show([node.concurrentlyKw, node.value]),
+  reindex_option_tablespace: (node) => show([node.tablespaceKw, node.name]),
+  reindex_option_verbose: (node) => show([node.verboseKw, node.value]),
 };

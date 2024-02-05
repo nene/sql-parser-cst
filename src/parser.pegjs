@@ -2146,17 +2146,39 @@ reindex_stmt
     }
   / &postgres
     kw:REINDEX
+    options:(__ paren$list$reindex_option)?
     targetKw:(__ (INDEX / SCHEMA / SYSTEM / TABLE / DATABASE))
     concurrentlyKw:(__ CONCURRENTLY)?
     name:(__ entity_name)? {
       return loc({
         type: "reindex_stmt",
         reindexKw: kw,
+        options: read(options),
         targetKw: read(targetKw),
         concurrentlyKw: read(concurrentlyKw),
         name: read(name),
       });
     }
+
+reindex_option
+  = reindex_option_concurrently
+  / reindex_option_tablespace
+  / reindex_option_verbose
+
+reindex_option_concurrently
+  = kw:CONCURRENTLY value:(__ boolean_literal)? {
+    return loc({ type: "reindex_option_concurrently", concurrentlyKw: read(kw), value: read(value) });
+  }
+
+reindex_option_tablespace
+  = kw:(TABLESPACE __) name:ident {
+    return loc({ type: "reindex_option_tablespace", tablespaceKw: read(kw), name });
+  }
+
+reindex_option_verbose
+  = kw:VERBOSE value:(__ boolean_literal)? {
+    return loc({ type: "reindex_option_verbose", verboseKw: kw, value: read(value) });
+  }
 
 /**
  * ------------------------------------------------------------------------------------ *
@@ -6572,6 +6594,7 @@ paren$list$partition_bound_from_to_value = .
 paren$list$partition_bound_with_value = .
 paren$list$postgresql_option_element = .
 paren$list$procedure_param = .
+paren$list$reindex_option = .
 paren$list$sort_specification = .
 paren$list$string_literal = .
 paren$list$table_func_call = .
@@ -6639,6 +6662,7 @@ list$partition_bound_from_to_value = .
 list$partition_bound_with_value = .
 list$postgresql_option_element = .
 list$procedure_param = .
+list$reindex_option = .
 list$relation_expr = .
 list$rename_action = .
 list$role_specification = .
@@ -8060,6 +8084,7 @@ VARBINARY           = kw:"VARBINARY"i           !ident_part { return loc(createK
 VARCHAR             = kw:"VARCHAR"i             !ident_part { return loc(createKeyword(kw)); }
 VARIADIC            = kw:"VARIADIC"i            !ident_part { return loc(createKeyword(kw)); }
 VARYING             = kw:"VARYING"i             !ident_part { return loc(createKeyword(kw)); }
+VERBOSE             = kw:"VERBOSE"i             !ident_part { return loc(createKeyword(kw)); }
 VIEW                = kw:"VIEW"i                !ident_part { return loc(createKeyword(kw)); }
 VIRTUAL             = kw:"VIRTUAL"i             !ident_part { return loc(createKeyword(kw)); }
 VISIBLE             = kw:"VISIBLE"i             !ident_part { return loc(createKeyword(kw)); }

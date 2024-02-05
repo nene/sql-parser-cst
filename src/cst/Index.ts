@@ -14,6 +14,7 @@ import {
 } from "./Select";
 import { AlterActionSetTablespace, AlterIndexAction } from "./AlterAction";
 import { OwnedByClause } from "./AlterTable";
+import { BooleanLiteral } from "./Literal";
 
 export type AllIndexNodes =
   | AllIndexStatements
@@ -21,7 +22,10 @@ export type AllIndexNodes =
   | IndexSpecification
   | IndexIncludeClause
   | IndexNullsDistinctClause
-  | IndexNullsNotDistinctClause;
+  | IndexNullsNotDistinctClause
+  | ReindexOptionConcurrently
+  | ReindexOptionTablespace
+  | ReindexOptionVerbose;
 
 export type AllIndexStatements =
   | CreateIndexStmt
@@ -125,7 +129,31 @@ export interface AlterIndexAllInTablespaceStmt extends BaseNode {
 export interface ReindexStmt extends BaseNode {
   type: "reindex_stmt";
   reindexKw: Keyword<"REINDEX">;
+  options?: ParenExpr<ListExpr<ReindexOption>>;
   targetKw?: Keyword<"INDEX" | "TABLE" | "SCHEMA" | "DATABASE" | "SYSTEM">;
   concurrentlyKw?: Keyword<"CONCURRENTLY">;
   name?: EntityName;
+}
+
+type ReindexOption =
+  | ReindexOptionConcurrently
+  | ReindexOptionTablespace
+  | ReindexOptionVerbose;
+
+export interface ReindexOptionConcurrently extends BaseNode {
+  type: "reindex_option_concurrently";
+  concurrentlyKw: Keyword<"CONCURRENTLY">;
+  value?: BooleanLiteral;
+}
+
+export interface ReindexOptionTablespace extends BaseNode {
+  type: "reindex_option_tablespace";
+  tablespaceKw: Keyword<"TABLESPACE">;
+  name: Identifier;
+}
+
+export interface ReindexOptionVerbose extends BaseNode {
+  type: "reindex_option_verbose";
+  verboseKw: Keyword<"VERBOSE">;
+  value?: BooleanLiteral;
 }

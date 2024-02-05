@@ -253,6 +253,28 @@ describe("index", () => {
         testWc("REINDEX TABLE CONCURRENTLY my_idx");
         testWc("REINDEX SYSTEM CONCURRENTLY");
       });
+
+      describe("reindex options", () => {
+        it("supports CONCURRENTLY", () => {
+          testWc("REINDEX (CONCURRENTLY true) INDEX my_idx");
+          testWc("REINDEX (CONCURRENTLY false) TABLE foo");
+          testWc("REINDEX (CONCURRENTLY) TABLE foo");
+        });
+
+        it("supports TABLESPACE", () => {
+          testWc("REINDEX (TABLESPACE my_space) INDEX my_idx");
+        });
+
+        it("supports VERBOSE", () => {
+          testWc("REINDEX (VERBOSE) INDEX my_idx");
+          testWc("REINDEX (VERBOSE true) TABLE foo");
+          testWc("REINDEX (VERBOSE false) TABLE foo");
+        });
+
+        it("supports multiple options", () => {
+          testWc("REINDEX ( VERBOSE true, CONCURRENTLY, TABLESPACE blah ) INDEX my_idx");
+        });
+      });
     });
   });
 });
