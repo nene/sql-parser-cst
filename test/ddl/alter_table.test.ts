@@ -311,6 +311,21 @@ describe("alter table", () => {
       testAlterWc("ADD CHECK (col1 > 0)");
     });
   });
+  dialect("bigquery", () => {
+    it("supports ADD PRIMARY KEY .. NOT ENFORCED", () => {
+      testAlterWc("ADD PRIMARY KEY (col1) NOT ENFORCED");
+    });
+    it("supports ADD [CONSTRAINT name] FORIGN KEY .. NOT ENFORCED", () => {
+      testAlterWc("ADD FOREIGN KEY (col1) REFERENCES tbl (col2) NOT ENFORCED");
+      testAlterWc("ADD CONSTRAINT fk FOREIGN KEY (col1) REFERENCES tbl (col2) NOT ENFORCED");
+    });
+    it.skip("supports ADD CONSTRAINT IF NOT EXISTS name FORIGN KEY", () => {
+      testAlterWc(`
+        ADD CONSTRAINT IF NOT EXISTS fk
+          FOREIGN KEY (col1) REFERENCES tbl (col2) NOT ENFORCED
+      `);
+    });
+  });
   dialect(["postgresql"], () => {
     it("supports ADD CONSTRAINT .. [NOT VALID]", () => {
       testAlterWc("ADD FOREIGN KEY (col1) REFERENCES tbl (col2) NOT VALID");

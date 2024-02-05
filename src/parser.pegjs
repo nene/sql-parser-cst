@@ -2628,6 +2628,7 @@ alter_action_bigquery
   = alter_action_alter_column
   / alter_action_set_default_collate
   / alter_action_set_bigquery_options
+  / alter_action_add_constraint
   / alter_action_drop_constraint
   / alter_action_drop_primary_key
 
@@ -4956,7 +4957,7 @@ table_constraint
     }
 
 constraint_name
-  = !bigquery kw:CONSTRAINT name:(__ ident)? {
+  = kw:CONSTRAINT name:(__ ident)? {
     return loc({
       type: "constraint_name",
       constraintKw: kw,

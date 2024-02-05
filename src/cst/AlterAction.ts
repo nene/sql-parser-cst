@@ -171,14 +171,14 @@ export interface AlterActionResetPostgresqlOptions extends BaseNode {
   options: ParenExpr<ListExpr<Identifier | MemberExpr>>;
 }
 
-// MySQL, MariaDB, PostgreSQL
+// MySQL, MariaDB, PostgreSQL, BigQuery
 export interface AlterActionAddConstraint extends BaseNode {
   type: "alter_action_add_constraint";
   addKw: Keyword<"ADD">;
   constraint: Constraint<TableConstraint>;
 }
 
-// MySQL, MariaDB, PostgreSQL
+// MySQL, MariaDB, PostgreSQL, BigQuery
 export interface AlterActionDropConstraint extends BaseNode {
   type: "alter_action_drop_constraint";
   dropConstraintKw: [Keyword<"DROP">, Keyword<"CONSTRAINT" | "CHECK">];
