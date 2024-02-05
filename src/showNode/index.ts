@@ -53,4 +53,6 @@ export const indexMap: FullTransformMap<string, AllIndexNodes> = {
       node.ownedBy,
       node.action,
     ]),
+
+  reindex_stmt: (node) => show([node.reindexKw, node.name]),
 };

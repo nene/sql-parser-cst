@@ -99,6 +99,7 @@ ddl_statement
   / drop_index_stmt
   / &postgres x:alter_index_stmt { return x; }
   / &postgres x:alter_index_all_in_tablespace_stmt { return x; }
+  / (&postgres / &sqlite) x:reindex_stmt { return x; }
   / &sqlite x:ddl_statement_sqlite { return x; }
   / &mysql x:ddl_statement_mysql { return x; }
   / &bigquery x:ddl_statement_bigquery { return x; }
@@ -2138,6 +2139,11 @@ alter_index_all_in_tablespace_stmt
         action,
       });
     }
+
+reindex_stmt
+  = kw:REINDEX name:(__ entity_name)? {
+    return loc({ type: "reindex_stmt", reindexKw: kw, name: read(name) });
+  }
 
 /**
  * ------------------------------------------------------------------------------------ *
@@ -4410,7 +4416,6 @@ sqlite_statement
   = attach_database_stmt
   / detach_database_stmt
   / vacuum_stmt
-  / reindex_stmt
   / pragma_stmt
 
 attach_database_stmt
@@ -4451,11 +4456,6 @@ vacuum_stmt
       vacuumKw: read(kw),
       schema: read(schema),
     });
-  }
-
-reindex_stmt
-  = kw:REINDEX table:(__ entity_name)? {
-    return loc({ type: "reindex_stmt", reindexKw: kw, table: read(table) });
   }
 
 pragma_stmt

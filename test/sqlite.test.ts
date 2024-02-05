@@ -25,14 +25,6 @@ describe("SQLite specific statements", () => {
       });
     });
 
-    describe("REINDEX", () => {
-      it("supports REINDEX statement", () => {
-        testWc("REINDEX");
-        testWc("REINDEX tbl");
-        testWc("REINDEX my_schema.tbl");
-      });
-    });
-
     describe("PRAGMA", () => {
       it("supports quering PRAGMA name", () => {
         testWc("PRAGMA function_list");

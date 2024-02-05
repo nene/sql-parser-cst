@@ -220,4 +220,14 @@ describe("index", () => {
       });
     });
   });
+
+  describe("reindex", () => {
+    dialect("sqlite", () => {
+      it("supports simple REINDEX", () => {
+        testWc("REINDEX");
+        testWc("REINDEX tbl");
+        testWc("REINDEX my_schema.tbl");
+      });
+    });
+  });
 });

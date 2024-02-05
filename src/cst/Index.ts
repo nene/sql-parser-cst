@@ -27,7 +27,8 @@ export type AllIndexStatements =
   | CreateIndexStmt
   | DropIndexStmt
   | AlterIndexStmt
-  | AlterIndexAllInTablespaceStmt;
+  | AlterIndexAllInTablespaceStmt
+  | ReindexStmt;
 
 // CREATE INDEX
 export interface CreateIndexStmt extends BaseNode {
@@ -118,4 +119,11 @@ export interface AlterIndexAllInTablespaceStmt extends BaseNode {
   tablespace: Identifier;
   ownedBy?: OwnedByClause;
   action: AlterActionSetTablespace;
+}
+
+// PostgreSQL, SQLite
+export interface ReindexStmt extends BaseNode {
+  type: "reindex_stmt";
+  reindexKw: Keyword<"REINDEX">;
+  name?: EntityName;
 }

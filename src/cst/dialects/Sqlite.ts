@@ -12,7 +12,6 @@ export type AllSqliteStatements =
   | AttachDatabaseStmt
   | DetachDatabaseStmt
   | VacuumStmt
-  | ReindexStmt
   | PragmaStmt;
 
 export interface AttachDatabaseStmt extends BaseNode {
@@ -37,12 +36,6 @@ export interface VacuumStmt extends BaseNode {
   schema?: Identifier;
   intoKw?: Keyword<"INTO">;
   file?: StringLiteral;
-}
-
-export interface ReindexStmt extends BaseNode {
-  type: "reindex_stmt";
-  reindexKw: Keyword<"REINDEX">;
-  table?: EntityName;
 }
 
 export interface PragmaStmt extends BaseNode {

@@ -9,7 +9,6 @@ export const sqliteMap: FullTransformMap<string, AllSqliteNodes> = {
     show([node.detachKw, node.databaseKw, node.schema]),
   vacuum_stmt: (node) =>
     show([node.vacuumKw, node.schema, node.intoKw, node.file]),
-  reindex_stmt: (node) => show([node.reindexKw, node.table]),
   pragma_stmt: (node) => show([node.pragmaKw, node.pragma]),
   pragma_assignment: (node) => show([node.name, "=", node.value]),
   pragma_func_call: (node) => show([node.name, node.args]),
