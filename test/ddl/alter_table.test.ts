@@ -328,7 +328,7 @@ describe("alter table", () => {
     });
   });
 
-  dialect(["mysql", "mariadb", "postgresql"], () => {
+  dialect(["mysql", "mariadb", "postgresql", "bigquery"], () => {
     it("supports DROP CONSTRAINT", () => {
       testAlterWc("DROP CONSTRAINT my_constraint");
     });
@@ -338,7 +338,7 @@ describe("alter table", () => {
       testAlterWc("DROP CHECK my_constraint");
     });
   });
-  dialect(["postgresql", "mariadb"], () => {
+  dialect(["postgresql", "mariadb", "bigquery"], () => {
     it("supports DROP CONSTRAINT [IF EXISTS]", () => {
       testAlterWc("DROP CONSTRAINT IF EXISTS my_constraint");
     });

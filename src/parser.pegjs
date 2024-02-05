@@ -2614,18 +2614,21 @@ owned_by_clause
   }
 
 alter_action
-  = alter_action_add_column
-  / alter_action_drop_column
-  / alter_action_rename_column
+  = alter_action_rename_column
   / alter_action_rename
   / &bigquery x:alter_action_bigquery { return x; }
   / &mysql x:alter_action_mysql { return x; }
   / &postgres x:alter_action_postgres { return x; }
+  // ADD/DROP CONSTRAINT must be matched before ADD/DROP column
+  // to avoid ambiguity (when CONSTRAINT is not a reserved word)
+  / alter_action_add_column
+  / alter_action_drop_column
 
 alter_action_bigquery
   = alter_action_alter_column
   / alter_action_set_default_collate
   / alter_action_set_bigquery_options
+  / alter_action_drop_constraint
 
 alter_action_mysql
   = alter_action_alter_column
