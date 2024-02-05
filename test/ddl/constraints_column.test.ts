@@ -60,6 +60,11 @@ describe("column constraints", () => {
         testColConstWc("PRIMARY KEY");
       });
     });
+    dialect(["bigquery"], () => {
+      it("PRIMARY KEY NOT ENFORCED", () => {
+        testColConstWc("PRIMARY KEY NOT ENFORCED");
+      });
+    });
 
     dialect("sqlite", () => {
       it("AUTOINCREMENT on PRIMARY KEY column", () => {
@@ -123,6 +128,11 @@ describe("column constraints", () => {
       it("REFERENCES", () => {
         // full syntax is tested under table constraints tests
         testColConstWc("REFERENCES tbl2 (col1)");
+      });
+    });
+    dialect(["bigquery"], () => {
+      it("REFERENCES .. NOT ENFORCED", () => {
+        testColConstWc("REFERENCES tbl2 (col1) NOT ENFORCED");
       });
     });
     dialect("sqlite", () => {

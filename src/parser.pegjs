@@ -4987,15 +4987,15 @@ column_constraint_type
   / !bigquery con:constraint_null { return con; }
   / constraint_default
   / constraint_collate
+  / column_constraint_primary_key
+  / references_specification
   / !bigquery con:column_constraint_type_common { return con; }
   / &mysql con:column_constraint_type_mysql { return con; }
   / &bigquery con:bigquery_options { return con; }
   / &postgres con:column_constraint_type_postgresql { return con; }
 
 column_constraint_type_common
-  = column_constraint_primary_key
-  / column_constraint_unique
-  / references_specification
+  = column_constraint_unique
   / constraint_check
   / constraint_generated
   / constraint_auto_increment
