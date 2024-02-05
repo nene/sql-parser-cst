@@ -182,6 +182,13 @@ describe("table constraints", () => {
         testTblConstWc("CHECK (x > 10) ENFORCED");
       });
     });
+
+    dialect(["bigquery"], () => {
+      it("supports NOT ENFORCED on PRIMARY KEY and FOREIGN KEY constraints", () => {
+        testTblConstWc("PRIMARY KEY (id) NOT ENFORCED");
+        testTblConstWc("FOREIGN KEY (id) REFERENCES tbl2 (id) NOT ENFORCED");
+      });
+    });
   });
 
   dialect(["mysql", "mariadb"], () => {

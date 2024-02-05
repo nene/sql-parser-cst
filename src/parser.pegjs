@@ -4969,7 +4969,13 @@ constraint_modifier
         kw: read(kw),
       });
     }
-  / &only_mysql kw:(ENFORCED / NOT __ ENFORCED) {
+  / (&only_mysql / &bigquery) kw:(NOT __ ENFORCED) {
+      return loc({
+        type: "constraint_modifier",
+        kw: read(kw),
+      });
+    }
+  / &only_mysql kw:(ENFORCED) {
       return loc({
         type: "constraint_modifier",
         kw: read(kw),
