@@ -2629,6 +2629,7 @@ alter_action_bigquery
   / alter_action_set_default_collate
   / alter_action_set_bigquery_options
   / alter_action_drop_constraint
+  / alter_action_drop_primary_key
 
 alter_action_mysql
   = alter_action_alter_column
@@ -2785,6 +2786,15 @@ alter_action_drop_constraint
         behaviorKw: read(behaviorKw),
       })
     }
+
+alter_action_drop_primary_key
+  = kw:(DROP __ PRIMARY __ KEY) ifExistsKw:(__ if_exists)? {
+    return loc({
+      type: "alter_action_drop_primary_key",
+      dropPrimaryKeyKw: read(kw),
+      ifExistsKw: read(ifExistsKw),
+    });
+  }
 
 alter_action_alter_constraint
   = kw:(ALTER __ (CONSTRAINT / CHECK) __) constraint:ident modifiers:(__ constraint_modifier)+ {

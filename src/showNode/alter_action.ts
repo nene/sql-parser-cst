@@ -37,6 +37,8 @@ export const alterActionMap: FullTransformMap<string, AllAlterActionNodes> = {
     show([node.renameConstraintKw, node.oldName, node.toKw, node.newName]),
   alter_action_validate_constraint: (node) =>
     show([node.validateConstraintKw, node.constraint]),
+  alter_action_drop_primary_key: (node) =>
+    show([node.dropPrimaryKeyKw, node.ifExistsKw]),
   alter_action_owner_to: (node) => show([node.ownerToKw, node.owner]),
   alter_action_set_schema: (node) => show([node.setSchemaKw, node.schema]),
   alter_action_enable: (node) => show([node.enableKw, node.modeKw, node.item]),

@@ -47,6 +47,7 @@ export type AlterTableAction =
   | AlterActionAlterConstraint
   | AlterActionRenameConstraint
   | AlterActionValidateConstraint
+  | AlterActionDropPrimaryKey
   | AlterActionOwnerTo
   | AlterActionSetSchema
   | AlterActionEnable
@@ -208,6 +209,13 @@ export interface AlterActionValidateConstraint extends BaseNode {
   type: "alter_action_validate_constraint";
   validateConstraintKw: [Keyword<"VALIDATE">, Keyword<"CONSTRAINT">];
   constraint: Identifier;
+}
+
+// BigQuery
+export interface AlterActionDropPrimaryKey extends BaseNode {
+  type: "alter_action_drop_primary_key";
+  dropPrimaryKeyKw: [Keyword<"DROP">, Keyword<"PRIMARY">, Keyword<"KEY">];
+  ifExistsKw?: [Keyword<"IF">, Keyword<"EXISTS">];
 }
 
 // PostgreSQL

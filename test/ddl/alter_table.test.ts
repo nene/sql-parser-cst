@@ -349,6 +349,12 @@ describe("alter table", () => {
       testAlterWc("DROP CONSTRAINT my_constraint CASCADE");
     });
   });
+  dialect(["bigquery"], () => {
+    it("supports DROP PRIMARY KEY [IF EXISTS]", () => {
+      testAlterWc("DROP PRIMARY KEY");
+      testAlterWc("DROP PRIMARY KEY IF EXISTS");
+    });
+  });
 
   dialect("postgresql", () => {
     it("supports ALTER CONSTRAINT", () => {
