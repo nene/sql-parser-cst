@@ -2237,7 +2237,7 @@ if_not_exists
   = kws:(IF __ NOT __ EXISTS) { return read(kws); }
 
 create_definition
-  = !bigquery c:table_constraint { return c; }
+  = c:table_constraint { return c; }
   / (&postgres / &mysql) c:create_table_like_clause { return c; }
   / column_definition
 
@@ -5130,9 +5130,9 @@ identity_column = kw:IDENTITY {
 
 table_constraint_type
   = table_constraint_primary_key
-  / table_constraint_unique
   / constraint_foreign_key
-  / constraint_check
+  / !bigquery con:table_constraint_unique { return con; }
+  / !bigquery con:constraint_check { return con; }
   / &mysql con:table_constraint_index { return con; }
   / &postgres con:table_constraint_exclude { return con; }
 
