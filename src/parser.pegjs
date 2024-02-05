@@ -2141,9 +2141,22 @@ alter_index_all_in_tablespace_stmt
     }
 
 reindex_stmt
-  = kw:REINDEX name:(__ entity_name)? {
-    return loc({ type: "reindex_stmt", reindexKw: kw, name: read(name) });
-  }
+  = &sqlite kw:REINDEX name:(__ entity_name)? {
+      return loc({ type: "reindex_stmt", reindexKw: kw, name: read(name) });
+    }
+  / &postgres
+    kw:REINDEX
+    targetKw:(__ (INDEX / SCHEMA / SYSTEM / TABLE / DATABASE))
+    concurrentlyKw:(__ CONCURRENTLY)?
+    name:(__ entity_name)? {
+      return loc({
+        type: "reindex_stmt",
+        reindexKw: kw,
+        targetKw: read(targetKw),
+        concurrentlyKw: read(concurrentlyKw),
+        name: read(name),
+      });
+    }
 
 /**
  * ------------------------------------------------------------------------------------ *

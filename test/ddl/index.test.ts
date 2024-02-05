@@ -229,5 +229,30 @@ describe("index", () => {
         testWc("REINDEX my_schema.tbl");
       });
     });
+
+    dialect("postgresql", () => {
+      it("supports REINDEX INDEX", () => {
+        testWc("REINDEX INDEX my_idx");
+        testWc("REINDEX INDEX schm.my_idx");
+      });
+
+      it("supports REINDEX {TABLE | SCHEMA | DATABASE | SYSTEM}", () => {
+        testWc("REINDEX TABLE my_tbl");
+        testWc("REINDEX SCHEMA my_schm");
+        testWc("REINDEX DATABASE my_db");
+        testWc("REINDEX SYSTEM my_db");
+      });
+
+      it("supports REINDEX {DATABASE | SYSTEM} without name", () => {
+        testWc("REINDEX DATABASE");
+        testWc("REINDEX SYSTEM");
+      });
+
+      it("supports CONCURRENTLY", () => {
+        testWc("REINDEX INDEX CONCURRENTLY my_idx");
+        testWc("REINDEX TABLE CONCURRENTLY my_idx");
+        testWc("REINDEX SYSTEM CONCURRENTLY");
+      });
+    });
   });
 });

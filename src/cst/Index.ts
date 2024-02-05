@@ -125,5 +125,7 @@ export interface AlterIndexAllInTablespaceStmt extends BaseNode {
 export interface ReindexStmt extends BaseNode {
   type: "reindex_stmt";
   reindexKw: Keyword<"REINDEX">;
+  targetKw?: Keyword<"INDEX" | "TABLE" | "SCHEMA" | "DATABASE" | "SYSTEM">;
+  concurrentlyKw?: Keyword<"CONCURRENTLY">;
   name?: EntityName;
 }
