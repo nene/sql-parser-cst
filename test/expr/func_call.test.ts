@@ -206,5 +206,9 @@ describe("function call", () => {
       testExprWc(`any_value(fruit HAVING MAX sold)`);
       testExprWc(`any_value(fruit HAVING MIN sold)`);
     });
+
+    it("supports GROUPING() function", () => {
+      testExpr(`GROUPING(product_name)`);
+    });
   });
 });

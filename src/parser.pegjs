@@ -6324,6 +6324,7 @@ bigquery_func_keyword
   / ARRAY
   / COLLATE
   / IF
+  / GROUPING
 
 postgres_func_keyword
   = CURRENT_TIME
