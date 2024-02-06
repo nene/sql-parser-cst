@@ -45,7 +45,7 @@ describe("select GROUP BY", () => {
     });
   });
 
-  dialect("postgresql", () => {
+  dialect(["bigquery", "postgresql"], () => {
     it("supports GROUPING SETS", () => {
       testClauseWc("GROUP BY GROUPING SETS ( (id, name), age )");
     });

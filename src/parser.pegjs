@@ -898,7 +898,7 @@ group_by_cube
   }
 
 group_by_grouping_sets
-  = kw:(GROUPING __ SETS __) columns:paren$list$grouping_element &postgres {
+  = kw:(GROUPING __ SETS __) columns:paren$list$grouping_element (&bigquery / &postgres) {
     return loc({
       type: "group_by_grouping_sets",
       groupingSetsKw: read(kw),
