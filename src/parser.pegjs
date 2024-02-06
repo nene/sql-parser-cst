@@ -5695,7 +5695,7 @@ _comparison_expr_right
   / c1:__ op:(NOT __ IN / IN) c2:__ right:(paren$list$expr / sub_comparison_expr / &bigquery e:unnest_expr { return e; }) {
     return (left: any) => createBinaryExpr(left, c1, read(op), c2, right);
   }
-  / c1:__ op:(NOT __ LIKE / LIKE) c2:__ right:escape_expr {
+  / c1:__ op:(NOT __ LIKE / LIKE) c2:__ right:(&bigquery x:quantifier_expr { return x; } / escape_expr) {
     return (left: any) => createBinaryExpr(left, c1, read(op), c2, right);
   }
   / &only_mysql c1:__ op:(MEMBER __ OF) c2:__ right:paren$string_literal {
@@ -5773,7 +5773,7 @@ between_op
   = kws:(NOT __ BETWEEN / BETWEEN) { return read(kws); }
 
 quantifier_expr
-  = op:((ANY / SOME / ALL) __) expr:paren$compound_select_stmt {
+  = op:((ANY / SOME / ALL) __) expr:(paren$compound_select_stmt / paren$list$expr) {
     return loc({
       type: "quantifier_expr",
       quantifierKw: read(op),

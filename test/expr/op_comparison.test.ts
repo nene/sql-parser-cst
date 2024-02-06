@@ -278,7 +278,7 @@ describe("comparison operators", () => {
     });
 
     dialect(["sqlite", "bigquery"], () => {
-      it("does not support quantifiers in comparison", () => {
+      it("does not support quantifiers in simple comparison operator", () => {
         // The more complex test is needed because SQLite parses ANY(..) as function call
         expect(() => {
           const expr = parseExpr(`x = ANY (SELECT 1)`);
@@ -289,6 +289,22 @@ describe("comparison operators", () => {
             throw new Error("Expected quantifier_expr");
           }
         }).toThrowError();
+      });
+    });
+
+    dialect(["bigquery"], () => {
+      it("supports quantified LIKE operator", () => {
+        testExprWc(`'abc' LIKE ANY ('a', 'b', 'c')`);
+        testExprWc(`'abc' NOT LIKE ALL ('a', 'b', 'c')`);
+        testExprWc(`'abc' NOT LIKE SOME ('a', 'b', 'c')`);
+      });
+
+      it("parses quantifier expression in LIKE operator", () => {
+        const expr = parseExpr(`'abc' LIKE SOME ('a', 'b', 'c')`);
+        if (expr.type !== "binary_expr") {
+          throw new Error("Expected binary_expr");
+        }
+        expect(expr.right.type).toBe("quantifier_expr");
       });
     });
   });

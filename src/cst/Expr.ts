@@ -402,11 +402,11 @@ export interface StringWithCharset extends BaseNode {
   string: StringLiteral;
 }
 
-// MySQL, MariaDB, PostgreSQL
+// MySQL, MariaDB, PostgreSQL, BigQuery
 export interface QuantifierExpr extends BaseNode {
   type: "quantifier_expr";
   quantifierKw: Keyword<"ANY" | "SOME" | "ALL">;
-  expr: ParenExpr<SubSelect>;
+  expr: ParenExpr<SubSelect | ListExpr<Expr>>;
 }
 
 // MySQL, MariaDB
