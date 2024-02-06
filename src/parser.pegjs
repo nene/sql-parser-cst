@@ -889,7 +889,7 @@ group_by_rollup
   }
 
 group_by_cube
-  = kw:(CUBE __) cols:paren$list$expr &postgres {
+  = kw:(CUBE __) cols:paren$list$expr (&bigquery / &postgres) {
     return loc({
       type: "group_by_cube",
       cubeKw: read(kw),

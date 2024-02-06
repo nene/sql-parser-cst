@@ -285,7 +285,7 @@ export interface GroupByRollup extends BaseNode {
   columns: ParenExpr<ListExpr<Expr>>;
 }
 
-// PostgreSQL
+// BigQuery, PostgreSQL
 export interface GroupByCube extends BaseNode {
   type: "group_by_cube";
   cubeKw: Keyword<"CUBE">;

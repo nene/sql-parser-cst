@@ -26,12 +26,12 @@ describe("select GROUP BY", () => {
       testClauseWc("GROUP BY ROLLUP ( id, (name, age) )");
     });
 
-    dialect("postgresql", () => {
-      it("supports GROUP BY CUBE()", () => {
-        testClauseWc("GROUP BY CUBE (id, name + age)");
-        testClauseWc("GROUP BY CUBE (id, (name, age))");
-      });
+    it("supports GROUP BY CUBE()", () => {
+      testClauseWc("GROUP BY CUBE (id, name + age)");
+      testClauseWc("GROUP BY CUBE (id, (name, age))");
+    });
 
+    dialect("postgresql", () => {
       it("supports multiple ROLLUPs and CUBEs in one GROUP BY", () => {
         testClauseWc("GROUP BY ROLLUP(id), CUBE(name)");
       });
