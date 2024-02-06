@@ -64,7 +64,7 @@ describe("create table", () => {
       testWc("CREATE TABLE foo AS SELECT 1 AS x UNION SELECT 2 AS x");
     });
 
-    dialect(["mysql", "mariadb"], () => {
+    dialect(["mysql", "mariadb", "bigquery"], () => {
       it("supports CREATE TABLE ...(defs) AS select", () => {
         testWc("CREATE TABLE foo (id INT) AS SELECT 1");
       });
