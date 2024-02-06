@@ -13,7 +13,7 @@ describe("select GROUP BY", () => {
   it("supports GROUP BY with list expression", () => {
     testClauseWc("GROUP BY (id, name), age");
   });
-  dialect("postgresql", () => {
+  dialect(["bigquery", "postgresql"], () => {
     it("supports GROUP BY empty list", () => {
       testClauseWc("GROUP BY ()");
       testClauseWc("GROUP BY foo, (), bar, ()");
