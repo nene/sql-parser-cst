@@ -1882,6 +1882,7 @@ bigquery_create_view_clause
   = bigquery_options
   / cluster_by_clause
   / partition_by_clause
+  / as_replica_of_clause
 
 postgres_create_view_clause
   = postgresql_with_options
@@ -1897,6 +1898,15 @@ with_check_option_clause
       withKw: read(kw),
       levelKw: read(levelKw),
       checkOptionKw: read(checkOptionKw),
+    });
+  }
+
+as_replica_of_clause
+  = kw:(AS __ REPLICA __ OF __) view:entity_name {
+    return loc({
+      type: "as_replica_of_clause",
+      asReplicaOfKw: read(kw),
+      view,
     });
   }
 

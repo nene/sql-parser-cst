@@ -13,7 +13,10 @@ import { ClusterByClause } from "./OtherClauses";
 import { AsClause } from "./ProcClause";
 import { PartitionByClause, SubSelect } from "./Select";
 
-export type AllViewNodes = AllViewStatements | WithCheckOptionClause;
+export type AllViewNodes =
+  | AllViewStatements
+  | WithCheckOptionClause
+  | AsReplicaOfClause;
 
 export type AllViewStatements =
   | CreateViewStmt
@@ -43,6 +46,7 @@ type CreateViewClause =
   | UsingAccessMethodClause
   | TablespaceClause
   | WithDataClause
+  | AsReplicaOfClause
   | AsClause<SubSelect>;
 
 // PostgreSQL
@@ -51,6 +55,13 @@ export interface WithCheckOptionClause extends BaseNode {
   withKw: Keyword<"WITH">;
   levelKw?: Keyword<"CASCADED" | "LOCAL">;
   checkOptionKw: [Keyword<"CHECK">, Keyword<"OPTION">];
+}
+
+// BigQuery
+export interface AsReplicaOfClause extends BaseNode {
+  type: "as_replica_of_clause";
+  asReplicaOfKw: [Keyword<"AS">, Keyword<"REPLICA">, Keyword<"OF">];
+  view: EntityName;
 }
 
 // DROP VIEW

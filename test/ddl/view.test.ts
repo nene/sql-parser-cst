@@ -90,6 +90,10 @@ describe("view", () => {
               AS SELECT 1
             `);
           });
+
+          it("supports AS REPLICA OF clause", () => {
+            testWc("CREATE MATERIALIZED VIEW my_view AS REPLICA OF my_proj.ds.other_view");
+          });
         });
 
         dialect("postgresql", () => {
