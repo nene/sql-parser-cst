@@ -93,6 +93,26 @@ describe("index", () => {
       });
     });
 
+    describe("vector index", () => {
+      dialect("bigquery", () => {
+        it("supports VECTOR INDEX", () => {
+          testWc("CREATE VECTOR INDEX my_idx ON tbl (col)");
+        });
+
+        it("supports OR REPLACE", () => {
+          testWc("CREATE OR REPLACE VECTOR INDEX my_idx ON tbl (col)");
+        });
+
+        it("supports IF NOT EXISTS", () => {
+          testWc("CREATE VECTOR INDEX IF NOT EXISTS my_idx ON tbl (col)");
+        });
+
+        it("supports OPTIONS(..)", () => {
+          testWc("CREATE VECTOR INDEX idx ON tbl (col) OPTIONS(distance_type = 'COSINE')");
+        });
+      });
+    });
+
     dialect(["mysql", "mariadb"], () => {
       it("supports FULLTEXT & SPATIAL index", () => {
         testWc("CREATE FULLTEXT INDEX my_idx ON tbl (col)");

@@ -6,6 +6,7 @@ export const indexMap: FullTransformMap<string, AllIndexNodes> = {
   create_index_stmt: (node) =>
     show([
       node.createKw,
+      node.orReplaceKw,
       node.indexTypeKw,
       node.indexKw,
       node.concurrentlyKw,

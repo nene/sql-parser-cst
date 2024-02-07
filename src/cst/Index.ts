@@ -38,7 +38,10 @@ export type AllIndexStatements =
 export interface CreateIndexStmt extends BaseNode {
   type: "create_index_stmt";
   createKw: Keyword<"CREATE">;
-  indexTypeKw?: Keyword<"UNIQUE" | "FULLTEXT" | "SPATIAL" | "SEARCH">;
+  orReplaceKw?: [Keyword<"OR">, Keyword<"REPLACE">];
+  indexTypeKw?: Keyword<
+    "UNIQUE" | "FULLTEXT" | "SPATIAL" | "SEARCH" | "VECTOR"
+  >;
   indexKw: Keyword<"INDEX">;
   concurrentlyKw?: Keyword<"CONCURRENTLY">;
   ifNotExistsKw?: [Keyword<"IF">, Keyword<"NOT">, Keyword<"EXISTS">];

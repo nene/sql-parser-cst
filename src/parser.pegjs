@@ -1972,6 +1972,7 @@ refresh_materialized_view_stmt
 create_index_stmt
   = (&mysql / &sqlite / &bigquery)
     kw:(CREATE __)
+    orReplaceKw:(OR __ REPLACE __)?
     typeKw:(index_type_kw __)?
     indexKw:(INDEX __)
     ifKw:(if_not_exists __)?
@@ -1983,6 +1984,7 @@ create_index_stmt
       return loc({
         type: "create_index_stmt",
         createKw: read(kw),
+        orReplaceKw: read(orReplaceKw),
         indexTypeKw: read(typeKw),
         indexKw: read(indexKw),
         ifNotExistsKw: read(ifKw),
@@ -2026,6 +2028,7 @@ index_type_kw
   / x:FULLTEXT &mysql { return x; }
   / x:SPATIAL &mysql { return x; }
   / x:SEARCH &bigquery { return x; }
+  / x:VECTOR &bigquery { return x; }
 
 create_index_subclause
   = (&sqlite / &postgres) x:where_clause { return x; }
@@ -8105,6 +8108,7 @@ VARBINARY           = kw:"VARBINARY"i           !ident_part { return loc(createK
 VARCHAR             = kw:"VARCHAR"i             !ident_part { return loc(createKeyword(kw)); }
 VARIADIC            = kw:"VARIADIC"i            !ident_part { return loc(createKeyword(kw)); }
 VARYING             = kw:"VARYING"i             !ident_part { return loc(createKeyword(kw)); }
+VECTOR              = kw:"VECTOR"i              !ident_part { return loc(createKeyword(kw)); }
 VERBOSE             = kw:"VERBOSE"i             !ident_part { return loc(createKeyword(kw)); }
 VIEW                = kw:"VIEW"i                !ident_part { return loc(createKeyword(kw)); }
 VIRTUAL             = kw:"VIRTUAL"i             !ident_part { return loc(createKeyword(kw)); }
