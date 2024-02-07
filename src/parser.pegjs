@@ -231,6 +231,16 @@ table_clause
     });
   }
 
+// Used in cases where we only want to allow TABLE statement, not just any SELECT statement.
+// Like in BigQuery VECTOR_SEARCH() function.
+table_stmt
+  = tableCls:table_clause {
+    return loc({
+      type: "select_stmt",
+      clauses: [tableCls],
+    });
+  }
+
 /**
  * SELECT .. WITH
  * --------------------------------------------------------------------------------------
@@ -6409,14 +6419,17 @@ func_args_list
   }
 
 // For aggregate functions, first argument can be "*"
+// The table_stmt is included because of BigQuery VECTOR_SEARCH() function
 func_1st_arg
-  = star
+  = &bigquery x:table_stmt { return x; }
+  / star
   / named_arg
   / expr
   / compound_select_stmt
 
 func_arg
-  = named_arg
+  = &bigquery x:table_stmt { return x; }
+  / named_arg
   / expr
 
 named_arg

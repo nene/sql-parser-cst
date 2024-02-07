@@ -210,5 +210,15 @@ describe("function call", () => {
     it("supports GROUPING() function", () => {
       testExpr(`GROUPING(product_name)`);
     });
+
+    it("supports VECTOR_SEARCH() function", () => {
+      testExpr(`VECTOR_SEARCH(
+        TABLE mydataset.table1,
+        'my_embedding',
+        TABLE mydataset.table2,
+        'embedding',
+        top_k => 2
+      )`);
+    });
   });
 });
