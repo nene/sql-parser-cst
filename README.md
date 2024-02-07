@@ -332,6 +332,16 @@ yarn test:sqlite --watch
 Note that `yarn test --watch` doesn't work.
 A separate watch process needs to be started manually for each dialect.
 
+### Release
+
+Generate new release with `yarn publish`.
+
+To generate a changelog use the `yarn changelog` command:
+
+```
+VERSION=v0.27.0 yarn changelog`
+```
+
 ## Acknowledgements
 
 This started as a fork of [node-sql-parser][],

@@ -41,7 +41,7 @@
     "perf:case": "yarn ts-node perf/perf-test.ts case",
     "lint": "eslint src test scripts perf",
     "ts:check": "tsc --noEmit",
-    "changelog": "auto-changelog -p"
+    "changelog": "auto-changelog -p --starting-version $VERSION --ending-version $VERSION"
   },
   "devDependencies": {
     "@types/benchmark": "^2.1.2",
@@ -65,8 +65,6 @@
   },
   "auto-changelog": {
     "stdout": true,
-    "startingVersion": "v0.25.0",
-    "endingVersion": "v0.25.0",
     "breakingPattern": "BREAKING!",
     "commitLimit": false,
     "template": "changelog.hbs",
