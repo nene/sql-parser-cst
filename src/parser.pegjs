@@ -1959,7 +1959,7 @@ alter_view_stmt
     }
 
 alter_view_action
-  = &bigquery ac:alter_action_set_bigquery_options { return ac; }
+  = &bigquery ac:(alter_action_set_bigquery_options / alter_action_alter_column) { return ac; }
   / &mysql ac:as_clause$compound_select_stmt { return ac; }
   / &postgres ac:alter_view_action_postgres { return ac; }
 

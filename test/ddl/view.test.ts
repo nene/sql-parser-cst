@@ -163,6 +163,11 @@ describe("view", () => {
         testWc("ALTER MATERIALIZED VIEW my_view SET OPTIONS(description='blah')");
         testWc("ALTER MATERIALIZED VIEW IF EXISTS my_view SET OPTIONS(description='blah')");
       });
+
+      it("supports ALTER VIEW .. ALTER COLUMN .. SET OPTIONS()", () => {
+        testWc("ALTER VIEW my_view ALTER COLUMN col1 SET OPTIONS(description='blah')");
+        testWc("ALTER VIEW my_view ALTER COLUMN IF EXISTS col1 SET OPTIONS(description='blah')");
+      });
     });
 
     dialect(["mysql", "mariadb"], () => {
