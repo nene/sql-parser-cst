@@ -1847,7 +1847,7 @@ create_view_stmt
     viewKw:(__ VIEW)
     ifKw:(__ if_not_exists)?
     name:(__ entity_name)
-    cols:(__ paren$list$column)?
+    cols:(__ paren$list$view_column_definition)?
     clauses:(__ create_view_clause)+ {
       return loc({
         type: "create_view_stmt",
@@ -1871,6 +1871,16 @@ view_kind
   }
   / kw:MATERIALIZED (&bigquery / &postgres) {
     return loc({ type: "relation_kind", kindKw: kw });
+  }
+
+// Just like column_definition, but with the only possible constraint being bigquery OPTIONS()
+view_column_definition
+  = name:ident constraints:(__ bigquery_options)|0..1| {
+    return loc({
+      type: "column_definition",
+      name,
+      constraints: constraints.map(read),
+    });
   }
 
 create_view_clause
@@ -2533,7 +2543,7 @@ create_table_server_clause
   }
 
 bigquery_options
-  = kw:(OPTIONS __) options:paren$list$equals_expr {
+  = &bigquery kw:(OPTIONS __) options:paren$list$equals_expr {
     return loc({
       type: "bigquery_options",
       optionsKw: read(kw),
@@ -6647,6 +6657,7 @@ paren$list$string_literal = .
 paren$list$table_func_call = .
 paren$list$table_option_postgresql = .
 paren$list$tablesample_arg = .
+paren$list$view_column_definition = .
 paren$pivot_for_in = .
 paren$postgresql_op = .
 paren$pragma_value = .
@@ -6723,6 +6734,7 @@ list$transform_type = .
 list$type_param = .
 list$values_row = .
 list$variable = .
+list$view_column_definition = .
 /*! list:end */
 
 empty_list

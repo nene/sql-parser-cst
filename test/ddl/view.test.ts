@@ -10,6 +10,16 @@ describe("view", () => {
     it("supports columns list", () => {
       testWc("CREATE VIEW my_view (col1, col2) AS SELECT 1, 2");
     });
+    dialect("bigquery", () => {
+      it("supports OPTIONS() in columns list", () => {
+        testWc(`
+          CREATE VIEW person (
+            id OPTIONS(description='identity'),
+            name OPTIONS(description='full person name')
+          ) AS SELECT 1, 'John'
+        `);
+      });
+    });
 
     dialect(["mysql", "mariadb", "bigquery", "postgresql"], () => {
       it("supports OR REPLACE", () => {

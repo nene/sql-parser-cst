@@ -5,6 +5,7 @@ import {
   WithDataClause,
   UsingAccessMethodClause,
   RelationKind,
+  ColumnDefinition,
 } from "./CreateTable";
 import { BigqueryOptions } from "./dialects/Bigquery";
 import { PostgresqlWithOptions } from "./dialects/Postgresql";
@@ -33,7 +34,7 @@ export interface CreateViewStmt extends BaseNode {
   viewKw: Keyword<"VIEW">;
   ifNotExistsKw?: [Keyword<"IF">, Keyword<"NOT">, Keyword<"EXISTS">];
   name: EntityName;
-  columns?: ParenExpr<ListExpr<Identifier>>;
+  columns?: ParenExpr<ListExpr<ColumnDefinition>>;
   clauses: CreateViewClause[];
 }
 
