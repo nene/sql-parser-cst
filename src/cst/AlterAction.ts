@@ -12,7 +12,7 @@ import {
   MemberExpr,
 } from "./Expr";
 import { NumberLiteral, StringLiteral } from "./Literal";
-import { Constraint, ConstraintModifier, TableConstraint } from "./Constraint";
+import { ConstraintModifier, TableConstraint } from "./Constraint";
 import { Default } from "./Insert";
 import {
   PostgresqlTableOption,
@@ -30,7 +30,8 @@ export type AllAlterActionNodes =
   | ToggleItem
   | ReplicaIdentityUsingIndex
   | SetDataTypeCollateClause
-  | SetDataTypeUsingClause;
+  | SetDataTypeUsingClause
+  | AlterActionAddConstraintConstraintName;
 
 export type AlterTableAction =
   | AlterActionRename
@@ -175,7 +176,18 @@ export interface AlterActionResetPostgresqlOptions extends BaseNode {
 export interface AlterActionAddConstraint extends BaseNode {
   type: "alter_action_add_constraint";
   addKw: Keyword<"ADD">;
-  constraint: Constraint<TableConstraint>;
+  name?: AlterActionAddConstraintConstraintName;
+  constraint: TableConstraint;
+  modifiers: ConstraintModifier[];
+}
+
+// BigQuery
+// Like ConstraintName, but allows for IF NOT EXISTS
+export interface AlterActionAddConstraintConstraintName extends BaseNode {
+  type: "alter_action_add_constraint_constraint_name";
+  constraintKw: Keyword<"CONSTRAINT">;
+  ifNotExistsKw?: [Keyword<"IF">, Keyword<"NOT">, Keyword<"EXISTS">];
+  name: Identifier;
 }
 
 // MySQL, MariaDB, PostgreSQL, BigQuery

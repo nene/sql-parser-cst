@@ -319,7 +319,7 @@ describe("alter table", () => {
       testAlterWc("ADD FOREIGN KEY (col1) REFERENCES tbl (col2) NOT ENFORCED");
       testAlterWc("ADD CONSTRAINT fk FOREIGN KEY (col1) REFERENCES tbl (col2) NOT ENFORCED");
     });
-    it.skip("supports ADD CONSTRAINT IF NOT EXISTS name FORIGN KEY", () => {
+    it("supports ADD CONSTRAINT IF NOT EXISTS name FORIGN KEY", () => {
       testAlterWc(`
         ADD CONSTRAINT IF NOT EXISTS fk
           FOREIGN KEY (col1) REFERENCES tbl (col2) NOT ENFORCED

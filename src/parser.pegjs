@@ -2802,11 +2802,25 @@ alter_action_reset_postgresql_options
   }
 
 alter_action_add_constraint
-  = kw:(ADD __) constraint:table_constraint {
+  = kw:(ADD __) name:(alter_action_add_constraint_constraint_name __)?
+    constraint:table_constraint_type
+    modifiers:(__ constraint_modifier)* {
+      return loc({
+        type: "alter_action_add_constraint",
+        addKw: read(kw),
+        name: read(name),
+        constraint,
+        modifiers: modifiers.map(read),
+      });
+    }
+
+alter_action_add_constraint_constraint_name
+  = constraintKw:(CONSTRAINT __) ifKw:(if_not_exists __)? name:ident {
     return loc({
-      type: "alter_action_add_constraint",
-      addKw: read(kw),
-      constraint,
+      type: "alter_action_add_constraint_constraint_name",
+      constraintKw: read(constraintKw),
+      ifNotExistsKw: read(ifKw),
+      name,
     });
   }
 
