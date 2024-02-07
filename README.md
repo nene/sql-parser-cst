@@ -20,7 +20,7 @@ with the goal of being able to re-create the exact original source code.
 Supports the following SQL dialects:
 
 - **SQLite** - full support (version 3.45)
-- **BigQuery** - full support (as of 15 Nov 2022).
+- **BigQuery** - full support (as of 31 January 2024).
 - **MySQL** - experimental (version 8)
   (see [#7](https://github.com/nene/sql-parser-cst/issues/7) for implementation progress).
 - **MariaDB** - experimental (version 10)
