@@ -33,6 +33,9 @@ export const functionMap: FullTransformMap<string, AllFunctionNodes> = {
     show([node.setKw, node.name, node.operator, node.value]),
   set_parameter_from_current_clause: (node) =>
     show([node.setKw, node.name, node.fromCurrentKw]),
+  reset_parameter_clause: (node) => show([node.resetKw, node.name]),
+  reset_all_parameters_clause: (node) => show([node.resetAllKw]),
+
   drop_function_stmt: (node) =>
     show([
       node.dropKw,
@@ -41,6 +44,16 @@ export const functionMap: FullTransformMap<string, AllFunctionNodes> = {
       node.ifExistsKw,
       node.name,
       node.params,
+      node.behaviorKw,
+    ]),
+
+  alter_function_stmt: (node) =>
+    show([
+      node.alterKw,
+      node.functionKw,
+      node.name,
+      node.params,
+      node.actions,
       node.behaviorKw,
     ]),
 };

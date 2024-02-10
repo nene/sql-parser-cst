@@ -136,6 +136,7 @@ ddl_statement_postgres
   / refresh_materialized_view_stmt
   / create_function_stmt
   / drop_function_stmt
+  / alter_function_stmt
   / create_procedure_stmt
   / drop_procedure_stmt
   / alter_table_all_in_tablespace_stmt
@@ -3684,6 +3685,23 @@ set_parameter_from_current_clause
     });
   }
 
+reset_parameter_clause
+  = kw:(RESET __) name:ident {
+    return loc({
+      type: "reset_parameter_clause",
+      resetKw: read(kw),
+      name,
+    });
+  }
+
+reset_all_parameters_clause
+  = kw:(RESET __ ALL __) {
+    return loc({
+      type: "reset_all_parameters_clause",
+      resetAllKw: read(kw),
+    });
+  }
+
 drop_function_stmt
   = kw:(DROP __)
     tableKw:(TABLE __)?
@@ -3703,6 +3721,39 @@ drop_function_stmt
         behaviorKw: read(behaviorKw),
       });
     }
+
+alter_function_stmt
+  = kw:(ALTER __) funKw:(FUNCTION __)
+    name:entity_name
+    params:(__ (paren$list$func_param / paren$empty_list))?
+    actions:(__ alter_function_action)+
+    behaviorKw:(__ RESTRICT)? {
+      return loc({
+        type: "alter_function_stmt",
+        alterKw: read(kw),
+        functionKw: read(funKw),
+        name,
+        params: read(params),
+        actions: actions.map(read),
+        behaviorKw: read(behaviorKw),
+      });
+    }
+
+alter_function_action
+  = alter_action_rename
+  / alter_action_owner_to
+  / alter_action_set_schema
+  / alter_action_depends_on_extension
+  / alter_action_no_depends_on_extension
+  / set_parameter_clause
+  / set_parameter_from_current_clause
+  / reset_all_parameters_clause
+  / reset_parameter_clause
+  / function_behavior_clause
+  / function_security_clause
+  / function_cost_clause
+  / function_rows_clause
+  / function_support_clause
 
 /**
  * ------------------------------------------------------------------------------------ *

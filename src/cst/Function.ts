@@ -13,6 +13,7 @@ import {
 import { SubSelect } from "./Select";
 import { BlockStmt } from "./ProceduralLanguage";
 import { Default } from "./Insert";
+import { AlterFunctionAction } from "./AlterAction";
 
 export type AllFunctionNodes =
   | AllFunctionStatements
@@ -29,9 +30,14 @@ export type AllFunctionNodes =
   | FunctionTransformClause
   | TransformType
   | SetParameterClause
-  | SetParameterFromCurrentClause;
+  | SetParameterFromCurrentClause
+  | ResetParameterClause
+  | ResetAllParametersClause;
 
-export type AllFunctionStatements = CreateFunctionStmt | DropFunctionStmt;
+export type AllFunctionStatements =
+  | CreateFunctionStmt
+  | DropFunctionStmt
+  | AlterFunctionStmt;
 
 // CREATE FUNCTION
 export interface CreateFunctionStmt extends BaseNode {
@@ -45,6 +51,7 @@ export interface CreateFunctionStmt extends BaseNode {
   name: EntityName;
   params: ParenExpr<ListExpr<FunctionParam>>;
   clauses: CreateFunctionClause[];
+  behaviorKw?: Keyword<"RESTRICT">;
 }
 
 export interface FunctionParam extends BaseNode {
@@ -187,6 +194,20 @@ export interface SetParameterFromCurrentClause extends BaseNode {
   fromCurrentKw: [Keyword<"FROM">, Keyword<"CURRENT">];
 }
 
+// PostgreSQL
+export interface ResetParameterClause extends BaseNode {
+  type: "reset_parameter_clause";
+  resetKw: Keyword<"RESET">;
+  name: Identifier;
+}
+
+// PostgreSQL
+export interface ResetAllParametersClause extends BaseNode {
+  type: "reset_all_parameters_clause";
+  resetAllKw: [Keyword<"RESET">, Keyword<"ALL">];
+  name: Identifier;
+}
+
 export interface DropFunctionStmt extends BaseNode {
   type: "drop_function_stmt";
   dropKw: Keyword<"DROP">;
@@ -197,3 +218,25 @@ export interface DropFunctionStmt extends BaseNode {
   params?: ParenExpr<ListExpr<FunctionParam>>;
   behaviorKw?: Keyword<"CASCADE" | "RESTRICT">;
 }
+
+// PostgreSQL
+export interface AlterFunctionStmt extends BaseNode {
+  type: "alter_function_stmt";
+  alterKw: Keyword<"ALTER">;
+  functionKw: Keyword<"FUNCTION">;
+  name: EntityName;
+  params?: ParenExpr<ListExpr<FunctionParam>>;
+  actions: (AlterFunctionAction | AlterFunctionClause)[];
+  behaviorKw?: Keyword<"RESTRICT">;
+}
+
+type AlterFunctionClause =
+  | SetParameterClause
+  | SetParameterFromCurrentClause
+  | ResetParameterClause
+  | ResetAllParametersClause
+  | FunctionBehaviorClause
+  | FunctionSecurityClause
+  | FunctionCostClause
+  | FunctionRowsClause
+  | FunctionSupportClause;
