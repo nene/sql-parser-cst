@@ -139,6 +139,7 @@ ddl_statement_postgres
   / alter_function_stmt
   / create_procedure_stmt
   / drop_procedure_stmt
+  / alter_procedure_stmt
   / alter_table_all_in_tablespace_stmt
   / create_schema_stmt
   / drop_schema_stmt
@@ -3853,6 +3854,35 @@ drop_procedure_stmt
         behaviorKw: read(behaviorKw),
       });
     }
+
+alter_procedure_stmt
+  = kw:(ALTER __) procKw:(PROCEDURE __)
+    name:entity_name
+    params:(__ (paren$list$func_param / paren$empty_list))?
+    actions:(__ alter_procedure_action)+
+    behaviorKw:(__ RESTRICT)? {
+      return loc({
+        type: "alter_procedure_stmt",
+        alterKw: read(kw),
+        procedureKw: read(procKw),
+        name,
+        params: read(params),
+        actions: actions.map(read),
+        behaviorKw: read(behaviorKw),
+      });
+    }
+
+alter_procedure_action
+  = alter_action_rename
+  / alter_action_owner_to
+  / alter_action_set_schema
+  / alter_action_depends_on_extension
+  / alter_action_no_depends_on_extension
+  / set_parameter_clause
+  / set_parameter_from_current_clause
+  / reset_all_parameters_clause
+  / reset_parameter_clause
+  / function_security_clause
 
 /**
  * ------------------------------------------------------------------------------------ *

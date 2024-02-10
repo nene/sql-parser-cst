@@ -47,40 +47,47 @@ describe("alter function/procedure", () => {
         testAlterClauseWc("RESET ALL");
       });
 
-      [
-        "CALLED ON NULL INPUT",
-        "RETURNS NULL ON NULL INPUT",
-        "STRICT",
-        "VOLATILE",
-        "STABLE",
-        "IMMUTABLE",
-        "LEAKPROOF",
-        "NOT LEAKPROOF",
-        "SECURITY DEFINER",
-        "SECURITY INVOKER",
-        "EXTERNAL SECURITY DEFINER",
-        "EXTERNAL SECURITY INVOKER",
-        "PARALLEL UNSAFE",
-        "PARALLEL RESTRICTED",
-        "PARALLEL SAFE",
-      ].forEach((attr) => {
-        it(`supports function behavior attribute: ${attr}`, () => {
-          testAlterClauseWc(attr);
+      if (kind === "FUNCTION") {
+        [
+          "CALLED ON NULL INPUT",
+          "RETURNS NULL ON NULL INPUT",
+          "STRICT",
+          "VOLATILE",
+          "STABLE",
+          "IMMUTABLE",
+          "LEAKPROOF",
+          "NOT LEAKPROOF",
+          "PARALLEL UNSAFE",
+          "PARALLEL RESTRICTED",
+          "PARALLEL SAFE",
+        ].forEach((attr) => {
+          it(`supports function behavior attribute: ${attr}`, () => {
+            testAlterClauseWc(attr);
+          });
         });
+      }
+
+      it(`supports security clauses`, () => {
+        testAlterClauseWc("SECURITY DEFINER");
+        testAlterClauseWc("SECURITY INVOKER");
+        testAlterClauseWc("EXTERNAL SECURITY DEFINER");
+        testAlterClauseWc("EXTERNAL SECURITY INVOKER");
       });
 
-      it("supports COST clause", () => {
-        testAlterClauseWc("COST 125");
-      });
+      if (kind === "FUNCTION") {
+        it("supports COST clause", () => {
+          testAlterClauseWc("COST 125");
+        });
 
-      it("supports ROWS clause", () => {
-        testAlterClauseWc("ROWS 5200");
-      });
+        it("supports ROWS clause", () => {
+          testAlterClauseWc("ROWS 5200");
+        });
 
-      it("supports SUPPORT clause", () => {
-        testAlterClauseWc("SUPPORT my_func");
-        testAlterClauseWc("SUPPORT schm.my_func");
-      });
+        it("supports SUPPORT clause", () => {
+          testAlterClauseWc("SUPPORT my_func");
+          testAlterClauseWc("SUPPORT schm.my_func");
+        });
+      }
 
       it("supports [RESTRICT] after actions", () => {
         testAlterClauseWc("RESET ALL SET foo = 1 RESTRICT");
@@ -90,6 +97,7 @@ describe("alter function/procedure", () => {
 
   dialect("postgresql", () => {
     testAlterStatement("FUNCTION");
+    testAlterStatement("PROCEDURE");
   });
 
   dialect(["mysql", "mariadb", "sqlite", "bigquery"], () => {

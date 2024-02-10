@@ -9,13 +9,19 @@ import {
   FunctionParam,
   FunctionSecurityClause,
   FunctionTransformClause,
+  ResetAllParametersClause,
+  ResetParameterClause,
   SetParameterClause,
   SetParameterFromCurrentClause,
 } from "./Function";
+import { AlterFunctionAction } from "./AlterAction";
 
 export type AllProcedureNodes = AllProcedureStatements;
 
-export type AllProcedureStatements = CreateProcedureStmt | DropProcedureStmt;
+export type AllProcedureStatements =
+  | CreateProcedureStmt
+  | DropProcedureStmt
+  | AlterProcedureStmt;
 
 // CREATE PROCEDURE
 export interface CreateProcedureStmt extends BaseNode {
@@ -50,3 +56,21 @@ export interface DropProcedureStmt extends BaseNode {
   params?: ParenExpr<ListExpr<FunctionParam>>;
   behaviorKw?: Keyword<"RESTRICT" | "CASCADE">;
 }
+
+// PostgreSQL
+export interface AlterProcedureStmt extends BaseNode {
+  type: "alter_procedure_stmt";
+  alterKw: Keyword<"ALTER">;
+  procedureKw: Keyword<"PROCEDURE">;
+  name: EntityName;
+  params?: ParenExpr<ListExpr<FunctionParam>>;
+  actions: (AlterFunctionAction | AlterProcedureClause)[];
+  behaviorKw?: Keyword<"RESTRICT">;
+}
+
+type AlterProcedureClause =
+  | SetParameterClause
+  | SetParameterFromCurrentClause
+  | ResetParameterClause
+  | ResetAllParametersClause
+  | FunctionSecurityClause;

@@ -22,4 +22,13 @@ export const procedureMap: FullTransformMap<string, AllProcedureNodes> = {
       node.params,
       node.behaviorKw,
     ]),
+  alter_procedure_stmt: (node) =>
+    show([
+      node.alterKw,
+      node.procedureKw,
+      node.name,
+      node.params,
+      node.actions,
+      node.behaviorKw,
+    ]),
 };
