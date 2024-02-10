@@ -7534,7 +7534,14 @@ number_literal "number"
   / n:number_literal_oct &postgres { return n; }
 
 number_literal_hex
-  = "0x" hex_digit+ {
+  = &postgres "0x" pg_hex_digits {
+    return loc({
+      type: "number_literal",
+      text: text(),
+      value: parseInt(text().replace(/_/g, ""), 16),
+    });
+  }
+  / !postgres "0x" hex_digit+ {
     return loc({
       type: "number_literal",
       text: text(),
@@ -7553,11 +7560,11 @@ blob_literal_hex
   }
 
 number_literal_bit
-  = "0b" chars:$[01]+ {
+  = "0b" chars:$pg_bit_digits {
     return loc({
       type: "number_literal",
       text: text(),
-      value: parseInt(chars, 2),
+      value: parseInt(chars.replace(/_/g, ""), 2),
     });
   }
 
@@ -7572,22 +7579,38 @@ blob_literal_bit
   }
 
 number_literal_oct
-  = "0o" chars:$[0-7]+ {
+  = "0o" chars:$pg_oct_digits {
     return loc({
       type: "number_literal",
       text: text(),
-      value: parseInt(chars, 8),
+      value: parseInt(chars.replace(/_/g, ""), 8),
     });
   }
 
 number_literal_decimal
-  = digits frac? exp? !ident_start {
+  = &postgres pg_digits pg_frac? pg_exp? !ident_start {
+    return loc({
+      type: "number_literal",
+      text: text(),
+      value: parseFloat(text().replace(/_/g, "")),
+    });
+  }
+  / !postgres digits frac? exp? !ident_start {
     return loc({
       type: "number_literal",
       text: text(),
       value: parseFloat(text()),
     });
   }
+
+// PostgreSQL allows for underscores in numbers
+pg_exp = exp ("_" digits)*
+pg_frac = "." pg_digits
+pg_digits = digits ("_" digits)*
+
+pg_hex_digits = hex_digit+ ("_" hex_digit+)*
+pg_oct_digits = [0-7]+ ("_" [0-7]+)*
+pg_bit_digits = [01]+ ("_" [01]+)*
 
 frac
   = "." digits

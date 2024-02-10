@@ -80,4 +80,42 @@ describe("number literal", () => {
       `);
     });
   });
+
+  dialect("postgresql", () => {
+    function testNumberLiteral(text: string, value: number) {
+      expect(parseExpr(text)).toEqual({ type: "number_literal", text, value });
+    }
+
+    it("parses underscores in number literal", () => {
+      testNumberLiteral(`10_000_000`, 10000000);
+      testNumberLiteral(`3.14_15_92_65`, 3.14159265);
+      testNumberLiteral(`1.2345e1_0`, 1.2345e10);
+    });
+
+    it("parses underscores in hex literal", () => {
+      testNumberLiteral(`0xFFF_000`, 0xfff000);
+    });
+
+    it("parses underscores in octal literal", () => {
+      testNumberLiteral(`0o77_66_00`, 0o776600);
+    });
+
+    it("parses underscores in bit literal", () => {
+      testNumberLiteral(`0b0011_1010_1101_0010`, 0b0011101011010010);
+    });
+
+    function parseNumberLiteral(text: string) {
+      const e = parseExpr(text);
+      if (e.type !== "number_literal") {
+        throw new Error(`Expected number literal, got ${e.type}`);
+      }
+      return e;
+    }
+
+    ["10_000_", "52__350", "_15_000", "0x_", "0o_", "0b_"].forEach((nr) => {
+      it(`does not parse invalid underscores: ${nr}`, () => {
+        expect(() => parseNumberLiteral(nr)).toThrow();
+      });
+    });
+  });
 });
