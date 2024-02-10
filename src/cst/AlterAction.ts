@@ -141,7 +141,7 @@ export interface AlterActionAlterColumn extends BaseNode {
   type: "alter_action_alter_column";
   alterKw: Keyword<"ALTER"> | [Keyword<"ALTER">, Keyword<"COLUMN">];
   ifExistsKw?: [Keyword<"IF">, Keyword<"EXISTS">];
-  column: Identifier;
+  column: Identifier | NumberLiteral;
   action: AlterColumnAction;
 }
 

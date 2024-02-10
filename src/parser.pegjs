@@ -2751,7 +2751,7 @@ rename_column_kw
   / kw:RENAME (&sqlite / &postgres) { return kw; }
 
 alter_action_alter_column
-  = alterKw:(alter_column_kw __) ifKw:(if_exists __)? column:(column __) action:alter_column_action {
+  = alterKw:(alter_column_kw __) ifKw:(if_exists __)? column:((column / number_literal) __) action:alter_column_action {
     return loc({
       type: "alter_action_alter_column",
       alterKw: read(alterKw),

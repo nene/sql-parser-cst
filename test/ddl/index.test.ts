@@ -225,7 +225,7 @@ describe("index", () => {
       });
 
       it("supports ALTER COLUMN .. SET STATISTICS", () => {
-        testWc("ALTER INDEX my_idx ALTER COLUMN col SET STATISTICS 100");
+        testWc("ALTER INDEX my_idx ALTER COLUMN 3 SET STATISTICS 100");
       });
 
       it("supports ALTER INDEX ALL IN TABLESPACE", () => {
