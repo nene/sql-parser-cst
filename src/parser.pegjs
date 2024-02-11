@@ -3337,7 +3337,7 @@ trigger_clause
   / when_clause
 
 for_each_clause
-  = kw:(FOR __ EACH __) itemKw:(ROW) {
+  = kw:(FOR __ EACH __ / FOR __) itemKw:(ROW / STATEMENT) {
     return loc({
       type: "for_each_clause",
       forEachKw: read(kw),
@@ -8257,6 +8257,7 @@ SQL_SMALL_RESULT    = kw:"SQL_SMALL_RESULT"i    !ident_part { return loc(createK
 STABLE              = kw:"STABLE"i              !ident_part { return loc(createKeyword(kw)); }
 START               = kw:"START"i               !ident_part { return loc(createKeyword(kw)); }
 STARTING            = kw:"STARTING"i            !ident_part { return loc(createKeyword(kw)); }
+STATEMENT           = kw:"STATEMENT"i           !ident_part { return loc(createKeyword(kw)); }
 STATISTICS          = kw:"STATISTICS"i          !ident_part { return loc(createKeyword(kw)); }
 STATS_AUTO_RECALC   = kw:"STATS_AUTO_RECALC"i   !ident_part { return loc(createKeyword(kw)); }
 STATS_PERSISTENT    = kw:"STATS_PERSISTENT"i    !ident_part { return loc(createKeyword(kw)); }

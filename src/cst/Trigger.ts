@@ -40,8 +40,8 @@ type TriggerClause = ForEachClause | WhenClause;
 
 export interface ForEachClause extends BaseNode {
   type: "for_each_clause";
-  forEachKw: [Keyword<"FOR">, Keyword<"EACH">];
-  itemKw: Keyword<"ROW">;
+  forEachKw: [Keyword<"FOR">, Keyword<"EACH">] | Keyword<"FOR">;
+  itemKw: Keyword<"ROW" | "STATEMENT">;
 }
 
 export interface WhenClause extends BaseNode {

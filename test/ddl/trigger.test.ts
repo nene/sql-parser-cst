@@ -103,6 +103,17 @@ describe("trigger", () => {
       it("supports CONSTRAINT TRIGGER", () => {
         testWc(`CREATE CONSTRAINT TRIGGER my_trig AFTER INSERT ON my_tbl ${body}`);
       });
+
+      it("supports WHEN clause", () => {
+        testWc(`CREATE TRIGGER my_trig AFTER INSERT ON my_tbl WHEN (x > 10) ${body}`);
+      });
+
+      it("supports FOR EACH clause", () => {
+        testWc(`CREATE TRIGGER my_trig AFTER INSERT ON my_tbl FOR EACH ROW ${body}`);
+        testWc(`CREATE TRIGGER my_trig AFTER INSERT ON my_tbl FOR EACH STATEMENT ${body}`);
+        testWc(`CREATE TRIGGER my_trig AFTER INSERT ON my_tbl FOR ROW ${body}`);
+        testWc(`CREATE TRIGGER my_trig AFTER INSERT ON my_tbl FOR STATEMENT ${body}`);
+      });
     });
   });
 
