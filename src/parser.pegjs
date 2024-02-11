@@ -7185,7 +7185,7 @@ string_literal_plain
   / &postgres s:(
       postgres_single_quoted_string_chain
     / string_literal_dollar_quoted
-    / string_literal_e_single_quoted_bs
+    / postgres_e_single_quoted_string_chain
     / postgres_unicode_string) { return s; }
 
 mysql_string_literal_chain
@@ -7213,8 +7213,18 @@ postgres_single_quoted_string_chain
     return createBinaryExprChain(head, tail);
   }
 
+postgres_e_single_quoted_string_chain
+  = head:string_literal_e_single_quoted_bs tail:(__hspace__ "\n" __ string_literal_single_quoted_qq_bs)* {
+    return createBinaryExprChain(head, tail);
+  }
+
 postgres_unicode_string
-  = head:string_literal_unicode_single_quoted_qq tail:(__ UESCAPE __ string_literal_single_quoted_qq)|0..1| {
+  = head:postgres_unicode_string_chain tail:(__ UESCAPE __ string_literal_single_quoted_qq)|0..1| {
+    return createBinaryExprChain(head, tail);
+  }
+
+postgres_unicode_string_chain
+  = head:string_literal_unicode_single_quoted_qq tail:(__hspace__ "\n" __ string_literal_single_quoted_qq)* {
     return createBinaryExprChain(head, tail);
   }
 

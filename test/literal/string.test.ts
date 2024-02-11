@@ -420,6 +420,17 @@ describe("string literal", () => {
         // And for our purposes it's more important to accept all valid SQL rather than to
         // reject all invalid SQL.
       });
+
+      it("supports it in C-style escaped strings", () => {
+        testExpr(`E'hello'\n'wor\\'ld'`);
+        testExpr(`E'hello' \n\n\n 'world'\n'Blah'`);
+      });
+
+      it("supports it in unicode strings", () => {
+        testExpr(`U&'hello'\n'world'`);
+        testExpr(`U&'hello' \n\n\n 'world'\n'Blah'`);
+        testExpr(`U&'he !0441_'\n'!0441' UESCAPE '!'`);
+      });
     });
   });
 });
