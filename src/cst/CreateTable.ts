@@ -83,7 +83,7 @@ export interface CreateTableStmt extends BaseNode {
 export interface RelationKind extends BaseNode {
   type: "relation_kind";
   kindKw:
-    | Keyword<"TEMP" | "TEMPORARY"> // for TABLE, VIEW, SEQUENCE
+    | Keyword<"TEMP" | "TEMPORARY"> // for TABLE, VIEW, SEQUENCE, TRIGGER
     // PostgreSQL deprecated syntax which has the same effect as just TEMPORARY
     | [Keyword<"GLOBAL" | "LOCAL">, Keyword<"TEMPORARY" | "TEMP">]
     | Keyword<"UNLOGGED"> // PostgreSQL (TABLE, SEQUENCE)
@@ -92,7 +92,8 @@ export interface RelationKind extends BaseNode {
     | Keyword<"SNAPSHOT"> // BigQuery
     | Keyword<"VIRTUAL"> // SQLite
     | Keyword<"MATERIALIZED"> // PostgreSQL (VIEW)
-    | Keyword<"RECURSIVE">; // PostgreSQL (VIEW)
+    | Keyword<"RECURSIVE"> // PostgreSQL (VIEW)
+    | Keyword<"CONSTRAINT">; // PostgreSQL (TRIGGER)
 }
 
 export interface ColumnDefinition extends BaseNode {

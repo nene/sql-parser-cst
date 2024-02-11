@@ -3278,29 +3278,35 @@ rename_action
 create_trigger_stmt
   = kw:(CREATE __)
     orReplaceKw:(OR __ REPLACE __)?
-    tmpKw:((TEMPORARY / TEMP) __)?
+    kind:(trigger_kind __)?
     trigKw:(TRIGGER __)
     ifKw:(if_not_exists __)?
     name:(entity_name __)
     event:(trigger_event __)
-    eachKw:(FOR __ EACH __ ROW __)?
-    when:(trigger_condition __)?
+    clauses:(trigger_clause __)*
     body:trigger_body
     {
       return loc({
         type: "create_trigger_stmt",
         createKw: read(kw),
         orReplaceKw: read(orReplaceKw),
-        temporaryKw: read(tmpKw),
+        kind: read(kind),
         triggerKw: read(trigKw),
         ifNotExistsKw: read(ifKw),
         name: read(name),
         event: read(event),
-        forEachRowKw: read(eachKw),
-        condition: read(when),
+        clauses: clauses.map(read),
         body,
       });
     }
+
+trigger_kind
+  = &sqlite kw:(TEMPORARY / TEMP) {
+    return loc({ type: "relation_kind", kindKw: kw });
+  }
+  / &postgres kw:CONSTRAINT {
+    return loc({ type: "relation_kind", kindKw: kw });
+  }
 
 trigger_event
   = timeKw:(trigger_time_kw __)? eventKw:(UPDATE __) ofKw:(OF __) cols:(list$column __) onKw:(ON __) table:entity_name {
@@ -3325,6 +3331,19 @@ trigger_event
     }
 
 trigger_time_kw = kw:(BEFORE / AFTER / INSTEAD __ OF) { return read(kw); }
+
+trigger_clause
+  = for_each_clause
+  / trigger_condition
+
+for_each_clause
+  = kw:(FOR __ EACH __) itemKw:(ROW) {
+    return loc({
+      type: "for_each_clause",
+      forEachKw: read(kw),
+      itemKw: read(itemKw),
+    });
+  }
 
 trigger_condition
   = kw:(WHEN __) e:expr {

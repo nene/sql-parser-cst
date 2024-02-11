@@ -1,10 +1,12 @@
 import { BaseNode, Keyword } from "./Base";
+import { RelationKind } from "./CreateTable";
 import { Expr, Identifier, ListExpr, EntityName, ParenExpr } from "./Expr";
 import { BlockStmt } from "./ProceduralLanguage";
 
 export type AllTriggerNodes =
   | AllTriggerStatements
   | TriggerEvent
+  | ForEachClause
   | TriggerCondition
   | ExecuteClause;
 
@@ -15,13 +17,12 @@ export interface CreateTriggerStmt extends BaseNode {
   type: "create_trigger_stmt";
   createKw: Keyword<"CREATE">;
   orReplaceKw?: [Keyword<"OR">, Keyword<"REPLACE">];
-  temporaryKw?: Keyword<"TEMP" | "TEMPORARY">;
+  kind?: RelationKind;
   triggerKw: Keyword<"TRIGGER">;
   ifNotExistsKw?: [Keyword<"IF">, Keyword<"NOT">, Keyword<"EXISTS">];
   name: EntityName;
   event: TriggerEvent;
-  forEachRowKw?: [Keyword<"FOR">, Keyword<"EACH">, Keyword<"ROW">];
-  condition?: TriggerCondition;
+  clauses: TriggerClause[];
   body: BlockStmt | ExecuteClause;
 }
 
@@ -33,6 +34,14 @@ export interface TriggerEvent extends BaseNode {
   columns?: ListExpr<Identifier>;
   onKw: Keyword<"ON">;
   table: EntityName;
+}
+
+type TriggerClause = ForEachClause | TriggerCondition;
+
+export interface ForEachClause extends BaseNode {
+  type: "for_each_clause";
+  forEachKw: [Keyword<"FOR">, Keyword<"EACH">];
+  itemKw: Keyword<"ROW">;
 }
 
 export interface TriggerCondition extends BaseNode {

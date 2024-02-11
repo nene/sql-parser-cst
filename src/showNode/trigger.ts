@@ -7,13 +7,12 @@ export const triggerMap: FullTransformMap<string, AllTriggerNodes> = {
     show([
       node.createKw,
       node.orReplaceKw,
-      node.temporaryKw,
+      node.kind,
       node.triggerKw,
       node.ifNotExistsKw,
       node.name,
       node.event,
-      node.forEachRowKw,
-      node.condition,
+      node.clauses,
       node.body,
     ]),
   trigger_event: (node) =>
@@ -25,6 +24,7 @@ export const triggerMap: FullTransformMap<string, AllTriggerNodes> = {
       node.onKw,
       node.table,
     ]),
+  for_each_clause: (node) => show([node.forEachKw, node.itemKw]),
   trigger_condition: (node) => show([node.whenKw, node.expr]),
   execute_clause: (node) =>
     show([node.executeKw, node.functionKw, node.name, node.args]),

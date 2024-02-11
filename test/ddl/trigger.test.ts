@@ -21,6 +21,7 @@ describe("trigger", () => {
       dialect("sqlite", () => {
         it("supports TEMPORARY trigger", () => {
           testWc("CREATE TEMPORARY TRIGGER my_trig DELETE ON my_tbl BEGIN SELECT 1; END");
+          testWc("CREATE TEMP TRIGGER my_trig DELETE ON my_tbl BEGIN SELECT 1; END");
         });
       });
 
@@ -97,6 +98,10 @@ describe("trigger", () => {
 
       it("supports TRUNCATE", () => {
         testWc(`CREATE TRIGGER my_trig AFTER TRUNCATE ON my_tbl ${body}`);
+      });
+
+      it("supports CONSTRAINT TRIGGER", () => {
+        testWc(`CREATE CONSTRAINT TRIGGER my_trig AFTER INSERT ON my_tbl ${body}`);
       });
     });
   });
