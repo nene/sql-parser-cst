@@ -6962,7 +6962,15 @@ quoted_ident
   / (&sqlite / &mysql) ident:backticks_quoted_ident_qq { return ident; }
   / &bigquery ident:(bigquery_quoted_member_expr / backticks_quoted_ident_bs) { return ident; }
   / (&sqlite / &postgres) str:string_literal_double_quoted_qq { return loc(createIdentifier(str.text, str.value)); }
-  / &postgres str:string_literal_unicode_double_quoted_qq { return loc(createIdentifier(str.text, str.value)); }
+  / &postgres ident:postgres_unicode_ident { return ident; }
+
+postgres_unicode_ident
+  = head:ident_unicode_double_quoted_qq tail:(__ UESCAPE __ string_literal_single_quoted_qq)|0..1| {
+    return createBinaryExprChain(head, tail);
+  }
+
+ident_unicode_double_quoted_qq
+  = str:string_literal_unicode_double_quoted_qq { return loc(createIdentifier(str.text, str.value)); }
 
 backticks_quoted_ident_qq
   = "`" chars:([^`] / escaped_backtick_qq)+ "`" { return loc(createIdentifier(text(), chars.join(""))); }
@@ -7178,7 +7186,7 @@ string_literal_plain
       string_literal_single_quoted_qq
     / string_literal_dollar_quoted
     / string_literal_e_single_quoted_bs
-    / string_literal_unicode_single_quoted_qq) { return s; }
+    / postgres_unicode_string) { return s; }
 
 mysql_string_literal_chain
   = head:mysql_string_literal_plain tail:(__ mysql_string_literal_plain)* {
@@ -7199,6 +7207,11 @@ charset_introducer
 
 charset_name
   = ident_name_basic { return text(); }
+
+postgres_unicode_string
+  = head:string_literal_unicode_single_quoted_qq tail:(__ UESCAPE __ string_literal_single_quoted_qq)|0..1| {
+    return createBinaryExprChain(head, tail);
+  }
 
 string_literal_single_quoted_qq_bs // with repeated quote or backslash for escaping
   = "'" chars:([^'\\] / escaped_single_quote_qq / backslash_escape)* "'" {
@@ -8235,6 +8248,7 @@ TRUE                = kw:"TRUE"i                !ident_part { return loc(createK
 TRUNCATE            = kw:"TRUNCATE"i            !ident_part { return loc(createKeyword(kw)); }
 TUESDAY             = kw:"TUESDAY"i             !ident_part { return loc(createKeyword(kw)); }
 TYPE                = kw:"TYPE"i                !ident_part { return loc(createKeyword(kw)); }
+UESCAPE             = kw:"UESCAPE"i             !ident_part { return loc(createKeyword(kw)); }
 UNBOUNDED           = kw:"UNBOUNDED"i           !ident_part { return loc(createKeyword(kw)); }
 UNDEFINED           = kw:"UNDEFINED"i           !ident_part { return loc(createKeyword(kw)); }
 UNION               = kw:"UNION"i               !ident_part { return loc(createKeyword(kw)); }

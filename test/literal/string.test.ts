@@ -340,5 +340,28 @@ describe("string literal", () => {
         }
       `);
     });
+
+    it("supports custom unicode escape character on unicode strings", () => {
+      expect(parseExpr(`U&'!0441!043B!043E!043D' UESCAPE '!'`)).toMatchInlineSnapshot(`
+        {
+          "left": {
+            "text": "U&'!0441!043B!043E!043D'",
+            "type": "string_literal",
+            "value": "!0441!043B!043E!043D",
+          },
+          "operator": {
+            "name": "UESCAPE",
+            "text": "UESCAPE",
+            "type": "keyword",
+          },
+          "right": {
+            "text": "'!'",
+            "type": "string_literal",
+            "value": "!",
+          },
+          "type": "binary_expr",
+        }
+      `);
+    });
   });
 });

@@ -216,5 +216,28 @@ describe("identifier", () => {
     it(`supports ""-escaping in unicode identifer`, () => {
       testExpr(`U&"my "" why"`);
     });
+
+    it("supports custom unicode escape character on unicode identifier", () => {
+      expect(parseExpr(`U&"!0441!043B!043E!043D" UESCAPE '!'`)).toMatchInlineSnapshot(`
+        {
+          "left": {
+            "name": "!0441!043B!043E!043D",
+            "text": "U&"!0441!043B!043E!043D"",
+            "type": "identifier",
+          },
+          "operator": {
+            "name": "UESCAPE",
+            "text": "UESCAPE",
+            "type": "keyword",
+          },
+          "right": {
+            "text": "'!'",
+            "type": "string_literal",
+            "value": "!",
+          },
+          "type": "binary_expr",
+        }
+      `);
+    });
   });
 });
