@@ -364,4 +364,62 @@ describe("string literal", () => {
       `);
     });
   });
+
+  dialect("postgresql", () => {
+    describe("string concatenation", () => {
+      it("combines multiple strings separated by newlines", () => {
+        expect(parseExpr(`'hello'\n'world'`)).toMatchInlineSnapshot(`
+          {
+            "left": {
+              "text": "'hello'",
+              "type": "string_literal",
+              "value": "hello",
+            },
+            "operator": "
+          ",
+            "right": {
+              "text": "'world'",
+              "type": "string_literal",
+              "value": "world",
+            },
+            "type": "binary_expr",
+          }
+        `);
+      });
+
+      it("supports spaces around newlines", () => {
+        testExpr(`'hello' \n 'world'`);
+        testExpr(`'hello'\n\n\n'world'`);
+        testExpr(`'hello' \n \t\t \n \t \n 'world'`);
+      });
+
+      it("supports multiple strings", () => {
+        testExpr(`'hello'\n'world'\n'I am'\n'here'`);
+      });
+
+      it("supports line comments around newlines", () => {
+        testExpr(`'hello'--comment\n'world'`);
+        testExpr(`'hello' --comment\n'world'`);
+        testExpr(`'hello'\n--comment\n--comment\n  'world'`);
+      });
+
+      it("does not support plain spaces for separation", () => {
+        expect(() => parseExpr(`'hello' 'world'`)).toThrowError();
+        expect(() => parseExpr(`'hello' \t 'world'`)).toThrowError();
+      });
+
+      it("does not support block comments in separating whitespace", () => {
+        expect(() => parseExpr(`'hello' /*com*/ 'world'`)).toThrowError();
+        expect(() => parseExpr(`'hello' /*com*/ \n 'world'`)).toThrowError();
+
+        // NOTE: we happen to allow block comments after the first newline, as in:
+        //
+        //   'hello' \n /*com*/ 'world'
+        //
+        // PostgreSQL does not allow this, but supporting it keeps the implementation simpler.
+        // And for our purposes it's more important to accept all valid SQL rather than to
+        // reject all invalid SQL.
+      });
+    });
+  });
 });

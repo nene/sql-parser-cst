@@ -103,6 +103,7 @@ export interface BinaryExpr<
  * string concatenation:
  *   || (except in MySQL)
  *   "" (empty string - in MySQL adjecent strings get concatenated)
+ *   "\n" (in PostgreSQL newline-separated strings strings get concatenated)
  * logic:
  *   && (MySQL AND)
  *   || (MySQL)

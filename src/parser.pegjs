@@ -7183,7 +7183,7 @@ string_literal_plain
   / &sqlite s:string_literal_single_quoted_qq { return s; }
   / &mysql s:mysql_string_literal_chain { return s; }
   / &postgres s:(
-      string_literal_single_quoted_qq
+      postgres_single_quoted_string_chain
     / string_literal_dollar_quoted
     / string_literal_e_single_quoted_bs
     / postgres_unicode_string) { return s; }
@@ -7207,6 +7207,11 @@ charset_introducer
 
 charset_name
   = ident_name_basic { return text(); }
+
+postgres_single_quoted_string_chain
+  = head:string_literal_single_quoted_qq tail:(__hspace__ "\n" __ string_literal_single_quoted_qq)* {
+    return createBinaryExprChain(head, tail);
+  }
 
 postgres_unicode_string
   = head:string_literal_unicode_single_quoted_qq tail:(__ UESCAPE __ string_literal_single_quoted_qq)|0..1| {
@@ -7643,6 +7648,12 @@ hex_digit
 // Optional whitespace (or comments)
 __ "whitespace"
   = xs:(space / newline / comment)* {
+    return xs.filter(isEnabledWhitespace);
+  }
+
+// Optional horizontal whitespace, can also include line-comment (but no block comments or newlines)
+__hspace__
+  = xs:(space / line_comment)* {
     return xs.filter(isEnabledWhitespace);
   }
 
