@@ -8,6 +8,7 @@ export type AllTriggerNodes =
   | TriggerEvent
   | ForEachClause
   | WhenClause
+  | FromReferencedTableClause
   | ExecuteClause;
 
 export type AllTriggerStatements = CreateTriggerStmt | DropTriggerStmt;
@@ -36,7 +37,7 @@ export interface TriggerEvent extends BaseNode {
   table: EntityName;
 }
 
-type TriggerClause = ForEachClause | WhenClause;
+type TriggerClause = ForEachClause | WhenClause | FromReferencedTableClause;
 
 export interface ForEachClause extends BaseNode {
   type: "for_each_clause";
@@ -50,6 +51,14 @@ export interface WhenClause extends BaseNode {
   expr: Expr;
 }
 
+// PostgreSQL
+export interface FromReferencedTableClause extends BaseNode {
+  type: "from_referenced_table_clause";
+  fromKw: Keyword<"FROM">;
+  table: EntityName;
+}
+
+// PostgreSQL
 export interface ExecuteClause extends BaseNode {
   type: "execute_clause";
   executeKw: Keyword<"EXECUTE">;

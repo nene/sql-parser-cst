@@ -114,6 +114,10 @@ describe("trigger", () => {
         testWc(`CREATE TRIGGER my_trig AFTER INSERT ON my_tbl FOR ROW ${body}`);
         testWc(`CREATE TRIGGER my_trig AFTER INSERT ON my_tbl FOR STATEMENT ${body}`);
       });
+
+      it("supports FROM clause", () => {
+        testWc(`CREATE CONSTRAINT TRIGGER my_trig AFTER INSERT ON my_tbl FROM schm.tbl ${body}`);
+      });
     });
   });
 

@@ -26,6 +26,7 @@ export const triggerMap: FullTransformMap<string, AllTriggerNodes> = {
     ]),
   for_each_clause: (node) => show([node.forEachKw, node.itemKw]),
   when_clause: (node) => show([node.whenKw, node.expr]),
+  from_referenced_table_clause: (node) => show([node.fromKw, node.table]),
   execute_clause: (node) =>
     show([node.executeKw, node.functionKw, node.name, node.args]),
 

@@ -3335,6 +3335,7 @@ trigger_time_kw = kw:(BEFORE / AFTER / INSTEAD __ OF) { return read(kw); }
 trigger_clause
   = for_each_clause
   / when_clause
+  / &postgres x:from_referenced_table_clause { return x; }
 
 for_each_clause
   = kw:(FOR __ EACH __ / FOR __) itemKw:(ROW / STATEMENT) {
@@ -3351,6 +3352,15 @@ when_clause
       type: "when_clause",
       whenKw: read(kw),
       expr: e,
+    });
+  }
+
+from_referenced_table_clause
+  = kw:(FROM __ ) table:entity_name {
+    return loc({
+      type: "from_referenced_table_clause",
+      fromKw: read(kw),
+      table,
     });
   }
 
