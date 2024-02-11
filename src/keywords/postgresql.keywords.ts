@@ -1,5 +1,4 @@
-// https://www.postgresql.org/docs/14/sql-keywords-appendix.html
-// TODO: update for Postgres 16
+// https://www.postgresql.org/docs/16/sql-keywords-appendix.html
 export const postgresqlKeywords: Record<string, boolean> = {
   ALL: true, // reserved
   ANALYSE: true, // reserved
@@ -126,6 +125,7 @@ export const postgresqlKeywords: Record<string, boolean> = {
   SOME: true, // reserved
   // SUBSTRING: true, // (cannot be function or type)
   SYMMETRIC: true, // reserved
+  SYSTEM_USER: true, // reserved
   TABLE: true, // reserved
   TABLESAMPLE: true, // reserved (can be function or type)
   THEN: true, // reserved
