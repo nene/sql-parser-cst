@@ -1,11 +1,12 @@
 import { BaseNode, Keyword } from "./Base";
-import { Expr, Identifier, ListExpr, EntityName } from "./Expr";
+import { Expr, Identifier, ListExpr, EntityName, ParenExpr } from "./Expr";
 import { BlockStmt } from "./ProceduralLanguage";
 
 export type AllTriggerNodes =
   | AllTriggerStatements
   | TriggerEvent
-  | TriggerCondition;
+  | TriggerCondition
+  | ExecuteClause;
 
 export type AllTriggerStatements = CreateTriggerStmt | DropTriggerStmt;
 
@@ -13,6 +14,7 @@ export type AllTriggerStatements = CreateTriggerStmt | DropTriggerStmt;
 export interface CreateTriggerStmt extends BaseNode {
   type: "create_trigger_stmt";
   createKw: Keyword<"CREATE">;
+  orReplaceKw?: [Keyword<"OR">, Keyword<"REPLACE">];
   temporaryKw?: Keyword<"TEMP" | "TEMPORARY">;
   triggerKw: Keyword<"TRIGGER">;
   ifNotExistsKw?: [Keyword<"IF">, Keyword<"NOT">, Keyword<"EXISTS">];
@@ -20,7 +22,7 @@ export interface CreateTriggerStmt extends BaseNode {
   event: TriggerEvent;
   forEachRowKw?: [Keyword<"FOR">, Keyword<"EACH">, Keyword<"ROW">];
   condition?: TriggerCondition;
-  body: BlockStmt;
+  body: BlockStmt | ExecuteClause;
 }
 
 export interface TriggerEvent extends BaseNode {
@@ -37,6 +39,14 @@ export interface TriggerCondition extends BaseNode {
   type: "trigger_condition";
   whenKw?: Keyword<"WHEN">;
   expr: Expr;
+}
+
+export interface ExecuteClause extends BaseNode {
+  type: "execute_clause";
+  executeKw: Keyword<"EXECUTE">;
+  functionKw: Keyword<"FUNCTION" | "PROCEDURE">;
+  name: EntityName;
+  args: ParenExpr<ListExpr<Expr>>;
 }
 
 // DROP TRIGGER

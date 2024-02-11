@@ -67,7 +67,33 @@ describe("trigger", () => {
         });
       });
     });
+  });
 
+  dialect("postgresql", () => {
+    describe("CREATE TRIGGER", () => {
+      it("supports CREATE TRIGGER .. EXECUTE function", () => {
+        testWc(`
+          CREATE TRIGGER my_trig AFTER INSERT ON my_tbl
+          EXECUTE FUNCTION my_function()
+        `);
+      });
+
+      it("supports CREATE TRIGGER .. EXECUTE procedure", () => {
+        testWc(`
+          CREATE TRIGGER my_trig BEFORE DELETE ON my_tbl
+          EXECUTE PROCEDURE my_proc (1, 2, 3, 'Hello')
+        `);
+      });
+
+      const body = `EXECUTE FUNCTION fn()`;
+
+      it("supports OR REPLACE", () => {
+        testWc(`CREATE OR REPLACE TRIGGER my_trig INSTEAD OF UPDATE ON my_tbl ${body}`);
+      });
+    });
+  });
+
+  dialect(["mysql", "mariadb", "sqlite"], () => {
     describe("DROP TRIGGER", () => {
       it("simple DROP TRIGGER statement", () => {
         testWc("DROP TRIGGER my_trg");
@@ -89,12 +115,6 @@ describe("trigger", () => {
 
     it("does not support DROP TRIGGER", () => {
       expect(() => test("DROP TRIGGER my_trg")).toThrowError();
-    });
-  });
-
-  dialect("postgresql", () => {
-    it.skip("TODO:postgres", () => {
-      expect(true).toBe(true);
     });
   });
 });

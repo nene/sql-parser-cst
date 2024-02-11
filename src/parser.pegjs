@@ -146,6 +146,8 @@ ddl_statement_postgres
   / create_sequence_stmt
   / alter_sequence_stmt
   / drop_sequence_stmt
+  / create_trigger_stmt
+  / drop_trigger_stmt
 
 dml_statement
   = compound_select_stmt
@@ -3275,6 +3277,7 @@ rename_action
  */
 create_trigger_stmt
   = kw:(CREATE __)
+    orReplaceKw:(OR __ REPLACE __)?
     tmpKw:((TEMPORARY / TEMP) __)?
     trigKw:(TRIGGER __)
     ifKw:(if_not_exists __)?
@@ -3287,6 +3290,7 @@ create_trigger_stmt
       return loc({
         type: "create_trigger_stmt",
         createKw: read(kw),
+        orReplaceKw: read(orReplaceKw),
         temporaryKw: read(tmpKw),
         triggerKw: read(trigKw),
         ifNotExistsKw: read(ifKw),
@@ -3332,7 +3336,7 @@ trigger_condition
   }
 
 trigger_body
-  = beginKw:(BEGIN __) program:trigger_program endKw:(__ END) {
+  = !postgres beginKw:(BEGIN __) program:trigger_program endKw:(__ END) {
     return loc({
       type: "block_stmt",
       beginKw: read(beginKw),
@@ -3340,6 +3344,17 @@ trigger_body
       endKw: read(endKw),
     });
   }
+  / &postgres
+    executeKw:(EXECUTE __) functionKw:((PROCEDURE / FUNCTION) __)
+    name:(entity_name __) args:(paren$empty_list / paren$list$expr) {
+      return loc({
+        type: "execute_clause",
+        executeKw: read(executeKw),
+        functionKw: read(functionKw),
+        name: read(name),
+        args,
+      });
+    }
 
 // One or more DML statement, plus an empty statement in the end
 trigger_program
