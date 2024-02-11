@@ -3335,7 +3335,10 @@ trigger_time_kw = kw:(BEFORE / AFTER / INSTEAD __ OF) { return read(kw); }
 trigger_clause
   = for_each_clause
   / when_clause
-  / &postgres x:from_referenced_table_clause { return x; }
+  / &postgres x:(
+      from_referenced_table_clause
+    / trigger_timing_clause
+  ) { return x; }
 
 for_each_clause
   = kw:(FOR __ EACH __ / FOR __) itemKw:(ROW / STATEMENT) {
@@ -3362,6 +3365,19 @@ from_referenced_table_clause
       fromKw: read(kw),
       table,
     });
+  }
+
+trigger_timing_clause
+  = kw:(NOT __ DEFERRABLE
+  / DEFERRABLE __ INITIALLY __ DEFERRED
+  / DEFERRABLE __ INITIALLY __ IMMEDIATE
+  / DEFERRABLE
+  / INITIALLY __ DEFERRED
+  / INITIALLY __ IMMEDIATE) {
+    return loc({
+      type: "trigger_timing_clause",
+      timingKw: read(kw),
+    })
   }
 
 trigger_body

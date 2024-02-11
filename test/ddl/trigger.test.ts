@@ -118,6 +118,19 @@ describe("trigger", () => {
       it("supports FROM clause", () => {
         testWc(`CREATE CONSTRAINT TRIGGER my_trig AFTER INSERT ON my_tbl FROM schm.tbl ${body}`);
       });
+
+      it("supports timing clauses", () => {
+        testWc(`CREATE TRIGGER my_trig AFTER INSERT ON my_tbl DEFERRABLE ${body}`);
+        testWc(`CREATE TRIGGER my_trig AFTER INSERT ON my_tbl NOT DEFERRABLE ${body}`);
+        testWc(`CREATE TRIGGER my_trig AFTER INSERT ON my_tbl INITIALLY DEFERRED ${body}`);
+        testWc(`CREATE TRIGGER my_trig AFTER INSERT ON my_tbl INITIALLY IMMEDIATE ${body}`);
+        testWc(
+          `CREATE TRIGGER my_trig AFTER INSERT ON my_tbl DEFERRABLE INITIALLY DEFERRED ${body}`
+        );
+        testWc(
+          `CREATE TRIGGER my_trig AFTER INSERT ON my_tbl DEFERRABLE INITIALLY IMMEDIATE ${body}`
+        );
+      });
     });
   });
 
