@@ -6,7 +6,6 @@
     parseBitBlob,
     parseTextBlob,
   } from "./utils/blob";
-  import { parseUnicodeEscapes } from "./utils/unicode";
   import {
     createBinaryExprChain,
     createBinaryExpr,
@@ -7225,7 +7224,7 @@ string_literal_unicode_single_quoted_qq
     return loc({
       type: "string_literal",
       text: text(),
-      value: parseUnicodeEscapes(str.value),
+      value: str.value,
     });
   }
 
@@ -7234,7 +7233,7 @@ string_literal_unicode_double_quoted_qq
     return loc({
       type: "string_literal",
       text: text(),
-      value: parseUnicodeEscapes(str.value),
+      value: str.value,
     });
   }
 

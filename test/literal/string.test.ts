@@ -326,7 +326,7 @@ describe("string literal", () => {
         {
           "text": "U&'d\\0061t\\+000061'",
           "type": "string_literal",
-          "value": "data",
+          "value": "d\\0061t\\+000061",
         }
       `);
     });
