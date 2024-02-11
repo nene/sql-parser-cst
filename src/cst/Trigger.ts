@@ -7,7 +7,7 @@ export type AllTriggerNodes =
   | AllTriggerStatements
   | TriggerEvent
   | ForEachClause
-  | TriggerCondition
+  | WhenClause
   | ExecuteClause;
 
 export type AllTriggerStatements = CreateTriggerStmt | DropTriggerStmt;
@@ -36,7 +36,7 @@ export interface TriggerEvent extends BaseNode {
   table: EntityName;
 }
 
-type TriggerClause = ForEachClause | TriggerCondition;
+type TriggerClause = ForEachClause | WhenClause;
 
 export interface ForEachClause extends BaseNode {
   type: "for_each_clause";
@@ -44,8 +44,8 @@ export interface ForEachClause extends BaseNode {
   itemKw: Keyword<"ROW">;
 }
 
-export interface TriggerCondition extends BaseNode {
-  type: "trigger_condition";
+export interface WhenClause extends BaseNode {
+  type: "when_clause";
   whenKw?: Keyword<"WHEN">;
   expr: Expr;
 }

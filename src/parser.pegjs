@@ -3334,7 +3334,7 @@ trigger_time_kw = kw:(BEFORE / AFTER / INSTEAD __ OF) { return read(kw); }
 
 trigger_clause
   = for_each_clause
-  / trigger_condition
+  / when_clause
 
 for_each_clause
   = kw:(FOR __ EACH __) itemKw:(ROW) {
@@ -3345,10 +3345,10 @@ for_each_clause
     });
   }
 
-trigger_condition
+when_clause
   = kw:(WHEN __) e:expr {
     return loc({
-      type: "trigger_condition",
+      type: "when_clause",
       whenKw: read(kw),
       expr: e,
     });
