@@ -90,6 +90,14 @@ describe("trigger", () => {
       it("supports OR REPLACE", () => {
         testWc(`CREATE OR REPLACE TRIGGER my_trig INSTEAD OF UPDATE ON my_tbl ${body}`);
       });
+
+      it("supports UPDATE OF", () => {
+        testWc(`CREATE TRIGGER my_trig AFTER UPDATE OF col1, col2 ON my_tbl ${body}`);
+      });
+
+      it("supports TRUNCATE", () => {
+        testWc(`CREATE TRIGGER my_trig AFTER TRUNCATE ON my_tbl ${body}`);
+      });
     });
   });
 

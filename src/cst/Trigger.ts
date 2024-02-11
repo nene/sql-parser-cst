@@ -28,7 +28,7 @@ export interface CreateTriggerStmt extends BaseNode {
 export interface TriggerEvent extends BaseNode {
   type: "trigger_event";
   timeKw?: Keyword<"BEFORE" | "AFTER"> | [Keyword<"INSTEAD">, Keyword<"OF">];
-  eventKw: Keyword<"INSERT" | "DELETE" | "UPDATE">;
+  eventKw: Keyword<"INSERT" | "DELETE" | "UPDATE" | "TRUNCATE">;
   ofKw?: Keyword<"OF">;
   columns?: ListExpr<Identifier>;
   onKw: Keyword<"ON">;

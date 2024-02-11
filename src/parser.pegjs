@@ -3314,7 +3314,7 @@ trigger_event
         table,
       });
     }
-  / timeKw:(trigger_time_kw __)? eventKw:(DELETE / INSERT / UPDATE) onKw:(__ ON __) table:entity_name {
+  / timeKw:(trigger_time_kw __)? eventKw:(DELETE / INSERT / UPDATE / TRUNCATE) onKw:(__ ON __) table:entity_name {
       return loc({
         type: "trigger_event",
         timeKw: read(timeKw),
