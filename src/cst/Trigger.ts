@@ -1,6 +1,13 @@
 import { BaseNode, Keyword } from "./Base";
 import { RelationKind } from "./CreateTable";
-import { Expr, Identifier, ListExpr, EntityName, ParenExpr } from "./Expr";
+import {
+  Expr,
+  Identifier,
+  ListExpr,
+  EntityName,
+  ParenExpr,
+  BinaryExpr,
+} from "./Expr";
 import { BlockStmt } from "./ProceduralLanguage";
 
 export type AllTriggerNodes =
@@ -27,11 +34,15 @@ export interface CreateTriggerStmt extends BaseNode {
   ifNotExistsKw?: [Keyword<"IF">, Keyword<"NOT">, Keyword<"EXISTS">];
   name: EntityName;
   timeKw?: Keyword<"BEFORE" | "AFTER"> | [Keyword<"INSTEAD">, Keyword<"OF">];
-  event: TriggerEvent;
+  event: TriggerEventExpr;
   target: TriggerTarget;
   clauses: TriggerClause[];
   body: BlockStmt | ExecuteClause;
 }
+
+export type TriggerEventExpr =
+  | BinaryExpr<TriggerEventExpr, Keyword<"OR">, TriggerEventExpr>
+  | TriggerEvent;
 
 export interface TriggerEvent extends BaseNode {
   type: "trigger_event";

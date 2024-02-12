@@ -3283,7 +3283,7 @@ create_trigger_stmt
     ifKw:(if_not_exists __)?
     name:(entity_name __)
     timeKw:(BEFORE __ / AFTER __ / INSTEAD __ OF __)?
-    event:(trigger_event __)
+    event:(trigger_event_expr __)
     target:(trigger_target __)
     clauses:(trigger_clause __)*
     body:trigger_body
@@ -3310,6 +3310,11 @@ trigger_kind
   }
   / &postgres kw:CONSTRAINT {
     return loc({ type: "relation_kind", kindKw: kw });
+  }
+
+trigger_event_expr
+  = head:trigger_event tail:(__ OR __ trigger_event)* {
+    return createBinaryExprChain(head, tail);
   }
 
 trigger_event

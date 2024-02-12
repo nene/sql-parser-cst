@@ -6,6 +6,7 @@ import {
   SelectClause,
   Statement,
   SubSelect,
+  TriggerEvent,
   Whitespace,
 } from "../src/cst/Node";
 import {
@@ -152,7 +153,7 @@ export function showCompoundPrecedence(sql: string): string {
   return show(addPrecedenceParens(stmt));
 }
 
-function addPrecedenceParens<T extends Expr | SubSelect>(
+function addPrecedenceParens<T extends Expr | SubSelect | TriggerEvent>(
   expr: T
 ): ParenExpr<T> | T {
   const space: Whitespace[] = [{ type: "space", text: " " }];

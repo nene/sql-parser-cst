@@ -1,7 +1,7 @@
 import { AllColumns, BaseNode, Empty, Keyword } from "./Base";
 import { DataType } from "./DataType";
 import { Literal, StringLiteral } from "./Literal";
-import { Node, Program } from "./Node";
+import { Node, Program, TriggerEventExpr } from "./Node";
 import {
   LimitClause,
   OrderByClause,
@@ -41,6 +41,7 @@ export type Expr =
   | ListExpr
   | ParenExpr
   | BinaryExpr
+  | BinaryExpr<TriggerEventExpr, Keyword<"OR">, TriggerEventExpr>
   | PrefixOpExpr
   | PostfixOpExpr
   | FuncCall

@@ -104,6 +104,14 @@ describe("trigger", () => {
         testWc(`CREATE CONSTRAINT TRIGGER my_trig AFTER INSERT ON my_tbl ${body}`);
       });
 
+      it("supports multiple events", () => {
+        testWc(`
+          CREATE TRIGGER my_trig AFTER INSERT OR UPDATE OF col1, col2 OR DELETE
+          ON my_tbl
+          ${body}
+        `);
+      });
+
       it("supports WHEN clause", () => {
         testWc(`CREATE TRIGGER my_trig AFTER INSERT ON my_tbl WHEN (x > 10) ${body}`);
       });
