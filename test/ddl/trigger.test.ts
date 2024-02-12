@@ -131,6 +131,31 @@ describe("trigger", () => {
           `CREATE TRIGGER my_trig AFTER INSERT ON my_tbl DEFERRABLE INITIALLY IMMEDIATE ${body}`
         );
       });
+
+      it("supports REFERENCING clause", () => {
+        testWc(`
+          CREATE CONSTRAINT TRIGGER my_trig AFTER INSERT ON my_tbl
+          REFERENCING OLD TABLE AS ref_tbl_old ${body}
+        `);
+        testWc(`
+          CREATE CONSTRAINT TRIGGER my_trig AFTER INSERT ON my_tbl
+          REFERENCING NEW TABLE AS ref_tbl_new ${body}
+        `);
+        testWc(`
+          CREATE CONSTRAINT TRIGGER my_trig AFTER INSERT ON my_tbl
+          REFERENCING NEW TABLE ref_tbl_new, OLD TABLE ref_tbl_old
+          ${body}
+        `);
+      });
+
+      // Not documented in PostgreSQL docs, but supported by actual PostgreSQL parser
+      it("supports REFERENCING clause with undocumented ROW", () => {
+        testWc(`
+          CREATE CONSTRAINT TRIGGER my_trig AFTER INSERT ON my_tbl
+          REFERENCING OLD ROW AS ref_tbl_old, NEW ROW AS ref_tbl_new
+          ${body}
+        `);
+      });
     });
   });
 

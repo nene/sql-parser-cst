@@ -28,6 +28,10 @@ export const triggerMap: FullTransformMap<string, AllTriggerNodes> = {
   when_clause: (node) => show([node.whenKw, node.expr]),
   from_referenced_table_clause: (node) => show([node.fromKw, node.table]),
   trigger_timing_clause: (node) => show([node.timingKw]),
+  trigger_referencing_clause: (node) =>
+    show([node.referencingKw, node.transitions]),
+  trigger_transition: (node) =>
+    show([node.oldOrNewKw, node.rowOrTableKw, node.asKw, node.name]),
   execute_clause: (node) =>
     show([node.executeKw, node.functionKw, node.name, node.args]),
 

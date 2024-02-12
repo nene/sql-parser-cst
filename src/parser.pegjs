@@ -3338,6 +3338,7 @@ trigger_clause
   / &postgres x:(
       from_referenced_table_clause
     / trigger_timing_clause
+    / trigger_referencing_clause
   ) { return x; }
 
 for_each_clause
@@ -3378,6 +3379,26 @@ trigger_timing_clause
       type: "trigger_timing_clause",
       timingKw: read(kw),
     })
+  }
+
+trigger_referencing_clause
+  = kw:(REFERENCING __) transitions:list$trigger_transition {
+    return loc({
+      type: "trigger_referencing_clause",
+      referencingKw: read(kw),
+      transitions: read(transitions),
+    });
+  }
+
+trigger_transition
+  = kw:((NEW / OLD) __) tableKw:((TABLE / ROW) __) asKw:(AS __)? name:ident {
+    return loc({
+      type: "trigger_transition",
+      oldOrNewKw: read(kw),
+      rowOrTableKw: read(tableKw),
+      asKw: read(asKw),
+      name,
+    });
   }
 
 trigger_body
@@ -6885,6 +6906,7 @@ list$table_func_call = .
 list$table_option_postgresql = .
 list$tablesample_arg = .
 list$transform_type = .
+list$trigger_transition = .
 list$type_param = .
 list$values_row = .
 list$variable = .
@@ -8132,6 +8154,7 @@ MONTH               = kw:"MONTH"i               !ident_part { return loc(createK
 NATIVE              = kw:"NATIVE"i              !ident_part { return loc(createKeyword(kw)); }
 NATURAL             = kw:"NATURAL"i             !ident_part { return loc(createKeyword(kw)); }
 NCHAR               = kw:"NCHAR"i               !ident_part { return loc(createKeyword(kw)); }
+NEW                 = kw:"NEW"i                 !ident_part { return loc(createKeyword(kw)); }
 NEXT                = kw:"NEXT"i                !ident_part { return loc(createKeyword(kw)); }
 NFC                 = kw:"NFC"i                 !ident_part { return loc(createKeyword(kw)); }
 NFD                 = kw:"NFD"i                 !ident_part { return loc(createKeyword(kw)); }
@@ -8155,6 +8178,7 @@ OF                  = kw:"OF"i                  !ident_part { return loc(createK
 OFF                 = kw:"OFF"i                 !ident_part { return loc(createKeyword(kw)); }
 OFFSET              = kw:"OFFSET"i              !ident_part { return loc(createKeyword(kw)); }
 OIDS                = kw:"OIDS"i                !ident_part { return loc(createKeyword(kw)); }
+OLD                 = kw:"OLD"i                 !ident_part { return loc(createKeyword(kw)); }
 ON                  = kw:"ON"i                  !ident_part { return loc(createKeyword(kw)); }
 ONLY                = kw:"ONLY"i                !ident_part { return loc(createKeyword(kw)); }
 OPERATOR            = kw:"OPERATOR"i            !ident_part { return loc(createKeyword(kw)); }
@@ -8209,6 +8233,7 @@ REAL                = kw:"REAL"i                !ident_part { return loc(createK
 RECURSIVE           = kw:"RECURSIVE"            !ident_part { return loc(createKeyword(kw)); }
 REDUNDANT           = kw:"REDUNDANT"i           !ident_part { return loc(createKeyword(kw)); }
 REFERENCES          = kw:"REFERENCES"i          !ident_part { return loc(createKeyword(kw)); }
+REFERENCING         = kw:"REFERENCING"i         !ident_part { return loc(createKeyword(kw)); }
 REFRESH             = kw:"REFRESH"i             !ident_part { return loc(createKeyword(kw)); }
 REGEXP              = kw:"REGEXP"i              !ident_part { return loc(createKeyword(kw)); }
 REINDEX             = kw:"REINDEX"i             !ident_part { return loc(createKeyword(kw)); }

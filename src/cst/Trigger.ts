@@ -10,6 +10,8 @@ export type AllTriggerNodes =
   | WhenClause
   | FromReferencedTableClause
   | TriggerTimingClause
+  | TriggerReferencingClause
+  | TriggerTransition
   | ExecuteClause;
 
 export type AllTriggerStatements = CreateTriggerStmt | DropTriggerStmt;
@@ -42,7 +44,8 @@ type TriggerClause =
   | ForEachClause
   | WhenClause
   | FromReferencedTableClause
-  | TriggerTimingClause;
+  | TriggerTimingClause
+  | TriggerReferencingClause;
 
 export interface ForEachClause extends BaseNode {
   type: "for_each_clause";
@@ -73,6 +76,22 @@ export interface TriggerTimingClause extends BaseNode {
     | [Keyword<"INITIALLY">, Keyword<"IMMEDIATE">]
     | [Keyword<"DEFERRABLE">, Keyword<"INITIALLY">, Keyword<"DEFERRED">]
     | [Keyword<"DEFERRABLE">, Keyword<"INITIALLY">, Keyword<"IMMEDIATE">];
+}
+
+// PostgreSQL
+export interface TriggerReferencingClause extends BaseNode {
+  type: "trigger_referencing_clause";
+  referencingKw: Keyword<"REFERENCING">;
+  transitions: ListExpr<TriggerTransition>;
+}
+
+// PostgreSQL
+export interface TriggerTransition extends BaseNode {
+  type: "trigger_transition";
+  oldOrNewKw: Keyword<"OLD" | "NEW">;
+  rowOrTableKw: Keyword<"TABLE" | "ROW">;
+  asKw?: Keyword<"AS">;
+  name: Identifier;
 }
 
 // PostgreSQL
