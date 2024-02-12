@@ -6,6 +6,7 @@ import { BlockStmt } from "./ProceduralLanguage";
 export type AllTriggerNodes =
   | AllTriggerStatements
   | TriggerEvent
+  | TriggerTarget
   | ForEachClause
   | WhenClause
   | FromReferencedTableClause
@@ -26,6 +27,7 @@ export interface CreateTriggerStmt extends BaseNode {
   ifNotExistsKw?: [Keyword<"IF">, Keyword<"NOT">, Keyword<"EXISTS">];
   name: EntityName;
   event: TriggerEvent;
+  target: TriggerTarget;
   clauses: TriggerClause[];
   body: BlockStmt | ExecuteClause;
 }
@@ -36,6 +38,10 @@ export interface TriggerEvent extends BaseNode {
   eventKw: Keyword<"INSERT" | "DELETE" | "UPDATE" | "TRUNCATE">;
   ofKw?: Keyword<"OF">;
   columns?: ListExpr<Identifier>;
+}
+
+export interface TriggerTarget extends BaseNode {
+  type: "trigger_target";
   onKw: Keyword<"ON">;
   table: EntityName;
 }
