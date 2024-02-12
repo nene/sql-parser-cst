@@ -3282,6 +3282,7 @@ create_trigger_stmt
     trigKw:(TRIGGER __)
     ifKw:(if_not_exists __)?
     name:(entity_name __)
+    timeKw:(BEFORE __ / AFTER __ / INSTEAD __ OF __)?
     event:(trigger_event __)
     target:(trigger_target __)
     clauses:(trigger_clause __)*
@@ -3295,6 +3296,7 @@ create_trigger_stmt
         triggerKw: read(trigKw),
         ifNotExistsKw: read(ifKw),
         name: read(name),
+        timeKw: read(timeKw),
         event: read(event),
         target: read(target),
         clauses: clauses.map(read),
@@ -3311,24 +3313,20 @@ trigger_kind
   }
 
 trigger_event
-  = timeKw:(trigger_time_kw __)? eventKw:(UPDATE __) ofKw:(OF __) cols:list$column {
+  = eventKw:(UPDATE __) ofKw:(OF __) cols:list$column {
       return loc({
         type: "trigger_event",
-        timeKw: read(timeKw),
         eventKw: read(eventKw),
         ofKw: read(ofKw),
         columns: read(cols),
       });
     }
-  / timeKw:(trigger_time_kw __)? eventKw:(DELETE / INSERT / UPDATE / TRUNCATE) {
+  / eventKw:(DELETE / INSERT / UPDATE / TRUNCATE) {
       return loc({
         type: "trigger_event",
-        timeKw: read(timeKw),
         eventKw: read(eventKw),
       });
     }
-
-trigger_time_kw = kw:(BEFORE / AFTER / INSTEAD __ OF) { return read(kw); }
 
 trigger_target
   = onKw:(__ ON __) table:entity_name {

@@ -26,6 +26,7 @@ export interface CreateTriggerStmt extends BaseNode {
   triggerKw: Keyword<"TRIGGER">;
   ifNotExistsKw?: [Keyword<"IF">, Keyword<"NOT">, Keyword<"EXISTS">];
   name: EntityName;
+  timeKw?: Keyword<"BEFORE" | "AFTER"> | [Keyword<"INSTEAD">, Keyword<"OF">];
   event: TriggerEvent;
   target: TriggerTarget;
   clauses: TriggerClause[];
@@ -34,7 +35,6 @@ export interface CreateTriggerStmt extends BaseNode {
 
 export interface TriggerEvent extends BaseNode {
   type: "trigger_event";
-  timeKw?: Keyword<"BEFORE" | "AFTER"> | [Keyword<"INSTEAD">, Keyword<"OF">];
   eventKw: Keyword<"INSERT" | "DELETE" | "UPDATE" | "TRUNCATE">;
   ofKw?: Keyword<"OF">;
   columns?: ListExpr<Identifier>;
