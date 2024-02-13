@@ -8,7 +8,14 @@ export const validDialectNames = {
 
 export type DialectName = keyof typeof validDialectNames;
 
-export type ParamType = "?" | "?nr" | ":name" | "$name" | "@name" | "@`name`";
+export type ParamType =
+  | "?"
+  | "?nr"
+  | "$nr"
+  | ":name"
+  | "$name"
+  | "@name"
+  | "@`name`";
 
 export type ParserOptions = {
   dialect: DialectName;

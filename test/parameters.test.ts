@@ -22,6 +22,9 @@ describe("bound parameters", () => {
       it("no support for $name parameters", () => {
         expect(() => test("SELECT * FROM foo WHERE x = $foo")).toThrowError();
       });
+      it("no support for $nr parameters", () => {
+        expect(() => test("SELECT * FROM foo WHERE x = $1")).toThrowError();
+      });
     });
   });
 
@@ -73,6 +76,15 @@ describe("bound parameters", () => {
       it("supports $name parameter placeholders", () => {
         test("SELECT * FROM foo WHERE x = $foo AND y = $bar", {
           paramTypes: ["$name"],
+          ...includeAll,
+        });
+      });
+    });
+
+    describe("when paramTypes includes '$nr'", () => {
+      it("supports $nr parameter placeholders", () => {
+        test("SELECT * FROM foo WHERE x = $1 AND y = $2", {
+          paramTypes: ["$nr"],
           ...includeAll,
         });
       });

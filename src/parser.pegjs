@@ -6781,6 +6781,7 @@ parameter
       "?" digits     &{ return hasParamType("?nr"); }
     / "?"            &{ return hasParamType("?"); }
     / ":" ident_name &{ return hasParamType(":name"); }
+    / "$" digits     &{ return hasParamType("$nr"); }
     / "$" ident_name &{ return hasParamType("$name"); }
     / "@" ident_name &{ return hasParamType("@name"); }
     / "@" backticks_quoted_ident_bs &{ return hasParamType("@`name`"); }
