@@ -52,6 +52,7 @@ export type Expr =
   | BetweenExpr
   | CaseExpr
   | RowConstructor
+  | ArrayConstructor
   | IntervalExpr
   | StringWithCharset
   | QuantifierExpr
@@ -341,6 +342,13 @@ export interface RowConstructor extends BaseNode {
   type: "row_constructor";
   rowKw: Keyword<"ROW">;
   row: ParenExpr<ListExpr<Expr | Default>>;
+}
+
+// PostgreSQL
+export interface ArrayConstructor extends BaseNode {
+  type: "array_constructor";
+  arrayKw: Keyword<"ARRAY">;
+  expr: ParenExpr<SubSelect>;
 }
 
 // MySQL, MariaDB, BigQuery

@@ -1501,11 +1501,20 @@ values_row
   / &mysql list:(paren$list$expr_or_default / row_constructor) { return list; }
 
 row_constructor
-  = kw:(ROW __) row:paren$list$expr_or_default {
+  = kw:(ROW __) row:paren$compound_select_stmt {
     return loc({
       type: "row_constructor",
       rowKw: read(kw),
       row,
+    });
+  }
+
+array_constructor
+  = kw:(ARRAY __) expr:select_stmt {
+    return loc({
+      type: "array_constructor",
+      arrayKw: read(kw),
+      expr: expr,
     });
   }
 
@@ -6295,7 +6304,7 @@ primary
   / &bigquery x:(typed_array_expr / array_expr / typed_struct_expr) { return x; }
   / &postgres x:typed_array_expr { return x; }
   / cast_expr
-  / &postgres x:row_constructor { return x; }
+  / &postgres x:(row_constructor / array_constructor) { return x; }
   / &sqlite e:raise_expr { return e; }
   / (&mysql / &bigquery / &postgres) e:extract_expr { return e; }
   / case_expr

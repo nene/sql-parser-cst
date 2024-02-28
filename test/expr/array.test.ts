@@ -82,6 +82,10 @@ describe("array", () => {
     it("supports empty ARRAY[]", () => {
       testExprWc(`ARRAY[]`);
     });
+
+    it("supports ARRAY() constructor", () => {
+      testExprWc(`ARRAY(SELECT row from tbl)`);
+    });
   });
 
   dialect(["mysql", "mariadb"], () => {
