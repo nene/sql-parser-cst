@@ -1501,7 +1501,7 @@ values_row
   / &mysql list:(paren$list$expr_or_default / row_constructor) { return list; }
 
 row_constructor
-  = kw:(ROW __) row:paren$compound_select_stmt {
+  = kw:(ROW __) row:paren$list$expr_or_default {
     return loc({
       type: "row_constructor",
       rowKw: read(kw),
