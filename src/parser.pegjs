@@ -6661,7 +6661,7 @@ named_arg_op
   / op:":=" &postgres { return op; }
 
 filter_arg
-  = kw:(FILTER __) e:paren$where_clause &sqlite {
+  = (&sqlite / &postgres) kw:(FILTER __) e:paren$where_clause {
     return loc({
       type: "filter_arg",
       filterKw: read(kw),

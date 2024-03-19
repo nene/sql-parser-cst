@@ -138,7 +138,7 @@ describe("function call", () => {
     });
   });
 
-  dialect("sqlite", () => {
+  dialect(["sqlite", "postgresql"], () => {
     it("supports FILTER clause for aggregate functions", () => {
       testExprWc(`count(*) FILTER (WHERE job_id = 2)`);
     });
