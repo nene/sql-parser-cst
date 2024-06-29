@@ -4457,7 +4457,15 @@ set_stmt
   }
 
 set_assignment
-  = name:((ident / variable / paren$list$ident / paren$list$variable) __) "=" value:(__ expr) {
+  = &mysql name:((ident / variable / paren$list$ident / paren$list$variable) __) "=" value:(__ expr) {
+    return loc({
+      type: "binary_expr",
+      left: read(name),
+      operator: "=",
+      right: read(value),
+    })
+  }
+  / !mysql name:((ident / paren$list$ident) __) "=" value:(__ expr) {
     return loc({
       type: "binary_expr",
       left: read(name),
