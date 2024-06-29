@@ -24,12 +24,12 @@ describe("SET", () => {
       testWc("SET @x = 10");
     });
 
-    // it("supports subquery SET statement", () => {
-    //   testWc("SET @total_tax = (SELECT SUM(tax) FROM taxable_transactions)");
-    // });
-
     it("supports multiple assignments", () => {
       testWc("SET @x = 1, @y = 'foo', @z = false");
+    });
+
+    it("supports scalar subquery", () => {
+      testWc("SET @total_tax = (SELECT SUM(tax) FROM taxable_transactions)");
     });
   });
 

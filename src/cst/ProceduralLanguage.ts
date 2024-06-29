@@ -9,6 +9,7 @@ import {
   FuncCall,
   CaseWhen,
   CaseElse,
+  Variable,
 } from "./Expr";
 import { StringLiteral } from "./Literal";
 import { Program } from "./Program";
@@ -92,7 +93,13 @@ export interface SetStmt extends BaseNode {
   type: "set_stmt";
   setKw: Keyword<"SET">;
   assignments: ListExpr<
-    BinaryExpr<Identifier | ParenExpr<ListExpr<Identifier>>, "=", Expr>
+    BinaryExpr<
+      | Identifier
+      | Variable
+      | ParenExpr<ListExpr<Identifier> | ParenExpr<ListExpr<Variable>>>,
+      "=",
+      Expr
+    >
   >;
 }
 
