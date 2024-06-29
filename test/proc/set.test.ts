@@ -33,8 +33,6 @@ describe("SET", () => {
     });
   });
 
-
-
   dialect("sqlite", () => {
     it("does not support SET statement", () => {
       expect(() => parse("SET x = 1")).toThrowError();
