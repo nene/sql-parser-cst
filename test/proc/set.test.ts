@@ -19,7 +19,7 @@ describe("SET", () => {
     });
   });
 
-  dialect("mysql", () => {
+  dialect(["mysql", "mariadb"], () => {
     it("supports SET statement", () => {
       testWc("SET @x = 10");
     });
@@ -29,7 +29,7 @@ describe("SET", () => {
     });
 
     it("supports scalar subquery", () => {
-      testWc("SET @total_tax = (SELECT SUM(tax) FROM taxable_transactions)");
+      testWc("SET @sum_age = (SELECT SUM(age) FROM user)");
     });
   });
 
