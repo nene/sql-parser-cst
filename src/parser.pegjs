@@ -4457,7 +4457,15 @@ set_stmt
   }
 
 set_assignment
-  = name:((ident / paren$list$ident) __) "=" value:(__ expr) {
+  = &mysql name:((ident / variable / paren$list$ident / paren$list$variable) __) "=" value:(__ expr) {
+    return loc({
+      type: "binary_expr",
+      left: read(name),
+      operator: "=",
+      right: read(value),
+    })
+  }
+  / !mysql name:((ident / paren$list$ident) __) "=" value:(__ expr) {
     return loc({
       type: "binary_expr",
       left: read(name),
@@ -6852,6 +6860,7 @@ paren$list$string_literal = .
 paren$list$table_func_call = .
 paren$list$table_option_postgresql = .
 paren$list$tablesample_arg = .
+paren$list$variable = .
 paren$list$view_column_definition = .
 paren$pivot_for_in = .
 paren$postgresql_op = .
