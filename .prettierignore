@@ -1,4 +1,5 @@
 /lib
 /node_modules
 /src/dialects/*.js
+/src/parser.ts
 changelog.hbs
