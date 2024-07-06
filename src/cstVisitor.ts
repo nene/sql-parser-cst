@@ -27,7 +27,7 @@ export type FullVisitorMap = {
 export function cstVisitor(map: Partial<FullVisitorMap>): (node: Node) => void {
   const visit = (node: Node) => {
     const visitType = map[node.type] as (
-      e: Extract<Node, { type: typeof node["type"] }>
+      e: Extract<Node, { type: (typeof node)["type"] }>
     ) => VisitorAction | void;
 
     // Visit the node itself
