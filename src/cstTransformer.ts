@@ -29,7 +29,7 @@ export type TransformMap<T, TNode extends Node = Node> = Partial<
 export function cstTransformer<T>(map: TransformMap<T>): (node: Node) => T {
   return (node: Node) => {
     const fn = map[node.type] as (
-      param: NodeByType<(typeof node)["type"], Node>
+      param: NodeByType<typeof node["type"], Node>
     ) => T;
     if (!fn) {
       if (!node.type) {
