@@ -46,6 +46,7 @@
   "devDependencies": {
     "@types/benchmark": "^2.1.2",
     "@types/jest": "^29.1.2",
+    "@types/node": "^22.7.9",
     "@typescript-eslint/eslint-plugin": "^5.47.0",
     "@typescript-eslint/parser": "^5.47.0",
     "auto-changelog": "^2.4.0",
