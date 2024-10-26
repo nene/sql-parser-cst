@@ -52,7 +52,7 @@ describe("struct", () => {
       expect(parseExpr(`STRUCT<id INT64>(1)`)).toMatchInlineSnapshot(`
         {
           "dataType": {
-            "nameKw": {
+            "name": {
               "name": "STRUCT",
               "text": "STRUCT",
               "type": "keyword",
@@ -63,7 +63,7 @@ describe("struct", () => {
                   {
                     "constraints": [],
                     "dataType": {
-                      "nameKw": {
+                      "name": {
                         "name": "INT64",
                         "text": "INT64",
                         "type": "keyword",

@@ -20,7 +20,7 @@ export const exprMap: FullTransformMap<string, AllExprNodes> = {
     ]),
   named_arg: (node) => show([node.name, node.operator, node.value]),
   cast_expr: (node) => show([node.castKw, node.args]),
-  cast_operator_expr: (node) => show([node.expr, "::", node.dataType]),
+  cast_operator_expr: (node) => show([node.left, node.operator, node.right]),
   cast_arg: (node) => show([node.expr, node.asKw, node.dataType, node.format]),
   cast_format: (node) => show([node.formatKw, node.string, node.timezone]),
   cast_format_timezone: (node) => show([node.atTimeZoneKw, node.timezone]),

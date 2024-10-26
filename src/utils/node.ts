@@ -20,6 +20,8 @@ import {
   FuncCall,
   ForSystemTimeAsOfExpr,
   ArrayDataType,
+  CastOperatorExpr,
+  DataType,
 } from "../cst/Node";
 import { leading, surrounding, trailing } from "./whitespace";
 import { readCommaSepList } from "./list";
@@ -75,6 +77,32 @@ export function createBinaryExpr(
     type: "binary_expr",
     operator: op,
     left: trailing(left, c1),
+    right: leading(right, c2),
+  };
+}
+
+export function createCastOperatorExprChain(
+  head: Expr,
+  tail: [Whitespace[], "::", Whitespace[], DataType][]
+): Expr {
+  return tail.reduce(
+    (left, [c1, op, c2, right]) =>
+      deriveLoc(createCastExpr(left, c1, op, c2, right)),
+    head
+  );
+}
+
+function createCastExpr(
+  left: CastOperatorExpr["left"],
+  c1: Whitespace[],
+  op: "::",
+  c2: Whitespace[],
+  right: CastOperatorExpr["right"]
+): CastOperatorExpr {
+  return {
+    type: "cast_operator_expr",
+    left: trailing(left, c1),
+    operator: op,
     right: leading(right, c2),
   };
 }

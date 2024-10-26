@@ -35,7 +35,7 @@ describe("type cast", () => {
               "type": "keyword",
             },
             "dataType": {
-              "nameKw": {
+              "name": {
                 "name": "INT",
                 "text": "INT",
                 "type": "keyword",
@@ -66,6 +66,21 @@ describe("type cast", () => {
     it("supports :: cast operator", () => {
       testExprWc(`x :: INT`);
       testExprWc(`8 :: DECIMAL(3, 2)`);
+    });
+
+    it("supports repeated :: cast operator", () => {
+      testExprWc(`x :: TEXT :: INT`);
+      testExprWc(`x :: DECIMAL(3, 2) :: DATETIME :: DATE`);
+      // One can of course always use parentheses to disambiguate:
+      testExprWc(`((x :: TEXT) :: INT) :: DATE`);
+    });
+
+    it("supports quoted identifier as :: cast operator parameter", () => {
+      testExprWc(`x :: "foo"`);
+    });
+
+    it("supports custom data type name without quotes as :: cast operator parameter", () => {
+      testExprWc(`x :: foobar`);
     });
 
     it("supports function call syntax for type casts", () => {

@@ -9,6 +9,7 @@
   import {
     createBinaryExprChain,
     createBinaryExpr,
+    createCastOperatorExprChain,
     createCompoundSelectStmtChain,
     createStringConcatExprChain,
     createJoinExprChain,
@@ -5621,28 +5622,28 @@ array_bounds
 
 named_data_type
   = kw:(type_name __) params:paren$list$literal {
-    return loc({ type: "named_data_type", nameKw: read(kw), params });
+    return loc({ type: "named_data_type", name: read(kw), params });
   }
   / &bigquery type:(bigquery_array_type / bigquery_struct_type / bigquery_table_type) {
     return type;
   }
   / kw:type_name {
-    return loc({ type: "named_data_type", nameKw: kw });
+    return loc({ type: "named_data_type", name: kw });
   }
 
 bigquery_array_type
   = kw:ARRAY params:(__ generic_type_params)? {
-    return loc({ type: "named_data_type", nameKw: read(kw), params: read(params) });
+    return loc({ type: "named_data_type", name: read(kw), params: read(params) });
   }
 
 bigquery_struct_type
   = kw:STRUCT params:(__ generic_type_params)? {
-    return loc({ type: "named_data_type", nameKw: read(kw), params: read(params) });
+    return loc({ type: "named_data_type", name: read(kw), params: read(params) });
   }
 
 bigquery_table_type
   = kw:TABLE params:(__ generic_type_params) {
-    return loc({ type: "named_data_type", nameKw: read(kw), params: read(params) });
+    return loc({ type: "named_data_type", name: read(kw), params: read(params) });
   }
 
 generic_type_params
@@ -5764,6 +5765,7 @@ type_name_postgresql
   / kws:(DOUBLE __ PRECISION) { return read(kws); }
   / interval_type_name_postgresql
   / unreserved_keyword // custom types
+  / quoted_ident // custom types
 
 interval_type_name_postgresql
   = kws:(INTERVAL __ interval_unit_kw __ TO __ interval_unit_kw) { return read(kws); }
@@ -6164,21 +6166,8 @@ pg_negation_expr
   / pg_cast_operator_expr
 
 pg_cast_operator_expr
-  = expr:member_expr_or_func_call rightFn:(_pg_cast_operator_expr_right)? {
-    if (rightFn) {
-      return loc(rightFn(expr));
-    } else {
-      return expr;
-    }
-  }
-
-_pg_cast_operator_expr_right
-  = c1:__ "::" dataType:(__ data_type) {
-    return (expr: any) => ({
-      type: "cast_operator_expr",
-      expr: trailing(expr, c1),
-      dataType: read(dataType),
-    });
+  = head:member_expr_or_func_call tail:(__ "::" __ data_type)* {
+    return createCastOperatorExprChain(head, tail);
   }
 
 bitwise_or_expr
