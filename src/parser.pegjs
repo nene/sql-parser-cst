@@ -149,6 +149,7 @@ ddl_statement_postgres
   / drop_sequence_stmt
   / create_trigger_stmt
   / drop_trigger_stmt
+  / create_type_stmt
 
 dml_statement
   = compound_select_stmt
@@ -4151,6 +4152,35 @@ drop_sequence_stmt
         behaviorKw: read(behaviorKw),
       });
     }
+
+/**
+ * ------------------------------------------------------------------------------------ *
+ *                                                                                      *
+ * CREATE/ALTER/DROP TYPE                                                               *
+ *                                                                                      *
+ * ------------------------------------------------------------------------------------ *
+ */
+create_type_stmt
+  = kw:(CREATE __ TYPE __) name:entity_name definition:(__ type_definition) {
+    return loc({
+      type: "create_type_stmt",
+      createTypeKw: read(kw),
+      name,
+      definition: read(definition),
+    });
+  }
+
+type_definition
+  = enum_type_definition
+
+enum_type_definition
+  = kw:(AS __ ENUM __) values:(paren$empty_list / paren$list$string_literal) {
+    return loc({
+      type: "enum_type_definition",
+      asEnumKw: read(kw),
+      values: read(values),
+    });
+  }
 
 /**
  * ------------------------------------------------------------------------------------ *

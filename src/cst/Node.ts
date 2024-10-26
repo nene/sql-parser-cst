@@ -66,6 +66,7 @@ import { AllSequenceNodes } from "./Sequence";
 import { AllSqliteNodes } from "./dialects/Sqlite";
 import { AllTransactionNodes } from "./Transaction";
 import { AllTriggerNodes } from "./Trigger";
+import { AllTypeNodes } from "./Type";
 import { AllUpdateNodes } from "./Update";
 import { AllViewNodes } from "./View";
 import { Program } from "./Program";
@@ -100,6 +101,7 @@ export type Node =
   | AllSqliteNodes
   | AllTransactionNodes
   | AllTriggerNodes
+  | AllTypeNodes
   | AllUpdateNodes
   | AllViewNodes
   | Keyword
