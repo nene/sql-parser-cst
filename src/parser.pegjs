@@ -3795,7 +3795,7 @@ reset_parameter_clause
   }
 
 reset_all_parameters_clause
-  = kw:(RESET __ ALL __) {
+  = kw:(RESET __ ALL) {
     return loc({
       type: "reset_all_parameters_clause",
       resetAllKw: read(kw),
