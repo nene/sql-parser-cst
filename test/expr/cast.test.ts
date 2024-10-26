@@ -75,6 +75,14 @@ describe("type cast", () => {
       testExprWc(`((x :: TEXT) :: INT) :: DATE`);
     });
 
+    it("supports quoted identifier as :: cast operator parameter", () => {
+      testExprWc(`x :: "foo"`);
+    });
+
+    it("supports custom data type name without quotes as :: cast operator parameter", () => {
+      testExprWc(`x :: foobar`);
+    });
+
     it("supports function call syntax for type casts", () => {
       testExpr(`float8('12.33')`);
       testExpr(`text(12.5)`);

@@ -19,7 +19,7 @@ export type DataType =
 
 export interface NamedDataType extends BaseNode {
   type: "named_data_type";
-  name: Keyword | Keyword[];
+  name: Keyword | Keyword[] | Identifier;
   params?: ParenExpr<ListExpr<Literal>> | GenericTypeParams;
 }
 
