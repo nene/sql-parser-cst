@@ -202,8 +202,10 @@ describe("identifier", () => {
     });
 
     // Issue #80
-    it("supports KEY as identifier", () => {
-      test(`SELECT key FROM key;`);
+    ["key", "column"].forEach((kw) => {
+      it(`supports ${kw.toUpperCase()} as identifier`, () => {
+        test(`SELECT ${kw} FROM ${kw};`);
+      });
     });
   });
 

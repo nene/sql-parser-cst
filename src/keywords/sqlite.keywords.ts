@@ -7,6 +7,8 @@
 //
 // Some keywords are never reserved. I've removed these from the list:
 // - KEY
+// Some are reserved only in certain contexts. I've removed these from the list:
+// - COLUMN
 //
 export const sqliteKeywords: Record<string, boolean> = {
   ABORT: true,
@@ -31,7 +33,6 @@ export const sqliteKeywords: Record<string, boolean> = {
   CAST: true,
   CHECK: true,
   COLLATE: true,
-  COLUMN: true,
   COMMIT: true,
   CONFLICT: true,
   CONSTRAINT: true,
