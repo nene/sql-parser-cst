@@ -205,7 +205,6 @@ export interface ResetParameterClause extends BaseNode {
 export interface ResetAllParametersClause extends BaseNode {
   type: "reset_all_parameters_clause";
   resetAllKw: [Keyword<"RESET">, Keyword<"ALL">];
-  name: Identifier;
 }
 
 export interface DropFunctionStmt extends BaseNode {
