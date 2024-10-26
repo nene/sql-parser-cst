@@ -51,7 +51,6 @@ export interface CreateFunctionStmt extends BaseNode {
   name: EntityName;
   params: ParenExpr<ListExpr<FunctionParam>>;
   clauses: CreateFunctionClause[];
-  behaviorKw?: Keyword<"RESTRICT">;
 }
 
 export interface FunctionParam extends BaseNode {
