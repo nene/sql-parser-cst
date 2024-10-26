@@ -68,6 +68,13 @@ describe("type cast", () => {
       testExprWc(`8 :: DECIMAL(3, 2)`);
     });
 
+    it("supports repeated :: cast operator", () => {
+      testExprWc(`x :: TEXT :: INT`);
+      testExprWc(`x :: DECIMAL(3, 2) :: DATETIME :: DATE`);
+      // One can of course always use parentheses to disambiguate:
+      testExprWc(`((x :: TEXT) :: INT) :: DATE`);
+    });
+
     it("supports function call syntax for type casts", () => {
       testExpr(`float8('12.33')`);
       testExpr(`text(12.5)`);

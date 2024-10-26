@@ -9,6 +9,7 @@
   import {
     createBinaryExprChain,
     createBinaryExpr,
+    createCastOperatorExprChain,
     createCompoundSelectStmtChain,
     createStringConcatExprChain,
     createJoinExprChain,
@@ -6164,21 +6165,8 @@ pg_negation_expr
   / pg_cast_operator_expr
 
 pg_cast_operator_expr
-  = expr:member_expr_or_func_call rightFn:(_pg_cast_operator_expr_right)? {
-    if (rightFn) {
-      return loc(rightFn(expr));
-    } else {
-      return expr;
-    }
-  }
-
-_pg_cast_operator_expr_right
-  = c1:__ "::" dataType:(__ data_type) {
-    return (expr: any) => ({
-      type: "cast_operator_expr",
-      expr: trailing(expr, c1),
-      dataType: read(dataType),
-    });
+  = head:member_expr_or_func_call tail:(__ "::" __ data_type)* {
+    return createCastOperatorExprChain(head, tail);
   }
 
 bitwise_or_expr

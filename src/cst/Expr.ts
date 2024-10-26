@@ -237,8 +237,9 @@ export interface CastExpr extends BaseNode {
 // PostgreSQL foo :: TYPE
 export interface CastOperatorExpr extends BaseNode {
   type: "cast_operator_expr";
-  expr: Expr;
-  dataType: DataType;
+  left: Expr;
+  operator: "::";
+  right: DataType;
 }
 
 export interface CastArg extends BaseNode {
