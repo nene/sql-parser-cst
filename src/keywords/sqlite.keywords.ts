@@ -4,6 +4,10 @@
 // However, not all of them are fully reserved.
 // I've marked the ones that by my testing are reserved with (R).
 // This might or might not be fully accurate.
+//
+// Some keywords are never reserved. I've removed these from the list:
+// - KEY
+//
 export const sqliteKeywords: Record<string, boolean> = {
   ABORT: true,
   ACTION: true,
@@ -84,7 +88,6 @@ export const sqliteKeywords: Record<string, boolean> = {
   IS: true, // (R)
   ISNULL: true, // (R)
   JOIN: true, // (R)
-  KEY: true,
   LAST: true,
   LEFT: true,
   LIKE: true,
