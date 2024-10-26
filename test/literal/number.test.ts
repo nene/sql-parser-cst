@@ -34,6 +34,17 @@ describe("number literal", () => {
     `);
   });
 
+  it("supports fractions without leading digits", () => {
+    testExpr(`.23`);
+    expect(parseExpr(`.158`)).toMatchInlineSnapshot(`
+      {
+        "text": ".158",
+        "type": "number_literal",
+        "value": 0.158,
+      }
+    `);
+  });
+
   it("supports scientific notation", () => {
     testExpr(`123e15`);
     testExpr(`1.23E+13`);
@@ -90,6 +101,7 @@ describe("number literal", () => {
       testNumberLiteral(`10_000_000`, 10000000);
       testNumberLiteral(`3.14_15_92_65`, 3.14159265);
       testNumberLiteral(`1.2345e1_0`, 1.2345e10);
+      testNumberLiteral(`.2345e1_0`, 0.2345e10);
     });
 
     it("parses underscores in hex literal", () => {

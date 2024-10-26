@@ -7726,14 +7726,14 @@ number_literal_oct
   }
 
 number_literal_decimal
-  = &postgres pg_digits pg_frac? pg_exp? !ident_start {
+  = &postgres (pg_digits pg_frac? / pg_frac) pg_exp? !ident_start {
     return loc({
       type: "number_literal",
       text: text(),
       value: parseFloat(text().replace(/_/g, "")),
     });
   }
-  / !postgres digits frac? exp? !ident_start {
+  / !postgres (digits frac? / frac) exp? !ident_start {
     return loc({
       type: "number_literal",
       text: text(),
