@@ -23,7 +23,7 @@ describe("array", () => {
       expect(parseExpr(`ARRAY<INT64>[1, 2]`)).toMatchInlineSnapshot(`
         {
           "dataType": {
-            "nameKw": {
+            "name": {
               "name": "ARRAY",
               "text": "ARRAY",
               "type": "keyword",
@@ -34,7 +34,7 @@ describe("array", () => {
                   {
                     "constraints": [],
                     "dataType": {
-                      "nameKw": {
+                      "name": {
                         "name": "INT64",
                         "text": "INT64",
                         "type": "keyword",

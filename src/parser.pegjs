@@ -5622,28 +5622,28 @@ array_bounds
 
 named_data_type
   = kw:(type_name __) params:paren$list$literal {
-    return loc({ type: "named_data_type", nameKw: read(kw), params });
+    return loc({ type: "named_data_type", name: read(kw), params });
   }
   / &bigquery type:(bigquery_array_type / bigquery_struct_type / bigquery_table_type) {
     return type;
   }
   / kw:type_name {
-    return loc({ type: "named_data_type", nameKw: kw });
+    return loc({ type: "named_data_type", name: kw });
   }
 
 bigquery_array_type
   = kw:ARRAY params:(__ generic_type_params)? {
-    return loc({ type: "named_data_type", nameKw: read(kw), params: read(params) });
+    return loc({ type: "named_data_type", name: read(kw), params: read(params) });
   }
 
 bigquery_struct_type
   = kw:STRUCT params:(__ generic_type_params)? {
-    return loc({ type: "named_data_type", nameKw: read(kw), params: read(params) });
+    return loc({ type: "named_data_type", name: read(kw), params: read(params) });
   }
 
 bigquery_table_type
   = kw:TABLE params:(__ generic_type_params) {
-    return loc({ type: "named_data_type", nameKw: read(kw), params: read(params) });
+    return loc({ type: "named_data_type", name: read(kw), params: read(params) });
   }
 
 generic_type_params

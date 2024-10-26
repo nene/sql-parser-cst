@@ -35,7 +35,7 @@ describe("type cast", () => {
               "type": "keyword",
             },
             "dataType": {
-              "nameKw": {
+              "name": {
                 "name": "INT",
                 "text": "INT",
                 "type": "keyword",
