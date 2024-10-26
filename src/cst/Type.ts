@@ -12,7 +12,7 @@ export interface CreateTypeStmt extends BaseNode {
   type: "create_type_stmt";
   createTypeKw: [Keyword<"CREATE">, Keyword<"TYPE">];
   name: EntityName;
-  definition: TypeDefinition;
+  definition?: TypeDefinition;
 }
 
 type TypeDefinition = EnumTypeDefinition | CompositeTypeDefinition;

@@ -4161,7 +4161,7 @@ drop_sequence_stmt
  * ------------------------------------------------------------------------------------ *
  */
 create_type_stmt
-  = kw:(CREATE __ TYPE __) name:entity_name definition:(__ type_definition) {
+  = kw:(CREATE __ TYPE __) name:entity_name definition:(__ type_definition)? {
     return loc({
       type: "create_type_stmt",
       createTypeKw: read(kw),
