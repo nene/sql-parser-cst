@@ -1,4 +1,4 @@
-import { dialect, parseExpr, testExpr } from "./test_utils";
+import { dialect, parseExpr, test, testExpr } from "./test_utils";
 
 describe("identifier", () => {
   function parseIdent(str: string) {
@@ -199,6 +199,13 @@ describe("identifier", () => {
           "type": "identifier",
         }
       `);
+    });
+
+    // Issue #80
+    ["key", "column"].forEach((kw) => {
+      it(`supports ${kw.toUpperCase()} as identifier`, () => {
+        test(`SELECT ${kw} FROM ${kw};`);
+      });
     });
   });
 
