@@ -51,7 +51,6 @@ export interface CreateFunctionStmt extends BaseNode {
   name: EntityName;
   params: ParenExpr<ListExpr<FunctionParam>>;
   clauses: CreateFunctionClause[];
-  behaviorKw?: Keyword<"RESTRICT">;
 }
 
 export interface FunctionParam extends BaseNode {
@@ -205,7 +204,6 @@ export interface ResetParameterClause extends BaseNode {
 export interface ResetAllParametersClause extends BaseNode {
   type: "reset_all_parameters_clause";
   resetAllKw: [Keyword<"RESET">, Keyword<"ALL">];
-  name: Identifier;
 }
 
 export interface DropFunctionStmt extends BaseNode {
