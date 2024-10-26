@@ -6,5 +6,6 @@ export const typeMap: FullTransformMap<string, AllTypeNodes> = {
   // CREATE TYPE
   create_type_stmt: (node) =>
     show([node.createTypeKw, node.name, node.definition]),
+  composite_type_definition: (node) => show([node.asKw, node.columns]),
   enum_type_definition: (node) => show([node.asEnumKw, node.values]),
 };

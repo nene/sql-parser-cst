@@ -4171,7 +4171,17 @@ create_type_stmt
   }
 
 type_definition
-  = enum_type_definition
+  = composite_type_definition
+  / enum_type_definition
+
+composite_type_definition
+  = kw:(AS __) columns:(paren$empty_list / paren$list$column_definition) {
+    return loc({
+      type: "composite_type_definition",
+      asKw: read(kw),
+      columns: read(columns),
+    });
+  }
 
 enum_type_definition
   = kw:(AS __ ENUM __) values:(paren$empty_list / paren$list$string_literal) {
