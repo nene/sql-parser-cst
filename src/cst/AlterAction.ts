@@ -27,6 +27,8 @@ export type AllAlterActionNodes =
   | AlterViewAction
   | AlterIdentityAction
   | AlterIndexAction
+  | AlterFunctionAction
+  | AlterTypeAction
   | ToggleItem
   | ReplicaIdentityUsingIndex
   | SetDataTypeCollateClause
@@ -117,7 +119,8 @@ export type AlterFunctionAction =
 export type AlterTypeAction =
   | AlterActionRename
   | AlterActionOwnerTo
-  | AlterActionSetSchema;
+  | AlterActionSetSchema
+  | AlterActionAddEnumValue;
 
 export interface AlterActionRename extends BaseNode {
   type: "alter_action_rename";
@@ -406,6 +409,14 @@ export interface AlterActionAttachPartition extends BaseNode {
   type: "alter_action_attach_partition";
   attachPartitionKw: [Keyword<"ATTACH">, Keyword<"PARTITION">];
   index: EntityName;
+}
+
+// PostgreSQL
+export interface AlterActionAddEnumValue extends BaseNode {
+  type: "alter_action_add_enum_value";
+  addValueKw: [Keyword<"ADD">, Keyword<"VALUE">];
+  ifNotExistsKw?: [Keyword<"IF">, Keyword<"NOT">, Keyword<"EXISTS">];
+  value: StringLiteral;
 }
 
 export type AlterColumnAction =

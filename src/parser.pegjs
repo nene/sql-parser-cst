@@ -3085,6 +3085,16 @@ alter_action_attach_partition
     });
   }
 
+alter_action_add_enum_value
+  = kw:(ADD __ VALUE __) ifKw:(if_not_exists __)? value:string_literal {
+    return loc({
+      type: "alter_action_add_enum_value",
+      addValueKw: read(kw),
+      ifNotExistsKw: read(ifKw),
+      value,
+    });
+  }
+
 alter_column_action
   = alter_action_set_default
   / alter_action_drop_default
@@ -4208,6 +4218,7 @@ alter_type_action
   = alter_action_owner_to
   / alter_action_rename
   / alter_action_set_schema
+  / alter_action_add_enum_value
 
 drop_type_stmt
   = kw:(DROP __ TYPE __) ifExistsKw:(if_exists __)? types:list$entity_name behaviorKw:(__ (CASCADE / RESTRICT))? {

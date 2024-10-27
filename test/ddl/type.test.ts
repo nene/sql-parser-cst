@@ -34,6 +34,11 @@ describe("type", () => {
       it("supports SET SCHEMA", () => {
         testWc("ALTER TYPE my_type SET SCHEMA new_schema");
       });
+
+      it("supports ADD VALUE", () => {
+        testWc("ALTER TYPE my_enum ADD VALUE 'apple'");
+        testWc("ALTER TYPE my_enum ADD VALUE IF NOT EXISTS 'apple'");
+      });
     });
 
     describe("DROP TYPE", () => {
