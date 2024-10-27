@@ -3132,6 +3132,19 @@ alter_action_rename_attribute
       });
     }
 
+alter_action_add_attribute
+  = kw:(ADD __ ATTRIBUTE __) name:ident dataType:(__ data_type)
+    constraint:(__ constraint_collate)? behaviorKw:(__ (CASCADE/RESTRICT))? {
+      return loc({
+        type: "alter_action_add_attribute",
+        addAttributeKw: read(kw),
+        name,
+        dataType: read(dataType),
+        constraint: read(constraint),
+        behaviorKw: read(behaviorKw),
+      });
+    }
+
 alter_column_action
   = alter_action_set_default
   / alter_action_drop_default
@@ -4258,6 +4271,7 @@ alter_type_action
   / alter_action_add_enum_value
   / alter_action_rename_enum_value
   / alter_action_rename_attribute
+  / alter_action_add_attribute
 
 drop_type_stmt
   = kw:(DROP __ TYPE __) ifExistsKw:(if_exists __)? types:list$entity_name behaviorKw:(__ (CASCADE / RESTRICT))? {

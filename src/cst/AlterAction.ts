@@ -12,7 +12,11 @@ import {
   MemberExpr,
 } from "./Expr";
 import { NumberLiteral, StringLiteral } from "./Literal";
-import { ConstraintModifier, TableConstraint } from "./Constraint";
+import {
+  ConstraintCollate,
+  ConstraintModifier,
+  TableConstraint,
+} from "./Constraint";
 import { Default } from "./Insert";
 import {
   PostgresqlTableOption,
@@ -123,7 +127,8 @@ export type AlterTypeAction =
   | AlterActionSetSchema
   | AlterActionAddEnumValue
   | AlterActionRenameEnumValue
-  | AlterActionRenameAttribute;
+  | AlterActionRenameAttribute
+  | AlterActionAddAttribute;
 
 export interface AlterActionRename extends BaseNode {
   type: "alter_action_rename";
@@ -446,6 +451,16 @@ export interface AlterActionRenameAttribute extends BaseNode {
   oldName: Identifier;
   toKw: Keyword<"TO">;
   newName: Identifier;
+  behaviorKw?: Keyword<"CASCADE" | "RESTRICT">;
+}
+
+// PostgreSQL
+export interface AlterActionAddAttribute extends BaseNode {
+  type: "alter_action_add_attribute";
+  addAttributeKw: [Keyword<"ADD">, Keyword<"ATTRIBUTE">];
+  name: Identifier;
+  dataType: DataType;
+  constraint?: ConstraintCollate;
   behaviorKw?: Keyword<"CASCADE" | "RESTRICT">;
 }
 

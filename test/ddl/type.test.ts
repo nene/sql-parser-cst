@@ -54,6 +54,13 @@ describe("type", () => {
         testWc("ALTER TYPE address RENAME ATTRIBUTE city TO town CASCADE");
         testWc("ALTER TYPE address RENAME ATTRIBUTE city TO town RESTRICT");
       });
+
+      it("supports ADD ATTRIBUTE", () => {
+        testWc(`ALTER TYPE address ADD ATTRIBUTE city TEXT`);
+        testWc(`ALTER TYPE address ADD ATTRIBUTE city TEXT COLLATE "C"`);
+        testWc(`ALTER TYPE address ADD ATTRIBUTE city TEXT CASCADE`);
+        testWc(`ALTER TYPE address ADD ATTRIBUTE city TEXT RESTRICT`);
+      });
     });
 
     describe("DROP TYPE", () => {
