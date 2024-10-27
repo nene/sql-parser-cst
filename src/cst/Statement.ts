@@ -10,6 +10,7 @@ import { AllSequenceStatements } from "./Sequence";
 import { AllSqliteStatements } from "./dialects/Sqlite";
 import { AllTransactionStatements } from "./Transaction";
 import { AllTriggerStatements } from "./Trigger";
+import { AllTypeStatements } from "./Type";
 import { AllViewStatements } from "./View";
 import { AnalyzeStmt } from "./Analyze";
 import { CompoundSelectStmt, SelectStmt } from "./Select";
@@ -38,6 +39,7 @@ export type Statement =
   | AllSqliteStatements
   | AllTransactionStatements
   | AllTriggerStatements
+  | AllTypeStatements
   | AllViewStatements
   | AnalyzeStmt
   | CompoundSelectStmt

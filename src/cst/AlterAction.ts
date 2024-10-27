@@ -12,7 +12,11 @@ import {
   MemberExpr,
 } from "./Expr";
 import { NumberLiteral, StringLiteral } from "./Literal";
-import { ConstraintModifier, TableConstraint } from "./Constraint";
+import {
+  ConstraintCollate,
+  ConstraintModifier,
+  TableConstraint,
+} from "./Constraint";
 import { Default } from "./Insert";
 import {
   PostgresqlTableOption,
@@ -27,11 +31,14 @@ export type AllAlterActionNodes =
   | AlterViewAction
   | AlterIdentityAction
   | AlterIndexAction
+  | AlterFunctionAction
+  | AlterTypeAction
   | ToggleItem
   | ReplicaIdentityUsingIndex
   | SetDataTypeCollateClause
   | SetDataTypeUsingClause
-  | AlterActionAddConstraintConstraintName;
+  | AlterActionAddConstraintConstraintName
+  | AlterActionAddEnumValuePosition;
 
 export type AlterTableAction =
   | AlterActionRename
@@ -113,6 +120,17 @@ export type AlterFunctionAction =
   | AlterActionSetSchema
   | AlterActionDependsOnExtension
   | AlterActionNoDependsOnExtension;
+
+export type AlterTypeAction =
+  | AlterActionRename
+  | AlterActionOwnerTo
+  | AlterActionSetSchema
+  | AlterActionAddEnumValue
+  | AlterActionRenameEnumValue
+  | AlterActionRenameAttribute
+  | AlterActionAddAttribute
+  | AlterActionDropAttribute
+  | AlterActionAlterAttribute;
 
 export interface AlterActionRename extends BaseNode {
   type: "alter_action_rename";
@@ -401,6 +419,73 @@ export interface AlterActionAttachPartition extends BaseNode {
   type: "alter_action_attach_partition";
   attachPartitionKw: [Keyword<"ATTACH">, Keyword<"PARTITION">];
   index: EntityName;
+}
+
+// PostgreSQL
+export interface AlterActionAddEnumValue extends BaseNode {
+  type: "alter_action_add_enum_value";
+  addValueKw: [Keyword<"ADD">, Keyword<"VALUE">];
+  ifNotExistsKw?: [Keyword<"IF">, Keyword<"NOT">, Keyword<"EXISTS">];
+  value: StringLiteral;
+  position?: AlterActionAddEnumValuePosition;
+}
+
+// PostgreSQL
+export interface AlterActionAddEnumValuePosition extends BaseNode {
+  type: "alter_action_add_enum_value_position";
+  positionKw: Keyword<"BEFORE" | "AFTER">;
+  value: StringLiteral;
+}
+
+// PostgreSQL
+export interface AlterActionRenameEnumValue extends BaseNode {
+  type: "alter_action_rename_enum_value";
+  renameValueKw: [Keyword<"RENAME">, Keyword<"VALUE">];
+  oldValue: StringLiteral;
+  toKw: Keyword<"TO">;
+  newValue: StringLiteral;
+}
+
+// PostgreSQL
+export interface AlterActionRenameAttribute extends BaseNode {
+  type: "alter_action_rename_attribute";
+  renameAttributeKw: [Keyword<"RENAME">, Keyword<"ATTRIBUTE">];
+  oldName: Identifier;
+  toKw: Keyword<"TO">;
+  newName: Identifier;
+  behaviorKw?: Keyword<"CASCADE" | "RESTRICT">;
+}
+
+// PostgreSQL
+export interface AlterActionAddAttribute extends BaseNode {
+  type: "alter_action_add_attribute";
+  addAttributeKw: [Keyword<"ADD">, Keyword<"ATTRIBUTE">];
+  name: Identifier;
+  dataType: DataType;
+  constraint?: ConstraintCollate;
+  behaviorKw?: Keyword<"CASCADE" | "RESTRICT">;
+}
+
+// PostgreSQL
+export interface AlterActionDropAttribute extends BaseNode {
+  type: "alter_action_drop_attribute";
+  dropAttributeKw: [Keyword<"DROP">, Keyword<"ATTRIBUTE">];
+  ifExistsKw?: [Keyword<"IF">, Keyword<"EXISTS">];
+  name: Identifier;
+  behaviorKw?: Keyword<"CASCADE" | "RESTRICT">;
+}
+
+// PostgreSQL
+export interface AlterActionAlterAttribute extends BaseNode {
+  type: "alter_action_alter_attribute";
+  alterAttributeKw: [Keyword<"ALTER">, Keyword<"ATTRIBUTE">];
+  name: Identifier;
+  setDataTypeKw:
+    | [Keyword<"SET">, Keyword<"DATA">, Keyword<"TYPE">]
+    | Keyword<"TYPE">;
+  dataType: DataType;
+  constraint?: ConstraintCollate;
+  behaviorKw?: Keyword<"CASCADE" | "RESTRICT">;
 }
 
 export type AlterColumnAction =

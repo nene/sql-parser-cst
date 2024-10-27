@@ -149,6 +149,9 @@ ddl_statement_postgres
   / drop_sequence_stmt
   / create_trigger_stmt
   / drop_trigger_stmt
+  / create_type_stmt
+  / alter_type_stmt
+  / drop_type_stmt
 
 dml_statement
   = compound_select_stmt
@@ -3082,6 +3085,91 @@ alter_action_attach_partition
     });
   }
 
+alter_action_add_enum_value
+  = kw:(ADD __ VALUE __)
+    ifKw:(if_not_exists __)?
+    value:string_literal
+    position:(__ alter_action_add_enum_value_position)? {
+      return loc({
+        type: "alter_action_add_enum_value",
+        addValueKw: read(kw),
+        ifNotExistsKw: read(ifKw),
+        value,
+        position: read(position),
+      });
+    }
+
+alter_action_add_enum_value_position
+  = kw:((BEFORE / AFTER) __) value:string_literal {
+    return loc({
+      type: "alter_action_add_enum_value_position",
+      positionKw: read(kw),
+      value,
+    });
+  }
+
+alter_action_rename_enum_value
+  = kw:(RENAME __ VALUE __) oldValue:string_literal toKw:(__ TO __) newValue:string_literal {
+    return loc({
+      type: "alter_action_rename_enum_value",
+      renameValueKw: read(kw),
+      oldValue,
+      toKw: read(toKw),
+      newValue,
+    });
+  }
+
+alter_action_rename_attribute
+  = kw:(RENAME __ ATTRIBUTE __) oldName:ident toKw:(__ TO __) newName:ident
+    behaviorKw:(__ (CASCADE/RESTRICT))? {
+      return loc({
+        type: "alter_action_rename_attribute",
+        renameAttributeKw: read(kw),
+        oldName,
+        toKw: read(toKw),
+        newName,
+        behaviorKw: read(behaviorKw),
+      });
+    }
+
+alter_action_add_attribute
+  = kw:(ADD __ ATTRIBUTE __) name:ident dataType:(__ data_type)
+    constraint:(__ constraint_collate)? behaviorKw:(__ (CASCADE/RESTRICT))? {
+      return loc({
+        type: "alter_action_add_attribute",
+        addAttributeKw: read(kw),
+        name,
+        dataType: read(dataType),
+        constraint: read(constraint),
+        behaviorKw: read(behaviorKw),
+      });
+    }
+
+alter_action_drop_attribute
+  = kw:(DROP __ ATTRIBUTE __) ifKw:(if_exists __)? name:ident behaviorKw:(__ (CASCADE/RESTRICT))? {
+      return loc({
+        type: "alter_action_drop_attribute",
+        dropAttributeKw: read(kw),
+        ifExistsKw: read(ifKw),
+        name,
+        behaviorKw: read(behaviorKw),
+      });
+    }
+
+alter_action_alter_attribute
+  = kw:(ALTER __ ATTRIBUTE __) name:(ident __) typeKw:(SET __ DATA __ TYPE __ / TYPE __) dataType:data_type
+    constraint:(__ constraint_collate)? behaviorKw:(__ (CASCADE/RESTRICT))? {
+      return loc({
+        type: "alter_action_alter_attribute",
+        alterAttributeKw: read(kw),
+        name: read(name),
+        setDataTypeKw: read(typeKw),
+        dataType,
+        constraint: read(constraint),
+        behaviorKw: read(behaviorKw),
+      });
+    }
+
 alter_column_action
   = alter_action_set_default
   / alter_action_drop_default
@@ -4151,6 +4239,77 @@ drop_sequence_stmt
         behaviorKw: read(behaviorKw),
       });
     }
+
+/**
+ * ------------------------------------------------------------------------------------ *
+ *                                                                                      *
+ * CREATE/ALTER/DROP TYPE                                                               *
+ *                                                                                      *
+ * ------------------------------------------------------------------------------------ *
+ */
+create_type_stmt
+  = kw:(CREATE __ TYPE __) name:entity_name definition:(__ type_definition)? {
+    return loc({
+      type: "create_type_stmt",
+      createTypeKw: read(kw),
+      name,
+      definition: read(definition),
+    });
+  }
+
+type_definition
+  = composite_type_definition
+  / enum_type_definition
+
+composite_type_definition
+  = kw:(AS __) columns:(paren$empty_list / paren$list$column_definition) {
+    return loc({
+      type: "composite_type_definition",
+      asKw: read(kw),
+      columns: read(columns),
+    });
+  }
+
+enum_type_definition
+  = kw:(AS __ ENUM __) values:(paren$empty_list / paren$list$string_literal) {
+    return loc({
+      type: "enum_type_definition",
+      asEnumKw: read(kw),
+      values: read(values),
+    });
+  }
+
+alter_type_stmt
+  = kw:(ALTER __ TYPE __) name:entity_name actions:(__ list$alter_type_action) {
+    return loc({
+      type: "alter_type_stmt",
+      alterTypeKw: read(kw),
+      name,
+      actions: read(actions),
+    });
+  }
+
+alter_type_action
+  = alter_action_owner_to
+  / alter_action_rename
+  / alter_action_set_schema
+  / alter_action_add_enum_value
+  / alter_action_rename_enum_value
+  / alter_action_rename_attribute
+  / alter_action_add_attribute
+  / alter_action_drop_attribute
+  / alter_action_alter_attribute
+
+drop_type_stmt
+  = kw:(DROP __ TYPE __) ifExistsKw:(if_exists __)? types:list$entity_name behaviorKw:(__ (CASCADE / RESTRICT))? {
+    return loc({
+      type: "drop_type_stmt",
+      dropTypeKw: read(kw),
+      ifExistsKw: read(ifExistsKw),
+      types,
+      behaviorKw: read(behaviorKw),
+    });
+  }
 
 /**
  * ------------------------------------------------------------------------------------ *
@@ -6888,6 +7047,7 @@ list$alias$paren$list$column = .
 list$alias$relation_expr = .
 list$alter_action = .
 list$alter_view_action = .
+list$alter_type_action = .
 list$column = .
 list$column_assignment = .
 list$column_definition = .
@@ -7873,6 +8033,7 @@ ASSIGNMENT          = kw:"ASSIGNMENT"i          !ident_part { return loc(createK
 AT                  = kw:"AT"i                  !ident_part { return loc(createKeyword(kw)); }
 ATOMIC              = kw:"ATOMIC"i              !ident_part { return loc(createKeyword(kw)); }
 ATTACH              = kw:"ATTACH"i              !ident_part { return loc(createKeyword(kw)); }
+ATTRIBUTE           = kw:"ATTRIBUTE"i           !ident_part { return loc(createKeyword(kw)); }
 AUTHORIZATION       = kw:"AUTHORIZATION"i       !ident_part { return loc(createKeyword(kw)); }
 AUTO                = kw:"AUTO"i                !ident_part { return loc(createKeyword(kw)); }
 AUTO_INCREMENT      = kw:"AUTO_INCREMENT"i      !ident_part { return loc(createKeyword(kw)); }
