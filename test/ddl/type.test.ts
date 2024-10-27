@@ -68,6 +68,14 @@ describe("type", () => {
         testWc(`ALTER TYPE address DROP ATTRIBUTE city CASCADE`);
         testWc(`ALTER TYPE address DROP ATTRIBUTE city RESTRICT`);
       });
+
+      it("supports ALTER ATTRIBUTE", () => {
+        testWc(`ALTER TYPE address ALTER ATTRIBUTE city SET DATA TYPE TEXT`);
+        testWc(`ALTER TYPE address ALTER ATTRIBUTE city TYPE TEXT`);
+        testWc(`ALTER TYPE address ALTER ATTRIBUTE city SET DATA TYPE TEXT COLLATE "C"`);
+        testWc(`ALTER TYPE address ALTER ATTRIBUTE city TYPE TEXT CASCADE`);
+        testWc(`ALTER TYPE address ALTER ATTRIBUTE city TYPE TEXT RESTRICT`);
+      });
     });
 
     describe("DROP TYPE", () => {

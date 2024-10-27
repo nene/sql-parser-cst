@@ -129,7 +129,8 @@ export type AlterTypeAction =
   | AlterActionRenameEnumValue
   | AlterActionRenameAttribute
   | AlterActionAddAttribute
-  | AlterActionDropAttribute;
+  | AlterActionDropAttribute
+  | AlterActionAlterAttribute;
 
 export interface AlterActionRename extends BaseNode {
   type: "alter_action_rename";
@@ -471,6 +472,19 @@ export interface AlterActionDropAttribute extends BaseNode {
   dropAttributeKw: [Keyword<"DROP">, Keyword<"ATTRIBUTE">];
   ifExistsKw?: [Keyword<"IF">, Keyword<"EXISTS">];
   name: Identifier;
+  behaviorKw?: Keyword<"CASCADE" | "RESTRICT">;
+}
+
+// PostgreSQL
+export interface AlterActionAlterAttribute extends BaseNode {
+  type: "alter_action_alter_attribute";
+  alterAttributeKw: [Keyword<"ALTER">, Keyword<"ATTRIBUTE">];
+  name: Identifier;
+  setDataTypeKw:
+    | [Keyword<"SET">, Keyword<"DATA">, Keyword<"TYPE">]
+    | Keyword<"TYPE">;
+  dataType: DataType;
+  constraint?: ConstraintCollate;
   behaviorKw?: Keyword<"CASCADE" | "RESTRICT">;
 }
 

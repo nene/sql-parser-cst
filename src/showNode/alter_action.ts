@@ -91,6 +91,15 @@ export const alterActionMap: FullTransformMap<string, AllAlterActionNodes> = {
     ]),
   alter_action_drop_attribute: (node) =>
     show([node.dropAttributeKw, node.ifExistsKw, node.name, node.behaviorKw]),
+  alter_action_alter_attribute: (node) =>
+    show([
+      node.alterAttributeKw,
+      node.name,
+      node.setDataTypeKw,
+      node.dataType,
+      node.constraint,
+      node.behaviorKw,
+    ]),
 
   // ALTER COLUMN ...
   alter_action_alter_column: (node) =>
