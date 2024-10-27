@@ -21,6 +21,21 @@ describe("type", () => {
       });
     });
 
+    describe("ALTER TYPE", () => {
+      it("supports RENAME TO", () => {
+        testWc("ALTER TYPE my_type RENAME TO new_type");
+        testWc("ALTER TYPE my_schema.my_type RENAME TO new_type");
+      });
+
+      it("supports OWNER TO", () => {
+        testWc("ALTER TYPE my_type OWNER TO new_owner");
+      });
+
+      it("supports SET SCHEMA", () => {
+        testWc("ALTER TYPE my_type SET SCHEMA new_schema");
+      });
+    });
+
     describe("DROP TYPE", () => {
       it("supports DROP TYPE", () => {
         testWc("DROP TYPE my_type");

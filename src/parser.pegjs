@@ -150,6 +150,7 @@ ddl_statement_postgres
   / create_trigger_stmt
   / drop_trigger_stmt
   / create_type_stmt
+  / alter_type_stmt
   / drop_type_stmt
 
 dml_statement
@@ -4193,6 +4194,21 @@ enum_type_definition
     });
   }
 
+alter_type_stmt
+  = kw:(ALTER __ TYPE __) name:entity_name actions:(__ list$alter_type_action) {
+    return loc({
+      type: "alter_type_stmt",
+      alterTypeKw: read(kw),
+      name,
+      actions: read(actions),
+    });
+  }
+
+alter_type_action
+  = alter_action_owner_to
+  / alter_action_rename
+  / alter_action_set_schema
+
 drop_type_stmt
   = kw:(DROP __ TYPE __) ifExistsKw:(if_exists __)? types:list$entity_name behaviorKw:(__ (CASCADE / RESTRICT))? {
     return loc({
@@ -6940,6 +6956,7 @@ list$alias$paren$list$column = .
 list$alias$relation_expr = .
 list$alter_action = .
 list$alter_view_action = .
+list$alter_type_action = .
 list$column = .
 list$column_assignment = .
 list$column_definition = .

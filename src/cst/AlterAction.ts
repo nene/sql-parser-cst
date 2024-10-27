@@ -114,6 +114,11 @@ export type AlterFunctionAction =
   | AlterActionDependsOnExtension
   | AlterActionNoDependsOnExtension;
 
+export type AlterTypeAction =
+  | AlterActionRename
+  | AlterActionOwnerTo
+  | AlterActionSetSchema;
+
 export interface AlterActionRename extends BaseNode {
   type: "alter_action_rename";
   renameKw: Keyword<"RENAME"> | [Keyword<"RENAME">, Keyword<"TO" | "AS">];

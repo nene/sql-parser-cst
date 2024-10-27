@@ -1,3 +1,4 @@
+import { AlterTypeAction } from "./AlterAction";
 import { BaseNode, Keyword } from "./Base";
 import { ColumnDefinition } from "./CreateTable";
 import { EntityName, ListExpr, ParenExpr } from "./Expr";
@@ -5,7 +6,7 @@ import { StringLiteral } from "./Literal";
 
 export type AllTypeNodes = AllTypeStatements | TypeDefinition;
 
-export type AllTypeStatements = CreateTypeStmt | DropTypeStmt;
+export type AllTypeStatements = CreateTypeStmt | AlterTypeStmt | DropTypeStmt;
 
 // CREATE TYPE
 export interface CreateTypeStmt extends BaseNode {
@@ -29,6 +30,15 @@ export interface EnumTypeDefinition extends BaseNode {
   values: ParenExpr<ListExpr<StringLiteral>>;
 }
 
+// ALTER TYPE
+export interface AlterTypeStmt extends BaseNode {
+  type: "alter_type_stmt";
+  alterTypeKw: [Keyword<"ALTER">, Keyword<"TYPE">];
+  name: EntityName;
+  actions: ListExpr<AlterTypeAction>;
+}
+
+// DROP TYPE
 export interface DropTypeStmt extends BaseNode {
   type: "drop_type_stmt";
   dropTypeKw: [Keyword<"DROP">, Keyword<"TYPE">];
