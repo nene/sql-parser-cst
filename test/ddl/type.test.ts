@@ -76,6 +76,10 @@ describe("type", () => {
         testWc(`ALTER TYPE address ALTER ATTRIBUTE city TYPE TEXT CASCADE`);
         testWc(`ALTER TYPE address ALTER ATTRIBUTE city TYPE TEXT RESTRICT`);
       });
+
+      it("supports multiple attribute actions", () => {
+        testWc(`ALTER TYPE address ADD ATTRIBUTE city TEXT, DROP ATTRIBUTE state`);
+      });
     });
 
     describe("DROP TYPE", () => {
