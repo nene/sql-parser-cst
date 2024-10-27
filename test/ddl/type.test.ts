@@ -20,6 +20,23 @@ describe("type", () => {
         testWc("CREATE TYPE my_enum AS ENUM ()");
       });
     });
+
+    describe("DROP TYPE", () => {
+      it("supports DROP TYPE", () => {
+        testWc("DROP TYPE my_type");
+        testWc("DROP TYPE my_schema.my_type");
+        testWc("DROP TYPE foo, bar, baz");
+      });
+
+      it("supports IF EXISTS", () => {
+        testWc("DROP TYPE IF EXISTS my_type");
+      });
+
+      it("supports CASCADE|RESTRICT", () => {
+        testWc("DROP TYPE my_type CASCADE");
+        testWc("DROP TYPE my_type RESTRICT");
+      });
+    });
   });
 
   notDialect("postgresql", () => {

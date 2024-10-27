@@ -150,6 +150,7 @@ ddl_statement_postgres
   / create_trigger_stmt
   / drop_trigger_stmt
   / create_type_stmt
+  / drop_type_stmt
 
 dml_statement
   = compound_select_stmt
@@ -4189,6 +4190,17 @@ enum_type_definition
       type: "enum_type_definition",
       asEnumKw: read(kw),
       values: read(values),
+    });
+  }
+
+drop_type_stmt
+  = kw:(DROP __ TYPE __) ifExistsKw:(if_exists __)? types:list$entity_name behaviorKw:(__ (CASCADE / RESTRICT))? {
+    return loc({
+      type: "drop_type_stmt",
+      dropTypeKw: read(kw),
+      ifExistsKw: read(ifExistsKw),
+      types,
+      behaviorKw: read(behaviorKw),
     });
   }
 
