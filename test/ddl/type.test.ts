@@ -41,7 +41,10 @@ describe("type", () => {
 
   notDialect("postgresql", () => {
     it("does not support CREATE TYPE", () => {
-      expect(() => test("CREATE TYPE my_type AS ENUM ('foo', 'bar')")).toThrowError();
+      expect(() => test("CREATE TYPE address AS (street TEXT, house INT)")).toThrowError();
+    });
+    it("does not support DROP TYPE", () => {
+      expect(() => test("DROP TYPE address")).toThrowError();
     });
   });
 });
