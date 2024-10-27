@@ -3145,6 +3145,17 @@ alter_action_add_attribute
       });
     }
 
+alter_action_drop_attribute
+  = kw:(DROP __ ATTRIBUTE __) ifKw:(if_exists __)? name:ident behaviorKw:(__ (CASCADE/RESTRICT))? {
+      return loc({
+        type: "alter_action_drop_attribute",
+        dropAttributeKw: read(kw),
+        ifExistsKw: read(ifKw),
+        name,
+        behaviorKw: read(behaviorKw),
+      });
+    }
+
 alter_column_action
   = alter_action_set_default
   / alter_action_drop_default
@@ -4272,6 +4283,7 @@ alter_type_action
   / alter_action_rename_enum_value
   / alter_action_rename_attribute
   / alter_action_add_attribute
+  / alter_action_drop_attribute
 
 drop_type_stmt
   = kw:(DROP __ TYPE __) ifExistsKw:(if_exists __)? types:list$entity_name behaviorKw:(__ (CASCADE / RESTRICT))? {

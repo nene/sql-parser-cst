@@ -61,6 +61,13 @@ describe("type", () => {
         testWc(`ALTER TYPE address ADD ATTRIBUTE city TEXT CASCADE`);
         testWc(`ALTER TYPE address ADD ATTRIBUTE city TEXT RESTRICT`);
       });
+
+      it("supports DROP ATTRIBUTE", () => {
+        testWc(`ALTER TYPE address DROP ATTRIBUTE city`);
+        testWc(`ALTER TYPE address DROP ATTRIBUTE IF EXISTS city `);
+        testWc(`ALTER TYPE address DROP ATTRIBUTE city CASCADE`);
+        testWc(`ALTER TYPE address DROP ATTRIBUTE city RESTRICT`);
+      });
     });
 
     describe("DROP TYPE", () => {
