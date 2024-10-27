@@ -44,6 +44,10 @@ describe("type", () => {
         testWc("ALTER TYPE my_enum ADD VALUE 'apple' BEFORE 'banana'");
         testWc("ALTER TYPE my_enum ADD VALUE 'pear' AFTER 'melon'");
       });
+
+      it("supports RENAME VALUE", () => {
+        testWc("ALTER TYPE my_enum RENAME VALUE 'apple' TO 'orange'");
+      });
     });
 
     describe("DROP TYPE", () => {

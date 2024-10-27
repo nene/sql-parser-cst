@@ -121,7 +121,8 @@ export type AlterTypeAction =
   | AlterActionRename
   | AlterActionOwnerTo
   | AlterActionSetSchema
-  | AlterActionAddEnumValue;
+  | AlterActionAddEnumValue
+  | AlterActionRenameEnumValue;
 
 export interface AlterActionRename extends BaseNode {
   type: "alter_action_rename";
@@ -426,6 +427,15 @@ export interface AlterActionAddEnumValuePosition extends BaseNode {
   type: "alter_action_add_enum_value_position";
   positionKw: Keyword<"BEFORE" | "AFTER">;
   value: StringLiteral;
+}
+
+// PostgreSQL
+export interface AlterActionRenameEnumValue extends BaseNode {
+  type: "alter_action_rename_enum_value";
+  renameValueKw: [Keyword<"RENAME">, Keyword<"VALUE">];
+  oldValue?: StringLiteral;
+  toKw: Keyword<"TO">;
+  newValue?: StringLiteral;
 }
 
 export type AlterColumnAction =
