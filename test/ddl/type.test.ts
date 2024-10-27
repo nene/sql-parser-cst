@@ -39,6 +39,11 @@ describe("type", () => {
         testWc("ALTER TYPE my_enum ADD VALUE 'apple'");
         testWc("ALTER TYPE my_enum ADD VALUE IF NOT EXISTS 'apple'");
       });
+
+      it("supports ADD VALUE with position", () => {
+        testWc("ALTER TYPE my_enum ADD VALUE 'apple' BEFORE 'banana'");
+        testWc("ALTER TYPE my_enum ADD VALUE 'pear' AFTER 'melon'");
+      });
     });
 
     describe("DROP TYPE", () => {

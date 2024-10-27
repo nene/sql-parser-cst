@@ -33,7 +33,8 @@ export type AllAlterActionNodes =
   | ReplicaIdentityUsingIndex
   | SetDataTypeCollateClause
   | SetDataTypeUsingClause
-  | AlterActionAddConstraintConstraintName;
+  | AlterActionAddConstraintConstraintName
+  | AlterActionAddEnumValuePosition;
 
 export type AlterTableAction =
   | AlterActionRename
@@ -416,6 +417,14 @@ export interface AlterActionAddEnumValue extends BaseNode {
   type: "alter_action_add_enum_value";
   addValueKw: [Keyword<"ADD">, Keyword<"VALUE">];
   ifNotExistsKw?: [Keyword<"IF">, Keyword<"NOT">, Keyword<"EXISTS">];
+  value: StringLiteral;
+  position?: AlterActionAddEnumValuePosition;
+}
+
+// PostgreSQL
+export interface AlterActionAddEnumValuePosition extends BaseNode {
+  type: "alter_action_add_enum_value_position";
+  positionKw: Keyword<"BEFORE" | "AFTER">;
   value: StringLiteral;
 }
 

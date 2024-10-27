@@ -68,7 +68,9 @@ export const alterActionMap: FullTransformMap<string, AllAlterActionNodes> = {
   alter_action_replica_identity: (node) =>
     show([node.replicaIdentityKw, node.identity]),
   alter_action_add_enum_value: (node) =>
-    show([node.addValueKw, node.ifNotExistsKw, node.value]),
+    show([node.addValueKw, node.ifNotExistsKw, node.value, node.position]),
+  alter_action_add_enum_value_position: (node) =>
+    show([node.positionKw, node.value]),
 
   // ALTER COLUMN ...
   alter_action_alter_column: (node) =>

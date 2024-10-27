@@ -3086,11 +3086,24 @@ alter_action_attach_partition
   }
 
 alter_action_add_enum_value
-  = kw:(ADD __ VALUE __) ifKw:(if_not_exists __)? value:string_literal {
+  = kw:(ADD __ VALUE __)
+    ifKw:(if_not_exists __)?
+    value:string_literal
+    position:(__ alter_action_add_enum_value_position)? {
+      return loc({
+        type: "alter_action_add_enum_value",
+        addValueKw: read(kw),
+        ifNotExistsKw: read(ifKw),
+        value,
+        position: read(position),
+      });
+    }
+
+alter_action_add_enum_value_position
+  = kw:((BEFORE / AFTER) __) value:string_literal {
     return loc({
-      type: "alter_action_add_enum_value",
-      addValueKw: read(kw),
-      ifNotExistsKw: read(ifKw),
+      type: "alter_action_add_enum_value_position",
+      positionKw: read(kw),
       value,
     });
   }
