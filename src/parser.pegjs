@@ -3119,6 +3119,19 @@ alter_action_rename_enum_value
     });
   }
 
+alter_action_rename_attribute
+  = kw:(RENAME __ ATTRIBUTE __) oldName:ident toKw:(__ TO __) newName:ident
+    behaviorKw:(__ (CASCADE/RESTRICT))? {
+      return loc({
+        type: "alter_action_rename_attribute",
+        renameAttributeKw: read(kw),
+        oldName,
+        toKw: read(toKw),
+        newName,
+        behaviorKw: read(behaviorKw),
+      });
+    }
+
 alter_column_action
   = alter_action_set_default
   / alter_action_drop_default
@@ -4244,6 +4257,7 @@ alter_type_action
   / alter_action_set_schema
   / alter_action_add_enum_value
   / alter_action_rename_enum_value
+  / alter_action_rename_attribute
 
 drop_type_stmt
   = kw:(DROP __ TYPE __) ifExistsKw:(if_exists __)? types:list$entity_name behaviorKw:(__ (CASCADE / RESTRICT))? {
@@ -7978,6 +7992,7 @@ ASSIGNMENT          = kw:"ASSIGNMENT"i          !ident_part { return loc(createK
 AT                  = kw:"AT"i                  !ident_part { return loc(createKeyword(kw)); }
 ATOMIC              = kw:"ATOMIC"i              !ident_part { return loc(createKeyword(kw)); }
 ATTACH              = kw:"ATTACH"i              !ident_part { return loc(createKeyword(kw)); }
+ATTRIBUTE           = kw:"ATTRIBUTE"i           !ident_part { return loc(createKeyword(kw)); }
 AUTHORIZATION       = kw:"AUTHORIZATION"i       !ident_part { return loc(createKeyword(kw)); }
 AUTO                = kw:"AUTO"i                !ident_part { return loc(createKeyword(kw)); }
 AUTO_INCREMENT      = kw:"AUTO_INCREMENT"i      !ident_part { return loc(createKeyword(kw)); }

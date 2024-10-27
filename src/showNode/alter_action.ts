@@ -73,6 +73,14 @@ export const alterActionMap: FullTransformMap<string, AllAlterActionNodes> = {
     show([node.positionKw, node.value]),
   alter_action_rename_enum_value: (node) =>
     show([node.renameValueKw, node.oldValue, node.toKw, node.newValue]),
+  alter_action_rename_attribute: (node) =>
+    show([
+      node.renameAttributeKw,
+      node.oldName,
+      node.toKw,
+      node.newName,
+      node.behaviorKw,
+    ]),
 
   // ALTER COLUMN ...
   alter_action_alter_column: (node) =>

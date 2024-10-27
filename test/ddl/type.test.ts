@@ -48,6 +48,12 @@ describe("type", () => {
       it("supports RENAME VALUE", () => {
         testWc("ALTER TYPE my_enum RENAME VALUE 'apple' TO 'orange'");
       });
+
+      it("supports RENAME ATTRIBUTE", () => {
+        testWc("ALTER TYPE address RENAME ATTRIBUTE city TO town");
+        testWc("ALTER TYPE address RENAME ATTRIBUTE city TO town CASCADE");
+        testWc("ALTER TYPE address RENAME ATTRIBUTE city TO town RESTRICT");
+      });
     });
 
     describe("DROP TYPE", () => {
