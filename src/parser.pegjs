@@ -152,6 +152,7 @@ ddl_statement_postgres
   / create_type_stmt
   / alter_type_stmt
   / drop_type_stmt
+  / create_domain_stmt
 
 dml_statement
   = compound_select_stmt
@@ -4314,6 +4315,24 @@ drop_type_stmt
 /**
  * ------------------------------------------------------------------------------------ *
  *                                                                                      *
+ * CREATE/ALTER/DROP DOMAIN                                                             *
+ *                                                                                      *
+ * ------------------------------------------------------------------------------------ *
+ */
+create_domain_stmt
+  = kw:(CREATE __ DOMAIN __) name:(entity_name __) asKw:(AS __)? dataType:data_type {
+    return loc({
+      type: "create_domain_stmt",
+      createDomainKw: read(kw),
+      name: read(name),
+      asKw: read(asKw),
+      dataType,
+    });
+  }
+
+/**
+ * ------------------------------------------------------------------------------------ *
+ *                                                                                      *
  * ANALYZE                                                                              *
  *                                                                                      *
  * ------------------------------------------------------------------------------------ *
@@ -8149,6 +8168,7 @@ DISTINCT            = kw:"DISTINCT"i            !ident_part { return loc(createK
 DISTINCTROW         = kw:"DISTINCTROW"i         !ident_part { return loc(createKeyword(kw)); }
 DIV                 = kw:"DIV"i                 !ident_part { return loc(createKeyword(kw)); }
 DO                  = kw:"DO"i                  !ident_part { return loc(createKeyword(kw)); }
+DOMAIN              = kw:"DOMAIN"i              !ident_part { return loc(createKeyword(kw)); }
 DOUBLE              = kw:"DOUBLE"i              !ident_part { return loc(createKeyword(kw)); }
 DOW                 = kw:"DOW"i                 !ident_part { return loc(createKeyword(kw)); }
 DOY                 = kw:"DOY"i                 !ident_part { return loc(createKeyword(kw)); }
