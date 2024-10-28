@@ -32,6 +32,23 @@ describe("domain", () => {
         testWc(`CREATE DOMAIN foo AS INT CONSTRAINT positive CHECK (foo > 0)`);
       });
     });
+
+    describe("DROP DOMAIN", () => {
+      it("supports DROP DOMAIN", () => {
+        testWc("DROP DOMAIN my_domain");
+        testWc("DROP DOMAIN my_schema.my_domain");
+        testWc("DROP DOMAIN foo, bar, baz");
+      });
+
+      it("supports IF EXISTS", () => {
+        testWc("DROP DOMAIN IF EXISTS my_domain");
+      });
+
+      it("supports CASCADE|RESTRICT", () => {
+        testWc("DROP DOMAIN my_domain CASCADE");
+        testWc("DROP DOMAIN my_domain RESTRICT");
+      });
+    });
   });
 
   notDialect("postgresql", () => {

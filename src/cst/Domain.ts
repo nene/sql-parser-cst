@@ -1,11 +1,11 @@
 import { BaseNode, Keyword } from "./Base";
 import { Constraint, DomainConstraint } from "./Constraint";
 import { DataType } from "./DataType";
-import { EntityName } from "./Expr";
+import { EntityName, ListExpr } from "./Expr";
 
 export type AllDomainNodes = AllDomainStatements;
 
-export type AllDomainStatements = CreateDomainStmt;
+export type AllDomainStatements = CreateDomainStmt | DropDomainStmt;
 
 // CREATE DOMAIN
 export interface CreateDomainStmt extends BaseNode {
@@ -15,4 +15,13 @@ export interface CreateDomainStmt extends BaseNode {
   asKw?: Keyword<"AS">;
   dataType: DataType;
   constraints: (Constraint<DomainConstraint> | DomainConstraint)[];
+}
+
+// DROP DOMAIN
+export interface DropDomainStmt extends BaseNode {
+  type: "drop_domain_stmt";
+  dropDomainKw: [Keyword<"DROP">, Keyword<"DOMAIN">];
+  ifExistsKw?: [Keyword<"IF">, Keyword<"EXISTS">];
+  domains: ListExpr<EntityName>;
+  behaviorKw?: Keyword<"CASCADE" | "RESTRICT">;
 }

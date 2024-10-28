@@ -153,6 +153,7 @@ ddl_statement_postgres
   / alter_type_stmt
   / drop_type_stmt
   / create_domain_stmt
+  / drop_domain_stmt
 
 dml_statement
   = compound_select_stmt
@@ -4331,6 +4332,17 @@ create_domain_stmt
         constraints: constraints.map(read),
       });
     }
+
+drop_domain_stmt
+  = kw:(DROP __ DOMAIN __) ifExistsKw:(if_exists __)? domains:list$entity_name behaviorKw:(__ (CASCADE / RESTRICT))? {
+    return loc({
+      type: "drop_domain_stmt",
+      dropDomainKw: read(kw),
+      ifExistsKw: read(ifExistsKw),
+      domains,
+      behaviorKw: read(behaviorKw),
+    });
+  }
 
 /**
  * ------------------------------------------------------------------------------------ *

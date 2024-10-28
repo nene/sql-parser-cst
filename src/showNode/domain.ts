@@ -12,4 +12,7 @@ export const domainMap: FullTransformMap<string, AllDomainNodes> = {
       node.dataType,
       node.constraints,
     ]),
+  // DROP DOMAIN
+  drop_domain_stmt: (node) =>
+    show([node.dropDomainKw, node.ifExistsKw, node.domains, node.behaviorKw]),
 };
