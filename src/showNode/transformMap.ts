@@ -7,6 +7,7 @@ import { createTableMap } from "./create_table";
 import { dataTypeMap } from "./data_type";
 import { dclMap } from "./dcl";
 import { deleteMap } from "./delete";
+import { domainMap } from "./domain";
 import { dropTableMap } from "./drop_table";
 import { explainMap } from "./explain";
 import { exprMap } from "./expr";
@@ -57,13 +58,14 @@ export const transformMap: FullTransformMap<string> = {
   ...dropTableMap,
   ...renameTableMap,
 
-  // CREATE/DROP/ALTER SCHEMA/VIEW/INDEX/TRIGGER/SEQUENCE/TYPE
+  // CREATE/DROP/ALTER SCHEMA/VIEW/INDEX/TRIGGER/SEQUENCE/TYPE/DOMAIN
   ...schemaMap,
   ...viewMap,
   ...indexMap,
   ...triggerMap,
   ...sequenceMap,
   ...typeMap,
+  ...domainMap,
 
   // CREATE/DROP FUNCTION/PROCEDURE
   ...functionMap,

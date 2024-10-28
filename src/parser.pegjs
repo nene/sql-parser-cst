@@ -152,6 +152,9 @@ ddl_statement_postgres
   / create_type_stmt
   / alter_type_stmt
   / drop_type_stmt
+  / create_domain_stmt
+  / alter_domain_stmt
+  / drop_domain_stmt
 
 dml_statement
   = compound_select_stmt
@@ -4314,6 +4317,60 @@ drop_type_stmt
 /**
  * ------------------------------------------------------------------------------------ *
  *                                                                                      *
+ * CREATE/ALTER/DROP DOMAIN                                                             *
+ *                                                                                      *
+ * ------------------------------------------------------------------------------------ *
+ */
+create_domain_stmt
+  = kw:(CREATE __ DOMAIN __) name:(entity_name __) asKw:(AS __)? dataType:data_type
+    constraints:(__ column_constraint)* {
+      return loc({
+        type: "create_domain_stmt",
+        createDomainKw: read(kw),
+        name: read(name),
+        asKw: read(asKw),
+        dataType,
+        constraints: constraints.map(read),
+      });
+    }
+
+alter_domain_stmt
+  = kw:(ALTER __ DOMAIN __) name:entity_name action:(__ alter_domain_action) {
+    return loc({
+      type: "alter_domain_stmt",
+      alterDomainKw: read(kw),
+      name,
+      action: read(action),
+    });
+  }
+
+alter_domain_action
+  = alter_action_owner_to
+  / alter_action_rename
+  / alter_action_set_schema
+  / alter_action_set_default
+  / alter_action_drop_default
+  / alter_action_set_not_null
+  / alter_action_drop_not_null
+  / alter_action_rename_constraint
+  / alter_action_validate_constraint
+  / alter_action_drop_constraint
+  / alter_action_add_constraint
+
+drop_domain_stmt
+  = kw:(DROP __ DOMAIN __) ifExistsKw:(if_exists __)? domains:list$entity_name behaviorKw:(__ (CASCADE / RESTRICT))? {
+    return loc({
+      type: "drop_domain_stmt",
+      dropDomainKw: read(kw),
+      ifExistsKw: read(ifExistsKw),
+      domains,
+      behaviorKw: read(behaviorKw),
+    });
+  }
+
+/**
+ * ------------------------------------------------------------------------------------ *
+ *                                                                                      *
  * ANALYZE                                                                              *
  *                                                                                      *
  * ------------------------------------------------------------------------------------ *
@@ -8149,6 +8206,7 @@ DISTINCT            = kw:"DISTINCT"i            !ident_part { return loc(createK
 DISTINCTROW         = kw:"DISTINCTROW"i         !ident_part { return loc(createKeyword(kw)); }
 DIV                 = kw:"DIV"i                 !ident_part { return loc(createKeyword(kw)); }
 DO                  = kw:"DO"i                  !ident_part { return loc(createKeyword(kw)); }
+DOMAIN              = kw:"DOMAIN"i              !ident_part { return loc(createKeyword(kw)); }
 DOUBLE              = kw:"DOUBLE"i              !ident_part { return loc(createKeyword(kw)); }
 DOW                 = kw:"DOW"i                 !ident_part { return loc(createKeyword(kw)); }
 DOY                 = kw:"DOY"i                 !ident_part { return loc(createKeyword(kw)); }

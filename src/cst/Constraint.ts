@@ -104,6 +104,13 @@ export type ColumnConstraint =
   | BigqueryOptions
   | PostgresqlOptions;
 
+export type DomainConstraint =
+  | ConstraintCollate
+  | ConstraintDefault
+  | ConstraintNull
+  | ConstraintNotNull
+  | ConstraintCheck;
+
 export interface ConstraintPrimaryKey extends BaseNode {
   type: "constraint_primary_key";
   primaryKeyKw: [Keyword<"PRIMARY">, Keyword<"KEY">] | Keyword<"KEY">;
