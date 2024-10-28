@@ -4320,15 +4320,17 @@ drop_type_stmt
  * ------------------------------------------------------------------------------------ *
  */
 create_domain_stmt
-  = kw:(CREATE __ DOMAIN __) name:(entity_name __) asKw:(AS __)? dataType:data_type {
-    return loc({
-      type: "create_domain_stmt",
-      createDomainKw: read(kw),
-      name: read(name),
-      asKw: read(asKw),
-      dataType,
-    });
-  }
+  = kw:(CREATE __ DOMAIN __) name:(entity_name __) asKw:(AS __)? dataType:data_type
+    constraints:(__ column_constraint)* {
+      return loc({
+        type: "create_domain_stmt",
+        createDomainKw: read(kw),
+        name: read(name),
+        asKw: read(asKw),
+        dataType,
+        constraints: constraints.map(read),
+      });
+    }
 
 /**
  * ------------------------------------------------------------------------------------ *

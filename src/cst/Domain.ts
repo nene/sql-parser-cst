@@ -1,4 +1,5 @@
 import { BaseNode, Keyword } from "./Base";
+import { Constraint, DomainConstraint } from "./Constraint";
 import { DataType } from "./DataType";
 import { EntityName } from "./Expr";
 
@@ -13,4 +14,5 @@ export interface CreateDomainStmt extends BaseNode {
   name: EntityName;
   asKw?: Keyword<"AS">;
   dataType: DataType;
+  constraints: (Constraint<DomainConstraint> | DomainConstraint)[];
 }

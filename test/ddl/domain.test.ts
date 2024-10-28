@@ -11,6 +11,26 @@ describe("domain", () => {
       it("supports CREATE DOMAIN without AS", () => {
         testWc("CREATE DOMAIN my_domain TEXT");
       });
+
+      it("supports COLLATE", () => {
+        testWc(`CREATE DOMAIN my_domain AS TEXT COLLATE "de_DE"`);
+      });
+
+      it("supports DEFAULT", () => {
+        testWc(`CREATE DOMAIN my_domain AS TEXT DEFAULT ''`);
+      });
+
+      it("supports constraints", () => {
+        testWc(`CREATE DOMAIN foo AS INT NOT NULL`);
+        testWc(`CREATE DOMAIN foo AS INT NULL`);
+        testWc(`CREATE DOMAIN foo AS INT CHECK (foo > 0)`);
+        testWc(`CREATE DOMAIN foo AS INT NOT NULL CHECK (foo < 100)`);
+      });
+
+      it("supports named constraints", () => {
+        testWc(`CREATE DOMAIN foo AS INT CONSTRAINT exists NOT NULL`);
+        testWc(`CREATE DOMAIN foo AS INT CONSTRAINT positive CHECK (foo > 0)`);
+      });
     });
   });
 
