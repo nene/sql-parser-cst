@@ -56,6 +56,21 @@ describe("domain", () => {
         testWc("ALTER DOMAIN my_domain SET NOT NULL");
         testWc("ALTER DOMAIN my_domain DROP NOT NULL");
       });
+
+      it("supports RENAME CONSTRAINT", () => {
+        testWc("ALTER DOMAIN my_domain RENAME CONSTRAINT foo TO bar");
+      });
+
+      it("supports VALIDATE CONSTRAINT", () => {
+        testWc("ALTER DOMAIN my_domain VALIDATE CONSTRAINT is_positive");
+      });
+
+      it("supports DROP CONSTRAINT", () => {
+        testWc("ALTER DOMAIN my_domain DROP CONSTRAINT foo");
+        testWc("ALTER DOMAIN my_domain DROP CONSTRAINT IF EXISTS foo");
+        testWc("ALTER DOMAIN my_domain DROP CONSTRAINT foo CASCADE");
+        testWc("ALTER DOMAIN my_domain DROP CONSTRAINT foo RESTRICT");
+      });
     });
 
     describe("DROP DOMAIN", () => {

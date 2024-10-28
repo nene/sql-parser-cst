@@ -4352,6 +4352,9 @@ alter_domain_action
   / alter_action_drop_default
   / alter_action_set_not_null
   / alter_action_drop_not_null
+  / alter_action_rename_constraint
+  / alter_action_validate_constraint
+  / alter_action_drop_constraint
 
 drop_domain_stmt
   = kw:(DROP __ DOMAIN __) ifExistsKw:(if_exists __)? domains:list$entity_name behaviorKw:(__ (CASCADE / RESTRICT))? {

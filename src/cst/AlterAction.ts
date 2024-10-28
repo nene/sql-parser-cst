@@ -140,7 +140,10 @@ export type AlterDomainAction =
   | AlterActionSetDefault
   | AlterActionDropDefault
   | AlterActionSetNotNull
-  | AlterActionDropNotNull;
+  | AlterActionDropNotNull
+  | AlterActionRenameConstraint
+  | AlterActionValidateConstraint
+  | AlterActionDropConstraint;
 
 export interface AlterActionRename extends BaseNode {
   type: "alter_action_rename";
