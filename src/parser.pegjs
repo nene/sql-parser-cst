@@ -153,6 +153,7 @@ ddl_statement_postgres
   / alter_type_stmt
   / drop_type_stmt
   / create_domain_stmt
+  / alter_domain_stmt
   / drop_domain_stmt
 
 dml_statement
@@ -4332,6 +4333,25 @@ create_domain_stmt
         constraints: constraints.map(read),
       });
     }
+
+alter_domain_stmt
+  = kw:(ALTER __ DOMAIN __) name:entity_name action:(__ alter_domain_action) {
+    return loc({
+      type: "alter_domain_stmt",
+      alterDomainKw: read(kw),
+      name,
+      action: read(action),
+    });
+  }
+
+alter_domain_action
+  = alter_action_owner_to
+  / alter_action_rename
+  / alter_action_set_schema
+  / alter_action_set_default
+  / alter_action_drop_default
+  / alter_action_set_not_null
+  / alter_action_drop_not_null
 
 drop_domain_stmt
   = kw:(DROP __ DOMAIN __) ifExistsKw:(if_exists __)? domains:list$entity_name behaviorKw:(__ (CASCADE / RESTRICT))? {

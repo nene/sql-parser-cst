@@ -33,6 +33,7 @@ export type AllAlterActionNodes =
   | AlterIndexAction
   | AlterFunctionAction
   | AlterTypeAction
+  | AlterDomainAction
   | ToggleItem
   | ReplicaIdentityUsingIndex
   | SetDataTypeCollateClause
@@ -131,6 +132,15 @@ export type AlterTypeAction =
   | AlterActionAddAttribute
   | AlterActionDropAttribute
   | AlterActionAlterAttribute;
+
+export type AlterDomainAction =
+  | AlterActionRename
+  | AlterActionOwnerTo
+  | AlterActionSetSchema
+  | AlterActionSetDefault
+  | AlterActionDropDefault
+  | AlterActionSetNotNull
+  | AlterActionDropNotNull;
 
 export interface AlterActionRename extends BaseNode {
   type: "alter_action_rename";

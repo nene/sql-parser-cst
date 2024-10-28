@@ -33,6 +33,31 @@ describe("domain", () => {
       });
     });
 
+    describe("ALTER DOMAIN", () => {
+      it("supports RENAME TO", () => {
+        testWc("ALTER DOMAIN my_domain RENAME TO new_domain");
+        testWc("ALTER DOMAIN my_schema.my_domain RENAME TO new_domain");
+      });
+
+      it("supports SET SCHEMA", () => {
+        testWc("ALTER DOMAIN my_domain SET SCHEMA new_schema");
+      });
+
+      it("supports OWNER TO", () => {
+        testWc("ALTER DOMAIN my_domain OWNER TO new_owner");
+      });
+
+      it("supports SET/DROP DEFAULT", () => {
+        testWc("ALTER DOMAIN my_domain SET DEFAULT 0");
+        testWc("ALTER DOMAIN my_domain DROP DEFAULT");
+      });
+
+      it("supports SET/DROP NOT NULL", () => {
+        testWc("ALTER DOMAIN my_domain SET NOT NULL");
+        testWc("ALTER DOMAIN my_domain DROP NOT NULL");
+      });
+    });
+
     describe("DROP DOMAIN", () => {
       it("supports DROP DOMAIN", () => {
         testWc("DROP DOMAIN my_domain");

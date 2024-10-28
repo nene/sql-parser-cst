@@ -1,3 +1,4 @@
+import { AlterDomainAction } from "./AlterAction";
 import { BaseNode, Keyword } from "./Base";
 import { Constraint, DomainConstraint } from "./Constraint";
 import { DataType } from "./DataType";
@@ -5,7 +6,10 @@ import { EntityName, ListExpr } from "./Expr";
 
 export type AllDomainNodes = AllDomainStatements;
 
-export type AllDomainStatements = CreateDomainStmt | DropDomainStmt;
+export type AllDomainStatements =
+  | CreateDomainStmt
+  | AlterDomainStmt
+  | DropDomainStmt;
 
 // CREATE DOMAIN
 export interface CreateDomainStmt extends BaseNode {
@@ -15,6 +19,14 @@ export interface CreateDomainStmt extends BaseNode {
   asKw?: Keyword<"AS">;
   dataType: DataType;
   constraints: (Constraint<DomainConstraint> | DomainConstraint)[];
+}
+
+// ALTER DOMAIN
+export interface AlterDomainStmt extends BaseNode {
+  type: "alter_domain_stmt";
+  alterDomainKw: [Keyword<"ALTER">, Keyword<"DOMAIN">];
+  name: EntityName;
+  action: AlterDomainAction;
 }
 
 // DROP DOMAIN
