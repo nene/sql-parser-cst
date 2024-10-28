@@ -57,6 +57,12 @@ describe("domain", () => {
         testWc("ALTER DOMAIN my_domain DROP NOT NULL");
       });
 
+      it("supports ADD CONSTRAINT", () => {
+        testWc("ALTER DOMAIN foo ADD CONSTRAINT is_positive CHECK (foo > 0)");
+        testWc("ALTER DOMAIN foo ADD CONSTRAINT is_positive CHECK (foo > 0) NOT VALID");
+        testWc("ALTER DOMAIN foo ADD CHECK (foo > 0)");
+      });
+
       it("supports RENAME CONSTRAINT", () => {
         testWc("ALTER DOMAIN my_domain RENAME CONSTRAINT foo TO bar");
       });
