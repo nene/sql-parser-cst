@@ -339,7 +339,7 @@ Generate new release with `yarn publish`.
 To generate a changelog use the `yarn changelog` command:
 
 ```
-VERSION=v0.27.0 yarn changelog`
+VERSION=v0.27.0 yarn changelog
 ```
 
 ## Acknowledgements
