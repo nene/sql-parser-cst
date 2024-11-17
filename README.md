@@ -196,6 +196,10 @@ Parses SQL string and returns the CST tree. Takes the following options:
   By default a query like `SELECT * FROM tbl WHERE id = ?` will result in parse error.
   To fix it, use `paramTypes: ["?"]` config option.
 - **filename**: `string` Name of the SQL file. This is only used for error-reporting.
+- **acceptUnsupportedGrammar**: `boolean` When enabled, code that would otherwise fail to parse,
+  gets parsed as `unsupported_grammar_stmt` node. That will consume all text until the next semicolon.
+  After the semicolon, parsing will resume as normal. This option is primarily intended as a workaround
+  for using the parser with an SQL dialect that's not yet 100% supported.
 
 When parsing fails with syntax error, it throws `FormattedSyntaxError` which contains a message like:
 
