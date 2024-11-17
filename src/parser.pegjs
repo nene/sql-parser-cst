@@ -39,6 +39,7 @@
     isPostgresql,
     hasParamType,
     isEnabledWhitespace,
+    isAcceptUnsupportedGrammar,
   } from "./utils/parserState";
   import { isReservedKeyword } from "./utils/keywords";
   import { loc } from "./utils/loc";
@@ -70,11 +71,13 @@ statement
   / &bigquery x:statement_bigquery { return x; }
   / &postgres x:statement_postgres { return x; }
   / transaction_statement // math BEGIN transaction after BEGIN..END block
+  / &{ return isAcceptUnsupportedGrammar(); } x:unsupported_grammar_stmt { return x; }
 
 statement_sqlite
   = analyze_stmt
   / explain_stmt
   / sqlite_statement
+
 
 statement_mysql
   = proc_statement
@@ -8048,6 +8051,13 @@ mysql = &{ return isMysql() || isMariadb(); } // 99% of MariaDB and MySQL syntax
 only_mysql = &{ return isMysql(); } // 99% of MariaDB and MySQL syntax is the same
 only_mariadb = &{ return isMariadb(); } // 99% of MariaDB and MySQL syntax is the same
 postgres = &{ return isPostgresql(); }
+
+unsupported_grammar_stmt = [^;]+ {
+  return loc({
+    type: "unsupported_grammar_stmt",
+    text: text(),
+  });
+}
 
 /**
  * Generic keyword rules

@@ -32,3 +32,6 @@ export const isEnabledWhitespace = (ws: Whitespace) =>
     (ws.type === "line_comment" || ws.type === "block_comment")) ||
   (getOptions().includeNewlines && ws.type === "newline") ||
   (getOptions().includeSpaces && ws.type === "space");
+
+export const isAcceptUnsupportedGrammar = () =>
+  getOptions().acceptUnsupportedGrammar;

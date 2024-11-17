@@ -38,4 +38,32 @@ describe("statement", () => {
       }
     `);
   });
+
+  describe("with acceptUnsupportedGrammar:true", () => {
+    it("does not produce a syntax error", () => {
+      test("INSERT TODAYS PUZZLE 123;", { acceptUnsupportedGrammar: true });
+    });
+
+    it("parses the code into unsupported_grammar_stmt nodes", () => {
+      expect(parse("INSERT TODAYS PUZZLE 123; WHOOPSIE DAISY;", { acceptUnsupportedGrammar: true }))
+        .toMatchInlineSnapshot(`
+        {
+          "statements": [
+            {
+              "text": "INSERT TODAYS PUZZLE 123",
+              "type": "unsupported_grammar_stmt",
+            },
+            {
+              "text": "WHOOPSIE DAISY",
+              "type": "unsupported_grammar_stmt",
+            },
+            {
+              "type": "empty",
+            },
+          ],
+          "type": "program",
+        }
+      `);
+    });
+  });
 });

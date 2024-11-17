@@ -24,6 +24,7 @@ export type ParserOptions = {
   includeSpaces?: boolean;
   includeRange?: boolean;
   paramTypes?: ParamType[];
+  acceptUnsupportedGrammar?: boolean;
   /** SQL file name, used when reporting syntax errors */
   filename?: string;
 };

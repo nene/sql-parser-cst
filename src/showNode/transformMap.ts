@@ -37,6 +37,7 @@ import { bigqueryMap } from "./dialects/bigquery";
 import { postgresqlMap } from "./dialects/postgresql";
 import { sqliteMap } from "./dialects/sqlite";
 import { mysqlMap } from "./dialects/mysql";
+import { unsupportedGrammarMap } from "./unsupported_grammar";
 
 export const transformMap: FullTransformMap<string> = {
   ...baseMap,
@@ -90,4 +91,6 @@ export const transformMap: FullTransformMap<string> = {
   // Expressions
   ...exprMap,
   ...dataTypeMap,
+
+  ...unsupportedGrammarMap,
 };
