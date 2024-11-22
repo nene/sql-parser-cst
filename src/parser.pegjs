@@ -2746,7 +2746,7 @@ alter_action_drop_column
     }
 
 alter_action_rename
-  = kw:(rename_table_kw __) t:entity_name {
+  = kw:(rename_action_kw __) t:entity_name {
     return loc({
       type: "alter_action_rename",
       renameKw: read(kw),
@@ -2754,7 +2754,7 @@ alter_action_rename
     });
   }
 
-rename_table_kw
+rename_action_kw
   = kw:(RENAME __ TO) { return read(kw); }
   / kw:(RENAME __ AS) &only_mysql { return read(kw); }
   / kw:RENAME &mysql { return kw; }
@@ -4467,6 +4467,7 @@ alter_role_stmt
 
 alter_role_action
   = alter_action_with_role_options
+  / alter_action_rename
 
 alter_action_with_role_options
   = kw:WITH options:(__ role_option)+ {
