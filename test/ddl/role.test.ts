@@ -78,6 +78,10 @@ describe("role", () => {
       it(`supports multiple options`, () => {
         testWc(`ALTER ROLE my_role WITH LOGIN CREATEDB NOREPLICATION`);
       });
+
+      it(`supports RENAME TO`, () => {
+        testWc(`ALTER ROLE my_role RENAME TO new_role`);
+      });
     });
 
     describe("DROP ROLE", () => {

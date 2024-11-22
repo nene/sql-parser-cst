@@ -148,7 +148,7 @@ export type AlterDomainAction =
   | AlterActionDropConstraint
   | AlterActionAddConstraint;
 
-export type AlterRoleAction = AlterActionWithRoleOptions;
+export type AlterRoleAction = AlterActionWithRoleOptions | AlterActionRename;
 
 export interface AlterActionRename extends BaseNode {
   type: "alter_action_rename";
