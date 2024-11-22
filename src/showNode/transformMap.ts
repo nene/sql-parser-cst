@@ -19,6 +19,7 @@ import { preparedStatementsMap } from "./prepared_statements";
 import { proceduralLanguageMap } from "./procedural_language";
 import { procedureMap } from "./procedure";
 import { procClauseMap } from "./proc_clause";
+import { roleMap } from "./role";
 import { schemaMap } from "./schema";
 import { selectMap } from "./select";
 import { sequenceMap } from "./sequence";
@@ -59,7 +60,7 @@ export const transformMap: FullTransformMap<string> = {
   ...dropTableMap,
   ...renameTableMap,
 
-  // CREATE/DROP/ALTER SCHEMA/VIEW/INDEX/TRIGGER/SEQUENCE/TYPE/DOMAIN
+  // CREATE/DROP/ALTER SCHEMA/VIEW/INDEX/TRIGGER/SEQUENCE/TYPE/DOMAIN/ROLE
   ...schemaMap,
   ...viewMap,
   ...indexMap,
@@ -67,6 +68,7 @@ export const transformMap: FullTransformMap<string> = {
   ...sequenceMap,
   ...typeMap,
   ...domainMap,
+  ...roleMap,
 
   // CREATE/DROP FUNCTION/PROCEDURE
   ...functionMap,
