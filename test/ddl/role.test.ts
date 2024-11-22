@@ -23,6 +23,12 @@ describe("role", () => {
         "NOREPLICATION",
         "BYPASSRLS",
         "NOBYPASSRLS",
+        "CONNECTION LIMIT 5",
+        "PASSWORD 'mypass123'",
+        "ENCRYPTED PASSWORD 'mypass123'",
+        "PASSWORD NULL",
+        "VALID UNTIL '2021-01-01'",
+        "SYSID 25",
       ].forEach((keyword) => {
         it(`supports CREATE ROLE ... [WITH] ${keyword}`, () => {
           testWc(`CREATE ROLE my_role WITH ${keyword}`);

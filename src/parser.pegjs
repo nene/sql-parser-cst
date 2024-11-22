@@ -4392,6 +4392,10 @@ create_role_stmt
 
 role_option
   = role_option_keyword
+  / role_option_connection_limit
+  / role_option_password
+  / role_option_valid_until
+  / role_option_sysid
 
 role_option_keyword
   = kw:(
@@ -4404,6 +4408,31 @@ role_option_keyword
     BYPASSRLS / NOBYPASSRLS
   ) {
     return loc({ type: "role_option_keyword", kw: read(kw) });
+  }
+
+role_option_connection_limit
+  = kw:(CONNECTION __ LIMIT __) limit:number_literal {
+    return loc({ type: "role_option_connection_limit", connectionLimitKw: read(kw), limit });
+  }
+
+role_option_password
+  = encryptedKw:(ENCRYPTED __)? kw:(PASSWORD __) password:(string_literal / null_literal) {
+    return loc({
+      type: "role_option_password",
+      encryptedKw: read(encryptedKw),
+      passwordKw: read(kw),
+      password,
+    });
+  }
+
+role_option_valid_until
+  = kw:(VALID __ UNTIL __) timestamp:string_literal {
+    return loc({ type: "role_option_valid_until", validUntilKw: read(kw), timestamp });
+  }
+
+role_option_sysid
+  = kw:(SYSID __) sysId:number_literal {
+    return loc({ type: "role_option_sysid", sysIdKw: read(kw), sysId });
   }
 
 /**
@@ -8268,6 +8297,7 @@ ELSE                = kw:"ELSE"i                !ident_part { return loc(createK
 ELSEIF              = kw:"ELSEIF"i              !ident_part { return loc(createKeyword(kw)); }
 ENABLE              = kw:"ENABLE"i              !ident_part { return loc(createKeyword(kw)); }
 ENCLOSED            = kw:"ENCLOSED"i            !ident_part { return loc(createKeyword(kw)); }
+ENCRYPTED           = kw:"ENCRYPTED"i           !ident_part { return loc(createKeyword(kw)); }
 ENCRYPTION          = kw:"ENCRYPTION"i          !ident_part { return loc(createKeyword(kw)); }
 END                 = kw:"END"i                 !ident_part { return loc(createKeyword(kw)); }
 ENFORCED            = kw:"ENFORCED"i            !ident_part { return loc(createKeyword(kw)); }
@@ -8618,6 +8648,7 @@ SUNDAY              = kw:"SUNDAY"i              !ident_part { return loc(createK
 SUPERUSER           = kw:"SUPERUSER"i           !ident_part { return loc(createKeyword(kw)); }
 SUPPORT             = kw:"SUPPORT"i             !ident_part { return loc(createKeyword(kw)); }
 SYMMETRIC           = kw:"SYMMETRIC"i           !ident_part { return loc(createKeyword(kw)); }
+SYSID               = kw:"SYSID"i               !ident_part { return loc(createKeyword(kw)); }
 SYSTEM              = kw:"SYSTEM"i              !ident_part { return loc(createKeyword(kw)); }
 SYSTEM_TIME         = kw:"SYSTEM_TIME"i         !ident_part { return loc(createKeyword(kw)); }
 SYSTEM_USER         = kw:"SYSTEM_USER"i         !ident_part { return loc(createKeyword(kw)); }
