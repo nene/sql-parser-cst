@@ -4395,6 +4395,9 @@ role_option
   / role_option_connection_limit
   / role_option_password
   / role_option_valid_until
+  / role_option_in_role
+  / role_option_role
+  / role_option_admin
   / role_option_sysid
 
 role_option_keyword
@@ -4428,6 +4431,21 @@ role_option_password
 role_option_valid_until
   = kw:(VALID __ UNTIL __) timestamp:string_literal {
     return loc({ type: "role_option_valid_until", validUntilKw: read(kw), timestamp });
+  }
+
+role_option_in_role
+  = kw:(IN __ ROLE __) names:list$entity_name {
+    return loc({ type: "role_option_in_role", inRoleKw: read(kw), names });
+  }
+
+role_option_role
+  = kw:(ROLE __) names:list$entity_name {
+    return loc({ type: "role_option_role", roleKw: read(kw), names });
+  }
+
+role_option_admin
+  = kw:(ADMIN __) names:list$entity_name {
+    return loc({ type: "role_option_admin", adminKw: read(kw), names });
   }
 
 role_option_sysid
@@ -8147,6 +8165,7 @@ ABORT               = kw:"ABORT"i               !ident_part { return loc(createK
 ACCESS              = kw:"ACCESS"i              !ident_part { return loc(createKeyword(kw)); }
 ACTION              = kw:"ACTION"i              !ident_part { return loc(createKeyword(kw)); }
 ADD                 = kw:"ADD"i                 !ident_part { return loc(createKeyword(kw)); }
+ADMIN               = kw:"ADMIN"i               !ident_part { return loc(createKeyword(kw)); }
 AFTER               = kw:"AFTER"i               !ident_part { return loc(createKeyword(kw)); }
 AGAINST             = kw:"AGAINST"              !ident_part { return loc(createKeyword(kw)); }
 ALGORITHM           = kw:"ALGORITHM"i           !ident_part { return loc(createKeyword(kw)); }

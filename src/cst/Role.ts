@@ -1,5 +1,5 @@
 import { BaseNode, Keyword } from "./Base";
-import { EntityName } from "./Expr";
+import { EntityName, ListExpr } from "./Expr";
 import { NullLiteral, NumberLiteral, StringLiteral } from "./Literal";
 
 export type AllRoleNodes = AllRoleStatements | RoleOption;
@@ -20,6 +20,9 @@ export type RoleOption =
   | RoleOptionConnectionLimit
   | RoleOptionPassword
   | RoleOptionValidUntil
+  | RoleOptionInRole
+  | RoleOptionRole
+  | RoleOptionAdmin
   | RoleOptionSysId;
 
 export interface RoleOptionKeyword extends BaseNode {
@@ -59,6 +62,24 @@ export interface RoleOptionValidUntil extends BaseNode {
   type: "role_option_valid_until";
   validUntilKw: [Keyword<"VALID">, Keyword<"UNTIL">];
   timestamp: StringLiteral;
+}
+
+export interface RoleOptionInRole extends BaseNode {
+  type: "role_option_in_role";
+  inRoleKw: [Keyword<"IN">, Keyword<"ROLE">];
+  names: ListExpr<EntityName>;
+}
+
+export interface RoleOptionRole extends BaseNode {
+  type: "role_option_role";
+  roleKw: Keyword<"ROLE">;
+  names: ListExpr<EntityName>;
+}
+
+export interface RoleOptionAdmin extends BaseNode {
+  type: "role_option_admin";
+  adminKw: Keyword<"ADMIN">;
+  names: ListExpr<EntityName>;
 }
 
 export interface RoleOptionSysId extends BaseNode {

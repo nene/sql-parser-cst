@@ -12,5 +12,8 @@ export const roleMap: FullTransformMap<string, AllRoleNodes> = {
   role_option_password: (node) =>
     show([node.encryptedKw, node.passwordKw, node.password]),
   role_option_valid_until: (node) => show([node.validUntilKw, node.timestamp]),
+  role_option_in_role: (node) => show([node.inRoleKw, node.names]),
+  role_option_role: (node) => show([node.roleKw, node.names]),
+  role_option_admin: (node) => show([node.adminKw, node.names]),
   role_option_sysid: (node) => show([node.sysIdKw, node.sysId]),
 };

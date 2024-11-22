@@ -28,12 +28,22 @@ describe("role", () => {
         "ENCRYPTED PASSWORD 'mypass123'",
         "PASSWORD NULL",
         "VALID UNTIL '2021-01-01'",
+        "IN ROLE my_role",
+        "IN ROLE foo, bar, baz",
+        "ROLE my_role",
+        "ROLE foo, bar, baz",
+        "ADMIN my_role",
+        "ADMIN foo, bar, baz",
         "SYSID 25",
       ].forEach((keyword) => {
         it(`supports CREATE ROLE ... [WITH] ${keyword}`, () => {
           testWc(`CREATE ROLE my_role WITH ${keyword}`);
           testWc(`CREATE ROLE my_role ${keyword}`);
         });
+      });
+
+      it(`supports multiple options`, () => {
+        testWc(`CREATE ROLE my_role WITH LOGIN CREATEDB`);
       });
     });
   });
