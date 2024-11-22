@@ -131,6 +131,7 @@ export const alterActionMap: FullTransformMap<string, AllAlterActionNodes> = {
   alter_action_alter_identity: (node) => show(node.actions),
   alter_action_attach_partition: (node) =>
     show([node.attachPartitionKw, node.index]),
+  alter_action_with_role_options: (node) => show([node.withKw, node.options]),
 
   // ENABLE/DISABLE
   toggle_row_level_security: (node) => show([node.rowLevelSecurityKw]),

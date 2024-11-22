@@ -18,6 +18,7 @@ import {
   TableConstraint,
 } from "./Constraint";
 import { Default } from "./Insert";
+import { RoleOption } from "./Role";
 import {
   PostgresqlTableOption,
   SequenceOption,
@@ -34,6 +35,7 @@ export type AllAlterActionNodes =
   | AlterFunctionAction
   | AlterTypeAction
   | AlterDomainAction
+  | AlterRoleAction
   | ToggleItem
   | ReplicaIdentityUsingIndex
   | SetDataTypeCollateClause
@@ -145,6 +147,8 @@ export type AlterDomainAction =
   | AlterActionValidateConstraint
   | AlterActionDropConstraint
   | AlterActionAddConstraint;
+
+export type AlterRoleAction = AlterActionWithRoleOptions;
 
 export interface AlterActionRename extends BaseNode {
   type: "alter_action_rename";
@@ -500,6 +504,13 @@ export interface AlterActionAlterAttribute extends BaseNode {
   dataType: DataType;
   constraint?: ConstraintCollate;
   behaviorKw?: Keyword<"CASCADE" | "RESTRICT">;
+}
+
+// PostgreSQL
+export interface AlterActionWithRoleOptions extends BaseNode {
+  type: "alter_action_with_role_options";
+  withKw: Keyword<"WITH">;
+  options: RoleOption[];
 }
 
 export type AlterColumnAction =

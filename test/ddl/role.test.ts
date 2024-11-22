@@ -47,6 +47,39 @@ describe("role", () => {
       });
     });
 
+    describe("ALTER ROLE", () => {
+      [
+        "SUPERUSER",
+        "NOSUPERUSER",
+        "CREATEDB",
+        "NOCREATEDB",
+        "CREATEROLE",
+        "NOCREATEROLE",
+        "INHERIT",
+        "NOINHERIT",
+        "LOGIN",
+        "NOLOGIN",
+        "REPLICATION",
+        "NOREPLICATION",
+        "BYPASSRLS",
+        "NOBYPASSRLS",
+        "CONNECTION LIMIT 5",
+        "PASSWORD 'mypass123'",
+        "ENCRYPTED PASSWORD 'mypass123'",
+        "PASSWORD NULL",
+        "VALID UNTIL '2021-01-01'",
+      ].forEach((keyword) => {
+        it(`supports ALTER ROLE name [WITH] ${keyword}`, () => {
+          testWc(`ALTER ROLE my_role WITH ${keyword}`);
+          testWc(`ALTER ROLE my_role ${keyword}`);
+        });
+      });
+
+      it(`supports multiple options`, () => {
+        testWc(`ALTER ROLE my_role WITH LOGIN CREATEDB NOREPLICATION`);
+      });
+    });
+
     describe("DROP ROLE", () => {
       it("supports plain DROP ROLE name", () => {
         testWc("DROP ROLE my_role");

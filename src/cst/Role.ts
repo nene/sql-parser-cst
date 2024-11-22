@@ -1,10 +1,11 @@
+import { AlterRoleAction } from "./AlterAction";
 import { BaseNode, Keyword } from "./Base";
 import { EntityName, ListExpr } from "./Expr";
 import { NullLiteral, NumberLiteral, StringLiteral } from "./Literal";
 
 export type AllRoleNodes = AllRoleStatements | RoleOption;
 
-export type AllRoleStatements = CreateRoleStmt | DropRoleStmt;
+export type AllRoleStatements = CreateRoleStmt | AlterRoleStmt | DropRoleStmt;
 
 // CREATE ROLE
 export interface CreateRoleStmt extends BaseNode {
@@ -86,6 +87,14 @@ export interface RoleOptionSysId extends BaseNode {
   type: "role_option_sysid";
   sysIdKw: Keyword<"SYSID">;
   sysId: NumberLiteral;
+}
+
+// ALTER ROLE
+export interface AlterRoleStmt extends BaseNode {
+  type: "alter_role_stmt";
+  alterRoleKw: [Keyword<"ALTER">, Keyword<"ROLE">];
+  name: EntityName;
+  action: AlterRoleAction;
 }
 
 // DROP ROLE

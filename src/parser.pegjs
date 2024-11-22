@@ -159,6 +159,7 @@ ddl_statement_postgres
   / alter_domain_stmt
   / drop_domain_stmt
   / create_role_stmt
+  / alter_role_stmt
   / drop_role_stmt
 
 dml_statement
@@ -4452,6 +4453,34 @@ role_option_admin
 role_option_sysid
   = kw:(SYSID __) sysId:number_literal {
     return loc({ type: "role_option_sysid", sysIdKw: read(kw), sysId });
+  }
+
+alter_role_stmt
+  = kw:(ALTER __ ROLE __) name:entity_name action:(__ alter_role_action) {
+    return loc({
+      type: "alter_role_stmt",
+      alterRoleKw: read(kw),
+      name,
+      action: read(action),
+    });
+  }
+
+alter_role_action
+  = alter_action_with_role_options
+
+alter_action_with_role_options
+  = kw:WITH options:(__ role_option)+ {
+    return loc({
+      type: "alter_action_with_role_options",
+      withKw: kw,
+      options: options.map(read),
+    });
+  }
+  / option:role_option options:(__ role_option)* {
+    return loc({
+      type: "alter_action_with_role_options",
+      options: [option, ...options.map(read)],
+    });
   }
 
 drop_role_stmt
