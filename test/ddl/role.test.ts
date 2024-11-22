@@ -46,6 +46,21 @@ describe("role", () => {
         testWc(`CREATE ROLE my_role WITH LOGIN CREATEDB`);
       });
     });
+
+    describe("DROP ROLE", () => {
+      it("supports plain DROP ROLE name", () => {
+        testWc("DROP ROLE my_role");
+        testWc("DROP TYPE my_schema.my_role");
+      });
+
+      it("supports IF EXISTS name", () => {
+        testWc("DROP ROLE IF EXISTS my_role");
+      });
+
+      it("supports multiple names", () => {
+        testWc("DROP ROLE my_role, foo, bar");
+      });
+    });
   });
 
   notDialect("postgresql", () => {

@@ -16,4 +16,8 @@ export const roleMap: FullTransformMap<string, AllRoleNodes> = {
   role_option_role: (node) => show([node.roleKw, node.names]),
   role_option_admin: (node) => show([node.adminKw, node.names]),
   role_option_sysid: (node) => show([node.sysIdKw, node.sysId]),
+
+  // DROP ROLE
+  drop_role_stmt: (node) =>
+    show([node.dropRoleKw, node.ifExistsKw, node.names]),
 };

@@ -159,6 +159,7 @@ ddl_statement_postgres
   / alter_domain_stmt
   / drop_domain_stmt
   / create_role_stmt
+  / drop_role_stmt
 
 dml_statement
   = compound_select_stmt
@@ -4451,6 +4452,16 @@ role_option_admin
 role_option_sysid
   = kw:(SYSID __) sysId:number_literal {
     return loc({ type: "role_option_sysid", sysIdKw: read(kw), sysId });
+  }
+
+drop_role_stmt
+  = kw:(DROP __ ROLE __) ifExistsKw:(if_exists __)? names:list$entity_name {
+    return loc({
+      type: "drop_role_stmt",
+      dropRoleKw: read(kw),
+      ifExistsKw: read(ifExistsKw),
+      names,
+    });
   }
 
 /**

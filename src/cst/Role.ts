@@ -4,7 +4,7 @@ import { NullLiteral, NumberLiteral, StringLiteral } from "./Literal";
 
 export type AllRoleNodes = AllRoleStatements | RoleOption;
 
-export type AllRoleStatements = CreateRoleStmt;
+export type AllRoleStatements = CreateRoleStmt | DropRoleStmt;
 
 // CREATE ROLE
 export interface CreateRoleStmt extends BaseNode {
@@ -86,4 +86,12 @@ export interface RoleOptionSysId extends BaseNode {
   type: "role_option_sysid";
   sysIdKw: Keyword<"SYSID">;
   sysId: NumberLiteral;
+}
+
+// DROP ROLE
+export interface DropRoleStmt extends BaseNode {
+  type: "drop_role_stmt";
+  dropRoleKw: [Keyword<"DROP">, Keyword<"ROLE">];
+  ifExistsKw?: [Keyword<"IF">, Keyword<"EXISTS">];
+  names: ListExpr<EntityName>;
 }
