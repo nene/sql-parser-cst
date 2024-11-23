@@ -92,11 +92,14 @@ describe("role", () => {
         testWc(`ALTER ROLE my_role SET something TO 128`);
         testWc(`ALTER ROLE my_role SET client_min_messages = DEBUG`);
         testWc(`ALTER ROLE my_role SET my_option TO DEFAULT`);
-      });
-
-      it(`supports IN DATABASE ... SET parameter TO value`, () => {
         testWc(`ALTER ROLE my_role IN DATABASE foo SET something TO 128`);
         testWc(`ALTER ROLE ALL IN DATABASE foo SET something TO 128`);
+      });
+
+      it(`supports RESET parameter`, () => {
+        testWc(`ALTER ROLE my_role RESET something`);
+        testWc(`ALTER ROLE my_role IN DATABASE foo RESET something`);
+        testWc(`ALTER ROLE ALL IN DATABASE foo RESET something`);
       });
     });
 

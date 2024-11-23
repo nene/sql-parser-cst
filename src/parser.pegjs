@@ -4478,6 +4478,7 @@ alter_role_action
   = alter_action_with_role_options
   / alter_action_rename
   / alter_action_set_postgresql_option
+  / alter_action_reset_postgresql_option
 
 alter_action_with_role_options
   = kw:WITH options:(__ role_option)+ {
@@ -4502,6 +4503,15 @@ alter_action_set_postgresql_option
       name: read(name),
       operator,
       value: read(value),
+    });
+  }
+
+alter_action_reset_postgresql_option
+  = kw:(RESET __) name:ident {
+    return loc({
+      type: "alter_action_reset_postgresql_option",
+      resetKw: read(kw),
+      name,
     });
   }
 

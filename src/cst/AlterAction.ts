@@ -151,7 +151,8 @@ export type AlterDomainAction =
 export type AlterRoleAction =
   | AlterActionWithRoleOptions
   | AlterActionRename
-  | AlterActionSetPostgresqlOption;
+  | AlterActionSetPostgresqlOption
+  | AlterActionResetPostgresqlOption;
 
 export interface AlterActionRename extends BaseNode {
   type: "alter_action_rename";
@@ -225,6 +226,13 @@ export interface AlterActionSetPostgresqlOption extends BaseNode {
   name: Identifier;
   operator: Keyword<"TO"> | "=";
   value: Expr | Keyword;
+}
+
+// PostgreSQL
+export interface AlterActionResetPostgresqlOption extends BaseNode {
+  type: "alter_action_reset_postgresql_option";
+  resetKw: Keyword<"RESET">;
+  name: Identifier;
 }
 
 // MySQL, MariaDB, PostgreSQL, BigQuery
