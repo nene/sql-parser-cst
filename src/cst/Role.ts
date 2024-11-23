@@ -12,7 +12,7 @@ export type RoleSpecification = Identifier | FuncCall;
 // CREATE ROLE
 export interface CreateRoleStmt extends BaseNode {
   type: "create_role_stmt";
-  createRoleKw: [Keyword<"CREATE">, Keyword<"ROLE">];
+  createRoleKw: [Keyword<"CREATE">, Keyword<"ROLE" | "USER">];
   name: Identifier;
   withKw?: Keyword<"WITH">;
   options?: RoleOption[];
@@ -94,7 +94,7 @@ export interface RoleOptionSysId extends BaseNode {
 // ALTER ROLE
 export interface AlterRoleStmt extends BaseNode {
   type: "alter_role_stmt";
-  alterRoleKw: [Keyword<"ALTER">, Keyword<"ROLE">];
+  alterRoleKw: [Keyword<"ALTER">, Keyword<"ROLE" | "USER">];
   name: RoleSpecification | Keyword<"ALL">;
   database?: InDatabaseClause;
   action: AlterRoleAction;
@@ -109,7 +109,7 @@ export interface InDatabaseClause extends BaseNode {
 // DROP ROLE
 export interface DropRoleStmt extends BaseNode {
   type: "drop_role_stmt";
-  dropRoleKw: [Keyword<"DROP">, Keyword<"ROLE">];
+  dropRoleKw: [Keyword<"DROP">, Keyword<"ROLE" | "USER">];
   ifExistsKw?: [Keyword<"IF">, Keyword<"EXISTS">];
   names: ListExpr<RoleSpecification>;
 }

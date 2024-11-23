@@ -128,6 +128,27 @@ describe("role", () => {
         testWc("DROP ROLE my_role, foo, bar");
       });
     });
+
+    describe("CREATE USER", () => {
+      it("is alias for CREATE ROLE", () => {
+        testWc("CREATE USER my_user");
+        testWc(`CREATE USER my_role WITH SUPERUSER`);
+      });
+    });
+
+    describe("ALTER USER", () => {
+      it("is alias for ALTER ROLE", () => {
+        testWc("ALTER USER my_user WITH SUPERUSER");
+        testWc("ALTER USER my_user RENAME TO new_user");
+        testWc(`ALTER USER ALL IN DATABASE foo SET something TO 128`);
+      });
+    });
+
+    describe("DROP USER", () => {
+      it("is alias for DROP ROLE", () => {
+        testWc("DROP USER IF EXISTS mary, john");
+      });
+    });
   });
 
   notDialect("postgresql", () => {

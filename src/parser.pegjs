@@ -4382,7 +4382,7 @@ drop_domain_stmt
  * ------------------------------------------------------------------------------------ *
  */
 create_role_stmt
-  = kw:(CREATE __ ROLE __) name:entity_name withKw:(__ WITH)? options:(__ role_option)* {
+  = kw:(CREATE __ (ROLE / USER) __) name:entity_name withKw:(__ WITH)? options:(__ role_option)* {
     return loc({
       type: "create_role_stmt",
       createRoleKw: read(kw),
@@ -4456,7 +4456,7 @@ role_option_sysid
   }
 
 alter_role_stmt
-  = kw:(ALTER __ ROLE __)
+  = kw:(ALTER __ (ROLE / USER) __)
     name:((role_specification / ALL) __)
     database:(in_database_clause __)?
     action:alter_role_action {
@@ -4527,7 +4527,7 @@ alter_action_reset_postgresql_option
   }
 
 drop_role_stmt
-  = kw:(DROP __ ROLE __) ifExistsKw:(if_exists __)? names:list$role_specification {
+  = kw:(DROP __ (ROLE / USER) __) ifExistsKw:(if_exists __)? names:list$role_specification {
     return loc({
       type: "drop_role_stmt",
       dropRoleKw: read(kw),
