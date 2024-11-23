@@ -4507,7 +4507,7 @@ alter_action_set_postgresql_option
   }
 
 alter_action_reset_postgresql_option
-  = kw:(RESET __) name:ident {
+  = kw:(RESET __) name:(ident / ALL) {
     return loc({
       type: "alter_action_reset_postgresql_option",
       resetKw: read(kw),

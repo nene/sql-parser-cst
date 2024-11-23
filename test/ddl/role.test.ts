@@ -101,6 +101,12 @@ describe("role", () => {
         testWc(`ALTER ROLE my_role IN DATABASE foo RESET something`);
         testWc(`ALTER ROLE ALL IN DATABASE foo RESET something`);
       });
+
+      it(`supports RESET ALL`, () => {
+        testWc(`ALTER ROLE my_role RESET ALL`);
+        testWc(`ALTER ROLE my_role IN DATABASE foo RESET ALL`);
+        testWc(`ALTER ROLE ALL IN DATABASE foo RESET ALL`);
+      });
     });
 
     describe("DROP ROLE", () => {

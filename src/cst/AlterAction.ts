@@ -232,7 +232,7 @@ export interface AlterActionSetPostgresqlOption extends BaseNode {
 export interface AlterActionResetPostgresqlOption extends BaseNode {
   type: "alter_action_reset_postgresql_option";
   resetKw: Keyword<"RESET">;
-  name: Identifier;
+  name: Identifier | Keyword<"ALL">;
 }
 
 // MySQL, MariaDB, PostgreSQL, BigQuery
