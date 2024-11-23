@@ -161,6 +161,7 @@ ddl_statement_postgres
   / create_role_stmt
   / alter_role_stmt
   / drop_role_stmt
+  / set_role_stmt
 
 dml_statement
   = compound_select_stmt
@@ -4553,6 +4554,17 @@ drop_role_stmt
       dropRoleKw: read(kw),
       ifExistsKw: read(ifExistsKw),
       names,
+    });
+  }
+
+set_role_stmt
+  = kw:(SET __) scopeKw:((SESSION / LOCAL) __)? roleKw:(ROLE __) name:(NONE / ident / string_literal) {
+    return loc({
+      type: "set_role_stmt",
+      setKw: read(kw),
+      scopeKw: read(scopeKw),
+      roleKw: read(roleKw),
+      name,
     });
   }
 

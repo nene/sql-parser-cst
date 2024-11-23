@@ -5,7 +5,11 @@ import { NullLiteral, NumberLiteral, StringLiteral } from "./Literal";
 
 export type AllRoleNodes = AllRoleStatements | RoleOption | InDatabaseClause;
 
-export type AllRoleStatements = CreateRoleStmt | AlterRoleStmt | DropRoleStmt;
+export type AllRoleStatements =
+  | CreateRoleStmt
+  | AlterRoleStmt
+  | DropRoleStmt
+  | SetRoleStmt;
 
 export type RoleSpecification = Identifier | FuncCall;
 
@@ -112,4 +116,13 @@ export interface DropRoleStmt extends BaseNode {
   dropRoleKw: [Keyword<"DROP">, Keyword<"ROLE" | "USER" | "GROUP">];
   ifExistsKw?: [Keyword<"IF">, Keyword<"EXISTS">];
   names: ListExpr<RoleSpecification>;
+}
+
+// SET ROLE
+export interface SetRoleStmt extends BaseNode {
+  type: "set_role_stmt";
+  setKw: Keyword<"SET">;
+  scopeKw?: Keyword<"SESSION" | "LOCAL">;
+  roleKw: Keyword<"ROLE">;
+  name: Identifier | StringLiteral | Keyword<"NONE">;
 }

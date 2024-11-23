@@ -25,4 +25,8 @@ export const roleMap: FullTransformMap<string, AllRoleNodes> = {
   // DROP ROLE
   drop_role_stmt: (node) =>
     show([node.dropRoleKw, node.ifExistsKw, node.names]),
+
+  // SET ROLE
+  set_role_stmt: (node) =>
+    show([node.setKw, node.scopeKw, node.roleKw, node.name]),
 };

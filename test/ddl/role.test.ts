@@ -176,6 +176,26 @@ describe("role", () => {
         testWc("DROP GROUP IF EXISTS mary, john");
       });
     });
+
+    describe("SET ROLE", () => {
+      it("supports SET ROLE name", () => {
+        testWc("SET ROLE paul");
+        testWc("SET SESSION ROLE paul");
+        testWc("SET LOCAL ROLE paul");
+      });
+
+      it("supports SET ROLE 'name'", () => {
+        testWc("SET ROLE 'paul'");
+        testWc("SET SESSION ROLE 'paul'");
+        testWc("SET LOCAL ROLE 'paul'");
+      });
+
+      it("supports SET ROLE NONE", () => {
+        testWc("SET ROLE NONE");
+        testWc("SET SESSION ROLE NONE");
+        testWc("SET LOCAL ROLE NONE");
+      });
+    });
   });
 
   notDialect("postgresql", () => {
