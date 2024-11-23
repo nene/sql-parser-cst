@@ -4478,6 +4478,7 @@ alter_role_action
   = alter_action_with_role_options
   / alter_action_rename
   / alter_action_set_postgresql_option
+  / alter_action_set_postgresql_option_from_current
   / alter_action_reset_postgresql_option
 
 alter_action_with_role_options
@@ -4503,6 +4504,16 @@ alter_action_set_postgresql_option
       name: read(name),
       operator,
       value: read(value),
+    });
+  }
+
+alter_action_set_postgresql_option_from_current
+  = kw:(SET __) name:(ident __) fromCurrentKw:(FROM __ CURRENT) {
+    return loc({
+      type: "alter_action_set_postgresql_option_from_current",
+      setKw: read(kw),
+      name: read(name),
+      fromCurrentKw: read(fromCurrentKw),
     });
   }
 

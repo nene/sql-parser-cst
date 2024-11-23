@@ -152,6 +152,7 @@ export type AlterRoleAction =
   | AlterActionWithRoleOptions
   | AlterActionRename
   | AlterActionSetPostgresqlOption
+  | AlterActionSetPostgresqlOptionFromCurrent
   | AlterActionResetPostgresqlOption;
 
 export interface AlterActionRename extends BaseNode {
@@ -226,6 +227,13 @@ export interface AlterActionSetPostgresqlOption extends BaseNode {
   name: Identifier;
   operator: Keyword<"TO"> | "=";
   value: Expr | Keyword;
+}
+
+export interface AlterActionSetPostgresqlOptionFromCurrent extends BaseNode {
+  type: "alter_action_set_postgresql_option_from_current";
+  setKw: Keyword<"SET">;
+  name: Identifier;
+  fromCurrentKw: [Keyword<"FROM">, Keyword<"CURRENT">];
 }
 
 // PostgreSQL

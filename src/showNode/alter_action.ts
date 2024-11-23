@@ -25,6 +25,8 @@ export const alterActionMap: FullTransformMap<string, AllAlterActionNodes> = {
     show([node.resetKw, node.options]),
   alter_action_set_postgresql_option: (node) =>
     show([node.setKw, node.name, node.operator, node.value]),
+  alter_action_set_postgresql_option_from_current: (node) =>
+    show([node.setKw, node.name, node.fromCurrentKw]),
   alter_action_reset_postgresql_option: (node) =>
     show([node.resetKw, node.name]),
   alter_action_add_constraint: (node) =>
