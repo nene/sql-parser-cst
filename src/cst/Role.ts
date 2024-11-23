@@ -1,11 +1,13 @@
 import { AlterRoleAction } from "./AlterAction";
 import { BaseNode, Keyword } from "./Base";
-import { Identifier, ListExpr } from "./Expr";
+import { FuncCall, Identifier, ListExpr } from "./Expr";
 import { NullLiteral, NumberLiteral, StringLiteral } from "./Literal";
 
 export type AllRoleNodes = AllRoleStatements | RoleOption;
 
 export type AllRoleStatements = CreateRoleStmt | AlterRoleStmt | DropRoleStmt;
+
+export type RoleSpecification = Identifier | FuncCall;
 
 // CREATE ROLE
 export interface CreateRoleStmt extends BaseNode {
@@ -68,19 +70,19 @@ export interface RoleOptionValidUntil extends BaseNode {
 export interface RoleOptionInRole extends BaseNode {
   type: "role_option_in_role";
   inRoleKw: [Keyword<"IN">, Keyword<"ROLE">];
-  names: ListExpr<Identifier>;
+  names: ListExpr<RoleSpecification>;
 }
 
 export interface RoleOptionRole extends BaseNode {
   type: "role_option_role";
   roleKw: Keyword<"ROLE">;
-  names: ListExpr<Identifier>;
+  names: ListExpr<RoleSpecification>;
 }
 
 export interface RoleOptionAdmin extends BaseNode {
   type: "role_option_admin";
   adminKw: Keyword<"ADMIN">;
-  names: ListExpr<Identifier>;
+  names: ListExpr<RoleSpecification>;
 }
 
 export interface RoleOptionSysId extends BaseNode {
@@ -93,7 +95,7 @@ export interface RoleOptionSysId extends BaseNode {
 export interface AlterRoleStmt extends BaseNode {
   type: "alter_role_stmt";
   alterRoleKw: [Keyword<"ALTER">, Keyword<"ROLE">];
-  name: Identifier;
+  name: RoleSpecification;
   action: AlterRoleAction;
 }
 
@@ -102,5 +104,5 @@ export interface DropRoleStmt extends BaseNode {
   type: "drop_role_stmt";
   dropRoleKw: [Keyword<"DROP">, Keyword<"ROLE">];
   ifExistsKw?: [Keyword<"IF">, Keyword<"EXISTS">];
-  names: ListExpr<Identifier>;
+  names: ListExpr<RoleSpecification>;
 }

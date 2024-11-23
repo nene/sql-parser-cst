@@ -78,6 +78,12 @@ describe("role", () => {
         testWc(`ALTER ROLE my_role WITH LOGIN CREATEDB NOREPLICATION`);
       });
 
+      it(`supports special role functions`, () => {
+        testWc(`ALTER ROLE CURRENT_USER WITH SUPERUSER`);
+        testWc(`ALTER ROLE CURRENT_ROLE WITH SUPERUSER`);
+        testWc(`ALTER ROLE SESSION_USER WITH SUPERUSER`);
+      });
+
       it(`supports RENAME TO`, () => {
         testWc(`ALTER ROLE my_role RENAME TO new_role`);
       });

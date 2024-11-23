@@ -4436,17 +4436,17 @@ role_option_valid_until
   }
 
 role_option_in_role
-  = kw:(IN __ ROLE __) names:list$entity_name {
+  = kw:(IN __ ROLE __) names:list$role_specification {
     return loc({ type: "role_option_in_role", inRoleKw: read(kw), names });
   }
 
 role_option_role
-  = kw:(ROLE __) names:list$entity_name {
+  = kw:(ROLE __) names:list$role_specification {
     return loc({ type: "role_option_role", roleKw: read(kw), names });
   }
 
 role_option_admin
-  = kw:(ADMIN __) names:list$entity_name {
+  = kw:(ADMIN __) names:list$role_specification {
     return loc({ type: "role_option_admin", adminKw: read(kw), names });
   }
 
@@ -4456,7 +4456,7 @@ role_option_sysid
   }
 
 alter_role_stmt
-  = kw:(ALTER __ ROLE __) name:entity_name action:(__ alter_role_action) {
+  = kw:(ALTER __ ROLE __) name:role_specification action:(__ alter_role_action) {
     return loc({
       type: "alter_role_stmt",
       alterRoleKw: read(kw),
@@ -4485,7 +4485,7 @@ alter_action_with_role_options
   }
 
 drop_role_stmt
-  = kw:(DROP __ ROLE __) ifExistsKw:(if_exists __)? names:list$entity_name {
+  = kw:(DROP __ ROLE __) ifExistsKw:(if_exists __)? names:list$role_specification {
     return loc({
       type: "drop_role_stmt",
       dropRoleKw: read(kw),
