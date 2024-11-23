@@ -196,6 +196,12 @@ describe("role", () => {
         testWc("SET LOCAL ROLE NONE");
       });
     });
+
+    describe("RESET ROLE", () => {
+      it("supports RESET ROLE", () => {
+        testWc("RESET ROLE");
+      });
+    });
   });
 
   notDialect("postgresql", () => {

@@ -9,7 +9,8 @@ export type AllRoleStatements =
   | CreateRoleStmt
   | AlterRoleStmt
   | DropRoleStmt
-  | SetRoleStmt;
+  | SetRoleStmt
+  | ResetRoleStmt;
 
 export type RoleSpecification = Identifier | FuncCall;
 
@@ -125,4 +126,10 @@ export interface SetRoleStmt extends BaseNode {
   scopeKw?: Keyword<"SESSION" | "LOCAL">;
   roleKw: Keyword<"ROLE">;
   name: Identifier | StringLiteral | Keyword<"NONE">;
+}
+
+// RESET ROLE
+export interface ResetRoleStmt extends BaseNode {
+  type: "reset_role_stmt";
+  resetRoleKw: [Keyword<"RESET">, Keyword<"ROLE">];
 }

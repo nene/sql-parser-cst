@@ -162,6 +162,7 @@ ddl_statement_postgres
   / alter_role_stmt
   / drop_role_stmt
   / set_role_stmt
+  / reset_role_stmt
 
 dml_statement
   = compound_select_stmt
@@ -4566,6 +4567,11 @@ set_role_stmt
       roleKw: read(roleKw),
       name,
     });
+  }
+
+reset_role_stmt
+  = kw:(RESET __ ROLE) {
+    return loc({ type: "reset_role_stmt", resetRoleKw: read(kw) });
   }
 
 /**
