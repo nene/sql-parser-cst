@@ -158,10 +158,8 @@ describe("role", () => {
     });
 
     describe("ALTER GROUP", () => {
-      it("is alias for ALTER ROLE", () => {
-        testWc("ALTER GROUP my_user WITH SUPERUSER");
-        testWc("ALTER GROUP my_user RENAME TO new_user");
-        testWc(`ALTER GROUP ALL IN DATABASE foo SET something TO 128`);
+      it("supports RENAME TO", () => {
+        testWc("ALTER GROUP moderator RENAME TO administator");
       });
 
       it("supports ADD USER", () => {
