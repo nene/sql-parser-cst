@@ -5,7 +5,6 @@ describe("role", () => {
     describe("CREATE ROLE", () => {
       it("supports plain CREATE ROLE name", () => {
         testWc("CREATE ROLE my_role");
-        testWc("CREATE TYPE my_schema.my_role");
       });
 
       [
@@ -87,7 +86,6 @@ describe("role", () => {
     describe("DROP ROLE", () => {
       it("supports plain DROP ROLE name", () => {
         testWc("DROP ROLE my_role");
-        testWc("DROP TYPE my_schema.my_role");
       });
 
       it("supports IF EXISTS name", () => {
