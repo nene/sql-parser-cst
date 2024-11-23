@@ -149,6 +149,27 @@ describe("role", () => {
         testWc("DROP USER IF EXISTS mary, john");
       });
     });
+
+    describe("CREATE GROUP", () => {
+      it("is alias for CREATE ROLE", () => {
+        testWc("CREATE GROUP my_user");
+        testWc(`CREATE GROUP my_role WITH SUPERUSER`);
+      });
+    });
+
+    describe("ALTER GROUP", () => {
+      it("is alias for ALTER ROLE", () => {
+        testWc("ALTER GROUP my_user WITH SUPERUSER");
+        testWc("ALTER GROUP my_user RENAME TO new_user");
+        testWc(`ALTER GROUP ALL IN DATABASE foo SET something TO 128`);
+      });
+    });
+
+    describe("DROP GROUP", () => {
+      it("is alias for DROP ROLE", () => {
+        testWc("DROP GROUP IF EXISTS mary, john");
+      });
+    });
   });
 
   notDialect("postgresql", () => {
