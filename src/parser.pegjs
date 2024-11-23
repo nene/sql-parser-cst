@@ -158,6 +158,9 @@ ddl_statement_postgres
   / create_domain_stmt
   / alter_domain_stmt
   / drop_domain_stmt
+  / create_role_stmt
+  / alter_role_stmt
+  / drop_role_stmt
 
 dml_statement
   = compound_select_stmt
@@ -2743,7 +2746,7 @@ alter_action_drop_column
     }
 
 alter_action_rename
-  = kw:(rename_table_kw __) t:entity_name {
+  = kw:(rename_action_kw __) t:entity_name {
     return loc({
       type: "alter_action_rename",
       renameKw: read(kw),
@@ -2751,7 +2754,7 @@ alter_action_rename
     });
   }
 
-rename_table_kw
+rename_action_kw
   = kw:(RENAME __ TO) { return read(kw); }
   / kw:(RENAME __ AS) &only_mysql { return read(kw); }
   / kw:RENAME &mysql { return kw; }
@@ -4368,6 +4371,168 @@ drop_domain_stmt
       ifExistsKw: read(ifExistsKw),
       domains,
       behaviorKw: read(behaviorKw),
+    });
+  }
+
+/**
+ * ------------------------------------------------------------------------------------ *
+ *                                                                                      *
+ * CREATE/ALTER/DROP ROLE                                                               *
+ *                                                                                      *
+ * ------------------------------------------------------------------------------------ *
+ */
+create_role_stmt
+  = kw:(CREATE __ ROLE __) name:entity_name withKw:(__ WITH)? options:(__ role_option)* {
+    return loc({
+      type: "create_role_stmt",
+      createRoleKw: read(kw),
+      name,
+      withKw: read(withKw),
+      options: options.map(read),
+    });
+  }
+
+role_option
+  = role_option_keyword
+  / role_option_connection_limit
+  / role_option_password
+  / role_option_valid_until
+  / role_option_in_role
+  / role_option_role
+  / role_option_admin
+  / role_option_sysid
+
+role_option_keyword
+  = kw:(
+    SUPERUSER / NOSUPERUSER /
+    CREATEDB / NOCREATEDB /
+    CREATEROLE / NOCREATEROLE /
+    INHERIT / NOINHERIT /
+    LOGIN / NOLOGIN /
+    REPLICATION / NOREPLICATION /
+    BYPASSRLS / NOBYPASSRLS
+  ) {
+    return loc({ type: "role_option_keyword", kw: read(kw) });
+  }
+
+role_option_connection_limit
+  = kw:(CONNECTION __ LIMIT __) limit:number_literal {
+    return loc({ type: "role_option_connection_limit", connectionLimitKw: read(kw), limit });
+  }
+
+role_option_password
+  = encryptedKw:(ENCRYPTED __)? kw:(PASSWORD __) password:(string_literal / null_literal) {
+    return loc({
+      type: "role_option_password",
+      encryptedKw: read(encryptedKw),
+      passwordKw: read(kw),
+      password,
+    });
+  }
+
+role_option_valid_until
+  = kw:(VALID __ UNTIL __) timestamp:string_literal {
+    return loc({ type: "role_option_valid_until", validUntilKw: read(kw), timestamp });
+  }
+
+role_option_in_role
+  = kw:(IN __ ROLE __) names:list$role_specification {
+    return loc({ type: "role_option_in_role", inRoleKw: read(kw), names });
+  }
+
+role_option_role
+  = kw:(ROLE __) names:list$role_specification {
+    return loc({ type: "role_option_role", roleKw: read(kw), names });
+  }
+
+role_option_admin
+  = kw:(ADMIN __) names:list$role_specification {
+    return loc({ type: "role_option_admin", adminKw: read(kw), names });
+  }
+
+role_option_sysid
+  = kw:(SYSID __) sysId:number_literal {
+    return loc({ type: "role_option_sysid", sysIdKw: read(kw), sysId });
+  }
+
+alter_role_stmt
+  = kw:(ALTER __ ROLE __)
+    name:((role_specification / ALL) __)
+    database:(in_database_clause __)?
+    action:alter_role_action {
+      return loc({
+        type: "alter_role_stmt",
+        alterRoleKw: read(kw),
+        name: read(name),
+        database: read(database),
+        action,
+      });
+    }
+
+in_database_clause
+  = kw:(IN __ DATABASE __) name:ident {
+    return loc({ type: "in_database_clause", inDatabaseKw: read(kw), name });
+  }
+
+alter_role_action
+  = alter_action_with_role_options
+  / alter_action_rename
+  / alter_action_set_postgresql_option
+  / alter_action_set_postgresql_option_from_current
+  / alter_action_reset_postgresql_option
+
+alter_action_with_role_options
+  = kw:WITH options:(__ role_option)+ {
+    return loc({
+      type: "alter_action_with_role_options",
+      withKw: kw,
+      options: options.map(read),
+    });
+  }
+  / option:role_option options:(__ role_option)* {
+    return loc({
+      type: "alter_action_with_role_options",
+      options: [option, ...options.map(read)],
+    });
+  }
+
+alter_action_set_postgresql_option
+  = kw:(SET __) name:(ident __) operator:("=" / TO) value:(__ (expr / keyword)) {
+    return loc({
+      type: "alter_action_set_postgresql_option",
+      setKw: read(kw),
+      name: read(name),
+      operator,
+      value: read(value),
+    });
+  }
+
+alter_action_set_postgresql_option_from_current
+  = kw:(SET __) name:(ident __) fromCurrentKw:(FROM __ CURRENT) {
+    return loc({
+      type: "alter_action_set_postgresql_option_from_current",
+      setKw: read(kw),
+      name: read(name),
+      fromCurrentKw: read(fromCurrentKw),
+    });
+  }
+
+alter_action_reset_postgresql_option
+  = kw:(RESET __) name:(ident / ALL) {
+    return loc({
+      type: "alter_action_reset_postgresql_option",
+      resetKw: read(kw),
+      name,
+    });
+  }
+
+drop_role_stmt
+  = kw:(DROP __ ROLE __) ifExistsKw:(if_exists __)? names:list$role_specification {
+    return loc({
+      type: "drop_role_stmt",
+      dropRoleKw: read(kw),
+      ifExistsKw: read(ifExistsKw),
+      names,
     });
   }
 
@@ -8083,6 +8248,7 @@ ABORT               = kw:"ABORT"i               !ident_part { return loc(createK
 ACCESS              = kw:"ACCESS"i              !ident_part { return loc(createKeyword(kw)); }
 ACTION              = kw:"ACTION"i              !ident_part { return loc(createKeyword(kw)); }
 ADD                 = kw:"ADD"i                 !ident_part { return loc(createKeyword(kw)); }
+ADMIN               = kw:"ADMIN"i               !ident_part { return loc(createKeyword(kw)); }
 AFTER               = kw:"AFTER"i               !ident_part { return loc(createKeyword(kw)); }
 AGAINST             = kw:"AGAINST"              !ident_part { return loc(createKeyword(kw)); }
 ALGORITHM           = kw:"ALGORITHM"i           !ident_part { return loc(createKeyword(kw)); }
@@ -8126,6 +8292,7 @@ BREADTH             = kw:"BREADTH"i             !ident_part { return loc(createK
 BREAK               = kw:"BREAK"i               !ident_part { return loc(createKeyword(kw)); }
 BTREE               = kw:"BTREE"i               !ident_part { return loc(createKeyword(kw)); }
 BY                  = kw:"BY"i                  !ident_part { return loc(createKeyword(kw)); }
+BYPASSRLS           = kw:"BYPASSRLS"i           !ident_part { return loc(createKeyword(kw)); }
 BYTEINT             = kw:"BYTEINT"i             !ident_part { return loc(createKeyword(kw)); }
 BYTES               = kw:"BYTES"i               !ident_part { return loc(createKeyword(kw)); }
 CACHE               = kw:"CACHE"i               !ident_part { return loc(createKeyword(kw)); }
@@ -8166,6 +8333,8 @@ COPY                = kw:"COPY"i                !ident_part { return loc(createK
 COST                = kw:"COST"i                !ident_part { return loc(createKeyword(kw)); }
 COUNT               = kw:"COUNT"i               !ident_part { return loc(createKeyword(kw)); }
 CREATE              = kw:"CREATE"i              !ident_part { return loc(createKeyword(kw)); }
+CREATEDB            = kw:"CREATEDB"i            !ident_part { return loc(createKeyword(kw)); }
+CREATEROLE          = kw:"CREATEROLE"i          !ident_part { return loc(createKeyword(kw)); }
 CROSS               = kw:"CROSS"i               !ident_part { return loc(createKeyword(kw)); }
 CUBE                = kw:"CUBE"i                !ident_part { return loc(createKeyword(kw)); }
 CUME_DIST           = kw:"CUME_DIST"i           !ident_part { return loc(createKeyword(kw)); }
@@ -8230,6 +8399,7 @@ ELSE                = kw:"ELSE"i                !ident_part { return loc(createK
 ELSEIF              = kw:"ELSEIF"i              !ident_part { return loc(createKeyword(kw)); }
 ENABLE              = kw:"ENABLE"i              !ident_part { return loc(createKeyword(kw)); }
 ENCLOSED            = kw:"ENCLOSED"i            !ident_part { return loc(createKeyword(kw)); }
+ENCRYPTED           = kw:"ENCRYPTED"i           !ident_part { return loc(createKeyword(kw)); }
 ENCRYPTION          = kw:"ENCRYPTION"i          !ident_part { return loc(createKeyword(kw)); }
 END                 = kw:"END"i                 !ident_part { return loc(createKeyword(kw)); }
 ENFORCED            = kw:"ENFORCED"i            !ident_part { return loc(createKeyword(kw)); }
@@ -8361,6 +8531,7 @@ LOCALTIMESTAMP      = kw:"LOCALTIMESTAMP"i      !ident_part { return loc(createK
 LOCK                = kw:"LOCK"i                !ident_part { return loc(createKeyword(kw)); }
 LOCKED              = kw:"LOCKED"i              !ident_part { return loc(createKeyword(kw)); }
 LOGGED              = kw:"LOGGED"i              !ident_part { return loc(createKeyword(kw)); }
+LOGIN               = kw:"LOGIN"i               !ident_part { return loc(createKeyword(kw)); }
 LOGS                = kw:"LOGS"i                !ident_part { return loc(createKeyword(kw)); }
 LONGBLOB            = kw:"LONGBLOB"i            !ident_part { return loc(createKeyword(kw)); }
 LONGTEXT            = kw:"LONGTEXT"i            !ident_part { return loc(createKeyword(kw)); }
@@ -8408,9 +8579,16 @@ NFD                 = kw:"NFD"i                 !ident_part { return loc(createK
 NFKC                = kw:"NFKC"i                !ident_part { return loc(createKeyword(kw)); }
 NFKD                = kw:"NFKD"i                !ident_part { return loc(createKeyword(kw)); }
 NO                  = kw:"NO"i                  !ident_part { return loc(createKeyword(kw)); }
+NOBYPASSRLS         = kw:"NOBYPASSRLS"i         !ident_part { return loc(createKeyword(kw)); }
 NOCHECK             = kw:"NOCHECK"i             !ident_part { return loc(createKeyword(kw)); }
+NOCREATEDB          = kw:"NOCREATEDB"i          !ident_part { return loc(createKeyword(kw)); }
+NOCREATEROLE        = kw:"NOCREATEROLE"i        !ident_part { return loc(createKeyword(kw)); }
+NOINHERIT           = kw:"NOINHERIT"i           !ident_part { return loc(createKeyword(kw)); }
+NOLOGIN             = kw:"NOLOGIN"i             !ident_part { return loc(createKeyword(kw)); }
 NONE                = kw:"NONE"i                !ident_part { return loc(createKeyword(kw)); }
+NOREPLICATION       = kw:"NOREPLICATION"i       !ident_part { return loc(createKeyword(kw)); }
 NORMALIZED          = kw:"NORMALIZED"i          !ident_part { return loc(createKeyword(kw)); }
+NOSUPERUSER         = kw:"NOSUPERUSER"i         !ident_part { return loc(createKeyword(kw)); }
 NOT                 = kw:"NOT"i                 !ident_part { return loc(createKeyword(kw)); }
 NOTHING             = kw:"NOTHING"i             !ident_part { return loc(createKeyword(kw)); }
 NOTNULL             = kw:"NOTNULL"              !ident_part { return loc(createKeyword(kw)); }
@@ -8505,6 +8683,7 @@ RETURNS             = kw:"RETURNS"i             !ident_part { return loc(createK
 REVOKE              = kw:"REVOKE"i              !ident_part { return loc(createKeyword(kw)); }
 RIGHT               = kw:"RIGHT"i               !ident_part { return loc(createKeyword(kw)); }
 RLIKE               = kw:"RLIKE"i               !ident_part { return loc(createKeyword(kw)); }
+ROLE                = kw:"ROLE"i                !ident_part { return loc(createKeyword(kw)); }
 ROLLBACK            = kw:"ROLLBACK"i            !ident_part { return loc(createKeyword(kw)); }
 ROLLUP              = kw:"ROLLUP"i              !ident_part { return loc(createKeyword(kw)); }
 ROW                 = kw:"ROW"i                 !ident_part { return loc(createKeyword(kw)); }
@@ -8568,8 +8747,10 @@ STRING              = kw:"STRING"i              !ident_part { return loc(createK
 STRUCT              = kw:"STRUCT"i              !ident_part { return loc(createKeyword(kw)); }
 SUM                 = kw:"SUM"i                 !ident_part { return loc(createKeyword(kw)); }
 SUNDAY              = kw:"SUNDAY"i              !ident_part { return loc(createKeyword(kw)); }
+SUPERUSER           = kw:"SUPERUSER"i           !ident_part { return loc(createKeyword(kw)); }
 SUPPORT             = kw:"SUPPORT"i             !ident_part { return loc(createKeyword(kw)); }
 SYMMETRIC           = kw:"SYMMETRIC"i           !ident_part { return loc(createKeyword(kw)); }
+SYSID               = kw:"SYSID"i               !ident_part { return loc(createKeyword(kw)); }
 SYSTEM              = kw:"SYSTEM"i              !ident_part { return loc(createKeyword(kw)); }
 SYSTEM_TIME         = kw:"SYSTEM_TIME"i         !ident_part { return loc(createKeyword(kw)); }
 SYSTEM_USER         = kw:"SYSTEM_USER"i         !ident_part { return loc(createKeyword(kw)); }

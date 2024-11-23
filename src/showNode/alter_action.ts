@@ -23,6 +23,12 @@ export const alterActionMap: FullTransformMap<string, AllAlterActionNodes> = {
     show([node.setKw, node.options]),
   alter_action_reset_postgresql_options: (node) =>
     show([node.resetKw, node.options]),
+  alter_action_set_postgresql_option: (node) =>
+    show([node.setKw, node.name, node.operator, node.value]),
+  alter_action_set_postgresql_option_from_current: (node) =>
+    show([node.setKw, node.name, node.fromCurrentKw]),
+  alter_action_reset_postgresql_option: (node) =>
+    show([node.resetKw, node.name]),
   alter_action_add_constraint: (node) =>
     show([node.addKw, node.name, node.constraint, node.modifiers]),
   alter_action_add_constraint_constraint_name: (node) =>
@@ -131,6 +137,7 @@ export const alterActionMap: FullTransformMap<string, AllAlterActionNodes> = {
   alter_action_alter_identity: (node) => show(node.actions),
   alter_action_attach_partition: (node) =>
     show([node.attachPartitionKw, node.index]),
+  alter_action_with_role_options: (node) => show([node.withKw, node.options]),
 
   // ENABLE/DISABLE
   toggle_row_level_security: (node) => show([node.rowLevelSecurityKw]),

@@ -18,6 +18,7 @@ import {
   TableConstraint,
 } from "./Constraint";
 import { Default } from "./Insert";
+import { RoleOption } from "./Role";
 import {
   PostgresqlTableOption,
   SequenceOption,
@@ -34,6 +35,7 @@ export type AllAlterActionNodes =
   | AlterFunctionAction
   | AlterTypeAction
   | AlterDomainAction
+  | AlterRoleAction
   | ToggleItem
   | ReplicaIdentityUsingIndex
   | SetDataTypeCollateClause
@@ -146,6 +148,13 @@ export type AlterDomainAction =
   | AlterActionDropConstraint
   | AlterActionAddConstraint;
 
+export type AlterRoleAction =
+  | AlterActionWithRoleOptions
+  | AlterActionRename
+  | AlterActionSetPostgresqlOption
+  | AlterActionSetPostgresqlOptionFromCurrent
+  | AlterActionResetPostgresqlOption;
+
 export interface AlterActionRename extends BaseNode {
   type: "alter_action_rename";
   renameKw: Keyword<"RENAME"> | [Keyword<"RENAME">, Keyword<"TO" | "AS">];
@@ -209,6 +218,29 @@ export interface AlterActionResetPostgresqlOptions extends BaseNode {
   type: "alter_action_reset_postgresql_options";
   resetKw: Keyword<"RESET">;
   options: ParenExpr<ListExpr<Identifier | MemberExpr>>;
+}
+
+// PostgreSQL
+export interface AlterActionSetPostgresqlOption extends BaseNode {
+  type: "alter_action_set_postgresql_option";
+  setKw: Keyword<"SET">;
+  name: Identifier;
+  operator: Keyword<"TO"> | "=";
+  value: Expr | Keyword;
+}
+
+export interface AlterActionSetPostgresqlOptionFromCurrent extends BaseNode {
+  type: "alter_action_set_postgresql_option_from_current";
+  setKw: Keyword<"SET">;
+  name: Identifier;
+  fromCurrentKw: [Keyword<"FROM">, Keyword<"CURRENT">];
+}
+
+// PostgreSQL
+export interface AlterActionResetPostgresqlOption extends BaseNode {
+  type: "alter_action_reset_postgresql_option";
+  resetKw: Keyword<"RESET">;
+  name: Identifier | Keyword<"ALL">;
 }
 
 // MySQL, MariaDB, PostgreSQL, BigQuery
@@ -500,6 +532,13 @@ export interface AlterActionAlterAttribute extends BaseNode {
   dataType: DataType;
   constraint?: ConstraintCollate;
   behaviorKw?: Keyword<"CASCADE" | "RESTRICT">;
+}
+
+// PostgreSQL
+export interface AlterActionWithRoleOptions extends BaseNode {
+  type: "alter_action_with_role_options";
+  withKw: Keyword<"WITH">;
+  options: RoleOption[];
 }
 
 export type AlterColumnAction =
