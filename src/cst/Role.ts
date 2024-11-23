@@ -3,7 +3,7 @@ import { BaseNode, Keyword } from "./Base";
 import { FuncCall, Identifier, ListExpr } from "./Expr";
 import { NullLiteral, NumberLiteral, StringLiteral } from "./Literal";
 
-export type AllRoleNodes = AllRoleStatements | RoleOption;
+export type AllRoleNodes = AllRoleStatements | RoleOption | InDatabaseClause;
 
 export type AllRoleStatements = CreateRoleStmt | AlterRoleStmt | DropRoleStmt;
 
@@ -95,8 +95,15 @@ export interface RoleOptionSysId extends BaseNode {
 export interface AlterRoleStmt extends BaseNode {
   type: "alter_role_stmt";
   alterRoleKw: [Keyword<"ALTER">, Keyword<"ROLE">];
-  name: RoleSpecification;
+  name: RoleSpecification | Keyword<"ALL">;
+  database?: InDatabaseClause;
   action: AlterRoleAction;
+}
+
+export interface InDatabaseClause extends BaseNode {
+  type: "in_database_clause";
+  inDatabaseKw: [Keyword<"IN">, Keyword<"DATABASE">];
+  name: Identifier;
 }
 
 // DROP ROLE

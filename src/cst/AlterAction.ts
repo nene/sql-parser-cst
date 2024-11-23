@@ -148,7 +148,10 @@ export type AlterDomainAction =
   | AlterActionDropConstraint
   | AlterActionAddConstraint;
 
-export type AlterRoleAction = AlterActionWithRoleOptions | AlterActionRename;
+export type AlterRoleAction =
+  | AlterActionWithRoleOptions
+  | AlterActionRename
+  | AlterActionSetPostgresqlOption;
 
 export interface AlterActionRename extends BaseNode {
   type: "alter_action_rename";
@@ -213,6 +216,15 @@ export interface AlterActionResetPostgresqlOptions extends BaseNode {
   type: "alter_action_reset_postgresql_options";
   resetKw: Keyword<"RESET">;
   options: ParenExpr<ListExpr<Identifier | MemberExpr>>;
+}
+
+// PostgreSQL
+export interface AlterActionSetPostgresqlOption extends BaseNode {
+  type: "alter_action_set_postgresql_option";
+  setKw: Keyword<"SET">;
+  name: Identifier;
+  operator: Keyword<"TO"> | "=";
+  value: Expr | Keyword;
 }
 
 // MySQL, MariaDB, PostgreSQL, BigQuery

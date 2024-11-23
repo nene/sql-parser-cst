@@ -4456,18 +4456,28 @@ role_option_sysid
   }
 
 alter_role_stmt
-  = kw:(ALTER __ ROLE __) name:role_specification action:(__ alter_role_action) {
-    return loc({
-      type: "alter_role_stmt",
-      alterRoleKw: read(kw),
-      name,
-      action: read(action),
-    });
+  = kw:(ALTER __ ROLE __)
+    name:((role_specification / ALL) __)
+    database:(in_database_clause __)?
+    action:alter_role_action {
+      return loc({
+        type: "alter_role_stmt",
+        alterRoleKw: read(kw),
+        name: read(name),
+        database: read(database),
+        action,
+      });
+    }
+
+in_database_clause
+  = kw:(IN __ DATABASE __) name:ident {
+    return loc({ type: "in_database_clause", inDatabaseKw: read(kw), name });
   }
 
 alter_role_action
   = alter_action_with_role_options
   / alter_action_rename
+  / alter_action_set_postgresql_option
 
 alter_action_with_role_options
   = kw:WITH options:(__ role_option)+ {
@@ -4481,6 +4491,17 @@ alter_action_with_role_options
     return loc({
       type: "alter_action_with_role_options",
       options: [option, ...options.map(read)],
+    });
+  }
+
+alter_action_set_postgresql_option
+  = kw:(SET __) name:(ident __) operator:("=" / TO) value:(__ (expr / keyword)) {
+    return loc({
+      type: "alter_action_set_postgresql_option",
+      setKw: read(kw),
+      name: read(name),
+      operator,
+      value: read(value),
     });
   }
 

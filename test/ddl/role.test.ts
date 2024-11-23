@@ -87,6 +87,17 @@ describe("role", () => {
       it(`supports RENAME TO`, () => {
         testWc(`ALTER ROLE my_role RENAME TO new_role`);
       });
+
+      it(`supports SET parameter TO value`, () => {
+        testWc(`ALTER ROLE my_role SET something TO 128`);
+        testWc(`ALTER ROLE my_role SET client_min_messages = DEBUG`);
+        testWc(`ALTER ROLE my_role SET my_option TO DEFAULT`);
+      });
+
+      it(`supports IN DATABASE ... SET parameter TO value`, () => {
+        testWc(`ALTER ROLE my_role IN DATABASE foo SET something TO 128`);
+        testWc(`ALTER ROLE ALL IN DATABASE foo SET something TO 128`);
+      });
     });
 
     describe("DROP ROLE", () => {

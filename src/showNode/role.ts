@@ -18,7 +18,9 @@ export const roleMap: FullTransformMap<string, AllRoleNodes> = {
   role_option_sysid: (node) => show([node.sysIdKw, node.sysId]),
 
   // ALTER ROLE
-  alter_role_stmt: (node) => show([node.alterRoleKw, node.name, node.action]),
+  alter_role_stmt: (node) =>
+    show([node.alterRoleKw, node.name, node.database, node.action]),
+  in_database_clause: (node) => show([node.inDatabaseKw, node.name]),
 
   // DROP ROLE
   drop_role_stmt: (node) =>
