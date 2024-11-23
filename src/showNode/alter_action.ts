@@ -106,6 +106,8 @@ export const alterActionMap: FullTransformMap<string, AllAlterActionNodes> = {
       node.constraint,
       node.behaviorKw,
     ]),
+  alter_action_add_user: (node) => show([node.addUserKw, node.users]),
+  alter_action_drop_user: (node) => show([node.dropUserKw, node.users]),
 
   // ALTER COLUMN ...
   alter_action_alter_column: (node) =>

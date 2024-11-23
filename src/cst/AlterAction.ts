@@ -153,7 +153,9 @@ export type AlterRoleAction =
   | AlterActionRename
   | AlterActionSetPostgresqlOption
   | AlterActionSetPostgresqlOptionFromCurrent
-  | AlterActionResetPostgresqlOption;
+  | AlterActionResetPostgresqlOption
+  | AlterActionAddUser
+  | AlterActionDropUser;
 
 export interface AlterActionRename extends BaseNode {
   type: "alter_action_rename";
@@ -539,6 +541,20 @@ export interface AlterActionWithRoleOptions extends BaseNode {
   type: "alter_action_with_role_options";
   withKw: Keyword<"WITH">;
   options: RoleOption[];
+}
+
+// PostgreSQL
+export interface AlterActionAddUser extends BaseNode {
+  type: "alter_action_add_user";
+  addUserKw: [Keyword<"ADD">, Keyword<"USER">];
+  users: ListExpr<Identifier>;
+}
+
+// PostgreSQL
+export interface AlterActionDropUser extends BaseNode {
+  type: "alter_action_drop_user";
+  dropUserKw: [Keyword<"DROP">, Keyword<"USER">];
+  users: ListExpr<Identifier>;
 }
 
 export type AlterColumnAction =

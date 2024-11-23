@@ -163,6 +163,14 @@ describe("role", () => {
         testWc("ALTER GROUP my_user RENAME TO new_user");
         testWc(`ALTER GROUP ALL IN DATABASE foo SET something TO 128`);
       });
+
+      it("supports ADD USER", () => {
+        testWc("ALTER GROUP moderator ADD USER mary, john");
+      });
+
+      it("supports DROP USER", () => {
+        testWc("ALTER GROUP moderator DROP USER mary, john");
+      });
     });
 
     describe("DROP GROUP", () => {

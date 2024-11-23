@@ -4480,6 +4480,8 @@ alter_role_action
   / alter_action_set_postgresql_option
   / alter_action_set_postgresql_option_from_current
   / alter_action_reset_postgresql_option
+  / alter_action_add_user
+  / alter_action_drop_user
 
 alter_action_with_role_options
   = kw:WITH options:(__ role_option)+ {
@@ -4523,6 +4525,24 @@ alter_action_reset_postgresql_option
       type: "alter_action_reset_postgresql_option",
       resetKw: read(kw),
       name,
+    });
+  }
+
+alter_action_add_user
+  = kw:(ADD __ USER __) users:list$ident {
+    return loc({
+      type: "alter_action_add_user",
+      addUserKw: read(kw),
+      users,
+    });
+  }
+
+alter_action_drop_user
+  = kw:(DROP __ USER __) users:list$ident {
+    return loc({
+      type: "alter_action_drop_user",
+      dropUserKw: read(kw),
+      users,
     });
   }
 
