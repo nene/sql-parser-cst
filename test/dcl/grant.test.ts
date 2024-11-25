@@ -88,6 +88,10 @@ describe("GRANT", () => {
       testWc(`GRANT USAGE ON FOREIGN SERVER serv1, serv2 TO john_doe`);
     });
 
+    it(`supports GRANT USAGE ON LANGUAGE ... TO role`, () => {
+      testWc(`GRANT USAGE ON LANGUAGE php, perl TO script_kiddie`);
+    });
+
     it(`supports WITH GRANT OPTION clause`, () => {
       testWc(`GRANT DELETE ON tbl TO johnny WITH GRANT OPTION`);
     });

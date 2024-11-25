@@ -38,6 +38,7 @@ export const dclMap: FullTransformMap<string, AllDclNodes> = {
     show([node.foreignDataWrapperKw, node.dataWrappers]),
   grant_resource_foreign_server: (node) =>
     show([node.foreignServerKw, node.servers]),
+  grant_resource_language: (node) => show([node.languageKw, node.languages]),
   granted_by_clause: (node) => show([node.grantedByKw, node.role]),
 
   revoke_stmt: (node) =>

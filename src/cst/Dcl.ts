@@ -71,7 +71,8 @@ export type GrantResource =
   | GrantResourceDatabase
   | GrantResourceDomain
   | GrantResourceForeignDataWrapper
-  | GrantResourceForeignServer;
+  | GrantResourceForeignServer
+  | GrantResourceLanguage;
 
 export interface GrantResourceTable extends BaseNode {
   type: "grant_resource_table";
@@ -133,6 +134,12 @@ export interface GrantResourceForeignServer extends BaseNode {
   type: "grant_resource_foreign_server";
   foreignServerKw: [Keyword<"FOREIGN">, Keyword<"SERVER">];
   servers: ListExpr<Identifier>;
+}
+
+export interface GrantResourceLanguage extends BaseNode {
+  type: "grant_resource_language";
+  languageKw: Keyword<"LANGUAGE">;
+  languages: ListExpr<Identifier>;
 }
 
 export interface GrantedByClause extends BaseNode {

@@ -4807,6 +4807,9 @@ grant_resource
   / kw:(FOREIGN __ SERVER __) servers:list$ident {
     return loc({ type: "grant_resource_foreign_server", foreignServerKw: read(kw), servers });
   }
+  / kw:(LANGUAGE __) languages:list$ident {
+    return loc({ type: "grant_resource_language", languageKw: read(kw), languages });
+  }
   / kw:(TABLE __)? tables:list$entity_name {
     return loc({ type: "grant_resource_table", tableKw: read(kw), tables });
   }
