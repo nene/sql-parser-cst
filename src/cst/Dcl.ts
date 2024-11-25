@@ -1,5 +1,5 @@
 import { BaseNode, Keyword } from "./Base";
-import { Identifier, ListExpr, EntityName } from "./Expr";
+import { Identifier, ListExpr, EntityName, Expr } from "./Expr";
 import { StringLiteral } from "./Literal";
 
 export type AllDclNodes =
@@ -72,7 +72,8 @@ export type GrantResource =
   | GrantResourceDomain
   | GrantResourceForeignDataWrapper
   | GrantResourceForeignServer
-  | GrantResourceLanguage;
+  | GrantResourceLanguage
+  | GrantResourceLargeObject;
 
 export interface GrantResourceTable extends BaseNode {
   type: "grant_resource_table";
@@ -140,6 +141,12 @@ export interface GrantResourceLanguage extends BaseNode {
   type: "grant_resource_language";
   languageKw: Keyword<"LANGUAGE">;
   languages: ListExpr<Identifier>;
+}
+
+export interface GrantResourceLargeObject extends BaseNode {
+  type: "grant_resource_large_object";
+  largeObjectKw: [Keyword<"LARGE">, Keyword<"OBJECT">];
+  oids: ListExpr<Expr>;
 }
 
 export interface GrantedByClause extends BaseNode {

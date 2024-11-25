@@ -1,4 +1,4 @@
-import { dialect, parse, testWc } from "../test_utils";
+import { dialect, includeAll, parse, testWc } from "../test_utils";
 
 describe("GRANT", () => {
   dialect("bigquery", () => {
@@ -90,6 +90,18 @@ describe("GRANT", () => {
 
     it(`supports GRANT USAGE ON LANGUAGE ... TO role`, () => {
       testWc(`GRANT USAGE ON LANGUAGE php, perl TO script_kiddie`);
+    });
+
+    ["SELECT", "UPDATE"].forEach((privilege) => {
+      it(`supports GRANT ${privilege} ON LARGE OBJECT ... TO role`, () => {
+        testWc(`GRANT ${privilege} ON LARGE OBJECT 128, 920 TO john_doe`);
+      });
+    });
+    it(`supports GRANT ... ON LARGE OBJECT with parameter`, () => {
+      testWc(`GRANT UPDATE ON LARGE OBJECT :oid TO john_doe`, {
+        ...includeAll,
+        paramTypes: [":name"],
+      });
     });
 
     it(`supports WITH GRANT OPTION clause`, () => {

@@ -4810,6 +4810,9 @@ grant_resource
   / kw:(LANGUAGE __) languages:list$ident {
     return loc({ type: "grant_resource_language", languageKw: read(kw), languages });
   }
+  / kw:(LARGE __ OBJECT __) oids:list$expr {
+    return loc({ type: "grant_resource_large_object", largeObjectKw: read(kw), oids });
+  }
   / kw:(TABLE __)? tables:list$entity_name {
     return loc({ type: "grant_resource_table", tableKw: read(kw), tables });
   }
@@ -8631,6 +8634,7 @@ KEY                 = kw:"KEY"i                 !ident_part { return loc(createK
 KEY_BLOCK_SIZE      = kw:"KEY_BLOCK_SIZE"i      !ident_part { return loc(createKeyword(kw)); }
 LAG                 = kw:"LAG"i                 !ident_part { return loc(createKeyword(kw)); }
 LANGUAGE            = kw:"LANGUAGE"i            !ident_part { return loc(createKeyword(kw)); }
+LARGE               = kw:"LARGE"i               !ident_part { return loc(createKeyword(kw)); }
 LAST                = kw:"LAST"i                !ident_part { return loc(createKeyword(kw)); }
 LAST_VALUE          = kw:"LAST_VALUE"i          !ident_part { return loc(createKeyword(kw)); }
 LATERAL             = kw:"LATERAL"i             !ident_part { return loc(createKeyword(kw)); }
@@ -8719,6 +8723,7 @@ NULL                = kw:"NULL"i                !ident_part { return loc(createK
 NULLS               = kw:"NULLS"i               !ident_part { return loc(createKeyword(kw)); }
 NUMERIC             = kw:"NUMERIC"i             !ident_part { return loc(createKeyword(kw)); }
 NVARCHAR            = kw:"NVARCHAR"i            !ident_part { return loc(createKeyword(kw)); }
+OBJECT              = kw:"OBJECT"i              !ident_part { return loc(createKeyword(kw)); }
 OF                  = kw:"OF"i                  !ident_part { return loc(createKeyword(kw)); }
 OFF                 = kw:"OFF"i                 !ident_part { return loc(createKeyword(kw)); }
 OFFSET              = kw:"OFFSET"i              !ident_part { return loc(createKeyword(kw)); }
