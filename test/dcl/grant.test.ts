@@ -70,6 +70,12 @@ describe("GRANT", () => {
       testWc(`GRANT USAGE, UPDATE ON ALL SEQUENCES IN SCHEMA schm1, schm2 TO peter_pan`);
     });
 
+    ["CREATE", "CONNECT", "TEMPORARY", "TEMP"].forEach((privilege) => {
+      it(`supports GRANT ${privilege} ON DATABASE resource TO role`, () => {
+        testWc(`GRANT ${privilege} ON DATABASE db1, db2 TO john_doe`);
+      });
+    });
+
     it(`supports WITH GRANT OPTION clause`, () => {
       testWc(`GRANT DELETE ON tbl TO johnny WITH GRANT OPTION`);
     });

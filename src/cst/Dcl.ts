@@ -50,6 +50,10 @@ export interface Privilege extends BaseNode {
     | "TRIGGER"
     | "MAINTAIN"
     | "USAGE"
+    | "CREATE"
+    | "CONNECT"
+    | "TEMPORARY"
+    | "TEMP"
   >;
 }
 
@@ -63,7 +67,8 @@ export type GrantResource =
   | GrantResourceTable
   | GrantResourceAllTablesInSchema
   | GrantResourceSequence
-  | GrantResourceAllSequencesInSchema;
+  | GrantResourceAllSequencesInSchema
+  | GrantResourceDatabase;
 
 export interface GrantResourceTable extends BaseNode {
   type: "grant_resource_table";
@@ -97,6 +102,12 @@ export interface GrantResourceAllSequencesInSchema extends BaseNode {
     Keyword<"SCHEMA">
   ];
   schemas: ListExpr<Identifier>;
+}
+
+export interface GrantResourceDatabase extends BaseNode {
+  type: "grant_resource_database";
+  databaseKw: Keyword<"DATABASE">;
+  databases: ListExpr<Identifier>;
 }
 
 export interface GrantedByClause extends BaseNode {

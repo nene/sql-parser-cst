@@ -4762,7 +4762,21 @@ grant_privilege_stmt
     }
 
 privilege
-  = kw:(SELECT / INSERT / UPDATE / DELETE / TRUNCATE / REFERENCES / TRIGGER / MAINTAIN / USAGE) {
+  = kw:(
+    SELECT
+  / INSERT
+  / UPDATE
+  / DELETE
+  / TRUNCATE
+  / REFERENCES
+  / TRIGGER
+  / MAINTAIN
+  / USAGE
+  / CREATE
+  / CONNECT
+  / TEMPORARY
+  / TEMP
+  ) {
     return loc({ type: "privilege", privilegeKw: kw });
   }
 
@@ -4780,6 +4794,9 @@ grant_resource
   }
   / kw:(SEQUENCE __) sequences:list$entity_name {
     return loc({ type: "grant_resource_sequence", sequenceKw: read(kw), sequences });
+  }
+  / kw:(DATABASE __) databases:list$ident {
+    return loc({ type: "grant_resource_database", databaseKw: read(kw), databases });
   }
   / kw:(TABLE __)? tables:list$entity_name {
     return loc({ type: "grant_resource_table", tableKw: read(kw), tables });
@@ -8413,6 +8430,7 @@ COMPRESSED          = kw:"COMPRESSED"i          !ident_part { return loc(createK
 COMPRESSION         = kw:"COMPRESSION"i         !ident_part { return loc(createKeyword(kw)); }
 CONCURRENTLY        = kw:"CONCURRENTLY"i        !ident_part { return loc(createKeyword(kw)); }
 CONFLICT            = kw:"CONFLICT"i            !ident_part { return loc(createKeyword(kw)); }
+CONNECT             = kw:"CONNECT"i             !ident_part { return loc(createKeyword(kw)); }
 CONNECTION          = kw:"CONNECTION"i          !ident_part { return loc(createKeyword(kw)); }
 CONSTRAINT          = kw:"CONSTRAINT"i          !ident_part { return loc(createKeyword(kw)); }
 CONSTRAINTS         = kw:"CONSTRAINTS"i         !ident_part { return loc(createKeyword(kw)); }
