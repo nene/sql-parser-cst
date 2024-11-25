@@ -2,11 +2,11 @@ import { BaseNode, Keyword } from "./Base";
 import { Identifier, ListExpr, EntityName } from "./Expr";
 import { StringLiteral } from "./Literal";
 
-export type AllDclStatements = GrantStmt | RevokeStmt;
+export type AllDclStatements = GrantRoleStmt | RevokeStmt;
 
-// GRANT
-export interface GrantStmt extends BaseNode {
-  type: "grant_stmt";
+// GRANT role ON resource TO user
+export interface GrantRoleStmt extends BaseNode {
+  type: "grant_role_stmt";
   grantKw: Keyword<"GRANT">;
   roles: ListExpr<Identifier>;
   onKw: Keyword<"ON">;

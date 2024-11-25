@@ -4723,14 +4723,14 @@ release_savepoint_stmt
  * ------------------------------------------------------------------------------------ *
  */
 dcl_statement
-  = &bigquery x:(grant_stmt / revoke_stmt) { return x; }
+  = &bigquery x:(grant_role_stmt / revoke_stmt) { return x; }
 
-grant_stmt
+grant_role_stmt
   = kw:(GRANT __) roles:(list$ident __)
     onKw:(ON __) resType:(resource_type_kw __) resName:(entity_name __)
     toKw:(TO __) users:(list$string_literal) {
       return loc({
-        type: "grant_stmt",
+        type: "grant_role_stmt",
         grantKw: read(kw),
         roles: read(roles),
         onKw: read(onKw),

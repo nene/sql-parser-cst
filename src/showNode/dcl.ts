@@ -3,7 +3,7 @@ import { AllDclStatements } from "../cst/Node";
 import { FullTransformMap } from "../cstTransformer";
 
 export const dclMap: FullTransformMap<string, AllDclStatements> = {
-  grant_stmt: (node) =>
+  grant_role_stmt: (node) =>
     show([
       node.grantKw,
       node.roles,
