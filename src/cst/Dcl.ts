@@ -75,7 +75,8 @@ export type GrantResource =
   | GrantResourceLanguage
   | GrantResourceLargeObject
   | GrantResourceSchema
-  | GrantResourceTablespace;
+  | GrantResourceTablespace
+  | GrantResourceType;
 
 export interface GrantResourceTable extends BaseNode {
   type: "grant_resource_table";
@@ -161,6 +162,12 @@ export interface GrantResourceTablespace extends BaseNode {
   type: "grant_resource_tablespace";
   tablespaceKw: Keyword<"TABLESPACE">;
   tablespaces: ListExpr<Identifier>;
+}
+
+export interface GrantResourceType extends BaseNode {
+  type: "grant_resource_type";
+  typeKw: Keyword<"TYPE">;
+  types: ListExpr<EntityName>;
 }
 
 export interface GrantedByClause extends BaseNode {

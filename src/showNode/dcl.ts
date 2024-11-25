@@ -43,6 +43,7 @@ export const dclMap: FullTransformMap<string, AllDclNodes> = {
   grant_resource_schema: (node) => show([node.schemaKw, node.schemas]),
   grant_resource_tablespace: (node) =>
     show([node.tablespaceKw, node.tablespaces]),
+  grant_resource_type: (node) => show([node.typeKw, node.types]),
   granted_by_clause: (node) => show([node.grantedByKw, node.role]),
 
   revoke_stmt: (node) =>

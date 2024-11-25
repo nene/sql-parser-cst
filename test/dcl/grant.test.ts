@@ -114,6 +114,10 @@ describe("GRANT", () => {
       testWc(`GRANT CREATE ON TABLESPACE spc1, spc2 TO john_doe`);
     });
 
+    it(`supports GRANT USAGE ON TYPE ... TO role`, () => {
+      testWc(`GRANT USAGE ON TYPE schm.typ1, typ2 TO john_doe`);
+    });
+
     it(`supports WITH GRANT OPTION clause`, () => {
       testWc(`GRANT DELETE ON tbl TO johnny WITH GRANT OPTION`);
     });

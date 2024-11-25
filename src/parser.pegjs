@@ -4819,6 +4819,9 @@ grant_resource
   / kw:(TABLESPACE __) tablespaces:list$ident {
     return loc({ type: "grant_resource_tablespace", tablespaceKw: read(kw), tablespaces });
   }
+  / kw:(TYPE __) types:list$entity_name {
+    return loc({ type: "grant_resource_type", typeKw: read(kw), types });
+  }
   / kw:(TABLE __)? tables:list$entity_name {
     return loc({ type: "grant_resource_table", tableKw: read(kw), tables });
   }
