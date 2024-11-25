@@ -4724,6 +4724,7 @@ release_savepoint_stmt
  */
 dcl_statement
   = &bigquery x:(grant_role_stmt / revoke_stmt) { return x; }
+  / &postgres x:(grant_privilege_stmt) { return x; }
 
 grant_role_stmt
   = kw:(GRANT __) roles:(list$ident __)
@@ -4740,6 +4741,46 @@ grant_role_stmt
         users,
       });
     }
+
+grant_privilege_stmt
+  = kw:(GRANT __) privileges:((list$grant_privilege / all_privileges) __)
+    onKw:(ON __) resource:(grant_resource __)
+    toKw:(TO __) roles:(list$role_specification)
+    withKw:(__ WITH __ GRANT __ OPTION)?
+    grantedBy:(__ granted_by_clause)? {
+      return loc({
+        type: "grant_privilege_stmt",
+        grantKw: read(kw),
+        privileges: read(privileges),
+        onKw: read(onKw),
+        resource: read(resource),
+        toKw: read(toKw),
+        roles,
+        withGrantOptionKw: read(withKw),
+        grantedBy: read(grantedBy),
+      });
+    }
+
+grant_privilege
+  = SELECT / INSERT / UPDATE / DELETE / TRUNCATE / REFERENCES / TRIGGER / MAINTAIN
+
+all_privileges
+  = allKw:ALL privilegesKw:(__ PRIVILEGES)? {
+    return loc({ type: "all_privileges", allKw: read(allKw), privilegesKw: read(privilegesKw) });
+  }
+
+grant_resource
+  = kw:(ALL __ TABLES __ IN __ SCHEMA __) schemas:list$ident {
+    return loc({ type: "grant_resource_all_tables_in_schema", allTablesInSchemaKw: read(kw), schemas });
+  }
+  / kw:(TABLE __)? tables:list$entity_name {
+    return loc({ type: "grant_resource_table", tableKw: read(kw), tables });
+  }
+
+granted_by_clause
+  = kw:(GRANTED __ BY __) role:role_specification {
+    return loc({ type: "granted_by_clause", grantedByKw: read(kw), role });
+  }
 
 revoke_stmt
   = kw:(REVOKE __) roles:(list$ident __)
@@ -7325,6 +7366,7 @@ list$expr = .
 list$expr_or_default = .
 list$expr_or_explicit_alias = .
 list$func_param = .
+list$grant_privilege = .
 list$grouping_element = .
 list$ident = .
 list$index_specification = .
@@ -8492,6 +8534,7 @@ GLOB                = kw:"GLOB"i                !ident_part { return loc(createK
 GLOBAL              = kw:"GLOBAL"i              !ident_part { return loc(createKeyword(kw)); }
 GO                  = kw:"GO"i                  !ident_part { return loc(createKeyword(kw)); }
 GRANT               = kw:"GRANT"i               !ident_part { return loc(createKeyword(kw)); }
+GRANTED             = kw:"GRANTED"i             !ident_part { return loc(createKeyword(kw)); }
 GRANTS              = kw:"GRANTS"i              !ident_part { return loc(createKeyword(kw)); }
 GROUP               = kw:"GROUP"i               !ident_part { return loc(createKeyword(kw)); }
 GROUP_CONCAT        = kw:"GROUP_CONCAT"i        !ident_part { return loc(createKeyword(kw)); }
@@ -8576,6 +8619,7 @@ LONGTEXT            = kw:"LONGTEXT"i            !ident_part { return loc(createK
 LOOP                = kw:"LOOP"i                !ident_part { return loc(createKeyword(kw)); }
 LOW_PRIORITY        = kw:"LOW_PRIORITY"i        !ident_part { return loc(createKeyword(kw)); }
 MAIN                = kw:"MAIN"i                !ident_part { return loc(createKeyword(kw)); }
+MAINTAIN            = kw:"MAINTAIN"i            !ident_part { return loc(createKeyword(kw)); }
 MASTER              = kw:"MASTER"i              !ident_part { return loc(createKeyword(kw)); }
 MATCH               = kw:"MATCH"i               !ident_part { return loc(createKeyword(kw)); }
 MATCHED             = kw:"MATCHED"i             !ident_part { return loc(createKeyword(kw)); }
@@ -8682,6 +8726,7 @@ PRECEDING           = kw:"PRECEDING"i           !ident_part { return loc(createK
 PRECISION           = kw:"PRECISION"i           !ident_part { return loc(createKeyword(kw)); }
 PRESERVE            = kw:"PRESERVE"i            !ident_part { return loc(createKeyword(kw)); }
 PRIMARY             = kw:"PRIMARY"i             !ident_part { return loc(createKeyword(kw)); }
+PRIVILEGES          = kw:"PRIVILEGES"i          !ident_part { return loc(createKeyword(kw)); }
 PROCEDURE           = kw:"PROCEDURE"i           !ident_part { return loc(createKeyword(kw)); }
 PROJECT             = kw:"PROJECT"i             !ident_part { return loc(createKeyword(kw)); }
 QUALIFY             = kw:"QUALIFY"i             !ident_part { return loc(createKeyword(kw)); }

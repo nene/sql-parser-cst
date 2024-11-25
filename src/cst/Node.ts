@@ -49,6 +49,7 @@ import { AllColumns, Keyword } from "./Base";
 import { AllConstraintNodes } from "./Constraint";
 import { AllCreateTableNodes } from "./CreateTable";
 import { AllDataTypeNodes } from "./DataType";
+import { AllDclNodes } from "./Dcl";
 import { AllDeleteNodes } from "./Delete";
 import { AllDomainNodes } from "./Domain";
 import { AllExprNodes } from "./Expr";
@@ -86,6 +87,7 @@ export type Node =
   | AllConstraintNodes
   | AllCreateTableNodes
   | AllDataTypeNodes
+  | AllDclNodes
   | AllDeleteNodes
   | AllDomainNodes
   | AllExprNodes

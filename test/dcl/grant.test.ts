@@ -21,6 +21,53 @@ describe("GRANT", () => {
     });
   });
 
+  dialect("postgresql", () => {
+    [
+      "SELECT",
+      "INSERT",
+      "UPDATE",
+      "DELETE",
+      "TRUNCATE",
+      "REFERENCES",
+      "TRIGGER",
+      "MAINTAIN",
+    ].forEach((privilege) => {
+      it(`supports GRANT ${privilege} ON TABLE resource TO role`, () => {
+        testWc(`GRANT ${privilege} ON TABLE schm.tbl TO john_doe`);
+      });
+    });
+
+    it(`supports granting multiple privileges`, () => {
+      testWc(`GRANT SELECT, UPDATE, INSERT ON TABLE tbl TO john`);
+    });
+
+    it(`supports GRANT ALL PRIVILEGES ON TABLE resource TO role`, () => {
+      testWc(`GRANT ALL ON TABLE schm.tbl TO john_doe`);
+      testWc(`GRANT ALL PRIVILEGES ON TABLE schm.tbl TO john_doe`);
+    });
+
+    it(`supports ALL TABLES IN SCHEMA`, () => {
+      testWc(`GRANT INSERT ON ALL TABLES IN SCHEMA my_schema TO peter_pan`);
+      testWc(`GRANT INSERT ON ALL TABLES IN SCHEMA schm1, schm2 TO peter_pan`);
+    });
+
+    it(`supports multiple tables and roles`, () => {
+      testWc(`GRANT UPDATE ON TABLE tbl1, tbl2, tbl3 TO john_doe, mary_jane`);
+    });
+
+    it(`supports optional TABLE keyword`, () => {
+      testWc(`GRANT DELETE ON tbl TO johnny`);
+    });
+
+    it(`supports WITH GRANT OPTION clause`, () => {
+      testWc(`GRANT DELETE ON tbl TO johnny WITH GRANT OPTION`);
+    });
+
+    it(`supports GRANTED BY clause`, () => {
+      testWc(`GRANT DELETE ON tbl TO johnny GRANTED BY happy_admin`);
+    });
+  });
+
   dialect(["mysql", "mariadb", "sqlite"], () => {
     it("does not support GRANT", () => {
       expect(() => parse("GRANT `role` ON TABLE foo TO 'user:blah'")).toThrowError();
