@@ -68,7 +68,8 @@ export type GrantResource =
   | GrantResourceAllTablesInSchema
   | GrantResourceSequence
   | GrantResourceAllSequencesInSchema
-  | GrantResourceDatabase;
+  | GrantResourceDatabase
+  | GrantResourceDomain;
 
 export interface GrantResourceTable extends BaseNode {
   type: "grant_resource_table";
@@ -108,6 +109,12 @@ export interface GrantResourceDatabase extends BaseNode {
   type: "grant_resource_database";
   databaseKw: Keyword<"DATABASE">;
   databases: ListExpr<Identifier>;
+}
+
+export interface GrantResourceDomain extends BaseNode {
+  type: "grant_resource_domain";
+  domainKw: Keyword<"DOMAIN">;
+  domains: ListExpr<EntityName>;
 }
 
 export interface GrantedByClause extends BaseNode {

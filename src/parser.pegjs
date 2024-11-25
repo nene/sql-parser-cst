@@ -4798,6 +4798,9 @@ grant_resource
   / kw:(DATABASE __) databases:list$ident {
     return loc({ type: "grant_resource_database", databaseKw: read(kw), databases });
   }
+  / kw:(DOMAIN __) domains:list$entity_name {
+    return loc({ type: "grant_resource_domain", domainKw: read(kw), domains });
+  }
   / kw:(TABLE __)? tables:list$entity_name {
     return loc({ type: "grant_resource_table", tableKw: read(kw), tables });
   }

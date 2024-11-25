@@ -32,7 +32,7 @@ describe("GRANT", () => {
       "TRIGGER",
       "MAINTAIN",
     ].forEach((privilege) => {
-      it(`supports GRANT ${privilege} ON TABLE resource TO role`, () => {
+      it(`supports GRANT ${privilege} ON TABLE ... TO role`, () => {
         testWc(`GRANT ${privilege} ON TABLE schm.tbl TO john_doe`);
       });
     });
@@ -41,7 +41,7 @@ describe("GRANT", () => {
       testWc(`GRANT SELECT, UPDATE, INSERT ON TABLE tbl TO john`);
     });
 
-    it(`supports GRANT ALL PRIVILEGES ON TABLE resource TO role`, () => {
+    it(`supports GRANT ALL PRIVILEGES ON TABLE ... TO role`, () => {
       testWc(`GRANT ALL ON TABLE schm.tbl TO john_doe`);
       testWc(`GRANT ALL PRIVILEGES ON TABLE schm.tbl TO john_doe`);
     });
@@ -60,7 +60,7 @@ describe("GRANT", () => {
     });
 
     ["USAGE", "SELECT", "UPDATE"].forEach((privilege) => {
-      it(`supports GRANT ${privilege} ON SEQUENCE resource TO role`, () => {
+      it(`supports GRANT ${privilege} ON SEQUENCE ... TO role`, () => {
         testWc(`GRANT ${privilege} ON SEQUENCE schm.seq1, seq2 TO john_doe`);
       });
     });
@@ -71,9 +71,13 @@ describe("GRANT", () => {
     });
 
     ["CREATE", "CONNECT", "TEMPORARY", "TEMP"].forEach((privilege) => {
-      it(`supports GRANT ${privilege} ON DATABASE resource TO role`, () => {
+      it(`supports GRANT ${privilege} ON DATABASE ... TO role`, () => {
         testWc(`GRANT ${privilege} ON DATABASE db1, db2 TO john_doe`);
       });
+    });
+
+    it(`supports GRANT USAGE ON DOMAIN ... TO role`, () => {
+      testWc(`GRANT USAGE ON DOMAIN schm.dom1, dom2 TO john_doe`);
     });
 
     it(`supports WITH GRANT OPTION clause`, () => {
