@@ -73,7 +73,8 @@ export type GrantResource =
   | GrantResourceForeignDataWrapper
   | GrantResourceForeignServer
   | GrantResourceLanguage
-  | GrantResourceLargeObject;
+  | GrantResourceLargeObject
+  | GrantResourceSchema;
 
 export interface GrantResourceTable extends BaseNode {
   type: "grant_resource_table";
@@ -147,6 +148,12 @@ export interface GrantResourceLargeObject extends BaseNode {
   type: "grant_resource_large_object";
   largeObjectKw: [Keyword<"LARGE">, Keyword<"OBJECT">];
   oids: ListExpr<Expr>;
+}
+
+export interface GrantResourceSchema extends BaseNode {
+  type: "grant_resource_schema";
+  schemaKw: Keyword<"SCHEMA">;
+  schemas: ListExpr<Identifier>;
 }
 
 export interface GrantedByClause extends BaseNode {

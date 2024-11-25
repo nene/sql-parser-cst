@@ -4813,6 +4813,9 @@ grant_resource
   / kw:(LARGE __ OBJECT __) oids:list$expr {
     return loc({ type: "grant_resource_large_object", largeObjectKw: read(kw), oids });
   }
+  / kw:(SCHEMA __) schemas:list$ident {
+    return loc({ type: "grant_resource_schema", schemaKw: read(kw), schemas });
+  }
   / kw:(TABLE __)? tables:list$entity_name {
     return loc({ type: "grant_resource_table", tableKw: read(kw), tables });
   }

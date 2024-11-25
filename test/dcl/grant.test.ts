@@ -104,6 +104,12 @@ describe("GRANT", () => {
       });
     });
 
+    ["CREATE", "USAGE"].forEach((privilege) => {
+      it(`supports GRANT ${privilege} ON SCHEMA ... TO role`, () => {
+        testWc(`GRANT ${privilege} ON SCHEMA foo, bar TO john_doe`);
+      });
+    });
+
     it(`supports WITH GRANT OPTION clause`, () => {
       testWc(`GRANT DELETE ON tbl TO johnny WITH GRANT OPTION`);
     });
