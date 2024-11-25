@@ -110,6 +110,10 @@ describe("GRANT", () => {
       });
     });
 
+    it(`supports GRANT CREATE ON TABLESPACE ... TO role`, () => {
+      testWc(`GRANT CREATE ON TABLESPACE spc1, spc2 TO john_doe`);
+    });
+
     it(`supports WITH GRANT OPTION clause`, () => {
       testWc(`GRANT DELETE ON tbl TO johnny WITH GRANT OPTION`);
     });
