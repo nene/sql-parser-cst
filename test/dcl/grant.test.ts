@@ -80,6 +80,10 @@ describe("GRANT", () => {
       testWc(`GRANT USAGE ON DOMAIN schm.dom1, dom2 TO john_doe`);
     });
 
+    it(`supports GRANT USAGE ON FOREIGN DATA WRAPPER ... TO role`, () => {
+      testWc(`GRANT USAGE ON FOREIGN DATA WRAPPER wrap1, wrap2 TO john_doe`);
+    });
+
     it(`supports WITH GRANT OPTION clause`, () => {
       testWc(`GRANT DELETE ON tbl TO johnny WITH GRANT OPTION`);
     });

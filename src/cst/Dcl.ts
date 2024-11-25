@@ -69,7 +69,8 @@ export type GrantResource =
   | GrantResourceSequence
   | GrantResourceAllSequencesInSchema
   | GrantResourceDatabase
-  | GrantResourceDomain;
+  | GrantResourceDomain
+  | GrantResourceForeignDataWrapper;
 
 export interface GrantResourceTable extends BaseNode {
   type: "grant_resource_table";
@@ -115,6 +116,16 @@ export interface GrantResourceDomain extends BaseNode {
   type: "grant_resource_domain";
   domainKw: Keyword<"DOMAIN">;
   domains: ListExpr<EntityName>;
+}
+
+export interface GrantResourceForeignDataWrapper extends BaseNode {
+  type: "grant_resource_foreign_data_wrapper";
+  foreignDataWrapperKw: [
+    Keyword<"FOREIGN">,
+    Keyword<"DATA">,
+    Keyword<"WRAPPER">
+  ];
+  dataWrappers: ListExpr<Identifier>;
 }
 
 export interface GrantedByClause extends BaseNode {

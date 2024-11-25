@@ -4801,6 +4801,9 @@ grant_resource
   / kw:(DOMAIN __) domains:list$entity_name {
     return loc({ type: "grant_resource_domain", domainKw: read(kw), domains });
   }
+  / kw:(FOREIGN __ DATA __ WRAPPER __) dataWrappers:list$ident {
+    return loc({ type: "grant_resource_foreign_data_wrapper", foreignDataWrapperKw: read(kw), dataWrappers });
+  }
   / kw:(TABLE __)? tables:list$entity_name {
     return loc({ type: "grant_resource_table", tableKw: read(kw), tables });
   }
@@ -8939,6 +8942,7 @@ WINDOW              = kw:"WINDOW"i              !ident_part { return loc(createK
 WITH                = kw:"WITH"i                !ident_part { return loc(createKeyword(kw)); }
 WITHOUT             = kw:"WITHOUT"i             !ident_part { return loc(createKeyword(kw)); }
 WORK                = kw:"WORK"i                !ident_part { return loc(createKeyword(kw)); }
+WRAPPER             = kw:"WRAPPER"i             !ident_part { return loc(createKeyword(kw)); }
 WRITE               = kw:"WRITE"i               !ident_part { return loc(createKeyword(kw)); }
 XOR                 = kw:"XOR"i                 !ident_part { return loc(createKeyword(kw)); }
 YEAR                = kw:"YEAR"i                !ident_part { return loc(createKeyword(kw)); }
