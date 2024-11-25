@@ -4804,6 +4804,9 @@ grant_resource
   / kw:(FOREIGN __ DATA __ WRAPPER __) dataWrappers:list$ident {
     return loc({ type: "grant_resource_foreign_data_wrapper", foreignDataWrapperKw: read(kw), dataWrappers });
   }
+  / kw:(FOREIGN __ SERVER __) servers:list$ident {
+    return loc({ type: "grant_resource_foreign_server", foreignServerKw: read(kw), servers });
+  }
   / kw:(TABLE __)? tables:list$entity_name {
     return loc({ type: "grant_resource_table", tableKw: read(kw), tables });
   }

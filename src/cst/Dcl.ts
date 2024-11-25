@@ -70,7 +70,8 @@ export type GrantResource =
   | GrantResourceAllSequencesInSchema
   | GrantResourceDatabase
   | GrantResourceDomain
-  | GrantResourceForeignDataWrapper;
+  | GrantResourceForeignDataWrapper
+  | GrantResourceForeignServer;
 
 export interface GrantResourceTable extends BaseNode {
   type: "grant_resource_table";
@@ -126,6 +127,12 @@ export interface GrantResourceForeignDataWrapper extends BaseNode {
     Keyword<"WRAPPER">
   ];
   dataWrappers: ListExpr<Identifier>;
+}
+
+export interface GrantResourceForeignServer extends BaseNode {
+  type: "grant_resource_foreign_server";
+  foreignServerKw: [Keyword<"FOREIGN">, Keyword<"SERVER">];
+  servers: ListExpr<Identifier>;
 }
 
 export interface GrantedByClause extends BaseNode {
