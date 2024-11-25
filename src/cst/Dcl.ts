@@ -4,6 +4,7 @@ import { StringLiteral } from "./Literal";
 
 export type AllDclNodes =
   | AllDclStatements
+  | Privilege
   | AllPrivileges
   | GrantResource
   | GrantedByClause;
@@ -28,7 +29,7 @@ export interface GrantRoleStmt extends BaseNode {
 export interface GrantPrivilegeStmt extends BaseNode {
   type: "grant_privilege_stmt";
   grantKw: Keyword<"GRANT">;
-  privileges: ListExpr<PrivilegeKeyword> | AllPrivileges;
+  privileges: ListExpr<Privilege> | AllPrivileges;
   onKw: Keyword<"ON">;
   resource: GrantResource;
   toKw: Keyword<"TO">;
@@ -37,16 +38,19 @@ export interface GrantPrivilegeStmt extends BaseNode {
   grantedBy?: GrantedByClause;
 }
 
-type PrivilegeKeyword = Keyword<
-  | "SELECT"
-  | "INSERT"
-  | "UPDATE"
-  | "DELETE"
-  | "TRUNCATE"
-  | "REFERENCES"
-  | "TRIGGER"
-  | "MAINTAIN"
->;
+export interface Privilege extends BaseNode {
+  type: "privilege";
+  privilegeKw: Keyword<
+    | "SELECT"
+    | "INSERT"
+    | "UPDATE"
+    | "DELETE"
+    | "TRUNCATE"
+    | "REFERENCES"
+    | "TRIGGER"
+    | "MAINTAIN"
+  >;
+}
 
 export interface AllPrivileges extends BaseNode {
   type: "all_privileges";

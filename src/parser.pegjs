@@ -4743,7 +4743,7 @@ grant_role_stmt
     }
 
 grant_privilege_stmt
-  = kw:(GRANT __) privileges:((list$grant_privilege / all_privileges) __)
+  = kw:(GRANT __) privileges:((list$privilege / all_privileges) __)
     onKw:(ON __) resource:(grant_resource __)
     toKw:(TO __) roles:(list$role_specification)
     withKw:(__ WITH __ GRANT __ OPTION)?
@@ -4761,8 +4761,10 @@ grant_privilege_stmt
       });
     }
 
-grant_privilege
-  = SELECT / INSERT / UPDATE / DELETE / TRUNCATE / REFERENCES / TRIGGER / MAINTAIN
+privilege
+  = kw:(SELECT / INSERT / UPDATE / DELETE / TRUNCATE / REFERENCES / TRIGGER / MAINTAIN) {
+    return loc({ type: "privilege", privilegeKw: kw });
+  }
 
 all_privileges
   = allKw:ALL privilegesKw:(__ PRIVILEGES)? {
@@ -7366,7 +7368,6 @@ list$expr = .
 list$expr_or_default = .
 list$expr_or_explicit_alias = .
 list$func_param = .
-list$grant_privilege = .
 list$grouping_element = .
 list$ident = .
 list$index_specification = .
@@ -7376,6 +7377,7 @@ list$named_window = .
 list$number_literal = .
 list$partition_bound_from_to_value = .
 list$partition_bound_with_value = .
+list$privilege = .
 list$postgresql_option_element = .
 list$procedure_param = .
 list$reindex_option = .

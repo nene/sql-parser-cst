@@ -24,6 +24,7 @@ export const dclMap: FullTransformMap<string, AllDclNodes> = {
       node.withGrantOptionKw,
       node.grantedBy,
     ]),
+  privilege: (node) => show([node.privilegeKw]),
   all_privileges: (node) => show([node.allKw, node.privilegesKw]),
   grant_resource_table: (node) => show([node.tableKw, node.tables]),
   grant_resource_all_tables_in_schema: (node) =>
