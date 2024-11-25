@@ -4762,7 +4762,7 @@ grant_privilege_stmt
     }
 
 privilege
-  = kw:(SELECT / INSERT / UPDATE / DELETE / TRUNCATE / REFERENCES / TRIGGER / MAINTAIN) {
+  = kw:(SELECT / INSERT / UPDATE / DELETE / TRUNCATE / REFERENCES / TRIGGER / MAINTAIN / USAGE) {
     return loc({ type: "privilege", privilegeKw: kw });
   }
 
@@ -4774,6 +4774,12 @@ all_privileges
 grant_resource
   = kw:(ALL __ TABLES __ IN __ SCHEMA __) schemas:list$ident {
     return loc({ type: "grant_resource_all_tables_in_schema", allTablesInSchemaKw: read(kw), schemas });
+  }
+  / kw:(ALL __ SEQUENCES __ IN __ SCHEMA __) schemas:list$ident {
+    return loc({ type: "grant_resource_all_sequences_in_schema", allSequencesInSchemaKw: read(kw), schemas });
+  }
+  / kw:(SEQUENCE __) sequences:list$entity_name {
+    return loc({ type: "grant_resource_sequence", sequenceKw: read(kw), sequences });
   }
   / kw:(TABLE __)? tables:list$entity_name {
     return loc({ type: "grant_resource_table", tableKw: read(kw), tables });
@@ -8791,6 +8797,7 @@ SECONDARY_ENGINE_ATTRIBUTE = kw:"SECONDARY_ENGINE_ATTRIBUTE"i !ident_part { retu
 SECURITY            = kw:"SECURITY"i            !ident_part { return loc(createKeyword(kw)); }
 SELECT              = kw:"SELECT"i              !ident_part { return loc(createKeyword(kw)); }
 SEQUENCE            = kw:"SEQUENCE"i            !ident_part { return loc(createKeyword(kw)); }
+SEQUENCES           = kw:"SEQUENCES"i           !ident_part { return loc(createKeyword(kw)); }
 SERVER              = kw:"SERVER"i              !ident_part { return loc(createKeyword(kw)); }
 SESSION             = kw:"SESSION"i             !ident_part { return loc(createKeyword(kw)); }
 SESSION_USER        = kw:"SESSION_USER"i        !ident_part { return loc(createKeyword(kw)); }
@@ -8882,6 +8889,7 @@ UNSAFE              = kw:"UNSAFE"i              !ident_part { return loc(createK
 UNSIGNED            = kw:"UNSIGNED"i            !ident_part { return loc(createKeyword(kw)); }
 UNTIL               = kw:"UNTIL"i               !ident_part { return loc(createKeyword(kw)); }
 UPDATE              = kw:"UPDATE"i              !ident_part { return loc(createKeyword(kw)); }
+USAGE               = kw:"USAGE"i               !ident_part { return loc(createKeyword(kw)); }
 USE                 = kw:"USE"i                 !ident_part { return loc(createKeyword(kw)); }
 USER                = kw:"USER"i                !ident_part { return loc(createKeyword(kw)); }
 USING               = kw:"USING"i               !ident_part { return loc(createKeyword(kw)); }

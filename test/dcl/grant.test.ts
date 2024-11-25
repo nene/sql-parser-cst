@@ -59,6 +59,17 @@ describe("GRANT", () => {
       testWc(`GRANT DELETE ON tbl TO johnny`);
     });
 
+    ["USAGE", "SELECT", "UPDATE"].forEach((privilege) => {
+      it(`supports GRANT ${privilege} ON SEQUENCE resource TO role`, () => {
+        testWc(`GRANT ${privilege} ON SEQUENCE schm.seq1, seq2 TO john_doe`);
+      });
+    });
+
+    it(`supports ALL SEQUENCES IN SCHEMA`, () => {
+      testWc(`GRANT USAGE ON ALL SEQUENCES IN SCHEMA my_schema TO peter_pan`);
+      testWc(`GRANT USAGE, UPDATE ON ALL SEQUENCES IN SCHEMA schm1, schm2 TO peter_pan`);
+    });
+
     it(`supports WITH GRANT OPTION clause`, () => {
       testWc(`GRANT DELETE ON tbl TO johnny WITH GRANT OPTION`);
     });

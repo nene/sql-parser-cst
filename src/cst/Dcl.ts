@@ -49,6 +49,7 @@ export interface Privilege extends BaseNode {
     | "REFERENCES"
     | "TRIGGER"
     | "MAINTAIN"
+    | "USAGE"
   >;
 }
 
@@ -58,7 +59,11 @@ export interface AllPrivileges extends BaseNode {
   privilegesKw?: Keyword<"PRIVILEGES">;
 }
 
-export type GrantResource = GrantResourceTable | GrantResourceAllTablesInSchema;
+export type GrantResource =
+  | GrantResourceTable
+  | GrantResourceAllTablesInSchema
+  | GrantResourceSequence
+  | GrantResourceAllSequencesInSchema;
 
 export interface GrantResourceTable extends BaseNode {
   type: "grant_resource_table";
@@ -71,6 +76,23 @@ export interface GrantResourceAllTablesInSchema extends BaseNode {
   allTablesInSchemaKw: [
     Keyword<"ALL">,
     Keyword<"TABLES">,
+    Keyword<"IN">,
+    Keyword<"SCHEMA">
+  ];
+  schemas: ListExpr<Identifier>;
+}
+
+export interface GrantResourceSequence extends BaseNode {
+  type: "grant_resource_sequence";
+  sequenceKw: Keyword<"SEQUENCE">;
+  sequences: ListExpr<EntityName>;
+}
+
+export interface GrantResourceAllSequencesInSchema extends BaseNode {
+  type: "grant_resource_all_sequences_in_schema";
+  allSequencesInSchemaKw: [
+    Keyword<"ALL">,
+    Keyword<"SEQUENCES">,
     Keyword<"IN">,
     Keyword<"SCHEMA">
   ];
