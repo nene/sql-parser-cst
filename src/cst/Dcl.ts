@@ -1,5 +1,6 @@
 import { BaseNode, Keyword } from "./Base";
 import { Identifier, ListExpr, EntityName, Expr, ParenExpr } from "./Expr";
+import { FunctionSignature } from "./Function";
 import { StringLiteral } from "./Literal";
 
 export type AllDclNodes =
@@ -56,6 +57,7 @@ export interface Privilege extends BaseNode {
         | "TEMPORARY"
         | "TEMP"
         | "SET"
+        | "EXECUTE"
       >
     | [Keyword<"ALTER">, Keyword<"SYSTEM">];
   columns?: ParenExpr<ListExpr<Identifier>>;
@@ -77,6 +79,8 @@ export type GrantResource =
   | GrantResourceDomain
   | GrantResourceForeignDataWrapper
   | GrantResourceForeignServer
+  | GrantResourceFunction
+  | GrantResourceAllFunctionsInSchema
   | GrantResourceLanguage
   | GrantResourceLargeObject
   | GrantResourcePostgresqlOption
@@ -144,6 +148,23 @@ export interface GrantResourceForeignServer extends BaseNode {
   type: "grant_resource_foreign_server";
   foreignServerKw: [Keyword<"FOREIGN">, Keyword<"SERVER">];
   servers: ListExpr<Identifier>;
+}
+
+export interface GrantResourceFunction extends BaseNode {
+  type: "grant_resource_function";
+  functionKw: Keyword<"FUNCTION" | "PROCEDURE" | "ROUTINE">;
+  functions: ListExpr<FunctionSignature>;
+}
+
+export interface GrantResourceAllFunctionsInSchema extends BaseNode {
+  type: "grant_resource_all_functions_in_schema";
+  allFunctionsInSchemaKw: [
+    Keyword<"ALL">,
+    Keyword<"FUNCTIONS" | "PROCEDURES" | "ROUTINES">,
+    Keyword<"IN">,
+    Keyword<"SCHEMA">
+  ];
+  schemas: ListExpr<Identifier>;
 }
 
 export interface GrantResourceLanguage extends BaseNode {

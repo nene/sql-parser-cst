@@ -103,6 +103,23 @@ describe("GRANT", () => {
       testWc(`GRANT USAGE ON FOREIGN SERVER serv1, serv2 TO john_doe`);
     });
 
+    ["FUNCTION", "PROCEDURE", "ROUTINE"].forEach((functionKw) => {
+      it(`supports GRANT EXECUTE ON ${functionKw} ... TO role`, () => {
+        testWc(`GRANT EXECUTE ON ${functionKw} fibo, fobo TO john`);
+        testWc(`GRANT EXECUTE ON ${functionKw} fn() TO john`);
+        testWc(`GRANT EXECUTE ON ${functionKw} schm.fn (INT, FLOAT) TO john`);
+        testWc(`GRANT EXECUTE ON ${functionKw} fn(a INT, b INT) TO john`);
+        testWc(`GRANT EXECUTE ON ${functionKw} fn(IN a INT, OUT b INT, INOUT c INT) TO john`);
+      });
+    });
+
+    ["FUNCTIONS", "PROCEDURES", "ROUTINES"].forEach((functionKw) => {
+      it(`supports GRANT EXECUTE ON ALL ${functionKw} IN SCHEMA ... TO role`, () => {
+        testWc(`GRANT EXECUTE ON ALL ${functionKw} IN SCHEMA my_schema TO john`);
+        testWc(`GRANT EXECUTE ON ALL ${functionKw} IN SCHEMA schm1, schm2 TO john`);
+      });
+    });
+
     it(`supports GRANT USAGE ON LANGUAGE ... TO role`, () => {
       testWc(`GRANT USAGE ON LANGUAGE php, perl TO script_kiddie`);
     });

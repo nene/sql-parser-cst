@@ -38,6 +38,9 @@ export const dclMap: FullTransformMap<string, AllDclNodes> = {
     show([node.foreignDataWrapperKw, node.dataWrappers]),
   grant_resource_foreign_server: (node) =>
     show([node.foreignServerKw, node.servers]),
+  grant_resource_function: (node) => show([node.functionKw, node.functions]),
+  grant_resource_all_functions_in_schema: (node) =>
+    show([node.allFunctionsInSchemaKw, node.schemas]),
   grant_resource_language: (node) => show([node.languageKw, node.languages]),
   grant_resource_large_object: (node) => show([node.largeObjectKw, node.oids]),
   grant_resource_postgresql_option: (node) =>
