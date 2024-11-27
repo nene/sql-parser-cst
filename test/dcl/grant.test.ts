@@ -59,6 +59,21 @@ describe("GRANT", () => {
       testWc(`GRANT DELETE ON tbl TO johnny`);
     });
 
+    ["SELECT", "INSERT", "UPDATE", "REFERENCES"].forEach((privilege) => {
+      it(`supports GRANT ${privilege} (cols) ON TABLE ... TO role`, () => {
+        testWc(`GRANT ${privilege} (col1, col2) ON TABLE my_tbl TO john`);
+      });
+    });
+
+    it(`supports granting multiple privileges per column`, () => {
+      testWc(`GRANT SELECT (col1, col2), UPDATE (col1, col2) ON TABLE my_tbl TO john`);
+    });
+
+    it(`supports granting all privileges on columns`, () => {
+      testWc(`GRANT ALL (col1, col2) ON TABLE my_tbl TO john`);
+      testWc(`GRANT ALL PRIVILEGES (col1) ON TABLE my_tbl TO john`);
+    });
+
     ["USAGE", "SELECT", "UPDATE"].forEach((privilege) => {
       it(`supports GRANT ${privilege} ON SEQUENCE ... TO role`, () => {
         testWc(`GRANT ${privilege} ON SEQUENCE schm.seq1, seq2 TO john_doe`);

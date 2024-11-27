@@ -1,5 +1,5 @@
 import { BaseNode, Keyword } from "./Base";
-import { Identifier, ListExpr, EntityName, Expr } from "./Expr";
+import { Identifier, ListExpr, EntityName, Expr, ParenExpr } from "./Expr";
 import { StringLiteral } from "./Literal";
 
 export type AllDclNodes =
@@ -55,12 +55,14 @@ export interface Privilege extends BaseNode {
     | "TEMPORARY"
     | "TEMP"
   >;
+  columns?: ParenExpr<ListExpr<Identifier>>;
 }
 
 export interface AllPrivileges extends BaseNode {
   type: "all_privileges";
   allKw: Keyword<"ALL">;
   privilegesKw?: Keyword<"PRIVILEGES">;
+  columns?: ParenExpr<ListExpr<Identifier>>;
 }
 
 export type GrantResource =

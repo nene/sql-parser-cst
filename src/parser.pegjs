@@ -4762,8 +4762,12 @@ grant_privilege_stmt
     }
 
 privilege
-  = kw:(
-    SELECT
+  = kw:privilege_kw columns:(__ paren$list$ident)? {
+    return loc({ type: "privilege", privilegeKw: kw, columns: read(columns) });
+  }
+
+privilege_kw
+  = SELECT
   / INSERT
   / UPDATE
   / DELETE
@@ -4776,13 +4780,15 @@ privilege
   / CONNECT
   / TEMPORARY
   / TEMP
-  ) {
-    return loc({ type: "privilege", privilegeKw: kw });
-  }
 
 all_privileges
-  = allKw:ALL privilegesKw:(__ PRIVILEGES)? {
-    return loc({ type: "all_privileges", allKw: read(allKw), privilegesKw: read(privilegesKw) });
+  = allKw:ALL privilegesKw:(__ PRIVILEGES)? columns:(__ paren$list$ident)? {
+    return loc({
+      type: "all_privileges",
+      allKw: read(allKw),
+      privilegesKw: read(privilegesKw),
+      columns: read(columns),
+    });
   }
 
 grant_resource
