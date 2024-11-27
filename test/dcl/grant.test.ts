@@ -119,6 +119,12 @@ describe("GRANT", () => {
       });
     });
 
+    ["SET", "ALTER SYSTEM"].forEach((privilege) => {
+      it(`supports GRANT ${privilege} ON PARAMETER ... TO role`, () => {
+        testWc(`GRANT ${privilege} ON PARAMETER foo, bar TO john_doe`);
+      });
+    });
+
     ["CREATE", "USAGE"].forEach((privilege) => {
       it(`supports GRANT ${privilege} ON SCHEMA ... TO role`, () => {
         testWc(`GRANT ${privilege} ON SCHEMA foo, bar TO john_doe`);

@@ -40,21 +40,24 @@ export interface GrantPrivilegeStmt extends BaseNode {
 
 export interface Privilege extends BaseNode {
   type: "privilege";
-  privilegeKw: Keyword<
-    | "SELECT"
-    | "INSERT"
-    | "UPDATE"
-    | "DELETE"
-    | "TRUNCATE"
-    | "REFERENCES"
-    | "TRIGGER"
-    | "MAINTAIN"
-    | "USAGE"
-    | "CREATE"
-    | "CONNECT"
-    | "TEMPORARY"
-    | "TEMP"
-  >;
+  privilegeKw:
+    | Keyword<
+        | "SELECT"
+        | "INSERT"
+        | "UPDATE"
+        | "DELETE"
+        | "TRUNCATE"
+        | "REFERENCES"
+        | "TRIGGER"
+        | "MAINTAIN"
+        | "USAGE"
+        | "CREATE"
+        | "CONNECT"
+        | "TEMPORARY"
+        | "TEMP"
+        | "SET"
+      >
+    | [Keyword<"ALTER">, Keyword<"SYSTEM">];
   columns?: ParenExpr<ListExpr<Identifier>>;
 }
 
@@ -76,6 +79,7 @@ export type GrantResource =
   | GrantResourceForeignServer
   | GrantResourceLanguage
   | GrantResourceLargeObject
+  | GrantResourcePostgresqlOption
   | GrantResourceSchema
   | GrantResourceTablespace
   | GrantResourceType;
@@ -152,6 +156,12 @@ export interface GrantResourceLargeObject extends BaseNode {
   type: "grant_resource_large_object";
   largeObjectKw: [Keyword<"LARGE">, Keyword<"OBJECT">];
   oids: ListExpr<Expr>;
+}
+
+export interface GrantResourcePostgresqlOption extends BaseNode {
+  type: "grant_resource_postgresql_option";
+  parameterKw: Keyword<"PARAMETER">;
+  options: ListExpr<Identifier>;
 }
 
 export interface GrantResourceSchema extends BaseNode {

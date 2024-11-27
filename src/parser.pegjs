@@ -4780,6 +4780,8 @@ privilege_kw
   / CONNECT
   / TEMPORARY
   / TEMP
+  / SET
+  / kw:(ALTER __ SYSTEM) { return read(kw); }
 
 all_privileges
   = allKw:ALL privilegesKw:(__ PRIVILEGES)? columns:(__ paren$list$ident)? {
@@ -4818,6 +4820,9 @@ grant_resource
   }
   / kw:(LARGE __ OBJECT __) oids:list$expr {
     return loc({ type: "grant_resource_large_object", largeObjectKw: read(kw), oids });
+  }
+  / kw:(PARAMETER __) options:list$ident {
+    return loc({ type: "grant_resource_postgresql_option", parameterKw: read(kw), options });
   }
   / kw:(SCHEMA __) schemas:list$ident {
     return loc({ type: "grant_resource_schema", schemaKw: read(kw), schemas });
@@ -8766,6 +8771,7 @@ OWNED               = kw:"OWNED"i               !ident_part { return loc(createK
 OWNER               = kw:"OWNER"i               !ident_part { return loc(createKeyword(kw)); }
 PACK_KEYS           = kw:"PACK_KEYS"i           !ident_part { return loc(createKeyword(kw)); }
 PARALLEL            = kw:"PARALLEL"i            !ident_part { return loc(createKeyword(kw)); }
+PARAMETER           = kw:"PARAMETER"i           !ident_part { return loc(createKeyword(kw)); }
 PARSER              = kw:"PARSER"i              !ident_part { return loc(createKeyword(kw)); }
 PARTIAL             = kw:"PARTIAL"i             !ident_part { return loc(createKeyword(kw)); }
 PARTITION           = kw:"PARTITION"i           !ident_part { return loc(createKeyword(kw)); }
