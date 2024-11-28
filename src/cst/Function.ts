@@ -17,6 +17,7 @@ import { AlterFunctionAction } from "./AlterAction";
 
 export type AllFunctionNodes =
   | AllFunctionStatements
+  | FunctionSignature
   | FunctionParam
   | FunctionParamDefault
   | ReturnClause
@@ -51,6 +52,13 @@ export interface CreateFunctionStmt extends BaseNode {
   name: EntityName;
   params: ParenExpr<ListExpr<FunctionParam>>;
   clauses: CreateFunctionClause[];
+}
+
+// Used elsewhere for referencing function definitions.
+export interface FunctionSignature extends BaseNode {
+  type: "function_signature";
+  name: EntityName;
+  params?: ParenExpr<ListExpr<FunctionParam>>;
 }
 
 export interface FunctionParam extends BaseNode {

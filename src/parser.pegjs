@@ -3687,6 +3687,15 @@ create_function_stmt
       });
     }
 
+function_signature
+  = name:entity_name params:(__ (paren$list$func_param / paren$empty_list))? {
+    return loc({
+      type: "function_signature",
+      name: read(name),
+      params: read(params),
+    });
+  }
+
 func_param
   = &bigquery name:(ident __) type:data_type {
       return loc({
@@ -4723,14 +4732,15 @@ release_savepoint_stmt
  * ------------------------------------------------------------------------------------ *
  */
 dcl_statement
-  = &bigquery x:(grant_stmt / revoke_stmt) { return x; }
+  = &bigquery x:(grant_role_stmt / revoke_stmt) { return x; }
+  / &postgres x:(grant_privilege_stmt) { return x; }
 
-grant_stmt
+grant_role_stmt
   = kw:(GRANT __) roles:(list$ident __)
     onKw:(ON __) resType:(resource_type_kw __) resName:(entity_name __)
     toKw:(TO __) users:(list$string_literal) {
       return loc({
-        type: "grant_stmt",
+        type: "grant_role_stmt",
         grantKw: read(kw),
         roles: read(roles),
         onKw: read(onKw),
@@ -4740,6 +4750,113 @@ grant_stmt
         users,
       });
     }
+
+grant_privilege_stmt
+  = kw:(GRANT __) privileges:((list$privilege / all_privileges) __)
+    onKw:(ON __) resource:(grant_resource __)
+    toKw:(TO __) roles:(list$role_specification)
+    withKw:(__ WITH __ GRANT __ OPTION)?
+    grantedBy:(__ granted_by_clause)? {
+      return loc({
+        type: "grant_privilege_stmt",
+        grantKw: read(kw),
+        privileges: read(privileges),
+        onKw: read(onKw),
+        resource: read(resource),
+        toKw: read(toKw),
+        roles,
+        withGrantOptionKw: read(withKw),
+        grantedBy: read(grantedBy),
+      });
+    }
+
+privilege
+  = kw:privilege_kw columns:(__ paren$list$ident)? {
+    return loc({ type: "privilege", privilegeKw: kw, columns: read(columns) });
+  }
+
+privilege_kw
+  = SELECT
+  / INSERT
+  / UPDATE
+  / DELETE
+  / TRUNCATE
+  / REFERENCES
+  / TRIGGER
+  / MAINTAIN
+  / USAGE
+  / CREATE
+  / CONNECT
+  / TEMPORARY
+  / TEMP
+  / SET
+  / EXECUTE
+  / kw:(ALTER __ SYSTEM) { return read(kw); }
+
+all_privileges
+  = allKw:ALL privilegesKw:(__ PRIVILEGES)? columns:(__ paren$list$ident)? {
+    return loc({
+      type: "all_privileges",
+      allKw: read(allKw),
+      privilegesKw: read(privilegesKw),
+      columns: read(columns),
+    });
+  }
+
+grant_resource
+  = kw:(ALL __ TABLES __ IN __ SCHEMA __) schemas:list$ident {
+    return loc({ type: "grant_resource_all_tables_in_schema", allTablesInSchemaKw: read(kw), schemas });
+  }
+  / kw:(ALL __ SEQUENCES __ IN __ SCHEMA __) schemas:list$ident {
+    return loc({ type: "grant_resource_all_sequences_in_schema", allSequencesInSchemaKw: read(kw), schemas });
+  }
+  / kw:(ALL __ (FUNCTIONS / PROCEDURES / ROUTINES) __ IN __ SCHEMA __) schemas:list$ident {
+    return loc({ type: "grant_resource_all_functions_in_schema", allFunctionsInSchemaKw: read(kw), schemas });
+  }
+  / kw:(SEQUENCE __) sequences:list$entity_name {
+    return loc({ type: "grant_resource_sequence", sequenceKw: read(kw), sequences });
+  }
+  / kw:(DATABASE __) databases:list$ident {
+    return loc({ type: "grant_resource_database", databaseKw: read(kw), databases });
+  }
+  / kw:(DOMAIN __) domains:list$entity_name {
+    return loc({ type: "grant_resource_domain", domainKw: read(kw), domains });
+  }
+  / kw:(FOREIGN __ DATA __ WRAPPER __) dataWrappers:list$ident {
+    return loc({ type: "grant_resource_foreign_data_wrapper", foreignDataWrapperKw: read(kw), dataWrappers });
+  }
+  / kw:(FOREIGN __ SERVER __) servers:list$ident {
+    return loc({ type: "grant_resource_foreign_server", foreignServerKw: read(kw), servers });
+  }
+  / kw:((FUNCTION / PROCEDURE / ROUTINE) __) functions:list$function_signature {
+    return loc({ type: "grant_resource_function", functionKw: read(kw), functions });
+  }
+  / kw:(LANGUAGE __) languages:list$ident {
+    return loc({ type: "grant_resource_language", languageKw: read(kw), languages });
+  }
+  / kw:(LARGE __ OBJECT __) oids:list$expr {
+    return loc({ type: "grant_resource_large_object", largeObjectKw: read(kw), oids });
+  }
+  / kw:(PARAMETER __) options:list$ident {
+    return loc({ type: "grant_resource_postgresql_option", parameterKw: read(kw), options });
+  }
+  / kw:(SCHEMA __) schemas:list$ident {
+    return loc({ type: "grant_resource_schema", schemaKw: read(kw), schemas });
+  }
+  / kw:(TABLESPACE __) tablespaces:list$ident {
+    return loc({ type: "grant_resource_tablespace", tablespaceKw: read(kw), tablespaces });
+  }
+  / kw:(TYPE __) types:list$entity_name {
+    return loc({ type: "grant_resource_type", typeKw: read(kw), types });
+  }
+  / kw:(TABLE __)? tables:list$entity_name {
+    return loc({ type: "grant_resource_table", tableKw: read(kw), tables });
+  }
+
+granted_by_clause
+  = kw:(GRANTED __ BY __) role:role_specification {
+    return loc({ type: "granted_by_clause", grantedByKw: read(kw), role });
+  }
 
 revoke_stmt
   = kw:(REVOKE __) roles:(list$ident __)
@@ -7325,6 +7442,7 @@ list$expr = .
 list$expr_or_default = .
 list$expr_or_explicit_alias = .
 list$func_param = .
+list$function_signature = .
 list$grouping_element = .
 list$ident = .
 list$index_specification = .
@@ -7334,6 +7452,7 @@ list$named_window = .
 list$number_literal = .
 list$partition_bound_from_to_value = .
 list$partition_bound_with_value = .
+list$privilege = .
 list$postgresql_option_element = .
 list$procedure_param = .
 list$reindex_option = .
@@ -8363,6 +8482,7 @@ COMPRESSED          = kw:"COMPRESSED"i          !ident_part { return loc(createK
 COMPRESSION         = kw:"COMPRESSION"i         !ident_part { return loc(createKeyword(kw)); }
 CONCURRENTLY        = kw:"CONCURRENTLY"i        !ident_part { return loc(createKeyword(kw)); }
 CONFLICT            = kw:"CONFLICT"i            !ident_part { return loc(createKeyword(kw)); }
+CONNECT             = kw:"CONNECT"i             !ident_part { return loc(createKeyword(kw)); }
 CONNECTION          = kw:"CONNECTION"i          !ident_part { return loc(createKeyword(kw)); }
 CONSTRAINT          = kw:"CONSTRAINT"i          !ident_part { return loc(createKeyword(kw)); }
 CONSTRAINTS         = kw:"CONSTRAINTS"i         !ident_part { return loc(createKeyword(kw)); }
@@ -8486,12 +8606,14 @@ FROM                = kw:"FROM"i                !ident_part { return loc(createK
 FULL                = kw:"FULL"i                !ident_part { return loc(createKeyword(kw)); }
 FULLTEXT            = kw:"FULLTEXT"i            !ident_part { return loc(createKeyword(kw)); }
 FUNCTION            = kw:"FUNCTION"i            !ident_part { return loc(createKeyword(kw)); }
+FUNCTIONS           = kw:"FUNCTIONS"i           !ident_part { return loc(createKeyword(kw)); }
 GENERATED           = kw:"GENERATED"i           !ident_part { return loc(createKeyword(kw)); }
 GEOGRAPHY           = kw:"GEOGRAPHY"i           !ident_part { return loc(createKeyword(kw)); }
 GLOB                = kw:"GLOB"i                !ident_part { return loc(createKeyword(kw)); }
 GLOBAL              = kw:"GLOBAL"i              !ident_part { return loc(createKeyword(kw)); }
 GO                  = kw:"GO"i                  !ident_part { return loc(createKeyword(kw)); }
 GRANT               = kw:"GRANT"i               !ident_part { return loc(createKeyword(kw)); }
+GRANTED             = kw:"GRANTED"i             !ident_part { return loc(createKeyword(kw)); }
 GRANTS              = kw:"GRANTS"i              !ident_part { return loc(createKeyword(kw)); }
 GROUP               = kw:"GROUP"i               !ident_part { return loc(createKeyword(kw)); }
 GROUP_CONCAT        = kw:"GROUP_CONCAT"i        !ident_part { return loc(createKeyword(kw)); }
@@ -8550,6 +8672,7 @@ KEY                 = kw:"KEY"i                 !ident_part { return loc(createK
 KEY_BLOCK_SIZE      = kw:"KEY_BLOCK_SIZE"i      !ident_part { return loc(createKeyword(kw)); }
 LAG                 = kw:"LAG"i                 !ident_part { return loc(createKeyword(kw)); }
 LANGUAGE            = kw:"LANGUAGE"i            !ident_part { return loc(createKeyword(kw)); }
+LARGE               = kw:"LARGE"i               !ident_part { return loc(createKeyword(kw)); }
 LAST                = kw:"LAST"i                !ident_part { return loc(createKeyword(kw)); }
 LAST_VALUE          = kw:"LAST_VALUE"i          !ident_part { return loc(createKeyword(kw)); }
 LATERAL             = kw:"LATERAL"i             !ident_part { return loc(createKeyword(kw)); }
@@ -8576,6 +8699,7 @@ LONGTEXT            = kw:"LONGTEXT"i            !ident_part { return loc(createK
 LOOP                = kw:"LOOP"i                !ident_part { return loc(createKeyword(kw)); }
 LOW_PRIORITY        = kw:"LOW_PRIORITY"i        !ident_part { return loc(createKeyword(kw)); }
 MAIN                = kw:"MAIN"i                !ident_part { return loc(createKeyword(kw)); }
+MAINTAIN            = kw:"MAINTAIN"i            !ident_part { return loc(createKeyword(kw)); }
 MASTER              = kw:"MASTER"i              !ident_part { return loc(createKeyword(kw)); }
 MATCH               = kw:"MATCH"i               !ident_part { return loc(createKeyword(kw)); }
 MATCHED             = kw:"MATCHED"i             !ident_part { return loc(createKeyword(kw)); }
@@ -8637,6 +8761,7 @@ NULL                = kw:"NULL"i                !ident_part { return loc(createK
 NULLS               = kw:"NULLS"i               !ident_part { return loc(createKeyword(kw)); }
 NUMERIC             = kw:"NUMERIC"i             !ident_part { return loc(createKeyword(kw)); }
 NVARCHAR            = kw:"NVARCHAR"i            !ident_part { return loc(createKeyword(kw)); }
+OBJECT              = kw:"OBJECT"i              !ident_part { return loc(createKeyword(kw)); }
 OF                  = kw:"OF"i                  !ident_part { return loc(createKeyword(kw)); }
 OFF                 = kw:"OFF"i                 !ident_part { return loc(createKeyword(kw)); }
 OFFSET              = kw:"OFFSET"i              !ident_part { return loc(createKeyword(kw)); }
@@ -8664,6 +8789,7 @@ OWNED               = kw:"OWNED"i               !ident_part { return loc(createK
 OWNER               = kw:"OWNER"i               !ident_part { return loc(createKeyword(kw)); }
 PACK_KEYS           = kw:"PACK_KEYS"i           !ident_part { return loc(createKeyword(kw)); }
 PARALLEL            = kw:"PARALLEL"i            !ident_part { return loc(createKeyword(kw)); }
+PARAMETER           = kw:"PARAMETER"i           !ident_part { return loc(createKeyword(kw)); }
 PARSER              = kw:"PARSER"i              !ident_part { return loc(createKeyword(kw)); }
 PARTIAL             = kw:"PARTIAL"i             !ident_part { return loc(createKeyword(kw)); }
 PARTITION           = kw:"PARTITION"i           !ident_part { return loc(createKeyword(kw)); }
@@ -8682,7 +8808,9 @@ PRECEDING           = kw:"PRECEDING"i           !ident_part { return loc(createK
 PRECISION           = kw:"PRECISION"i           !ident_part { return loc(createKeyword(kw)); }
 PRESERVE            = kw:"PRESERVE"i            !ident_part { return loc(createKeyword(kw)); }
 PRIMARY             = kw:"PRIMARY"i             !ident_part { return loc(createKeyword(kw)); }
+PRIVILEGES          = kw:"PRIVILEGES"i          !ident_part { return loc(createKeyword(kw)); }
 PROCEDURE           = kw:"PROCEDURE"i           !ident_part { return loc(createKeyword(kw)); }
+PROCEDURES          = kw:"PROCEDURES"i          !ident_part { return loc(createKeyword(kw)); }
 PROJECT             = kw:"PROJECT"i             !ident_part { return loc(createKeyword(kw)); }
 QUALIFY             = kw:"QUALIFY"i             !ident_part { return loc(createKeyword(kw)); }
 QUARTER             = kw:"QUARTER"i             !ident_part { return loc(createKeyword(kw)); }
@@ -8724,6 +8852,8 @@ RLIKE               = kw:"RLIKE"i               !ident_part { return loc(createK
 ROLE                = kw:"ROLE"i                !ident_part { return loc(createKeyword(kw)); }
 ROLLBACK            = kw:"ROLLBACK"i            !ident_part { return loc(createKeyword(kw)); }
 ROLLUP              = kw:"ROLLUP"i              !ident_part { return loc(createKeyword(kw)); }
+ROUTINE             = kw:"ROUTINE"i             !ident_part { return loc(createKeyword(kw)); }
+ROUTINES            = kw:"ROUTINES"i            !ident_part { return loc(createKeyword(kw)); }
 ROW                 = kw:"ROW"i                 !ident_part { return loc(createKeyword(kw)); }
 ROW_FORMAT          = kw:"ROW_FORMAT"i          !ident_part { return loc(createKeyword(kw)); }
 ROW_NUMBER          = kw:"ROW_NUMBER"i          !ident_part { return loc(createKeyword(kw)); }
@@ -8744,6 +8874,7 @@ SECONDARY_ENGINE_ATTRIBUTE = kw:"SECONDARY_ENGINE_ATTRIBUTE"i !ident_part { retu
 SECURITY            = kw:"SECURITY"i            !ident_part { return loc(createKeyword(kw)); }
 SELECT              = kw:"SELECT"i              !ident_part { return loc(createKeyword(kw)); }
 SEQUENCE            = kw:"SEQUENCE"i            !ident_part { return loc(createKeyword(kw)); }
+SEQUENCES           = kw:"SEQUENCES"i           !ident_part { return loc(createKeyword(kw)); }
 SERVER              = kw:"SERVER"i              !ident_part { return loc(createKeyword(kw)); }
 SESSION             = kw:"SESSION"i             !ident_part { return loc(createKeyword(kw)); }
 SESSION_USER        = kw:"SESSION_USER"i        !ident_part { return loc(createKeyword(kw)); }
@@ -8835,6 +8966,7 @@ UNSAFE              = kw:"UNSAFE"i              !ident_part { return loc(createK
 UNSIGNED            = kw:"UNSIGNED"i            !ident_part { return loc(createKeyword(kw)); }
 UNTIL               = kw:"UNTIL"i               !ident_part { return loc(createKeyword(kw)); }
 UPDATE              = kw:"UPDATE"i              !ident_part { return loc(createKeyword(kw)); }
+USAGE               = kw:"USAGE"i               !ident_part { return loc(createKeyword(kw)); }
 USE                 = kw:"USE"i                 !ident_part { return loc(createKeyword(kw)); }
 USER                = kw:"USER"i                !ident_part { return loc(createKeyword(kw)); }
 USING               = kw:"USING"i               !ident_part { return loc(createKeyword(kw)); }
@@ -8863,6 +8995,7 @@ WINDOW              = kw:"WINDOW"i              !ident_part { return loc(createK
 WITH                = kw:"WITH"i                !ident_part { return loc(createKeyword(kw)); }
 WITHOUT             = kw:"WITHOUT"i             !ident_part { return loc(createKeyword(kw)); }
 WORK                = kw:"WORK"i                !ident_part { return loc(createKeyword(kw)); }
+WRAPPER             = kw:"WRAPPER"i             !ident_part { return loc(createKeyword(kw)); }
 WRITE               = kw:"WRITE"i               !ident_part { return loc(createKeyword(kw)); }
 XOR                 = kw:"XOR"i                 !ident_part { return loc(createKeyword(kw)); }
 YEAR                = kw:"YEAR"i                !ident_part { return loc(createKeyword(kw)); }
