@@ -10,7 +10,10 @@ export type AllDclNodes =
   | GrantResource
   | GrantedByClause;
 
-export type AllDclStatements = GrantRoleStmt | GrantPrivilegeStmt | RevokeStmt;
+export type AllDclStatements =
+  | GrantRoleStmt
+  | GrantPrivilegeStmt
+  | RevokeRoleStmt;
 
 // GRANT role ON resource TO user
 export interface GrantRoleStmt extends BaseNode {
@@ -212,8 +215,8 @@ export interface GrantedByClause extends BaseNode {
 type GrantRoleSpecification = Identifier;
 
 // REVOKE
-export interface RevokeStmt extends BaseNode {
-  type: "revoke_stmt";
+export interface RevokeRoleStmt extends BaseNode {
+  type: "revoke_role_stmt";
   revokeKw: Keyword<"REVOKE">;
   roles: ListExpr<Identifier>;
   onKw: Keyword<"ON">;

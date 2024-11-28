@@ -4732,7 +4732,7 @@ release_savepoint_stmt
  * ------------------------------------------------------------------------------------ *
  */
 dcl_statement
-  = &bigquery x:(grant_role_stmt / revoke_stmt) { return x; }
+  = &bigquery x:(grant_role_stmt / revoke_role_stmt) { return x; }
   / &postgres x:(grant_privilege_stmt) { return x; }
 
 grant_role_stmt
@@ -4858,12 +4858,12 @@ granted_by_clause
     return loc({ type: "granted_by_clause", grantedByKw: read(kw), role });
   }
 
-revoke_stmt
+revoke_role_stmt
   = kw:(REVOKE __) roles:(list$ident __)
     onKw:(ON __) resType:(resource_type_kw __) resName:(entity_name __)
     fromKw:(FROM __) users:(list$string_literal) {
       return loc({
-        type: "revoke_stmt",
+        type: "revoke_role_stmt",
         revokeKw: read(kw),
         roles: read(roles),
         onKw: read(onKw),
