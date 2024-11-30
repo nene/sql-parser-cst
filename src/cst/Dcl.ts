@@ -38,7 +38,7 @@ export interface GrantPrivilegeStmt extends BaseNode {
   onKw: Keyword<"ON">;
   resource: GrantResource;
   toKw: Keyword<"TO">;
-  roles: ListExpr<GrantRoleSpecification>;
+  roles: ListExpr<Grantee>;
   withGrantOptionKw?: [Keyword<"WITH">, Keyword<"GRANT">, Keyword<"OPTION">];
   grantedBy?: GrantedByClause;
 }
@@ -210,10 +210,8 @@ export interface GrantResourceType extends BaseNode {
 export interface GrantedByClause extends BaseNode {
   type: "granted_by_clause";
   grantedByKw: [Keyword<"GRANTED">, Keyword<"BY">];
-  role: GrantRoleSpecification;
+  role: Grantee;
 }
-
-type GrantRoleSpecification = Identifier;
 
 // REVOKE role ON resource FROM user
 export interface RevokeRoleStmt extends BaseNode {
@@ -238,7 +236,9 @@ export interface RevokePrivilegeStmt extends BaseNode {
   onKw: Keyword<"ON">;
   resource: GrantResource;
   fromKw: Keyword<"FROM">;
-  roles: ListExpr<GrantRoleSpecification>;
+  roles: ListExpr<Grantee>;
   grantedBy?: GrantedByClause;
   behaviorKw: Keyword<"CASCADE" | "RESTRICT">;
 }
+
+type Grantee = Identifier;
