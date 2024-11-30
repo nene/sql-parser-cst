@@ -1,5 +1,12 @@
 import { BaseNode, Keyword } from "./Base";
-import { Identifier, ListExpr, EntityName, Expr, ParenExpr } from "./Expr";
+import {
+  Identifier,
+  ListExpr,
+  EntityName,
+  Expr,
+  ParenExpr,
+  FuncCall,
+} from "./Expr";
 import { FunctionSignature } from "./Function";
 import { StringLiteral } from "./Literal";
 
@@ -8,7 +15,9 @@ export type AllDclNodes =
   | Privilege
   | AllPrivileges
   | GrantResource
-  | GrantedByClause;
+  | GrantedByClause
+  | GranteeGroup
+  | GranteePublic;
 
 export type AllDclStatements =
   | GrantRoleStmt
@@ -241,4 +250,15 @@ export interface RevokePrivilegeStmt extends BaseNode {
   behaviorKw: Keyword<"CASCADE" | "RESTRICT">;
 }
 
-type Grantee = Identifier;
+type Grantee = Identifier | FuncCall | GranteeGroup | GranteePublic;
+
+export interface GranteeGroup extends BaseNode {
+  type: "grantee_group";
+  groupKw: Keyword<"GROUP">;
+  name: Identifier;
+}
+
+export interface GranteePublic extends BaseNode {
+  type: "grantee_public";
+  publicKw: Keyword<"PUBLIC">;
+}

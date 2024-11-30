@@ -168,6 +168,13 @@ describe("REVOKE", () => {
       testWc(`REVOKE DELETE ON tbl FROM johnny RESTRICT`);
       testWc(`REVOKE DELETE ON tbl FROM johnny GRANTED BY foo CASCADE`);
     });
+
+    ["CURRENT_ROLE", "CURRENT_USER", "SESSION_USER", "PUBLIC", "GROUP foo"].forEach((role) => {
+      it(`supports revoking from ${role}`, () => {
+        testWc(`REVOKE SELECT ON tbl FROM ${role}`);
+        testWc(`REVOKE DELETE ON tbl FROM johnny GRANTED BY ${role}`);
+      });
+    });
   });
 
   dialect(["mysql", "mariadb", "sqlite"], () => {

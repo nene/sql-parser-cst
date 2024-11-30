@@ -163,6 +163,13 @@ describe("GRANT", () => {
     it(`supports GRANTED BY clause`, () => {
       testWc(`GRANT DELETE ON tbl TO johnny GRANTED BY happy_admin`);
     });
+
+    ["CURRENT_ROLE", "CURRENT_USER", "SESSION_USER", "PUBLIC", "GROUP foo"].forEach((role) => {
+      it(`supports granting to ${role}`, () => {
+        testWc(`GRANT SELECT ON tbl TO ${role}`);
+        testWc(`GRANT SELECT ON tbl TO foo GRANTED BY ${role}`);
+      });
+    });
   });
 
   dialect(["mysql", "mariadb", "sqlite"], () => {

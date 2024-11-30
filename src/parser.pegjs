@@ -4754,7 +4754,7 @@ grant_role_stmt
 grant_privilege_stmt
   = kw:(GRANT __) privileges:((list$privilege / all_privileges) __)
     onKw:(ON __) resource:(grant_resource __)
-    toKw:(TO __) roles:(list$role_specification)
+    toKw:(TO __) roles:(list$grantee)
     withKw:(__ WITH __ GRANT __ OPTION)?
     grantedBy:(__ granted_by_clause)? {
       return loc({
@@ -4854,7 +4854,7 @@ grant_resource
   }
 
 granted_by_clause
-  = kw:(GRANTED __ BY __) role:role_specification {
+  = kw:(GRANTED __ BY __) role:grantee {
     return loc({ type: "granted_by_clause", grantedByKw: read(kw), role });
   }
 
@@ -4884,7 +4884,7 @@ revoke_privilege_stmt
   = kw:(REVOKE __) grantOptionForKw:(GRANT __ OPTION __ FOR __)?
     privileges:((list$privilege / all_privileges) __)
     onKw:(ON __) resource:(grant_resource __)
-    fromKw:(FROM __) roles:list$role_specification
+    fromKw:(FROM __) roles:list$grantee
     grantedBy:(__ granted_by_clause)?
     behaviorKw:(__ (CASCADE / RESTRICT))? {
       return loc({
@@ -4908,6 +4908,25 @@ revoke_privilege_stmt
  *                                                                                      *
  * ------------------------------------------------------------------------------------ *
  */
+
+grantee
+  = kw:GROUP name:(__ ident) {
+    return loc({ type: "grantee_group", groupKw: kw, name: read(name) });
+  }
+  / kw:PUBLIC {
+    return loc({ type: "grantee_public", publicKw: kw });
+  }
+  / name:grantee_fn_name {
+    return loc({ type: "func_call", name });
+  }
+  / name:ident {
+    return name;
+  }
+
+grantee_fn_name
+  = kw:(CURRENT_ROLE / CURRENT_USER / SESSION_USER) {
+    return loc(createIdentifier(kw.text, kw.text));
+  }
 
 // user_name or CURRENT_USER, SESSION_USER, CURRENT_ROLE
 role_specification
@@ -7464,6 +7483,7 @@ list$expr_or_default = .
 list$expr_or_explicit_alias = .
 list$func_param = .
 list$function_signature = .
+list$grantee = .
 list$grouping_element = .
 list$ident = .
 list$index_specification = .
@@ -8833,6 +8853,7 @@ PRIVILEGES          = kw:"PRIVILEGES"i          !ident_part { return loc(createK
 PROCEDURE           = kw:"PROCEDURE"i           !ident_part { return loc(createKeyword(kw)); }
 PROCEDURES          = kw:"PROCEDURES"i          !ident_part { return loc(createKeyword(kw)); }
 PROJECT             = kw:"PROJECT"i             !ident_part { return loc(createKeyword(kw)); }
+PUBLIC              = kw:"PUBLIC"i              !ident_part { return loc(createKeyword(kw)); }
 QUALIFY             = kw:"QUALIFY"i             !ident_part { return loc(createKeyword(kw)); }
 QUARTER             = kw:"QUARTER"i             !ident_part { return loc(createKeyword(kw)); }
 QUERY               = kw:"QUERY"i               !ident_part { return loc(createKeyword(kw)); }
