@@ -20,34 +20,19 @@ export type AllDclNodes =
   | GranteePublic;
 
 export type AllDclStatements =
-  | GrantRoleStmt
   | GrantPrivilegeStmt
   | RevokeRoleStmt
   | RevokePrivilegeStmt;
-
-// GRANT role ON resource TO user
-export interface GrantRoleStmt extends BaseNode {
-  type: "grant_role_stmt";
-  grantKw: Keyword<"GRANT">;
-  roles: ListExpr<Identifier>;
-  onKw: Keyword<"ON">;
-  resourceType:
-    | Keyword<"SCHEMA" | "TABLE" | "VIEW">
-    | [Keyword<"EXTERNAL">, Keyword<"TABLE">];
-  resourceName: EntityName;
-  toKw: Keyword<"TO">;
-  users: ListExpr<StringLiteral>;
-}
 
 // GRANT privilege ON resource TO roles
 export interface GrantPrivilegeStmt extends BaseNode {
   type: "grant_privilege_stmt";
   grantKw: Keyword<"GRANT">;
-  privileges: ListExpr<Privilege> | AllPrivileges;
+  privileges: ListExpr<Privilege> | ListExpr<Identifier> | AllPrivileges;
   onKw: Keyword<"ON">;
   resource: GrantResource;
   toKw: Keyword<"TO">;
-  roles: ListExpr<Grantee>;
+  roles: ListExpr<Grantee> | ListExpr<StringLiteral>;
   withGrantOptionKw?: [Keyword<"WITH">, Keyword<"GRANT">, Keyword<"OPTION">];
   grantedBy?: GrantedByClause;
 }
@@ -99,11 +84,12 @@ export type GrantResource =
   | GrantResourcePostgresqlOption
   | GrantResourceSchema
   | GrantResourceTablespace
-  | GrantResourceType;
+  | GrantResourceType
+  | GrantResourceView;
 
 export interface GrantResourceTable extends BaseNode {
   type: "grant_resource_table";
-  tableKw?: Keyword<"TABLE">;
+  tableKw?: Keyword<"TABLE"> | [Keyword<"EXTERNAL">, Keyword<"TABLE">];
   tables: ListExpr<EntityName>;
 }
 
@@ -201,7 +187,7 @@ export interface GrantResourcePostgresqlOption extends BaseNode {
 export interface GrantResourceSchema extends BaseNode {
   type: "grant_resource_schema";
   schemaKw: Keyword<"SCHEMA">;
-  schemas: ListExpr<Identifier>;
+  schemas: ListExpr<EntityName>;
 }
 
 export interface GrantResourceTablespace extends BaseNode {
@@ -214,6 +200,13 @@ export interface GrantResourceType extends BaseNode {
   type: "grant_resource_type";
   typeKw: Keyword<"TYPE">;
   types: ListExpr<EntityName>;
+}
+
+// BigQuery
+export interface GrantResourceView extends BaseNode {
+  type: "grant_resource_view";
+  viewKw: Keyword<"VIEW">;
+  views: ListExpr<EntityName>;
 }
 
 export interface GrantedByClause extends BaseNode {

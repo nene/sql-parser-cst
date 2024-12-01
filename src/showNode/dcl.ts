@@ -3,16 +3,6 @@ import { AllDclNodes } from "../cst/Node";
 import { FullTransformMap } from "../cstTransformer";
 
 export const dclMap: FullTransformMap<string, AllDclNodes> = {
-  grant_role_stmt: (node) =>
-    show([
-      node.grantKw,
-      node.roles,
-      node.onKw,
-      node.resourceType,
-      node.resourceName,
-      node.toKw,
-      node.users,
-    ]),
   grant_privilege_stmt: (node) =>
     show([
       node.grantKw,
@@ -49,6 +39,7 @@ export const dclMap: FullTransformMap<string, AllDclNodes> = {
   grant_resource_tablespace: (node) =>
     show([node.tablespaceKw, node.tablespaces]),
   grant_resource_type: (node) => show([node.typeKw, node.types]),
+  grant_resource_view: (node) => show([node.viewKw, node.views]),
   granted_by_clause: (node) => show([node.grantedByKw, node.role]),
 
   revoke_role_stmt: (node) =>

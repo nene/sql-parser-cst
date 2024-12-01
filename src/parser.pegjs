@@ -4732,28 +4732,13 @@ release_savepoint_stmt
  * ------------------------------------------------------------------------------------ *
  */
 dcl_statement
-  = &bigquery x:(grant_role_stmt / revoke_role_stmt) { return x; }
+  = &bigquery x:(grant_privilege_stmt / revoke_role_stmt) { return x; }
   / &postgres x:(grant_privilege_stmt / revoke_privilege_stmt) { return x; }
 
-grant_role_stmt
-  = kw:(GRANT __) roles:(list$ident __)
-    onKw:(ON __) resType:(resource_type_kw __) resName:(entity_name __)
-    toKw:(TO __) users:(list$string_literal) {
-      return loc({
-        type: "grant_role_stmt",
-        grantKw: read(kw),
-        roles: read(roles),
-        onKw: read(onKw),
-        resourceType: read(resType),
-        resourceName: read(resName),
-        toKw: read(toKw),
-        users,
-      });
-    }
-
 grant_privilege_stmt
-  = kw:(GRANT __) privileges:((list$privilege / all_privileges) __)
-    onKw:(ON __) resource:(grant_resource __)
+  = &postgres
+    kw:(GRANT __) privileges:((list$privilege / all_privileges) __)
+    onKw:(ON __) resource:(grant_resource_postgres __)
     toKw:(TO __) roles:(list$grantee)
     withKw:(__ WITH __ GRANT __ OPTION)?
     grantedBy:(__ granted_by_clause)? {
@@ -4767,6 +4752,20 @@ grant_privilege_stmt
         roles,
         withGrantOptionKw: read(withKw),
         grantedBy: read(grantedBy),
+      });
+    }
+  / &bigquery
+    kw:(GRANT __) privileges:(list$ident __)
+    onKw:(ON __) resource:(grant_resource_bigquery __)
+    toKw:(TO __) roles:(list$string_literal) {
+      return loc({
+        type: "grant_privilege_stmt",
+        grantKw: read(kw),
+        privileges: read(privileges),
+        onKw: read(onKw),
+        resource: read(resource),
+        toKw: read(toKw),
+        roles,
       });
     }
 
@@ -4803,7 +4802,7 @@ all_privileges
     });
   }
 
-grant_resource
+grant_resource_postgres
   = kw:(ALL __ TABLES __ IN __ SCHEMA __) schemas:list$ident {
     return loc({ type: "grant_resource_all_tables_in_schema", allTablesInSchemaKw: read(kw), schemas });
   }
@@ -4853,6 +4852,17 @@ grant_resource
     return loc({ type: "grant_resource_table", tableKw: read(kw), tables });
   }
 
+grant_resource_bigquery
+  = kw:(TABLE __ / EXTERNAL __ TABLE __) tables:list$entity_name {
+    return loc({ type: "grant_resource_table", tableKw: read(kw), tables });
+  }
+  / kw:(VIEW __) views:list$entity_name {
+    return loc({ type: "grant_resource_view", viewKw: read(kw), views });
+  }
+  / kw:(SCHEMA __) schemas:list$entity_name {
+    return loc({ type: "grant_resource_schema", schemaKw: read(kw), schemas });
+  }
+
 granted_by_clause
   = kw:(GRANTED __ BY __) role:grantee {
     return loc({ type: "granted_by_clause", grantedByKw: read(kw), role });
@@ -4883,7 +4893,7 @@ resource_type_kw
 revoke_privilege_stmt
   = kw:(REVOKE __) grantOptionForKw:(GRANT __ OPTION __ FOR __)?
     privileges:((list$privilege / all_privileges) __)
-    onKw:(ON __) resource:(grant_resource __)
+    onKw:(ON __) resource:(grant_resource_postgres __)
     fromKw:(FROM __) roles:list$grantee
     grantedBy:(__ granted_by_clause)?
     behaviorKw:(__ (CASCADE / RESTRICT))? {
