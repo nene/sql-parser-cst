@@ -42,16 +42,6 @@ export const dclMap: FullTransformMap<string, AllDclNodes> = {
   grant_resource_view: (node) => show([node.viewKw, node.views]),
   granted_by_clause: (node) => show([node.grantedByKw, node.role]),
 
-  revoke_role_stmt: (node) =>
-    show([
-      node.revokeKw,
-      node.roles,
-      node.onKw,
-      node.resourceType,
-      node.resourceName,
-      node.fromKw,
-      node.users,
-    ]),
   revoke_privilege_stmt: (node) =>
     show([
       node.revokeKw,

@@ -19,10 +19,7 @@ export type AllDclNodes =
   | GranteeGroup
   | GranteePublic;
 
-export type AllDclStatements =
-  | GrantPrivilegeStmt
-  | RevokeRoleStmt
-  | RevokePrivilegeStmt;
+export type AllDclStatements = GrantPrivilegeStmt | RevokePrivilegeStmt;
 
 // GRANT privilege ON resource TO roles
 export interface GrantPrivilegeStmt extends BaseNode {
@@ -215,32 +212,18 @@ export interface GrantedByClause extends BaseNode {
   role: Grantee;
 }
 
-// REVOKE role ON resource FROM user
-export interface RevokeRoleStmt extends BaseNode {
-  type: "revoke_role_stmt";
-  revokeKw: Keyword<"REVOKE">;
-  roles: ListExpr<Identifier>;
-  onKw: Keyword<"ON">;
-  resourceType:
-    | Keyword<"SCHEMA" | "TABLE" | "VIEW">
-    | [Keyword<"EXTERNAL">, Keyword<"TABLE">];
-  resourceName: EntityName;
-  fromKw: Keyword<"FROM">;
-  users: ListExpr<StringLiteral>;
-}
-
 // REVOKE privilege ON resource FROM roles
 export interface RevokePrivilegeStmt extends BaseNode {
   type: "revoke_privilege_stmt";
   revokeKw: Keyword<"REVOKE">;
   grantOptionForKw?: [Keyword<"GRANT">, Keyword<"OPTION">, Keyword<"FOR">];
-  privileges: ListExpr<Privilege> | AllPrivileges;
+  privileges: ListExpr<Privilege> | ListExpr<Identifier> | AllPrivileges;
   onKw: Keyword<"ON">;
   resource: GrantResource;
   fromKw: Keyword<"FROM">;
-  roles: ListExpr<Grantee>;
+  roles: ListExpr<Grantee> | ListExpr<StringLiteral>;
   grantedBy?: GrantedByClause;
-  behaviorKw: Keyword<"CASCADE" | "RESTRICT">;
+  behaviorKw?: Keyword<"CASCADE" | "RESTRICT">;
 }
 
 type Grantee = Identifier | FuncCall | GranteeGroup | GranteePublic;

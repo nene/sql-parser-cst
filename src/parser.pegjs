@@ -4732,8 +4732,7 @@ release_savepoint_stmt
  * ------------------------------------------------------------------------------------ *
  */
 dcl_statement
-  = &bigquery x:(grant_privilege_stmt / revoke_role_stmt) { return x; }
-  / &postgres x:(grant_privilege_stmt / revoke_privilege_stmt) { return x; }
+  = (&bigquery / &postgres) x:(grant_privilege_stmt / revoke_privilege_stmt) { return x; }
 
 grant_privilege_stmt
   = &postgres
@@ -4868,30 +4867,9 @@ granted_by_clause
     return loc({ type: "granted_by_clause", grantedByKw: read(kw), role });
   }
 
-revoke_role_stmt
-  = kw:(REVOKE __) roles:(list$ident __)
-    onKw:(ON __) resType:(resource_type_kw __) resName:(entity_name __)
-    fromKw:(FROM __) users:(list$string_literal) {
-      return loc({
-        type: "revoke_role_stmt",
-        revokeKw: read(kw),
-        roles: read(roles),
-        onKw: read(onKw),
-        resourceType: read(resType),
-        resourceName: read(resName),
-        fromKw: read(fromKw),
-        users,
-      });
-    }
-
-resource_type_kw
-  = SCHEMA
-  / TABLE
-  / VIEW
-  / kw:(EXTERNAL __ TABLE) { return read(kw); }
-
 revoke_privilege_stmt
-  = kw:(REVOKE __) grantOptionForKw:(GRANT __ OPTION __ FOR __)?
+  = &postgres
+    kw:(REVOKE __) grantOptionForKw:(GRANT __ OPTION __ FOR __)?
     privileges:((list$privilege / all_privileges) __)
     onKw:(ON __) resource:(grant_resource_postgres __)
     fromKw:(FROM __) roles:list$grantee
@@ -4908,6 +4886,20 @@ revoke_privilege_stmt
         roles,
         grantedBy: read(grantedBy),
         behaviorKw: read(behaviorKw),
+      });
+    }
+  / &bigquery
+    kw:(REVOKE __) privileges:(list$ident __)
+    onKw:(ON __) resource:(grant_resource_bigquery __)
+    fromKw:(FROM __) roles:list$string_literal {
+      return loc({
+        type: "revoke_privilege_stmt",
+        revokeKw: read(kw),
+        privileges: read(privileges),
+        onKw: read(onKw),
+        resource: read(resource),
+        fromKw: read(fromKw),
+        roles,
       });
     }
 
