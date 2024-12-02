@@ -4705,11 +4705,12 @@ start_transaction_stmt
   }
 
 commit_transaction_stmt
-  = kw:commit_kw tKw:(__ transaction_kw)? {
+  = kw:commit_kw tKw:(__ transaction_kw)? chain:(__ transaction_chain_clause)? {
     return loc({
       type: "commit_transaction_stmt",
       commitKw: kw,
       transactionKw: read(tKw),
+      chain: read(chain),
     });
   }
 
@@ -4718,14 +4719,17 @@ commit_kw
   / kw:END &sqlite { return kw; }
 
 rollback_transaction_stmt
-  = kw:ROLLBACK tKw:(__ transaction_kw)? sp:(__ rollback_to_savepoint)? {
-    return loc({
-      type: "rollback_transaction_stmt",
-      rollbackKw: kw,
-      transactionKw: read(tKw),
-      savepoint: read(sp),
-    });
-  }
+  = kw:ROLLBACK tKw:(__ transaction_kw)?
+    sp:(__ rollback_to_savepoint)?
+    chain:(__ transaction_chain_clause)? {
+      return loc({
+        type: "rollback_transaction_stmt",
+        rollbackKw: kw,
+        transactionKw: read(tKw),
+        savepoint: read(sp),
+        chain: read(chain),
+      });
+    }
 
 rollback_to_savepoint
   = toKw:(TO __) spKw:(SAVEPOINT __)? id:ident {
@@ -4759,6 +4763,15 @@ release_savepoint_stmt
       savepoint: id,
     });
   }
+
+transaction_chain_clause
+  = kw:(AND __ CHAIN) {
+    return loc({ type: "transaction_chain_clause", andChainKw: read(kw) });
+  }
+  / kw:(AND __ NO __ CHAIN) {
+    return loc({ type: "transaction_no_chain_clause", andNoChainKw: read(kw) });
+  }
+
 
 /**
  * ------------------------------------------------------------------------------------ *
@@ -8593,6 +8606,7 @@ CASCADED            = kw:"CASCADED"i            !ident_part { return loc(createK
 CASE                = kw:"CASE"i                !ident_part { return loc(createKeyword(kw)); }
 CAST                = kw:"CAST"i                !ident_part { return loc(createKeyword(kw)); }
 CENTURY             = kw:"CENTURY"i             !ident_part { return loc(createKeyword(kw)); }
+CHAIN               = kw:"CHAIN"i               !ident_part { return loc(createKeyword(kw)); }
 CHANGE              = kw:"CHANGE"i              !ident_part { return loc(createKeyword(kw)); }
 CHAR                = kw:"CHAR"i                !ident_part { return loc(createKeyword(kw)); }
 CHARACTER           = kw:"CHARACTER"i           !ident_part { return loc(createKeyword(kw)); }

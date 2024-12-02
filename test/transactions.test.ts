@@ -58,6 +58,14 @@ describe("transactions", () => {
         testWc("COMMIT WORK");
       });
     });
+
+    dialect("postgresql", () => {
+      it("supports AND [NO] CHAIN", () => {
+        testWc("COMMIT AND CHAIN");
+        testWc("COMMIT AND NO CHAIN");
+        testWc("COMMIT TRANSACTION AND NO CHAIN");
+      });
+    });
   });
 
   describe("rolling back a transaction", () => {
@@ -75,6 +83,14 @@ describe("transactions", () => {
     dialect(["mysql", "mariadb", "postgresql"], () => {
       it("supports ROLLBACK WORK", () => {
         testWc("ROLLBACK WORK");
+      });
+    });
+
+    dialect("postgresql", () => {
+      it("supports AND [NO] CHAIN", () => {
+        testWc("ROLLBACK AND CHAIN");
+        testWc("ROLLBACK AND NO CHAIN");
+        testWc("ROLLBACK TRANSACTION AND NO CHAIN");
       });
     });
   });

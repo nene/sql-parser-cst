@@ -3,7 +3,9 @@ import { Identifier } from "./Expr";
 
 export type AllTransactionNodes =
   | AllTransactionStatements
-  | RollbackToSavepoint;
+  | RollbackToSavepoint
+  | TransactionChainClause
+  | TransactionNoChainClause;
 
 export type AllTransactionStatements =
   | StartTransactionStmt
@@ -23,6 +25,7 @@ export interface CommitTransactionStmt extends BaseNode {
   type: "commit_transaction_stmt";
   commitKw: Keyword<"COMMIT" | "END">;
   transactionKw?: Keyword<"TRANSACTION" | "WORK">;
+  chain?: TransactionChainClause | TransactionNoChainClause;
 }
 
 export interface RollbackTransactionStmt extends BaseNode {
@@ -30,6 +33,7 @@ export interface RollbackTransactionStmt extends BaseNode {
   rollbackKw: Keyword<"ROLLBACK">;
   transactionKw?: Keyword<"TRANSACTION" | "WORK">;
   savepoint?: RollbackToSavepoint;
+  chain?: TransactionChainClause | TransactionNoChainClause;
 }
 
 export interface RollbackToSavepoint extends BaseNode {
@@ -50,4 +54,14 @@ export interface ReleaseSavepointStmt extends BaseNode {
   releaseKw: Keyword<"RELEASE">;
   savepointKw?: Keyword<"SAVEPOINT">;
   savepoint: Identifier;
+}
+
+export interface TransactionChainClause extends BaseNode {
+  type: "transaction_chain_clause";
+  andChainKw: [Keyword<"AND">, Keyword<"CHAIN">];
+}
+
+export interface TransactionNoChainClause extends BaseNode {
+  type: "transaction_no_chain_clause";
+  andNoChainKw: [Keyword<"AND">, Keyword<"NO">, Keyword<"CHAIN">];
 }
