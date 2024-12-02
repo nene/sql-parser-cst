@@ -49,8 +49,8 @@ describe("schema", () => {
               CREATE SEQUENCE my_seq
               GRANT SELECT ON TABLE my_table TO some_user
               GRANT some_role TO some_user
+              CREATE TRIGGER my_trigger AFTER INSERT ON my_table FOR EACH ROW EXECUTE PROCEDURE my_func()
           `);
-          // TODO: CREATE TRIGGER
         });
 
         it("supports optional schema name", () => {
