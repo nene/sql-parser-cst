@@ -34,7 +34,7 @@ export interface GrantPrivilegeStmt extends BaseNode {
   resource: GrantResource;
   toKw: Keyword<"TO">;
   roles: ListExpr<Grantee> | ListExpr<StringLiteral>;
-  withGrantOptionKw?: [Keyword<"WITH">, Keyword<"GRANT">, Keyword<"OPTION">];
+  option?: WithGrantOptionClause;
   grantedBy?: GrantedByClause;
 }
 

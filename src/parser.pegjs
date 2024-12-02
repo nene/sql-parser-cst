@@ -4740,7 +4740,7 @@ grant_privilege_stmt
     kw:(GRANT __) privileges:((list$privilege / all_privileges) __)
     onKw:(ON __) resource:(grant_resource_postgres __)
     toKw:(TO __) roles:(list$grantee)
-    withKw:(__ WITH __ GRANT __ OPTION)?
+    option:(__ with_grant_option_clause)?
     grantedBy:(__ granted_by_clause)? {
       return loc({
         type: "grant_privilege_stmt",
@@ -4750,7 +4750,7 @@ grant_privilege_stmt
         resource: read(resource),
         toKw: read(toKw),
         roles,
-        withGrantOptionKw: read(withKw),
+        option: read(option),
         grantedBy: read(grantedBy),
       });
     }

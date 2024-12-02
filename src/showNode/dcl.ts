@@ -11,7 +11,7 @@ export const dclMap: FullTransformMap<string, AllDclNodes> = {
       node.resource,
       node.toKw,
       node.roles,
-      node.withGrantOptionKw,
+      node.option,
       node.grantedBy,
     ]),
   grant_role_stmt: (node) =>
