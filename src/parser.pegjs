@@ -3443,7 +3443,7 @@ trigger_event
     }
 
 trigger_target
-  = onKw:(__ ON __) table:entity_name {
+  = onKw:(ON __) table:entity_name {
     return loc({
       type: "trigger_target",
       onKw: read(onKw),
@@ -3552,7 +3552,8 @@ trigger_program
 
 // DROP TRIGGER
 drop_trigger_stmt
-  = kw:(DROP __ TRIGGER __)
+  = (&mysql / &sqlite)
+    kw:(DROP __ TRIGGER __)
     ifKw:(if_exists __)?
     trigger:entity_name {
       return loc({
@@ -3560,6 +3561,21 @@ drop_trigger_stmt
         dropTriggerKw: read(kw),
         ifExistsKw: read(ifKw),
         trigger,
+      });
+    }
+  / &postgres
+    kw:(DROP __ TRIGGER __)
+    ifKw:(if_exists __)?
+    trigger:entity_name
+    target:(__ trigger_target)?
+    behaviorKw:(__ (CASCADE / RESTRICT))? {
+      return loc({
+        type: "drop_trigger_stmt",
+        dropTriggerKw: read(kw),
+        ifExistsKw: read(ifKw),
+        trigger,
+        target: read(target),
+        behaviorKw: read(behaviorKw),
       });
     }
 

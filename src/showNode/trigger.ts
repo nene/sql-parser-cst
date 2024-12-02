@@ -32,5 +32,11 @@ export const triggerMap: FullTransformMap<string, AllTriggerNodes> = {
 
   // DROP TRIGGER
   drop_trigger_stmt: (node) =>
-    show([node.dropTriggerKw, node.ifExistsKw, node.trigger]),
+    show([
+      node.dropTriggerKw,
+      node.ifExistsKw,
+      node.trigger,
+      node.target,
+      node.behaviorKw,
+    ]),
 };

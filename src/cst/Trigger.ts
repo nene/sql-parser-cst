@@ -126,4 +126,6 @@ export interface DropTriggerStmt extends BaseNode {
   dropTriggerKw: [Keyword<"DROP">, Keyword<"TRIGGER">];
   ifExistsKw?: [Keyword<"IF">, Keyword<"EXISTS">];
   trigger: EntityName;
+  target?: TriggerTarget;
+  behaviorKw?: Keyword<"CASCADE" | "RESTRICT">;
 }

@@ -167,8 +167,8 @@ describe("trigger", () => {
     });
   });
 
-  dialect(["mysql", "mariadb", "sqlite"], () => {
-    describe("DROP TRIGGER", () => {
+  describe("DROP TRIGGER", () => {
+    dialect(["mysql", "mariadb", "sqlite"], () => {
       it("simple DROP TRIGGER statement", () => {
         testWc("DROP TRIGGER my_trg");
         testWc("DROP TRIGGER schemata.my_trg");
@@ -176,6 +176,22 @@ describe("trigger", () => {
 
       it("supports IF EXISTS", () => {
         testWc("DROP TRIGGER IF EXISTS my_trg");
+      });
+    });
+
+    dialect(["postgresql"], () => {
+      it("supports DROP TRIGGER .. ON ..", () => {
+        testWc("DROP TRIGGER my_trg ON my_tbl");
+        testWc("DROP TRIGGER my_trg ON schemata.my_tbl");
+      });
+
+      it("supports IF EXISTS", () => {
+        testWc("DROP TRIGGER IF EXISTS my_trg ON my_tbl");
+      });
+
+      it("supports CASCADE/RESTRICT", () => {
+        testWc("DROP TRIGGER my_trg ON my_tbl CASCADE");
+        testWc("DROP TRIGGER my_trg ON my_tbl RESTRICT");
       });
     });
   });
