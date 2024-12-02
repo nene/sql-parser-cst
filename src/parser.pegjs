@@ -2831,7 +2831,7 @@ alter_action_reset_postgresql_options
 
 alter_action_add_constraint
   = kw:(ADD __) name:(alter_action_add_constraint_constraint_name __)?
-    constraint:table_constraint_type
+    constraint:(table_constraint_type / x:constraint_not_null &postgres { return x; })
     modifiers:(__ constraint_modifier)* {
       return loc({
         type: "alter_action_add_constraint",
@@ -5849,7 +5849,7 @@ column_constraint
 
 table_constraint
   = name:(constraint_name __)?
-    constraint:table_constraint_type
+    constraint:(table_constraint_type / x:constraint_not_null &postgres { return x; })
     modifiers:(__ constraint_modifier)* {
       if (!name && modifiers.length === 0) {
         return constraint;

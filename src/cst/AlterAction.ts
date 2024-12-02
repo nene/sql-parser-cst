@@ -15,6 +15,7 @@ import { NumberLiteral, StringLiteral } from "./Literal";
 import {
   ConstraintCollate,
   ConstraintModifier,
+  ConstraintNotNull,
   TableConstraint,
 } from "./Constraint";
 import { Default } from "./Insert";
@@ -255,7 +256,7 @@ export interface AlterActionAddConstraint extends BaseNode {
   type: "alter_action_add_constraint";
   addKw: Keyword<"ADD">;
   name?: AlterActionAddConstraintConstraintName;
-  constraint: TableConstraint;
+  constraint: TableConstraint | ConstraintNotNull;
   modifiers: ConstraintModifier[];
 }
 
