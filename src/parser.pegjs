@@ -3565,6 +3565,8 @@ alter_trigger_stmt
 
 alter_trigger_action
   = alter_action_rename
+  / alter_action_depends_on_extension
+  / alter_action_no_depends_on_extension
 
 // DROP TRIGGER
 drop_trigger_stmt

@@ -157,7 +157,10 @@ export type AlterRoleAction =
   | AlterActionAddUser
   | AlterActionDropUser;
 
-export type AlterTriggerAction = AlterActionRename;
+export type AlterTriggerAction =
+  | AlterActionRename
+  | AlterActionDependsOnExtension
+  | AlterActionNoDependsOnExtension;
 
 export interface AlterActionRename extends BaseNode {
   type: "alter_action_rename";

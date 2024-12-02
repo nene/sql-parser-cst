@@ -173,6 +173,11 @@ describe("trigger", () => {
         testWc("ALTER TRIGGER my_trg ON my_table RENAME TO my_trg_new");
         testWc("ALTER TRIGGER my_trg ON schm.my_table RENAME TO my_trg_new");
       });
+
+      it("supports [NO] DEPENDS ON EXTENSION", () => {
+        testWc("ALTER TRIGGER my_trg ON my_table DEPENDS ON EXTENSION my_ext");
+        testWc("ALTER TRIGGER my_trg ON my_table NO DEPENDS ON EXTENSION my_ext");
+      });
     });
   });
 
