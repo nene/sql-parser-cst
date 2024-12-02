@@ -198,10 +198,10 @@ inner_program
     });
   }
 
-// BigQuery allows transactions inside BEGIN..END blocks, Postgres doesn't allow it.
+// PostgreSQL allows no transactions inside BEGIN..END blocks
 inner_program_statement
   = &postgres x:non_transaction_statement { return x; }
-  / &bigquery x:statement { return x; }
+  / !postgres x:statement { return x; }
   / &postgres x:return_stmt { return x; }
 
 /**
