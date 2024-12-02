@@ -4888,6 +4888,15 @@ with_grant_option_clause
     });
   }
 
+grant_option_for_clause
+  = nameKw:((GRANT / ADMIN / INHERIT / SET) __) optionForKw:(OPTION __ FOR __) {
+    return loc({
+      type: "grant_option_for_clause",
+      nameKw: read(nameKw),
+      optionForKw: read(optionForKw),
+    });
+  }
+
 granted_by_clause
   = kw:(GRANTED __ BY __) role:grantee {
     return loc({ type: "granted_by_clause", grantedByKw: read(kw), role });
@@ -4895,7 +4904,7 @@ granted_by_clause
 
 revoke_stmt
   = &postgres
-    kw:(REVOKE __) grantOptionForKw:(GRANT __ OPTION __ FOR __)?
+    kw:(REVOKE __) option:(grant_option_for_clause __)?
     privileges:((list$privilege / all_privileges) __)
     onKw:(ON __) resource:(grant_resource_postgres __)
     fromKw:(FROM __) roles:list$grantee
@@ -4904,7 +4913,7 @@ revoke_stmt
       return loc({
         type: "revoke_privilege_stmt",
         revokeKw: read(kw),
-        grantOptionForKw: read(grantOptionForKw),
+        option: read(option),
         privileges: read(privileges),
         onKw: read(onKw),
         resource: read(resource),
@@ -4929,13 +4938,16 @@ revoke_stmt
       });
     }
   / &postgres
-    kw:(REVOKE __) grantedRoles:(list$ident __)
+    kw:(REVOKE __)
+    option:(grant_option_for_clause __)?
+    grantedRoles:(list$ident __)
     fromKw:(FROM __) granteeRoles:list$grantee
     grantedBy:(__ granted_by_clause)?
     behaviorKw:(__ (CASCADE / RESTRICT))? {
       return loc({
         type: "revoke_role_stmt",
         revokeKw: read(kw),
+        option: read(option),
         grantedRoles: read(grantedRoles),
         fromKw: read(fromKw),
         granteeRoles,

@@ -49,12 +49,13 @@ export const dclMap: FullTransformMap<string, AllDclNodes> = {
   grant_resource_view: (node) => show([node.viewKw, node.views]),
   with_grant_option_clause: (node) =>
     show([node.withKw, node.nameKw, node.value]),
+  grant_option_for_clause: (node) => show([node.nameKw, node.optionForKw]),
   granted_by_clause: (node) => show([node.grantedByKw, node.role]),
 
   revoke_privilege_stmt: (node) =>
     show([
       node.revokeKw,
-      node.grantOptionForKw,
+      node.option,
       node.privileges,
       node.onKw,
       node.resource,
@@ -66,6 +67,7 @@ export const dclMap: FullTransformMap<string, AllDclNodes> = {
   revoke_role_stmt: (node) =>
     show([
       node.revokeKw,
+      node.option,
       node.grantedRoles,
       node.fromKw,
       node.granteeRoles,

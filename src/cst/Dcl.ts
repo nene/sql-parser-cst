@@ -16,6 +16,7 @@ export type AllDclNodes =
   | AllPrivileges
   | GrantResource
   | WithGrantOptionClause
+  | GrantOptionForClause
   | GrantedByClause
   | GranteeGroup
   | GranteePublic;
@@ -227,6 +228,12 @@ export interface WithGrantOptionClause extends BaseNode {
   value: Keyword<"OPTION"> | BooleanLiteral;
 }
 
+export interface GrantOptionForClause extends BaseNode {
+  type: "grant_option_for_clause";
+  nameKw: Keyword<"GRANT" | "ADMIN" | "INHERIT" | "SET">;
+  optionForKw: [Keyword<"OPTION">, Keyword<"FOR">];
+}
+
 export interface GrantedByClause extends BaseNode {
   type: "granted_by_clause";
   grantedByKw: [Keyword<"GRANTED">, Keyword<"BY">];
@@ -237,7 +244,7 @@ export interface GrantedByClause extends BaseNode {
 export interface RevokePrivilegeStmt extends BaseNode {
   type: "revoke_privilege_stmt";
   revokeKw: Keyword<"REVOKE">;
-  grantOptionForKw?: [Keyword<"GRANT">, Keyword<"OPTION">, Keyword<"FOR">];
+  option?: GrantOptionForClause;
   privileges: ListExpr<Privilege> | ListExpr<Identifier> | AllPrivileges;
   onKw: Keyword<"ON">;
   resource: GrantResource;
@@ -251,6 +258,7 @@ export interface RevokePrivilegeStmt extends BaseNode {
 export interface RevokeRoleStmt extends BaseNode {
   type: "revoke_role_stmt";
   revokeKw: Keyword<"REVOKE">;
+  option?: GrantOptionForClause;
   grantedRoles: ListExpr<Identifier>;
   fromKw: Keyword<"FROM">;
   granteeRoles: ListExpr<Grantee>;

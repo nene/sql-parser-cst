@@ -188,6 +188,12 @@ describe("REVOKE", () => {
         });
       });
 
+      ["ADMIN OPTION FOR", "INHERIT OPTION FOR", "SET OPTION FOR"].forEach((clause) => {
+        it(`supports ${clause} clause`, () => {
+          testWc(`REVOKE ${clause} some_role FROM johnny`);
+        });
+      });
+
       it(`supports GRANTED BY clause`, () => {
         testWc(`REVOKE some_role FROM johnny GRANTED BY happy_admin`);
       });
