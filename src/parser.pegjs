@@ -4738,11 +4738,11 @@ rollback_to_savepoint
   }
 
 transaction_kw
-  = kw:TRANSACTION (&sqlite / &bigquery) { return kw; }
-  / kw:WORK &mysql { return kw; }
+  = kw:TRANSACTION (&sqlite / &bigquery / &postgres) { return kw; }
+  / kw:WORK (&mysql / &postgres) { return kw; }
 
 savepoint_stmt
-  = (&mysql / &sqlite) spKw:(SAVEPOINT __) id:ident {
+  = (&mysql / &sqlite / &postgres) spKw:(SAVEPOINT __) id:ident {
     return loc({
       type: "savepoint_stmt",
       savepointKw: read(spKw),
@@ -4751,7 +4751,7 @@ savepoint_stmt
   }
 
 release_savepoint_stmt
-  = (&mysql / &sqlite) kw:(RELEASE __) spKw:(SAVEPOINT __)? id:ident {
+  = (&mysql / &sqlite / &postgres) kw:(RELEASE __) spKw:(SAVEPOINT __)? id:ident {
     return loc({
       type: "release_savepoint_stmt",
       releaseKw: read(kw),

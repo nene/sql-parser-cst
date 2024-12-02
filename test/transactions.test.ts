@@ -40,7 +40,7 @@ describe("transactions", () => {
       testWc("COMMIT");
     });
 
-    dialect(["sqlite", "bigquery"], () => {
+    dialect(["sqlite", "bigquery", "postgresql"], () => {
       it("supports COMMIT TRANSACTION", () => {
         testWc("COMMIT TRANSACTION");
       });
@@ -53,7 +53,7 @@ describe("transactions", () => {
       });
     });
 
-    dialect(["mysql", "mariadb"], () => {
+    dialect(["mysql", "mariadb", "postgresql"], () => {
       it("supports COMMIT WORK", () => {
         testWc("COMMIT WORK");
       });
@@ -66,20 +66,20 @@ describe("transactions", () => {
       testWc("ROLLBACK");
     });
 
-    dialect(["sqlite", "bigquery"], () => {
+    dialect(["sqlite", "bigquery", "postgresql"], () => {
       it("supports ROLLBACK TRANSACTION", () => {
         testWc("ROLLBACK TRANSACTION");
       });
     });
 
-    dialect(["mysql", "mariadb"], () => {
+    dialect(["mysql", "mariadb", "postgresql"], () => {
       it("supports ROLLBACK WORK", () => {
         testWc("ROLLBACK WORK");
       });
     });
   });
 
-  dialect(["mysql", "mariadb", "sqlite"], () => {
+  dialect(["mysql", "mariadb", "sqlite", "postgresql"], () => {
     describe("creating savepoints", () => {
       it("supports SAVEPOINT", () => {
         testWc("SAVEPOINT my_sp");
@@ -91,7 +91,7 @@ describe("transactions", () => {
         testWc("RELEASE SAVEPOINT my_sp");
       });
 
-      dialect("sqlite", () => {
+      dialect(["sqlite", "postgresql"], () => {
         it("supports RELEASE", () => {
           testWc("RELEASE my_sp");
         });
@@ -104,14 +104,14 @@ describe("transactions", () => {
         testWc("ROLLBACK TO my_savepoint");
       });
 
-      dialect("sqlite", () => {
+      dialect(["sqlite", "postgresql"], () => {
         it("supports ROLLBACK TRANSACTION TO [SAVEPOINT]", () => {
           testWc("ROLLBACK TRANSACTION TO SAVEPOINT my_savepoint");
           testWc("ROLLBACK TRANSACTION TO my_savepoint");
         });
       });
 
-      dialect(["mysql", "mariadb"], () => {
+      dialect(["mysql", "mariadb", "postgresql"], () => {
         it("supports ROLLBACK WORK TO [SAVEPOINT]", () => {
           testWc("ROLLBACK WORK TO SAVEPOINT my_savepoint");
           testWc("ROLLBACK WORK TO my_savepoint");
