@@ -3604,6 +3604,7 @@ schema_scoped_statement
     / create_view_stmt
     / create_index_stmt
     / create_sequence_stmt
+    / grant_stmt
   ) { return x; }
 
 drop_schema_stmt

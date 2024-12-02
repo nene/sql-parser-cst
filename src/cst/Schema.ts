@@ -1,7 +1,7 @@
 import { AlterSchemaAction } from "./AlterAction";
 import { BaseNode, Keyword } from "./Base";
 import { CreateTableStmt } from "./CreateTable";
-import { GrantPrivilegeStmt } from "./Dcl";
+import { GrantPrivilegeStmt, GrantRoleStmt } from "./Dcl";
 import {
   BigqueryOptionDefaultCollate,
   BigqueryOptions,
@@ -39,7 +39,8 @@ type SchemaScopedStatement =
   | CreateIndexStmt
   | CreateSequenceStmt
   | CreateTriggerStmt
-  | GrantPrivilegeStmt;
+  | GrantPrivilegeStmt
+  | GrantRoleStmt;
 
 // PostgreSQL
 export interface CreateSchemaAuthorizationClause extends BaseNode {
