@@ -1,3 +1,4 @@
+import { AlterTriggerAction } from "./AlterAction";
 import { BaseNode, Keyword } from "./Base";
 import { RelationKind } from "./CreateTable";
 import {
@@ -22,7 +23,10 @@ export type AllTriggerNodes =
   | TriggerTransition
   | ExecuteClause;
 
-export type AllTriggerStatements = CreateTriggerStmt | DropTriggerStmt;
+export type AllTriggerStatements =
+  | CreateTriggerStmt
+  | AlterTriggerStmt
+  | DropTriggerStmt;
 
 // CREATE TRIGGER
 export interface CreateTriggerStmt extends BaseNode {
@@ -118,6 +122,15 @@ export interface ExecuteClause extends BaseNode {
   functionKw: Keyword<"FUNCTION" | "PROCEDURE">;
   name: EntityName;
   args: ParenExpr<ListExpr<Expr>>;
+}
+
+// ALTER TRIGGER
+export interface AlterTriggerStmt extends BaseNode {
+  type: "alter_trigger_stmt";
+  alterTriggerKw: [Keyword<"ALTER">, Keyword<"TRIGGER">];
+  trigger: EntityName;
+  target: TriggerTarget;
+  action: AlterTriggerAction;
 }
 
 // DROP TRIGGER

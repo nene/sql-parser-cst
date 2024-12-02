@@ -167,6 +167,15 @@ describe("trigger", () => {
     });
   });
 
+  dialect("postgresql", () => {
+    describe("ALTER TRIGGER", () => {
+      it("supports RENAME TO", () => {
+        testWc("ALTER TRIGGER my_trg ON my_table RENAME TO my_trg_new");
+        testWc("ALTER TRIGGER my_trg ON schm.my_table RENAME TO my_trg_new");
+      });
+    });
+  });
+
   describe("DROP TRIGGER", () => {
     dialect(["mysql", "mariadb", "sqlite"], () => {
       it("simple DROP TRIGGER statement", () => {

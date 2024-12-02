@@ -157,6 +157,8 @@ export type AlterRoleAction =
   | AlterActionAddUser
   | AlterActionDropUser;
 
+export type AlterTriggerAction = AlterActionRename;
+
 export interface AlterActionRename extends BaseNode {
   type: "alter_action_rename";
   renameKw: Keyword<"RENAME"> | [Keyword<"RENAME">, Keyword<"TO" | "AS">];

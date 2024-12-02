@@ -151,6 +151,7 @@ ddl_statement_postgres
   / alter_sequence_stmt
   / drop_sequence_stmt
   / create_trigger_stmt
+  / alter_trigger_stmt
   / drop_trigger_stmt
   / create_type_stmt
   / alter_type_stmt
@@ -3549,6 +3550,21 @@ trigger_program
       statements: readCommaSepList(head, tail),
     });
   }
+
+// ALTER TRIGGER
+alter_trigger_stmt
+  = kw:(ALTER __ TRIGGER __) trigger:(ident __) target:(trigger_target __) action:alter_trigger_action {
+    return loc({
+      type: "alter_trigger_stmt",
+      alterTriggerKw: read(kw),
+      trigger: read(trigger),
+      target: read(target),
+      action: action,
+    });
+  }
+
+alter_trigger_action
+  = alter_action_rename
 
 // DROP TRIGGER
 drop_trigger_stmt
