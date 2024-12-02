@@ -170,6 +170,39 @@ describe("GRANT", () => {
         testWc(`GRANT SELECT ON tbl TO foo GRANTED BY ${role}`);
       });
     });
+
+    describe("GRANT role", () => {
+      it("support basic GRANT role", () => {
+        testWc(`GRANT admin TO joe`);
+        testWc(`GRANT manager, moderator TO mary, alice, jane`);
+      });
+
+      ["CURRENT_ROLE", "CURRENT_USER", "SESSION_USER", "PUBLIC", "GROUP foo"].forEach((role) => {
+        it(`supports granting to ${role}`, () => {
+          testWc(`GRANT admin TO ${role}`);
+        });
+      });
+
+      [
+        "WITH ADMIN OPTION",
+        "WITH ADMIN TRUE",
+        "WITH ADMIN FALSE",
+        "WITH INHERIT OPTION",
+        "WITH INHERIT TRUE",
+        "WITH INHERIT FALSE",
+        "WITH SET OPTION",
+        "WITH SET TRUE",
+        "WITH SET FALSE",
+      ].forEach((clause) => {
+        it(`supports ${clause} clause`, () => {
+          testWc(`GRANT some_role TO johnny ${clause}`);
+        });
+      });
+
+      it(`supports GRANTED BY clause`, () => {
+        testWc(`GRANT some_role TO johnny GRANTED BY happy_admin`);
+      });
+    });
   });
 
   dialect(["mysql", "mariadb", "sqlite"], () => {

@@ -4733,6 +4733,7 @@ release_savepoint_stmt
  */
 dcl_statement
   = (&bigquery / &postgres) x:(grant_privilege_stmt / revoke_privilege_stmt) { return x; }
+  / &postgres x:(grant_role_stmt) { return x; }
 
 grant_privilege_stmt
   = &postgres
@@ -4765,6 +4766,22 @@ grant_privilege_stmt
         resource: read(resource),
         toKw: read(toKw),
         roles,
+      });
+    }
+
+grant_role_stmt
+  = kw:(GRANT __) grantedRoles:(list$ident __)
+    toKw:(TO __) granteeRoles:list$grantee
+    option:(__ with_grant_option_clause)?
+    grantedBy:(__ granted_by_clause)? {
+      return loc({
+        type: "grant_role_stmt",
+        grantKw: read(kw),
+        grantedRoles: read(grantedRoles),
+        toKw: read(toKw),
+        granteeRoles,
+        option: read(option),
+        grantedBy: read(grantedBy),
       });
     }
 
@@ -4860,6 +4877,16 @@ grant_resource_bigquery
   }
   / kw:(SCHEMA __) schemas:list$entity_name {
     return loc({ type: "grant_resource_schema", schemaKw: read(kw), schemas });
+  }
+
+with_grant_option_clause
+  = kw:(WITH __) nameKw:((GRANT / ADMIN / INHERIT / SET) __) value:(OPTION / boolean_literal) {
+    return loc({
+      type: "with_grant_option_clause",
+      withKw: read(kw),
+      nameKw: read(nameKw),
+      value,
+    });
   }
 
 granted_by_clause

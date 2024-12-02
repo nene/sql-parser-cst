@@ -8,18 +8,22 @@ import {
   FuncCall,
 } from "./Expr";
 import { FunctionSignature } from "./Function";
-import { StringLiteral } from "./Literal";
+import { BooleanLiteral, StringLiteral } from "./Literal";
 
 export type AllDclNodes =
   | AllDclStatements
   | Privilege
   | AllPrivileges
   | GrantResource
+  | WithGrantOptionClause
   | GrantedByClause
   | GranteeGroup
   | GranteePublic;
 
-export type AllDclStatements = GrantPrivilegeStmt | RevokePrivilegeStmt;
+export type AllDclStatements =
+  | GrantPrivilegeStmt
+  | GrantRoleStmt
+  | RevokePrivilegeStmt;
 
 // GRANT privilege ON resource TO roles
 export interface GrantPrivilegeStmt extends BaseNode {
@@ -31,6 +35,17 @@ export interface GrantPrivilegeStmt extends BaseNode {
   toKw: Keyword<"TO">;
   roles: ListExpr<Grantee> | ListExpr<StringLiteral>;
   withGrantOptionKw?: [Keyword<"WITH">, Keyword<"GRANT">, Keyword<"OPTION">];
+  grantedBy?: GrantedByClause;
+}
+
+// GRANT role TO role
+export interface GrantRoleStmt extends BaseNode {
+  type: "grant_role_stmt";
+  grantKw: Keyword<"GRANT">;
+  grantedRoles: ListExpr<Identifier>;
+  toKw: Keyword<"TO">;
+  granteeRoles: ListExpr<Grantee>;
+  option?: WithGrantOptionClause;
   grantedBy?: GrantedByClause;
 }
 
@@ -204,6 +219,13 @@ export interface GrantResourceView extends BaseNode {
   type: "grant_resource_view";
   viewKw: Keyword<"VIEW">;
   views: ListExpr<EntityName>;
+}
+
+export interface WithGrantOptionClause extends BaseNode {
+  type: "with_grant_option_clause";
+  withKw: Keyword<"WITH">;
+  nameKw: Keyword<"GRANT" | "ADMIN" | "INHERIT" | "SET">;
+  value: Keyword<"OPTION"> | BooleanLiteral;
 }
 
 export interface GrantedByClause extends BaseNode {
