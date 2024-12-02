@@ -46,10 +46,15 @@ describe("transactions", () => {
       });
     });
 
-    dialect("sqlite", () => {
+    dialect(["sqlite", "postgresql"], () => {
       it("supports END [TRANSACTION]", () => {
         testWc("END TRANSACTION");
         testWc("END");
+      });
+    });
+    dialect("postgresql", () => {
+      it("supports END WORK", () => {
+        testWc("END WORK");
       });
     });
 
@@ -64,6 +69,7 @@ describe("transactions", () => {
         testWc("COMMIT AND CHAIN");
         testWc("COMMIT AND NO CHAIN");
         testWc("COMMIT TRANSACTION AND NO CHAIN");
+        testWc("END TRANSACTION AND NO CHAIN");
       });
     });
   });

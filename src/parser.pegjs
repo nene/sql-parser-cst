@@ -63,6 +63,14 @@ program
   }
 
 statement
+  = non_transaction_statement
+  / transaction_statement  // math BEGIN transaction after BEGIN..END block
+  / &{ return isAcceptUnsupportedGrammar(); } x:unsupported_grammar_stmt { return x; }
+
+// This is referenced by BEGIN..END blocks of FUNCTION definitions,
+// which don't allow transactions inside them (specifically it would create a conflict
+// with BEGIN..END keywords which are also used with transactions)
+non_transaction_statement
   = dml_statement
   / ddl_statement
   / dcl_statement
@@ -70,8 +78,6 @@ statement
   / &mysql x:statement_mysql { return x; }
   / &bigquery x:statement_bigquery { return x; }
   / &postgres x:statement_postgres { return x; }
-  / transaction_statement // math BEGIN transaction after BEGIN..END block
-  / &{ return isAcceptUnsupportedGrammar(); } x:unsupported_grammar_stmt { return x; }
 
 statement_sqlite
   = analyze_stmt
@@ -193,7 +199,7 @@ inner_program
   }
 
 inner_program_statement
-  = statement
+  = non_transaction_statement
   / &postgres x:return_stmt { return x; }
 
 /**
@@ -4716,7 +4722,7 @@ commit_transaction_stmt
 
 commit_kw
   = COMMIT
-  / kw:END &sqlite { return kw; }
+  / kw:END (&sqlite / &postgres) { return kw; }
 
 rollback_transaction_stmt
   = kw:ROLLBACK tKw:(__ transaction_kw)?
