@@ -175,6 +175,28 @@ describe("REVOKE", () => {
         testWc(`REVOKE DELETE ON tbl FROM johnny GRANTED BY ${role}`);
       });
     });
+
+    describe("REVOKE role", () => {
+      it("support basic REVOKE role", () => {
+        testWc(`REVOKE admin FROM joe`);
+        testWc(`REVOKE manager, moderator FROM mary, alice, jane`);
+      });
+
+      ["CURRENT_ROLE", "CURRENT_USER", "SESSION_USER", "PUBLIC", "GROUP foo"].forEach((role) => {
+        it(`supports revoking from ${role}`, () => {
+          testWc(`REVOKE admin FROM ${role}`);
+        });
+      });
+
+      it(`supports GRANTED BY clause`, () => {
+        testWc(`REVOKE some_role FROM johnny GRANTED BY happy_admin`);
+      });
+
+      it(`supports RESTRICT/CASCASE`, () => {
+        testWc(`REVOKE some_role FROM johnny RESTRICT`);
+        testWc(`REVOKE some_role FROM johnny CASCADE`);
+      });
+    });
   });
 
   dialect(["mysql", "mariadb", "sqlite"], () => {

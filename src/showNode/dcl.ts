@@ -63,6 +63,15 @@ export const dclMap: FullTransformMap<string, AllDclNodes> = {
       node.grantedBy,
       node.behaviorKw,
     ]),
+  revoke_role_stmt: (node) =>
+    show([
+      node.revokeKw,
+      node.grantedRoles,
+      node.fromKw,
+      node.granteeRoles,
+      node.grantedBy,
+      node.behaviorKw,
+    ]),
 
   grantee_group: (node) => show([node.groupKw, node.name]),
   grantee_public: (node) => show([node.publicKw]),

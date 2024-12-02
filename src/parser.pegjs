@@ -4928,6 +4928,21 @@ revoke_stmt
         roles,
       });
     }
+  / &postgres
+    kw:(REVOKE __) grantedRoles:(list$ident __)
+    fromKw:(FROM __) granteeRoles:list$grantee
+    grantedBy:(__ granted_by_clause)?
+    behaviorKw:(__ (CASCADE / RESTRICT))? {
+      return loc({
+        type: "revoke_role_stmt",
+        revokeKw: read(kw),
+        grantedRoles: read(grantedRoles),
+        fromKw: read(fromKw),
+        granteeRoles,
+        grantedBy: read(grantedBy),
+        behaviorKw: read(behaviorKw),
+      });
+    }
 
 /**
  * ------------------------------------------------------------------------------------ *
