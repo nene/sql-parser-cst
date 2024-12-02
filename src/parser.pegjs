@@ -4732,10 +4732,9 @@ release_savepoint_stmt
  * ------------------------------------------------------------------------------------ *
  */
 dcl_statement
-  = (&bigquery / &postgres) x:(grant_privilege_stmt / revoke_privilege_stmt) { return x; }
-  / &postgres x:(grant_role_stmt) { return x; }
+  = (&bigquery / &postgres) x:(grant_stmt / revoke_stmt) { return x; }
 
-grant_privilege_stmt
+grant_stmt
   = &postgres
     kw:(GRANT __) privileges:((list$privilege / all_privileges) __)
     onKw:(ON __) resource:(grant_resource_postgres __)
@@ -4768,9 +4767,8 @@ grant_privilege_stmt
         roles,
       });
     }
-
-grant_role_stmt
-  = kw:(GRANT __) grantedRoles:(list$ident __)
+  / &postgres
+    kw:(GRANT __) grantedRoles:(list$ident __)
     toKw:(TO __) granteeRoles:list$grantee
     option:(__ with_grant_option_clause)?
     grantedBy:(__ granted_by_clause)? {
@@ -4894,7 +4892,7 @@ granted_by_clause
     return loc({ type: "granted_by_clause", grantedByKw: read(kw), role });
   }
 
-revoke_privilege_stmt
+revoke_stmt
   = &postgres
     kw:(REVOKE __) grantOptionForKw:(GRANT __ OPTION __ FOR __)?
     privileges:((list$privilege / all_privileges) __)
