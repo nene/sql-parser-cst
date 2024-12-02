@@ -64,7 +64,7 @@ program
 
 statement
   = non_transaction_statement
-  / transaction_statement  // math BEGIN transaction after BEGIN..END block
+  / transaction_statement  // match BEGIN transaction after BEGIN..END block
   / &{ return isAcceptUnsupportedGrammar(); } x:unsupported_grammar_stmt { return x; }
 
 // This is referenced by BEGIN..END blocks of FUNCTION definitions,
@@ -198,8 +198,10 @@ inner_program
     });
   }
 
+// BigQuery allows transactions inside BEGIN..END blocks, Postgres doesn't allow it.
 inner_program_statement
-  = non_transaction_statement
+  = &postgres x:non_transaction_statement { return x; }
+  / &bigquery x:statement { return x; }
   / &postgres x:return_stmt { return x; }
 
 /**
