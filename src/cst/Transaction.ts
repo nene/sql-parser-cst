@@ -1,11 +1,12 @@
 import { BaseNode, Keyword } from "./Base";
-import { Identifier } from "./Expr";
+import { Identifier, ListExpr } from "./Expr";
 
 export type AllTransactionNodes =
   | AllTransactionStatements
   | RollbackToSavepoint
   | TransactionChainClause
-  | TransactionNoChainClause;
+  | TransactionNoChainClause
+  | TransactionMode;
 
 export type AllTransactionStatements =
   | StartTransactionStmt
@@ -19,6 +20,44 @@ export interface StartTransactionStmt extends BaseNode {
   startKw: Keyword<"START" | "BEGIN">;
   behaviorKw?: Keyword<"DEFERRED" | "IMMEDIATE" | "EXCLUSIVE">;
   transactionKw?: Keyword<"TRANSACTION" | "WORK">;
+  modes?: ListExpr<TransactionMode>;
+}
+
+type TransactionMode =
+  | TransactionModeDeferrable
+  | TransactionModeNotDeferrable
+  | TransactionModeReadWrite
+  | TransactionModeReadOnly
+  | TransactionModeIsolationLevel;
+
+export interface TransactionModeDeferrable extends BaseNode {
+  type: "transaction_mode_deferrable";
+  deferrableKw: Keyword<"DEFERRABLE">;
+}
+
+export interface TransactionModeNotDeferrable extends BaseNode {
+  type: "transaction_mode_not_deferrable";
+  notDeferrableKw: [Keyword<"NOT">, Keyword<"DEFERRABLE">];
+}
+
+export interface TransactionModeReadWrite extends BaseNode {
+  type: "transaction_mode_read_write";
+  readWriteKw: [Keyword<"READ">, Keyword<"WRITE">];
+}
+
+export interface TransactionModeReadOnly extends BaseNode {
+  type: "transaction_mode_read_only";
+  readOnlyKw: [Keyword<"READ">, Keyword<"ONLY">];
+}
+
+export interface TransactionModeIsolationLevel extends BaseNode {
+  type: "transaction_mode_isolation_level";
+  isolationLevelKw: [Keyword<"ISOLATION">, Keyword<"LEVEL">];
+  levelKw:
+    | Keyword<"SERIALIZABLE">
+    | [Keyword<"REPEATABLE">, Keyword<"READ">]
+    | [Keyword<"READ">, Keyword<"COMMITTED">]
+    | [Keyword<"READ">, Keyword<"UNCOMMITTED">];
 }
 
 export interface CommitTransactionStmt extends BaseNode {

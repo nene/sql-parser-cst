@@ -4688,11 +4688,12 @@ start_transaction_stmt
       transactionKw: read(tKw),
     });
   }
-  / &postgres kw:BEGIN tKw:(__ (TRANSACTION / WORK))? {
+  / &postgres kw:BEGIN tKw:(__ (TRANSACTION / WORK))? modes:(__ list$transaction_mode)? {
     return loc({
       type: "start_transaction_stmt",
       startKw: kw,
       transactionKw: read(tKw),
+      modes: read(modes),
     });
   }
   / &mysql kw:BEGIN tKw:(__ WORK)? {
@@ -4702,13 +4703,56 @@ start_transaction_stmt
       transactionKw: read(tKw),
     });
   }
-  / (&mysql / &postgres) kw:START tKw:(__ TRANSACTION) {
+  / (&mysql / &postgres) kw:START tKw:(__ TRANSACTION) modes:(__ list$transaction_mode)? {
     return loc({
       type: "start_transaction_stmt",
       startKw: kw,
       transactionKw: read(tKw),
+      modes: read(modes),
     });
   }
+
+transaction_mode
+  = transaction_mode_deferrable
+  / transaction_mode_not_deferrable
+  / transaction_mode_read_write
+  / transaction_mode_read_only
+  / transaction_mode_isolation_level
+
+transaction_mode_deferrable
+  = kw:(DEFERRABLE) {
+    return loc({ type: "transaction_mode_deferrable", deferrableKw: kw });
+  }
+
+transaction_mode_not_deferrable
+  = kw:(NOT __ DEFERRABLE) {
+    return loc({ type: "transaction_mode_not_deferrable", notDeferrableKw: read(kw) });
+  }
+
+transaction_mode_read_write
+  = kw:(READ __ WRITE) {
+    return loc({ type: "transaction_mode_read_write", readWriteKw: read(kw) });
+  }
+
+transaction_mode_read_only
+  = kw:(READ __ ONLY) {
+    return loc({ type: "transaction_mode_read_only", readOnlyKw: read(kw) });
+  }
+
+transaction_mode_isolation_level
+  = kw:(ISOLATION __ LEVEL __) levelKw:isolation_level_kw {
+    return loc({
+      type: "transaction_mode_isolation_level",
+      isolationLevelKw: read(kw),
+      levelKw: read(levelKw),
+    });
+  }
+
+isolation_level_kw
+  = SERIALIZABLE
+  / REPEATABLE __ READ
+  / READ __ COMMITTED
+  / READ __ UNCOMMITTED
 
 commit_transaction_stmt
   = kw:commit_kw tKw:(__ transaction_kw)? chain:(__ transaction_chain_clause)? {
@@ -7616,6 +7660,7 @@ list$string_literal = .
 list$table_func_call = .
 list$table_option_postgresql = .
 list$tablesample_arg = .
+list$transaction_mode = .
 list$transform_type = .
 list$trigger_transition = .
 list$type_param = .
@@ -8629,6 +8674,7 @@ COLUMNS             = kw:"COLUMNS"i             !ident_part { return loc(createK
 COMMENT             = kw:"COMMENT"i             !ident_part { return loc(createKeyword(kw)); }
 COMMENTS            = kw:"COMMENTS"i            !ident_part { return loc(createKeyword(kw)); }
 COMMIT              = kw:"COMMIT"i              !ident_part { return loc(createKeyword(kw)); }
+COMMITTED           = kw:"COMMITTED"i           !ident_part { return loc(createKeyword(kw)); }
 COMPACT             = kw:"COMPACT"i             !ident_part { return loc(createKeyword(kw)); }
 COMPRESSED          = kw:"COMPRESSED"i          !ident_part { return loc(createKeyword(kw)); }
 COMPRESSION         = kw:"COMPRESSION"i         !ident_part { return loc(createKeyword(kw)); }
@@ -8813,6 +8859,7 @@ INVOKER             = kw:"INVOKER"i             !ident_part { return loc(createK
 IS                  = kw:"IS"i                  !ident_part { return loc(createKeyword(kw)); }
 ISNULL              = kw:"ISNULL"               !ident_part { return loc(createKeyword(kw)); }
 ISODOW              = kw:"ISODOW"i              !ident_part { return loc(createKeyword(kw)); }
+ISOLATION           = kw:"ISOLATION"i           !ident_part { return loc(createKeyword(kw)); }
 ISOWEEK             = kw:"ISOWEEK"i             !ident_part { return loc(createKeyword(kw)); }
 ISOYEAR             = kw:"ISOYEAR"i             !ident_part { return loc(createKeyword(kw)); }
 ITERATE             = kw:"ITERATE"i             !ident_part { return loc(createKeyword(kw)); }
@@ -9028,6 +9075,7 @@ SECURITY            = kw:"SECURITY"i            !ident_part { return loc(createK
 SELECT              = kw:"SELECT"i              !ident_part { return loc(createKeyword(kw)); }
 SEQUENCE            = kw:"SEQUENCE"i            !ident_part { return loc(createKeyword(kw)); }
 SEQUENCES           = kw:"SEQUENCES"i           !ident_part { return loc(createKeyword(kw)); }
+SERIALIZABLE        = kw:"SERIALIZABLE"i        !ident_part { return loc(createKeyword(kw)); }
 SERVER              = kw:"SERVER"i              !ident_part { return loc(createKeyword(kw)); }
 SESSION             = kw:"SESSION"i             !ident_part { return loc(createKeyword(kw)); }
 SESSION_USER        = kw:"SESSION_USER"i        !ident_part { return loc(createKeyword(kw)); }
@@ -9107,6 +9155,7 @@ TUESDAY             = kw:"TUESDAY"i             !ident_part { return loc(createK
 TYPE                = kw:"TYPE"i                !ident_part { return loc(createKeyword(kw)); }
 UESCAPE             = kw:"UESCAPE"i             !ident_part { return loc(createKeyword(kw)); }
 UNBOUNDED           = kw:"UNBOUNDED"i           !ident_part { return loc(createKeyword(kw)); }
+UNCOMMITTED         = kw:"UNCOMMITTED"i         !ident_part { return loc(createKeyword(kw)); }
 UNDEFINED           = kw:"UNDEFINED"i           !ident_part { return loc(createKeyword(kw)); }
 UNION               = kw:"UNION"i               !ident_part { return loc(createKeyword(kw)); }
 UNIQUE              = kw:"UNIQUE"i              !ident_part { return loc(createKeyword(kw)); }

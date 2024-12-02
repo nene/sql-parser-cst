@@ -32,6 +32,29 @@ describe("transactions", () => {
         testWc("BEGIN WORK");
       });
     });
+
+    dialect("postgresql", () => {
+      it("supports [NOT] DEFERRABLE", () => {
+        testWc("BEGIN NOT DEFERRABLE");
+        testWc("BEGIN DEFERRABLE");
+      });
+
+      it("supports READ {WRITE | ONLY}", () => {
+        testWc("BEGIN READ WRITE");
+        testWc("BEGIN READ ONLY");
+      });
+
+      it("supports ISOLATION LEVEL", () => {
+        testWc("BEGIN ISOLATION LEVEL SERIALIZABLE");
+        testWc("BEGIN ISOLATION LEVEL REPEATABLE READ");
+        testWc("BEGIN ISOLATION LEVEL READ COMMITTED");
+        testWc("BEGIN ISOLATION LEVEL READ UNCOMMITTED");
+      });
+
+      it("supports multiple transaction modes", () => {
+        testWc("BEGIN READ ONLY, ISOLATION LEVEL SERIALIZABLE, DEFERRABLE");
+      });
+    });
   });
 
   describe("committing transaction", () => {
