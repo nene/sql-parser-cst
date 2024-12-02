@@ -11,8 +11,7 @@ export const dclMap: FullTransformMap<string, AllDclNodes> = {
       node.resource,
       node.toKw,
       node.roles,
-      node.option,
-      node.grantedBy,
+      node.clauses,
     ]),
   grant_role_stmt: (node) =>
     show([
@@ -20,8 +19,7 @@ export const dclMap: FullTransformMap<string, AllDclNodes> = {
       node.grantedRoles,
       node.toKw,
       node.granteeRoles,
-      node.option,
-      node.grantedBy,
+      node.clauses,
     ]),
   privilege: (node) => show([node.privilegeKw, node.columns]),
   all_privileges: (node) => show([node.allKw, node.privilegesKw, node.columns]),

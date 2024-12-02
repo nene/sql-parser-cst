@@ -4739,8 +4739,7 @@ grant_stmt
     kw:(GRANT __) privileges:((list$privilege / all_privileges) __)
     onKw:(ON __) resource:(grant_resource_postgres __)
     toKw:(TO __) roles:(list$grantee)
-    option:(__ with_grant_option_clause)?
-    grantedBy:(__ granted_by_clause)? {
+    clauses:(__ grant_stmt_clause)* {
       return loc({
         type: "grant_privilege_stmt",
         grantKw: read(kw),
@@ -4749,8 +4748,7 @@ grant_stmt
         resource: read(resource),
         toKw: read(toKw),
         roles,
-        option: read(option),
-        grantedBy: read(grantedBy),
+        clauses: clauses.map(read),
       });
     }
   / &bigquery
@@ -4765,21 +4763,20 @@ grant_stmt
         resource: read(resource),
         toKw: read(toKw),
         roles,
+        clauses: [],
       });
     }
   / &postgres
     kw:(GRANT __) grantedRoles:(list$ident __)
     toKw:(TO __) granteeRoles:list$grantee
-    option:(__ with_grant_option_clause)?
-    grantedBy:(__ granted_by_clause)? {
+    clauses:(__ grant_stmt_clause)* {
       return loc({
         type: "grant_role_stmt",
         grantKw: read(kw),
         grantedRoles: read(grantedRoles),
         toKw: read(toKw),
         granteeRoles,
-        option: read(option),
-        grantedBy: read(grantedBy),
+        clauses: clauses.map(read),
       });
     }
 
@@ -4876,6 +4873,10 @@ grant_resource_bigquery
   / kw:(SCHEMA __) schemas:list$entity_name {
     return loc({ type: "grant_resource_schema", schemaKw: read(kw), schemas });
   }
+
+grant_stmt_clause
+  = with_grant_option_clause
+  / granted_by_clause
 
 with_grant_option_clause
   = kw:(WITH __) nameKw:((GRANT / ADMIN / INHERIT / SET) __) value:(OPTION / boolean_literal) {

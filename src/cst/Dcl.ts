@@ -34,8 +34,7 @@ export interface GrantPrivilegeStmt extends BaseNode {
   resource: GrantResource;
   toKw: Keyword<"TO">;
   roles: ListExpr<Grantee> | ListExpr<StringLiteral>;
-  option?: WithGrantOptionClause;
-  grantedBy?: GrantedByClause;
+  clauses: (WithGrantOptionClause | GrantedByClause)[];
 }
 
 // GRANT role TO role
@@ -45,8 +44,7 @@ export interface GrantRoleStmt extends BaseNode {
   grantedRoles: ListExpr<Identifier>;
   toKw: Keyword<"TO">;
   granteeRoles: ListExpr<Grantee>;
-  option?: WithGrantOptionClause;
-  grantedBy?: GrantedByClause;
+  clauses: (WithGrantOptionClause | GrantedByClause)[];
 }
 
 export interface Privilege extends BaseNode {
