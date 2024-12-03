@@ -69,7 +69,7 @@ export interface CommitTransactionStmt extends BaseNode {
 
 export interface RollbackTransactionStmt extends BaseNode {
   type: "rollback_transaction_stmt";
-  rollbackKw: Keyword<"ROLLBACK">;
+  rollbackKw: Keyword<"ROLLBACK" | "ABORT">;
   transactionKw?: Keyword<"TRANSACTION" | "WORK">;
   savepoint?: RollbackToSavepoint;
   chain?: TransactionChainClause | TransactionNoChainClause;

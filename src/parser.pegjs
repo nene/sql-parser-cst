@@ -4771,7 +4771,7 @@ commit_kw
   / kw:END (&sqlite / &postgres) { return kw; }
 
 rollback_transaction_stmt
-  = kw:ROLLBACK tKw:(__ transaction_kw)?
+  = kw:rollback_kw tKw:(__ transaction_kw)?
     sp:(__ rollback_to_savepoint)?
     chain:(__ transaction_chain_clause)? {
       return loc({
@@ -4782,6 +4782,10 @@ rollback_transaction_stmt
         chain: read(chain),
       });
     }
+
+rollback_kw
+  = ROLLBACK
+  / &postgres x:ABORT { return x; }
 
 rollback_to_savepoint
   = toKw:(TO __) spKw:(SAVEPOINT __)? id:ident {

@@ -124,6 +124,18 @@ describe("transactions", () => {
     });
   });
 
+  dialect("postgresql", () => {
+    describe("ABORT as alias for ROLLBACK", () => {
+      it("supports ABORT", () => {
+        testWc("ABORT");
+        testWc("ABORT WORK");
+        testWc("ABORT TRANSACTION");
+        testWc("ABORT AND CHAIN");
+        testWc("ABORT AND NO CHAIN");
+      });
+    });
+  });
+
   dialect(["mysql", "mariadb", "sqlite", "postgresql"], () => {
     describe("creating savepoints", () => {
       it("supports SAVEPOINT", () => {
