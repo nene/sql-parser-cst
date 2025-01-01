@@ -20,6 +20,12 @@ describe("select GROUP BY", () => {
     });
   });
 
+  dialect(["bigquery"], () => {
+    it("supports GROUP BY ALL", () => {
+      testClauseWc("GROUP BY ALL");
+    });
+  });
+
   dialect(["bigquery", "postgresql"], () => {
     it("supports GROUP BY ROLLUP()", () => {
       testClauseWc("GROUP BY ROLLUP ( id, name + age )");

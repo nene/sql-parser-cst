@@ -104,6 +104,7 @@ export const selectMap: FullTransformMap<string, AllSelectNodes> = {
   group_by_rollup: (node) => show([node.rollupKw, node.columns]),
   group_by_cube: (node) => show([node.cubeKw, node.columns]),
   group_by_grouping_sets: (node) => show([node.groupingSetsKw, node.columns]),
+  group_by_all: (node) => show([node.allKw]),
   having_clause: (node) => show([node.havingKw, node.expr]),
   qualify_clause: (node) => show([node.qualifyKw, node.expr]),
   order_by_clause: (node) =>
