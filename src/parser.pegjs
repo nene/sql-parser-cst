@@ -913,6 +913,7 @@ grouping_element
   = group_by_rollup
   / group_by_cube
   / group_by_grouping_sets
+  / group_by_all &bigquery
   / paren$empty_list
   / expr
 
@@ -940,6 +941,14 @@ group_by_grouping_sets
       type: "group_by_grouping_sets",
       groupingSetsKw: read(kw),
       columns,
+    });
+  }
+
+group_by_all
+  = kw:ALL {
+    return loc({
+      type: "group_by_all",
+      allKw: read(kw),
     });
   }
 

@@ -44,6 +44,7 @@ export type AllSelectNodes =
   | GroupByRollup
   | GroupByCube
   | GroupByGroupingSets
+  | GroupByAll
   | HavingClause
   | WindowClause
   | QualifyClause
@@ -276,7 +277,12 @@ export interface GroupByClause extends BaseNode {
   withRollupKw?: [Keyword<"WITH">, Keyword<"ROLLUP">]; // MySQL, MariaDB
 }
 
-type GroupingElement = Expr | GroupByRollup | GroupByCube | GroupByGroupingSets;
+type GroupingElement =
+  | Expr
+  | GroupByRollup
+  | GroupByCube
+  | GroupByGroupingSets
+  | GroupByAll;
 
 // BigQuery, PostgreSQL
 export interface GroupByRollup extends BaseNode {
@@ -290,6 +296,12 @@ export interface GroupByCube extends BaseNode {
   type: "group_by_cube";
   cubeKw: Keyword<"CUBE">;
   columns: ParenExpr<ListExpr<Expr>>;
+}
+
+// BigQuery
+export interface GroupByAll extends BaseNode {
+  type: "group_by_all";
+  allKw: Keyword<"ALL">;
 }
 
 // PostgreSQL
