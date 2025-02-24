@@ -15,6 +15,7 @@ import { functionMap } from "./function";
 import { indexMap } from "./index";
 import { insertMap } from "./insert";
 import { mergeMap } from "./merge";
+import { policyMap } from "./policy";
 import { preparedStatementsMap } from "./prepared_statements";
 import { proceduralLanguageMap } from "./procedural_language";
 import { procedureMap } from "./procedure";
@@ -60,7 +61,7 @@ export const transformMap: FullTransformMap<string> = {
   ...dropTableMap,
   ...renameTableMap,
 
-  // CREATE/DROP/ALTER SCHEMA/VIEW/INDEX/TRIGGER/SEQUENCE/TYPE/DOMAIN/ROLE
+  // CREATE/DROP/ALTER SCHEMA/VIEW/INDEX/TRIGGER/SEQUENCE/TYPE/DOMAIN/ROLE/POLICY
   ...schemaMap,
   ...viewMap,
   ...indexMap,
@@ -69,6 +70,7 @@ export const transformMap: FullTransformMap<string> = {
   ...typeMap,
   ...domainMap,
   ...roleMap,
+  ...policyMap,
 
   // CREATE/DROP FUNCTION/PROCEDURE
   ...functionMap,

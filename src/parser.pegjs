@@ -170,6 +170,7 @@ ddl_statement_postgres
   / drop_role_stmt
   / set_role_stmt
   / reset_role_stmt
+  / create_policy_stmt
 
 dml_statement
   = compound_select_stmt
@@ -4639,6 +4640,72 @@ reset_role_stmt
 /**
  * ------------------------------------------------------------------------------------ *
  *                                                                                      *
+ * CREATE/ALTER/DROP POLICY                                                             *
+ *                                                                                      *
+ * ------------------------------------------------------------------------------------ *
+ */
+create_policy_stmt
+  = kw:(CREATE __ POLICY __) name:(ident __) onKw:(ON __) table:entity_name
+    clauses:(__ create_policy_clause)* {
+      return loc({
+        type: "create_policy_stmt",
+        createPolicyKw: read(kw),
+        name: read(name),
+        onKw: read(onKw),
+        table,
+        clauses: clauses.map(read),
+      });
+    }
+
+create_policy_clause
+  = policy_permissive_clause
+  / policy_restrictive_clause
+  / policy_command_clause
+  / policy_roles_clause
+  / policy_using_clause
+  / policy_check_clause
+
+policy_permissive_clause
+  = asKw:(AS __) permissiveKw:PERMISSIVE {
+    return loc({
+      type: "policy_permissive_clause",
+      asKw: read(asKw),
+      permissiveKw,
+    });
+  }
+
+policy_restrictive_clause
+  = asKw:(AS __) restrictiveKw:RESTRICTIVE {
+    return loc({
+      type: "policy_restrictive_clause",
+      asKw: read(asKw),
+      restrictiveKw,
+    });
+  }
+
+policy_command_clause
+  = kw:(FOR __) commandKw:(ALL / SELECT / INSERT / UPDATE / DELETE) {
+    return loc({ type: "policy_command_clause", forKw: read(kw), commandKw });
+  }
+
+policy_roles_clause
+  = kw:(TO __) roles:list$grantee {
+    return loc({ type: "policy_roles_clause", toKw: read(kw), roles });
+  }
+
+policy_using_clause
+  = kw:(USING __) expr:paren$expr {
+    return loc({ type: "policy_using_clause", usingKw: read(kw), expr });
+  }
+
+policy_check_clause
+  = withKw:(WITH __) checkKw:(CHECK __) expr:paren$expr {
+    return loc({ type: "policy_check_clause", withKw: read(withKw), checkKw: read(checkKw), expr });
+  }
+
+/**
+ * ------------------------------------------------------------------------------------ *
+ *                                                                                      *
  * ANALYZE                                                                              *
  *                                                                                      *
  * ------------------------------------------------------------------------------------ *
@@ -9010,6 +9077,7 @@ PARTITION           = kw:"PARTITION"i           !ident_part { return loc(createK
 PASSWORD            = kw:"PASSWORD"i            !ident_part { return loc(createKeyword(kw)); }
 PERCENT             = kw:"PERCENT"i             !ident_part { return loc(createKeyword(kw)); }
 PERCENT_RANK        = kw:"PERCENT_RANK"i        !ident_part { return loc(createKeyword(kw)); }
+PERMISSIVE          = kw:"PERMISSIVE"i          !ident_part { return loc(createKeyword(kw)); }
 PERSIST             = kw:"PERSIST"i             !ident_part { return loc(createKeyword(kw)); }
 PERSIST_ONLY        = kw:"PERSIST_ONLY"i        !ident_part { return loc(createKeyword(kw)); }
 PIVOT               = kw:"PIVOT"i               !ident_part { return loc(createKeyword(kw)); }
@@ -9058,6 +9126,7 @@ RESPECT             = kw:"RESPECT"i             !ident_part { return loc(createK
 RESTART             = kw:"RESTART"i             !ident_part { return loc(createKeyword(kw)); }
 RESTRICT            = kw:"RESTRICT"i            !ident_part { return loc(createKeyword(kw)); }
 RESTRICTED          = kw:"RESTRICTED"i          !ident_part { return loc(createKeyword(kw)); }
+RESTRICTIVE         = kw:"RESTRICTIVE"i         !ident_part { return loc(createKeyword(kw)); }
 RETURN              = kw:"RETURN"i              !ident_part { return loc(createKeyword(kw)); }
 RETURNING           = kw:"RETURNING"i           !ident_part { return loc(createKeyword(kw)); }
 RETURNS             = kw:"RETURNS"i             !ident_part { return loc(createKeyword(kw)); }
