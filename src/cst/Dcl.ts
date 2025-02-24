@@ -266,7 +266,7 @@ export interface RevokeRoleStmt extends BaseNode {
   behaviorKw?: Keyword<"CASCADE" | "RESTRICT">;
 }
 
-type Grantee = Identifier | FuncCall | GranteeGroup | GranteePublic;
+export type Grantee = Identifier | FuncCall | GranteeGroup | GranteePublic;
 
 export interface GranteeGroup extends BaseNode {
   type: "grantee_group";
