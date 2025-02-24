@@ -4,7 +4,7 @@ import { Identifier, EntityName, Expr, ParenExpr, ListExpr } from "./Expr";
 
 export type AllPolicyNodes = AllPolicyStatements | CreatePolicyClause;
 
-export type AllPolicyStatements = CreatePolicyStmt;
+export type AllPolicyStatements = CreatePolicyStmt | DropPolicyStmt;
 
 // CREATE POLICY name ON table
 export interface CreatePolicyStmt extends BaseNode {
@@ -59,4 +59,14 @@ export interface PolicyCheckClause extends BaseNode {
   withKw: Keyword<"WITH">;
   checkKw: Keyword<"CHECK">;
   expr: ParenExpr<Expr>;
+}
+
+export interface DropPolicyStmt extends BaseNode {
+  type: "drop_policy_stmt";
+  dropPolicyKw: [Keyword<"DROP">, Keyword<"POLICY">];
+  ifExistsKw?: [Keyword<"IF">, Keyword<"EXISTS">];
+  name: Identifier;
+  onKw: Keyword<"ON">;
+  table: EntityName;
+  behaviorKw?: Keyword<"CASCADE" | "RESTRICT">;
 }

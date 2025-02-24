@@ -47,6 +47,22 @@ describe("policy", () => {
         `);
       });
     });
+
+    describe("DROP POLICY", () => {
+      it("supports CREATE POLICY .. ON ..", () => {
+        testWc("DROP POLICY foo ON my_table");
+        testWc("DROP POLICY foo ON my_schema.my_table");
+      });
+
+      it("supports IF EXISTS", () => {
+        testWc("DROP POLICY IF EXISTS foo ON my_table");
+      });
+
+      it("supports CASCADE/RESTRICT", () => {
+        testWc("DROP POLICY foo ON my_table CASCADE");
+        testWc("DROP POLICY foo ON my_table RESTRICT");
+      });
+    });
   });
 
   notDialect("postgresql", () => {
