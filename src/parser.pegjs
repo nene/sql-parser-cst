@@ -171,6 +171,7 @@ ddl_statement_postgres
   / set_role_stmt
   / reset_role_stmt
   / create_policy_stmt
+  / alter_policy_stmt
   / drop_policy_stmt
 
 dml_statement
@@ -4703,6 +4704,24 @@ policy_check_clause
   = withKw:(WITH __) checkKw:(CHECK __) expr:paren$expr {
     return loc({ type: "policy_check_clause", withKw: read(withKw), checkKw: read(checkKw), expr });
   }
+
+alter_policy_stmt
+  = kw:(ALTER __ POLICY __) name:(ident __) onKw:(ON __) table:entity_name actions:(__ alter_policy_action)+ {
+    return loc({
+      type: "alter_policy_stmt",
+      alterPolicyKw: read(kw),
+      name: read(name),
+      onKw: read(onKw),
+      table,
+      actions: actions.map(read),
+    });
+  }
+
+alter_policy_action
+  = alter_action_rename
+  / policy_roles_clause
+  / policy_using_clause
+  / policy_check_clause
 
 drop_policy_stmt
   = kw:(DROP __ POLICY __) ifExistsKw:(if_exists __)? name:(ident __) onKw:(ON __) table:entity_name behaviorKw:(__ (CASCADE / RESTRICT))? {

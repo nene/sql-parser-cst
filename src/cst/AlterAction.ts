@@ -163,6 +163,8 @@ export type AlterTriggerAction =
   | AlterActionDependsOnExtension
   | AlterActionNoDependsOnExtension;
 
+export type AlterPolicyAction = AlterActionRename;
+
 export interface AlterActionRename extends BaseNode {
   type: "alter_action_rename";
   renameKw: Keyword<"RENAME"> | [Keyword<"RENAME">, Keyword<"TO" | "AS">];

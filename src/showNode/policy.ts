@@ -15,6 +15,10 @@ export const policyMap: FullTransformMap<string, AllPolicyNodes> = {
   policy_using_clause: (node) => show([node.usingKw, node.expr]),
   policy_check_clause: (node) => show([node.withKw, node.checkKw, node.expr]),
 
+  // ALTER POLICY
+  alter_policy_stmt: (node) =>
+    show([node.alterPolicyKw, node.name, node.onKw, node.table, node.actions]),
+
   // DROP POLICY
   drop_policy_stmt: (node) =>
     show([

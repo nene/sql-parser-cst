@@ -1,10 +1,14 @@
+import { AlterPolicyAction } from "./AlterAction";
 import { BaseNode, Keyword } from "./Base";
 import { Grantee } from "./Dcl";
 import { Identifier, EntityName, Expr, ParenExpr, ListExpr } from "./Expr";
 
 export type AllPolicyNodes = AllPolicyStatements | CreatePolicyClause;
 
-export type AllPolicyStatements = CreatePolicyStmt | DropPolicyStmt;
+export type AllPolicyStatements =
+  | CreatePolicyStmt
+  | AlterPolicyStmt
+  | DropPolicyStmt;
 
 // CREATE POLICY name ON table
 export interface CreatePolicyStmt extends BaseNode {
@@ -59,6 +63,20 @@ export interface PolicyCheckClause extends BaseNode {
   withKw: Keyword<"WITH">;
   checkKw: Keyword<"CHECK">;
   expr: ParenExpr<Expr>;
+}
+
+export interface AlterPolicyStmt extends BaseNode {
+  type: "alter_policy_stmt";
+  alterPolicyKw: [Keyword<"ALTER">, Keyword<"POLICY">];
+  name: Identifier;
+  onKw: Keyword<"ON">;
+  table: EntityName;
+  actions: (
+    | AlterPolicyAction
+    | PolicyRolesClause
+    | PolicyUsingClause
+    | PolicyCheckClause
+  )[];
 }
 
 export interface DropPolicyStmt extends BaseNode {

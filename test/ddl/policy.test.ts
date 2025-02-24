@@ -48,8 +48,41 @@ describe("policy", () => {
       });
     });
 
+    describe("ALTER POLICY", () => {
+      it("supports ALTER POLICY .. RENAME TO", () => {
+        testWc("ALTER POLICY foo ON my_table RENAME TO bar");
+        testWc("ALTER POLICY foo ON my_schema.my_table RENAME TO bar");
+      });
+
+      it("supports ALTER POLICY .. TO role", () => {
+        testWc("ALTER POLICY foo ON my_table TO my_role");
+        testWc("ALTER POLICY foo ON my_table TO PUBLIC");
+        testWc("ALTER POLICY foo ON my_table TO CURRENT_USER");
+        testWc("ALTER POLICY foo ON my_table TO CURRENT_ROLE");
+        testWc("ALTER POLICY foo ON my_table TO SESSION_USER");
+        testWc("ALTER POLICY foo ON my_table TO bar, baz, SESSION_USER");
+      });
+
+      it("supports ALTER POLICY .. USING ()", () => {
+        testWc("ALTER POLICY foo ON my_table USING (age > 10)");
+      });
+
+      it("supports ALTER POLICY .. WITH CHECK ()", () => {
+        testWc("ALTER POLICY foo ON my_table WITH CHECK (name <> '')");
+      });
+
+      it("supports combination of ALTER POLICY-s", () => {
+        testWc(`
+          ALTER POLICY foo ON my_table
+          TO my_role
+          USING (age > 10)
+          WITH CHECK (FALSE)
+        `);
+      });
+    });
+
     describe("DROP POLICY", () => {
-      it("supports CREATE POLICY .. ON ..", () => {
+      it("supports DROP POLICY .. ON ..", () => {
         testWc("DROP POLICY foo ON my_table");
         testWc("DROP POLICY foo ON my_schema.my_table");
       });
