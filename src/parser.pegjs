@@ -4566,7 +4566,7 @@ alter_action_with_role_options
   }
 
 alter_action_set_postgresql_option
-  = kw:(SET __) name:(ident __) operator:("=" / TO) value:(__ (expr / keyword)) {
+  = kw:(SET __) name:(ident __) operator:("=" / TO) value:(__ (list$expr / keyword)) {
     return loc({
       type: "alter_action_set_postgresql_option",
       setKw: read(kw),

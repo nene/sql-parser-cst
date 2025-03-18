@@ -96,6 +96,11 @@ describe("role", () => {
         testWc(`ALTER ROLE ALL IN DATABASE foo SET something TO 128`);
       });
 
+      it(`supports SET parameter TO list,of,values`, () => {
+        testWc(`ALTER ROLE my_role SET something TO 1, 2, 3`);
+        testWc(`ALTER ROLE my_role SET foo = 'a', 'b'`);
+      });
+
       it(`supports SET parameter FROM CURRENT`, () => {
         testWc(`ALTER ROLE my_role SET something FROM CURRENT`);
         testWc(`ALTER ROLE my_role IN DATABASE foo SET something FROM CURRENT`);
