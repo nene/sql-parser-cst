@@ -149,7 +149,9 @@ describe("function call", () => {
       it("IF() function", () => {
         testExpr(`IF(x > 3, 'yes', 'no')`);
       });
+    });
 
+    dialect(["mysql", "mariadb", "bigquery", "postgresql"], () => {
       it("LEFT() / RIGHT() functions", () => {
         testExpr(`LEFT('hello', 3)`);
         testExpr(`RIGHT('hello', 3)`);

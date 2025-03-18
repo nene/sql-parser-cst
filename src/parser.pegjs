@@ -7404,6 +7404,8 @@ postgres_func_keyword
   / LOCALTIME
   / LOCALTIMESTAMP
   / CURRENT_SCHEMA
+  / RIGHT
+  / LEFT
 
 sqlite_func_keyword
   = GLOB
