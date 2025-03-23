@@ -183,6 +183,11 @@ describe("column constraints", () => {
         // For all sequence options, see test/ddl/sequence.test.ts
         testColConstWc("GENERATED ALWAYS AS IDENTITY (START WITH 10 INCREMENT BY 5)");
       });
+
+      // SEQUENCE NAME is not among the general sequence options
+      it("GENERATED .. AS IDENTITY (SEQUENCE NAME ...)", () => {
+        testColConstWc("GENERATED ALWAYS AS IDENTITY (START WITH 10 SEQUENCE NAME schm.my_seq)");
+      });
     });
   });
 

@@ -43,7 +43,8 @@ export type SequenceOption =
   | SequenceOptionCache
   | SequenceOptionCycle
   | SequenceOptionNoCycle
-  | SequenceOptionOwnedBy;
+  | SequenceOptionOwnedBy
+  | SequenceOptionSequenceName;
 
 export interface SequenceOptionAsType extends BaseNode {
   type: "sequence_option_as_type";
@@ -114,6 +115,12 @@ export interface SequenceOptionOwnedBy extends BaseNode {
   type: "sequence_option_owned_by";
   ownedByKw: [Keyword<"OWNED">, Keyword<"BY">];
   owner: EntityName;
+}
+
+export interface SequenceOptionSequenceName extends BaseNode {
+  type: "sequence_option_sequence_name";
+  sequenceNameKw: [Keyword<"SEQUENCE">, Keyword<"NAME">];
+  name: EntityName;
 }
 
 export interface AlterSequenceStmt extends BaseNode {

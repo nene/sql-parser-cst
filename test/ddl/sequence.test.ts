@@ -12,6 +12,8 @@ describe("sequence", () => {
       CACHE: ["CACHE 10", "CACHE -1"], // Negative makes no sense, but Postgres allows it
       CYCLE: ["CYCLE", "NO CYCLE"],
       "OWNED BY": ["OWNED BY blah", "OWNED BY foo.bar", "OWNED BY NONE"],
+      // Not testing SEQUENCE NAME here (it's not supported in CREATE SEQUENCE and ALTER SEQUENCE)
+      // only inside ALTER TABLE / CREATE TABLE
     };
 
     describe("CREATE SEQUENCE", () => {

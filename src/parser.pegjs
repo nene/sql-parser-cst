@@ -4199,6 +4199,7 @@ sequence_option
   / sequence_option_cycle
   / sequence_option_no_cycle
   / sequence_option_owned_by
+  / sequence_option_sequence_name
 
 sequence_option_as_type
   = kw:(AS __) type:data_type {
@@ -4275,6 +4276,11 @@ sequence_option_no_cycle
 sequence_option_owned_by
   = kw:(OWNED __ BY __) owner:entity_name {
     return loc({ type: "sequence_option_owned_by", ownedByKw: read(kw), owner });
+  }
+
+sequence_option_sequence_name
+  = kw:(SEQUENCE __ NAME __) name:entity_name {
+    return loc({ type: "sequence_option_sequence_name", sequenceNameKw: read(kw), name });
   }
 
 alter_sequence_stmt
@@ -9047,6 +9053,7 @@ MODE                = kw:"MODE"i                !ident_part { return loc(createK
 MODULUS             = kw:"MODULUS"i             !ident_part { return loc(createKeyword(kw)); }
 MONDAY              = kw:"MONDAY"i              !ident_part { return loc(createKeyword(kw)); }
 MONTH               = kw:"MONTH"i               !ident_part { return loc(createKeyword(kw)); }
+NAME                = kw:"NAME"i                !ident_part { return loc(createKeyword(kw)); }
 NATIVE              = kw:"NATIVE"i              !ident_part { return loc(createKeyword(kw)); }
 NATURAL             = kw:"NATURAL"i             !ident_part { return loc(createKeyword(kw)); }
 NCHAR               = kw:"NCHAR"i               !ident_part { return loc(createKeyword(kw)); }
