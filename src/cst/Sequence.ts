@@ -45,72 +45,72 @@ export type SequenceOption =
   | SequenceOptionNoCycle
   | SequenceOptionOwnedBy;
 
-interface SequenceOptionAsType extends BaseNode {
+export interface SequenceOptionAsType extends BaseNode {
   type: "sequence_option_as_type";
   asKw: Keyword<"AS">;
   dataType: DataType;
 }
 
-interface SequenceOptionIncrement extends BaseNode {
+export interface SequenceOptionIncrement extends BaseNode {
   type: "sequence_option_increment";
   incrementKw: Keyword<"INCREMENT">;
   byKw?: Keyword<"BY">;
   value: Expr;
 }
 
-interface SequenceOptionStart extends BaseNode {
+export interface SequenceOptionStart extends BaseNode {
   type: "sequence_option_start";
   startKw: Keyword<"START">;
   withKw?: Keyword<"WITH">;
   value: Expr;
 }
 
-interface SequenceOptionRestart extends BaseNode {
+export interface SequenceOptionRestart extends BaseNode {
   type: "sequence_option_restart";
   restartKw: Keyword<"RESTART">;
   withKw?: Keyword<"WITH">;
   value?: Expr;
 }
 
-interface SequenceOptionMinvalue extends BaseNode {
+export interface SequenceOptionMinvalue extends BaseNode {
   type: "sequence_option_minvalue";
   minvalueKw: Keyword<"MINVALUE">;
   value: Expr;
 }
 
-interface SequenceOptionMaxvalue extends BaseNode {
+export interface SequenceOptionMaxvalue extends BaseNode {
   type: "sequence_option_maxvalue";
   maxvalueKw: Keyword<"MAXVALUE">;
   value: Expr;
 }
 
-interface SequenceOptionNoMinvalue extends BaseNode {
+export interface SequenceOptionNoMinvalue extends BaseNode {
   type: "sequence_option_no_minvalue";
   noMinvalueKw: [Keyword<"NO">, Keyword<"MINVALUE">];
 }
 
-interface SequenceOptionNoMaxvalue extends BaseNode {
+export interface SequenceOptionNoMaxvalue extends BaseNode {
   type: "sequence_option_no_maxvalue";
   noMaxvalueKw: [Keyword<"NO">, Keyword<"MAXVALUE">];
 }
 
-interface SequenceOptionCache extends BaseNode {
+export interface SequenceOptionCache extends BaseNode {
   type: "sequence_option_cache";
   cacheKw: Keyword<"CACHE">;
   value: Expr;
 }
 
-interface SequenceOptionCycle extends BaseNode {
+export interface SequenceOptionCycle extends BaseNode {
   type: "sequence_option_cycle";
   cycleKw: Keyword<"CYCLE">;
 }
 
-interface SequenceOptionNoCycle extends BaseNode {
+export interface SequenceOptionNoCycle extends BaseNode {
   type: "sequence_option_no_cycle";
   noCycleKw: [Keyword<"NO">, Keyword<"CYCLE">];
 }
 
-interface SequenceOptionOwnedBy extends BaseNode {
+export interface SequenceOptionOwnedBy extends BaseNode {
   type: "sequence_option_owned_by";
   ownedByKw: [Keyword<"OWNED">, Keyword<"BY">];
   owner: EntityName;
