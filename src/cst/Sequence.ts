@@ -44,7 +44,9 @@ export type SequenceOption =
   | SequenceOptionCycle
   | SequenceOptionNoCycle
   | SequenceOptionOwnedBy
-  | SequenceOptionSequenceName;
+  | SequenceOptionSequenceName
+  | SequenceOptionLogged
+  | SequenceOptionUnlogged;
 
 export interface SequenceOptionAsType extends BaseNode {
   type: "sequence_option_as_type";
@@ -121,6 +123,16 @@ export interface SequenceOptionSequenceName extends BaseNode {
   type: "sequence_option_sequence_name";
   sequenceNameKw: [Keyword<"SEQUENCE">, Keyword<"NAME">];
   name: EntityName;
+}
+
+export interface SequenceOptionLogged extends BaseNode {
+  type: "sequence_option_logged";
+  loggedKw: Keyword<"LOGGED">;
+}
+
+export interface SequenceOptionUnlogged extends BaseNode {
+  type: "sequence_option_unlogged";
+  unloggedKw: Keyword<"UNLOGGED">;
 }
 
 export interface AlterSequenceStmt extends BaseNode {

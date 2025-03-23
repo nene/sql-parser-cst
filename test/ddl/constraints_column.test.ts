@@ -184,9 +184,11 @@ describe("column constraints", () => {
         testColConstWc("GENERATED ALWAYS AS IDENTITY (START WITH 10 INCREMENT BY 5)");
       });
 
-      // SEQUENCE NAME is not among the general sequence options
-      it("GENERATED .. AS IDENTITY (SEQUENCE NAME ...)", () => {
+      // SEQUENCE NAME, LOGGED, UNLOGGED are not among the general sequence options
+      it("GENERATED .. AS IDENTITY (special options ...)", () => {
         testColConstWc("GENERATED ALWAYS AS IDENTITY (START WITH 10 SEQUENCE NAME schm.my_seq)");
+        testColConstWc("GENERATED ALWAYS AS IDENTITY (LOGGED)");
+        testColConstWc("GENERATED ALWAYS AS IDENTITY (UNLOGGED)");
       });
     });
   });

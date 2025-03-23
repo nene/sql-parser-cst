@@ -4200,6 +4200,8 @@ sequence_option
   / sequence_option_no_cycle
   / sequence_option_owned_by
   / sequence_option_sequence_name
+  / sequence_option_logged
+  / sequence_option_unlogged
 
 sequence_option_as_type
   = kw:(AS __) type:data_type {
@@ -4281,6 +4283,16 @@ sequence_option_owned_by
 sequence_option_sequence_name
   = kw:(SEQUENCE __ NAME __) name:entity_name {
     return loc({ type: "sequence_option_sequence_name", sequenceNameKw: read(kw), name });
+  }
+
+sequence_option_logged
+  = kw:LOGGED {
+    return loc({ type: "sequence_option_logged", loggedKw: kw });
+  }
+
+sequence_option_unlogged
+  = kw:UNLOGGED {
+    return loc({ type: "sequence_option_unlogged", unloggedKw: kw });
   }
 
 alter_sequence_stmt
