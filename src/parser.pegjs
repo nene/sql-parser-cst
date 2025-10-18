@@ -100,6 +100,7 @@ statement_postgres
   = analyze_stmt
   / explain_stmt
   / execute_stmt
+  / call_stmt
 
 ddl_statement
   = create_view_stmt
