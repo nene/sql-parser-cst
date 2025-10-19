@@ -93,7 +93,7 @@ statement_mysql
 
 statement_bigquery
   = proc_statement
-  / execute_stmt
+  / execute_immediate_stmt
   / bigquery_statement
 
 statement_postgres
@@ -5524,11 +5524,20 @@ raise_message
  * ------------------------------------------------------------------------------------ *
  */
 execute_stmt
-  = kw:(EXECUTE __) immedKw:(immediate_kw __)? expr:expr
+  = kw:(EXECUTE __) name:entity_name {
+      return loc({
+        type: "execute_stmt",
+        executeKw: read(kw),
+        name,
+      });
+    }
+
+execute_immediate_stmt
+  = kw:(EXECUTE __) immedKw:(IMMEDIATE __) expr:expr
     into:(__ execute_into_clause)?
     using:(__ execute_using_clause)? {
       return loc({
-        type: "execute_stmt",
+        type: "execute_immediate_stmt",
         executeKw: read(kw),
         immediateKw: read(immedKw),
         expr,
@@ -5536,9 +5545,6 @@ execute_stmt
         using: read(using),
       });
     }
-
-immediate_kw
-  = x:IMMEDIATE &bigquery { return x; }
 
 execute_into_clause
   = kw:(INTO __) variables:list$ident {

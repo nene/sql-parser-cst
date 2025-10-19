@@ -1,19 +1,25 @@
 import { Alias } from "./Alias";
 import { BaseNode, Keyword } from "./Base";
-import { Expr, Identifier, ListExpr } from "./Expr";
+import { EntityName, Expr, Identifier, ListExpr } from "./Expr";
 
 export type AllPreparedStatementNodes =
   | AllPreparedStatements
   | ExecuteIntoClause
   | ExecuteUsingClause;
 
-export type AllPreparedStatements = ExecuteStmt;
+export type AllPreparedStatements = ExecuteStmt | ExecuteImmediateStmt;
 
 // EXECUTE
 export interface ExecuteStmt extends BaseNode {
   type: "execute_stmt";
   executeKw: Keyword<"EXECUTE">;
-  immediateKw?: Keyword<"IMMEDIATE">;
+  name: EntityName;
+}
+
+export interface ExecuteImmediateStmt extends BaseNode {
+  type: "execute_immediate_stmt";
+  executeKw: Keyword<"EXECUTE">;
+  immediateKw: Keyword<"IMMEDIATE">;
   expr: Expr;
   into?: ExecuteIntoClause;
   using?: ExecuteUsingClause;
