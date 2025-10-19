@@ -100,6 +100,7 @@ statement_bigquery
 statement_postgres
   = analyze_stmt
   / explain_stmt
+  / prepare_stmt
   / execute_stmt
   / call_stmt
   / do_stmt
@@ -5526,11 +5527,13 @@ raise_message
  */
 prepare_stmt
   = kw:(PREPARE __) name:(entity_name __)
-    source:prepare_from_clause {
+    params:(paren$list$data_type __)?
+    source:(prepare_from_clause / as_clause$prepareable_statement) {
       return loc({
         type: "prepare_stmt",
         prepareKw: read(kw),
         name: read(name),
+        params: read(params),
         source: source,
       });
     }
@@ -5543,6 +5546,13 @@ prepare_from_clause
       expr,
     });
   }
+
+prepareable_statement
+  = compound_select_stmt
+  / insert_stmt
+  / update_stmt
+  / delete_stmt
+  / merge_stmt
 
 execute_stmt
   = kw:(EXECUTE __) name:entity_name
@@ -7737,6 +7747,7 @@ paren$list$alias$paren$list$column = .
 paren$list$column = .
 paren$list$column_definition = .
 paren$list$create_definition = .
+paren$list$data_type = .
 paren$list$entity_name = .
 paren$list$equals_expr = .
 paren$list$exclusion_param = .
@@ -7804,6 +7815,7 @@ list$column_definition = .
 list$common_table_expr = .
 list$config_parameter_value = .
 list$create_definition = .
+list$data_type = .
 list$delete_clause_table = .
 list$entity_name = .
 list$equals_expr = .
@@ -7902,6 +7914,7 @@ as_clause$__template__
 as_clause$compound_select_stmt = .
 as_clause$func_as_expr_bigquery = .
 as_clause$func_as_expr_postgresql = .
+as_clause$prepareable_statement = .
 as_clause$string_literal = .
 as_clause$expr = .
 /*! as_clause:end */

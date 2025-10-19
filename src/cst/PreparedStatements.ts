@@ -1,6 +1,9 @@
 import { Alias } from "./Alias";
 import { BaseNode, Keyword } from "./Base";
+import { DataType } from "./DataType";
 import { EntityName, Expr, Identifier, ListExpr, ParenExpr } from "./Expr";
+import { AsClause } from "./ProcClause";
+import { Statement } from "./Statement";
 
 export type AllPreparedStatementNodes =
   | AllPreparedStatements
@@ -18,7 +21,8 @@ export interface PrepareStmt extends BaseNode {
   type: "prepare_stmt";
   prepareKw: Keyword<"PREPARE">;
   name: EntityName;
-  source: PrepareFromClause;
+  params?: ParenExpr<ListExpr<DataType>>;
+  source: PrepareFromClause | AsClause<Statement>;
 }
 
 export interface PrepareFromClause extends BaseNode {

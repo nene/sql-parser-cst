@@ -6,7 +6,8 @@ export const preparedStatementsMap: FullTransformMap<
   string,
   AllPreparedStatementNodes
 > = {
-  prepare_stmt: (node) => show([node.prepareKw, node.name, node.source]),
+  prepare_stmt: (node) =>
+    show([node.prepareKw, node.name, node.params, node.source]),
   prepare_from_clause: (node) => show([node.fromKw, node.expr]),
   execute_stmt: (node) => show([node.executeKw, node.name, node.args]),
   execute_immediate_stmt: (node) =>

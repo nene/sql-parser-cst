@@ -1,10 +1,37 @@
-import { dialect, parse, testWc, test } from "./test_utils";
+import { dialect, parse, testWc, test, includeAll } from "./test_utils";
 
 describe("prepared statements", () => {
   dialect(["mysql", "mariadb"], () => {
     it("supports PREPARE .. FROM statement", () => {
       testWc(`PREPARE my_stmt FROM 'SELECT * FROM my_table WHERE id = ?'`);
       testWc(`PREPARE my_stmt FROM @sql_text`);
+    });
+  });
+
+  dialect(["postgresql"], () => {
+    it("supports PREPARE .. AS statement", () => {
+      testWc(`PREPARE my_stmt AS SELECT * FROM my_table WHERE id = $1`, {
+        paramTypes: ["$nr"],
+        ...includeAll,
+      });
+      testWc(`PREPARE my_stmt AS UPDATE foo SET bar = $1`, { paramTypes: ["$nr"], ...includeAll });
+      testWc(`PREPARE my_stmt AS DELETE FROM foo WHERE id = $1`, {
+        paramTypes: ["$nr"],
+        ...includeAll,
+      });
+      testWc(`PREPARE my_stmt AS INSERT INTO foo (bar) VALUES ($1)`, {
+        paramTypes: ["$nr"],
+        ...includeAll,
+      });
+      testWc(`PREPARE my_stmt AS MERGE INTO foo USING bar ON x = $1 WHEN MATCHED THEN DELETE`, {
+        paramTypes: ["$nr"],
+        ...includeAll,
+      });
+      testWc(`PREPARE my_stmt AS VALUES ($1), ($2), ($3)`, { paramTypes: ["$nr"], ...includeAll });
+    });
+
+    it("supports PREPARE .. AS with parameters", () => {
+      testWc(`PREPARE my_stmt(INT, TEXT) AS SELECT $1, $2`, { paramTypes: ["$nr"], ...includeAll });
     });
   });
 
