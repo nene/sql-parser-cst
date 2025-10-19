@@ -1,4 +1,4 @@
-import { dialect, testWc } from "../test_utils";
+import { dialect, notDialect, testWc } from "../test_utils";
 
 describe("BigQuery export data", () => {
   dialect("bigquery", () => {
@@ -21,7 +21,9 @@ describe("BigQuery export data", () => {
     });
   });
 
-  it("ignore empty testsuite", () => {
-    expect(true).toBeTruthy();
+  notDialect("bigquery", () => {
+    it("does not support EXPORT DATA", () => {
+      expect(() => testWc("EXPORT DATA OPTIONS(format='CSV') AS SELECT 1")).toThrowError();
+    });
   });
 });

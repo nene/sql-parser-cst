@@ -1,4 +1,4 @@
-import { dialect, testWc } from "../test_utils";
+import { dialect, notDialect, testWc } from "../test_utils";
 
 describe("BigQuery row access policy", () => {
   dialect("bigquery", () => {
@@ -52,7 +52,15 @@ describe("BigQuery row access policy", () => {
     });
   });
 
-  it("ignore empty testsuite", () => {
-    expect(true).toBeTruthy();
+  notDialect("bigquery", () => {
+    it("does not support CREATE ROW ACCESS POLICY", () => {
+      expect(() =>
+        testWc("CREATE ROW ACCESS POLICY policy_name ON my_table FILTER USING (TRUE)")
+      ).toThrowError();
+    });
+
+    it("does not support DROP ROW ACCESS POLICY", () => {
+      expect(() => testWc("DROP ROW ACCESS POLICY policy_name ON my_table")).toThrowError();
+    });
   });
 });

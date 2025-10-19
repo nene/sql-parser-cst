@@ -1,7 +1,7 @@
-import { dialect, parse, testWc } from "../test_utils";
+import { dialect, notDialect, parse, testWc } from "../test_utils";
 
 describe("DO", () => {
-  dialect(["postgresql"], () => {
+  dialect("postgresql", () => {
     it("supports DO statement", () => {
       testWc(`DO $$
         BEGIN
@@ -19,7 +19,7 @@ describe("DO", () => {
     });
   });
 
-  dialect(["bigquery", "mariadb", "mysql", "sqlite"], () => {
+  notDialect("postgresql", () => {
     it("does not support DO statement", () => {
       expect(() => parse("DO 'SELECT 1;'")).toThrowError();
     });

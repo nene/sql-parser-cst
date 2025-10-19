@@ -1,4 +1,4 @@
-import { dialect, testWc } from "../test_utils";
+import { dialect, notDialect, testWc } from "../test_utils";
 
 describe("BigQuery load data", () => {
   dialect("bigquery", () => {
@@ -69,7 +69,9 @@ describe("BigQuery load data", () => {
     });
   });
 
-  it("ignore empty testsuite", () => {
-    expect(true).toBeTruthy();
+  notDialect("bigquery", () => {
+    it("does not support LOAD DATA", () => {
+      expect(() => testWc("LOAD DATA INTO my_tbl FROM FILES(uris=[])")).toThrowError();
+    });
   });
 });

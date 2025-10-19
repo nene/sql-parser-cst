@@ -1,4 +1,4 @@
-import { dialect, testWc } from "../test_utils";
+import { dialect, notDialect, testWc } from "../test_utils";
 
 describe("BigQuery specific statements", () => {
   dialect("bigquery", () => {
@@ -53,7 +53,21 @@ describe("BigQuery specific statements", () => {
     });
   });
 
-  it("ignore empty testsuite", () => {
-    expect(true).toBeTruthy();
+  notDialect("bigquery", () => {
+    it("does not support CREATE CAPACITY", () => {
+      expect(() => testWc("CREATE CAPACITY foo OPTIONS (foo = 'bar')")).toThrowError();
+    });
+    it("does not support DROP CAPACITY", () => {
+      expect(() => testWc("DROP CAPACITY foo")).toThrowError();
+    });
+    it("does not support ALTER ORGANIZATION", () => {
+      expect(() => testWc("ALTER ORGANIZATION SET OPTIONS(foo='bar')")).toThrowError();
+    });
+    it("does not support ALTER PROJECT", () => {
+      expect(() => testWc("ALTER PROJECT my_project SET OPTIONS(foo='bar')")).toThrowError();
+    });
+    it("does not support ALTER CAPACITY", () => {
+      expect(() => testWc("ALTER CAPACITY foo SET OPTIONS(size_gb=10)")).toThrowError();
+    });
   });
 });

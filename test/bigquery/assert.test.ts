@@ -1,4 +1,4 @@
-import { dialect, testWc } from "../test_utils";
+import { dialect, notDialect, testWc } from "../test_utils";
 
 describe("BigQuery assert", () => {
   dialect("bigquery", () => {
@@ -15,7 +15,9 @@ describe("BigQuery assert", () => {
     });
   });
 
-  it("ignore empty testsuite", () => {
-    expect(true).toBeTruthy();
+  notDialect("bigquery", () => {
+    it("does not support ASSERT", () => {
+      expect(() => testWc("ASSERT 1 = 1")).toThrowError();
+    });
   });
 });
