@@ -101,6 +101,7 @@ statement_postgres
   / explain_stmt
   / execute_stmt
   / call_stmt
+  / do_stmt
 
 ddl_statement
   = create_view_stmt
@@ -5512,6 +5513,16 @@ raise_message
       type: "raise_message",
       usingMessageKw: read(kw),
       string: read(string),
+    });
+  }
+
+do_stmt
+  = kw:(DO __) language:(language_clause __)? body:string_literal {
+    return loc({
+      type: "do_stmt",
+      doKw: read(kw),
+      language: read(language),
+      body,
     });
   }
 

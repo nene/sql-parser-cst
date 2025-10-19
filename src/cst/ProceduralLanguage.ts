@@ -12,6 +12,7 @@ import {
   Variable,
 } from "./Expr";
 import { StringLiteral } from "./Literal";
+import { LanguageClause } from "./ProcClause";
 import { Program } from "./Program";
 import { SubSelect } from "./Select";
 
@@ -40,7 +41,8 @@ export type AllProceduralStatements =
   | ContinueStmt
   | CallStmt
   | ReturnStmt
-  | RaiseStmt;
+  | RaiseStmt
+  | DoStmt;
 
 export interface LabeledStmt extends BaseNode {
   type: "labeled_stmt";
@@ -220,4 +222,11 @@ export interface RaiseMessage extends BaseNode {
   type: "raise_message";
   usingMessageKw: [Keyword<"USING">, Keyword<"MESSAGE">];
   string: StringLiteral;
+}
+
+export interface DoStmt extends BaseNode {
+  type: "do_stmt";
+  doKw: Keyword<"DO">;
+  language: LanguageClause;
+  body: StringLiteral;
 }
