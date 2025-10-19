@@ -7,6 +7,24 @@ describe("prepared statements", () => {
     });
   });
 
+  dialect(["mysql"], () => {
+    it("supports EXECUTE .. USING with variables", () => {
+      testWc(`EXECUTE my_stmt USING @foo, @bar`);
+    });
+  });
+
+  dialect(["mariadb"], () => {
+    it("supports EXECUTE .. USING with expressions", () => {
+      testWc(`EXECUTE my_stmt USING 1, @foo, 'hello'`);
+    });
+  });
+
+  dialect(["postgresql"], () => {
+    it("supports EXECUTE .. (arg1, arg2, ...)", () => {
+      testWc(`EXECUTE my_stmt(1, 2, 3)`);
+    });
+  });
+
   dialect("bigquery", () => {
     it("supports EXECUTE IMMEDIATE", () => {
       testWc(`EXECUTE IMMEDIATE 'SELECT 1'`);

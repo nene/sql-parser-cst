@@ -5524,11 +5524,13 @@ raise_message
  * ------------------------------------------------------------------------------------ *
  */
 execute_stmt
-  = kw:(EXECUTE __) name:entity_name {
+  = kw:(EXECUTE __) name:entity_name
+    args:(__ (execute_using_clause / paren$list$expr))? {
       return loc({
         type: "execute_stmt",
         executeKw: read(kw),
         name,
+        args: read(args),
       });
     }
 
