@@ -1,6 +1,13 @@
 import { dialect, parse, testWc, test } from "./test_utils";
 
 describe("prepared statements", () => {
+  dialect(["mysql", "mariadb"], () => {
+    it("supports PREPARE .. FROM statement", () => {
+      testWc(`PREPARE my_stmt FROM 'SELECT * FROM my_table WHERE id = ?'`);
+      testWc(`PREPARE my_stmt FROM @sql_text`);
+    });
+  });
+
   dialect(["mysql", "mariadb", "postgresql"], () => {
     it("supports EXECUTE", () => {
       testWc(`EXECUTE my_stmt`);

@@ -4,10 +4,28 @@ import { EntityName, Expr, Identifier, ListExpr, ParenExpr } from "./Expr";
 
 export type AllPreparedStatementNodes =
   | AllPreparedStatements
+  | PrepareFromClause
   | ExecuteIntoClause
   | ExecuteUsingClause;
 
-export type AllPreparedStatements = ExecuteStmt | ExecuteImmediateStmt;
+export type AllPreparedStatements =
+  | PrepareStmt
+  | ExecuteStmt
+  | ExecuteImmediateStmt;
+
+// PREPARE in MySQL, MariaDB
+export interface PrepareStmt extends BaseNode {
+  type: "prepare_stmt";
+  prepareKw: Keyword<"PREPARE">;
+  name: EntityName;
+  source: PrepareFromClause;
+}
+
+export interface PrepareFromClause extends BaseNode {
+  type: "prepare_from_clause";
+  fromKw: Keyword<"FROM">;
+  expr: Expr;
+}
 
 // EXECUTE in MySQL, MariaDB, PostgreSQL
 export interface ExecuteStmt extends BaseNode {

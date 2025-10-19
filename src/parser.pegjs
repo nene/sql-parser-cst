@@ -89,6 +89,7 @@ statement_mysql
   = proc_statement
   / analyze_stmt
   / explain_stmt
+  / prepare_stmt
   / execute_stmt
 
 statement_bigquery
@@ -5523,6 +5524,26 @@ raise_message
  *                                                                                      *
  * ------------------------------------------------------------------------------------ *
  */
+prepare_stmt
+  = kw:(PREPARE __) name:(entity_name __)
+    source:prepare_from_clause {
+      return loc({
+        type: "prepare_stmt",
+        prepareKw: read(kw),
+        name: read(name),
+        source: source,
+      });
+    }
+
+prepare_from_clause
+  = kw:(FROM __) expr:expr {
+    return loc({
+      type: "prepare_from_clause",
+      fromKw: read(kw),
+      expr,
+    });
+  }
+
 execute_stmt
   = kw:(EXECUTE __) name:entity_name
     args:(__ (execute_using_clause / paren$list$expr))? {
@@ -9162,6 +9183,7 @@ POLICY              = kw:"POLICY"i              !ident_part { return loc(createK
 PRAGMA              = kw:"PRAGMA"i              !ident_part { return loc(createKeyword(kw)); }
 PRECEDING           = kw:"PRECEDING"i           !ident_part { return loc(createKeyword(kw)); }
 PRECISION           = kw:"PRECISION"i           !ident_part { return loc(createKeyword(kw)); }
+PREPARE             = kw:"PREPARE"i             !ident_part { return loc(createKeyword(kw)); }
 PRESERVE            = kw:"PRESERVE"i            !ident_part { return loc(createKeyword(kw)); }
 PRIMARY             = kw:"PRIMARY"i             !ident_part { return loc(createKeyword(kw)); }
 PRIVILEGES          = kw:"PRIVILEGES"i          !ident_part { return loc(createKeyword(kw)); }
