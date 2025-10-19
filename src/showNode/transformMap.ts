@@ -7,6 +7,7 @@ import { createTableMap } from "./create_table";
 import { dataTypeMap } from "./data_type";
 import { dclMap } from "./dcl";
 import { deleteMap } from "./delete";
+import { doMap } from "./do";
 import { domainMap } from "./domain";
 import { dropTableMap } from "./drop_table";
 import { explainMap } from "./explain";
@@ -79,6 +80,7 @@ export const transformMap: FullTransformMap<string> = {
 
   // Other
   ...analyzeMap,
+  ...doMap,
   ...explainMap,
   ...transactionMap,
   ...dclMap,

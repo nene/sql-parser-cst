@@ -5516,16 +5516,6 @@ raise_message
     });
   }
 
-do_stmt
-  = kw:(DO __) language:(language_clause __)? body:string_literal {
-    return loc({
-      type: "do_stmt",
-      doKw: read(kw),
-      language: read(language),
-      body,
-    });
-  }
-
 /**
  * ------------------------------------------------------------------------------------ *
  *                                                                                      *
@@ -5898,6 +5888,16 @@ from_files_options
  *                                                                                      *
  * ------------------------------------------------------------------------------------ *
  */
+do_stmt
+  = kw:(DO __) language:(language_clause __)? body:string_literal {
+    return loc({
+      type: "do_stmt",
+      doKw: read(kw),
+      language: read(language),
+      body,
+    });
+  }
+
 postgresql_with_options
   = kw:(WITH __) options:paren$list$table_option_postgresql {
     return loc({

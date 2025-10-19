@@ -26,6 +26,7 @@ import { UpdateStmt } from "./Update";
 import { AllPreparedStatements } from "./PreparedStatements";
 import { UnsupportedGrammarStmt } from "./UnsupportedGrammar";
 import { AllPolicyStatements } from "./Policy";
+import { DoStmt } from "./Do";
 
 export type Statement =
   | AllAlterTableStatements
@@ -48,6 +49,7 @@ export type Statement =
   | CompoundSelectStmt
   | CreateTableStmt
   | DeleteStmt
+  | DoStmt
   | DropTableStmt
   | Empty
   | ExplainStmt
