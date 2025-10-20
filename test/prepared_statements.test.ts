@@ -110,7 +110,15 @@ describe("prepared statements", () => {
     });
   });
 
-  dialect("sqlite", () => {
+  dialect(["sqlite", "bigquery"], () => {
+    it("does not support PREPARE statement", () => {
+      expect(() => parse(`PREPARE my_stmt FROM 'foo'`)).toThrowError();
+    });
+
+    it("does not support DEALLOCATE statement", () => {
+      expect(() => parse(`DEALLOCATE my_stmt`)).toThrowError();
+    });
+
     it("does not support EXECUTE statement", () => {
       expect(() => parse(`EXECUTE my_stmt`)).toThrowError();
     });
