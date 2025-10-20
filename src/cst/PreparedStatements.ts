@@ -8,11 +8,13 @@ import { Statement } from "./Statement";
 export type AllPreparedStatementNodes =
   | AllPreparedStatements
   | PrepareFromClause
+  | DeallocateAll
   | ExecuteIntoClause
   | ExecuteUsingClause;
 
 export type AllPreparedStatements =
   | PrepareStmt
+  | DeallocateStmt
   | ExecuteStmt
   | ExecuteImmediateStmt;
 
@@ -29,6 +31,21 @@ export interface PrepareFromClause extends BaseNode {
   type: "prepare_from_clause";
   fromKw: Keyword<"FROM">;
   expr: Expr;
+}
+
+// DEALLOCATE PREPARE in MySQL, MariaDB, PostgreSQL
+export interface DeallocateStmt extends BaseNode {
+  type: "deallocate_stmt";
+  deallocateKw:
+    | Keyword<"DEALLOCATE">
+    | [Keyword<"DEALLOCATE">, Keyword<"PREPARE">]
+    | [Keyword<"DROP">, Keyword<"PREPARE">];
+  name: EntityName | DeallocateAll;
+}
+
+export interface DeallocateAll extends BaseNode {
+  type: "deallocate_all";
+  allKw: Keyword<"ALL">;
 }
 
 // EXECUTE in MySQL, MariaDB, PostgreSQL

@@ -41,6 +41,27 @@ describe("prepared statements", () => {
     });
   });
 
+  dialect(["mysql", "mariadb", "postgresql"], () => {
+    it("supports DEALLOCATE PREPARE", () => {
+      testWc(`DEALLOCATE PREPARE my_stmt`);
+    });
+  });
+
+  dialect(["mysql", "mariadb"], () => {
+    it("supports DROP PREPARE", () => {
+      testWc(`DROP PREPARE my_stmt`);
+    });
+  });
+
+  dialect(["postgresql"], () => {
+    it("supports DEALLOCATE", () => {
+      testWc(`DEALLOCATE my_stmt`);
+    });
+    it("supports DEALLOCATE ALL", () => {
+      testWc(`DEALLOCATE ALL`);
+    });
+  });
+
   dialect(["mysql"], () => {
     it("supports EXECUTE .. USING with variables", () => {
       testWc(`EXECUTE my_stmt USING @foo, @bar`);

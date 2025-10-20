@@ -90,6 +90,7 @@ statement_mysql
   / analyze_stmt
   / explain_stmt
   / prepare_stmt
+  / deallocate_stmt
   / execute_stmt
 
 statement_bigquery
@@ -101,6 +102,7 @@ statement_postgres
   = analyze_stmt
   / explain_stmt
   / prepare_stmt
+  / deallocate_stmt
   / execute_stmt
   / call_stmt
   / do_stmt
@@ -5554,6 +5556,23 @@ prepareable_statement
   / delete_stmt
   / merge_stmt
 
+deallocate_stmt
+  = kw:(deallocate_kw __) name:(deallocate_all / entity_name) {
+    return loc({
+      type: "deallocate_stmt",
+      deallocateKw: read(kw),
+      name,
+    });
+  }
+
+deallocate_kw
+  = kws:(DEALLOCATE __ PREPARE) { return read(kws); }
+  / kws:DEALLOCATE &postgres { return read(kws); }
+  / kws:(DROP __ PREPARE) &mysql { return read(kws); }
+
+deallocate_all
+  = allKw:ALL &postgres { return loc({ type: "deallocate_all", allKw }); }
+
 execute_stmt
   = kw:(EXECUTE __) name:entity_name
     args:(__ (execute_using_clause / paren$list$expr))? {
@@ -8904,6 +8923,7 @@ DAY_MINUTE          = kw:"DAY_MINUTE"i          !ident_part { return loc(createK
 DAY_SECOND          = kw:"DAY_SECOND"i          !ident_part { return loc(createKeyword(kw)); }
 DAYOFWEEK           = kw:"DAYOFWEEK"i           !ident_part { return loc(createKeyword(kw)); }
 DAYOFYEAR           = kw:"DAYOFYEAR"i           !ident_part { return loc(createKeyword(kw)); }
+DEALLOCATE          = kw:"DEALLOCATE"i          !ident_part { return loc(createKeyword(kw)); }
 DEC                 = kw:"DEC"i                 !ident_part { return loc(createKeyword(kw)); }
 DECADE              = kw:"DECADE"i              !ident_part { return loc(createKeyword(kw)); }
 DECIMAL             = kw:"DECIMAL"i             !ident_part { return loc(createKeyword(kw)); }

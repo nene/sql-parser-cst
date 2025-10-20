@@ -9,6 +9,8 @@ export const preparedStatementsMap: FullTransformMap<
   prepare_stmt: (node) =>
     show([node.prepareKw, node.name, node.params, node.source]),
   prepare_from_clause: (node) => show([node.fromKw, node.expr]),
+  deallocate_stmt: (node) => show([node.deallocateKw, node.name]),
+  deallocate_all: (node) => show([node.allKw]),
   execute_stmt: (node) => show([node.executeKw, node.name, node.args]),
   execute_immediate_stmt: (node) =>
     show([node.executeKw, node.immediateKw, node.expr, node.into, node.using]),
