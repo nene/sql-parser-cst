@@ -5338,7 +5338,7 @@ set_assignment
       right: read(value),
     })
   }
-  / !mysql name:((ident / paren$list$ident) __) "=" value:(__ expr) {
+  / &bigquery name:((ident / paren$list$ident) __) "=" value:(__ expr) {
     return loc({
       type: "binary_expr",
       left: read(name),
