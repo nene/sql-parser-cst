@@ -1,9 +1,13 @@
-import { dialect, parse, testWc } from "../test_utils";
+import { dialect, parse, parseStmt, testWc } from "../test_utils";
 
 describe("SET", () => {
   dialect(["mysql", "mariadb", "bigquery"], () => {
     it("supports basic SET statement", () => {
       testWc("SET x = 10");
+    });
+
+    it("parses SET as set_stmt", () => {
+      expect(parseStmt("SET x = 10").type).toBe("set_stmt");
     });
   });
 
@@ -39,8 +43,8 @@ describe("SET", () => {
 
   dialect("postgresql", () => {
     // In PostgreSQL the SET statement is used for changing run-time parameters
-    it.skip("PostgreSQL does not use SET statement for variable assignment", () => {
-      expect(true).toBe(true);
+    it("PostgreSQL does not parse SET statement as set_stmt", () => {
+      expect(parseStmt("SET x = 10").type).not.toBe("set_stmt");
     });
   });
 });

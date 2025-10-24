@@ -1,4 +1,4 @@
-import { dialect, notDialect, parse, testWc } from "../test_utils";
+import { dialect, notDialect, parse, parseStmt, testWc } from "../test_utils";
 
 describe("SET", () => {
   dialect("postgresql", () => {
@@ -10,6 +10,10 @@ describe("SET", () => {
       testWc("SET foo = some_identifier");
       testWc("SET foo = DEFAULT");
       testWc("SET foo = 1, 2, 3");
+    });
+
+    it("parses SET as set_parameter_stmt", () => {
+      expect(parseStmt("SET x = 10").type).toBe("set_parameter_stmt");
     });
 
     it("supports SET parameter TO value", () => {
@@ -32,7 +36,7 @@ describe("SET", () => {
 
   notDialect("postgresql", () => {
     it("does not support SET .. TO statement", () => {
-      expect(parse("SET x TO 10")).toBe(true);
+      expect(() => parse("SET x TO 10")).toThrowError();
     });
   });
 });
