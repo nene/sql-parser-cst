@@ -107,6 +107,7 @@ statement_postgres
   / call_stmt
   / do_stmt
   / set_parameter_stmt
+  / set_time_zone_parameter_stmt
 
 ddl_statement
   = create_view_stmt
@@ -5966,6 +5967,17 @@ set_parameter_stmt
       name: read(name),
       operator: op,
       value: read(value),
+    });
+  }
+
+set_time_zone_parameter_stmt
+  = kw:(SET __) modifierKw:((LOCAL / SESSION) __)? timeZoneKw:(TIME __ ZONE __) value:(default / LOCAL / expr) {
+    return loc({
+      type: "set_time_zone_parameter_stmt",
+      setKw: read(kw),
+      modifierKw: read(modifierKw),
+      timeZoneKw: read(timeZoneKw),
+      value,
     });
   }
 

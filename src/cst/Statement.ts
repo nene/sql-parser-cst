@@ -7,6 +7,7 @@ import { AllProceduralStatements } from "./ProceduralLanguage";
 import { AllProcedureStatements } from "./Procedure";
 import { AllSchemaStatements } from "./Schema";
 import { AllSequenceStatements } from "./Sequence";
+import { AllSetParameterStatements } from "./SetParameter";
 import { AllSqliteStatements } from "./dialects/Sqlite";
 import { AllTransactionStatements } from "./Transaction";
 import { AllTriggerStatements } from "./Trigger";
@@ -27,7 +28,6 @@ import { AllPreparedStatements } from "./PreparedStatements";
 import { UnsupportedGrammarStmt } from "./UnsupportedGrammar";
 import { AllPolicyStatements } from "./Policy";
 import { DoStmt } from "./Do";
-import { SetParameterStmt } from "./SetParameter";
 
 export type Statement =
   | AllAlterTableStatements
@@ -41,6 +41,7 @@ export type Statement =
   | AllProcedureStatements
   | AllSchemaStatements
   | AllSequenceStatements
+  | AllSetParameterStatements
   | AllSqliteStatements
   | AllTransactionStatements
   | AllTriggerStatements
@@ -57,7 +58,6 @@ export type Statement =
   | InsertStmt
   | MergeStmt
   | SelectStmt
-  | SetParameterStmt
   | TruncateStmt
   | UpdateStmt
   | UnsupportedGrammarStmt;

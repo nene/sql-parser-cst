@@ -20,6 +20,14 @@ describe("SET", () => {
       testWc("SET LOCAL foo = 10");
       testWc("SET SESSION foo = 10");
     });
+
+    it("supports SET TIME ZONE", () => {
+      testWc("SET TIME ZONE 'UTC'");
+      testWc("SET SESSION TIME ZONE -5");
+      testWc("SET LOCAL TIME ZONE DEFAULT");
+      testWc("SET LOCAL TIME ZONE LOCAL");
+      testWc("SET TIME ZONE INTERVAL '-08:00'");
+    });
   });
 
   notDialect("postgresql", () => {
