@@ -25,6 +25,7 @@ import { roleMap } from "./role";
 import { schemaMap } from "./schema";
 import { selectMap } from "./select";
 import { sequenceMap } from "./sequence";
+import { setParameterMap } from "./set_parameter";
 import { typeMap } from "./type";
 import { transactionMap } from "./transaction";
 import { triggerMap } from "./trigger";
@@ -81,6 +82,7 @@ export const transformMap: FullTransformMap<string> = {
   // Other
   ...analyzeMap,
   ...doMap,
+  ...setParameterMap,
   ...explainMap,
   ...transactionMap,
   ...dclMap,

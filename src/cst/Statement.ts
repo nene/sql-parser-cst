@@ -27,6 +27,7 @@ import { AllPreparedStatements } from "./PreparedStatements";
 import { UnsupportedGrammarStmt } from "./UnsupportedGrammar";
 import { AllPolicyStatements } from "./Policy";
 import { DoStmt } from "./Do";
+import { SetParameterStmt } from "./SetParameter";
 
 export type Statement =
   | AllAlterTableStatements
@@ -56,6 +57,7 @@ export type Statement =
   | InsertStmt
   | MergeStmt
   | SelectStmt
+  | SetParameterStmt
   | TruncateStmt
   | UpdateStmt
   | UnsupportedGrammarStmt;

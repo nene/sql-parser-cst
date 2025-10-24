@@ -106,6 +106,7 @@ statement_postgres
   / execute_stmt
   / call_stmt
   / do_stmt
+  / set_parameter_stmt
 
 ddl_statement
   = create_view_stmt
@@ -5953,6 +5954,18 @@ do_stmt
       doKw: read(kw),
       language: read(language),
       body,
+    });
+  }
+
+set_parameter_stmt
+  = kw:(SET __) modifierKw:((LOCAL / SESSION) __)? name:(ident __) op:("=" / TO) value:(__ list$config_parameter_value) {
+    return loc({
+      type: "set_parameter_stmt",
+      setKw: read(kw),
+      modifierKw: read(modifierKw),
+      name: read(name),
+      operator: op,
+      value: read(value),
     });
   }
 
