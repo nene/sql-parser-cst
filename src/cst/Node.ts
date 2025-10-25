@@ -61,6 +61,7 @@ import { AllInsertNodes } from "./Insert";
 import { AllMergeNodes } from "./Merge";
 import { AllMysqlNodes } from "./dialects/Mysql";
 import { AllOtherClauses } from "./OtherClauses";
+import { AllParameterNodes } from "./Parameter";
 import { AllPolicyNodes } from "./Policy";
 import { AllPostgresqlNodes } from "./dialects/Postgresql";
 import { AllPreparedStatementNodes } from "./PreparedStatements";
@@ -100,6 +101,7 @@ export type Node =
   | AllMergeNodes
   | AllMysqlNodes
   | AllOtherClauses
+  | AllParameterNodes
   | AllPostgresqlNodes
   | AllPolicyNodes
   | AllPreparedStatementNodes

@@ -9,12 +9,14 @@ import {
   FunctionParam,
   FunctionSecurityClause,
   FunctionTransformClause,
+} from "./Function";
+import { AlterFunctionAction } from "./AlterAction";
+import {
   ResetAllParametersClause,
   ResetParameterClause,
   SetParameterClause,
   SetParameterFromCurrentClause,
-} from "./Function";
-import { AlterFunctionAction } from "./AlterAction";
+} from "./Parameter";
 
 export type AllProcedureNodes = AllProcedureStatements;
 

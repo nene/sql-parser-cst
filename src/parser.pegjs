@@ -3938,47 +3938,6 @@ transform_type
     });
   }
 
-set_parameter_clause
-  = kw:(SET __) name:(ident __) op:("=" / TO) value:(__ list$config_parameter_value) {
-    return loc({
-      type: "set_parameter_clause",
-      setKw: read(kw),
-      name: read(name),
-      operator: op,
-      value: read(value),
-    });
-  }
-
-config_parameter_value
-  = literal / default / ident
-
-set_parameter_from_current_clause
-  = kw:(SET __) name:ident fromCurrentKw:(__ FROM __ CURRENT) {
-    return loc({
-      type: "set_parameter_from_current_clause",
-      setKw: read(kw),
-      name,
-      fromCurrentKw: read(fromCurrentKw),
-    });
-  }
-
-reset_parameter_clause
-  = kw:(RESET __) name:ident {
-    return loc({
-      type: "reset_parameter_clause",
-      resetKw: read(kw),
-      name,
-    });
-  }
-
-reset_all_parameters_clause
-  = kw:(RESET __ ALL) {
-    return loc({
-      type: "reset_all_parameters_clause",
-      resetAllKw: read(kw),
-    });
-  }
-
 drop_function_stmt
   = kw:(DROP __)
     tableKw:(TABLE __)?
@@ -5974,6 +5933,20 @@ set_parameter_stmt
     });
   }
 
+set_parameter_clause
+  = kw:(SET __) name:(ident __) op:("=" / TO) value:(__ list$config_parameter_value) {
+    return loc({
+      type: "set_parameter_clause",
+      setKw: read(kw),
+      name: read(name),
+      operator: op,
+      value: read(value),
+    });
+  }
+
+config_parameter_value
+  = literal / default / ident
+
 set_time_zone_parameter_stmt
   = kw:(SET __) modifierKw:((LOCAL / SESSION) __)? timeZoneKw:(TIME __ ZONE __) value:(default / LOCAL / expr) {
     return loc({
@@ -5982,6 +5955,16 @@ set_time_zone_parameter_stmt
       modifierKw: read(modifierKw),
       timeZoneKw: read(timeZoneKw),
       value,
+    });
+  }
+
+set_parameter_from_current_clause
+  = kw:(SET __) name:ident fromCurrentKw:(__ FROM __ CURRENT) {
+    return loc({
+      type: "set_parameter_from_current_clause",
+      setKw: read(kw),
+      name,
+      fromCurrentKw: read(fromCurrentKw),
     });
   }
 
@@ -5998,6 +5981,23 @@ reset_all_parameters_stmt
   = kw:(RESET __ ALL) {
     return loc({
       type: "reset_all_parameters_stmt",
+      resetAllKw: read(kw),
+    });
+  }
+
+reset_parameter_clause
+  = kw:(RESET __) name:ident {
+    return loc({
+      type: "reset_parameter_clause",
+      resetKw: read(kw),
+      name,
+    });
+  }
+
+reset_all_parameters_clause
+  = kw:(RESET __ ALL) {
+    return loc({
+      type: "reset_all_parameters_clause",
       resetAllKw: read(kw),
     });
   }

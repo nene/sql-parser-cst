@@ -2,7 +2,7 @@ import { BaseNode, Keyword } from "./Base";
 import { BigqueryOptions } from "./dialects/Bigquery";
 import { DataType } from "./DataType";
 import { Expr, Identifier, ListExpr, ParenExpr, EntityName } from "./Expr";
-import { Literal, NumberLiteral, StringLiteral } from "./Literal";
+import { NumberLiteral, StringLiteral } from "./Literal";
 import {
   AsClause,
   DeterminismClause,
@@ -12,8 +12,13 @@ import {
 } from "./ProcClause";
 import { SubSelect } from "./Select";
 import { BlockStmt } from "./ProceduralLanguage";
-import { Default } from "./Insert";
 import { AlterFunctionAction } from "./AlterAction";
+import {
+  ResetAllParametersClause,
+  ResetParameterClause,
+  SetParameterClause,
+  SetParameterFromCurrentClause,
+} from "./Parameter";
 
 export type AllFunctionNodes =
   | AllFunctionStatements
@@ -29,11 +34,7 @@ export type AllFunctionNodes =
   | FunctionRowsClause
   | FunctionSupportClause
   | FunctionTransformClause
-  | TransformType
-  | SetParameterClause
-  | SetParameterFromCurrentClause
-  | ResetParameterClause
-  | ResetAllParametersClause;
+  | TransformType;
 
 export type AllFunctionStatements =
   | CreateFunctionStmt
@@ -182,36 +183,6 @@ export interface TransformType extends BaseNode {
   type: "transform_type";
   forTypeKw: [Keyword<"FOR">, Keyword<"TYPE">];
   dataType: DataType;
-}
-
-// PostgreSQL
-export interface SetParameterClause extends BaseNode {
-  type: "set_parameter_clause";
-  setKw: Keyword<"SET">;
-  name: Identifier;
-  operator: Keyword<"TO"> | "=";
-  value: ListExpr<Literal | Identifier | Default>;
-}
-
-// PostgreSQL
-export interface SetParameterFromCurrentClause extends BaseNode {
-  type: "set_parameter_from_current_clause";
-  setKw: Keyword<"SET">;
-  name: Identifier;
-  fromCurrentKw: [Keyword<"FROM">, Keyword<"CURRENT">];
-}
-
-// PostgreSQL
-export interface ResetParameterClause extends BaseNode {
-  type: "reset_parameter_clause";
-  resetKw: Keyword<"RESET">;
-  name: Identifier;
-}
-
-// PostgreSQL
-export interface ResetAllParametersClause extends BaseNode {
-  type: "reset_all_parameters_clause";
-  resetAllKw: [Keyword<"RESET">, Keyword<"ALL">];
 }
 
 export interface DropFunctionStmt extends BaseNode {
