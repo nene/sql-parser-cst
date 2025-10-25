@@ -3,9 +3,9 @@ import { Expr, Identifier, ListExpr } from "./Expr";
 import { Default } from "./Insert";
 import { Literal } from "./Literal";
 
-export type AllSetParameterNodes = AllSetParameterStatements;
+export type AllParameterNodes = AllParameterStatements;
 
-export type AllSetParameterStatements =
+export type AllParameterStatements =
   | SetParameterStmt
   | SetTimeZoneParameterStmt
   | ResetParameterStmt

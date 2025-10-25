@@ -1,6 +1,6 @@
 import { dialect, notDialect, parse, parseStmt, testWc } from "../test_utils";
 
-describe("SET parameter", () => {
+describe("parameters", () => {
   dialect("postgresql", () => {
     it("supports SET parameter = value", () => {
       testWc("SET foo = 10");

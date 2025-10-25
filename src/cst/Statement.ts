@@ -7,7 +7,7 @@ import { AllProceduralStatements } from "./ProceduralLanguage";
 import { AllProcedureStatements } from "./Procedure";
 import { AllSchemaStatements } from "./Schema";
 import { AllSequenceStatements } from "./Sequence";
-import { AllSetParameterStatements } from "./SetParameter";
+import { AllParameterStatements } from "./Parameter";
 import { AllSqliteStatements } from "./dialects/Sqlite";
 import { AllTransactionStatements } from "./Transaction";
 import { AllTriggerStatements } from "./Trigger";
@@ -41,7 +41,7 @@ export type Statement =
   | AllProcedureStatements
   | AllSchemaStatements
   | AllSequenceStatements
-  | AllSetParameterStatements
+  | AllParameterStatements
   | AllSqliteStatements
   | AllTransactionStatements
   | AllTriggerStatements

@@ -1,8 +1,8 @@
 import { show } from "../show";
 import { FullTransformMap } from "../cstTransformer";
-import { AllSetParameterNodes } from "src/cst/SetParameter";
+import { AllParameterNodes } from "src/cst/Parameter";
 
-export const setParameterMap: FullTransformMap<string, AllSetParameterNodes> = {
+export const parameterMap: FullTransformMap<string, AllParameterNodes> = {
   set_parameter_stmt: (node) =>
     show([node.setKw, node.modifierKw, node.name, node.operator, node.value]),
   set_time_zone_parameter_stmt: (node) =>
