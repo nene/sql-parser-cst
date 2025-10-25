@@ -110,6 +110,8 @@ statement_postgres
   / set_time_zone_parameter_stmt
   / reset_parameter_stmt
   / reset_all_parameters_stmt
+  / show_parameter_stmt
+  / show_all_parameters_stmt
 
 ddl_statement
   = create_view_stmt
@@ -5997,6 +5999,23 @@ reset_all_parameters_stmt
     return loc({
       type: "reset_all_parameters_stmt",
       resetAllKw: read(kw),
+    });
+  }
+
+show_parameter_stmt
+  = kw:(SHOW __) name:ident {
+    return loc({
+      type: "show_parameter_stmt",
+      showKw: read(kw),
+      name,
+    });
+  }
+
+show_all_parameters_stmt
+  = kw:(SHOW __ ALL) {
+    return loc({
+      type: "show_all_parameters_stmt",
+      showAllKw: read(kw),
     });
   }
 

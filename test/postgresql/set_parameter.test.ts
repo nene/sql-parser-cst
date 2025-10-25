@@ -40,6 +40,14 @@ describe("SET parameter", () => {
     it("supports RESET ALL", () => {
       testWc("RESET ALL");
     });
+
+    it("supports SHOW", () => {
+      testWc("SHOW foo");
+    });
+
+    it("supports SHOW ALL", () => {
+      testWc("SHOW ALL");
+    });
   });
 
   notDialect("postgresql", () => {

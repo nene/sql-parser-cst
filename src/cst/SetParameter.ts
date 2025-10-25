@@ -9,7 +9,9 @@ export type AllSetParameterStatements =
   | SetParameterStmt
   | SetTimeZoneParameterStmt
   | ResetParameterStmt
-  | ResetAllParametersStmt;
+  | ResetAllParametersStmt
+  | ShowParameterStmt
+  | ShowAllParametersStmt;
 
 // These are all PostgreSQL specific
 export interface SetParameterStmt extends BaseNode {
@@ -38,4 +40,15 @@ export interface ResetParameterStmt extends BaseNode {
 export interface ResetAllParametersStmt extends BaseNode {
   type: "reset_all_parameters_stmt";
   resetAllKw: [Keyword<"RESET">, Keyword<"ALL">];
+}
+
+export interface ShowParameterStmt extends BaseNode {
+  type: "show_parameter_stmt";
+  showKw: Keyword<"SHOW">;
+  name: Identifier;
+}
+
+export interface ShowAllParametersStmt extends BaseNode {
+  type: "show_all_parameters_stmt";
+  showAllKw: [Keyword<"SHOW">, Keyword<"ALL">];
 }
