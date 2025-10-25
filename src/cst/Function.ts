@@ -14,7 +14,6 @@ import { SubSelect } from "./Select";
 import { BlockStmt } from "./ProceduralLanguage";
 import { AlterFunctionAction } from "./AlterAction";
 import {
-  ResetAllParametersClause,
   ResetParameterClause,
   SetParameterClause,
   SetParameterFromCurrentClause,
@@ -211,7 +210,6 @@ type AlterFunctionClause =
   | SetParameterClause
   | SetParameterFromCurrentClause
   | ResetParameterClause
-  | ResetAllParametersClause
   | FunctionBehaviorClause
   | FunctionSecurityClause
   | FunctionCostClause

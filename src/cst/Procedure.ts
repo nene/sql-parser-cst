@@ -12,7 +12,6 @@ import {
 } from "./Function";
 import { AlterFunctionAction } from "./AlterAction";
 import {
-  ResetAllParametersClause,
   ResetParameterClause,
   SetParameterClause,
   SetParameterFromCurrentClause,
@@ -74,5 +73,4 @@ type AlterProcedureClause =
   | SetParameterClause
   | SetParameterFromCurrentClause
   | ResetParameterClause
-  | ResetAllParametersClause
   | FunctionSecurityClause;

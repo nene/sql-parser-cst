@@ -109,9 +109,7 @@ statement_postgres
   / set_parameter_stmt
   / set_time_zone_parameter_stmt
   / reset_parameter_stmt
-  / reset_all_parameters_stmt
   / show_parameter_stmt
-  / show_all_parameters_stmt
 
 ddl_statement
   = create_view_stmt
@@ -3983,7 +3981,6 @@ alter_function_action
   / alter_action_no_depends_on_extension
   / set_parameter_clause
   / set_parameter_from_current_clause
-  / reset_all_parameters_clause
   / reset_parameter_clause
   / function_behavior_clause
   / function_security_clause
@@ -4115,7 +4112,6 @@ alter_procedure_action
   / alter_action_no_depends_on_extension
   / set_parameter_clause
   / set_parameter_from_current_clause
-  / reset_all_parameters_clause
   / reset_parameter_clause
   / function_security_clause
 
@@ -5969,7 +5965,7 @@ set_parameter_from_current_clause
   }
 
 reset_parameter_stmt
-  = kw:(RESET __) name:ident {
+  = kw:(RESET __) name:(all_parameters / ident) {
     return loc({
       type: "reset_parameter_stmt",
       resetKw: read(kw),
@@ -5977,16 +5973,8 @@ reset_parameter_stmt
     });
   }
 
-reset_all_parameters_stmt
-  = kw:(RESET __ ALL) {
-    return loc({
-      type: "reset_all_parameters_stmt",
-      resetAllKw: read(kw),
-    });
-  }
-
 reset_parameter_clause
-  = kw:(RESET __) name:ident {
+  = kw:(RESET __) name:(all_parameters / ident) {
     return loc({
       type: "reset_parameter_clause",
       resetKw: read(kw),
@@ -5994,16 +5982,8 @@ reset_parameter_clause
     });
   }
 
-reset_all_parameters_clause
-  = kw:(RESET __ ALL) {
-    return loc({
-      type: "reset_all_parameters_clause",
-      resetAllKw: read(kw),
-    });
-  }
-
 show_parameter_stmt
-  = kw:(SHOW __) name:ident {
+  = kw:(SHOW __) name:(all_parameters / ident) {
     return loc({
       type: "show_parameter_stmt",
       showKw: read(kw),
@@ -6011,12 +5991,9 @@ show_parameter_stmt
     });
   }
 
-show_all_parameters_stmt
-  = kw:(SHOW __ ALL) {
-    return loc({
-      type: "show_all_parameters_stmt",
-      showAllKw: read(kw),
-    });
+all_parameters
+  = allKw:ALL {
+    return loc({ type: "all_parameters", allKw });
   }
 
 postgresql_with_options

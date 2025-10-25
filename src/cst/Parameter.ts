@@ -8,15 +8,13 @@ export type AllParameterNodes =
   | SetParameterClause
   | SetParameterFromCurrentClause
   | ResetParameterClause
-  | ResetAllParametersClause;
+  | AllParameters;
 
 export type AllParameterStatements =
   | SetParameterStmt
   | SetTimeZoneParameterStmt
   | ResetParameterStmt
-  | ResetAllParametersStmt
-  | ShowParameterStmt
-  | ShowAllParametersStmt;
+  | ShowParameterStmt;
 
 // These are all PostgreSQL specific
 export interface SetParameterStmt extends BaseNode {
@@ -39,23 +37,13 @@ export interface SetTimeZoneParameterStmt extends BaseNode {
 export interface ResetParameterStmt extends BaseNode {
   type: "reset_parameter_stmt";
   resetKw: Keyword<"RESET">;
-  name: Identifier;
-}
-
-export interface ResetAllParametersStmt extends BaseNode {
-  type: "reset_all_parameters_stmt";
-  resetAllKw: [Keyword<"RESET">, Keyword<"ALL">];
+  name: Identifier | AllParameters;
 }
 
 export interface ShowParameterStmt extends BaseNode {
   type: "show_parameter_stmt";
   showKw: Keyword<"SHOW">;
-  name: Identifier;
-}
-
-export interface ShowAllParametersStmt extends BaseNode {
-  type: "show_all_parameters_stmt";
-  showAllKw: [Keyword<"SHOW">, Keyword<"ALL">];
+  name: Identifier | AllParameters;
 }
 
 export interface SetParameterClause extends BaseNode {
@@ -76,10 +64,10 @@ export interface SetParameterFromCurrentClause extends BaseNode {
 export interface ResetParameterClause extends BaseNode {
   type: "reset_parameter_clause";
   resetKw: Keyword<"RESET">;
-  name: Identifier;
+  name: Identifier | AllParameters;
 }
 
-export interface ResetAllParametersClause extends BaseNode {
-  type: "reset_all_parameters_clause";
-  resetAllKw: [Keyword<"RESET">, Keyword<"ALL">];
+export interface AllParameters extends BaseNode {
+  type: "all_parameters";
+  allKw: Keyword<"ALL">;
 }
