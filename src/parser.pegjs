@@ -5944,7 +5944,7 @@ config_parameter_value
   = literal / default / ident
 
 set_time_zone_parameter_stmt
-  = kw:(SET __) modifierKw:((LOCAL / SESSION) __)? timeZoneKw:(TIME __ ZONE __) value:(default / LOCAL / expr) {
+  = kw:(SET __) modifierKw:((LOCAL / SESSION) __)? timeZoneKw:(TIME __ ZONE __) value:(default / local_parameter_value / expr) {
     return loc({
       type: "set_time_zone_parameter_stmt",
       setKw: read(kw),
@@ -5952,6 +5952,11 @@ set_time_zone_parameter_stmt
       timeZoneKw: read(timeZoneKw),
       value,
     });
+  }
+
+local_parameter_value
+  = kw:LOCAL {
+    return loc({ type: "local_parameter_value", localKw: kw });
   }
 
 set_parameter_from_current_clause

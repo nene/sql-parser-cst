@@ -8,7 +8,8 @@ export type AllParameterNodes =
   | SetParameterClause
   | SetParameterFromCurrentClause
   | ResetParameterClause
-  | AllParameters;
+  | AllParameters
+  | LocalParameterValue;
 
 export type AllParameterStatements =
   | SetParameterStmt
@@ -31,7 +32,7 @@ export interface SetTimeZoneParameterStmt extends BaseNode {
   setKw: Keyword<"SET">;
   modifierKw?: Keyword<"LOCAL" | "SESSION">;
   timeZoneKw: [Keyword<"TIME">, Keyword<"ZONE">];
-  value: Default | Keyword<"LOCAL"> | Expr;
+  value: Default | LocalParameterValue | Expr;
 }
 
 export interface ResetParameterStmt extends BaseNode {
@@ -70,4 +71,9 @@ export interface ResetParameterClause extends BaseNode {
 export interface AllParameters extends BaseNode {
   type: "all_parameters";
   allKw: Keyword<"ALL">;
+}
+
+export interface LocalParameterValue extends BaseNode {
+  type: "local_parameter_value";
+  localKw: Keyword<"LOCAL">;
 }

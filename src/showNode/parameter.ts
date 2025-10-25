@@ -15,4 +15,5 @@ export const parameterMap: FullTransformMap<string, AllParameterNodes> = {
     show([node.setKw, node.name, node.fromCurrentKw]),
   reset_parameter_clause: (node) => show([node.resetKw, node.name]),
   all_parameters: (node) => show([node.allKw]),
+  local_parameter_value: (node) => show([node.localKw]),
 };
