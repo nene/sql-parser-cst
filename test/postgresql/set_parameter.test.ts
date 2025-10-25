@@ -32,6 +32,14 @@ describe("SET parameter", () => {
       testWc("SET LOCAL TIME ZONE LOCAL");
       testWc("SET TIME ZONE INTERVAL '-08:00'");
     });
+
+    it("supports RESET", () => {
+      testWc("RESET foo");
+    });
+
+    it("supports RESET ALL", () => {
+      testWc("RESET ALL");
+    });
   });
 
   notDialect("postgresql", () => {

@@ -108,6 +108,8 @@ statement_postgres
   / do_stmt
   / set_parameter_stmt
   / set_time_zone_parameter_stmt
+  / reset_parameter_stmt
+  / reset_all_parameters_stmt
 
 ddl_statement
   = create_view_stmt
@@ -5978,6 +5980,23 @@ set_time_zone_parameter_stmt
       modifierKw: read(modifierKw),
       timeZoneKw: read(timeZoneKw),
       value,
+    });
+  }
+
+reset_parameter_stmt
+  = kw:(RESET __) name:ident {
+    return loc({
+      type: "reset_parameter_stmt",
+      resetKw: read(kw),
+      name,
+    });
+  }
+
+reset_all_parameters_stmt
+  = kw:(RESET __ ALL) {
+    return loc({
+      type: "reset_all_parameters_stmt",
+      resetAllKw: read(kw),
     });
   }
 

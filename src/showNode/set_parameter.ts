@@ -7,4 +7,6 @@ export const setParameterMap: FullTransformMap<string, AllSetParameterNodes> = {
     show([node.setKw, node.modifierKw, node.name, node.operator, node.value]),
   set_time_zone_parameter_stmt: (node) =>
     show([node.setKw, node.modifierKw, node.timeZoneKw, node.value]),
+  reset_parameter_stmt: (node) => show([node.resetKw, node.name]),
+  reset_all_parameters_stmt: (node) => show(node.resetAllKw),
 };
