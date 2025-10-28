@@ -22,6 +22,7 @@ export const commentMap: FullTransformMap<string, AllCommentNodes> = {
   comment_target_index: (node) => show([node.indexKw, node.name]),
   comment_target_materialized_view: (node) =>
     show([node.materializedViewKw, node.name]),
+  comment_target_language: (node) => show([node.languageKw, node.name]),
   comment_target_publication: (node) => show([node.publicationKw, node.name]),
   comment_target_role: (node) => show([node.roleKw, node.name]),
   comment_target_schema: (node) => show([node.schemaKw, node.name]),

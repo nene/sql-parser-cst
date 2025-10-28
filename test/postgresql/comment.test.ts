@@ -15,6 +15,8 @@ describe("COMMENT ON", () => {
       "FOREIGN TABLE my_foreign_table",
       "INDEX my_index",
       "MATERIALIZED VIEW my_mat_view",
+      "LANGUAGE my_language",
+      "PROCEDURAL LANGUAGE my_language",
       "PUBLICATION my_publication",
       "ROLE my_role",
       "SCHEMA my_schema",

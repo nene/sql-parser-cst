@@ -6051,6 +6051,9 @@ comment_target
   / kw:(MATERIALIZED __ VIEW __) name:entity_name {
     return loc({ type: "comment_target_materialized_view", materializedViewKw: read(kw), name });
   }
+  / kw:(LANGUAGE __ / PROCEDURAL __ LANGUAGE __) name:entity_name {
+    return loc({ type: "comment_target_language", languageKw: read(kw), name });
+  }
   / kw:(PUBLICATION __) name:entity_name {
     return loc({ type: "comment_target_publication", publicationKw: read(kw), name });
   }
@@ -9365,6 +9368,7 @@ PREPARE             = kw:"PREPARE"i             !ident_part { return loc(createK
 PRESERVE            = kw:"PRESERVE"i            !ident_part { return loc(createKeyword(kw)); }
 PRIMARY             = kw:"PRIMARY"i             !ident_part { return loc(createKeyword(kw)); }
 PRIVILEGES          = kw:"PRIVILEGES"i          !ident_part { return loc(createKeyword(kw)); }
+PROCEDURAL          = kw:"PROCEDURAL"i          !ident_part { return loc(createKeyword(kw)); }
 PROCEDURE           = kw:"PROCEDURE"i           !ident_part { return loc(createKeyword(kw)); }
 PROCEDURES          = kw:"PROCEDURES"i          !ident_part { return loc(createKeyword(kw)); }
 PROJECT             = kw:"PROJECT"i             !ident_part { return loc(createKeyword(kw)); }
