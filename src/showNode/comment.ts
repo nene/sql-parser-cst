@@ -9,6 +9,16 @@ export const commentMap: FullTransformMap<string, AllCommentNodes> = {
     show([node.accessMethodKw, node.name]),
   comment_target_collation: (node) => show([node.collationKw, node.name]),
   comment_target_column: (node) => show([node.columnKw, node.name]),
+  comment_target_table_constraint: (node) =>
+    show([node.constraintKw, node.name, node.onKw, node.tableName]),
+  comment_target_domain_constraint: (node) =>
+    show([
+      node.constraintKw,
+      node.name,
+      node.onKw,
+      node.domainKw,
+      node.domainName,
+    ]),
   comment_target_conversion: (node) => show([node.conversionKw, node.name]),
   comment_target_database: (node) => show([node.databaseKw, node.name]),
   comment_target_domain: (node) => show([node.domainKw, node.name]),

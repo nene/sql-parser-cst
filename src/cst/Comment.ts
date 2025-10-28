@@ -20,6 +20,8 @@ type CommentTarget =
   | CommentTargetAccessMethod
   | CommentTargetCollation
   | CommentTargetColumn
+  | CommentTargetTableConstraint
+  | CommentTargetDomainConstraint
   | CommentTargetConversion
   | CommentTargetDatabase
   | CommentTargetDomain
@@ -62,6 +64,23 @@ export interface CommentTargetColumn extends BaseNode {
   type: "comment_target_column";
   columnKw: Keyword<"COLUMN">;
   name: EntityName;
+}
+
+export interface CommentTargetTableConstraint extends BaseNode {
+  type: "comment_target_table_constraint";
+  constraintKw: Keyword<"CONSTRAINT">;
+  name: EntityName;
+  onKw: Keyword<"ON">;
+  tableName: EntityName;
+}
+
+export interface CommentTargetDomainConstraint extends BaseNode {
+  type: "comment_target_domain_constraint";
+  constraintKw: Keyword<"CONSTRAINT">;
+  name: EntityName;
+  onKw: Keyword<"ON">;
+  domainKw: Keyword<"DOMAIN">;
+  domainName: EntityName;
 }
 
 export interface CommentTargetConversion extends BaseNode {

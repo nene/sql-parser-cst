@@ -6024,6 +6024,12 @@ comment_target
   / kw:(COLUMN __) name:entity_name {
     return loc({ type: "comment_target_column", columnKw: read(kw), name });
   }
+  / kw:(CONSTRAINT __) name:(entity_name __) onKw:(ON __) domainKw:(DOMAIN __) domainName:entity_name {
+    return loc({ type: "comment_target_domain_constraint", constraintKw: read(kw), name: read(name), onKw: read(onKw), domainKw: read(domainKw), domainName });
+  }
+  / kw:(CONSTRAINT __) name:(entity_name __) onKw:(ON __) tableName:entity_name {
+    return loc({ type: "comment_target_table_constraint", constraintKw: read(kw), name: read(name), onKw: read(onKw), tableName });
+  }
   / kw:(CONVERSION __) name:entity_name {
     return loc({ type: "comment_target_conversion", conversionKw: read(kw), name });
   }

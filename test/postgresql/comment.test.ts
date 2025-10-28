@@ -6,6 +6,8 @@ describe("COMMENT ON", () => {
       "ACCESS METHOD my_am",
       "COLLATION my_collation",
       "COLUMN my_table.my_column",
+      "CONSTRAINT my_constraint ON my_table",
+      "CONSTRAINT my_constraint ON DOMAIN my_domain",
       "CONVERSION my_conversion",
       "DATABASE my_database",
       "DOMAIN my_domain",
