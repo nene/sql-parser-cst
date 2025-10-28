@@ -6057,6 +6057,9 @@ comment_target
   / kw:(MATERIALIZED __ VIEW __) name:entity_name {
     return loc({ type: "comment_target_materialized_view", materializedViewKw: read(kw), name });
   }
+  / kw:(POLICY __) name:(entity_name __) onKw:(ON __) tableName:entity_name {
+    return loc({ type: "comment_target_policy", policyKw: read(kw), name: read(name), onKw: read(onKw), tableName });
+  }
   / kw:(LANGUAGE __ / PROCEDURAL __ LANGUAGE __) name:entity_name {
     return loc({ type: "comment_target_language", languageKw: read(kw), name });
   }

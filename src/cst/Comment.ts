@@ -31,6 +31,7 @@ type CommentTarget =
   | CommentTargetForeignTable
   | CommentTargetIndex
   | CommentTargetMaterializedView
+  | CommentTargetPolicy
   | CommentTargetLanguage
   | CommentTargetPublication
   | CommentTargetRole
@@ -139,6 +140,14 @@ export interface CommentTargetMaterializedView extends BaseNode {
   type: "comment_target_materialized_view";
   materializedViewKw: [Keyword<"MATERIALIZED">, Keyword<"VIEW">];
   name: EntityName;
+}
+
+export interface CommentTargetPolicy extends BaseNode {
+  type: "comment_target_policy";
+  policyKw: Keyword<"POLICY">;
+  name: EntityName;
+  onKw: Keyword<"ON">;
+  tableName: EntityName;
 }
 
 export interface CommentTargetLanguage extends BaseNode {
