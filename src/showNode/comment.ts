@@ -5,7 +5,40 @@ import { AllCommentNodes } from "../cst/Node";
 export const commentMap: FullTransformMap<string, AllCommentNodes> = {
   comment_stmt: (node) =>
     show([node.commentKw, node.onKw, node.target, node.isKw, node.message]),
+  comment_target_access_method: (node) =>
+    show([node.accessMethodKw, node.name]),
+  comment_target_collation: (node) => show([node.collationKw, node.name]),
   comment_target_column: (node) => show([node.columnKw, node.name]),
+  comment_target_conversion: (node) => show([node.conversionKw, node.name]),
+  comment_target_database: (node) => show([node.databaseKw, node.name]),
+  comment_target_domain: (node) => show([node.domainKw, node.name]),
+  comment_target_extension: (node) => show([node.extensionKw, node.name]),
+  comment_target_event_trigger: (node) =>
+    show([node.eventTriggerKw, node.name]),
+  comment_target_foreign_data_wrapper: (node) =>
+    show([node.foreignDataWrapperKw, node.name]),
+  comment_target_foreign_table: (node) =>
+    show([node.foreignTableKw, node.name]),
+  comment_target_index: (node) => show([node.indexKw, node.name]),
+  comment_target_materialized_view: (node) =>
+    show([node.materializedViewKw, node.name]),
+  comment_target_publication: (node) => show([node.publicationKw, node.name]),
+  comment_target_role: (node) => show([node.roleKw, node.name]),
   comment_target_schema: (node) => show([node.schemaKw, node.name]),
+  comment_target_sequence: (node) => show([node.sequenceKw, node.name]),
+  comment_target_server: (node) => show([node.serverKw, node.name]),
+  comment_target_statistics: (node) => show([node.statisticsKw, node.name]),
+  comment_target_subscription: (node) => show([node.subscriptionKw, node.name]),
   comment_target_table: (node) => show([node.tableKw, node.name]),
+  comment_target_tablespace: (node) => show([node.tablespaceKw, node.name]),
+  comment_target_text_search_configuration: (node) =>
+    show([node.textSearchConfigurationKw, node.name]),
+  comment_target_text_search_dictionary: (node) =>
+    show([node.textSearchDictionaryKw, node.name]),
+  comment_target_text_search_parser: (node) =>
+    show([node.textSearchParserKw, node.name]),
+  comment_target_text_search_template: (node) =>
+    show([node.textSearchTemplateKw, node.name]),
+  comment_target_type: (node) => show([node.typeKw, node.name]),
+  comment_target_view: (node) => show([node.viewKw, node.name]),
 };

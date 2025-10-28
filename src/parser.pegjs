@@ -6015,14 +6015,86 @@ comment_stmt
   }
 
 comment_target
-  = kw:(COLUMN __) name:entity_name {
+  = kw:(ACCESS __ METHOD __) name:entity_name {
+    return loc({ type: "comment_target_access_method", accessMethodKw: read(kw), name });
+  }
+  / kw:(COLLATION __) name:entity_name {
+    return loc({ type: "comment_target_collation", collationKw: read(kw), name });
+  }
+  / kw:(COLUMN __) name:entity_name {
     return loc({ type: "comment_target_column", columnKw: read(kw), name });
+  }
+  / kw:(CONVERSION __) name:entity_name {
+    return loc({ type: "comment_target_conversion", conversionKw: read(kw), name });
+  }
+  / kw:(DATABASE __) name:entity_name {
+    return loc({ type: "comment_target_database", databaseKw: read(kw), name });
+  }
+  / kw:(DOMAIN __) name:entity_name {
+    return loc({ type: "comment_target_domain", domainKw: read(kw), name });
+  }
+  / kw:(EXTENSION __) name:entity_name {
+    return loc({ type: "comment_target_extension", extensionKw: read(kw), name });
+  }
+  / kw:(EVENT __ TRIGGER __) name:entity_name {
+    return loc({ type: "comment_target_event_trigger", eventTriggerKw: read(kw), name });
+  }
+  / kw:(FOREIGN __ DATA __ WRAPPER __) name:entity_name {
+    return loc({ type: "comment_target_foreign_data_wrapper", foreignDataWrapperKw: read(kw), name });
+  }
+  / kw:(FOREIGN __ TABLE __) name:entity_name {
+    return loc({ type: "comment_target_foreign_table", foreignTableKw: read(kw), name });
+  }
+  / kw:(INDEX __) name:entity_name {
+    return loc({ type: "comment_target_index", indexKw: read(kw), name });
+  }
+  / kw:(MATERIALIZED __ VIEW __) name:entity_name {
+    return loc({ type: "comment_target_materialized_view", materializedViewKw: read(kw), name });
+  }
+  / kw:(PUBLICATION __) name:entity_name {
+    return loc({ type: "comment_target_publication", publicationKw: read(kw), name });
+  }
+  / kw:(ROLE __) name:entity_name {
+    return loc({ type: "comment_target_role", roleKw: read(kw), name });
+  }
+  / kw:(SCHEMA __) name:entity_name {
+    return loc({ type: "comment_target_schema", schemaKw: read(kw), name });
+  }
+  / kw:(SEQUENCE __) name:entity_name {
+    return loc({ type: "comment_target_sequence", sequenceKw: read(kw), name });
+  }
+  / kw:(SERVER __) name:entity_name {
+    return loc({ type: "comment_target_server", serverKw: read(kw), name });
+  }
+  / kw:(STATISTICS __) name:entity_name {
+    return loc({ type: "comment_target_statistics", statisticsKw: read(kw), name });
+  }
+  / kw:(SUBSCRIPTION __) name:entity_name {
+    return loc({ type: "comment_target_subscription", subscriptionKw: read(kw), name });
   }
   / kw:(TABLE __) name:entity_name {
     return loc({ type: "comment_target_table", tableKw: read(kw), name });
   }
-  / kw:(SCHEMA __) name:entity_name {
-    return loc({ type: "comment_target_schema", schemaKw: read(kw), name });
+  / kw:(TABLESPACE __) name:entity_name {
+    return loc({ type: "comment_target_tablespace", tablespaceKw: read(kw), name });
+  }
+  / kw:(TEXT __ SEARCH __ CONFIGURATION __) name:entity_name {
+    return loc({ type: "comment_target_text_search_configuration", textSearchConfigurationKw: read(kw), name });
+  }
+  / kw:(TEXT __ SEARCH __ DICTIONARY __) name:entity_name {
+    return loc({ type: "comment_target_text_search_dictionary", textSearchDictionaryKw: read(kw), name });
+  }
+  / kw:(TEXT __ SEARCH __ PARSER __) name:entity_name {
+    return loc({ type: "comment_target_text_search_parser", textSearchParserKw: read(kw), name });
+  }
+  / kw:(TEXT __ SEARCH __ TEMPLATE __) name:entity_name {
+    return loc({ type: "comment_target_text_search_template", textSearchTemplateKw: read(kw), name });
+  }
+  / kw:(TYPE __) name:entity_name {
+    return loc({ type: "comment_target_type", typeKw: read(kw), name });
+  }
+  / kw:(VIEW __) name:entity_name {
+    return loc({ type: "comment_target_view", viewKw: read(kw), name });
   }
 
 postgresql_with_options
@@ -8956,12 +9028,14 @@ COMPACT             = kw:"COMPACT"i             !ident_part { return loc(createK
 COMPRESSED          = kw:"COMPRESSED"i          !ident_part { return loc(createKeyword(kw)); }
 COMPRESSION         = kw:"COMPRESSION"i         !ident_part { return loc(createKeyword(kw)); }
 CONCURRENTLY        = kw:"CONCURRENTLY"i        !ident_part { return loc(createKeyword(kw)); }
+CONFIGURATION       = kw:"CONFIGURATION"i       !ident_part { return loc(createKeyword(kw)); }
 CONFLICT            = kw:"CONFLICT"i            !ident_part { return loc(createKeyword(kw)); }
 CONNECT             = kw:"CONNECT"i             !ident_part { return loc(createKeyword(kw)); }
 CONNECTION          = kw:"CONNECTION"i          !ident_part { return loc(createKeyword(kw)); }
 CONSTRAINT          = kw:"CONSTRAINT"i          !ident_part { return loc(createKeyword(kw)); }
 CONSTRAINTS         = kw:"CONSTRAINTS"i         !ident_part { return loc(createKeyword(kw)); }
 CONTINUE            = kw:"CONTINUE"i            !ident_part { return loc(createKeyword(kw)); }
+CONVERSION          = kw:"CONVERSION"i          !ident_part { return loc(createKeyword(kw)); }
 COPY                = kw:"COPY"i                !ident_part { return loc(createKeyword(kw)); }
 COST                = kw:"COST"i                !ident_part { return loc(createKeyword(kw)); }
 COUNT               = kw:"COUNT"i               !ident_part { return loc(createKeyword(kw)); }
@@ -9012,6 +9086,7 @@ DESC                = kw:"DESC"i                !ident_part { return loc(createK
 DESCRIBE            = kw:"DESCRIBE"i            !ident_part { return loc(createKeyword(kw)); }
 DETACH              = kw:"DETACH"i              !ident_part { return loc(createKeyword(kw)); }
 DETERMINISTIC       = kw:"DETERMINISTIC"i       !ident_part { return loc(createKeyword(kw)); }
+DICTIONARY          = kw:"DICTIONARY"i          !ident_part { return loc(createKeyword(kw)); }
 DIRECTORY           = kw:"DIRECTORY"i           !ident_part { return loc(createKeyword(kw)); }
 DISABLE             = kw:"DISABLE"i             !ident_part { return loc(createKeyword(kw)); }
 DISK                = kw:"DISK"i                !ident_part { return loc(createKeyword(kw)); }
@@ -9044,6 +9119,7 @@ EPOCH               = kw:"EPOCH"i               !ident_part { return loc(createK
 ERROR               = kw:"ERROR"i               !ident_part { return loc(createKeyword(kw)); }
 ESCAPE              = kw:"ESCAPE"i              !ident_part { return loc(createKeyword(kw)); }
 ESCAPED             = kw:"ESCAPED"i             !ident_part { return loc(createKeyword(kw)); }
+EVENT               = kw:"EVENT"i               !ident_part { return loc(createKeyword(kw)); }
 EVENTS              = kw:"EVENTS"i              !ident_part { return loc(createKeyword(kw)); }
 EXAMINED            = kw:"EXAMINED"i            !ident_part { return loc(createKeyword(kw)); }
 EXCEPT              = kw:"EXCEPT"i              !ident_part { return loc(createKeyword(kw)); }
@@ -9293,6 +9369,7 @@ PROCEDURE           = kw:"PROCEDURE"i           !ident_part { return loc(createK
 PROCEDURES          = kw:"PROCEDURES"i          !ident_part { return loc(createKeyword(kw)); }
 PROJECT             = kw:"PROJECT"i             !ident_part { return loc(createKeyword(kw)); }
 PUBLIC              = kw:"PUBLIC"i              !ident_part { return loc(createKeyword(kw)); }
+PUBLICATION         = kw:"PUBLICATION"i         !ident_part { return loc(createKeyword(kw)); }
 QUALIFY             = kw:"QUALIFY"i             !ident_part { return loc(createKeyword(kw)); }
 QUARTER             = kw:"QUARTER"i             !ident_part { return loc(createKeyword(kw)); }
 QUERY               = kw:"QUERY"i               !ident_part { return loc(createKeyword(kw)); }
@@ -9397,6 +9474,7 @@ STRAIGHT_JOIN       = kw:"STRAIGHT_JOIN"i       !ident_part { return loc(createK
 STRICT              = kw:"STRICT"i              !ident_part { return loc(createKeyword(kw)); }
 STRING              = kw:"STRING"i              !ident_part { return loc(createKeyword(kw)); }
 STRUCT              = kw:"STRUCT"i              !ident_part { return loc(createKeyword(kw)); }
+SUBSCRIPTION        = kw:"SUBSCRIPTION"i        !ident_part { return loc(createKeyword(kw)); }
 SUM                 = kw:"SUM"i                 !ident_part { return loc(createKeyword(kw)); }
 SUNDAY              = kw:"SUNDAY"i              !ident_part { return loc(createKeyword(kw)); }
 SUPERUSER           = kw:"SUPERUSER"i           !ident_part { return loc(createKeyword(kw)); }
@@ -9412,6 +9490,7 @@ TABLESAMPLE         = kw:"TABLESAMPLE"i         !ident_part { return loc(createK
 TABLESPACE          = kw:"TABLESPACE"i          !ident_part { return loc(createKeyword(kw)); }
 TARGET              = kw:"TARGET"i              !ident_part { return loc(createKeyword(kw)); }
 TEMP                = kw:"TEMP"i                !ident_part { return loc(createKeyword(kw)); }
+TEMPLATE            = kw:"TEMPLATE"i            !ident_part { return loc(createKeyword(kw)); }
 TEMPORARY           = kw:"TEMPORARY"i           !ident_part { return loc(createKeyword(kw)); }
 TEMPTABLE           = kw:"TEMPTABLE"i           !ident_part { return loc(createKeyword(kw)); }
 TERMINATED          = kw:"TERMINATED"i          !ident_part { return loc(createKeyword(kw)); }
