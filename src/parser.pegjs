@@ -110,6 +110,7 @@ statement_postgres
   / set_time_zone_parameter_stmt
   / reset_parameter_stmt
   / show_parameter_stmt
+  / comment_stmt
 
 ddl_statement
   = create_view_stmt
@@ -5999,6 +6000,29 @@ show_parameter_stmt
 all_parameters
   = allKw:ALL {
     return loc({ type: "all_parameters", allKw });
+  }
+
+comment_stmt
+  = kw:(COMMENT __) onKw:(ON __) target:(comment_target __) isKw:(IS __) message:(string_literal / null_literal) {
+    return loc({
+      type: "comment_stmt",
+      commentKw: read(kw),
+      onKw: read(onKw),
+      target: read(target),
+      isKw: read(isKw),
+      message,
+    });
+  }
+
+comment_target
+  = kw:(COLUMN __) name:entity_name {
+    return loc({ type: "comment_target_column", columnKw: read(kw), name });
+  }
+  / kw:(TABLE __) name:entity_name {
+    return loc({ type: "comment_target_table", tableKw: read(kw), name });
+  }
+  / kw:(SCHEMA __) name:entity_name {
+    return loc({ type: "comment_target_schema", schemaKw: read(kw), name });
   }
 
 postgresql_with_options

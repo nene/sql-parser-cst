@@ -1,5 +1,6 @@
 import { AllAlterTableStatements } from "./AlterTable";
 import { AllBigqueryStatements } from "./dialects/Bigquery";
+import { AllCommentStatements } from "./Comment";
 import { AllDclStatements } from "./Dcl";
 import { AllFunctionStatements } from "./Function";
 import { AllIndexStatements } from "./Index";
@@ -32,6 +33,7 @@ import { DoStmt } from "./Do";
 export type Statement =
   | AllAlterTableStatements
   | AllBigqueryStatements
+  | AllCommentStatements
   | AllDclStatements
   | AllFunctionStatements
   | AllIndexStatements

@@ -4,6 +4,7 @@ export * from "./AlterTable";
 export * from "./Analyze";
 export * from "./Base";
 export * from "./dialects/Bigquery";
+export * from "./Comment";
 export * from "./Constraint";
 export * from "./CreateTable";
 export * from "./DataType";
@@ -49,6 +50,7 @@ import { AllAlterActionNodes } from "./AlterAction";
 import { AllAlterTableNodes } from "./AlterTable";
 import { AllBigqueryNodes } from "./dialects/Bigquery";
 import { AllColumns, Keyword } from "./Base";
+import { AllCommentNodes } from "./Comment";
 import { AllConstraintNodes } from "./Constraint";
 import { AllCreateTableNodes } from "./CreateTable";
 import { AllDataTypeNodes } from "./DataType";
@@ -89,6 +91,7 @@ export type Node =
   | AllAlterTableNodes
   | AllBigqueryNodes
   | AllColumns
+  | AllCommentNodes
   | AllConstraintNodes
   | AllCreateTableNodes
   | AllDataTypeNodes

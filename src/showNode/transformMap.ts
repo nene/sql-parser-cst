@@ -2,6 +2,7 @@ import { alterActionMap } from "./alter_action";
 import { alterTableMap } from "./alter_table";
 import { analyzeMap } from "./analyze";
 import { baseMap } from "./base";
+import { commentMap } from "./comment";
 import { constraintMap } from "./constraint";
 import { createTableMap } from "./create_table";
 import { dataTypeMap } from "./data_type";
@@ -81,6 +82,7 @@ export const transformMap: FullTransformMap<string> = {
 
   // Other
   ...analyzeMap,
+  ...commentMap,
   ...doMap,
   ...parameterMap,
   ...explainMap,
