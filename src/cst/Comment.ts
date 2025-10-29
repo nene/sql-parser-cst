@@ -35,6 +35,7 @@ type CommentTarget =
   | CommentTargetLanguage
   | CommentTargetPublication
   | CommentTargetRole
+  | CommentTargetRule
   | CommentTargetSchema
   | CommentTargetSequence
   | CommentTargetServer
@@ -170,6 +171,14 @@ export interface CommentTargetRole extends BaseNode {
   type: "comment_target_role";
   roleKw: Keyword<"ROLE">;
   name: EntityName;
+}
+
+export interface CommentTargetRule extends BaseNode {
+  type: "comment_target_rule";
+  ruleKw: Keyword<"RULE">;
+  name: EntityName;
+  onKw: Keyword<"ON">;
+  tableName: EntityName;
 }
 
 export interface CommentTargetSchema extends BaseNode {

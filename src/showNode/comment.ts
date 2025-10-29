@@ -37,6 +37,8 @@ export const commentMap: FullTransformMap<string, AllCommentNodes> = {
   comment_target_language: (node) => show([node.languageKw, node.name]),
   comment_target_publication: (node) => show([node.publicationKw, node.name]),
   comment_target_role: (node) => show([node.roleKw, node.name]),
+  comment_target_rule: (node) =>
+    show([node.ruleKw, node.name, node.onKw, node.tableName]),
   comment_target_schema: (node) => show([node.schemaKw, node.name]),
   comment_target_sequence: (node) => show([node.sequenceKw, node.name]),
   comment_target_server: (node) => show([node.serverKw, node.name]),

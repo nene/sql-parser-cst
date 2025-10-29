@@ -22,6 +22,7 @@ describe("COMMENT ON", () => {
       "PROCEDURAL LANGUAGE my_language",
       "PUBLICATION my_publication",
       "ROLE my_role",
+      "RULE my_rule ON my_table",
       "SCHEMA my_schema",
       "SEQUENCE my_sequence",
       "SERVER my_server",

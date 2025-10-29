@@ -6069,6 +6069,9 @@ comment_target
   / kw:(ROLE __) name:entity_name {
     return loc({ type: "comment_target_role", roleKw: read(kw), name });
   }
+  / kw:(RULE __) name:(entity_name __) onKw:(ON __) tableName:entity_name {
+    return loc({ type: "comment_target_rule", ruleKw: read(kw), name: read(name), onKw: read(onKw), tableName });
+  }
   / kw:(SCHEMA __) name:entity_name {
     return loc({ type: "comment_target_schema", schemaKw: read(kw), name });
   }
