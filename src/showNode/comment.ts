@@ -71,4 +71,12 @@ export const commentMap: FullTransformMap<string, AllCommentNodes> = {
     show([node.triggerKw, node.name, node.onKw, node.tableName]),
   comment_target_type: (node) => show([node.typeKw, node.name]),
   comment_target_view: (node) => show([node.viewKw, node.name]),
+  comment_target_aggregate: (node) =>
+    show([node.aggregateKw, node.name, node.params]),
+  comment_target_function: (node) =>
+    show([node.functionKw, node.name, node.params]),
+  comment_target_procedure: (node) =>
+    show([node.procedureKw, node.name, node.params]),
+  comment_target_routine: (node) =>
+    show([node.routineKw, node.name, node.params]),
 };

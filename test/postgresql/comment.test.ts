@@ -49,8 +49,17 @@ describe("COMMENT ON", () => {
         testWc(`COMMENT ON ${target} IS 'This is a comment'`);
       });
     });
-  });
 
+    ["FUNCTION", "PROCEDURE", "ROUTINE", "AGGREGATE"].forEach((target) => {
+      it(`supports COMMENT ON ${target}`, () => {
+        testWc(`COMMENT ON ${target} fibo IS 'This is a comment'`);
+      });
+
+      it(`supports COMMENT ON ${target} with parameters`, () => {
+        testWc(`COMMENT ON ${target} schm.fobo (INT, x INT, INOUT y TEXT) IS 'This is a comment'`);
+      });
+    });
+  });
   notDialect("postgresql", () => {
     it("does not support COMMENT ON", () => {
       expect(() => parse(`COMMENT ON TABLE my_table IS 'This is a comment'`)).toThrow();

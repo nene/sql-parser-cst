@@ -6129,6 +6129,18 @@ comment_target
   / kw:(VIEW __) name:entity_name {
     return loc({ type: "comment_target_view", viewKw: read(kw), name });
   }
+  / kw:(AGGREGATE __) name:entity_name params:(__ paren$list$func_param)? {
+    return loc({ type: "comment_target_aggregate", aggregateKw: read(kw), name, params: read(params) });
+  }
+  / kw:(FUNCTION __) name:entity_name params:(__ paren$list$func_param)? {
+    return loc({ type: "comment_target_function", functionKw: read(kw), name, params: read(params) });
+  }
+  / kw:(PROCEDURE __) name:entity_name params:(__ paren$list$func_param)? {
+    return loc({ type: "comment_target_procedure", procedureKw: read(kw), name, params: read(params) });
+  }
+  / kw:(ROUTINE __) name:entity_name params:(__ paren$list$func_param)? {
+    return loc({ type: "comment_target_routine", routineKw: read(kw), name, params: read(params) });
+  }
 
 cast_definition
   = from:(named_data_type __) asKw:(AS __) to:named_data_type {
@@ -8997,6 +9009,7 @@ ADD                 = kw:"ADD"i                 !ident_part { return loc(createK
 ADMIN               = kw:"ADMIN"i               !ident_part { return loc(createKeyword(kw)); }
 AFTER               = kw:"AFTER"i               !ident_part { return loc(createKeyword(kw)); }
 AGAINST             = kw:"AGAINST"i             !ident_part { return loc(createKeyword(kw)); }
+AGGREGATE           = kw:"AGGREGATE"i           !ident_part { return loc(createKeyword(kw)); }
 ALGORITHM           = kw:"ALGORITHM"i           !ident_part { return loc(createKeyword(kw)); }
 ALL                 = kw:"ALL"i                 !ident_part { return loc(createKeyword(kw)); }
 ALTER               = kw:"ALTER"i               !ident_part { return loc(createKeyword(kw)); }

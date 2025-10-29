@@ -1,8 +1,8 @@
 import { BaseNode, Keyword } from "./Base";
 import { CastDefinition } from "./Cast";
-import { EntityName, Expr, Identifier, ParenExpr } from "./Expr";
+import { EntityName, Expr, Identifier, ListExpr, ParenExpr } from "./Expr";
 import { NullLiteral, StringLiteral } from "./Literal";
-import { NamedDataType } from "./Node";
+import { FunctionParam, NamedDataType } from "./Node";
 
 export type AllCommentNodes = AllCommentStatements | CommentTarget;
 
@@ -56,7 +56,11 @@ type CommentTarget =
   | CommentTargetTransform
   | CommentTargetTrigger
   | CommentTargetType
-  | CommentTargetView;
+  | CommentTargetView
+  | CommentTargetAggregate
+  | CommentTargetFunction
+  | CommentTargetProcedure
+  | CommentTargetRoutine;
 
 export interface CommentTargetAccessMethod extends BaseNode {
   type: "comment_target_access_method";
@@ -319,4 +323,32 @@ export interface CommentTargetView extends BaseNode {
   type: "comment_target_view";
   viewKw: Keyword<"VIEW">;
   name: EntityName;
+}
+
+export interface CommentTargetAggregate extends BaseNode {
+  type: "comment_target_aggregate";
+  aggregateKw: Keyword<"AGGREGATE">;
+  name: EntityName;
+  params?: ParenExpr<ListExpr<FunctionParam>>;
+}
+
+export interface CommentTargetFunction extends BaseNode {
+  type: "comment_target_function";
+  functionKw: Keyword<"FUNCTION">;
+  name: EntityName;
+  params?: ParenExpr<ListExpr<FunctionParam>>;
+}
+
+export interface CommentTargetProcedure extends BaseNode {
+  type: "comment_target_procedure";
+  procedureKw: Keyword<"PROCEDURE">;
+  name: EntityName;
+  params?: ParenExpr<ListExpr<FunctionParam>>;
+}
+
+export interface CommentTargetRoutine extends BaseNode {
+  type: "comment_target_routine";
+  routineKw: Keyword<"ROUTINE">;
+  name: EntityName;
+  params?: ParenExpr<ListExpr<FunctionParam>>;
 }
