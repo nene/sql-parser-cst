@@ -6027,10 +6027,10 @@ comment_target
   / kw:(COLUMN __) name:entity_name {
     return loc({ type: "comment_target_column", columnKw: read(kw), name });
   }
-  / kw:(CONSTRAINT __) name:(entity_name __) onKw:(ON __) domainKw:(DOMAIN __) domainName:entity_name {
+  / kw:(CONSTRAINT __) name:(ident __) onKw:(ON __) domainKw:(DOMAIN __) domainName:entity_name {
     return loc({ type: "comment_target_domain_constraint", constraintKw: read(kw), name: read(name), onKw: read(onKw), domainKw: read(domainKw), domainName });
   }
-  / kw:(CONSTRAINT __) name:(entity_name __) onKw:(ON __) tableName:entity_name {
+  / kw:(CONSTRAINT __) name:(ident __) onKw:(ON __) tableName:entity_name {
     return loc({ type: "comment_target_table_constraint", constraintKw: read(kw), name: read(name), onKw: read(onKw), tableName });
   }
   / kw:(CONVERSION __) name:entity_name {
@@ -6117,7 +6117,7 @@ comment_target
   / kw:(TEXT __ SEARCH __ TEMPLATE __) name:entity_name {
     return loc({ type: "comment_target_text_search_template", textSearchTemplateKw: read(kw), name });
   }
-  / kw:(TRANSFORM __ FOR __) typeName:(named_data_type __) languageKw:(LANGUAGE __) languageName:entity_name {
+  / kw:(TRANSFORM __ FOR __) typeName:(named_data_type __) languageKw:(LANGUAGE __) languageName:ident {
     return loc({ type: "comment_target_transform", transformForKw: read(kw), typeName: read(typeName), languageKw: read(languageKw), languageName });
   }
   / kw:(TRIGGER __) name:(entity_name __) onKw:(ON __) tableName:entity_name {

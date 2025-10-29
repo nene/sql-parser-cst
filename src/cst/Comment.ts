@@ -85,7 +85,7 @@ export interface CommentTargetColumn extends BaseNode {
 export interface CommentTargetTableConstraint extends BaseNode {
   type: "comment_target_table_constraint";
   constraintKw: Keyword<"CONSTRAINT">;
-  name: EntityName;
+  name: Identifier;
   onKw: Keyword<"ON">;
   tableName: EntityName;
 }
@@ -93,7 +93,7 @@ export interface CommentTargetTableConstraint extends BaseNode {
 export interface CommentTargetDomainConstraint extends BaseNode {
   type: "comment_target_domain_constraint";
   constraintKw: Keyword<"CONSTRAINT">;
-  name: EntityName;
+  name: Identifier;
   onKw: Keyword<"ON">;
   domainKw: Keyword<"DOMAIN">;
   domainName: EntityName;
@@ -298,7 +298,7 @@ export interface CommentTargetTransform extends BaseNode {
   transformForKw: [Keyword<"TRANSFORM">, Keyword<"FOR">];
   typeName: NamedDataType;
   languageKw: Keyword<"LANGUAGE">;
-  languageName: EntityName;
+  languageName: Identifier;
 }
 
 export interface CommentTargetTrigger extends BaseNode {
