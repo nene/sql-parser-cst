@@ -1,5 +1,6 @@
 import { BaseNode, Keyword } from "./Base";
-import { EntityName } from "./Expr";
+import { CastDefinition } from "./Cast";
+import { EntityName, ParenExpr } from "./Expr";
 import { NullLiteral, StringLiteral } from "./Literal";
 import { NamedDataType } from "./Node";
 
@@ -19,6 +20,7 @@ export interface CommentStmt extends BaseNode {
 
 type CommentTarget =
   | CommentTargetAccessMethod
+  | CommentTargetCast
   | CommentTargetCollation
   | CommentTargetColumn
   | CommentTargetTableConstraint
@@ -57,6 +59,12 @@ export interface CommentTargetAccessMethod extends BaseNode {
   type: "comment_target_access_method";
   accessMethodKw: [Keyword<"ACCESS">, Keyword<"METHOD">];
   name: EntityName;
+}
+
+export interface CommentTargetCast extends BaseNode {
+  type: "comment_target_cast";
+  castKw: Keyword<"CAST">;
+  args: ParenExpr<CastDefinition>;
 }
 
 export interface CommentTargetCollation extends BaseNode {

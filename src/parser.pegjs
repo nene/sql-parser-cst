@@ -6018,6 +6018,9 @@ comment_target
   = kw:(ACCESS __ METHOD __) name:entity_name {
     return loc({ type: "comment_target_access_method", accessMethodKw: read(kw), name });
   }
+  / kw:(CAST __) args:paren$cast_definition {
+    return loc({ type: "comment_target_cast", castKw: read(kw), args });
+  }
   / kw:(COLLATION __) name:entity_name {
     return loc({ type: "comment_target_collation", collationKw: read(kw), name });
   }
@@ -6116,6 +6119,16 @@ comment_target
   }
   / kw:(VIEW __) name:entity_name {
     return loc({ type: "comment_target_view", viewKw: read(kw), name });
+  }
+
+cast_definition
+  = from:(named_data_type __) asKw:(AS __) to:named_data_type {
+    return loc({
+      type: "cast_definition",
+      from: read(from),
+      asKw: read(asKw),
+      to,
+    });
   }
 
 postgresql_with_options
@@ -7913,6 +7926,7 @@ paren$__template__
 
 /*! paren:start */
 paren$cast_arg = .
+paren$cast_definition = .
 paren$compound_select_stmt = .
 paren$cte_expr = .
 paren$empty_list = .

@@ -7,6 +7,7 @@ export const commentMap: FullTransformMap<string, AllCommentNodes> = {
     show([node.commentKw, node.onKw, node.target, node.isKw, node.message]),
   comment_target_access_method: (node) =>
     show([node.accessMethodKw, node.name]),
+  comment_target_cast: (node) => show([node.castKw, node.args]),
   comment_target_collation: (node) => show([node.collationKw, node.name]),
   comment_target_column: (node) => show([node.columnKw, node.name]),
   comment_target_table_constraint: (node) =>

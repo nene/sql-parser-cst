@@ -4,6 +4,8 @@ describe("COMMENT ON", () => {
   dialect("postgresql", () => {
     [
       "ACCESS METHOD my_am",
+      "CAST (INTEGER AS TEXT)",
+      "CAST (INT AS CHARACTER VARYING)",
       "COLLATION my_collation",
       "COLUMN my_table.my_column",
       "CONSTRAINT my_constraint ON my_table",
