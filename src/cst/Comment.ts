@@ -1,6 +1,6 @@
 import { BaseNode, Keyword } from "./Base";
 import { CastDefinition } from "./Cast";
-import { EntityName, Identifier, ParenExpr } from "./Expr";
+import { EntityName, Expr, Identifier, ParenExpr } from "./Expr";
 import { NullLiteral, StringLiteral } from "./Literal";
 import { NamedDataType } from "./Node";
 
@@ -33,6 +33,7 @@ type CommentTarget =
   | CommentTargetForeignDataWrapper
   | CommentTargetForeignTable
   | CommentTargetIndex
+  | CommentTargetLargeObject
   | CommentTargetMaterializedView
   | CommentTargetOperatorClass
   | CommentTargetOperatorFamily
@@ -148,6 +149,12 @@ export interface CommentTargetIndex extends BaseNode {
   type: "comment_target_index";
   indexKw: Keyword<"INDEX">;
   name: EntityName;
+}
+
+export interface CommentTargetLargeObject extends BaseNode {
+  type: "comment_target_large_object";
+  largeObjectKw: [Keyword<"LARGE">, Keyword<"OBJECT">];
+  oid: Expr;
 }
 
 export interface CommentTargetMaterializedView extends BaseNode {

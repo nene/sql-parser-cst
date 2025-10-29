@@ -31,6 +31,7 @@ export const commentMap: FullTransformMap<string, AllCommentNodes> = {
   comment_target_foreign_table: (node) =>
     show([node.foreignTableKw, node.name]),
   comment_target_index: (node) => show([node.indexKw, node.name]),
+  comment_target_large_object: (node) => show([node.largeObjectKw, node.oid]),
   comment_target_materialized_view: (node) =>
     show([node.materializedViewKw, node.name]),
   comment_target_operator_class: (node) =>

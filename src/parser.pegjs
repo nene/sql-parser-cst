@@ -6057,6 +6057,9 @@ comment_target
   / kw:(INDEX __) name:entity_name {
     return loc({ type: "comment_target_index", indexKw: read(kw), name });
   }
+  / kw:(LARGE __ OBJECT __) oid:signed_number_literal {
+    return loc({ type: "comment_target_large_object", largeObjectKw: read(kw), oid });
+  }
   / kw:(MATERIALIZED __ VIEW __) name:entity_name {
     return loc({ type: "comment_target_materialized_view", materializedViewKw: read(kw), name });
   }
