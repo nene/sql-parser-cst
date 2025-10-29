@@ -1,6 +1,7 @@
 import { BaseNode, Keyword } from "./Base";
 import { EntityName } from "./Expr";
 import { NullLiteral, StringLiteral } from "./Literal";
+import { NamedDataType } from "./Node";
 
 export type AllCommentNodes = AllCommentStatements | CommentTarget;
 
@@ -262,7 +263,7 @@ export interface CommentTargetTextSearchTemplate extends BaseNode {
 export interface CommentTargetTransform extends BaseNode {
   type: "comment_target_transform";
   transformForKw: [Keyword<"TRANSFORM">, Keyword<"FOR">];
-  name: EntityName;
+  typeName: NamedDataType;
   languageKw: Keyword<"LANGUAGE">;
   languageName: EntityName;
 }
@@ -278,7 +279,7 @@ export interface CommentTargetTrigger extends BaseNode {
 export interface CommentTargetType extends BaseNode {
   type: "comment_target_type";
   typeKw: Keyword<"TYPE">;
-  name: EntityName;
+  name: NamedDataType;
 }
 
 export interface CommentTargetView extends BaseNode {

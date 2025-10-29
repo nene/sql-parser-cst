@@ -55,7 +55,12 @@ export const commentMap: FullTransformMap<string, AllCommentNodes> = {
   comment_target_text_search_template: (node) =>
     show([node.textSearchTemplateKw, node.name]),
   comment_target_transform: (node) =>
-    show([node.transformForKw, node.name, node.languageKw, node.languageName]),
+    show([
+      node.transformForKw,
+      node.typeName,
+      node.languageKw,
+      node.languageName,
+    ]),
   comment_target_trigger: (node) =>
     show([node.triggerKw, node.name, node.onKw, node.tableName]),
   comment_target_type: (node) => show([node.typeKw, node.name]),
