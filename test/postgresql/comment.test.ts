@@ -19,6 +19,8 @@ describe("COMMENT ON", () => {
       "FOREIGN TABLE my_foreign_table",
       "INDEX my_index",
       "MATERIALIZED VIEW my_mat_view",
+      "OPERATOR CLASS my_opclass USING btree",
+      "OPERATOR FAMILY my_opfamily USING btree",
       "POLICY my_policy ON my_table",
       "LANGUAGE my_language",
       "PROCEDURAL LANGUAGE my_language",

@@ -33,6 +33,10 @@ export const commentMap: FullTransformMap<string, AllCommentNodes> = {
   comment_target_index: (node) => show([node.indexKw, node.name]),
   comment_target_materialized_view: (node) =>
     show([node.materializedViewKw, node.name]),
+  comment_target_operator_class: (node) =>
+    show([node.operatorClassKw, node.name, node.usingKw, node.methodName]),
+  comment_target_operator_family: (node) =>
+    show([node.operatorFamilyKw, node.name, node.usingKw, node.methodName]),
   comment_target_policy: (node) =>
     show([node.policyKw, node.name, node.onKw, node.tableName]),
   comment_target_language: (node) => show([node.languageKw, node.name]),

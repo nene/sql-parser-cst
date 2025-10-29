@@ -6060,6 +6060,12 @@ comment_target
   / kw:(MATERIALIZED __ VIEW __) name:entity_name {
     return loc({ type: "comment_target_materialized_view", materializedViewKw: read(kw), name });
   }
+  / kw:(OPERATOR __ CLASS __) name:(entity_name __) usingKw:(USING __) methodName:ident {
+    return loc({ type: "comment_target_operator_class", operatorClassKw: read(kw), name: read(name), usingKw: read(usingKw), methodName });
+  }
+  / kw:(OPERATOR __ FAMILY __) name:(entity_name __) usingKw:(USING __) methodName:ident {
+    return loc({ type: "comment_target_operator_family", operatorFamilyKw: read(kw), name: read(name), usingKw: read(usingKw), methodName });
+  }
   / kw:(POLICY __) name:(entity_name __) onKw:(ON __) tableName:entity_name {
     return loc({ type: "comment_target_policy", policyKw: read(kw), name: read(name), onKw: read(onKw), tableName });
   }
@@ -9048,6 +9054,7 @@ CHARACTER           = kw:"CHARACTER"i           !ident_part { return loc(createK
 CHARSET             = kw:"CHARSET"i             !ident_part { return loc(createKeyword(kw)); }
 CHECK               = kw:"CHECK"i               !ident_part { return loc(createKeyword(kw)); }
 CHECKSUM            = kw:"CHECKSUM"i            !ident_part { return loc(createKeyword(kw)); }
+CLASS               = kw:"CLASS"i               !ident_part { return loc(createKeyword(kw)); }
 CLONE               = kw:"CLONE"i               !ident_part { return loc(createKeyword(kw)); }
 CLUSTER             = kw:"CLUSTER"i             !ident_part { return loc(createKeyword(kw)); }
 COLLATE             = kw:"COLLATE"i             !ident_part { return loc(createKeyword(kw)); }
@@ -9174,6 +9181,7 @@ EXTERNAL            = kw:"EXTERNAL"i            !ident_part { return loc(createK
 EXTRACT             = kw:"EXTRACT"i             !ident_part { return loc(createKeyword(kw)); }
 FAIL                = kw:"FAIL"i                !ident_part { return loc(createKeyword(kw)); }
 FALSE               = kw:"FALSE"i               !ident_part { return loc(createKeyword(kw)); }
+FAMILY              = kw:"FAMILY"i              !ident_part { return loc(createKeyword(kw)); }
 FETCH               = kw:"FETCH"i               !ident_part { return loc(createKeyword(kw)); }
 FIELDS              = kw:"FIELDS"i              !ident_part { return loc(createKeyword(kw)); }
 FILES               = kw:"FILES"i               !ident_part { return loc(createKeyword(kw)); }

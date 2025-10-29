@@ -1,6 +1,6 @@
 import { BaseNode, Keyword } from "./Base";
 import { CastDefinition } from "./Cast";
-import { EntityName, ParenExpr } from "./Expr";
+import { EntityName, Identifier, ParenExpr } from "./Expr";
 import { NullLiteral, StringLiteral } from "./Literal";
 import { NamedDataType } from "./Node";
 
@@ -34,6 +34,8 @@ type CommentTarget =
   | CommentTargetForeignTable
   | CommentTargetIndex
   | CommentTargetMaterializedView
+  | CommentTargetOperatorClass
+  | CommentTargetOperatorFamily
   | CommentTargetPolicy
   | CommentTargetLanguage
   | CommentTargetPublication
@@ -152,6 +154,22 @@ export interface CommentTargetMaterializedView extends BaseNode {
   type: "comment_target_materialized_view";
   materializedViewKw: [Keyword<"MATERIALIZED">, Keyword<"VIEW">];
   name: EntityName;
+}
+
+export interface CommentTargetOperatorClass extends BaseNode {
+  type: "comment_target_operator_class";
+  operatorClassKw: [Keyword<"OPERATOR">, Keyword<"CLASS">];
+  name: EntityName;
+  usingKw: Keyword<"USING">;
+  methodName: Identifier;
+}
+
+export interface CommentTargetOperatorFamily extends BaseNode {
+  type: "comment_target_operator_family";
+  operatorFamilyKw: [Keyword<"OPERATOR">, Keyword<"FAMILY">];
+  name: EntityName;
+  usingKw: Keyword<"USING">;
+  methodName: Identifier;
 }
 
 export interface CommentTargetPolicy extends BaseNode {
