@@ -33,6 +33,8 @@ describe("COMMENT ON", () => {
       "TEXT SEARCH DICTIONARY my_tsdict",
       "TEXT SEARCH PARSER my_tsparser",
       "TEXT SEARCH TEMPLATE my_tstemplate",
+      "TRANSFORM FOR my_transform LANGUAGE my_language",
+      "TRIGGER my_trigger ON my_table",
       "TYPE my_type",
       "VIEW my_view",
     ].forEach((target) => {

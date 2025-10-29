@@ -46,6 +46,8 @@ type CommentTarget =
   | CommentTargetTextSearchDictionary
   | CommentTargetTextSearchParser
   | CommentTargetTextSearchTemplate
+  | CommentTargetTransform
+  | CommentTargetTrigger
   | CommentTargetType
   | CommentTargetView;
 
@@ -246,6 +248,22 @@ export interface CommentTargetTextSearchTemplate extends BaseNode {
     Keyword<"TEMPLATE">
   ];
   name: EntityName;
+}
+
+export interface CommentTargetTransform extends BaseNode {
+  type: "comment_target_transform";
+  transformForKw: [Keyword<"TRANSFORM">, Keyword<"FOR">];
+  name: EntityName;
+  languageKw: Keyword<"LANGUAGE">;
+  languageName: EntityName;
+}
+
+export interface CommentTargetTrigger extends BaseNode {
+  type: "comment_target_trigger";
+  triggerKw: Keyword<"TRIGGER">;
+  name: EntityName;
+  onKw: Keyword<"ON">;
+  tableName: EntityName;
 }
 
 export interface CommentTargetType extends BaseNode {

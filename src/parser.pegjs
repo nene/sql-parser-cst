@@ -6102,6 +6102,12 @@ comment_target
   / kw:(TEXT __ SEARCH __ TEMPLATE __) name:entity_name {
     return loc({ type: "comment_target_text_search_template", textSearchTemplateKw: read(kw), name });
   }
+  / kw:(TRANSFORM __ FOR __) name:(entity_name __) languageKw:(LANGUAGE __) languageName:entity_name {
+    return loc({ type: "comment_target_transform", transformForKw: read(kw), name: read(name), languageKw: read(languageKw), languageName });
+  }
+  / kw:(TRIGGER __) name:(entity_name __) onKw:(ON __) tableName:entity_name {
+    return loc({ type: "comment_target_trigger", triggerKw: read(kw), name: read(name), onKw: read(onKw), tableName });
+  }
   / kw:(TYPE __) name:entity_name {
     return loc({ type: "comment_target_type", typeKw: read(kw), name });
   }
