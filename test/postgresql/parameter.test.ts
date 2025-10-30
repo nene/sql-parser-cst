@@ -20,6 +20,32 @@ describe("parameters", () => {
       testWc("SET foo TO 10");
     });
 
+    it("supports ON value", () => {
+      testWc("SET foo = ON");
+      testWc("SET foo TO ON");
+    });
+
+    it("supports OFF value", () => {
+      testWc("SET foo = OFF");
+      testWc("SET foo TO OFF");
+    });
+
+    it("parses ON value as literal", () => {
+      expect(parseParameterValue("SET x = ON")).toEqual({
+        type: "boolean_on_off_literal",
+        valueKw: { type: "keyword", name: "ON", text: "ON" },
+        value: true,
+      });
+    });
+
+    it("parses OFF value as literal", () => {
+      expect(parseParameterValue("SET x = OFF")).toEqual({
+        type: "boolean_on_off_literal",
+        valueKw: { type: "keyword", name: "OFF", text: "OFF" },
+        value: false,
+      });
+    });
+
     it("supports [LOCAL | SESSION] modifier", () => {
       testWc("SET LOCAL foo = 10");
       testWc("SET SESSION foo = 10");
@@ -56,3 +82,14 @@ describe("parameters", () => {
     });
   });
 });
+
+function parseParameterValue(sql: string) {
+  const stmt = parseStmt(sql);
+  if (stmt.type !== "set_parameter_stmt") {
+    throw new Error("Expected set_parameter_stmt");
+  }
+  if (stmt.value.type !== "list_expr") {
+    throw new Error("Expected list_expr");
+  }
+  return stmt.value.items[0];
+}

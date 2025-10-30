@@ -9,7 +9,8 @@ export type AllParameterNodes =
   | SetParameterFromCurrentClause
   | ResetParameterClause
   | AllParameters
-  | LocalParameterValue;
+  | LocalParameterValue
+  | BooleanOnOffLiteral;
 
 export type AllParameterStatements =
   | SetParameterStmt
@@ -24,7 +25,7 @@ export interface SetParameterStmt extends BaseNode {
   modifierKw?: Keyword<"LOCAL" | "SESSION">;
   name: Identifier;
   operator: Keyword<"TO"> | "=";
-  value: ListExpr<Literal | Identifier | Default>;
+  value: ListExpr<Literal | BooleanOnOffLiteral | Identifier | Default>;
 }
 
 export interface SetTimeZoneParameterStmt extends BaseNode {
@@ -76,4 +77,10 @@ export interface AllParameters extends BaseNode {
 export interface LocalParameterValue extends BaseNode {
   type: "local_parameter_value";
   localKw: Keyword<"LOCAL">;
+}
+
+export interface BooleanOnOffLiteral extends BaseNode {
+  type: "boolean_on_off_literal";
+  valueKw: Keyword<"ON" | "OFF">;
+  value: boolean;
 }

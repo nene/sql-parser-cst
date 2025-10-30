@@ -5942,7 +5942,15 @@ set_parameter_clause
   }
 
 config_parameter_value
-  = literal / default / ident
+  = literal / boolean_on_off_literal / default / ident
+
+boolean_on_off_literal
+  = kw:ON {
+    return loc({ type: "boolean_on_off_literal", valueKw: kw, value: true });
+  }
+  / kw:OFF {
+    return loc({ type: "boolean_on_off_literal", valueKw: kw, value: false });
+  }
 
 set_time_zone_parameter_stmt
   = kw:(SET __) modifierKw:((LOCAL / SESSION) __)? timeZoneKw:(TIME __ ZONE __) value:(default / local_parameter_value / expr) {
