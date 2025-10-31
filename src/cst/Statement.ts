@@ -3,6 +3,7 @@ import { AllBigqueryStatements } from "./dialects/Bigquery";
 import { AllCommentStatements } from "./Comment";
 import { AllDclStatements } from "./Dcl";
 import { AllDomainStatements } from "./Domain";
+import { AllExtensionNodes } from "./Extension";
 import { AllFunctionStatements } from "./Function";
 import { AllIndexStatements } from "./Index";
 import { AllProceduralStatements } from "./ProceduralLanguage";
@@ -37,6 +38,7 @@ export type Statement =
   | AllCommentStatements
   | AllDclStatements
   | AllDomainStatements
+  | AllExtensionNodes
   | AllFunctionStatements
   | AllIndexStatements
   | AllPolicyStatements

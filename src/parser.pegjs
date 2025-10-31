@@ -110,6 +110,7 @@ statement_postgres
   / set_time_zone_parameter_stmt
   / reset_parameter_stmt
   / show_parameter_stmt
+  / create_extension_stmt
   / comment_stmt
 
 ddl_statement
@@ -6010,6 +6011,32 @@ all_parameters
     return loc({ type: "all_parameters", allKw });
   }
 
+create_extension_stmt
+  = kw:(CREATE __ EXTENSION __)
+    ifKw:(if_not_exists __)? name:ident
+    withKw:(__  WITH)?
+    clauses:(__ create_extension_clause)* {
+      return loc({
+        type: "create_extension_stmt",
+        createExtensionKw: read(kw),
+        ifNotExistsKw: read(ifKw),
+        name: read(name),
+        withKw: read(withKw),
+        clauses: clauses.map(read),
+      });
+    }
+
+create_extension_clause
+  = kw:(SCHEMA __) name:ident {
+    return loc({ type: "extension_schema_clause", schemaKw: read(kw), name });
+  }
+  / kw:(VERSION __) name:(string_literal / ident) {
+    return loc({ type: "extension_version_clause", versionKw: read(kw), name });
+  }
+  / kw:CASCADE {
+    return loc({ type: "extension_cascade_clause", cascadeKw: read(kw) });
+  }
+
 comment_stmt
   = kw:(COMMENT __) onKw:(ON __) target:(comment_target __) isKw:(IS __) message:(string_literal / null_literal) {
     return loc({
@@ -9612,6 +9639,7 @@ VARIADIC            = kw:"VARIADIC"i            !ident_part { return loc(createK
 VARYING             = kw:"VARYING"i             !ident_part { return loc(createKeyword(kw)); }
 VECTOR              = kw:"VECTOR"i              !ident_part { return loc(createKeyword(kw)); }
 VERBOSE             = kw:"VERBOSE"i             !ident_part { return loc(createKeyword(kw)); }
+VERSION             = kw:"VERSION"i             !ident_part { return loc(createKeyword(kw)); }
 VIEW                = kw:"VIEW"i                !ident_part { return loc(createKeyword(kw)); }
 VIRTUAL             = kw:"VIRTUAL"i             !ident_part { return loc(createKeyword(kw)); }
 VISIBLE             = kw:"VISIBLE"i             !ident_part { return loc(createKeyword(kw)); }

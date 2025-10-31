@@ -16,6 +16,7 @@ export * from "./Domain";
 export * from "./DropTable";
 export * from "./Explain";
 export * from "./Expr";
+export * from "./Extension";
 export * from "./Function";
 export * from "./Index";
 export * from "./Insert";
@@ -60,6 +61,7 @@ import { AllDclNodes } from "./Dcl";
 import { AllDeleteNodes } from "./Delete";
 import { AllDomainNodes } from "./Domain";
 import { AllExprNodes } from "./Expr";
+import { AllExtensionNodes } from "./Extension";
 import { AllFrameNodes } from "./WindowFrame";
 import { AllFunctionNodes } from "./Function";
 import { AllIndexNodes } from "./Index";
@@ -102,6 +104,7 @@ export type Node =
   | AllDeleteNodes
   | AllDomainNodes
   | AllExprNodes
+  | AllExtensionNodes
   | AllFrameNodes
   | AllFunctionNodes
   | AllIndexNodes

@@ -14,6 +14,7 @@ import { domainMap } from "./domain";
 import { dropTableMap } from "./drop_table";
 import { explainMap } from "./explain";
 import { exprMap } from "./expr";
+import { extensionMap } from "./extension";
 import { functionMap } from "./function";
 import { indexMap } from "./index";
 import { insertMap } from "./insert";
@@ -88,6 +89,7 @@ export const transformMap: FullTransformMap<string> = {
   ...doMap,
   ...parameterMap,
   ...explainMap,
+  ...extensionMap,
   ...transactionMap,
   ...dclMap,
   ...proceduralLanguageMap,
