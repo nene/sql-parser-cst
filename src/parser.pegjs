@@ -111,6 +111,7 @@ statement_postgres
   / reset_parameter_stmt
   / show_parameter_stmt
   / create_extension_stmt
+  / drop_extension_stmt
   / comment_stmt
 
 ddl_statement
@@ -6036,6 +6037,20 @@ create_extension_clause
   / kw:CASCADE {
     return loc({ type: "extension_cascade_clause", cascadeKw: read(kw) });
   }
+
+drop_extension_stmt
+  = kw:(DROP __ EXTENSION __)
+    ifKw:(if_exists __)?
+    names:list$ident
+    behaviorKw:(__ (CASCADE / RESTRICT))? {
+      return loc({
+        type: "drop_extension_stmt",
+        dropExtensionKw: read(kw),
+        ifExistsKw: read(ifKw),
+        names,
+        behaviorKw: read(behaviorKw),
+      });
+    }
 
 comment_stmt
   = kw:(COMMENT __) onKw:(ON __) target:(comment_target __) isKw:(IS __) message:(string_literal / null_literal) {

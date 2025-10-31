@@ -1,10 +1,10 @@
 import { BaseNode, Keyword } from "./Base";
-import { Identifier } from "./Expr";
+import { Identifier, ListExpr } from "./Expr";
 import { StringLiteral } from "./Literal";
 
 export type AllExtensionNodes = AllExtensionStatements | CreateExtensionClause;
 
-export type AllExtensionStatements = CreateExtensionStmt;
+export type AllExtensionStatements = CreateExtensionStmt | DropExtensionStmt;
 
 // CREATE EXTENSION
 export interface CreateExtensionStmt extends BaseNode {
@@ -36,4 +36,13 @@ export interface ExtensionVersionClause extends BaseNode {
 export interface ExtensionCascadeClause extends BaseNode {
   type: "extension_cascade_clause";
   cascadeKw: Keyword<"CASCADE">;
+}
+
+// DROP EXTENSION
+export interface DropExtensionStmt extends BaseNode {
+  type: "drop_extension_stmt";
+  dropExtensionKw: [Keyword<"DROP">, Keyword<"EXTENSION">];
+  ifExistsKw?: [Keyword<"IF">, Keyword<"EXISTS">];
+  names: ListExpr<Identifier>;
+  behaviorKw?: Keyword<"CASCADE"> | Keyword<"RESTRICT">;
 }
