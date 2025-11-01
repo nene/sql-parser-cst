@@ -77,4 +77,17 @@ export const dclMap: FullTransformMap<string, AllDclNodes> = {
 
   grantee_group: (node) => show([node.groupKw, node.name]),
   grantee_public: (node) => show([node.publicKw]),
+
+  alter_default_privileges_stmt: (node) =>
+    show([node.alterDefaultPrivilegesKw, node.action]),
+  grant_default_privileges_action: (node) =>
+    show([
+      node.grantKw,
+      node.privileges,
+      node.onKw,
+      node.resourcesKw,
+      node.toKw,
+      node.roles,
+      node.withGrantOption,
+    ]),
 };

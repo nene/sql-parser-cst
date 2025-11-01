@@ -4935,6 +4935,7 @@ transaction_chain_clause
  */
 dcl_statement
   = (&bigquery / &postgres) x:(grant_stmt / revoke_stmt) { return x; }
+  / &postgres x:alter_default_privileges_stmt { return x; }
 
 grant_stmt
   = &postgres
@@ -5157,6 +5158,38 @@ revoke_stmt
         behaviorKw: read(behaviorKw),
       });
     }
+
+alter_default_privileges_stmt
+  = kw:(ALTER __ DEFAULT __ PRIVILEGES __)
+    action:grant_default_privileges_action {
+      return loc({
+        type: "alter_default_privileges_stmt",
+        alterDefaultPrivilegesKw: read(kw),
+        action,
+      });
+    }
+
+grant_default_privileges_action
+  = kw:(GRANT __) privileges:((list$privilege / all_privileges) __)
+    onKw:(ON __) resourcesKw:(grant_resources_kw __)
+    toKw:(TO __) roles:(list$grantee)
+    withGrantOption:(__ with_grant_option_clause)? {
+      return loc({
+        type: "grant_default_privileges_action",
+        grantKw: read(kw),
+        privileges: read(privileges),
+        onKw: read(onKw),
+        resourcesKw: read(resourcesKw),
+        toKw: read(toKw),
+        roles,
+        withGrantOption: read(withGrantOption),
+      });
+    }
+
+grant_resources_kw
+  = kw:(TABLES / SEQUENCES / FUNCTIONS / ROUTINES / TYPES / SCHEMAS / LARGE __ OBJECTS) {
+    return read(kw);
+  }
 
 /**
  * ------------------------------------------------------------------------------------ *
@@ -9425,6 +9458,7 @@ NULLS               = kw:"NULLS"i               !ident_part { return loc(createK
 NUMERIC             = kw:"NUMERIC"i             !ident_part { return loc(createKeyword(kw)); }
 NVARCHAR            = kw:"NVARCHAR"i            !ident_part { return loc(createKeyword(kw)); }
 OBJECT              = kw:"OBJECT"i              !ident_part { return loc(createKeyword(kw)); }
+OBJECTS             = kw:"OBJECTS"i             !ident_part { return loc(createKeyword(kw)); }
 OF                  = kw:"OF"i                  !ident_part { return loc(createKeyword(kw)); }
 OFF                 = kw:"OFF"i                 !ident_part { return loc(createKeyword(kw)); }
 OFFSET              = kw:"OFFSET"i              !ident_part { return loc(createKeyword(kw)); }
@@ -9536,6 +9570,7 @@ SAFE_ORDINAL        = kw:"SAFE_ORDINAL"i        !ident_part { return loc(createK
 SATURDAY            = kw:"SATURDAY"i            !ident_part { return loc(createKeyword(kw)); }
 SAVEPOINT           = kw:"SAVEPOINT"i           !ident_part { return loc(createKeyword(kw)); }
 SCHEMA              = kw:"SCHEMA"i              !ident_part { return loc(createKeyword(kw)); }
+SCHEMAS             = kw:"SCHEMAS"i             !ident_part { return loc(createKeyword(kw)); }
 SEARCH              = kw:"SEARCH"i              !ident_part { return loc(createKeyword(kw)); }
 SECOND              = kw:"SECOND"i              !ident_part { return loc(createKeyword(kw)); }
 SECOND_MICROSECOND  = kw:"SECOND_MICROSECOND"i  !ident_part { return loc(createKeyword(kw)); }
@@ -9624,6 +9659,7 @@ TRUE                = kw:"TRUE"i                !ident_part { return loc(createK
 TRUNCATE            = kw:"TRUNCATE"i            !ident_part { return loc(createKeyword(kw)); }
 TUESDAY             = kw:"TUESDAY"i             !ident_part { return loc(createKeyword(kw)); }
 TYPE                = kw:"TYPE"i                !ident_part { return loc(createKeyword(kw)); }
+TYPES               = kw:"TYPES"i               !ident_part { return loc(createKeyword(kw)); }
 UESCAPE             = kw:"UESCAPE"i             !ident_part { return loc(createKeyword(kw)); }
 UNBOUNDED           = kw:"UNBOUNDED"i           !ident_part { return loc(createKeyword(kw)); }
 UNCOMMITTED         = kw:"UNCOMMITTED"i         !ident_part { return loc(createKeyword(kw)); }

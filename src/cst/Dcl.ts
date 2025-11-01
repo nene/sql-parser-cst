@@ -19,13 +19,15 @@ export type AllDclNodes =
   | GrantOptionForClause
   | GrantedByClause
   | GranteeGroup
-  | GranteePublic;
+  | GranteePublic
+  | GrantDefaultPrivilegesAction;
 
 export type AllDclStatements =
   | GrantPrivilegeStmt
   | GrantRoleStmt
   | RevokePrivilegeStmt
-  | RevokeRoleStmt;
+  | RevokeRoleStmt
+  | AlterDefaultPrivilegesStmt;
 
 // GRANT privilege ON resource TO roles
 export interface GrantPrivilegeStmt extends BaseNode {
@@ -278,3 +280,30 @@ export interface GranteePublic extends BaseNode {
   type: "grantee_public";
   publicKw: Keyword<"PUBLIC">;
 }
+
+export interface AlterDefaultPrivilegesStmt extends BaseNode {
+  type: "alter_default_privileges_stmt";
+  alterDefaultPrivilegesKw: [
+    Keyword<"ALTER">,
+    Keyword<"DEFAULT">,
+    Keyword<"PRIVILEGES">
+  ];
+  action: GrantDefaultPrivilegesAction;
+}
+
+export interface GrantDefaultPrivilegesAction extends BaseNode {
+  type: "grant_default_privileges_action";
+  grantKw: Keyword<"GRANT">;
+  privileges: ListExpr<Privilege> | AllPrivileges;
+  onKw: Keyword<"ON">;
+  resourcesKw: ResourcesKeyword;
+  toKw: Keyword<"TO">;
+  roles: ListExpr<Grantee>;
+  withGrantOption?: WithGrantOptionClause;
+}
+
+type ResourcesKeyword =
+  | Keyword<
+      "TABLES" | "SEQUENCES" | "FUNCTIONS" | "ROUTINES" | "TYPES" | "SCHEMAS"
+    >
+  | [Keyword<"LARGE">, Keyword<"OBJECTS">];
