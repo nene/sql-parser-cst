@@ -27,19 +27,15 @@ describe("ALTER DEFAULT PRIVILEGES", () => {
         });
 
         privileges.forEach((privilege) => {
-          it(`supports GRANT ${privilege} ON ${resources} TO GROUP`, () => {
-            testWc(
-              `ALTER DEFAULT PRIVILEGES GRANT ${privilege} ON ${resources} TO GROUP moderator`
-            );
+          it(`supports GRANT ${privilege} ON ${resources}`, () => {
+            testWc(`ALTER DEFAULT PRIVILEGES GRANT ${privilege} ON ${resources} TO john`);
           });
+        });
 
-          it(`supports GRANT ${privilege} ON ${resources} TO role`, () => {
-            testWc(`ALTER DEFAULT PRIVILEGES GRANT ${privilege} ON ${resources} TO moderator`);
-          });
-
-          it(`supports GRANT ${privilege} ON ${resources} TO PUBLIC`, () => {
-            testWc(`ALTER DEFAULT PRIVILEGES GRANT ${privilege} ON ${resources} TO PUBLIC`);
-          });
+        it(`supports GRANT on multiple roles`, () => {
+          testWc(
+            `ALTER DEFAULT PRIVILEGES GRANT ALL ON ${resources} TO john, GROUP moderator, PUBLIC`
+          );
         });
 
         it(`supports WITH GRANT OPTION`, () => {
@@ -60,19 +56,15 @@ describe("ALTER DEFAULT PRIVILEGES", () => {
         });
 
         privileges.forEach((privilege) => {
-          it(`supports REVOKE ${privilege} ON ${resources} FROM GROUP`, () => {
-            testWc(
-              `ALTER DEFAULT PRIVILEGES REVOKE ${privilege} ON ${resources} FROM GROUP moderator`
-            );
+          it(`supports REVOKE ${privilege} ON ${resources}`, () => {
+            testWc(`ALTER DEFAULT PRIVILEGES REVOKE ${privilege} ON ${resources} FROM john`);
           });
+        });
 
-          it(`supports REVOKE ${privilege} ON ${resources} FROM role`, () => {
-            testWc(`ALTER DEFAULT PRIVILEGES REVOKE ${privilege} ON ${resources} FROM moderator`);
-          });
-
-          it(`supports REVOKE ${privilege} ON ${resources} FROM PUBLIC`, () => {
-            testWc(`ALTER DEFAULT PRIVILEGES REVOKE ${privilege} ON ${resources} FROM PUBLIC`);
-          });
+        it(`supports REVOKE on multiple roles`, () => {
+          testWc(
+            `ALTER DEFAULT PRIVILEGES REVOKE ALL ON ${resources} FROM john, GROUP moderator, PUBLIC`
+          );
         });
 
         it(`supports GRANT OPTION FOR`, () => {
