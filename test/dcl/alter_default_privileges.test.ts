@@ -77,6 +77,11 @@ describe("ALTER DEFAULT PRIVILEGES", () => {
         });
       });
     });
+
+    it("supports FOR ROLE/USER target_role", () => {
+      testWc(`ALTER DEFAULT PRIVILEGES FOR ROLE admin, moderator GRANT SELECT ON TABLES TO john`);
+      testWc(`ALTER DEFAULT PRIVILEGES FOR USER john, mary GRANT SELECT ON TABLES TO john`);
+    });
   });
 
   notDialect("postgresql", () => {

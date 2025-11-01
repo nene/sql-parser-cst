@@ -79,7 +79,8 @@ export const dclMap: FullTransformMap<string, AllDclNodes> = {
   grantee_public: (node) => show([node.publicKw]),
 
   alter_default_privileges_stmt: (node) =>
-    show([node.alterDefaultPrivilegesKw, node.action]),
+    show([node.alterDefaultPrivilegesKw, node.clauses, node.action]),
+  for_role_clause: (node) => show([node.forKw, node.roleKw, node.roles]),
   grant_default_privileges_action: (node) =>
     show([
       node.grantKw,

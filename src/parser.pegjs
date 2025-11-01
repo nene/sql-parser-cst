@@ -5161,13 +5161,20 @@ revoke_stmt
 
 alter_default_privileges_stmt
   = kw:(ALTER __ DEFAULT __ PRIVILEGES __)
+    clauses:(for_role_clause __)*
     action:(grant_default_privileges_action / revoke_default_privileges_action) {
       return loc({
         type: "alter_default_privileges_stmt",
         alterDefaultPrivilegesKw: read(kw),
+        clauses: clauses.map(read),
         action,
       });
     }
+
+for_role_clause
+  = kw:(FOR __) roleKw:((ROLE / USER) __) roles:list$role_specification {
+    return loc({ type: "for_role_clause", forKw: read(kw), roleKw: read(roleKw), roles });
+  }
 
 grant_default_privileges_action
   = kw:(GRANT __) privileges:((list$privilege / all_privileges) __)

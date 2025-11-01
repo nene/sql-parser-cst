@@ -9,6 +9,7 @@ import {
 } from "./Expr";
 import { FunctionSignature } from "./Function";
 import { BooleanLiteral, StringLiteral } from "./Literal";
+import { RoleSpecification } from "./Role";
 
 export type AllDclNodes =
   | AllDclStatements
@@ -21,7 +22,8 @@ export type AllDclNodes =
   | GranteeGroup
   | GranteePublic
   | GrantDefaultPrivilegesAction
-  | RevokeDefaultPrivilegesAction;
+  | RevokeDefaultPrivilegesAction
+  | ForRoleClause;
 
 export type AllDclStatements =
   | GrantPrivilegeStmt
@@ -289,7 +291,15 @@ export interface AlterDefaultPrivilegesStmt extends BaseNode {
     Keyword<"DEFAULT">,
     Keyword<"PRIVILEGES">
   ];
+  clauses: ForRoleClause[];
   action: GrantDefaultPrivilegesAction | RevokeDefaultPrivilegesAction;
+}
+
+export interface ForRoleClause extends BaseNode {
+  type: "for_role_clause";
+  forKw: Keyword<"FOR">;
+  roleKw: Keyword<"ROLE" | "USER">;
+  roles: ListExpr<RoleSpecification>;
 }
 
 export interface GrantDefaultPrivilegesAction extends BaseNode {
