@@ -23,8 +23,8 @@ export type AllDclNodes =
   | GranteePublic
   | GrantDefaultPrivilegesAction
   | RevokeDefaultPrivilegesAction
-  | ForRoleClause
-  | InSchemaClause;
+  | DefaultAclForRoleClause
+  | DefaultAclInSchemaClause;
 
 export type AllDclStatements =
   | GrantPrivilegeStmt
@@ -292,19 +292,19 @@ export interface AlterDefaultPrivilegesStmt extends BaseNode {
     Keyword<"DEFAULT">,
     Keyword<"PRIVILEGES">
   ];
-  clauses: (ForRoleClause | InSchemaClause)[];
+  clauses: (DefaultAclForRoleClause | DefaultAclInSchemaClause)[];
   action: GrantDefaultPrivilegesAction | RevokeDefaultPrivilegesAction;
 }
 
-export interface ForRoleClause extends BaseNode {
-  type: "for_role_clause";
+export interface DefaultAclForRoleClause extends BaseNode {
+  type: "default_acl_for_role_clause";
   forKw: Keyword<"FOR">;
   roleKw: Keyword<"ROLE" | "USER">;
   roles: ListExpr<RoleSpecification>;
 }
 
-export interface InSchemaClause extends BaseNode {
-  type: "in_schema_clause";
+export interface DefaultAclInSchemaClause extends BaseNode {
+  type: "default_acl_in_schema_clause";
   inKw: Keyword<"IN">;
   schemaKw: Keyword<"SCHEMA">;
   schemas: ListExpr<Identifier>;

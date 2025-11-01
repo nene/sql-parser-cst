@@ -5161,7 +5161,7 @@ revoke_stmt
 
 alter_default_privileges_stmt
   = kw:(ALTER __ DEFAULT __ PRIVILEGES __)
-    clauses:((for_role_clause / in_schema_clause) __)*
+    clauses:((default_acl_for_role_clause / default_acl_in_schema_clause) __)*
     action:(grant_default_privileges_action / revoke_default_privileges_action) {
       return loc({
         type: "alter_default_privileges_stmt",
@@ -5171,14 +5171,14 @@ alter_default_privileges_stmt
       });
     }
 
-for_role_clause
+default_acl_for_role_clause
   = kw:(FOR __) roleKw:((ROLE / USER) __) roles:list$role_specification {
-    return loc({ type: "for_role_clause", forKw: read(kw), roleKw: read(roleKw), roles });
+    return loc({ type: "default_acl_for_role_clause", forKw: read(kw), roleKw: read(roleKw), roles });
   }
 
-in_schema_clause
+default_acl_in_schema_clause
   = kw:(IN __) schemaKw:(SCHEMA __) schemas:list$ident {
-    return loc({ type: "in_schema_clause", inKw: read(kw), schemaKw: read(schemaKw), schemas });
+    return loc({ type: "default_acl_in_schema_clause", inKw: read(kw), schemaKw: read(schemaKw), schemas });
   }
 
 grant_default_privileges_action
