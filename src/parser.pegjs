@@ -113,6 +113,7 @@ statement_postgres
   / create_extension_stmt
   / drop_extension_stmt
   / create_publication_stmt
+  / drop_publication_stmt
   / comment_stmt
 
 ddl_statement
@@ -6124,6 +6125,20 @@ create_publication_stmt
         type: "create_publication_stmt",
         createPublicationKw: read(kw),
         name,
+      });
+    }
+
+drop_publication_stmt
+  = kw:(DROP __ PUBLICATION __)
+    ifKw:(if_exists __)?
+    names:list$ident
+    behaviorKw:(__ (CASCADE / RESTRICT))? {
+      return loc({
+        type: "drop_publication_stmt",
+        dropPublicationKw: read(kw),
+        ifExistsKw: read(ifKw),
+        names,
+        behaviorKw: read(behaviorKw),
       });
     }
 
