@@ -8,6 +8,19 @@ describe("PUBLICATION", () => {
       });
     });
 
+    describe("ALTER PUBLICATION", () => {
+      it("supports OWNER TO", () => {
+        testWc(`ALTER PUBLICATION foo OWNER TO johnny`);
+        testWc(`ALTER PUBLICATION foo OWNER TO CURRENT_USER`);
+        testWc(`ALTER PUBLICATION foo OWNER TO CURRENT_ROLE`);
+        testWc(`ALTER PUBLICATION foo OWNER TO SESSION_USER`);
+      });
+
+      it("supports RENAME TO", () => {
+        testWc(`ALTER PUBLICATION foo RENAME TO bar`);
+      });
+    });
+
     describe("DROP PUBLICATION", () => {
       it("supports DROP PUBLICATION", () => {
         testWc(`DROP PUBLICATION foo`);

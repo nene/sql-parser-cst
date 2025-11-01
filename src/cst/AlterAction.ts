@@ -165,6 +165,8 @@ export type AlterTriggerAction =
 
 export type AlterPolicyAction = AlterActionRename;
 
+export type AlterPublicationAction = AlterActionRename | AlterActionOwnerTo;
+
 export interface AlterActionRename extends BaseNode {
   type: "alter_action_rename";
   renameKw: Keyword<"RENAME"> | [Keyword<"RENAME">, Keyword<"TO" | "AS">];

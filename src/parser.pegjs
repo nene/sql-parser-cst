@@ -113,6 +113,7 @@ statement_postgres
   / create_extension_stmt
   / drop_extension_stmt
   / create_publication_stmt
+  / alter_publication_stmt
   / drop_publication_stmt
   / comment_stmt
 
@@ -6127,6 +6128,21 @@ create_publication_stmt
         name,
       });
     }
+
+alter_publication_stmt
+  = kw:(ALTER __ PUBLICATION __) name:ident
+    action:(__ alter_publication_action) {
+      return loc({
+        type: "alter_publication_stmt",
+        alterPublicationKw: read(kw),
+        name,
+        action: read(action),
+      });
+    }
+
+alter_publication_action
+  = alter_action_rename
+  / alter_action_owner_to
 
 drop_publication_stmt
   = kw:(DROP __ PUBLICATION __)
