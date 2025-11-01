@@ -90,4 +90,15 @@ export const dclMap: FullTransformMap<string, AllDclNodes> = {
       node.roles,
       node.withGrantOption,
     ]),
+  revoke_default_privileges_action: (node) =>
+    show([
+      node.revokeKw,
+      node.grantOptionFor,
+      node.privileges,
+      node.onKw,
+      node.resourcesKw,
+      node.fromKw,
+      node.roles,
+      node.behaviorKw,
+    ]),
 };

@@ -22,7 +22,7 @@ describe("ALTER DEFAULT PRIVILEGES", () => {
           testWc(`ALTER DEFAULT PRIVILEGES GRANT ALL PRIVILEGES ON ${resources} TO john`);
         });
 
-        it(`supports GRANT ON multiple priveleges`, () => {
+        it(`supports GRANT on multiple priveleges`, () => {
           testWc(`ALTER DEFAULT PRIVILEGES GRANT ${privileges.join(", ")} ON ${resources} TO john`);
         });
 
@@ -44,6 +44,44 @@ describe("ALTER DEFAULT PRIVILEGES", () => {
 
         it(`supports WITH GRANT OPTION`, () => {
           testWc(`ALTER DEFAULT PRIVILEGES GRANT ALL ON ${resources} TO john WITH GRANT OPTION`);
+        });
+      });
+
+      describe(`revoke on ${resources}`, () => {
+        it(`supports REVOKE ALL`, () => {
+          testWc(`ALTER DEFAULT PRIVILEGES REVOKE ALL ON ${resources} FROM john`);
+          testWc(`ALTER DEFAULT PRIVILEGES REVOKE ALL PRIVILEGES ON ${resources} FROM john`);
+        });
+
+        it(`supports REVOKE on multiple priveleges`, () => {
+          testWc(
+            `ALTER DEFAULT PRIVILEGES REVOKE ${privileges.join(", ")} ON ${resources} FROM john`
+          );
+        });
+
+        privileges.forEach((privilege) => {
+          it(`supports REVOKE ${privilege} ON ${resources} FROM GROUP`, () => {
+            testWc(
+              `ALTER DEFAULT PRIVILEGES REVOKE ${privilege} ON ${resources} FROM GROUP moderator`
+            );
+          });
+
+          it(`supports REVOKE ${privilege} ON ${resources} FROM role`, () => {
+            testWc(`ALTER DEFAULT PRIVILEGES REVOKE ${privilege} ON ${resources} FROM moderator`);
+          });
+
+          it(`supports REVOKE ${privilege} ON ${resources} FROM PUBLIC`, () => {
+            testWc(`ALTER DEFAULT PRIVILEGES REVOKE ${privilege} ON ${resources} FROM PUBLIC`);
+          });
+        });
+
+        it(`supports GRANT OPTION FOR`, () => {
+          testWc(`ALTER DEFAULT PRIVILEGES REVOKE GRANT OPTION FOR ALL ON ${resources} FROM john`);
+        });
+
+        it(`supports CASCADE/RESTRICT`, () => {
+          testWc(`ALTER DEFAULT PRIVILEGES REVOKE ALL ON ${resources} FROM john CASCADE`);
+          testWc(`ALTER DEFAULT PRIVILEGES REVOKE ALL ON ${resources} FROM john RESTRICT`);
         });
       });
     });

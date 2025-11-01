@@ -5161,7 +5161,7 @@ revoke_stmt
 
 alter_default_privileges_stmt
   = kw:(ALTER __ DEFAULT __ PRIVILEGES __)
-    action:grant_default_privileges_action {
+    action:(grant_default_privileges_action / revoke_default_privileges_action) {
       return loc({
         type: "alter_default_privileges_stmt",
         alterDefaultPrivilegesKw: read(kw),
@@ -5183,6 +5183,26 @@ grant_default_privileges_action
         toKw: read(toKw),
         roles,
         withGrantOption: read(withGrantOption),
+      });
+    }
+
+revoke_default_privileges_action
+  = kw:(REVOKE __)
+    grantOptionFor:(grant_option_for_clause __)?
+    privileges:((list$privilege / all_privileges) __)
+    onKw:(ON __) resourcesKw:(grant_resources_kw __)
+    fromKw:(FROM __) roles:(list$grantee)
+    behaviorKw:(__ (CASCADE / RESTRICT))? {
+      return loc({
+        type: "revoke_default_privileges_action",
+        revokeKw: read(kw),
+        grantOptionFor: read(grantOptionFor),
+        privileges: read(privileges),
+        onKw: read(onKw),
+        resourcesKw: read(resourcesKw),
+        fromKw: read(fromKw),
+        roles,
+        behaviorKw: read(behaviorKw),
       });
     }
 

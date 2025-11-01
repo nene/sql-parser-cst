@@ -20,7 +20,8 @@ export type AllDclNodes =
   | GrantedByClause
   | GranteeGroup
   | GranteePublic
-  | GrantDefaultPrivilegesAction;
+  | GrantDefaultPrivilegesAction
+  | RevokeDefaultPrivilegesAction;
 
 export type AllDclStatements =
   | GrantPrivilegeStmt
@@ -288,7 +289,7 @@ export interface AlterDefaultPrivilegesStmt extends BaseNode {
     Keyword<"DEFAULT">,
     Keyword<"PRIVILEGES">
   ];
-  action: GrantDefaultPrivilegesAction;
+  action: GrantDefaultPrivilegesAction | RevokeDefaultPrivilegesAction;
 }
 
 export interface GrantDefaultPrivilegesAction extends BaseNode {
@@ -300,6 +301,18 @@ export interface GrantDefaultPrivilegesAction extends BaseNode {
   toKw: Keyword<"TO">;
   roles: ListExpr<Grantee>;
   withGrantOption?: WithGrantOptionClause;
+}
+
+export interface RevokeDefaultPrivilegesAction extends BaseNode {
+  type: "revoke_default_privileges_action";
+  revokeKw: Keyword<"REVOKE">;
+  grantOptionFor?: GrantOptionForClause;
+  privileges: ListExpr<Privilege> | AllPrivileges;
+  onKw: Keyword<"ON">;
+  resourcesKw: ResourcesKeyword;
+  fromKw: Keyword<"FROM">;
+  roles: ListExpr<Grantee>;
+  behaviorKw?: Keyword<"CASCADE" | "RESTRICT">;
 }
 
 type ResourcesKeyword =
