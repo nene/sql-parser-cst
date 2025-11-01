@@ -6,8 +6,11 @@ import { AllDomainStatements } from "./Domain";
 import { AllExtensionNodes } from "./Extension";
 import { AllFunctionStatements } from "./Function";
 import { AllIndexStatements } from "./Index";
+import { AllPolicyStatements } from "./Policy";
+import { AllPreparedStatements } from "./PreparedStatements";
 import { AllProceduralStatements } from "./ProceduralLanguage";
 import { AllProcedureStatements } from "./Procedure";
+import { AllPublicationStatements } from "./Publication";
 import { AllSchemaStatements } from "./Schema";
 import { AllSequenceStatements } from "./Sequence";
 import { AllParameterStatements } from "./Parameter";
@@ -27,9 +30,7 @@ import { InsertStmt } from "./Insert";
 import { MergeStmt } from "./Merge";
 import { TruncateStmt } from "./Truncate";
 import { UpdateStmt } from "./Update";
-import { AllPreparedStatements } from "./PreparedStatements";
 import { UnsupportedGrammarStmt } from "./UnsupportedGrammar";
-import { AllPolicyStatements } from "./Policy";
 import { DoStmt } from "./Do";
 
 export type Statement =
@@ -45,6 +46,7 @@ export type Statement =
   | AllPreparedStatements
   | AllProceduralStatements
   | AllProcedureStatements
+  | AllPublicationStatements
   | AllSchemaStatements
   | AllSequenceStatements
   | AllParameterStatements

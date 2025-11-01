@@ -112,6 +112,7 @@ statement_postgres
   / show_parameter_stmt
   / create_extension_stmt
   / drop_extension_stmt
+  / create_publication_stmt
   / comment_stmt
 
 ddl_statement
@@ -6114,6 +6115,15 @@ drop_extension_stmt
         ifExistsKw: read(ifKw),
         names,
         behaviorKw: read(behaviorKw),
+      });
+    }
+
+create_publication_stmt
+  = kw:(CREATE __ PUBLICATION __) name:ident {
+      return loc({
+        type: "create_publication_stmt",
+        createPublicationKw: read(kw),
+        name,
       });
     }
 

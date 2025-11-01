@@ -24,6 +24,7 @@ import { preparedStatementsMap } from "./prepared_statements";
 import { proceduralLanguageMap } from "./procedural_language";
 import { procedureMap } from "./procedure";
 import { procClauseMap } from "./proc_clause";
+import { publicationMap } from "./publication";
 import { roleMap } from "./role";
 import { schemaMap } from "./schema";
 import { selectMap } from "./select";
@@ -94,6 +95,7 @@ export const transformMap: FullTransformMap<string> = {
   ...dclMap,
   ...proceduralLanguageMap,
   ...preparedStatementsMap,
+  ...publicationMap,
   ...otherClausesMap,
 
   // DB-specific statements

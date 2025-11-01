@@ -32,6 +32,7 @@ export * from "./ProcClause";
 export * from "./Procedure";
 export * from "./ProceduralLanguage";
 export * from "./Program";
+export * from "./Publication";
 export * from "./RenameTable";
 export * from "./Role";
 export * from "./Schema";
@@ -76,6 +77,7 @@ import { AllPreparedStatementNodes } from "./PreparedStatements";
 import { AllProcClauseNodes } from "./ProcClause";
 import { AllProceduralNodes } from "./ProceduralLanguage";
 import { AllProcedureNodes } from "./Procedure";
+import { AllPublicationNodes } from "./Publication";
 import { AllRenameTableNodes } from "./RenameTable";
 import { AllRoleNodes } from "./Role";
 import { AllSelectNodes } from "./Select";
@@ -119,6 +121,7 @@ export type Node =
   | AllProcClauseNodes
   | AllProceduralNodes
   | AllProcedureNodes
+  | AllPublicationNodes
   | AllRenameTableNodes
   | AllRoleNodes
   | AllSelectNodes
