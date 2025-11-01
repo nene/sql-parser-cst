@@ -739,7 +739,7 @@ join_type
 left_right_full_kw
   = LEFT
   / RIGHT
-  / kw:FULL (&sqlite / &bigquery) { return kw; }
+  / kw:FULL (&sqlite / &bigquery / &postgres) { return kw; }
 
 join_specification
   = using_clause / on_clause

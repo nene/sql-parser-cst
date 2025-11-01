@@ -60,7 +60,7 @@ describe("join", () => {
     testWc("SELECT c FROM t1 CROSS JOIN t2");
   });
 
-  dialect(["sqlite", "bigquery"], () => {
+  dialect(["sqlite", "bigquery", "postgresql"], () => {
     it("supports FULL [OUTER] JOIN", () => {
       testWc("SELECT c FROM t1 FULL JOIN t2");
       testWc("SELECT c FROM t1 FULL OUTER JOIN t2");
