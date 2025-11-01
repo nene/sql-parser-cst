@@ -82,6 +82,11 @@ describe("ALTER DEFAULT PRIVILEGES", () => {
       testWc(`ALTER DEFAULT PRIVILEGES FOR ROLE admin, moderator GRANT SELECT ON TABLES TO john`);
       testWc(`ALTER DEFAULT PRIVILEGES FOR USER john, mary GRANT SELECT ON TABLES TO john`);
     });
+
+    it("supports IN SCHEMA schema", () => {
+      testWc(`ALTER DEFAULT PRIVILEGES IN SCHEMA foo GRANT SELECT ON TABLES TO john`);
+      testWc(`ALTER DEFAULT PRIVILEGES IN SCHEMA foo, bar REVOKE SELECT ON TABLES FROM john`);
+    });
   });
 
   notDialect("postgresql", () => {
