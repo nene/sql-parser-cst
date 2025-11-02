@@ -71,6 +71,11 @@ describe("PUBLICATION", () => {
         testWc(`ALTER PUBLICATION foo DROP TABLE tbl1`);
         testWc(`ALTER PUBLICATION foo DROP TABLE tbl1, TABLES IN SCHEMA schm1`);
       });
+
+      it("supports SET", () => {
+        testWc(`ALTER PUBLICATION foo SET TABLE tbl1`);
+        testWc(`ALTER PUBLICATION foo SET TABLE tbl1, TABLES IN SCHEMA schm1`);
+      });
     });
 
     describe("DROP PUBLICATION", () => {

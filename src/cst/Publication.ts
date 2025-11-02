@@ -15,7 +15,8 @@ export type AllPublicationNodes =
   | PublicationObjectTable
   | PublicationObjectTablesInSchema
   | AlterActionAddPublicationObjects
-  | AlterActionDropPublicationObjects;
+  | AlterActionDropPublicationObjects
+  | AlterActionSetPublicationObjects;
 
 export type AllPublicationStatements =
   | CreatePublicationStmt
@@ -71,7 +72,8 @@ type AlterPublicationAction =
   | AlterActionOwnerTo
   | AlterActionSetPostgresqlOptions
   | AlterActionAddPublicationObjects
-  | AlterActionDropPublicationObjects;
+  | AlterActionDropPublicationObjects
+  | AlterActionSetPublicationObjects;
 
 export interface AlterActionAddPublicationObjects extends BaseNode {
   type: "alter_action_add_publication_objects";
@@ -84,6 +86,14 @@ export interface AlterActionAddPublicationObjects extends BaseNode {
 export interface AlterActionDropPublicationObjects extends BaseNode {
   type: "alter_action_drop_publication_objects";
   dropKw: Keyword<"DROP">;
+  publicationObjects: ListExpr<
+    PublicationObjectTable | PublicationObjectTablesInSchema
+  >;
+}
+
+export interface AlterActionSetPublicationObjects extends BaseNode {
+  type: "alter_action_set_publication_objects";
+  setKw: Keyword<"SET">;
   publicationObjects: ListExpr<
     PublicationObjectTable | PublicationObjectTablesInSchema
   >;
