@@ -1,11 +1,13 @@
 import { AlterPublicationAction } from "./AlterAction";
 import { BaseNode, Keyword } from "./Base";
 import { Identifier, ListExpr } from "./Expr";
+import { RelationExpr } from "./Select";
 
 export type AllPublicationNodes =
   | AllPublicationStatements
   | ForPublicationObjectsClause
-  | AllPublicationObject;
+  | AllPublicationObject
+  | PublicationObjectTable;
 
 export type AllPublicationStatements =
   | CreatePublicationStmt
@@ -23,13 +25,21 @@ export interface CreatePublicationStmt extends BaseNode {
 export interface ForPublicationObjectsClause extends BaseNode {
   type: "for_publication_objects_clause";
   forKw: Keyword<"FOR">;
-  publicationObjects: ListExpr<AllPublicationObject>;
+  publicationObjects:
+    | ListExpr<AllPublicationObject>
+    | ListExpr<PublicationObjectTable>;
 }
 
 export interface AllPublicationObject extends BaseNode {
   type: "all_publication_object";
   allKw: Keyword<"ALL">;
   typesKw: Keyword<"TABLES" | "SEQUENCES">;
+}
+
+export interface PublicationObjectTable extends BaseNode {
+  type: "publication_object_table";
+  tableKw: Keyword<"TABLE">;
+  table: RelationExpr;
 }
 
 // ALTER PUBLICATION

@@ -12,6 +12,12 @@ describe("PUBLICATION", () => {
         testWc(`CREATE PUBLICATION foo FOR ALL SEQUENCES`);
         testWc(`CREATE PUBLICATION foo FOR ALL TABLES, ALL SEQUENCES`);
       });
+
+      it("supports FOR TABLE", () => {
+        testWc(`CREATE PUBLICATION foo FOR TABLE schm1.tbl1`);
+        testWc(`CREATE PUBLICATION foo FOR TABLE ONLY tbl1`);
+        testWc(`CREATE PUBLICATION foo FOR TABLE tbl1 *`);
+      });
     });
 
     describe("ALTER PUBLICATION", () => {

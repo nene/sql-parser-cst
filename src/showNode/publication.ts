@@ -9,6 +9,7 @@ export const publicationMap: FullTransformMap<string, AllPublicationNodes> = {
   for_publication_objects_clause: (node) =>
     show([node.forKw, node.publicationObjects]),
   all_publication_object: (node) => show([node.allKw, node.typesKw]),
+  publication_object_table: (node) => show([node.tableKw, node.table]),
 
   // ALTER PUBLICATION
   alter_publication_stmt: (node) =>

@@ -6134,7 +6134,7 @@ create_publication_clause
   = for_publication_objects_clause
 
 for_publication_objects_clause
-  = kw:(FOR __) publicationObjects:list$all_publication_object {
+  = kw:(FOR __) publicationObjects:(list$all_publication_object / list$publication_object) {
       return loc({
         type: "for_publication_objects_clause",
         forKw: read(kw),
@@ -6145,6 +6145,13 @@ for_publication_objects_clause
 all_publication_object
   = kw:(ALL __) typesKw:(TABLES / SEQUENCES) {
       return loc({ type: "all_publication_object", allKw: read(kw), typesKw });
+    }
+
+publication_object = publication_object_table
+
+publication_object_table
+  = kw:(TABLE __) table:relation_expr {
+      return loc({ type: "publication_object_table", tableKw: read(kw), table });
     }
 
 alter_publication_stmt
@@ -8197,6 +8204,7 @@ list$alias$expr = .
 list$alias$func_call = .
 list$alias$paren$list$column = .
 list$alias$relation_expr = .
+list$all_publication_object = .
 list$alter_action = .
 list$alter_view_action = .
 list$alter_type_action = .
@@ -8229,7 +8237,7 @@ list$partition_bound_with_value = .
 list$privilege = .
 list$postgresql_option_element = .
 list$procedure_param = .
-list$all_publication_object = .
+list$publication_object = .
 list$reindex_option = .
 list$relation_expr = .
 list$rename_action = .
