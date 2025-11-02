@@ -1,4 +1,8 @@
-import { AlterPublicationAction } from "./AlterAction";
+import {
+  AlterActionOwnerTo,
+  AlterActionRename,
+  AlterActionSetPostgresqlOptions,
+} from "./AlterAction";
 import { BaseNode, Keyword } from "./Base";
 import { Identifier, ListExpr, ParenExpr } from "./Expr";
 import { PostgresqlWithOptions } from "./Node";
@@ -9,7 +13,9 @@ export type AllPublicationNodes =
   | ForPublicationObjectsClause
   | AllPublicationObject
   | PublicationObjectTable
-  | PublicationObjectTablesInSchema;
+  | PublicationObjectTablesInSchema
+  | AlterActionAddPublicationObjects
+  | AlterActionDropPublicationObjects;
 
 export type AllPublicationStatements =
   | CreatePublicationStmt
@@ -58,6 +64,29 @@ export interface AlterPublicationStmt extends BaseNode {
   alterPublicationKw: [Keyword<"ALTER">, Keyword<"PUBLICATION">];
   name: Identifier;
   action: AlterPublicationAction;
+}
+
+type AlterPublicationAction =
+  | AlterActionRename
+  | AlterActionOwnerTo
+  | AlterActionSetPostgresqlOptions
+  | AlterActionAddPublicationObjects
+  | AlterActionDropPublicationObjects;
+
+export interface AlterActionAddPublicationObjects extends BaseNode {
+  type: "alter_action_add_publication_objects";
+  addKw: Keyword<"ADD">;
+  publicationObjects: ListExpr<
+    PublicationObjectTable | PublicationObjectTablesInSchema
+  >;
+}
+
+export interface AlterActionDropPublicationObjects extends BaseNode {
+  type: "alter_action_drop_publication_objects";
+  dropKw: Keyword<"DROP">;
+  publicationObjects: ListExpr<
+    PublicationObjectTable | PublicationObjectTablesInSchema
+  >;
 }
 
 // DROP PUBLICATION

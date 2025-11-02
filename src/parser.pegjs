@@ -6185,6 +6185,26 @@ alter_publication_action
   = alter_action_rename
   / alter_action_owner_to
   / alter_action_set_postgresql_options
+  / alter_action_add_publication_objects
+  / alter_action_drop_publication_objects
+
+alter_action_add_publication_objects
+  = kw:(ADD __) publicationObjects:list$publication_object {
+      return loc({
+        type: "alter_action_add_publication_objects",
+        addKw: read(kw),
+        publicationObjects,
+      });
+    }
+
+alter_action_drop_publication_objects
+  = kw:(DROP __) publicationObjects:list$publication_object {
+      return loc({
+        type: "alter_action_drop_publication_objects",
+        dropKw: read(kw),
+        publicationObjects,
+      });
+    }
 
 drop_publication_stmt
   = kw:(DROP __ PUBLICATION __)

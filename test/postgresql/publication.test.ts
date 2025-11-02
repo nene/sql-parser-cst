@@ -61,6 +61,16 @@ describe("PUBLICATION", () => {
       it("supports SET (options...)", () => {
         testWc(`ALTER PUBLICATION foo SET (publish = 'true', foo = 'bar')`);
       });
+
+      it("supports ADD", () => {
+        testWc(`ALTER PUBLICATION foo ADD TABLE tbl1`);
+        testWc(`ALTER PUBLICATION foo ADD TABLE tbl1, TABLES IN SCHEMA schm1`);
+      });
+
+      it("supports DROP", () => {
+        testWc(`ALTER PUBLICATION foo DROP TABLE tbl1`);
+        testWc(`ALTER PUBLICATION foo DROP TABLE tbl1, TABLES IN SCHEMA schm1`);
+      });
     });
 
     describe("DROP PUBLICATION", () => {
