@@ -115,6 +115,7 @@ statement_postgres
   / create_publication_stmt
   / alter_publication_stmt
   / drop_publication_stmt
+  / drop_subscription_stmt
   / comment_stmt
 
 ddl_statement
@@ -6226,6 +6227,20 @@ drop_publication_stmt
         dropPublicationKw: read(kw),
         ifExistsKw: read(ifKw),
         names,
+        behaviorKw: read(behaviorKw),
+      });
+    }
+
+drop_subscription_stmt
+  = kw:(DROP __ SUBSCRIPTION __)
+    ifKw:(if_exists __)?
+    name:ident
+    behaviorKw:(__ (CASCADE / RESTRICT))? {
+      return loc({
+        type: "drop_subscription_stmt",
+        dropSubscriptionKw: read(kw),
+        ifExistsKw: read(ifKw),
+        name,
         behaviorKw: read(behaviorKw),
       });
     }

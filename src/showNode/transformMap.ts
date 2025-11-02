@@ -40,6 +40,7 @@ import { frameMap } from "./window_frame";
 import { FullTransformMap } from "../cstTransformer";
 import { renameTableMap } from "./rename_table";
 import { otherClausesMap } from "./other_clauses";
+import { subscriptionMap } from "./subscription";
 
 import { bigqueryMap } from "./dialects/bigquery";
 import { postgresqlMap } from "./dialects/postgresql";
@@ -96,6 +97,7 @@ export const transformMap: FullTransformMap<string> = {
   ...proceduralLanguageMap,
   ...preparedStatementsMap,
   ...publicationMap,
+  ...subscriptionMap,
   ...otherClausesMap,
 
   // DB-specific statements

@@ -6,6 +6,7 @@ import { AllDomainStatements } from "./Domain";
 import { AllExtensionNodes } from "./Extension";
 import { AllFunctionStatements } from "./Function";
 import { AllIndexStatements } from "./Index";
+import { AllParameterStatements } from "./Parameter";
 import { AllPolicyStatements } from "./Policy";
 import { AllPreparedStatements } from "./PreparedStatements";
 import { AllProceduralStatements } from "./ProceduralLanguage";
@@ -13,8 +14,8 @@ import { AllProcedureStatements } from "./Procedure";
 import { AllPublicationStatements } from "./Publication";
 import { AllSchemaStatements } from "./Schema";
 import { AllSequenceStatements } from "./Sequence";
-import { AllParameterStatements } from "./Parameter";
 import { AllSqliteStatements } from "./dialects/Sqlite";
+import { AllSubscriptionNodes } from "./Subscription";
 import { AllTransactionStatements } from "./Transaction";
 import { AllTriggerStatements } from "./Trigger";
 import { AllTypeStatements } from "./Type";
@@ -49,6 +50,7 @@ export type Statement =
   | AllPublicationStatements
   | AllSchemaStatements
   | AllSequenceStatements
+  | AllSubscriptionNodes
   | AllParameterStatements
   | AllSqliteStatements
   | AllTransactionStatements

@@ -40,6 +40,7 @@ export * from "./Select";
 export * from "./Sequence";
 export * from "./dialects/Sqlite";
 export * from "./Statement";
+export * from "./Subscription";
 export * from "./Transaction";
 export * from "./Trigger";
 export * from "./Truncate";
@@ -83,6 +84,7 @@ import { AllRoleNodes } from "./Role";
 import { AllSelectNodes } from "./Select";
 import { AllSequenceNodes } from "./Sequence";
 import { AllSqliteNodes } from "./dialects/Sqlite";
+import { AllSubscriptionNodes } from "./Subscription";
 import { AllTransactionNodes } from "./Transaction";
 import { AllTriggerNodes } from "./Trigger";
 import { AllTypeNodes } from "./Type";
@@ -127,6 +129,7 @@ export type Node =
   | AllSelectNodes
   | AllSequenceNodes
   | AllSqliteNodes
+  | AllSubscriptionNodes
   | AllTransactionNodes
   | AllTriggerNodes
   | AllTypeNodes
