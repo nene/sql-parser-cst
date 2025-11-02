@@ -19,6 +19,10 @@ describe("PUBLICATION", () => {
       it("supports RENAME TO", () => {
         testWc(`ALTER PUBLICATION foo RENAME TO bar`);
       });
+
+      it("supports SET (options...)", () => {
+        testWc(`ALTER PUBLICATION foo SET (publish = 'true', foo = 'bar')`);
+      });
     });
 
     describe("DROP PUBLICATION", () => {

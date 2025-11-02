@@ -6143,6 +6143,7 @@ alter_publication_stmt
 alter_publication_action
   = alter_action_rename
   / alter_action_owner_to
+  / alter_action_set_postgresql_options
 
 drop_publication_stmt
   = kw:(DROP __ PUBLICATION __)

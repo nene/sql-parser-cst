@@ -165,7 +165,10 @@ export type AlterTriggerAction =
 
 export type AlterPolicyAction = AlterActionRename;
 
-export type AlterPublicationAction = AlterActionRename | AlterActionOwnerTo;
+export type AlterPublicationAction =
+  | AlterActionRename
+  | AlterActionOwnerTo
+  | AlterActionSetPostgresqlOptions;
 
 export interface AlterActionRename extends BaseNode {
   type: "alter_action_rename";
