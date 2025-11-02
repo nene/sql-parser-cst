@@ -38,6 +38,12 @@ describe("PUBLICATION", () => {
           `CREATE PUBLICATION foo FOR TABLE tbl1, TABLE tbl2 (col1) WHERE (1), TABLES IN SCHEMA blah`
         );
       });
+
+      it("supports WITH clause", () => {
+        testWc(
+          `CREATE PUBLICATION foo WITH (publish = 'insert', publish_via_partition_root = true)`
+        );
+      });
     });
 
     describe("ALTER PUBLICATION", () => {

@@ -1,6 +1,7 @@
 import { AlterPublicationAction } from "./AlterAction";
 import { BaseNode, Keyword } from "./Base";
 import { Identifier, ListExpr, ParenExpr } from "./Expr";
+import { PostgresqlWithOptions } from "./Node";
 import { RelationExpr, WhereClause } from "./Select";
 
 export type AllPublicationNodes =
@@ -20,7 +21,7 @@ export interface CreatePublicationStmt extends BaseNode {
   type: "create_publication_stmt";
   createPublicationKw: [Keyword<"CREATE">, Keyword<"PUBLICATION">];
   name: Identifier;
-  clauses: ForPublicationObjectsClause[];
+  clauses: (ForPublicationObjectsClause | PostgresqlWithOptions)[];
 }
 
 export interface ForPublicationObjectsClause extends BaseNode {

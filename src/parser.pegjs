@@ -6121,7 +6121,8 @@ drop_extension_stmt
     }
 
 create_publication_stmt
-  = kw:(CREATE __ PUBLICATION __) name:ident clauses:(__ create_publication_clause)* {
+  = kw:(CREATE __ PUBLICATION __) name:ident
+    clauses:(__ create_publication_clause / __ postgresql_with_options)* {
       return loc({
         type: "create_publication_stmt",
         createPublicationKw: read(kw),
