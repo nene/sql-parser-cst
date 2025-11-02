@@ -25,6 +25,11 @@ describe("PUBLICATION", () => {
 
       it("supports FOR TABLE with WHERE clause", () => {
         testWc(`CREATE PUBLICATION foo FOR TABLE tbl1 WHERE (x > 1)`);
+        testWc(`CREATE PUBLICATION foo FOR TABLE tbl1 (col1) WHERE (1)`);
+      });
+
+      it("supports multiple TABLE-s in FOR clause", () => {
+        testWc(`CREATE PUBLICATION foo FOR TABLE tbl1, TABLE tbl2 (col1) WHERE (1), TABLE tbl3`);
       });
     });
 
