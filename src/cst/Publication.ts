@@ -7,7 +7,8 @@ export type AllPublicationNodes =
   | AllPublicationStatements
   | ForPublicationObjectsClause
   | AllPublicationObject
-  | PublicationObjectTable;
+  | PublicationObjectTable
+  | PublicationObjectTablesInSchema;
 
 export type AllPublicationStatements =
   | CreatePublicationStmt
@@ -27,7 +28,7 @@ export interface ForPublicationObjectsClause extends BaseNode {
   forKw: Keyword<"FOR">;
   publicationObjects:
     | ListExpr<AllPublicationObject>
-    | ListExpr<PublicationObjectTable>;
+    | ListExpr<PublicationObjectTable | PublicationObjectTablesInSchema>;
 }
 
 export interface AllPublicationObject extends BaseNode {
@@ -42,6 +43,12 @@ export interface PublicationObjectTable extends BaseNode {
   table: RelationExpr;
   columns?: ParenExpr<ListExpr<Identifier>>;
   where?: WhereClause;
+}
+
+export interface PublicationObjectTablesInSchema extends BaseNode {
+  type: "publication_object_tables_in_schema";
+  tablesInSchemaKw: [Keyword<"TABLES">, Keyword<"IN">, Keyword<"SCHEMA">];
+  schema: Identifier | Keyword<"CURRENT_SCHEMA">;
 }
 
 // ALTER PUBLICATION

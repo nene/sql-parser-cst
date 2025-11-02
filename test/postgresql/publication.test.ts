@@ -28,8 +28,15 @@ describe("PUBLICATION", () => {
         testWc(`CREATE PUBLICATION foo FOR TABLE tbl1 (col1) WHERE (1)`);
       });
 
+      it("supports FOR TABLES IN SCHEMA", () => {
+        testWc(`CREATE PUBLICATION foo FOR TABLES IN SCHEMA schm1`);
+        testWc(`CREATE PUBLICATION foo FOR TABLES IN SCHEMA CURRENT_SCHEMA`);
+      });
+
       it("supports multiple TABLE-s in FOR clause", () => {
-        testWc(`CREATE PUBLICATION foo FOR TABLE tbl1, TABLE tbl2 (col1) WHERE (1), TABLE tbl3`);
+        testWc(
+          `CREATE PUBLICATION foo FOR TABLE tbl1, TABLE tbl2 (col1) WHERE (1), TABLES IN SCHEMA blah`
+        );
       });
     });
 

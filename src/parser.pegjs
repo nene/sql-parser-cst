@@ -6147,7 +6147,7 @@ all_publication_object
       return loc({ type: "all_publication_object", allKw: read(kw), typesKw });
     }
 
-publication_object = publication_object_table
+publication_object = publication_object_table / publication_object_tables_in_schema
 
 publication_object_table
   = kw:(TABLE __) table:relation_expr columns:(__ paren$list$column)? where:(__ where_clause)? {
@@ -6157,6 +6157,15 @@ publication_object_table
       table,
       columns: read(columns),
       where: read(where),
+    });
+  }
+
+publication_object_tables_in_schema
+  = kw:(TABLES __ IN __ SCHEMA __) schema:(CURRENT_SCHEMA / ident) {
+    return loc({
+      type: "publication_object_tables_in_schema",
+      tablesInSchemaKw: read(kw),
+      schema,
     });
   }
 

@@ -11,6 +11,8 @@ export const publicationMap: FullTransformMap<string, AllPublicationNodes> = {
   all_publication_object: (node) => show([node.allKw, node.typesKw]),
   publication_object_table: (node) =>
     show([node.tableKw, node.table, node.columns, node.where]),
+  publication_object_tables_in_schema: (node) =>
+    show([node.tablesInSchemaKw, node.schema]),
 
   // ALTER PUBLICATION
   alter_publication_stmt: (node) =>
