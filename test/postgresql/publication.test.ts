@@ -18,6 +18,10 @@ describe("PUBLICATION", () => {
         testWc(`CREATE PUBLICATION foo FOR TABLE ONLY tbl1`);
         testWc(`CREATE PUBLICATION foo FOR TABLE tbl1 *`);
       });
+
+      it("supports FOR TABLE with columns", () => {
+        testWc(`CREATE PUBLICATION foo FOR TABLE tbl1 (col1, col2)`);
+      });
     });
 
     describe("ALTER PUBLICATION", () => {
