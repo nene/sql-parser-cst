@@ -1,5 +1,7 @@
 import { BaseNode, Keyword } from "./Base";
-import { Identifier } from "./Expr";
+import { Identifier, ListExpr } from "./Expr";
+import { StringLiteral } from "./Literal";
+import { PostgresqlWithOptions } from "./Node";
 
 export type AllSubscriptionNodes = AllSubscriptionStatements;
 
@@ -12,6 +14,11 @@ export interface CreateSubscriptionStmt extends BaseNode {
   type: "create_subscription_stmt";
   createSubscriptionKw: [Keyword<"CREATE">, Keyword<"SUBSCRIPTION">];
   name: Identifier;
+  connectionKw: Keyword<"CONNECTION">;
+  connectionInfo: StringLiteral;
+  publicationKw: Keyword<"PUBLICATION">;
+  publications: ListExpr<Identifier>;
+  with?: PostgresqlWithOptions;
 }
 
 // DROP SUBSCRIPTION

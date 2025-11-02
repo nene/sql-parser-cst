@@ -115,6 +115,7 @@ statement_postgres
   / create_publication_stmt
   / alter_publication_stmt
   / drop_publication_stmt
+  / create_subscription_stmt
   / drop_subscription_stmt
   / comment_stmt
 
@@ -6228,6 +6229,23 @@ drop_publication_stmt
         ifExistsKw: read(ifKw),
         names,
         behaviorKw: read(behaviorKw),
+      });
+    }
+
+create_subscription_stmt
+  = kw:(CREATE __ SUBSCRIPTION __) name:ident
+    connectionKw:(__ CONNECTION) connectionInfo:(__ string_literal)
+    publicationKw:(__ PUBLICATION) publications:(__ list$ident)
+    withOpts:(__ postgresql_with_options)? {
+      return loc({
+        type: "create_subscription_stmt",
+        createSubscriptionKw: read(kw),
+        name,
+        connectionKw: read(connectionKw),
+        connectionInfo: read(connectionInfo),
+        publicationKw: read(publicationKw),
+        publications: read(publications),
+        with: read(withOpts)
       });
     }
 
