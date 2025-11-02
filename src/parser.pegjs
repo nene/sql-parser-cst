@@ -6121,12 +6121,30 @@ drop_extension_stmt
     }
 
 create_publication_stmt
-  = kw:(CREATE __ PUBLICATION __) name:ident {
+  = kw:(CREATE __ PUBLICATION __) name:ident clauses:(__ create_publication_clause)* {
       return loc({
         type: "create_publication_stmt",
         createPublicationKw: read(kw),
         name,
+        clauses: clauses.map(read),
       });
+    }
+
+create_publication_clause
+  = for_publication_objects_clause
+
+for_publication_objects_clause
+  = kw:(FOR __) publicationObjects:list$all_publication_object {
+      return loc({
+        type: "for_publication_objects_clause",
+        forKw: read(kw),
+        publicationObjects,
+      });
+    }
+
+all_publication_object
+  = kw:(ALL __) typesKw:(TABLES / SEQUENCES) {
+      return loc({ type: "all_publication_object", allKw: read(kw), typesKw });
     }
 
 alter_publication_stmt
@@ -8211,6 +8229,7 @@ list$partition_bound_with_value = .
 list$privilege = .
 list$postgresql_option_element = .
 list$procedure_param = .
+list$all_publication_object = .
 list$reindex_option = .
 list$relation_expr = .
 list$rename_action = .
