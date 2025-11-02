@@ -6150,12 +6150,13 @@ all_publication_object
 publication_object = publication_object_table
 
 publication_object_table
-  = kw:(TABLE __) table:relation_expr columns:(__ paren$list$column)? {
+  = kw:(TABLE __) table:relation_expr columns:(__ paren$list$column)? where:(__ where_clause)? {
     return loc({
       type: "publication_object_table",
       tableKw: read(kw),
       table,
       columns: read(columns),
+      where: read(where),
     });
   }
 

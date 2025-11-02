@@ -1,7 +1,7 @@
 import { AlterPublicationAction } from "./AlterAction";
 import { BaseNode, Keyword } from "./Base";
 import { Identifier, ListExpr, ParenExpr } from "./Expr";
-import { RelationExpr } from "./Select";
+import { RelationExpr, WhereClause } from "./Select";
 
 export type AllPublicationNodes =
   | AllPublicationStatements
@@ -41,6 +41,7 @@ export interface PublicationObjectTable extends BaseNode {
   tableKw: Keyword<"TABLE">;
   table: RelationExpr;
   columns?: ParenExpr<ListExpr<Identifier>>;
+  where?: WhereClause;
 }
 
 // ALTER PUBLICATION

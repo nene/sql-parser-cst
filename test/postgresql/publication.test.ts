@@ -22,6 +22,10 @@ describe("PUBLICATION", () => {
       it("supports FOR TABLE with columns", () => {
         testWc(`CREATE PUBLICATION foo FOR TABLE tbl1 (col1, col2)`);
       });
+
+      it("supports FOR TABLE with WHERE clause", () => {
+        testWc(`CREATE PUBLICATION foo FOR TABLE tbl1 WHERE (x > 1)`);
+      });
     });
 
     describe("ALTER PUBLICATION", () => {
