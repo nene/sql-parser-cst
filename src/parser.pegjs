@@ -8147,7 +8147,14 @@ interval_unit_kw
   / HOUR
   / MINUTE
   / SECOND
-  / x:interval_unit_kw_mysql &mysql { return x; }
+  / &bigquery x:interval_unit_kw_bigquery { return x; }
+  / &mysql x:interval_unit_kw_mysql { return x; }
+
+interval_unit_kw_bigquery
+  = QUARTER
+  / WEEK
+  / MICROSECOND
+  / MILLISECOND
 
 interval_unit_kw_mysql
   = QUARTER

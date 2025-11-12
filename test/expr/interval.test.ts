@@ -69,6 +69,13 @@ describe("temporal intervals", () => {
   });
 
   dialect("bigquery", () => {
+    it("supports additional BigQuery time units", () => {
+      testExpr(`INTERVAL 3 WEEK`);
+      testExpr(`INTERVAL 3 QUARTER`);
+      testExpr(`INTERVAL 3 MILLISECOND`);
+      testExpr(`INTERVAL 3 MICROSECOND`);
+    });
+
     it("supports BigQuery time range syntax", () => {
       testExprWc(`INTERVAL '11:25:58' HOUR TO SECOND`);
       testExprWc(`INTERVAL '8 11:25' DAY TO MINUTE`);
