@@ -1,5 +1,5 @@
 import { DialectName } from "../../src/ParserOptions";
-import { dialect, test, withComments } from "../test_utils";
+import { dialect, parseExpr, test, withComments } from "../test_utils";
 
 describe("data types", () => {
   function testType(type: string) {
@@ -386,6 +386,38 @@ describe("data types", () => {
 
     it("supports schema-qualified types", () => {
       testType("public.my_type");
+    });
+
+    it("parses data types as identifiers", () => {
+      expect(parseExpr(`foo :: Character Varying`)).toMatchInlineSnapshot(`
+        {
+          "left": {
+            "name": "foo",
+            "text": "foo",
+            "type": "identifier",
+          },
+          "operator": "::",
+          "right": {
+            "name": {
+              "name": [
+                {
+                  "name": "Character",
+                  "text": "Character",
+                  "type": "identifier",
+                },
+                {
+                  "name": "Varying",
+                  "text": "Varying",
+                  "type": "identifier",
+                },
+              ],
+              "type": "data_type_identifier",
+            },
+            "type": "named_data_type",
+          },
+          "type": "cast_operator_expr",
+        }
+      `);
     });
   });
 });

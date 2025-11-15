@@ -9,7 +9,8 @@ export type AllDataTypeNodes =
   | GenericTypeParams
   | ArrayTypeParam
   | StructTypeParam
-  | ArrayBounds;
+  | ArrayBounds
+  | DataTypeIdentifier;
 
 export type DataType =
   | NamedDataType
@@ -19,9 +20,15 @@ export type DataType =
 
 export interface NamedDataType extends BaseNode {
   type: "named_data_type";
-  // Note that the name can be an identifier only in PostgreSQL
-  name: Keyword | Keyword[] | EntityName;
+  // in PostgreSQL all data types will be parsed as DataTypeIdentifier
+  name: Keyword | Keyword[] | DataTypeIdentifier;
   params?: ParenExpr<ListExpr<Literal>> | GenericTypeParams;
+}
+
+// PostgreSQL
+export interface DataTypeIdentifier extends BaseNode {
+  type: "data_type_identifier";
+  name: EntityName | Identifier[];
 }
 
 // PostgreSQL
