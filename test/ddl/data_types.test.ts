@@ -383,5 +383,9 @@ describe("data types", () => {
       testType("COMPLEX");
       testType("MY_CUSTOM_TYPE");
     });
+
+    it("supports schema-qualified types", () => {
+      testType("public.my_type");
+    });
   });
 });

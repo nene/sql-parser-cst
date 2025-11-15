@@ -1,7 +1,7 @@
 import { BaseNode, Empty, Keyword } from "./Base";
 import { ColumnConstraint } from "./Constraint";
 import { ColumnDefinition } from "./CreateTable";
-import { Identifier, ListExpr, ParenExpr } from "./Expr";
+import { EntityName, Identifier, ListExpr, ParenExpr } from "./Expr";
 import { Literal, NumberLiteral } from "./Literal";
 
 export type AllDataTypeNodes =
@@ -19,8 +19,8 @@ export type DataType =
 
 export interface NamedDataType extends BaseNode {
   type: "named_data_type";
-  // Note that the name can be an identifier, but only a quoted identifier.
-  name: Keyword | Keyword[] | Identifier;
+  // Note that the name can be an identifier only in PostgreSQL
+  name: Keyword | Keyword[] | EntityName;
   params?: ParenExpr<ListExpr<Literal>> | GenericTypeParams;
 }
 

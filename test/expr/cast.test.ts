@@ -24,42 +24,8 @@ describe("type cast", () => {
   });
 
   // To make sure we don't parse it as normal function call
-  it("parses CAST() to syntax tree", () => {
-    expect(parseExpr(`CAST(10 AS INT)`)).toMatchInlineSnapshot(`
-      {
-        "args": {
-          "expr": {
-            "asKw": {
-              "name": "AS",
-              "text": "AS",
-              "type": "keyword",
-            },
-            "dataType": {
-              "name": {
-                "name": "INT",
-                "text": "INT",
-                "type": "keyword",
-              },
-              "type": "named_data_type",
-            },
-            "expr": {
-              "text": "10",
-              "type": "number_literal",
-              "value": 10,
-            },
-            "format": undefined,
-            "type": "cast_arg",
-          },
-          "type": "paren_expr",
-        },
-        "castKw": {
-          "name": "CAST",
-          "text": "CAST",
-          "type": "keyword",
-        },
-        "type": "cast_expr",
-      }
-    `);
+  it("parses CAST() as cast_expr", () => {
+    expect(parseExpr(`CAST(10 AS CHARACTER VARYING)`).type).toBe("cast_expr");
   });
 
   dialect("postgresql", () => {

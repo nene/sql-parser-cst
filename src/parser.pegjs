@@ -7157,8 +7157,7 @@ type_name_postgresql
   / kws:(CHARACTER __ VARYING) { return read(kws); }
   / kws:(DOUBLE __ PRECISION) { return read(kws); }
   / interval_type_name_postgresql
-  / unreserved_keyword // custom types
-  / quoted_ident // custom types
+  / entity_name // custom types
 
 interval_type_name_postgresql
   = kws:(INTERVAL __ interval_unit_kw __ TO __ interval_unit_kw) { return read(kws); }
