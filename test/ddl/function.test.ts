@@ -43,9 +43,14 @@ describe("function", () => {
       it("supports RETURNS", () => {
         testWc(`CREATE FUNCTION foo() RETURNS INT ${body}`);
       });
+
       dialect("postgresql", () => {
         it("supports RETURNS TABLE", () => {
           testWc(`CREATE FUNCTION foo() RETURNS TABLE (x INT, y TEXT) ${body}`);
+        });
+
+        it("supports RETURNS schema.table", () => {
+          testWc(`CREATE FUNCTION foo() RETURNS schema.table ${body}`);
         });
       });
 
