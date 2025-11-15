@@ -7009,7 +7009,7 @@ array_data_type
       return head;
     }
   }
-  / !postgres with_time_zone_data_type
+  / !postgres x:with_time_zone_data_type { return x; }
 
 array_bounds
   = "[" bounds:(__ empty __) "]" {
