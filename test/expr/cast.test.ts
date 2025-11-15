@@ -25,7 +25,7 @@ describe("type cast", () => {
 
   // To make sure we don't parse it as normal function call
   it("parses CAST() as cast_expr", () => {
-    expect(parseExpr(`CAST(10 AS CHARACTER VARYING)`).type).toBe("cast_expr");
+    expect(parseExpr(`CAST(10 AS INT)`).type).toBe("cast_expr");
   });
 
   dialect("postgresql", () => {
