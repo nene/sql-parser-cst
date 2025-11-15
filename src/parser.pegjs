@@ -6993,17 +6993,23 @@ index_tablespace_clause
  * ------------------------------------------------------------------------------------ *
  */
 data_type
-  = &postgres head:named_data_type tail:(__ array_bounds)+ {
-    return loc(createArrayDataTypeChain(head, tail));
+  = setof_data_type
+
+setof_data_type
+  = &postgres kw:(SETOF __) dataType:array_data_type {
+    return loc({ type: "setof_data_type", setofKw: read(kw), dataType })
   }
-  / &postgres dataType:named_data_type tz:(__ (WITHOUT / WITH) __ TIME __ ZONE) {
-    return loc({
-      type: "with_time_zone_data_type",
-      dataType,
-      withTimeZoneKw: read(tz),
-    });
+  / array_data_type
+
+array_data_type
+  = &postgres head:with_time_zone_data_type tail:(__ array_bounds)* {
+    if (tail.length > 0) {
+      return loc(createArrayDataTypeChain(head, tail));
+    } else {
+      return head;
+    }
   }
-  / named_data_type
+  / !postgres with_time_zone_data_type
 
 array_bounds
   = "[" bounds:(__ empty __) "]" {
@@ -7012,6 +7018,16 @@ array_bounds
   / "[" bounds:(__ number_literal __) "]" {
     return loc({ type: "array_bounds", bounds: read(bounds) });
   }
+
+with_time_zone_data_type
+  = &postgres dataType:named_data_type tz:(__ (WITHOUT / WITH) __ TIME __ ZONE) {
+    return loc({
+      type: "with_time_zone_data_type",
+      dataType,
+      withTimeZoneKw: read(tz),
+    });
+  }
+  / named_data_type
 
 named_data_type
   = kw:(type_name __) params:paren$list$literal {
@@ -9782,6 +9798,7 @@ SERVER              = kw:"SERVER"i              !ident_part { return loc(createK
 SESSION             = kw:"SESSION"i             !ident_part { return loc(createKeyword(kw)); }
 SESSION_USER        = kw:"SESSION_USER"i        !ident_part { return loc(createKeyword(kw)); }
 SET                 = kw:"SET"i                 !ident_part { return loc(createKeyword(kw)); }
+SETOF               = kw:"SETOF"i               !ident_part { return loc(createKeyword(kw)); }
 SETS                = kw:"SETS"i                !ident_part { return loc(createKeyword(kw)); }
 SHARE               = kw:"SHARE"i               !ident_part { return loc(createKeyword(kw)); }
 SHARED              = kw:"SHARED"i              !ident_part { return loc(createKeyword(kw)); }

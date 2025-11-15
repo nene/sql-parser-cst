@@ -15,6 +15,7 @@ export type AllDataTypeNodes =
 export type DataType =
   | NamedDataType
   | ArrayDataType
+  | SetofDataType
   | WithTimeZoneDataType
   | TableDataType;
 
@@ -81,4 +82,10 @@ export interface TableDataType extends BaseNode {
   type: "table_data_type";
   tableKw: Keyword<"TABLE">;
   columns: ParenExpr<ListExpr<ColumnDefinition>>;
+}
+
+export interface SetofDataType extends BaseNode {
+  type: "setof_data_type";
+  setofKw: Keyword<"SETOF">;
+  dataType: DataType;
 }

@@ -384,6 +384,11 @@ describe("data types", () => {
       testType("MY_CUSTOM_TYPE");
     });
 
+    it("supports SETOF types", () => {
+      testType("SETOF INT");
+      testType("SETOF VARCHAR (100)");
+    });
+
     it("supports schema-qualified types", () => {
       testType("public.my_type");
     });
