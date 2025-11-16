@@ -97,7 +97,18 @@ statement_mysql
 statement_bigquery
   = proc_statement
   / execute_immediate_stmt
-  / bigquery_statement
+  / create_bigquery_entity_stmt
+  / drop_bigquery_entity_stmt
+  / create_row_access_policy_stmt
+  / drop_row_access_policy_stmt
+  / alter_organization_stmt
+  / alter_project_stmt
+  / alter_bi_capacity_stmt
+  / alter_capacity_stmt
+  / alter_reservation_stmt
+  / assert_stmt
+  / export_data_stmt
+  / load_data_stmt
 
 statement_postgres
   = analyze_stmt
@@ -5742,19 +5753,6 @@ pragma_value
  *                                                                                      *
  * ------------------------------------------------------------------------------------ *
  */
-bigquery_statement
-  = create_bigquery_entity_stmt
-  / drop_bigquery_entity_stmt
-  / create_row_access_policy_stmt
-  / drop_row_access_policy_stmt
-  / alter_organization_stmt
-  / alter_project_stmt
-  / alter_bi_capacity_stmt
-  / alter_capacity_stmt
-  / alter_reservation_stmt
-  / assert_stmt
-  / export_data_stmt
-  / load_data_stmt
 
 // CREATE CAPACITY
 // CREATE RESERVATION
