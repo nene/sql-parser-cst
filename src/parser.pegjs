@@ -7030,7 +7030,7 @@ with_time_zone_data_type
   / named_data_type
 
 named_data_type
-  = kw:(type_name __) params:paren$list$literal {
+  = kw:(type_name __) params:paren$list$expr {
     return loc({ type: "named_data_type", name: read(kw), params });
   }
   / &bigquery type:(bigquery_array_type / bigquery_struct_type / bigquery_table_type) {

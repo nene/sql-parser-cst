@@ -393,6 +393,13 @@ describe("data types", () => {
       testType("public.my_type");
     });
 
+    it("supports geometry types", () => {
+      testType("GEOMETRY");
+      testType("GEOMETRY(POLYGON, 3395)");
+      testType("GEOMETRY(POINT, 4326)");
+      testType("GEOMETRY(LINESTRINGZM, 4269)");
+    });
+
     it("parses data types as identifiers", () => {
       expect(parseExpr(`foo :: Character Varying`)).toMatchInlineSnapshot(`
         {
