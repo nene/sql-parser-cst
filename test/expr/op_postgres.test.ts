@@ -29,7 +29,6 @@ describe("special PostgreSQL operators", () => {
       "#>",
       // JSONB
       "@>",
-      "<@",
       "?",
       "?|",
       "?&",
@@ -44,13 +43,47 @@ describe("special PostgreSQL operators", () => {
       "<=>",
       "<~>",
       "<%>",
+      // Others
+      // discovered by running in Supabase:
+      // SELECT DISTINCT oprname FROM pg_operator WHERE length(oprname) >= 2 ORDER BY oprname;
+      "!!",
+      "##",
+      "&&",
+      "&<",
+      "&>",
+      "*<",
+      "*<=",
+      "*<>",
+      "*=",
+      "*>",
+      "*>=",
+      "-|-",
+      "<<=",
+      "<<|",
+      "<^",
+      ">>=",
+      ">^",
+      "?#",
+      "?-",
+      "?-|",
+      "?||",
+      "@-@",
+      "@@@",
+      "^@",
+      "|&>",
+      "|>>",
+      "~<=~",
+      "~<~",
+      "~=",
+      "~>=~",
+      "~>~",
     ].forEach((op) => {
       it(`parses ${op} operator`, () => {
         testExprWc(`x ${op} y`);
       });
     });
 
-    // Test the currently unused isPostgresqlOtherOperator() predicate
+    // Separately test the isPostgresqlOtherOperator() predicate
     describe("isPostgresqlOtherOperator()", () => {
       it("rejects standard operators", () => {
         expect(isPostgresqlOtherOperator("+")).toBe(false);

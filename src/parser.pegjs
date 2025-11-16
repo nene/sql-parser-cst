@@ -43,6 +43,7 @@
   } from "./utils/parserState";
   import { isReservedKeyword } from "./utils/keywords";
   import { loc } from "./utils/loc";
+  import { isPostgresqlOtherOperator } from "./utils/pgOperators";
 
   setRangeFunction(() => [peg$savedPos, peg$currPos]);
 
@@ -7486,23 +7487,14 @@ pg_other_expr
     return createBinaryExprChain(head, tail);
   }
 
-// TODO: Actually Postgres allows combinations of all these symbols:
+// Postgres allows combinations of all these symbols:
 //
 //   + - * / < > = ~ ! @ # % ^ & | ` ?
 //
+// But there are some restrictions (see isPostgresqlOtherOperator for details)
+//
 pg_other_op
-  = op:(
-    // multi-letter operators (non-exhaustive list)
-    "||/" / "|/" / "||" / ">>" / "<<" / "!~~*" / "~~*" / "!~~" / "~~" / "!~*" / "~*" / "!~" / "^@"
-    // pgvector operators
-    / "<+>" / "<->" / "<#>" / "<=>" / "<~>" / "<%>"
-    // JSON operators
-    / "->>" / "->" / "#>>" / "#>"
-    // JSONB operators
-    / "@>" / "<@" / "?|" / "?&" / "#-" / "@?" / "@@"
-    // single-letter operators (exhaustive list)
-    / "!" / "~" / "@" / "#" / "&" / "|" / "`" / "?"
-  ) {
+  = op:(postgresql_operator) &{ return isPostgresqlOtherOperator(op); } {
     return op;
   }
 
