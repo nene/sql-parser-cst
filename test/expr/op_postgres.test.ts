@@ -36,6 +36,14 @@ describe("special PostgreSQL operators", () => {
       "#-",
       "@?",
       "@@",
+      // pgvector
+      // https://github.com/pgvector/pgvector#vector-operators
+      "<+>",
+      "<->",
+      "<#>",
+      "<=>",
+      "<~>",
+      "<%>",
     ].forEach((op) => {
       it(`parses ${op} operator`, () => {
         testExprWc(`x ${op} y`);

@@ -7494,6 +7494,8 @@ pg_other_op
   = op:(
     // multi-letter operators (non-exhaustive list)
     "||/" / "|/" / "||" / ">>" / "<<" / "!~~*" / "~~*" / "!~~" / "~~" / "!~*" / "~*" / "!~" / "^@"
+    // pgvector operators
+    / "<+>" / "<->" / "<#>" / "<=>" / "<~>" / "<%>"
     // JSON operators
     / "->>" / "->" / "#>>" / "#>"
     // JSONB operators
