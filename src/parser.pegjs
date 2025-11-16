@@ -7492,7 +7492,7 @@ pg_other_expr
 // But there are some restrictions (see isPostgresqlOtherOperator for details)
 //
 pg_other_op
-  = op:(postgresql_operator) &{ return isPostgresqlOtherOperator(op); } {
+  = op:(postgresql_operator_string) &{ return isPostgresqlOtherOperator(op); } {
     return op;
   }
 
@@ -7518,12 +7518,15 @@ postgresql_operator_member_expr
   }
 
 postgresql_operator
-  = op:[-+*/<>=~!@#%^&|`?]+ {
+  = op:postgresql_operator_string {
     return loc({
       type: "postgresql_operator",
       operator: text(),
     });
   }
+
+postgresql_operator_string
+  = [-+*/<>=~!@#%^&|`?]+ { return text(); }
 
 // Some of these PostgreSQL operators above can also be unary
 pg_other_unary_expr

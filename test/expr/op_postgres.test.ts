@@ -99,7 +99,18 @@ describe("special PostgreSQL operators", () => {
         expect(isPostgresqlOtherOperator("<=")).toBe(false);
         expect(isPostgresqlOtherOperator("!=")).toBe(false);
         expect(isPostgresqlOtherOperator("=")).toBe(false);
-        expect(isPostgresqlOtherOperator("~")).toBe(false);
+      });
+
+      // ~ ! @ # & | ` ?
+      it("allows for single-letter operators", () => {
+        expect(isPostgresqlOtherOperator("~")).toBe(true);
+        expect(isPostgresqlOtherOperator("!")).toBe(true);
+        expect(isPostgresqlOtherOperator("@")).toBe(true);
+        expect(isPostgresqlOtherOperator("#")).toBe(true);
+        expect(isPostgresqlOtherOperator("&")).toBe(true);
+        expect(isPostgresqlOtherOperator("|")).toBe(true);
+        expect(isPostgresqlOtherOperator("`")).toBe(true);
+        expect(isPostgresqlOtherOperator("?")).toBe(true);
       });
 
       it("rejects operators containing -- or /*", () => {

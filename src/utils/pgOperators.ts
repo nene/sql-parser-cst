@@ -48,6 +48,4 @@ const standardOperators = [
   "<>",
   "!=",
   "=",
-  // bitwise unary
-  "~",
 ];
