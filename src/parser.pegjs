@@ -74,7 +74,6 @@ statement
 non_transaction_statement
   = dml_statement
   / ddl_statement
-  / dcl_statement
   / &sqlite x:statement_sqlite { return x; }
   / &mysql x:statement_mysql { return x; }
   / &bigquery x:statement_bigquery { return x; }
@@ -96,6 +95,8 @@ statement_mysql
 
 statement_bigquery
   = proc_statement
+  / grant_stmt
+  / revoke_stmt
   / execute_immediate_stmt
   / create_bigquery_entity_stmt
   / drop_bigquery_entity_stmt
@@ -111,7 +112,10 @@ statement_bigquery
   / load_data_stmt
 
 statement_postgres
-  = analyze_stmt
+  = grant_stmt
+  / revoke_stmt
+  / alter_default_privileges_stmt
+  / analyze_stmt
   / explain_stmt
   / prepare_stmt
   / deallocate_stmt
@@ -4950,10 +4954,6 @@ transaction_chain_clause
  *                                                                                      *
  * ------------------------------------------------------------------------------------ *
  */
-dcl_statement
-  = (&bigquery / &postgres) x:(grant_stmt / revoke_stmt) { return x; }
-  / &postgres x:alter_default_privileges_stmt { return x; }
-
 grant_stmt
   = &postgres
     kw:(GRANT __) privileges:((list$privilege / all_privileges) __)
