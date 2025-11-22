@@ -72,14 +72,17 @@ statement
 // which don't allow transactions inside them (specifically it would create a conflict
 // with BEGIN..END keywords which are also used with transactions)
 non_transaction_statement
-  = dml_statement
-  / &sqlite x:statement_sqlite { return x; }
+  = &sqlite x:statement_sqlite { return x; }
   / &mysql x:statement_mysql { return x; }
   / &bigquery x:statement_bigquery { return x; }
   / &postgres x:statement_postgres { return x; }
 
 statement_sqlite
-  = create_view_stmt
+  = compound_select_stmt
+  / insert_stmt
+  / update_stmt
+  / delete_stmt
+  / create_view_stmt
   / drop_view_stmt
   / create_index_stmt
   / drop_index_stmt
@@ -94,7 +97,12 @@ statement_sqlite
   / sqlite_statement
 
 statement_mysql
-  = create_view_stmt
+  = compound_select_stmt
+  / insert_stmt
+  / update_stmt
+  / delete_stmt
+  / truncate_stmt
+  / create_view_stmt
   / drop_view_stmt
   / create_index_stmt
   / drop_index_stmt
@@ -116,7 +124,13 @@ statement_mysql
   / execute_stmt
 
 statement_bigquery
-  = create_view_stmt
+  = compound_select_stmt
+  / insert_stmt
+  / update_stmt
+  / delete_stmt
+  / truncate_stmt
+  / merge_stmt
+  / create_view_stmt
   / drop_view_stmt
   / create_index_stmt
   / drop_index_stmt
@@ -149,7 +163,13 @@ statement_bigquery
   / load_data_stmt
 
 statement_postgres
-  = create_view_stmt
+  = compound_select_stmt
+  / insert_stmt
+  / update_stmt
+  / delete_stmt
+  / truncate_stmt
+  / merge_stmt
+  / create_view_stmt
   / drop_view_stmt
   / create_index_stmt
   / drop_index_stmt
