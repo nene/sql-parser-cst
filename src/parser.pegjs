@@ -78,188 +78,188 @@ non_transaction_statement
   / &postgres x:statement_postgres { return x; }
 
 statement_sqlite
-  = compound_select_stmt
-  / insert_stmt
-  / update_stmt
-  / delete_stmt
-  / create_view_stmt
-  / drop_view_stmt
-  / create_index_stmt
-  / drop_index_stmt
-  / reindex_stmt
-  / create_trigger_stmt
-  / drop_trigger_stmt
-  / create_table_stmt
-  / drop_table_stmt
-  / alter_table_stmt
+  = alter_table_stmt
   / analyze_stmt
-  / explain_stmt
   / attach_database_stmt
+  / compound_select_stmt
+  / create_index_stmt
+  / create_table_stmt
+  / create_trigger_stmt
+  / create_view_stmt
+  / delete_stmt
   / detach_database_stmt
-  / vacuum_stmt
+  / drop_index_stmt
+  / drop_table_stmt
+  / drop_trigger_stmt
+  / drop_view_stmt
+  / explain_stmt
+  / insert_stmt
   / pragma_stmt
+  / reindex_stmt
+  / update_stmt
+  / vacuum_stmt
 
 statement_mysql
-  = compound_select_stmt
-  / insert_stmt
-  / update_stmt
-  / delete_stmt
-  / truncate_stmt
-  / create_view_stmt
-  / drop_view_stmt
-  / create_index_stmt
-  / drop_index_stmt
-  / alter_view_stmt
-  / rename_table_stmt
-  / create_trigger_stmt
-  / drop_trigger_stmt
-  / create_schema_stmt
-  / drop_schema_stmt
-  / alter_schema_stmt
-  / create_table_stmt
-  / drop_table_stmt
+  = alter_schema_stmt
   / alter_table_stmt
-  / labeled$block_stmt
-  / declare_stmt
-  / set_stmt
-  / if_stmt
+  / alter_view_stmt
+  / analyze_stmt
+  / break_stmt
+  / call_stmt
   / case_stmt
+  / compound_select_stmt
+  / continue_stmt
+  / create_index_stmt
+  / create_schema_stmt
+  / create_table_stmt
+  / create_trigger_stmt
+  / create_view_stmt
+  / deallocate_stmt
+  / declare_stmt
+  / delete_stmt
+  / drop_index_stmt
+  / drop_schema_stmt
+  / drop_table_stmt
+  / drop_trigger_stmt
+  / drop_view_stmt
+  / execute_stmt
+  / explain_stmt
+  / if_stmt
+  / insert_stmt
+  / labeled$block_stmt
   / labeled$loop_stmt
   / labeled$repeat_stmt
   / labeled$while_stmt
-  / break_stmt
-  / continue_stmt
-  / call_stmt
-  / return_stmt
-  / analyze_stmt
-  / explain_stmt
   / prepare_stmt
-  / deallocate_stmt
-  / execute_stmt
+  / rename_table_stmt
+  / return_stmt
+  / set_stmt
+  / truncate_stmt
+  / update_stmt
 
 statement_bigquery
-  = compound_select_stmt
-  / insert_stmt
-  / update_stmt
-  / delete_stmt
-  / truncate_stmt
-  / merge_stmt
-  / create_view_stmt
-  / drop_view_stmt
-  / create_index_stmt
-  / drop_index_stmt
-  / alter_view_stmt
-  / create_function_stmt
-  / drop_function_stmt
-  / create_procedure_stmt
-  / drop_procedure_stmt
-  / create_schema_stmt
-  / drop_schema_stmt
+  = alter_bi_capacity_stmt
+  / alter_capacity_stmt
+  / alter_organization_stmt
+  / alter_project_stmt
+  / alter_reservation_stmt
   / alter_schema_stmt
-  / create_table_stmt // CREATE TABLE must be matched after CREATE [TABLE] FUNCTION
-  / drop_table_stmt
   / alter_table_stmt
-  / labeled$block_stmt
-  / declare_stmt
-  / set_stmt
-  / if_stmt
+  / alter_view_stmt
+  / assert_stmt
+  / break_stmt
+  / call_stmt
   / case_stmt
+  / compound_select_stmt
+  / continue_stmt
+  / create_bigquery_entity_stmt
+  / create_function_stmt
+  / create_index_stmt
+  / create_procedure_stmt
+  / create_row_access_policy_stmt
+  / create_schema_stmt
+  / create_table_stmt // CREATE TABLE must be matched after CREATE [TABLE] FUNCTION
+  / create_view_stmt
+  / declare_stmt
+  / delete_stmt
+  / drop_bigquery_entity_stmt
+  / drop_function_stmt
+  / drop_index_stmt
+  / drop_procedure_stmt
+  / drop_row_access_policy_stmt
+  / drop_schema_stmt
+  / drop_table_stmt
+  / drop_view_stmt
+  / execute_immediate_stmt
+  / export_data_stmt
+  / grant_stmt
+  / if_stmt
+  / insert_stmt
+  / labeled$block_stmt
+  / labeled$for_stmt
   / labeled$loop_stmt
   / labeled$repeat_stmt
   / labeled$while_stmt
-  / labeled$for_stmt
-  / break_stmt
-  / continue_stmt
-  / call_stmt
-  / return_stmt
-  / raise_stmt
-  / grant_stmt
-  / revoke_stmt
-  / execute_immediate_stmt
-  / create_bigquery_entity_stmt
-  / drop_bigquery_entity_stmt
-  / create_row_access_policy_stmt
-  / drop_row_access_policy_stmt
-  / alter_organization_stmt
-  / alter_project_stmt
-  / alter_bi_capacity_stmt
-  / alter_capacity_stmt
-  / alter_reservation_stmt
-  / assert_stmt
-  / export_data_stmt
   / load_data_stmt
+  / merge_stmt
+  / raise_stmt
+  / return_stmt
+  / revoke_stmt
+  / set_stmt
+  / truncate_stmt
+  / update_stmt
 
 statement_postgres
-  = compound_select_stmt
-  / insert_stmt
-  / update_stmt
-  / delete_stmt
-  / truncate_stmt
-  / merge_stmt
-  / create_view_stmt
-  / drop_view_stmt
-  / create_index_stmt
-  / drop_index_stmt
-  / alter_index_stmt
-  / alter_index_all_in_tablespace_stmt
-  / reindex_stmt
-  / alter_view_stmt
-  / refresh_materialized_view_stmt
-  / create_function_stmt
-  / drop_function_stmt
-  / alter_function_stmt
-  / create_procedure_stmt
-  / drop_procedure_stmt
-  / alter_procedure_stmt
-  / alter_table_all_in_tablespace_stmt
-  / create_schema_stmt
-  / drop_schema_stmt
-  / alter_schema_stmt
-  / create_sequence_stmt
-  / alter_sequence_stmt
-  / drop_sequence_stmt
-  / create_trigger_stmt
-  / alter_trigger_stmt
-  / drop_trigger_stmt
-  / create_type_stmt
-  / alter_type_stmt
-  / drop_type_stmt
-  / create_domain_stmt
+  = alter_default_privileges_stmt
   / alter_domain_stmt
-  / drop_domain_stmt
-  / create_role_stmt
-  / alter_role_stmt
-  / drop_role_stmt
-  / set_role_stmt
-  / reset_role_stmt
-  / create_policy_stmt
+  / alter_function_stmt
+  / alter_index_all_in_tablespace_stmt
+  / alter_index_stmt
   / alter_policy_stmt
-  / drop_policy_stmt
-  / create_table_stmt // CREATE TABLE must be matched after CREATE TABLE FUNCTION
-  / drop_table_stmt
-  / alter_table_stmt
-  / grant_stmt
-  / revoke_stmt
-  / alter_default_privileges_stmt
-  / analyze_stmt
-  / explain_stmt
-  / prepare_stmt
-  / deallocate_stmt
-  / execute_stmt
-  / call_stmt
-  / do_stmt
-  / set_parameter_stmt
-  / set_time_zone_parameter_stmt
-  / reset_parameter_stmt
-  / show_parameter_stmt
-  / create_extension_stmt
-  / drop_extension_stmt
-  / create_publication_stmt
+  / alter_procedure_stmt
   / alter_publication_stmt
-  / drop_publication_stmt
-  / create_subscription_stmt
-  / drop_subscription_stmt
+  / alter_role_stmt
+  / alter_schema_stmt
+  / alter_sequence_stmt
+  / alter_table_all_in_tablespace_stmt
+  / alter_table_stmt
+  / alter_trigger_stmt
+  / alter_type_stmt
+  / alter_view_stmt
+  / analyze_stmt
+  / call_stmt
   / comment_stmt
+  / compound_select_stmt
+  / create_domain_stmt
+  / create_extension_stmt
+  / create_function_stmt
+  / create_index_stmt
+  / create_policy_stmt
+  / create_procedure_stmt
+  / create_publication_stmt
+  / create_role_stmt
+  / create_schema_stmt
+  / create_sequence_stmt
+  / create_subscription_stmt
+  / create_table_stmt // CREATE TABLE must be matched after CREATE TABLE FUNCTION
+  / create_trigger_stmt
+  / create_type_stmt
+  / create_view_stmt
+  / deallocate_stmt
+  / delete_stmt
+  / do_stmt
+  / drop_domain_stmt
+  / drop_extension_stmt
+  / drop_function_stmt
+  / drop_index_stmt
+  / drop_policy_stmt
+  / drop_procedure_stmt
+  / drop_publication_stmt
+  / drop_role_stmt
+  / drop_schema_stmt
+  / drop_sequence_stmt
+  / drop_subscription_stmt
+  / drop_table_stmt
+  / drop_trigger_stmt
+  / drop_type_stmt
+  / drop_view_stmt
+  / execute_stmt
+  / explain_stmt
+  / grant_stmt
+  / insert_stmt
+  / merge_stmt
+  / prepare_stmt
+  / refresh_materialized_view_stmt
+  / reindex_stmt
+  / reset_parameter_stmt
+  / reset_role_stmt
+  / revoke_stmt
+  / set_parameter_stmt
+  / set_role_stmt
+  / set_time_zone_parameter_stmt
+  / show_parameter_stmt
+  / truncate_stmt
+  / update_stmt
 
 dml_statement
   = compound_select_stmt
