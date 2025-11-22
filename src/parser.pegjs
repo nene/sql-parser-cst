@@ -119,7 +119,18 @@ statement_mysql
   / create_table_stmt
   / drop_table_stmt
   / alter_table_stmt
-  / proc_statement
+  / labeled$block_stmt
+  / declare_stmt
+  / set_stmt
+  / if_stmt
+  / case_stmt
+  / labeled$loop_stmt
+  / labeled$repeat_stmt
+  / labeled$while_stmt
+  / break_stmt
+  / continue_stmt
+  / call_stmt
+  / return_stmt
   / analyze_stmt
   / explain_stmt
   / prepare_stmt
@@ -148,7 +159,20 @@ statement_bigquery
   / create_table_stmt // CREATE TABLE must be matched after CREATE [TABLE] FUNCTION
   / drop_table_stmt
   / alter_table_stmt
-  / proc_statement
+  / labeled$block_stmt
+  / declare_stmt
+  / set_stmt
+  / if_stmt
+  / case_stmt
+  / labeled$loop_stmt
+  / labeled$repeat_stmt
+  / labeled$while_stmt
+  / labeled$for_stmt
+  / break_stmt
+  / continue_stmt
+  / call_stmt
+  / return_stmt
+  / raise_stmt
   / grant_stmt
   / revoke_stmt
   / execute_immediate_stmt
@@ -5307,22 +5331,6 @@ role_specification
  *                                                                                      *
  * ------------------------------------------------------------------------------------ *
  */
-proc_statement
-  = labeled$block_stmt
-  / declare_stmt
-  / set_stmt
-  / if_stmt
-  / case_stmt
-  / labeled$loop_stmt
-  / labeled$repeat_stmt
-  / labeled$while_stmt
-  / x:labeled$for_stmt &bigquery { return x; }
-  / break_stmt
-  / continue_stmt
-  / call_stmt
-  / return_stmt
-  / x:raise_stmt &bigquery { return x; }
-
 labeled$__template__
   = beginLabel:(ident __) ":" stmt:(__ __template__) endLabel:(__ ident)? {
     return loc({
