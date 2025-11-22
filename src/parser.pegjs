@@ -94,7 +94,10 @@ statement_sqlite
   / alter_table_stmt
   / analyze_stmt
   / explain_stmt
-  / sqlite_statement
+  / attach_database_stmt
+  / detach_database_stmt
+  / vacuum_stmt
+  / pragma_stmt
 
 statement_mysql
   = compound_select_stmt
@@ -5695,12 +5698,6 @@ execute_using_clause
  *                                                                                      *
  * ------------------------------------------------------------------------------------ *
  */
-sqlite_statement
-  = attach_database_stmt
-  / detach_database_stmt
-  / vacuum_stmt
-  / pragma_stmt
-
 attach_database_stmt
   = kw:(ATTACH __) dbKw:(DATABASE __)? file:(expr __) asKw:(AS __) schema:ident {
     return loc({
