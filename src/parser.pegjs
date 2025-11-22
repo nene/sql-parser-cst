@@ -73,20 +73,42 @@ statement
 // with BEGIN..END keywords which are also used with transactions)
 non_transaction_statement
   = dml_statement
-  / ddl_statement
   / &sqlite x:statement_sqlite { return x; }
   / &mysql x:statement_mysql { return x; }
   / &bigquery x:statement_bigquery { return x; }
   / &postgres x:statement_postgres { return x; }
 
 statement_sqlite
-  = analyze_stmt
+  = create_view_stmt
+  / drop_view_stmt
+  / create_index_stmt
+  / drop_index_stmt
+  / reindex_stmt
+  / create_trigger_stmt
+  / drop_trigger_stmt
+  / create_table_stmt
+  / drop_table_stmt
+  / alter_table_stmt
+  / analyze_stmt
   / explain_stmt
   / sqlite_statement
 
-
 statement_mysql
-  = proc_statement
+  = create_view_stmt
+  / drop_view_stmt
+  / create_index_stmt
+  / drop_index_stmt
+  / alter_view_stmt
+  / rename_table_stmt
+  / create_trigger_stmt
+  / drop_trigger_stmt
+  / create_schema_stmt
+  / drop_schema_stmt
+  / alter_schema_stmt
+  / create_table_stmt
+  / drop_table_stmt
+  / alter_table_stmt
+  / proc_statement
   / analyze_stmt
   / explain_stmt
   / prepare_stmt
@@ -94,7 +116,22 @@ statement_mysql
   / execute_stmt
 
 statement_bigquery
-  = proc_statement
+  = create_view_stmt
+  / drop_view_stmt
+  / create_index_stmt
+  / drop_index_stmt
+  / alter_view_stmt
+  / create_function_stmt
+  / drop_function_stmt
+  / create_procedure_stmt
+  / drop_procedure_stmt
+  / create_schema_stmt
+  / drop_schema_stmt
+  / alter_schema_stmt
+  / create_table_stmt // CREATE TABLE must be matched after CREATE [TABLE] FUNCTION
+  / drop_table_stmt
+  / alter_table_stmt
+  / proc_statement
   / grant_stmt
   / revoke_stmt
   / execute_immediate_stmt
@@ -112,70 +149,14 @@ statement_bigquery
   / load_data_stmt
 
 statement_postgres
-  = grant_stmt
-  / revoke_stmt
-  / alter_default_privileges_stmt
-  / analyze_stmt
-  / explain_stmt
-  / prepare_stmt
-  / deallocate_stmt
-  / execute_stmt
-  / call_stmt
-  / do_stmt
-  / set_parameter_stmt
-  / set_time_zone_parameter_stmt
-  / reset_parameter_stmt
-  / show_parameter_stmt
-  / create_extension_stmt
-  / drop_extension_stmt
-  / create_publication_stmt
-  / alter_publication_stmt
-  / drop_publication_stmt
-  / create_subscription_stmt
-  / drop_subscription_stmt
-  / comment_stmt
-
-ddl_statement
   = create_view_stmt
   / drop_view_stmt
   / create_index_stmt
   / drop_index_stmt
-  / &postgres x:alter_index_stmt { return x; }
-  / &postgres x:alter_index_all_in_tablespace_stmt { return x; }
-  / (&postgres / &sqlite) x:reindex_stmt { return x; }
-  / &sqlite x:ddl_statement_sqlite { return x; }
-  / &mysql x:ddl_statement_mysql { return x; }
-  / &bigquery x:ddl_statement_bigquery { return x; }
-  / &postgres x:ddl_statement_postgres { return x; }
-  / create_table_stmt // CREATE TABLE must be matched after CREATE TABLE FUNCTION
-  / drop_table_stmt
-  / alter_table_stmt
-
-ddl_statement_sqlite
-  = create_trigger_stmt
-  / drop_trigger_stmt
-
-ddl_statement_mysql
-  = alter_view_stmt
-  / rename_table_stmt
-  / create_trigger_stmt
-  / drop_trigger_stmt
-  / create_schema_stmt
-  / drop_schema_stmt
-  / alter_schema_stmt
-
-ddl_statement_bigquery
-  = alter_view_stmt
-  / create_function_stmt
-  / drop_function_stmt
-  / create_procedure_stmt
-  / drop_procedure_stmt
-  / create_schema_stmt
-  / drop_schema_stmt
-  / alter_schema_stmt
-
-ddl_statement_postgres
-  = alter_view_stmt
+  / alter_index_stmt
+  / alter_index_all_in_tablespace_stmt
+  / reindex_stmt
+  / alter_view_stmt
   / refresh_materialized_view_stmt
   / create_function_stmt
   / drop_function_stmt
@@ -207,6 +188,31 @@ ddl_statement_postgres
   / create_policy_stmt
   / alter_policy_stmt
   / drop_policy_stmt
+  / create_table_stmt // CREATE TABLE must be matched after CREATE TABLE FUNCTION
+  / drop_table_stmt
+  / alter_table_stmt
+  / grant_stmt
+  / revoke_stmt
+  / alter_default_privileges_stmt
+  / analyze_stmt
+  / explain_stmt
+  / prepare_stmt
+  / deallocate_stmt
+  / execute_stmt
+  / call_stmt
+  / do_stmt
+  / set_parameter_stmt
+  / set_time_zone_parameter_stmt
+  / reset_parameter_stmt
+  / show_parameter_stmt
+  / create_extension_stmt
+  / drop_extension_stmt
+  / create_publication_stmt
+  / alter_publication_stmt
+  / drop_publication_stmt
+  / create_subscription_stmt
+  / drop_subscription_stmt
+  / comment_stmt
 
 dml_statement
   = compound_select_stmt
