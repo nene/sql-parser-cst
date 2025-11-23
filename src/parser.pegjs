@@ -7064,22 +7064,22 @@ named_data_type
   }
 
 datetime_data_type
-  = kw:(TIMESTAMP / DATE / TIME) params:(__ paren$expr)? tz:(__ (WITHOUT / WITH) __ TIME __ ZONE)? {
+  = kw:(TIMESTAMP / DATE / TIME) precision:(__ paren$expr)? tz:(__ (WITHOUT / WITH) __ TIME __ ZONE)? {
     return loc({
       type: "datetime_data_type",
       dateKw: read(kw),
-      params: read(params),
+      precision: read(precision),
       timeZoneKw: read(tz),
     });
   }
 
 interval_data_type
-  = kw:INTERVAL fieldsKw:(__ interval_unit_kw __ TO __ interval_unit_kw / __ interval_unit_kw)? params:(__ paren$expr)? {
+  = kw:INTERVAL fieldsKw:(__ interval_unit_kw __ TO __ interval_unit_kw / __ interval_unit_kw)? precision:(__ paren$expr)? {
     return loc({
       type: "interval_data_type",
       intervalKw: read(kw),
       fieldsKw: read(fieldsKw),
-      params: read(params),
+      precision: read(precision),
     });
   }
 

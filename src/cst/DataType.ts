@@ -50,7 +50,7 @@ export interface ArrayBounds extends BaseNode {
 export interface DatetimeDataType extends BaseNode {
   type: "datetime_data_type";
   dateKw: Keyword<"DATE" | "TIME" | "TIMESTAMP">;
-  params?: ParenExpr<Expr>;
+  precision?: ParenExpr<Expr>;
   timeZoneKw?: [Keyword<"WITH" | "WITHOUT">, Keyword<"TIME">, Keyword<"ZONE">];
 }
 
@@ -65,7 +65,7 @@ export interface IntervalDataType extends BaseNode {
         Keyword<"TO">,
         Keyword<"YEAR" | "MONTH" | "DAY" | "HOUR" | "MINUTE" | "SECOND">
       ];
-  params?: ParenExpr<Expr>;
+  precision?: ParenExpr<Expr>;
 }
 
 // BigQuery
