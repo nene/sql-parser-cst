@@ -7403,19 +7403,19 @@ _comparison_expr_right
   }
 
 unary_comparison_op
-  = kw:(NOTNULL / ISNULL) (&sqlite / &postgres) {
+  = (&sqlite / &postgres) kw:(NOTNULL / ISNULL) {
     return kw;
   }
-  / kws:(NOT __ NULL) &sqlite {
+  / &sqlite kws:(NOT __ NULL) {
     return read(kws);
   }
-  / kws:(IS __ UNKNOWN / IS __ NOT __ UNKNOWN) (&mysql / &bigquery / &postgres) {
+  / (&mysql / &bigquery / &postgres) kws:(IS __ UNKNOWN / IS __ NOT __ UNKNOWN) {
     return read(kws);
   }
-  / kws:(IS __ NOT __ normalization_form __ NORMALIZED / IS __ normalization_form __ NORMALIZED) &postgres {
+  / &postgres kws:(IS __ NOT __ normalization_form __ NORMALIZED / IS __ normalization_form __ NORMALIZED) {
     return read(kws);
   }
-  / kws:(IS __ NOT __ NORMALIZED / IS __ NORMALIZED) &postgres {
+  / &postgres kws:(IS __ NOT __ NORMALIZED / IS __ NORMALIZED) {
     return read(kws);
   }
 
@@ -7423,8 +7423,8 @@ normalization_form
   = NFC / NFD / NFKC / NFKD
 
 comparison_op
-  = op:"<=>" &mysql { return op; }
-  / op:"==" &sqlite { return op; }
+  = &mysql op:"<=>" { return op; }
+  / &sqlite op:"==" { return op; }
   / ">="
   / ">"
   / "<="
@@ -7436,8 +7436,8 @@ comparison_op
   / regexp_op
 
 is_op
-  = kws:(IS __ NOT __ DISTINCT __ FROM) (&sqlite / &bigquery / &postgres) { return read(kws); }
-  / kws:(IS __ DISTINCT __ FROM) (&sqlite / &bigquery / &postgres) { return read(kws); }
+  = (&sqlite / &bigquery / &postgres) kws:(IS __ NOT __ DISTINCT __ FROM) { return read(kws); }
+  / (&sqlite / &bigquery / &postgres) kws:(IS __ DISTINCT __ FROM) { return read(kws); }
   / kws:(IS __ NOT) { return read(kws); }
   / kws:(IS) { return read(kws); }
 
@@ -7446,9 +7446,9 @@ regexp_op
 
 regexp_op_kw
   = REGEXP
-  / kw:RLIKE &mysql { return kw; }
-  / kw:GLOB &sqlite { return kw; }
-  / kw:MATCH &sqlite { return kw; }
+  / &mysql kw:RLIKE { return kw; }
+  / &sqlite kw:GLOB { return kw; }
+  / &sqlite kw:MATCH { return kw; }
 
 escape_expr
   = left:sub_comparison_expr c1:__ op:ESCAPE c2:__ right:string_literal {
@@ -7654,10 +7654,10 @@ multiplicative_expr
 multiplicative_operator
   = "*"
   / "/"
-  / op:"%" (&mysql / &sqlite) { return op; }
-  / op:DIV (&mysql / &sqlite) { return op; }
-  / op:MOD (&mysql / &sqlite) { return op; }
-  / op:"||" &bigquery { return op; }
+  / (&mysql / &sqlite) op:"%" { return op; }
+  / (&mysql / &sqlite) op:DIV { return op; }
+  / (&mysql / &sqlite) op:MOD { return op; }
+  / &bigquery op:"||" { return op; }
 
 mysql_bitwise_xor_expr
   = &mysql head:concat_or_json_expr tail:(__ "^"  __ concat_or_json_expr)* {
@@ -7671,9 +7671,9 @@ concat_or_json_expr
     }
 
 concat_or_json_op
-  = op:"||" &sqlite { return op; }
-  / op:"->>" (&sqlite / &only_mysql) { return op; }
-  / op:"->" (&sqlite / &only_mysql) { return op; }
+  = &sqlite op:"||" { return op; }
+  / (&sqlite / &only_mysql) op:"->>" { return op; }
+  / (&sqlite / &only_mysql) op:"->" { return op; }
 
 binary_expr
   = &mysql op:BINARY right:(__ binary_expr) {
@@ -7696,8 +7696,8 @@ negation_expr
 negation_operator
   = "-"
   / "+"
-  / op:"~" !postgres { return op; }
-  / op:"!" &mysql { return op; }
+  / !postgres op:"~" { return op; }
+  / &mysql op:"!" { return op; }
 
 member_expr_or_func_call
   = name:func_name_kw fnRight:(__ func_call_right) {
