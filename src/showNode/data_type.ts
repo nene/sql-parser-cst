@@ -9,6 +9,8 @@ export const dataTypeMap: FullTransformMap<string, AllDataTypeNodes> = {
   array_bounds: (node) => show(["[", node.bounds, "]"]),
   datetime_data_type: (node) =>
     show([node.dateKw, node.params, node.timeZoneKw]),
+  interval_data_type: (node) =>
+    show([node.intervalKw, node.fieldsKw, node.params]),
   generic_type_params: (node) => show(["<", node.params, ">"]),
   array_type_param: (node) => show([node.dataType, node.constraints]),
   struct_type_param: (node) =>

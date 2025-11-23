@@ -17,6 +17,7 @@ export type DataType =
   | ArrayDataType
   | SetofDataType
   | DatetimeDataType
+  | IntervalDataType
   | TableDataType;
 
 export interface NamedDataType extends BaseNode {
@@ -51,6 +52,20 @@ export interface DatetimeDataType extends BaseNode {
   dateKw: Keyword<"DATE" | "TIME" | "TIMESTAMP">;
   params?: ParenExpr<Expr>;
   timeZoneKw?: [Keyword<"WITH" | "WITHOUT">, Keyword<"TIME">, Keyword<"ZONE">];
+}
+
+// PostgreSQL
+export interface IntervalDataType extends BaseNode {
+  type: "interval_data_type";
+  intervalKw: Keyword<"INTERVAL">;
+  fieldsKw?:
+    | Keyword<"YEAR" | "MONTH" | "DAY" | "HOUR" | "MINUTE" | "SECOND">
+    | [
+        Keyword<"YEAR" | "MONTH" | "DAY" | "HOUR" | "MINUTE" | "SECOND">,
+        Keyword<"TO">,
+        Keyword<"YEAR" | "MONTH" | "DAY" | "HOUR" | "MINUTE" | "SECOND">
+      ];
+  params?: ParenExpr<Expr>;
 }
 
 // BigQuery

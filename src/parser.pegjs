@@ -7050,7 +7050,7 @@ array_bounds
   }
 
 named_data_type
-  = &postgres type:datetime_data_type {
+  = &postgres type:(datetime_data_type / interval_data_type) {
     return type;
   }
   / &bigquery type:(bigquery_array_type / bigquery_struct_type / bigquery_table_type) {
@@ -7070,6 +7070,16 @@ datetime_data_type
       dateKw: read(kw),
       params: read(params),
       timeZoneKw: read(tz),
+    });
+  }
+
+interval_data_type
+  = kw:INTERVAL fieldsKw:(__ interval_unit_kw __ TO __ interval_unit_kw / __ interval_unit_kw)? params:(__ paren$expr)? {
+    return loc({
+      type: "interval_data_type",
+      intervalKw: read(kw),
+      fieldsKw: read(fieldsKw),
+      params: read(params),
     });
   }
 
@@ -7222,8 +7232,6 @@ multi_word_type_name_postgresql
   = kws:(BIT __ VARYING) { return read(kws); }
   / kws:(CHARACTER __ VARYING) { return read(kws); }
   / kws:(DOUBLE __ PRECISION) { return read(kws); }
-  / kws:(INTERVAL __ interval_unit_kw __ TO __ interval_unit_kw) { return read(kws); }
-  / kws:(INTERVAL __ interval_unit_kw) { return read(kws); }
 
 type_name_sqlite
   = head:unreserved_keyword tail:(__ unreserved_keyword)* {
