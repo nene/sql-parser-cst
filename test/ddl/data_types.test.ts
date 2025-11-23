@@ -425,6 +425,7 @@ describe("data types", () => {
               ],
               "type": "data_type_identifier",
             },
+            "params": undefined,
             "type": "named_data_type",
           },
           "type": "cast_operator_expr",

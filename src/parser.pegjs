@@ -7056,11 +7056,8 @@ named_data_type
   / &bigquery type:(bigquery_array_type / bigquery_struct_type / bigquery_table_type) {
     return type;
   }
-  / kw:(type_name __) params:paren$list$expr {
-    return loc({ type: "named_data_type", name: read(kw), params });
-  }
-  / kw:type_name {
-    return loc({ type: "named_data_type", name: kw });
+  / kw:type_name params:(__ paren$list$expr)? {
+    return loc({ type: "named_data_type", name: read(kw), params: read(params) });
   }
 
 datetime_data_type
