@@ -7032,14 +7032,14 @@ setof_data_type
   / array_data_type
 
 array_data_type
-  = &postgres head:with_time_zone_data_type tail:(__ array_bounds)* {
+  = &postgres head:named_data_type tail:(__ array_bounds)* {
     if (tail.length > 0) {
       return loc(createArrayDataTypeChain(head, tail));
     } else {
       return head;
     }
   }
-  / !postgres x:with_time_zone_data_type { return x; }
+  / !postgres x:named_data_type { return x; }
 
 array_bounds
   = "[" bounds:(__ empty __) "]" {
@@ -7049,25 +7049,28 @@ array_bounds
     return loc({ type: "array_bounds", bounds: read(bounds) });
   }
 
-with_time_zone_data_type
-  = &postgres dataType:named_data_type tz:(__ (WITHOUT / WITH) __ TIME __ ZONE) {
-    return loc({
-      type: "with_time_zone_data_type",
-      dataType,
-      withTimeZoneKw: read(tz),
-    });
-  }
-  / named_data_type
-
 named_data_type
-  = kw:(type_name __) params:paren$list$expr {
-    return loc({ type: "named_data_type", name: read(kw), params });
+  = &postgres type:datetime_data_type {
+    return type;
   }
   / &bigquery type:(bigquery_array_type / bigquery_struct_type / bigquery_table_type) {
     return type;
   }
+  / kw:(type_name __) params:paren$list$expr {
+    return loc({ type: "named_data_type", name: read(kw), params });
+  }
   / kw:type_name {
     return loc({ type: "named_data_type", name: kw });
+  }
+
+datetime_data_type
+  = kw:(TIMESTAMP / DATE / TIME) params:(__ paren$expr)? tz:(__ (WITHOUT / WITH) __ TIME __ ZONE)? {
+    return loc({
+      type: "datetime_data_type",
+      dateKw: read(kw),
+      params: read(params),
+      timeZoneKw: read(tz),
+    });
   }
 
 bigquery_array_type

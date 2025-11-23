@@ -16,7 +16,7 @@ export type DataType =
   | NamedDataType
   | ArrayDataType
   | SetofDataType
-  | WithTimeZoneDataType
+  | DatetimeDataType
   | TableDataType;
 
 export interface NamedDataType extends BaseNode {
@@ -46,14 +46,11 @@ export interface ArrayBounds extends BaseNode {
 }
 
 // PostgreSQL
-export interface WithTimeZoneDataType extends BaseNode {
-  type: "with_time_zone_data_type";
-  dataType: DataType;
-  withTimeZoneKw: [
-    Keyword<"WITH" | "WITHOUT">,
-    Keyword<"TIME">,
-    Keyword<"ZONE">
-  ];
+export interface DatetimeDataType extends BaseNode {
+  type: "datetime_data_type";
+  dateKw: Keyword<"DATE" | "TIME" | "TIMESTAMP">;
+  params?: ParenExpr<Expr>;
+  timeZoneKw?: [Keyword<"WITH" | "WITHOUT">, Keyword<"TIME">, Keyword<"ZONE">];
 }
 
 // BigQuery
