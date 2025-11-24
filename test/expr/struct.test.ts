@@ -68,6 +68,7 @@ describe("struct", () => {
                         "text": "INT64",
                         "type": "keyword",
                       },
+                      "params": undefined,
                       "type": "named_data_type",
                     },
                     "name": {

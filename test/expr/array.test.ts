@@ -39,6 +39,7 @@ describe("array", () => {
                         "text": "INT64",
                         "type": "keyword",
                       },
+                      "params": undefined,
                       "type": "named_data_type",
                     },
                     "type": "array_type_param",
