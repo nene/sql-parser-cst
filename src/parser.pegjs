@@ -7050,7 +7050,7 @@ array_bounds
   }
 
 named_data_type
-  = &postgres type:(datetime_data_type / interval_data_type) {
+  = &postgres type:(time_data_type / interval_data_type) {
     return type;
   }
   / &bigquery type:(bigquery_array_type / bigquery_struct_type / bigquery_table_type) {
@@ -7060,11 +7060,11 @@ named_data_type
     return loc({ type: "named_data_type", name: read(kw), params: read(params) });
   }
 
-datetime_data_type
-  = kw:(TIMESTAMP / DATE / TIME) precision:(__ paren$expr)? tz:(__ (WITHOUT / WITH) __ TIME __ ZONE)? {
+time_data_type
+  = kw:(TIMESTAMP / TIME) precision:(__ paren$expr)? tz:(__ (WITHOUT / WITH) __ TIME __ ZONE)? {
     return loc({
-      type: "datetime_data_type",
-      dateKw: read(kw),
+      type: "time_data_type",
+      timeKw: read(kw),
       precision: read(precision),
       timeZoneKw: read(tz),
     });

@@ -7,8 +7,8 @@ export const dataTypeMap: FullTransformMap<string, AllDataTypeNodes> = {
   data_type_identifier: (node) => show([node.name]),
   array_data_type: (node) => show([node.dataType, node.bounds]),
   array_bounds: (node) => show(["[", node.bounds, "]"]),
-  datetime_data_type: (node) =>
-    show([node.dateKw, node.precision, node.timeZoneKw]),
+  time_data_type: (node) =>
+    show([node.timeKw, node.precision, node.timeZoneKw]),
   interval_data_type: (node) =>
     show([node.intervalKw, node.fieldsKw, node.precision]),
   generic_type_params: (node) => show(["<", node.params, ">"]),

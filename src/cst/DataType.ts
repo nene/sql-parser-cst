@@ -16,7 +16,7 @@ export type DataType =
   | NamedDataType
   | ArrayDataType
   | SetofDataType
-  | DatetimeDataType
+  | TimeDataType
   | IntervalDataType
   | TableDataType;
 
@@ -47,9 +47,9 @@ export interface ArrayBounds extends BaseNode {
 }
 
 // PostgreSQL
-export interface DatetimeDataType extends BaseNode {
-  type: "datetime_data_type";
-  dateKw: Keyword<"DATE" | "TIME" | "TIMESTAMP">;
+export interface TimeDataType extends BaseNode {
+  type: "time_data_type";
+  timeKw: Keyword<"TIME" | "TIMESTAMP">;
   precision?: ParenExpr<Expr>;
   timeZoneKw?: [Keyword<"WITH" | "WITHOUT">, Keyword<"TIME">, Keyword<"ZONE">];
 }
