@@ -5,6 +5,7 @@ import { FullTransformMap } from "../cstTransformer";
 export const dataTypeMap: FullTransformMap<string, AllDataTypeNodes> = {
   data_type_name: (node) => show([node.name]),
   modified_data_type: (node) => show([node.dataType, node.modifiers]),
+  parametric_data_type: (node) => show([node.typeKw, node.params]),
   array_data_type: (node) => show([node.dataType, node.bounds]),
   array_bounds: (node) => show(["[", node.bounds, "]"]),
   time_data_type: (node) =>

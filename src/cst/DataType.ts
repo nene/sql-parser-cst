@@ -7,6 +7,7 @@ import { NumberLiteral } from "./Literal";
 export type AllDataTypeNodes =
   | DataTypeName
   | ModifiedDataType
+  | ParametricDataType
   | ArrayDataType
   | SetofDataType
   | TimeDataType
@@ -23,11 +24,17 @@ export type DataType =
   | EntityName
   | DataTypeName
   | ModifiedDataType
+  | ParametricDataType
   | ArrayDataType
   | SetofDataType
   | TimeDataType
   | IntervalDataType
   | TableDataType;
+
+export interface DataTypeName extends BaseNode {
+  type: "data_type_name";
+  name: Keyword | Keyword[];
+}
 
 export interface ModifiedDataType extends BaseNode {
   type: "modified_data_type";
@@ -35,9 +42,11 @@ export interface ModifiedDataType extends BaseNode {
   modifiers?: ParenExpr<ListExpr<Expr>> | GenericTypeParams;
 }
 
-export interface DataTypeName extends BaseNode {
-  type: "data_type_name";
-  name: Keyword | Keyword[];
+// BigQuery
+export interface ParametricDataType extends BaseNode {
+  type: "parametric_data_type";
+  typeKw: Keyword<"ARRAY" | "STRUCT" | "TABLE">;
+  params?: GenericTypeParams;
 }
 
 // PostgreSQL

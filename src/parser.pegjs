@@ -7085,18 +7085,18 @@ interval_data_type
   }
 
 bigquery_array_type
-  = kw:ARRAY modifiers:(__ generic_type_params)? {
-    return loc({ type: "modified_data_type", dataType: read(kw), modifiers: read(modifiers) });
+  = kw:ARRAY params:(__ generic_type_params)? {
+    return loc({ type: "parametric_data_type", typeKw: read(kw), params: read(params) });
   }
 
 bigquery_struct_type
-  = kw:STRUCT modifiers:(__ generic_type_params)? {
-    return loc({ type: "modified_data_type", dataType: read(kw), modifiers: read(modifiers) });
+  = kw:STRUCT params:(__ generic_type_params)? {
+    return loc({ type: "parametric_data_type", typeKw: read(kw), params: read(params) });
   }
 
 bigquery_table_type
-  = kw:TABLE modifiers:(__ generic_type_params) {
-    return loc({ type: "modified_data_type", dataType: read(kw), modifiers: read(modifiers) });
+  = kw:TABLE params:(__ generic_type_params) {
+    return loc({ type: "parametric_data_type", typeKw: read(kw), params: read(params) });
   }
 
 generic_type_params
