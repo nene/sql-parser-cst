@@ -7053,7 +7053,7 @@ modified_data_type
   = &postgres type:(time_data_type / interval_data_type) {
     return type;
   }
-  / &bigquery type:(bigquery_array_type / bigquery_struct_type / bigquery_table_type) {
+  / &bigquery type:parametric_data_type {
     return type;
   }
   / dataType:data_type_name modifiers:(__ paren$list$expr)? {
@@ -7083,6 +7083,9 @@ interval_data_type
       precision: read(precision),
     });
   }
+
+parametric_data_type
+  = bigquery_array_type / bigquery_struct_type / bigquery_table_type
 
 bigquery_array_type
   = kw:ARRAY params:(__ generic_type_params)? {
