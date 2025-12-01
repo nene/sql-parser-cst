@@ -52,11 +52,6 @@ describe("struct", () => {
       expect(parseExpr(`STRUCT<id INT64>(1)`)).toMatchInlineSnapshot(`
         {
           "dataType": {
-            "name": {
-              "name": "STRUCT",
-              "text": "STRUCT",
-              "type": "keyword",
-            },
             "params": {
               "params": {
                 "items": [
@@ -68,8 +63,7 @@ describe("struct", () => {
                         "text": "INT64",
                         "type": "keyword",
                       },
-                      "params": undefined,
-                      "type": "named_data_type",
+                      "type": "data_type_name",
                     },
                     "name": {
                       "name": "id",
@@ -83,7 +77,12 @@ describe("struct", () => {
               },
               "type": "generic_type_params",
             },
-            "type": "named_data_type",
+            "type": "parametric_data_type",
+            "typeKw": {
+              "name": "STRUCT",
+              "text": "STRUCT",
+              "type": "keyword",
+            },
           },
           "expr": {
             "expr": {

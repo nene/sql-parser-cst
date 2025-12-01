@@ -23,11 +23,6 @@ describe("array", () => {
       expect(parseExpr(`ARRAY<INT64>[1, 2]`)).toMatchInlineSnapshot(`
         {
           "dataType": {
-            "name": {
-              "name": "ARRAY",
-              "text": "ARRAY",
-              "type": "keyword",
-            },
             "params": {
               "params": {
                 "items": [
@@ -39,8 +34,7 @@ describe("array", () => {
                         "text": "INT64",
                         "type": "keyword",
                       },
-                      "params": undefined,
-                      "type": "named_data_type",
+                      "type": "data_type_name",
                     },
                     "type": "array_type_param",
                   },
@@ -49,7 +43,12 @@ describe("array", () => {
               },
               "type": "generic_type_params",
             },
-            "type": "named_data_type",
+            "type": "parametric_data_type",
+            "typeKw": {
+              "name": "ARRAY",
+              "text": "ARRAY",
+              "type": "keyword",
+            },
           },
           "expr": {
             "expr": {
