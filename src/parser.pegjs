@@ -7056,8 +7056,12 @@ named_data_type
   / &bigquery type:(bigquery_array_type / bigquery_struct_type / bigquery_table_type) {
     return type;
   }
-  / kw:type_name params:(__ paren$list$expr)? {
-    return loc({ type: "named_data_type", name: read(kw), params: read(params) });
+  / name:data_type_name params:(__ paren$list$expr)? {
+    if (params) {
+      return loc({ type: "named_data_type", name: read(name), params: read(params) });
+    } else {
+      return name;
+    }
   }
 
 time_data_type
@@ -7129,6 +7133,14 @@ array_type_param
 table_data_type
   = &postgres kw:(TABLE __) columns:paren$list$column_definition {
     return loc({ type: "table_data_type", tableKw: read(kw), columns });
+  }
+
+data_type_name
+  = name:type_name {
+    return loc({ type: "data_type_name", name })
+  }
+  / &postgres name:entity_name {
+    return name;
   }
 
 type_name
@@ -7209,53 +7221,28 @@ type_name_mysql
   / SET
 
 type_name_postgresql
-  = data_type_identifier
-
-data_type_identifier
-  = kws:multi_word_type_name_postgresql {
-    return loc({
-      type: "data_type_identifier",
-      name: kws.map((kw) => ({ ...kw, type: "identifier", name: kw.text })),
-    });
-  }
-  / kw:type_name_builtin_postgresql {
-    return loc({
-      type: "data_type_identifier",
-      name: { ...kw, type: "identifier", name: kw.text }
-    });
-  }
-  / name:entity_name {
-    return loc({
-      type: "data_type_identifier",
-      name,
-    });
-  }
-
-type_name_builtin_postgresql
   = BIGINT
+  / kws:(BIT __ VARYING) { return read(kws); }
   / BIT
   / BOOLEAN
+  / kws:((CHARACTER / CHAR) __ VARYING) { return read(kws); }
   / CHARACTER
   / CHAR
   / DECIMAL
   / DEC
+  / kws:(DOUBLE __ PRECISION) { return read(kws); }
   / FLOAT
   / INTEGER
   / INT
   / JSON
+  / kws:(NATIONAL __ (CHARACTER / CHAR) __ VARYING) { return read(kws); }
+  / kws:(NATIONAL __ (CHARACTER / CHAR)) { return read(kws); }
+  / kws:(NCHAR __ VARYING) { return read(kws); }
   / NCHAR
   / NUMERIC
   / REAL
   / SMALLINT
   / VARCHAR
-
-multi_word_type_name_postgresql
-  = kws:(BIT __ VARYING) { return read(kws); }
-  / kws:((CHARACTER / CHAR) __ VARYING) { return read(kws); }
-  / kws:(DOUBLE __ PRECISION) { return read(kws); }
-  / kws:(NATIONAL __ (CHARACTER / CHAR) __ VARYING) { return read(kws); }
-  / kws:(NATIONAL __ (CHARACTER / CHAR)) { return read(kws); }
-  / kws:(NCHAR __ VARYING) { return read(kws); }
 
 type_name_sqlite
   = head:unreserved_keyword tail:(__ unreserved_keyword)* {

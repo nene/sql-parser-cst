@@ -5,14 +5,21 @@ import { EntityName, Expr, Identifier, ListExpr, ParenExpr } from "./Expr";
 import { NumberLiteral } from "./Literal";
 
 export type AllDataTypeNodes =
-  | DataType
+  | DataTypeName
+  | NamedDataType
+  | ArrayDataType
+  | SetofDataType
+  | TimeDataType
+  | IntervalDataType
+  | TableDataType
   | GenericTypeParams
   | ArrayTypeParam
   | StructTypeParam
-  | ArrayBounds
-  | DataTypeIdentifier;
+  | ArrayBounds;
 
 export type DataType =
+  | EntityName
+  | DataTypeName
   | NamedDataType
   | ArrayDataType
   | SetofDataType
@@ -22,15 +29,15 @@ export type DataType =
 
 export interface NamedDataType extends BaseNode {
   type: "named_data_type";
-  // in PostgreSQL all data types will be parsed as DataTypeIdentifier
-  name: Keyword | Keyword[] | DataTypeIdentifier;
+  // in PostgreSQL only builtin data types will be parsed DataTypeName,
+  // the rest will be parsed as EntityName
+  name: DataTypeName | EntityName;
   params?: ParenExpr<ListExpr<Expr>> | GenericTypeParams;
 }
 
-// PostgreSQL
-export interface DataTypeIdentifier extends BaseNode {
-  type: "data_type_identifier";
-  name: EntityName | Identifier[];
+export interface DataTypeName extends BaseNode {
+  type: "data_type_name";
+  name: Keyword | Keyword[];
 }
 
 // PostgreSQL

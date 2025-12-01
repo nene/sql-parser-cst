@@ -406,8 +406,27 @@ describe("data types", () => {
       testType("GEOMETRY(LINESTRINGZM, 4269)");
     });
 
-    it("parses data types as identifiers", () => {
-      expect(parseExpr(`foo :: Character Varying`)).toMatchInlineSnapshot(`
+    it("parses custom data types as identifiers", () => {
+      expect(parseExpr(`foo :: GEOMETRY`)).toMatchInlineSnapshot(`
+        {
+          "left": {
+            "name": "foo",
+            "text": "foo",
+            "type": "identifier",
+          },
+          "operator": "::",
+          "right": {
+            "name": "GEOMETRY",
+            "text": "GEOMETRY",
+            "type": "identifier",
+          },
+          "type": "cast_operator_expr",
+        }
+      `);
+    });
+
+    it("parses builtin data types as keywords", () => {
+      expect(parseExpr(`foo :: Character`)).toMatchInlineSnapshot(`
         {
           "left": {
             "name": "foo",
@@ -417,22 +436,11 @@ describe("data types", () => {
           "operator": "::",
           "right": {
             "name": {
-              "name": [
-                {
-                  "name": "Character",
-                  "text": "Character",
-                  "type": "identifier",
-                },
-                {
-                  "name": "Varying",
-                  "text": "Varying",
-                  "type": "identifier",
-                },
-              ],
-              "type": "data_type_identifier",
+              "name": "CHARACTER",
+              "text": "Character",
+              "type": "keyword",
             },
-            "params": undefined,
-            "type": "named_data_type",
+            "type": "data_type_name",
           },
           "type": "cast_operator_expr",
         }
