@@ -6408,13 +6408,13 @@ comment_target
   / kw:(TEXT __ SEARCH __ TEMPLATE __) name:entity_name {
     return loc({ type: "comment_target_text_search_template", textSearchTemplateKw: read(kw), name });
   }
-  / kw:(TRANSFORM __ FOR __) typeName:(named_data_type __) languageKw:(LANGUAGE __) languageName:ident {
+  / kw:(TRANSFORM __ FOR __) typeName:(data_type __) languageKw:(LANGUAGE __) languageName:ident {
     return loc({ type: "comment_target_transform", transformForKw: read(kw), typeName: read(typeName), languageKw: read(languageKw), languageName });
   }
   / kw:(TRIGGER __) name:(entity_name __) onKw:(ON __) tableName:entity_name {
     return loc({ type: "comment_target_trigger", triggerKw: read(kw), name: read(name), onKw: read(onKw), tableName });
   }
-  / kw:(TYPE __) name:named_data_type {
+  / kw:(TYPE __) name:data_type {
     return loc({ type: "comment_target_type", typeKw: read(kw), name });
   }
   / kw:(VIEW __) name:entity_name {
@@ -6434,7 +6434,7 @@ comment_target
   }
 
 cast_definition
-  = from:(named_data_type __) asKw:(AS __) to:named_data_type {
+  = from:(data_type __) asKw:(AS __) to:data_type {
     return loc({
       type: "cast_definition",
       from: read(from),
@@ -7032,14 +7032,14 @@ setof_data_type
   / array_data_type
 
 array_data_type
-  = &postgres head:named_data_type tail:(__ array_bounds)* {
+  = &postgres head:modified_data_type tail:(__ array_bounds)* {
     if (tail.length > 0) {
       return loc(createArrayDataTypeChain(head, tail));
     } else {
       return head;
     }
   }
-  / !postgres x:named_data_type { return x; }
+  / !postgres x:modified_data_type { return x; }
 
 array_bounds
   = "[" bounds:(__ empty __) "]" {
@@ -7049,18 +7049,18 @@ array_bounds
     return loc({ type: "array_bounds", bounds: read(bounds) });
   }
 
-named_data_type
+modified_data_type
   = &postgres type:(time_data_type / interval_data_type) {
     return type;
   }
   / &bigquery type:(bigquery_array_type / bigquery_struct_type / bigquery_table_type) {
     return type;
   }
-  / name:data_type_name params:(__ paren$list$expr)? {
-    if (params) {
-      return loc({ type: "named_data_type", name: read(name), params: read(params) });
+  / dataType:data_type_name modifiers:(__ paren$list$expr)? {
+    if (modifiers) {
+      return loc({ type: "modified_data_type", dataType, modifiers: read(modifiers) });
     } else {
-      return name;
+      return dataType;
     }
   }
 
@@ -7085,18 +7085,18 @@ interval_data_type
   }
 
 bigquery_array_type
-  = kw:ARRAY params:(__ generic_type_params)? {
-    return loc({ type: "named_data_type", name: read(kw), params: read(params) });
+  = kw:ARRAY modifiers:(__ generic_type_params)? {
+    return loc({ type: "modified_data_type", dataType: read(kw), modifiers: read(modifiers) });
   }
 
 bigquery_struct_type
-  = kw:STRUCT params:(__ generic_type_params)? {
-    return loc({ type: "named_data_type", name: read(kw), params: read(params) });
+  = kw:STRUCT modifiers:(__ generic_type_params)? {
+    return loc({ type: "modified_data_type", dataType: read(kw), modifiers: read(modifiers) });
   }
 
 bigquery_table_type
-  = kw:TABLE params:(__ generic_type_params) {
-    return loc({ type: "named_data_type", name: read(kw), params: read(params) });
+  = kw:TABLE modifiers:(__ generic_type_params) {
+    return loc({ type: "modified_data_type", dataType: read(kw), modifiers: read(modifiers) });
   }
 
 generic_type_params

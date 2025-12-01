@@ -6,7 +6,7 @@ import { NumberLiteral } from "./Literal";
 
 export type AllDataTypeNodes =
   | DataTypeName
-  | NamedDataType
+  | ModifiedDataType
   | ArrayDataType
   | SetofDataType
   | TimeDataType
@@ -18,21 +18,21 @@ export type AllDataTypeNodes =
   | ArrayBounds;
 
 export type DataType =
+  // in PostgreSQL only builtin data types will be parsed DataTypeName,
+  // the rest will be parsed as EntityName
   | EntityName
   | DataTypeName
-  | NamedDataType
+  | ModifiedDataType
   | ArrayDataType
   | SetofDataType
   | TimeDataType
   | IntervalDataType
   | TableDataType;
 
-export interface NamedDataType extends BaseNode {
-  type: "named_data_type";
-  // in PostgreSQL only builtin data types will be parsed DataTypeName,
-  // the rest will be parsed as EntityName
-  name: DataTypeName | EntityName;
-  params?: ParenExpr<ListExpr<Expr>> | GenericTypeParams;
+export interface ModifiedDataType extends BaseNode {
+  type: "modified_data_type";
+  dataType: DataType;
+  modifiers?: ParenExpr<ListExpr<Expr>> | GenericTypeParams;
 }
 
 export interface DataTypeName extends BaseNode {

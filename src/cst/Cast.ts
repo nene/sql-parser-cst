@@ -1,11 +1,11 @@
 import { BaseNode, Keyword } from "./Base";
-import { NamedDataType } from "./Node";
+import { ModifiedDataType } from "./Node";
 
 export type AllCastNodes = CastDefinition;
 
 export interface CastDefinition extends BaseNode {
   type: "cast_definition";
-  from: NamedDataType;
+  from: ModifiedDataType;
   asKw: Keyword<"AS">;
-  to: NamedDataType;
+  to: ModifiedDataType;
 }
