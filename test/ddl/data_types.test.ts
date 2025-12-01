@@ -196,18 +196,18 @@ describe("data types", () => {
 
     dialect("postgresql", () => {
       it("supports restricted INTERVAL type", () => {
-        testTypeWithLength("INTERVAL");
-        testTypeWithLength("INTERVAL YEAR");
-        testTypeWithLength("INTERVAL MONTH");
-        testTypeWithLength("INTERVAL DAY");
-        testTypeWithLength("INTERVAL HOUR");
-        testTypeWithLength("INTERVAL MINUTE");
+        testType("INTERVAL");
+        testType("INTERVAL YEAR");
+        testType("INTERVAL MONTH");
+        testType("INTERVAL DAY");
+        testType("INTERVAL HOUR");
+        testType("INTERVAL MINUTE");
         testTypeWithLength("INTERVAL SECOND");
-        testTypeWithLength("INTERVAL YEAR TO MONTH");
-        testTypeWithLength("INTERVAL DAY TO HOUR");
-        testTypeWithLength("INTERVAL DAY TO MINUTE");
+        testType("INTERVAL YEAR TO MONTH");
+        testType("INTERVAL DAY TO HOUR");
+        testType("INTERVAL DAY TO MINUTE");
         testTypeWithLength("INTERVAL DAY TO SECOND");
-        testTypeWithLength("INTERVAL HOUR TO MINUTE");
+        testType("INTERVAL HOUR TO MINUTE");
         testTypeWithLength("INTERVAL HOUR TO SECOND");
         testTypeWithLength("INTERVAL MINUTE TO SECOND");
       });
