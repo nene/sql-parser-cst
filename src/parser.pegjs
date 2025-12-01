@@ -7218,6 +7218,12 @@ data_type_identifier
       name: kws.map((kw) => ({ ...kw, type: "identifier", name: kw.text })),
     });
   }
+  / kw:type_name_builtin_postgresql {
+    return loc({
+      type: "data_type_identifier",
+      name: { ...kw, type: "identifier", name: kw.text }
+    });
+  }
   / name:entity_name {
     return loc({
       type: "data_type_identifier",
@@ -7225,13 +7231,31 @@ data_type_identifier
     });
   }
 
+type_name_builtin_postgresql
+  = BIGINT
+  / BIT
+  / BOOLEAN
+  / CHARACTER
+  / CHAR
+  / DECIMAL
+  / DEC
+  / FLOAT
+  / INTEGER
+  / INT
+  / JSON
+  / NCHAR
+  / NUMERIC
+  / REAL
+  / SMALLINT
+  / VARCHAR
+
 multi_word_type_name_postgresql
   = kws:(BIT __ VARYING) { return read(kws); }
   / kws:((CHARACTER / CHAR) __ VARYING) { return read(kws); }
+  / kws:(DOUBLE __ PRECISION) { return read(kws); }
   / kws:(NATIONAL __ (CHARACTER / CHAR) __ VARYING) { return read(kws); }
   / kws:(NATIONAL __ (CHARACTER / CHAR)) { return read(kws); }
   / kws:(NCHAR __ VARYING) { return read(kws); }
-  / kws:(DOUBLE __ PRECISION) { return read(kws); }
 
 type_name_sqlite
   = head:unreserved_keyword tail:(__ unreserved_keyword)* {
