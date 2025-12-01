@@ -7227,7 +7227,10 @@ data_type_identifier
 
 multi_word_type_name_postgresql
   = kws:(BIT __ VARYING) { return read(kws); }
-  / kws:(CHARACTER __ VARYING) { return read(kws); }
+  / kws:((CHARACTER / CHAR) __ VARYING) { return read(kws); }
+  / kws:(NATIONAL __ (CHARACTER / CHAR) __ VARYING) { return read(kws); }
+  / kws:(NATIONAL __ (CHARACTER / CHAR)) { return read(kws); }
+  / kws:(NCHAR __ VARYING) { return read(kws); }
   / kws:(DOUBLE __ PRECISION) { return read(kws); }
 
 type_name_sqlite
@@ -9675,6 +9678,7 @@ MODULUS             = kw:"MODULUS"i             !ident_part { return loc(createK
 MONDAY              = kw:"MONDAY"i              !ident_part { return loc(createKeyword(kw)); }
 MONTH               = kw:"MONTH"i               !ident_part { return loc(createKeyword(kw)); }
 NAME                = kw:"NAME"i                !ident_part { return loc(createKeyword(kw)); }
+NATIONAL            = kw:"NATIONAL"i            !ident_part { return loc(createKeyword(kw)); }
 NATIVE              = kw:"NATIVE"i              !ident_part { return loc(createKeyword(kw)); }
 NATURAL             = kw:"NATURAL"i             !ident_part { return loc(createKeyword(kw)); }
 NCHAR               = kw:"NCHAR"i               !ident_part { return loc(createKeyword(kw)); }
