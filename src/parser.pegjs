@@ -7147,12 +7147,12 @@ data_type_name
   }
 
 type_name
-  = &bigquery t:type_name_bigquery { return t; }
-  / &mysql t:type_name_mysql { return t; }
-  / &postgres t:type_name_postgresql { return t; }
-  / &sqlite t:type_name_sqlite { return t; }
+  = &bigquery t:type_name_kw_bigquery { return read(t); }
+  / &mysql t:type_name_kw_mysql { return read(t); }
+  / &postgres t:type_name_kw_postgresql { return read(t); }
+  / &sqlite t:type_name_kw_sqlite { return read(t); }
 
-type_name_bigquery
+type_name_kw_bigquery
   = BOOL
   / BYTES
   / GEOGRAPHY
@@ -7178,9 +7178,9 @@ type_name_bigquery
   / BIGDECIMAL
   / FLOAT64
   // used in TABLE FUNCTION parameters list
-  / kw:(ANY __ TYPE) { return read(kw); }
+  / ANY __ TYPE
 
-type_name_mysql
+type_name_kw_mysql
   = BOOLEAN
   / BOOL
   / BLOB
@@ -7213,9 +7213,9 @@ type_name_mysql
   / MEDIUMINT
   / BIGINT
   / FLOAT
-  / kws:(DOUBLE __ PRECISION) { return read(kws); }
-  / kws:(VARYING __ CHARACTER) { return read(kws); }
-  / kws:(NATIVE __ CHARACTER) { return read(kws); }
+  / DOUBLE __ PRECISION
+  / VARYING __ CHARACTER
+  / NATIVE __ CHARACTER
   / DOUBLE
   / REAL
   / BIT
@@ -7223,31 +7223,31 @@ type_name_mysql
   / ENUM
   / SET
 
-type_name_postgresql
+type_name_kw_postgresql
   = BIGINT
-  / kws:(BIT __ VARYING) { return read(kws); }
+  / BIT __ VARYING
   / BIT
   / BOOLEAN
-  / kws:((CHARACTER / CHAR) __ VARYING) { return read(kws); }
+  / (CHARACTER / CHAR) __ VARYING
   / CHARACTER
   / CHAR
   / DECIMAL
   / DEC
-  / kws:(DOUBLE __ PRECISION) { return read(kws); }
+  / DOUBLE __ PRECISION
   / FLOAT
   / INTEGER
   / INT
   / JSON
-  / kws:(NATIONAL __ (CHARACTER / CHAR) __ VARYING) { return read(kws); }
-  / kws:(NATIONAL __ (CHARACTER / CHAR)) { return read(kws); }
-  / kws:(NCHAR __ VARYING) { return read(kws); }
+  / NATIONAL __ (CHARACTER / CHAR) __ VARYING
+  / NATIONAL __ (CHARACTER / CHAR)
+  / NCHAR __ VARYING
   / NCHAR
   / NUMERIC
   / REAL
   / SMALLINT
   / VARCHAR
 
-type_name_sqlite
+type_name_kw_sqlite
   = head:unreserved_keyword tail:(__ unreserved_keyword)* {
     if (tail.length === 0) {
       return head;
