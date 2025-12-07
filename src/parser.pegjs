@@ -9261,9 +9261,23 @@ __hspace__
 // Comments
 comment
   = line_comment
+  / conditional_comment
   / !postgres x:pound_sign_comment { return x; }
   / !postgres x:block_comment { return x; }
   / &postgres x:nested_block_comment { return x; }
+
+conditional_comment
+  = conditional_comment_start (!conditional_comment_end .)* conditional_comment_end {
+    return loc({
+      type: "block_comment",
+      text: text(),
+    });
+  }
+
+conditional_comment_start
+  = "/*" " "* "sql-parser-cst-disable" " "* "*/"
+conditional_comment_end
+  = "/*" " "* "sql-parser-cst-enable" " "* "*/"
 
 block_comment
   = "/*" (!"*/" .)* "*/" {

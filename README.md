@@ -201,6 +201,8 @@ Parses SQL string and returns the CST tree. Takes the following options:
   After the semicolon, parsing will resume as normal. This option is primarily intended as a workaround
   for using the parser with an SQL dialect that's not yet 100% supported.
 
+  **Deprecated:** use conditional comments instead (see below).
+
 When parsing fails with syntax error, it throws `FormattedSyntaxError` which contains a message like:
 
 ```
@@ -210,6 +212,18 @@ Was expecting to see: "!", "$", "(", "-", ":", "?", "@", "CASE", ...
   |
 2 | SELECT * FROM my_table ORDER BY WHERE
   |                                 ^
+```
+
+Because not all SQL dialects are 100% supported and even the ones that are can have bugs,
+you might encounter SQL that the parser fails to parse. As a workaround you can use conditional
+comments to disable the parser for the problematic part of SQL:
+
+```sql
+SELECT * FROM products;
+/* sql-parser-cst-disable */
+UNSUPPORTED SQL IN HERE;
+/* sql-parser-cst-enable */
+UPDATE products SET sold = true WHERE id = 2;
 ```
 
 ### show(cst: Node): string

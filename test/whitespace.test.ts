@@ -211,4 +211,44 @@ describe("whitespace", () => {
       ).toBe("SELECT 1 +   2");
     });
   });
+
+  describe("conditional comments", () => {
+    it("ignores code between sql-parser-cst comments as one single comment", () => {
+      test(
+        "SELECT 1; /* sql-parser-cst-disable */ RANDOM STUFF /* sql-parser-cst-enable */ SELECT 1;"
+      );
+    });
+
+    it("handles whitespace variation in sql-parser-cst comments", () => {
+      test("/*   sql-parser-cst-disable  */ RANDOM STUFF /*   sql-parser-cst-enable   */");
+      test("/*sql-parser-cst-disable*/ RANDOM STUFF /*sql-parser-cst-enable*/");
+    });
+
+    it("handles comments inside in sql-parser-cst comments", () => {
+      test("/* sql-parser-cst-disable */ RANDOM /* foo */ STUFF /* sql-parser-cst-enable */");
+    });
+
+    it("parses everything between sql-parser-cst comments as one single comment", () => {
+      expect(
+        parse("/* sql-parser-cst-disable */ RANDOM STUFF /* sql-parser-cst-enable */", {
+          includeComments: true,
+        })
+      ).toMatchInlineSnapshot(`
+        {
+          "leading": [
+            {
+              "text": "/* sql-parser-cst-disable */ RANDOM STUFF /* sql-parser-cst-enable */",
+              "type": "block_comment",
+            },
+          ],
+          "statements": [
+            {
+              "type": "empty",
+            },
+          ],
+          "type": "program",
+        }
+      `);
+    });
+  });
 });
