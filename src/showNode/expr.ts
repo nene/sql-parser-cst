@@ -44,6 +44,7 @@ export const exprMap: FullTransformMap<string, AllExprNodes> = {
   interval_unit_range: (node) => show([node.fromUnit, node.toKw, node.toUnit]),
   interval_unit: (node) => show([node.unitKw]),
   typed_expr: (node) => show([node.dataType, node.expr]),
+  array_literal_expr: (node) => show([node.arrayKw, node.expr]),
   array_expr: (node) => show(["[", node.expr, "]"]),
   struct_expr: (node) => show(["(", node.expr, ")"]),
   quantifier_expr: (node) => show([node.quantifierKw, node.expr]),

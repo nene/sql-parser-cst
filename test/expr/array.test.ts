@@ -86,6 +86,37 @@ describe("array", () => {
     it("supports ARRAY() constructor", () => {
       testExprWc(`ARRAY(SELECT row from tbl)`);
     });
+
+    it("parses array literal", () => {
+      expect(parseExpr(`ARRAY[1, 2]`)).toMatchInlineSnapshot(`
+        {
+          "arrayKw": {
+            "name": "ARRAY",
+            "text": "ARRAY",
+            "type": "keyword",
+          },
+          "expr": {
+            "expr": {
+              "items": [
+                {
+                  "text": "1",
+                  "type": "number_literal",
+                  "value": 1,
+                },
+                {
+                  "text": "2",
+                  "type": "number_literal",
+                  "value": 2,
+                },
+              ],
+              "type": "list_expr",
+            },
+            "type": "array_expr",
+          },
+          "type": "array_literal_expr",
+        }
+      `);
+    });
   });
 
   dialect(["mysql", "mariadb"], () => {

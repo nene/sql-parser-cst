@@ -64,6 +64,7 @@ export type Expr =
   | Variable
   | Parameter
   | TypedExpr
+  | ArrayLiteralExpr
   | ArrayExpr
   | StructExpr;
 
@@ -509,12 +510,18 @@ export interface Parameter extends BaseNode {
   text: string;
 }
 
-// BigQuery, PostgreSQL
-// TODO: It feels awkward that PostgreSQL array literals have the ARRAY type attached to them
+// BigQuery
 export interface TypedExpr extends BaseNode {
   type: "typed_expr";
   dataType: DataType;
   expr: ArrayExpr | StructExpr;
+}
+
+// PostgreSQL
+export interface ArrayLiteralExpr extends BaseNode {
+  type: "array_literal_expr";
+  arrayKw: Keyword<"ARRAY">;
+  expr: ArrayExpr;
 }
 
 // BigQuery, PostgreSQL

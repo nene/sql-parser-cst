@@ -7770,7 +7770,7 @@ primary
   / primary_paren_expr
   / paren$compound_select_stmt
   / &bigquery x:(typed_array_expr / array_expr / typed_struct_expr) { return x; }
-  / &postgres x:typed_array_expr { return x; }
+  / &postgres x:array_literal_expr { return x; }
   / cast_expr
   / &postgres x:(row_constructor / array_constructor) { return x; }
   / &sqlite e:raise_expr { return e; }
@@ -8669,6 +8669,15 @@ system_variable
  *                                                                                      *
  * ------------------------------------------------------------------------------------ *
  */
+array_literal_expr
+  = kw:(ARRAY __) expr:array_expr {
+    return loc({
+      type: "array_literal_expr",
+      arrayKw: read(kw),
+      expr,
+    });
+  }
+
 typed_array_expr
   = type:(bigquery_array_type __) expr:array_expr {
     return loc({
