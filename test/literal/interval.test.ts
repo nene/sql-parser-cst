@@ -146,6 +146,15 @@ describe("INTERVAL literal", () => {
     it("supports INTERVAL with precision argument", () => {
       testExpr(`INTERVAL (4) '8 second'`);
     });
+
+    it("supports INTERVAL with range and precision argument", () => {
+      testExpr(`INTERVAL '8' SECOND (4)`);
+      testExpr(`INTERVAL '8' DAY TO SECOND (2)`);
+    });
+
+    it("parses INTERVAL range with precision as interval_literal", () => {
+      expect(parseExpr(`INTERVAL '8' SECOND (4)`).type).toBe("interval_literal");
+    });
   });
 
   dialect("sqlite", () => {

@@ -156,4 +156,5 @@ export interface IntervalUnit extends BaseNode {
     | "YEAR_MONTH"
     | "YEAR"
   >;
+  precision?: ParenExpr<NumberLiteral>;
 }

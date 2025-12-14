@@ -9078,7 +9078,10 @@ interval_unit_range
   }
 
 interval_unit
-  = kw:interval_unit_kw {
+  = &postgres kw:SECOND precision:(__ paren$number_literal)? {
+    return loc({ type: "interval_unit", unitKw: kw, precision: read(precision) })
+  }
+  / kw:interval_unit_kw {
     return loc({ type: "interval_unit", unitKw: kw })
   }
 
