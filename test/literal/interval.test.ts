@@ -23,6 +23,7 @@ describe("INTERVAL literal", () => {
             "text": "INTERVAL",
             "type": "keyword",
           },
+          "precision": undefined,
           "type": "interval_literal",
           "unit": {
             "type": "interval_unit",
@@ -86,6 +87,7 @@ describe("INTERVAL literal", () => {
             "text": "INTERVAL",
             "type": "keyword",
           },
+          "precision": undefined,
           "type": "interval_literal",
           "unit": {
             "fromUnit": {
@@ -139,6 +141,10 @@ describe("INTERVAL literal", () => {
       testExpr(`INTERVAL U&'1 day'`);
       testExpr(`INTERVAL E'1 day'`);
       testExpr("INTERVAL $$1 day$$");
+    });
+
+    it("supports INTERVAL with precision argument", () => {
+      testExpr(`INTERVAL (4) '8 second'`);
     });
   });
 

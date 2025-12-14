@@ -70,7 +70,8 @@ export const exprMap: FullTransformMap<string, AllExprNodes> = {
   jsonb_literal: (node) => show([node.jsonbKw, node.string]),
   numeric_literal: (node) => show([node.numericKw, node.string]),
   bignumeric_literal: (node) => show([node.bignumericKw, node.string]),
-  interval_literal: (node) => show([node.intervalKw, node.value, node.unit]),
+  interval_literal: (node) =>
+    show([node.intervalKw, node.precision, node.value, node.unit]),
   interval_unit_range: (node) => show([node.fromUnit, node.toKw, node.toUnit]),
   interval_unit: (node) => show([node.unitKw]),
 

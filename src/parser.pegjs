@@ -8275,6 +8275,7 @@ paren$list$table_option_postgresql = .
 paren$list$tablesample_arg = .
 paren$list$variable = .
 paren$list$view_column_definition = .
+paren$number_literal = .
 paren$pivot_for_in = .
 paren$postgresql_op = .
 paren$pragma_value = .
@@ -9055,11 +9056,12 @@ bignumeric_literal
 
 interval_literal
   = (&bigquery / &mysql / &postgres)
-    kw:(INTERVAL __) str:(string_literal_plain / number_literal)
+    kw:(INTERVAL __) precision:(paren$number_literal __)? str:(string_literal_plain / number_literal)
     unit:(__ (interval_unit_range / interval_unit))? {
       return loc({
         type: "interval_literal",
         intervalKw: read(kw),
+        precision: read(precision),
         value: read(str),
         unit: read(unit),
       });
