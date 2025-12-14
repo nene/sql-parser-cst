@@ -7778,7 +7778,6 @@ primary
   / case_expr
   / exists_expr
   / ident
-  / (&mysql / &bigquery) e:interval_expr { return e; }
   / &mysql e:variable { return e; }
   / &bigquery e:system_variable { return e; }
   / parameter
@@ -8192,63 +8191,6 @@ case_else
       result: read(result),
     });
   }
-
-interval_expr
-  = kw:INTERVAL e:(__ expr __) unit:(interval_unit_range / interval_unit) {
-    return {
-      type: "interval_expr",
-      intervalKw: kw,
-      expr: read(e),
-      unit,
-    };
-  }
-
-interval_unit_range
-  = fromUnit:interval_unit toKw:(__ TO __) toUnit:interval_unit {
-    return loc({
-      type: "interval_unit_range",
-      fromUnit,
-      toKw: read(toKw),
-      toUnit,
-    });
-  }
-
-interval_unit
-  = kw:interval_unit_kw {
-    return loc({ type: "interval_unit", unitKw: kw })
-  }
-
-interval_unit_kw
-  = YEAR
-  / MONTH
-  / DAY
-  / HOUR
-  / MINUTE
-  / SECOND
-  / &bigquery x:interval_unit_kw_bigquery { return x; }
-  / &mysql x:interval_unit_kw_mysql { return x; }
-
-interval_unit_kw_bigquery
-  = QUARTER
-  / WEEK
-  / MICROSECOND
-  / MILLISECOND
-
-interval_unit_kw_mysql
-  = QUARTER
-  / WEEK
-  / MICROSECOND
-  / SECOND_MICROSECOND
-  / MINUTE_MICROSECOND
-  / MINUTE_SECOND
-  / HOUR_MICROSECOND
-  / HOUR_SECOND
-  / HOUR_MINUTE
-  / DAY_MICROSECOND
-  / DAY_SECOND
-  / DAY_MINUTE
-  / DAY_HOUR
-  / YEAR_MONTH
 
 exists_expr
   = kw:EXISTS expr:(__ paren$compound_select_stmt) {
@@ -9112,13 +9054,63 @@ bignumeric_literal
   }
 
 interval_literal
-  = &postgres kw:INTERVAL str:(__ string_literal_plain) {
+  = (&bigquery / &mysql / &postgres)
+    kw:(INTERVAL __) str:(string_literal_plain / number_literal)
+    unit:(__ (interval_unit_range / interval_unit))? {
+      return loc({
+        type: "interval_literal",
+        intervalKw: read(kw),
+        value: read(str),
+        unit: read(unit),
+      });
+    }
+
+interval_unit_range
+  = fromUnit:interval_unit toKw:(__ TO __) toUnit:interval_unit {
     return loc({
-      type: "interval_literal",
-      intervalKw: kw,
-      string: read(str),
+      type: "interval_unit_range",
+      fromUnit,
+      toKw: read(toKw),
+      toUnit,
     });
   }
+
+interval_unit
+  = kw:interval_unit_kw {
+    return loc({ type: "interval_unit", unitKw: kw })
+  }
+
+interval_unit_kw
+  = YEAR
+  / MONTH
+  / DAY
+  / HOUR
+  / MINUTE
+  / SECOND
+  / &bigquery x:interval_unit_kw_bigquery { return x; }
+  / &mysql x:interval_unit_kw_mysql { return x; }
+
+interval_unit_kw_bigquery
+  = QUARTER
+  / WEEK
+  / MICROSECOND
+  / MILLISECOND
+
+interval_unit_kw_mysql
+  = QUARTER
+  / WEEK
+  / MICROSECOND
+  / SECOND_MICROSECOND
+  / MINUTE_MICROSECOND
+  / MINUTE_SECOND
+  / HOUR_MICROSECOND
+  / HOUR_SECOND
+  / HOUR_MINUTE
+  / DAY_MICROSECOND
+  / DAY_SECOND
+  / DAY_MINUTE
+  / DAY_HOUR
+  / YEAR_MONTH
 
 blob_literal
   = blob_literal_hex_string

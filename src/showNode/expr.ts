@@ -40,9 +40,6 @@ export const exprMap: FullTransformMap<string, AllExprNodes> = {
   case_when: (node) =>
     show([node.whenKw, node.condition, node.thenKw, node.result]),
   case_else: (node) => show([node.elseKw, node.result]),
-  interval_expr: (node) => show([node.intervalKw, node.expr, node.unit]),
-  interval_unit_range: (node) => show([node.fromUnit, node.toKw, node.toUnit]),
-  interval_unit: (node) => show([node.unitKw]),
   typed_expr: (node) => show([node.dataType, node.expr]),
   array_literal_expr: (node) => show([node.arrayKw, node.expr]),
   array_expr: (node) => show(["[", node.expr, "]"]),
@@ -73,7 +70,9 @@ export const exprMap: FullTransformMap<string, AllExprNodes> = {
   jsonb_literal: (node) => show([node.jsonbKw, node.string]),
   numeric_literal: (node) => show([node.numericKw, node.string]),
   bignumeric_literal: (node) => show([node.bignumericKw, node.string]),
-  interval_literal: (node) => show([node.intervalKw, node.string]),
+  interval_literal: (node) => show([node.intervalKw, node.value, node.unit]),
+  interval_unit_range: (node) => show([node.fromUnit, node.toKw, node.toUnit]),
+  interval_unit: (node) => show([node.unitKw]),
 
   // Basic language elements
   identifier: (node) => node.text,

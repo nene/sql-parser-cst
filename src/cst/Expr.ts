@@ -1,6 +1,11 @@
 import { AllColumns, BaseNode, Empty, Keyword } from "./Base";
 import { DataType } from "./DataType";
-import { Literal, StringLiteral } from "./Literal";
+import {
+  AllLiteralNodes,
+  IntervalUnit,
+  Literal,
+  StringLiteral,
+} from "./Literal";
 import { Node, Program, TriggerEventExpr } from "./Node";
 import {
   LimitClause,
@@ -29,13 +34,12 @@ export type AllExprNodes =
   | HavingArg
   | CaseWhen<Expr | Program>
   | CaseElse<Expr | Program>
-  | IntervalUnitRange
-  | IntervalUnit
   | WeekExpr
   | FullTextMatchArgs
   | ArraySubscript
   | ArraySubscriptSpecifier
-  | ArraySliceSpecifier;
+  | ArraySliceSpecifier
+  | AllLiteralNodes;
 
 export type Expr =
   | ListExpr
@@ -53,7 +57,6 @@ export type Expr =
   | CaseExpr
   | RowConstructor
   | ArrayConstructor
-  | IntervalExpr
   | StringWithCharset
   | QuantifierExpr
   | FullTextMatchExpr
@@ -351,61 +354,6 @@ export interface ArrayConstructor extends BaseNode {
   type: "array_constructor";
   arrayKw: Keyword<"ARRAY">;
   expr: ParenExpr<SubSelect>;
-}
-
-// MySQL, MariaDB, BigQuery
-export interface IntervalExpr extends BaseNode {
-  type: "interval_expr";
-  intervalKw: Keyword<"INTERVAL">;
-  expr: Expr;
-  unit: IntervalUnit | IntervalUnitRange;
-}
-
-export interface IntervalUnitRange extends BaseNode {
-  type: "interval_unit_range";
-  fromUnit: IntervalUnit;
-  toKw: Keyword<"TO">;
-  toUnit: IntervalUnit;
-}
-
-export interface IntervalUnit extends BaseNode {
-  type: "interval_unit";
-  unitKw: Keyword<
-    | "CENTURY"
-    | "DAY_HOUR"
-    | "DAY_MICROSECOND"
-    | "DAY_MINUTE"
-    | "DAY_SECOND"
-    | "DAY"
-    | "DECADE"
-    | "DOW"
-    | "DOY"
-    | "EPOCH"
-    | "HOUR_MICROSECOND"
-    | "HOUR_MINUTE"
-    | "HOUR_SECOND"
-    | "HOUR"
-    | "ISODOW"
-    | "ISOYEAR"
-    | "JULIAN"
-    | "MICROSECOND"
-    | "MICROSECONDS"
-    | "MILLENNIUM"
-    | "MILLISECONDS"
-    | "MINUTE_MICROSECOND"
-    | "MINUTE_SECOND"
-    | "MINUTE"
-    | "MONTH"
-    | "QUARTER"
-    | "SECOND_MICROSECOND"
-    | "SECOND"
-    | "TIMEZONE_HOUR"
-    | "TIMEZONE_MINUTE"
-    | "TIMEZONE"
-    | "WEEK"
-    | "YEAR_MONTH"
-    | "YEAR"
-  >;
 }
 
 // MySQL, MariaDB
