@@ -11,6 +11,8 @@ export const dataTypeMap: FullTransformMap<string, AllDataTypeNodes> = {
   time_data_type: (node) =>
     show([node.timeKw, node.precision, node.timeZoneKw]),
   interval_data_type: (node) => show([node.intervalKw, node.unit]),
+  interval_unit_range: (node) => show([node.fromUnit, node.toKw, node.toUnit]),
+  interval_unit: (node) => show([node.unitKw, node.precision]),
   generic_type_params: (node) => show(["<", node.params, ">"]),
   array_type_param: (node) => show([node.dataType, node.constraints]),
   struct_type_param: (node) =>

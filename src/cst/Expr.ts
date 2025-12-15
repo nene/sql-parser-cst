@@ -1,11 +1,6 @@
 import { AllColumns, BaseNode, Empty, Keyword } from "./Base";
-import { DataType } from "./DataType";
-import {
-  AllLiteralNodes,
-  IntervalUnit,
-  Literal,
-  StringLiteral,
-} from "./Literal";
+import { DataType, IntervalUnit } from "./DataType";
+import { Literal, StringLiteral } from "./Literal";
 import { Node, Program, TriggerEventExpr } from "./Node";
 import {
   LimitClause,
@@ -38,8 +33,7 @@ export type AllExprNodes =
   | FullTextMatchArgs
   | ArraySubscript
   | ArraySubscriptSpecifier
-  | ArraySliceSpecifier
-  | AllLiteralNodes;
+  | ArraySliceSpecifier;
 
 export type Expr =
   | ListExpr

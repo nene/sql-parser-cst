@@ -1,7 +1,6 @@
 import { BaseNode, Keyword } from "./Base";
+import { IntervalUnit, IntervalUnitRange } from "./DataType";
 import { ParenExpr } from "./Expr";
-
-export type AllLiteralNodes = Literal | IntervalUnit | IntervalUnitRange;
 
 export type Literal =
   | StringLiteral
@@ -109,52 +108,4 @@ export interface IntervalLiteral extends BaseNode {
   precision?: ParenExpr<NumberLiteral>;
   value: StringLiteral | NumberLiteral;
   unit?: IntervalUnit | IntervalUnitRange;
-}
-
-export interface IntervalUnitRange extends BaseNode {
-  type: "interval_unit_range";
-  fromUnit: IntervalUnit;
-  toKw: Keyword<"TO">;
-  toUnit: IntervalUnit;
-}
-
-export interface IntervalUnit extends BaseNode {
-  type: "interval_unit";
-  unitKw: Keyword<
-    | "CENTURY"
-    | "DAY_HOUR"
-    | "DAY_MICROSECOND"
-    | "DAY_MINUTE"
-    | "DAY_SECOND"
-    | "DAY"
-    | "DECADE"
-    | "DOW"
-    | "DOY"
-    | "EPOCH"
-    | "HOUR_MICROSECOND"
-    | "HOUR_MINUTE"
-    | "HOUR_SECOND"
-    | "HOUR"
-    | "ISODOW"
-    | "ISOYEAR"
-    | "JULIAN"
-    | "MICROSECOND"
-    | "MICROSECONDS"
-    | "MILLENNIUM"
-    | "MILLISECONDS"
-    | "MINUTE_MICROSECOND"
-    | "MINUTE_SECOND"
-    | "MINUTE"
-    | "MONTH"
-    | "QUARTER"
-    | "SECOND_MICROSECOND"
-    | "SECOND"
-    | "TIMEZONE_HOUR"
-    | "TIMEZONE_MINUTE"
-    | "TIMEZONE"
-    | "WEEK"
-    | "YEAR_MONTH"
-    | "YEAR"
-  >;
-  precision?: ParenExpr<NumberLiteral>;
 }
