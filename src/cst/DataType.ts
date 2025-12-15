@@ -2,7 +2,7 @@ import { BaseNode, Empty, Keyword } from "./Base";
 import { ColumnConstraint } from "./Constraint";
 import { ColumnDefinition } from "./CreateTable";
 import { EntityName, Expr, Identifier, ListExpr, ParenExpr } from "./Expr";
-import { NumberLiteral } from "./Literal";
+import { IntervalUnit, IntervalUnitRange, NumberLiteral } from "./Literal";
 
 export type AllDataTypeNodes =
   | DataTypeName
@@ -74,14 +74,7 @@ export interface TimeDataType extends BaseNode {
 export interface IntervalDataType extends BaseNode {
   type: "interval_data_type";
   intervalKw: Keyword<"INTERVAL">;
-  fieldsKw?:
-    | Keyword<"YEAR" | "MONTH" | "DAY" | "HOUR" | "MINUTE" | "SECOND">
-    | [
-        Keyword<"YEAR" | "MONTH" | "DAY" | "HOUR" | "MINUTE" | "SECOND">,
-        Keyword<"TO">,
-        Keyword<"YEAR" | "MONTH" | "DAY" | "HOUR" | "MINUTE" | "SECOND">
-      ];
-  precision?: ParenExpr<Expr>;
+  unit?: IntervalUnit | IntervalUnitRange;
 }
 
 // BigQuery

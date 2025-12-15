@@ -7075,12 +7075,11 @@ time_data_type
   }
 
 interval_data_type
-  = kw:INTERVAL fieldsKw:(__ interval_unit_kw __ TO __ interval_unit_kw / __ interval_unit_kw)? precision:(__ paren$expr)? {
+  = kw:INTERVAL unit:(__ (interval_unit_range / interval_unit))? {
     return loc({
       type: "interval_data_type",
       intervalKw: read(kw),
-      fieldsKw: read(fieldsKw),
-      precision: read(precision),
+      unit: read(unit),
     });
   }
 
