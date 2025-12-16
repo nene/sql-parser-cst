@@ -44,8 +44,10 @@ describe("INTERVAL literal", () => {
   });
 
   dialect(["mysql", "mariadb", "bigquery"], () => {
-    it("supports INTERVAL with number argument", () => {
+    it("supports INTERVAL with any expression as argument", () => {
       testExpr(`INTERVAL 3 DAY`);
+      testExpr(`INTERVAL -3 DAY`);
+      testExpr(`INTERVAL delay + ship_time DAY`);
     });
   });
 

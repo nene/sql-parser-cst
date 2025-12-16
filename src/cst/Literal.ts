@@ -1,6 +1,6 @@
 import { BaseNode, Keyword } from "./Base";
 import { IntervalUnit, IntervalUnitRange } from "./DataType";
-import { ParenExpr } from "./Expr";
+import { Expr, ParenExpr } from "./Expr";
 
 export type Literal =
   | StringLiteral
@@ -106,6 +106,6 @@ export interface IntervalLiteral extends BaseNode {
   type: "interval_literal";
   intervalKw: Keyword<"INTERVAL">;
   precision?: ParenExpr<NumberLiteral>;
-  value: StringLiteral | NumberLiteral;
+  value: Expr;
   unit?: IntervalUnit | IntervalUnitRange;
 }

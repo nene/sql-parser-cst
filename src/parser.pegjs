@@ -9055,13 +9055,13 @@ bignumeric_literal
 
 interval_literal
   = (&bigquery / &mysql / &postgres)
-    kw:(INTERVAL __) precision:(paren$number_literal __)? str:(string_literal_plain / number_literal)
+    kw:(INTERVAL __) precision:(paren$number_literal __)? value:expr
     unit:(__ (interval_unit_range / interval_unit))? {
       return loc({
         type: "interval_literal",
         intervalKw: read(kw),
         precision: read(precision),
-        value: read(str),
+        value: read(value),
         unit: read(unit),
       });
     }
