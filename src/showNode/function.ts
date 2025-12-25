@@ -37,8 +37,7 @@ export const functionMap: FullTransformMap<string, AllFunctionNodes> = {
       node.tableKw,
       node.functionKw,
       node.ifExistsKw,
-      node.name,
-      node.params,
+      node.functions,
       node.behaviorKw,
     ]),
 

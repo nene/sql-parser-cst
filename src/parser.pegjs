@@ -4018,8 +4018,7 @@ drop_function_stmt
     tableKw:(TABLE __)?
     funKw:(FUNCTION __)
     ifKw:(if_exists __)?
-    name:entity_name
-    params:(__ (paren$list$func_param / paren$empty_list))?
+    functions:list$function_signature
     behaviorKw:(__ (CASCADE / RESTRICT))? {
       return loc({
         type: "drop_function_stmt",
@@ -4027,8 +4026,7 @@ drop_function_stmt
         tableKw: read(tableKw),
         functionKw: read(funKw),
         ifExistsKw: read(ifKw),
-        name,
-        params: read(params),
+        functions,
         behaviorKw: read(behaviorKw),
       });
     }

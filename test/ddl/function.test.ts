@@ -292,6 +292,14 @@ describe("function", () => {
           testWc("DROP FUNCTION bar ( id INT, name VARCHAR(255) )");
         });
 
+        it("supports multiple functions", () => {
+          testWc("DROP FUNCTION foo, bar");
+        });
+
+        it("supports multiple functions with parameter lists", () => {
+          testWc("DROP FUNCTION foo (a, b), bar (c)");
+        });
+
         it("supports CASCADE|RESTRICT", () => {
           testWc("DROP FUNCTION foo CASCADE");
           testWc("DROP FUNCTION bar() RESTRICT");
