@@ -114,6 +114,19 @@ describe("select", () => {
         test("SELECT minute");
         test("SELECT second");
       });
+
+      it("supports SET as explicit alias", () => {
+        test("SELECT 12 AS set");
+      });
+
+      // Currently not supported, though actually PostgreSQL supports this.
+      it.skip("supports SET as implicit alias", () => {
+        test("SELECT 4 set");
+      });
+
+      it("supports SET as column name", () => {
+        test("SELECT set");
+      });
     });
   });
 

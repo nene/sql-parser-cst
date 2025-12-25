@@ -178,8 +178,6 @@ export const postgresqlKeywords: Record<string, boolean> = {
       .filter(([_, def]) => def.reserved)
       .map(([kw]) => [kw, true])
   ),
-  // TODO: Temporarily including these actually non-reserved words
-  SET: true,
 };
 
 export const postgresqlRequiresAsKeywords: Record<string, boolean> = {
@@ -188,6 +186,19 @@ export const postgresqlRequiresAsKeywords: Record<string, boolean> = {
       .filter(([_, def]) => def.requiresAs || def.reserved)
       .map(([kw]) => [kw, true])
   ),
-  // TODO: Temporarily including these actually non-reserved words
+
+  // TODO: SET is non-reserved keyword in PostgreSQL
+  // and it's also allowed as implicit alias,
+  // but that causes a "conflict" in UPDATE ... SET statement.
+  //
+  // The following is allowed:
+  // UPDATE foo SET set = 10;
+  //
+  // But the following is error:
+  // UPDATE foo set SET x = 10;
+  //
+  // PostgreSQL parser pulls some magic to deal with this.
+  // As only crazy people really need this, and most other dialects treat SET
+  // as reserved keyword, we'll require AS for SET as a workaround for now.
   SET: true,
 };
