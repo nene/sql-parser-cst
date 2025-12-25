@@ -4169,16 +4169,14 @@ drop_procedure_stmt
 
 alter_procedure_stmt
   = kw:(ALTER __) procKw:(PROCEDURE __)
-    name:entity_name
-    params:(__ (paren$list$func_param / paren$empty_list))?
+    signature:procedure_signature
     actions:(__ alter_procedure_action)+
     behaviorKw:(__ RESTRICT)? {
       return loc({
         type: "alter_procedure_stmt",
         alterKw: read(kw),
         procedureKw: read(procKw),
-        name,
-        params: read(params),
+        signature,
         actions: actions.map(read),
         behaviorKw: read(behaviorKw),
       });

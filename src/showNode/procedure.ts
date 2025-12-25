@@ -25,8 +25,7 @@ export const procedureMap: FullTransformMap<string, AllProcedureNodes> = {
     show([
       node.alterKw,
       node.procedureKw,
-      node.name,
-      node.params,
+      node.signature,
       node.actions,
       node.behaviorKw,
     ]),

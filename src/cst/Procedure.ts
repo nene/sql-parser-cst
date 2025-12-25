@@ -63,8 +63,7 @@ export interface AlterProcedureStmt extends BaseNode {
   type: "alter_procedure_stmt";
   alterKw: Keyword<"ALTER">;
   procedureKw: Keyword<"PROCEDURE">;
-  name: EntityName;
-  params?: ParenExpr<ListExpr<FunctionParam>>;
+  signature: FunctionSignature;
   actions: (AlterFunctionAction | AlterProcedureClause)[];
   behaviorKw?: Keyword<"RESTRICT">;
 }
