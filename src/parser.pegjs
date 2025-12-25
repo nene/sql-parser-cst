@@ -41,7 +41,7 @@
     isEnabledWhitespace,
     isAcceptUnsupportedGrammar,
   } from "./utils/parserState";
-  import { isReservedKeyword } from "./utils/keywords";
+  import { isReservedKeyword, isForbiddenImplicitAliasName } from "./utils/keywords";
   import { loc } from "./utils/loc";
   import { isPostgresqlOtherOperator } from "./utils/pgOperators";
 
@@ -8473,7 +8473,10 @@ column
  * ------------------------------------------------------------------------------------ *
  */
 implicit_alias_ident
-  = ident
+  = quoted_ident
+  / name:ident_name !{ return isForbiddenImplicitAliasName(name); } {
+    return loc(createIdentifier(name, name));
+  }
   / s:string_literal_plain (&sqlite / &bigquery / &mysql) {
     return loc(createIdentifier(s.text, s.value));
   }

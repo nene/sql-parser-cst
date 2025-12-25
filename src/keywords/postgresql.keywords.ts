@@ -172,10 +172,20 @@ const keywordDefs: Record<string, KeywordDef> = {
   YEAR: { requiresAs: true },
 };
 
-export const postgresqlKeywords = {
+export const postgresqlKeywords: Record<string, boolean> = {
   ...Object.fromEntries(
     Object.entries(keywordDefs)
-      .filter(([_, def]) => def.reserved || def.requiresAs)
+      .filter(([_, def]) => def.reserved)
+      .map(([kw]) => [kw, true])
+  ),
+  // TODO: Temporarily including these actually non-reserved words
+  SET: true,
+};
+
+export const postgresqlRequiresAsKeywords: Record<string, boolean> = {
+  ...Object.fromEntries(
+    Object.entries(keywordDefs)
+      .filter(([_, def]) => def.requiresAs || def.reserved)
       .map(([kw]) => [kw, true])
   ),
   // TODO: Temporarily including these actually non-reserved words

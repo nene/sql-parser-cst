@@ -86,6 +86,35 @@ describe("select", () => {
         expect(() => test("SELECT col AS select")).toThrowError();
       });
     });
+
+    dialect("postgresql", () => {
+      it("supports interval units as explicit aliases", () => {
+        test("SELECT '1981' AS year");
+        test("SELECT 'Jan' AS month");
+        test("SELECT '3' AS day");
+        test("SELECT '12' AS hour");
+        test("SELECT '30' AS minute");
+        test("SELECT '18' AS second");
+      });
+
+      it("does not supports interval units as implicit aliases", () => {
+        expect(() => parseStmt("SELECT '1981' year")).toThrowError();
+        expect(() => parseStmt("SELECT 'Jan' month")).toThrowError();
+        expect(() => parseStmt("SELECT '3' day")).toThrowError();
+        expect(() => parseStmt("SELECT '12' hour")).toThrowError();
+        expect(() => parseStmt("SELECT '30' minute")).toThrowError();
+        expect(() => parseStmt("SELECT '18' second")).toThrowError();
+      });
+
+      it("supports interval units as column names", () => {
+        test("SELECT year");
+        test("SELECT month");
+        test("SELECT day");
+        test("SELECT hour");
+        test("SELECT minute");
+        test("SELECT second");
+      });
+    });
   });
 
   it("supports SELECT *", () => {
