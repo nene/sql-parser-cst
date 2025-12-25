@@ -4033,16 +4033,14 @@ drop_function_stmt
 
 alter_function_stmt
   = kw:(ALTER __) funKw:(FUNCTION __)
-    name:entity_name
-    params:(__ (paren$list$func_param / paren$empty_list))?
+    signature:function_signature
     actions:(__ alter_function_action)+
     behaviorKw:(__ RESTRICT)? {
       return loc({
         type: "alter_function_stmt",
         alterKw: read(kw),
         functionKw: read(funKw),
-        name,
-        params: read(params),
+        signature,
         actions: actions.map(read),
         behaviorKw: read(behaviorKw),
       });

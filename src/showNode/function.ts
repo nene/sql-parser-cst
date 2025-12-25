@@ -45,8 +45,7 @@ export const functionMap: FullTransformMap<string, AllFunctionNodes> = {
     show([
       node.alterKw,
       node.functionKw,
-      node.name,
-      node.params,
+      node.signature,
       node.actions,
       node.behaviorKw,
     ]),

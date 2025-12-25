@@ -199,8 +199,7 @@ export interface AlterFunctionStmt extends BaseNode {
   type: "alter_function_stmt";
   alterKw: Keyword<"ALTER">;
   functionKw: Keyword<"FUNCTION">;
-  name: EntityName;
-  params?: ParenExpr<ListExpr<FunctionParam>>;
+  signature: FunctionSignature;
   actions: (AlterFunctionAction | AlterFunctionClause)[];
   behaviorKw?: Keyword<"RESTRICT">;
 }
