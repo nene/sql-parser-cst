@@ -190,7 +190,7 @@ export interface DropFunctionStmt extends BaseNode {
   tableKw?: Keyword<"TABLE">;
   functionKw: Keyword<"FUNCTION">;
   ifExistsKw?: [Keyword<"IF">, Keyword<"EXISTS">];
-  functions: ListExpr<FunctionSignature>;
+  signatures: ListExpr<FunctionSignature>;
   behaviorKw?: Keyword<"CASCADE" | "RESTRICT">;
 }
 

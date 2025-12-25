@@ -4018,7 +4018,7 @@ drop_function_stmt
     tableKw:(TABLE __)?
     funKw:(FUNCTION __)
     ifKw:(if_exists __)?
-    functions:list$function_signature
+    signatures:list$function_signature
     behaviorKw:(__ (CASCADE / RESTRICT))? {
       return loc({
         type: "drop_function_stmt",
@@ -4026,7 +4026,7 @@ drop_function_stmt
         tableKw: read(tableKw),
         functionKw: read(funKw),
         ifExistsKw: read(ifKw),
-        functions,
+        signatures,
         behaviorKw: read(behaviorKw),
       });
     }
