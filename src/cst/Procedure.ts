@@ -8,6 +8,7 @@ import {
   DynamicallyLoadedFunction,
   FunctionParam,
   FunctionSecurityClause,
+  FunctionSignature,
   FunctionTransformClause,
 } from "./Function";
 import { AlterFunctionAction } from "./AlterAction";
@@ -53,8 +54,7 @@ export interface DropProcedureStmt extends BaseNode {
   dropKw: Keyword<"DROP">;
   procedureKw: Keyword<"PROCEDURE">;
   ifExistsKw?: [Keyword<"IF">, Keyword<"EXISTS">];
-  name: EntityName;
-  params?: ParenExpr<ListExpr<FunctionParam>>;
+  signatures: ListExpr<FunctionSignature>;
   behaviorKw?: Keyword<"RESTRICT" | "CASCADE">;
 }
 

@@ -182,6 +182,14 @@ describe("procedure", () => {
           testWc("DROP PROCEDURE bar ( id INT, name VARCHAR(255) )");
         });
 
+        it("supports multiple procedures", () => {
+          testWc("DROP PROCEDURE foo, bar");
+        });
+
+        it("supports multiple procedures with parameter lists", () => {
+          testWc("DROP PROCEDURE foo (a, b), bar (c)");
+        });
+
         it("supports CASCADE|RESTRICT", () => {
           testWc("DROP PROCEDURE foo CASCADE");
           testWc("DROP PROCEDURE bar() RESTRICT");

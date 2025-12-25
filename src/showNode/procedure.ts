@@ -18,8 +18,7 @@ export const procedureMap: FullTransformMap<string, AllProcedureNodes> = {
       node.dropKw,
       node.procedureKw,
       node.ifExistsKw,
-      node.name,
-      node.params,
+      node.signatures,
       node.behaviorKw,
     ]),
   alter_procedure_stmt: (node) =>

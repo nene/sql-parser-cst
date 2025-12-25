@@ -4088,6 +4088,15 @@ create_procedure_stmt
       });
     }
 
+procedure_signature
+  = name:entity_name params:(__ (paren$list$procedure_param / paren$empty_list))? {
+    return loc({
+      type: "function_signature",
+      name: read(name),
+      params: read(params),
+    });
+  }
+
 procedure_param
   = &bigquery mode:((INOUT / IN / OUT) __)? name:(ident __) type:data_type {
     return loc({
@@ -4146,16 +4155,14 @@ drop_procedure_stmt
   = kw:(DROP __)
     procKw:(PROCEDURE __)
     ifKw:(if_exists __)?
-    name:entity_name
-    params:(__ (paren$list$procedure_param / paren$empty_list))?
+    signatures:list$procedure_signature
     behaviorKw:(__ (CASCADE / RESTRICT))? {
       return loc({
         type: "drop_procedure_stmt",
         dropKw: read(kw),
         procedureKw: read(procKw),
         ifExistsKw: read(ifKw),
-        name,
-        params: read(params),
+        signatures,
         behaviorKw: read(behaviorKw),
       });
     }
@@ -8339,6 +8346,7 @@ list$partition_bound_with_value = .
 list$privilege = .
 list$postgresql_option_element = .
 list$procedure_param = .
+list$procedure_signature = .
 list$publication_object = .
 list$reindex_option = .
 list$relation_expr = .
