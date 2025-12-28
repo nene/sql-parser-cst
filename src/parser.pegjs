@@ -7771,10 +7771,8 @@ primary
   / paren$compound_select_stmt
   / &bigquery x:(typed_array_expr / array_expr / typed_struct_expr) { return x; }
   / &postgres x:array_literal_expr { return x; }
-  / cast_expr
+  / special_func_call
   / &postgres x:(row_constructor / array_constructor) { return x; }
-  / &sqlite e:raise_expr { return e; }
-  / (&mysql / &bigquery / &postgres) e:extract_expr { return e; }
   / case_expr
   / exists_expr
   / ident
@@ -7800,6 +7798,11 @@ primary_paren_expr
       return loc({ type: "paren_expr", expr: surrounding(c1, list.items[0], c2) });
     }
   }
+
+special_func_call
+  = cast_expr
+  / &sqlite e:raise_expr { return e; }
+  / (&mysql / &bigquery / &postgres) e:extract_expr { return e; }
 
 cast_expr
   = kw:cast_kw args:(__ paren$cast_arg)  {
