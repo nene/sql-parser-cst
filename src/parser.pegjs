@@ -7965,7 +7965,6 @@ func_call
   = name:func_name fnRight:(__ func_call_right) {
     return loc(createFuncCall(name, fnRight));
   }
-  / paren_less_func_call
 
 func_call_right
   = args:paren$func_args filter:(__ filter_arg)? over:(__ over_arg)? {
