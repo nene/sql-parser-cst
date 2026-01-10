@@ -9062,7 +9062,7 @@ bignumeric_literal
 
 interval_literal
   = (&bigquery / &mysql / &postgres)
-    kw:(INTERVAL __) precision:(paren$number_literal __)? value:expr
+    kw:(INTERVAL __) precision:(paren$number_literal __)? value:sub_comparison_expr
     unit:(__ (interval_unit_range / interval_unit))? {
       return loc({
         type: "interval_literal",
