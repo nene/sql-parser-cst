@@ -49,6 +49,12 @@ describe("INTERVAL literal", () => {
       testExpr(`INTERVAL -3 DAY`);
       testExpr(`INTERVAL delay + ship_time DAY`);
     });
+
+    // Regression test for: https://github.com/nene/prettier-plugin-sql-cst/issues/60
+    it("does not support boolean and comparison expressions in the INTERVAL expression", () => {
+      expect(parseExpr(`INTERVAL 3 AND 5`).type).toBe("binary_expr");
+      expect(parseExpr(`INTERVAL 3 > 5`).type).toBe("binary_expr");
+    });
   });
 
   dialect(["mysql", "mariadb"], () => {
