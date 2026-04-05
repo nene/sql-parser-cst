@@ -26,7 +26,7 @@
     "generate:fast": "ts-node ./scripts/generate.ts --fast",
     "watch:generate": "npm-watch",
     "clean": "rm -rf lib; rm -rf src/generated_parser.ts",
-    "build": "yarn clean && yarn generate && tsc",
+    "build": "yarn clean && yarn generate && tsc -p tsconfig.build.json",
     "test:bigquery": "jest --config test/config/bigquery.json",
     "test:mysql": "jest --config test/config/mysql.json",
     "test:mariadb": "jest --config test/config/mariadb.json",

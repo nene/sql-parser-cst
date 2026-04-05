@@ -5,14 +5,14 @@
     "target": "es6",
     "lib": ["es6"],
     "rootDirs": ["src"],
-    "outDir": "lib",
     "baseUrl": "./",
     "declaration": true,
     "esModuleInterop": true,
     "strict": true,
     "noImplicitReturns": true,
-    "isolatedModules": true
+    "isolatedModules": true,
+    "noEmit": true
   },
-  "include": ["src", "test", "perf"],
+  "include": ["src", "test", "perf", "scripts"],
   "exclude": ["node_modules"]
 }
