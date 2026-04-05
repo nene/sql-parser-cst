@@ -5,7 +5,7 @@
     "target": "es6",
     "lib": ["es6"],
     "rootDirs": ["src"],
-    "baseUrl": "./",
+    "paths": { "src/*": ["./src/*"] },
     "declaration": true,
     "esModuleInterop": true,
     "strict": true,
