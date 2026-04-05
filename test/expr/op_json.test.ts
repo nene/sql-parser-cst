@@ -37,7 +37,7 @@ describe("JSON operators", () => {
 
   dialect(["mariadb", "bigquery"], () => {
     it("does not support JSON operators", () => {
-      expect(() => parseExpr(`col->'op'`)).toThrowError();
+      expect(() => parseExpr(`col->'op'`)).toThrow();
     });
   });
 });

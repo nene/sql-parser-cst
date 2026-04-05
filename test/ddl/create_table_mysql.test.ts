@@ -60,9 +60,7 @@ describe("create table (MySQL)", () => {
 
   notDialect(["mysql", "mariadb"], () => {
     it("does not support MySQL-like CREATE TABLE options", () => {
-      expect(() =>
-        test(`CREATE TABLE foo(id INT) ENGINE = INNODB, COMMENT 'hello'`)
-      ).toThrowError();
+      expect(() => test(`CREATE TABLE foo(id INT) ENGINE = INNODB, COMMENT 'hello'`)).toThrow();
     });
   });
 });

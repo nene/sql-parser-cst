@@ -39,7 +39,7 @@ describe("SUBSCRIPTION", () => {
 
   notDialect("postgresql", () => {
     it("does not support DROP SUBSCRIPTION", () => {
-      expect(() => parse("DROP SUBSCRIPTION foo")).toThrowError();
+      expect(() => parse("DROP SUBSCRIPTION foo")).toThrow();
     });
   });
 });

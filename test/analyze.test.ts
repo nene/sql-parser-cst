@@ -31,7 +31,7 @@ describe("analyze", () => {
 
   dialect("bigquery", () => {
     it("does not support ANALYZE", () => {
-      expect(() => test("ANALYZE my_tbl")).toThrowError();
+      expect(() => test("ANALYZE my_tbl")).toThrow();
     });
   });
 });

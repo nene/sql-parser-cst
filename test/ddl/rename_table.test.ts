@@ -55,7 +55,7 @@ describe("rename table", () => {
 
   dialect(["bigquery", "sqlite"], () => {
     it("does not support RENAME TABLE", () => {
-      expect(() => parseStmt("RENAME TABLE foo TO bar")).toThrowError();
+      expect(() => parseStmt("RENAME TABLE foo TO bar")).toThrow();
     });
   });
 

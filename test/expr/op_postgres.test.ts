@@ -141,7 +141,7 @@ describe("special PostgreSQL operators", () => {
 
   notDialect("postgresql", () => {
     it("does not support weird Postgres operators", () => {
-      expect(() => parse(`x ||/ y`)).toThrowError();
+      expect(() => parse(`x ||/ y`)).toThrow();
     });
   });
 });

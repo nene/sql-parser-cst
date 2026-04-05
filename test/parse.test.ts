@@ -33,7 +33,7 @@ describe("parse()", () => {
         `  \\|                \\^`,
       ].join("\n")
     );
-    expect(() => parse("SELECT foo bar baz", { dialect: "sqlite" })).toThrowError(errorRegex);
+    expect(() => parse("SELECT foo bar baz", { dialect: "sqlite" })).toThrow(errorRegex);
   });
 
   it("indents syntax error properly when it happen on a large line number", () => {
@@ -47,9 +47,9 @@ describe("parse()", () => {
         `    \\|                \\^`,
       ].join("\n")
     );
-    expect(() =>
-      parse("\n".repeat(100) + "SELECT foo bar baz", { dialect: "sqlite" })
-    ).toThrowError(errorRegex);
+    expect(() => parse("\n".repeat(100) + "SELECT foo bar baz", { dialect: "sqlite" })).toThrow(
+      errorRegex
+    );
   });
 
   it("uses the filename option in syntax error messages", () => {
@@ -65,6 +65,6 @@ describe("parse()", () => {
     );
     expect(() =>
       parse("INSERT TODAYS PUZZLE 123;", { dialect: "sqlite", filename: "prod-database.sql" })
-    ).toThrowError(errorRegex);
+    ).toThrow(errorRegex);
   });
 });

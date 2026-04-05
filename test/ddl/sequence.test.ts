@@ -114,8 +114,8 @@ describe("sequence", () => {
 
   notDialect("postgresql", () => {
     it("does not support CREATE/DROP SEQUENCE", () => {
-      expect(() => test("CREATE SEQUENCE my_schema")).toThrowError();
-      expect(() => test("DROP SEQUENCE my_schema")).toThrowError();
+      expect(() => test("CREATE SEQUENCE my_schema")).toThrow();
+      expect(() => test("DROP SEQUENCE my_schema")).toThrow();
     });
   });
 });

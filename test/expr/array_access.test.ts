@@ -121,7 +121,7 @@ describe("array access", () => {
 
   dialect(["mysql", "mariadb", "sqlite"], () => {
     it("does not support array subscripts", () => {
-      expect(() => parseExpr("my_array[0]")).toThrowError();
+      expect(() => parseExpr("my_array[0]")).toThrow();
     });
   });
 });

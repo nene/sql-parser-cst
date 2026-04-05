@@ -108,13 +108,13 @@ describe("create table (BigQuery)", () => {
 
   notDialect("bigquery", () => {
     it("does not support CREATE TABLE ... COPY", () => {
-      expect(() => testWc("CREATE TABLE foo COPY bar")).toThrowError();
+      expect(() => testWc("CREATE TABLE foo COPY bar")).toThrow();
     });
     it("does not support CREATE TABLE ... CLONE", () => {
-      expect(() => testWc("CREATE TABLE foo CLONE bar")).toThrowError();
+      expect(() => testWc("CREATE TABLE foo CLONE bar")).toThrow();
     });
     it("does not support CREATE EXTERNAL TABLE", () => {
-      expect(() => testWc("CREATE EXTERNAL TABLE foo (id INT)")).toThrowError();
+      expect(() => testWc("CREATE EXTERNAL TABLE foo (id INT)")).toThrow();
     });
   });
 });

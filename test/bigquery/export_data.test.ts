@@ -23,7 +23,7 @@ describe("BigQuery export data", () => {
 
   notDialect("bigquery", () => {
     it("does not support EXPORT DATA", () => {
-      expect(() => testWc("EXPORT DATA OPTIONS(format='CSV') AS SELECT 1")).toThrowError();
+      expect(() => testWc("EXPORT DATA OPTIONS(format='CSV') AS SELECT 1")).toThrow();
     });
   });
 });

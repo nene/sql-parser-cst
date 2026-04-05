@@ -30,7 +30,7 @@ describe("WHILE", () => {
 
   dialect("sqlite", () => {
     it("does not support WHILE statement", () => {
-      expect(() => parse("WHILE true DO SELECT 1; END WHILE")).toThrowError();
+      expect(() => parse("WHILE true DO SELECT 1; END WHILE")).toThrow();
     });
   });
 

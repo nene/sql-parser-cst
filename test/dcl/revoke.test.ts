@@ -207,7 +207,7 @@ describe("REVOKE", () => {
 
   dialect(["mysql", "mariadb", "sqlite"], () => {
     it("does not support REVOKE", () => {
-      expect(() => parse("REVOKE `role` ON TABLE foo FROM 'user:blah'")).toThrowError();
+      expect(() => parse("REVOKE `role` ON TABLE foo FROM 'user:blah'")).toThrow();
     });
   });
 });

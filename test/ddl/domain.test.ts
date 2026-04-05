@@ -105,10 +105,10 @@ describe("domain", () => {
 
   notDialect("postgresql", () => {
     it("does not support CREATE DOMAIN", () => {
-      expect(() => test("CREATE DOMAIN address AS TEXT")).toThrowError();
+      expect(() => test("CREATE DOMAIN address AS TEXT")).toThrow();
     });
     it("does not support DROP DOMAIN", () => {
-      expect(() => test("DROP DOMAIN address")).toThrowError();
+      expect(() => test("DROP DOMAIN address")).toThrow();
     });
   });
 });

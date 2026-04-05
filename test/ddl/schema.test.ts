@@ -137,8 +137,8 @@ describe("schema", () => {
 
   dialect("sqlite", () => {
     it("does not support CREATE/DROP SCHEMA", () => {
-      expect(() => test("CREATE SCHEMA my_schema")).toThrowError();
-      expect(() => test("DROP SCHEMA my_schema")).toThrowError();
+      expect(() => test("CREATE SCHEMA my_schema")).toThrow();
+      expect(() => test("DROP SCHEMA my_schema")).toThrow();
     });
   });
 });

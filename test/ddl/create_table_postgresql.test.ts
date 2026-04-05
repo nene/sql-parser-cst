@@ -189,11 +189,11 @@ describe("create table (PostgreSQL)", () => {
 
   notDialect("postgresql", () => {
     it("does not support CREATE TABLE INHERITS", () => {
-      expect(() => testClauseWc("INHERITS (parent)")).toThrowError();
+      expect(() => testClauseWc("INHERITS (parent)")).toThrow();
     });
 
     it("does not support CREATE TABLE .. PARTITION BY", () => {
-      expect(() => testClauseWc("PARTITION BY RANGE (id)")).toThrowError();
+      expect(() => testClauseWc("PARTITION BY RANGE (id)")).toThrow();
     });
   });
 });

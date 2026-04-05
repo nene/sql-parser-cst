@@ -186,7 +186,7 @@ describe("whitespace", () => {
     });
     dialect(["postgresql"], () => {
       it("does not support hash comments", () => {
-        expect(() => test("SELECT 1 + # comment 1\n # comment 2\n 2")).toThrowError();
+        expect(() => test("SELECT 1 + # comment 1\n # comment 2\n 2")).toThrow();
       });
     });
 

@@ -21,7 +21,7 @@ describe("DO", () => {
 
   notDialect("postgresql", () => {
     it("does not support DO statement", () => {
-      expect(() => parse("DO 'SELECT 1;'")).toThrowError();
+      expect(() => parse("DO 'SELECT 1;'")).toThrow();
     });
   });
 });

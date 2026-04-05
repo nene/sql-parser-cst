@@ -52,7 +52,7 @@ describe("ROW constructor", () => {
 
   dialect(["sqlite", "mysql"], () => {
     it("does not support ROW() constructor", () => {
-      expect(() => parseExpr("ROW(1, 2, 3)")).toThrowError();
+      expect(() => parseExpr("ROW(1, 2, 3)")).toThrow();
     });
   });
   dialect(["bigquery", "mariadb"], () => {

@@ -9,7 +9,7 @@ describe("select LOCK IN SHARE MODE", () => {
 
   notDialect(["mysql", "mariadb"], () => {
     it("does not suppprt LOCK IN SHARE MODE", () => {
-      expect(() => testClauseWc("LOCK IN SHARE MODE")).toThrowError();
+      expect(() => testClauseWc("LOCK IN SHARE MODE")).toThrow();
     });
   });
 });

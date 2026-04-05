@@ -93,7 +93,7 @@ describe("string literal", () => {
 
     dialect("bigquery", () => {
       it("does not support repeated-quote escapes", () => {
-        expect(() => parseExpr(`'hel''lo'`)).toThrowError();
+        expect(() => parseExpr(`'hel''lo'`)).toThrow();
       });
     });
 
@@ -135,7 +135,7 @@ describe("string literal", () => {
 
     dialect("bigquery", () => {
       it("does not support repeated-quote escapes", () => {
-        expect(() => parseExpr(`"hel""lo"`)).toThrowError();
+        expect(() => parseExpr(`"hel""lo"`)).toThrow();
       });
     });
 
@@ -404,13 +404,13 @@ describe("string literal", () => {
       });
 
       it("does not support plain spaces for separation", () => {
-        expect(() => parseExpr(`'hello' 'world'`)).toThrowError();
-        expect(() => parseExpr(`'hello' \t 'world'`)).toThrowError();
+        expect(() => parseExpr(`'hello' 'world'`)).toThrow();
+        expect(() => parseExpr(`'hello' \t 'world'`)).toThrow();
       });
 
       it("does not support block comments in separating whitespace", () => {
-        expect(() => parseExpr(`'hello' /*com*/ 'world'`)).toThrowError();
-        expect(() => parseExpr(`'hello' /*com*/ \n 'world'`)).toThrowError();
+        expect(() => parseExpr(`'hello' /*com*/ 'world'`)).toThrow();
+        expect(() => parseExpr(`'hello' /*com*/ \n 'world'`)).toThrow();
 
         // NOTE: we happen to allow block comments after the first newline, as in:
         //

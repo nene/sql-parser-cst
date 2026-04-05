@@ -33,7 +33,7 @@ describe("JSONB literal", () => {
 
   notDialect("postgresql", () => {
     it("does not support JSONB literals", () => {
-      expect(() => testExpr(`(JSONB '{}')`)).toThrowError();
+      expect(() => testExpr(`(JSONB '{}')`)).toThrow();
     });
   });
 });

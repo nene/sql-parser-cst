@@ -25,7 +25,7 @@ describe("DECLARE", () => {
 
   dialect("sqlite", () => {
     it("does not support DECLARE statement", () => {
-      expect(() => parse("DECLARE x INT")).toThrowError();
+      expect(() => parse("DECLARE x INT")).toThrow();
     });
   });
 

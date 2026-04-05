@@ -78,7 +78,7 @@ describe("parameters", () => {
 
   notDialect("postgresql", () => {
     it("does not support SET .. TO statement", () => {
-      expect(() => parse("SET x TO 10")).toThrowError();
+      expect(() => parse("SET x TO 10")).toThrow();
     });
   });
 });

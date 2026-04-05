@@ -41,7 +41,7 @@ describe("CASE", () => {
 
   dialect("sqlite", () => {
     it("does not support CASE statement", () => {
-      expect(() => parse("CASE foo WHEN 1 THEN SELECT 1; END CASE")).toThrowError();
+      expect(() => parse("CASE foo WHEN 1 THEN SELECT 1; END CASE")).toThrow();
     });
   });
 

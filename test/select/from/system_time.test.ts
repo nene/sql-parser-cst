@@ -13,7 +13,7 @@ describe("select FROM + FOR SYSTEM_TIME AS OF", () => {
 
   notDialect("bigquery", () => {
     it("does not support FOR SYSTEM_TIME AS OF", () => {
-      expect(() => test("SELECT * FROM tbl FOR SYSTEM_TIME AS OF my_timestamp")).toThrowError();
+      expect(() => test("SELECT * FROM tbl FOR SYSTEM_TIME AS OF my_timestamp")).toThrow();
     });
   });
 });

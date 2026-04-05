@@ -21,7 +21,7 @@ describe("select FROM + table inheritance modifiers", () => {
 
   notDialect("postgresql", () => {
     it("does not support table inheritance modifiers", () => {
-      expect(() => test("SELECT * FROM tbl*")).toThrowError();
+      expect(() => test("SELECT * FROM tbl*")).toThrow();
     });
   });
 });

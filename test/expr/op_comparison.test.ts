@@ -212,10 +212,10 @@ describe("comparison operators", () => {
 
   dialect(["sqlite", "bigquery"], () => {
     it("does not support MEMBER OF operator", () => {
-      expect(() => parseExpr(`3 MEMBER OF ('[3]')`)).toThrowError();
+      expect(() => parseExpr(`3 MEMBER OF ('[3]')`)).toThrow();
     });
     it("does not support SOUNDS LIKE operator", () => {
-      expect(() => parseExpr(`'sun' SOUNDS LIKE 'son'`)).toThrowError();
+      expect(() => parseExpr(`'sun' SOUNDS LIKE 'son'`)).toThrow();
     });
   });
 
@@ -288,7 +288,7 @@ describe("comparison operators", () => {
           if (expr.right.type !== "quantifier_expr") {
             throw new Error("Expected quantifier_expr");
           }
-        }).toThrowError();
+        }).toThrow();
       });
     });
 
@@ -385,7 +385,7 @@ describe("comparison operators", () => {
 
     dialect(["sqlite", "bigquery"], () => {
       it("does not support MATCH..AGAINST operator", () => {
-        expect(() => parseExpr(`MATCH (col) AGAINST ('foo')`)).toThrowError();
+        expect(() => parseExpr(`MATCH (col) AGAINST ('foo')`)).toThrow();
       });
     });
   });

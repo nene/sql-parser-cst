@@ -105,7 +105,7 @@ describe("string operators", () => {
     });
 
     it("does not support concatenating of two strings with charset", () => {
-      expect(() => parseExpr(`_utf8'foo' _utf8'bar'`)).toThrowError();
+      expect(() => parseExpr(`_utf8'foo' _utf8'bar'`)).toThrow();
     });
 
     it("supports concatenation of natural charset string with plain string", () => {
@@ -114,7 +114,7 @@ describe("string operators", () => {
     });
 
     it("does not support concatenating of two natural charset strings", () => {
-      expect(() => parseExpr(`N'foo' N'bar'`)).toThrowError();
+      expect(() => parseExpr(`N'foo' N'bar'`)).toThrow();
     });
   });
 

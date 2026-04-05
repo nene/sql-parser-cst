@@ -15,7 +15,7 @@ describe("RETURN", () => {
 
   dialect("sqlite", () => {
     it("does not support RETURN statement", () => {
-      expect(() => parse("RETURN")).toThrowError();
+      expect(() => parse("RETURN")).toThrow();
     });
   });
 

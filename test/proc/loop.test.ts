@@ -29,7 +29,7 @@ describe("LOOP", () => {
 
   dialect("sqlite", () => {
     it("does not support LOOP statement", () => {
-      expect(() => parse("LOOP SELECT 1; END LOOP")).toThrowError();
+      expect(() => parse("LOOP SELECT 1; END LOOP")).toThrow();
     });
   });
 

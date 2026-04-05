@@ -121,7 +121,7 @@ describe("array", () => {
 
   dialect(["mysql", "mariadb"], () => {
     it("does not support arrays", () => {
-      expect(() => parseExpr("[1, 2, 3]")).toThrowError();
+      expect(() => parseExpr("[1, 2, 3]")).toThrow();
     });
   });
   dialect("sqlite", () => {

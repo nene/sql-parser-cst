@@ -41,7 +41,7 @@ describe("VALUES clause/statement", () => {
 
   dialect("bigquery", () => {
     it("does not support a separate VALUES statement", () => {
-      expect(() => test("VALUES (1, 2)")).toThrowError();
+      expect(() => test("VALUES (1, 2)")).toThrow();
     });
   });
 });

@@ -45,7 +45,7 @@ describe("truncate table", () => {
 
   dialect(["sqlite"], () => {
     it("does not support TRUNCATE TABLE", () => {
-      expect(() => parse("TRUNCATE TABLE foo")).toThrowError();
+      expect(() => parse("TRUNCATE TABLE foo")).toThrow();
     });
   });
 });

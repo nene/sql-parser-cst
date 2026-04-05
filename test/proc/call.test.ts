@@ -9,7 +9,7 @@ describe("CALL", () => {
 
   dialect("sqlite", () => {
     it("does not support CALL statement", () => {
-      expect(() => parse("CALL foo()")).toThrowError();
+      expect(() => parse("CALL foo()")).toThrow();
     });
   });
 });

@@ -26,7 +26,7 @@ describe("operators", () => {
   dialect(["bigquery", "postgresql"], () => {
     it("requires space around keyword operators", () => {
       // In BigQuery & PostgreSQL identifiers can't start with number (as in above test)
-      expect(() => parseExpr(`8AND4`)).toThrowError();
+      expect(() => parseExpr(`8AND4`)).toThrow();
     });
   });
 

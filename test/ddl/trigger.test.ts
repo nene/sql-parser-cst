@@ -212,13 +212,11 @@ describe("trigger", () => {
 
   dialect("bigquery", () => {
     it("does not support CREATE TRIGGER", () => {
-      expect(() =>
-        test(`CREATE TRIGGER my_trig DELETE ON my_tbl BEGIN SELECT 1; END`)
-      ).toThrowError();
+      expect(() => test(`CREATE TRIGGER my_trig DELETE ON my_tbl BEGIN SELECT 1; END`)).toThrow();
     });
 
     it("does not support DROP TRIGGER", () => {
-      expect(() => test("DROP TRIGGER my_trg")).toThrowError();
+      expect(() => test("DROP TRIGGER my_trg")).toThrow();
     });
   });
 });

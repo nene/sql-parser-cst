@@ -63,7 +63,7 @@ describe("select INTO", () => {
 
   dialect(["bigquery", "sqlite"], () => {
     it("does not support INTO clause", () => {
-      expect(() => testWc("SELECT 1 INTO @varname")).toThrowError();
+      expect(() => testWc("SELECT 1 INTO @varname")).toThrow();
     });
   });
 });

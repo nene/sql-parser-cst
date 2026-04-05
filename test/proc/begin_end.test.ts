@@ -168,7 +168,7 @@ describe("BEGIN..END", () => {
 
   dialect("sqlite", () => {
     it("does not support BEGIN..END block", () => {
-      expect(() => parse("BEGIN SELECT 1; END")).toThrowError();
+      expect(() => parse("BEGIN SELECT 1; END")).toThrow();
     });
   });
 

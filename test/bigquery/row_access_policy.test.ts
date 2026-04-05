@@ -56,11 +56,11 @@ describe("BigQuery row access policy", () => {
     it("does not support CREATE ROW ACCESS POLICY", () => {
       expect(() =>
         testWc("CREATE ROW ACCESS POLICY policy_name ON my_table FILTER USING (TRUE)")
-      ).toThrowError();
+      ).toThrow();
     });
 
     it("does not support DROP ROW ACCESS POLICY", () => {
-      expect(() => testWc("DROP ROW ACCESS POLICY policy_name ON my_table")).toThrowError();
+      expect(() => testWc("DROP ROW ACCESS POLICY policy_name ON my_table")).toThrow();
     });
   });
 });

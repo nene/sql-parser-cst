@@ -49,7 +49,7 @@ describe("select", () => {
 
   dialect("mysql", () => {
     it("does not support MariaDB-specific SQL_CACHE option", () => {
-      expect(() => test("SELECT SQL_CACHE foo AS x")).toThrowError();
+      expect(() => test("SELECT SQL_CACHE foo AS x")).toThrow();
     });
   });
 
@@ -69,7 +69,7 @@ describe("select", () => {
     });
     dialect("postgresql", () => {
       it("does not support string as column alias", () => {
-        expect(() => test(`SELECT col AS 'foo'`)).toThrowError();
+        expect(() => test(`SELECT col AS 'foo'`)).toThrow();
       });
     });
 
@@ -83,7 +83,7 @@ describe("select", () => {
     });
     dialect(["bigquery", "sqlite", "mysql", "mariadb"], () => {
       it("does not allow reserved keywords as explicit column aliases", () => {
-        expect(() => test("SELECT col AS select")).toThrowError();
+        expect(() => test("SELECT col AS select")).toThrow();
       });
     });
 
@@ -98,12 +98,12 @@ describe("select", () => {
       });
 
       it("does not supports interval units as implicit aliases", () => {
-        expect(() => parseStmt("SELECT '1981' year")).toThrowError();
-        expect(() => parseStmt("SELECT 'Jan' month")).toThrowError();
-        expect(() => parseStmt("SELECT '3' day")).toThrowError();
-        expect(() => parseStmt("SELECT '12' hour")).toThrowError();
-        expect(() => parseStmt("SELECT '30' minute")).toThrowError();
-        expect(() => parseStmt("SELECT '18' second")).toThrowError();
+        expect(() => parseStmt("SELECT '1981' year")).toThrow();
+        expect(() => parseStmt("SELECT 'Jan' month")).toThrow();
+        expect(() => parseStmt("SELECT '3' day")).toThrow();
+        expect(() => parseStmt("SELECT '12' hour")).toThrow();
+        expect(() => parseStmt("SELECT '30' minute")).toThrow();
+        expect(() => parseStmt("SELECT '18' second")).toThrow();
       });
 
       it("supports interval units as column names", () => {

@@ -33,7 +33,7 @@ describe("select FOR", () => {
 
   dialect(["sqlite", "bigquery"], () => {
     it("does not suppprt FOR clause", () => {
-      expect(() => testClauseWc("FOR UPDATE")).toThrowError();
+      expect(() => testClauseWc("FOR UPDATE")).toThrow();
     });
   });
 });

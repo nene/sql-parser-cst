@@ -91,7 +91,7 @@ describe("ALTER DEFAULT PRIVILEGES", () => {
 
   notDialect("postgresql", () => {
     it("does not support ALTER DEFAULT PRIVILEGES", () => {
-      expect(() => parse("ALTER DEFAULT PRIVILEGES GRANT SELECT ON TABLES TO john")).toThrowError();
+      expect(() => parse("ALTER DEFAULT PRIVILEGES GRANT SELECT ON TABLES TO john")).toThrow();
     });
   });
 });

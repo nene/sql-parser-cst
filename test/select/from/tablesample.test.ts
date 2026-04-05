@@ -32,7 +32,7 @@ describe("select FROM + TABLESAMPLE", () => {
 
   notDialect(["bigquery", "postgresql"], () => {
     it("does not support TABLESAMPLE", () => {
-      expect(() => test("SELECT * FROM tbl TABLESAMPLE SYSTEM (5 PERCENT)")).toThrowError();
+      expect(() => test("SELECT * FROM tbl TABLESAMPLE SYSTEM (5 PERCENT)")).toThrow();
     });
   });
 });

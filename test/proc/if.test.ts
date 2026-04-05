@@ -47,7 +47,7 @@ describe("IF", () => {
 
   dialect("sqlite", () => {
     it("does not support IF statement", () => {
-      expect(() => parse("IF true THEN SELECT 1; END IF")).toThrowError();
+      expect(() => parse("IF true THEN SELECT 1; END IF")).toThrow();
     });
   });
 

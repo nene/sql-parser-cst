@@ -58,7 +58,7 @@ describe("EXTENSION", () => {
 
   notDialect("postgresql", () => {
     it("does not support CREATE EXTENSION", () => {
-      expect(() => parse("CREATE EXTENSION foo")).toThrowError();
+      expect(() => parse("CREATE EXTENSION foo")).toThrow();
     });
   });
 });

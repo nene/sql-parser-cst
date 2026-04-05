@@ -100,7 +100,7 @@ describe("PUBLICATION", () => {
 
   notDialect("postgresql", () => {
     it("does not support CREATE PUBLICATION", () => {
-      expect(() => parse("CREATE PUBLICATION foo")).toThrowError();
+      expect(() => parse("CREATE PUBLICATION foo")).toThrow();
     });
   });
 });

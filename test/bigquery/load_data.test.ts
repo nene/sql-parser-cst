@@ -71,7 +71,7 @@ describe("BigQuery load data", () => {
 
   notDialect("bigquery", () => {
     it("does not support LOAD DATA", () => {
-      expect(() => testWc("LOAD DATA INTO my_tbl FROM FILES(uris=[])")).toThrowError();
+      expect(() => testWc("LOAD DATA INTO my_tbl FROM FILES(uris=[])")).toThrow();
     });
   });
 });

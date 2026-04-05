@@ -161,9 +161,7 @@ describe("merge into", () => {
 
   dialect(["mysql", "mariadb", "sqlite"], () => {
     it("does not support MERGE statement", () => {
-      expect(() =>
-        parse("MERGE INTO foo USING bar ON x = y WHEN MATCHED THEN DELETE")
-      ).toThrowError();
+      expect(() => parse("MERGE INTO foo USING bar ON x = y WHEN MATCHED THEN DELETE")).toThrow();
     });
   });
 });

@@ -100,7 +100,7 @@ describe("policy", () => {
 
   notDialect("postgresql", () => {
     it("does not support CREATE POLICY", () => {
-      expect(() => test("CREATE POLICY my_pol ON tbl")).toThrowError();
+      expect(() => test("CREATE POLICY my_pol ON tbl")).toThrow();
     });
   });
 });

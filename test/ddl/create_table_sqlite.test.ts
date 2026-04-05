@@ -18,7 +18,7 @@ describe("create table (SQLite)", () => {
 
   notDialect("sqlite", () => {
     it("does not support CREATE VIRTUAL TABLE", () => {
-      expect(() => testWc("CREATE VIRTUAL TABLE foo USING my_module")).toThrowError();
+      expect(() => testWc("CREATE VIRTUAL TABLE foo USING my_module")).toThrow();
     });
   });
 });

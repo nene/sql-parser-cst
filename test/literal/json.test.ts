@@ -43,7 +43,7 @@ describe("JSON literal", () => {
 
   notDialect(["bigquery", "postgresql"], () => {
     it("does not support JSON literals", () => {
-      expect(() => testExpr(`(JSON '{}')`)).toThrowError();
+      expect(() => testExpr(`(JSON '{}')`)).toThrow();
     });
   });
 });

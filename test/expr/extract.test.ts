@@ -137,7 +137,7 @@ describe("extract()", () => {
 
   dialect("sqlite", () => {
     it("does not support extract expression", () => {
-      expect(() => parseExpr("EXTRACT(DAY FROM col)")).toThrowError();
+      expect(() => parseExpr("EXTRACT(DAY FROM col)")).toThrow();
     });
   });
 });

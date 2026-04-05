@@ -37,7 +37,7 @@ describe("member_expr", () => {
   });
 
   it("does not allow string as field name", () => {
-    expect(() => parseExpr(`foo.'bar'`)).toThrowError();
+    expect(() => parseExpr(`foo.'bar'`)).toThrow();
   });
 
   it("parses nested member expression", () => {

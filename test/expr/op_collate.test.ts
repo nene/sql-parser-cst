@@ -70,11 +70,11 @@ describe("COLLATE operator", () => {
 
   dialect("bigquery", () => {
     it("does not support COLLATE operator", () => {
-      expect(() => parseExpr(`'foobar' COLLATE utf8`)).toThrowError();
+      expect(() => parseExpr(`'foobar' COLLATE utf8`)).toThrow();
     });
 
     it("does not support BINARY operator", () => {
-      expect(() => parseExpr(`BINARY 'foobar'`)).toThrowError();
+      expect(() => parseExpr(`BINARY 'foobar'`)).toThrow();
     });
   });
 });

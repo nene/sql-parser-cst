@@ -167,7 +167,7 @@ describe("INTERVAL literal", () => {
 
   dialect("sqlite", () => {
     it("does not support INTERVAL literals", () => {
-      expect(() => testExpr(`(INTERVAL '1' DAY)`)).toThrowError();
+      expect(() => testExpr(`(INTERVAL '1' DAY)`)).toThrow();
     });
   });
 });

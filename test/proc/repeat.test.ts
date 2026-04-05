@@ -31,7 +31,7 @@ describe("REPEAT", () => {
 
   dialect("sqlite", () => {
     it("does not support REPEAT statement", () => {
-      expect(() => parse("REPEAT SELECT 1; UNTIL true END REPEAT")).toThrowError();
+      expect(() => parse("REPEAT SELECT 1; UNTIL true END REPEAT")).toThrow();
     });
   });
 

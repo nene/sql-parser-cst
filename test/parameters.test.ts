@@ -3,27 +3,27 @@ import { includeAll, notDialect, test } from "./test_utils";
 describe("bound parameters", () => {
   describe("by default no parameters are supported", () => {
     it("no support for ? parameters", () => {
-      expect(() => test("SELECT * FROM foo WHERE x = ?")).toThrowError();
+      expect(() => test("SELECT * FROM foo WHERE x = ?")).toThrow();
     });
     it("no support for ?nr parameters", () => {
-      expect(() => test("SELECT * FROM foo WHERE x = ?5")).toThrowError();
+      expect(() => test("SELECT * FROM foo WHERE x = ?5")).toThrow();
     });
     it("no support for :name parameters", () => {
-      expect(() => test("SELECT * FROM foo WHERE x = :foo")).toThrowError();
+      expect(() => test("SELECT * FROM foo WHERE x = :foo")).toThrow();
     });
     // In MySQL @name syntax is used for variables
     notDialect(["mysql", "mariadb"], () => {
       it("no support for @name parameters", () => {
-        expect(() => test("SELECT * FROM foo WHERE x = @foo")).toThrowError();
+        expect(() => test("SELECT * FROM foo WHERE x = @foo")).toThrow();
       });
     });
     // In MySQL identifiers can begin with $
     notDialect(["mysql", "mariadb"], () => {
       it("no support for $name parameters", () => {
-        expect(() => test("SELECT * FROM foo WHERE x = $foo")).toThrowError();
+        expect(() => test("SELECT * FROM foo WHERE x = $foo")).toThrow();
       });
       it("no support for $nr parameters", () => {
-        expect(() => test("SELECT * FROM foo WHERE x = $1")).toThrowError();
+        expect(() => test("SELECT * FROM foo WHERE x = $1")).toThrow();
       });
     });
   });

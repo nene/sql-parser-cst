@@ -17,7 +17,7 @@ describe("BigQuery assert", () => {
 
   notDialect("bigquery", () => {
     it("does not support ASSERT", () => {
-      expect(() => testWc("ASSERT 1 = 1")).toThrowError();
+      expect(() => testWc("ASSERT 1 = 1")).toThrow();
     });
   });
 });

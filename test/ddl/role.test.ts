@@ -211,7 +211,7 @@ describe("role", () => {
 
   notDialect("postgresql", () => {
     it("does not support CREATE ROLE", () => {
-      expect(() => test("CREATE ROLE foo WITH LOGIN")).toThrowError();
+      expect(() => test("CREATE ROLE foo WITH LOGIN")).toThrow();
     });
   });
 });

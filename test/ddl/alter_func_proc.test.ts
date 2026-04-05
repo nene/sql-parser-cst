@@ -102,8 +102,8 @@ describe("alter function/procedure", () => {
 
   dialect(["mysql", "mariadb", "sqlite", "bigquery"], () => {
     it("does not support ALTER FUNCTION/PROCEDURE", () => {
-      expect(() => test("ALTER FUNCTION foo() RENAME TO bar")).toThrowError();
-      expect(() => test("ALTER PROCEDURE foo() RENAME TO bar")).toThrowError();
+      expect(() => test("ALTER FUNCTION foo() RENAME TO bar")).toThrow();
+      expect(() => test("ALTER PROCEDURE foo() RENAME TO bar")).toThrow();
     });
   });
 });

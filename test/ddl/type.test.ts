@@ -102,10 +102,10 @@ describe("type", () => {
 
   notDialect("postgresql", () => {
     it("does not support CREATE TYPE", () => {
-      expect(() => test("CREATE TYPE address AS (street TEXT, house INT)")).toThrowError();
+      expect(() => test("CREATE TYPE address AS (street TEXT, house INT)")).toThrow();
     });
     it("does not support DROP TYPE", () => {
-      expect(() => test("DROP TYPE address")).toThrowError();
+      expect(() => test("DROP TYPE address")).toThrow();
     });
   });
 });

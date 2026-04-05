@@ -13,7 +13,7 @@ describe("RAISE", () => {
 
   dialect(["mysql", "mariadb", "sqlite"], () => {
     it("does not support RAISE statement", () => {
-      expect(() => parse("RAISE")).toThrowError();
+      expect(() => parse("RAISE")).toThrow();
     });
   });
 

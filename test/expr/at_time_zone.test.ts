@@ -54,7 +54,7 @@ describe("AT TIME ZONE operator", () => {
 
   notDialect("postgresql", () => {
     it("does not support AT TIME ZONE operator", () => {
-      expect(() => parseExpr(`col AT TIME ZONE 'UTC'`)).toThrowError();
+      expect(() => parseExpr(`col AT TIME ZONE 'UTC'`)).toThrow();
     });
   });
 });

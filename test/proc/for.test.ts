@@ -37,7 +37,7 @@ describe("FOR..IN", () => {
 
   dialect(["mysql", "mariadb", "sqlite"], () => {
     it("does not support FOR..IN statement", () => {
-      expect(() => parse("FOR x IN (SELECT 1) DO SELECT x; END FOR")).toThrowError();
+      expect(() => parse("FOR x IN (SELECT 1) DO SELECT x; END FOR")).toThrow();
     });
   });
 

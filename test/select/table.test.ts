@@ -70,7 +70,7 @@ describe("table", () => {
 
   dialect(["sqlite", "bigquery"], () => {
     it("does not support TABLE statement", () => {
-      expect(() => parseStmt("TABLE foo")).toThrowError();
+      expect(() => parseStmt("TABLE foo")).toThrow();
     });
   });
 });

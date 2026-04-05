@@ -38,7 +38,7 @@ describe("explain", () => {
 
   dialect("bigquery", () => {
     it("does not support EXPLAIN", () => {
-      expect(() => test("EXPLAIN SELECT * FROM foo")).toThrowError();
+      expect(() => test("EXPLAIN SELECT * FROM foo")).toThrow();
     });
   });
 });

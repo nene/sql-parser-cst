@@ -207,7 +207,7 @@ describe("procedure", () => {
 
   dialect(["mysql", "mariadb", "sqlite"], () => {
     it("does not support CREATE PROCEDURE", () => {
-      expect(() => test("CREATE PROCEDURE foo() BEGIN SELECT 1; END")).toThrowError();
+      expect(() => test("CREATE PROCEDURE foo() BEGIN SELECT 1; END")).toThrow();
     });
   });
 });
