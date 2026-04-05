@@ -35,16 +35,11 @@ export type AllConstraintNodes =
   | ConstraintStorage
   | ConstraintEngineAttribute
   | ConstraintCompression
-  | ConstraintPrimaryKey
   | ConstraintForeignKey
-  | ConstraintUnique
-  | ConstraintCheck
-  | ConstraintIndex
   | ConstraintName
   | ConstraintModifier
   | ConstraintExclude
   | ExclusionParam
-  | ReferencesSpecification
   | ReferentialAction
   | ReferentialMatch
   | OnConflictClause
