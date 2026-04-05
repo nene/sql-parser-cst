@@ -9,7 +9,8 @@
     "declaration": true,
     "esModuleInterop": true,
     "strict": true,
-    "noImplicitReturns": true
+    "noImplicitReturns": true,
+    "isolatedModules": true
   },
   "include": ["src"],
   "exclude": ["node_modules"]
