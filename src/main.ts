@@ -2,7 +2,7 @@ export * from "./cst/Node";
 export * from "./cstVisitor";
 export * from "./cstTransformer";
 export * from "./keywords";
-export { DialectName, ParserOptions } from "./ParserOptions";
+export { type DialectName, type ParserOptions } from "./ParserOptions";
 export { FormattedSyntaxError } from "./FormattedSyntaxError";
 
 import { Node, Program } from "./cst/Node";
