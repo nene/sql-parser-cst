@@ -15,6 +15,7 @@ const keywordMap: Record<DialectName, Record<string, boolean>> = {
   mariadb: mariadbKeywords,
   sqlite: sqliteKeywords,
   postgresql: postgresqlKeywords,
+  plpgsql: postgresqlKeywords,
 };
 
 export const isReservedKeyword = (name: string) => {
@@ -22,7 +23,7 @@ export const isReservedKeyword = (name: string) => {
 };
 
 export const isForbiddenImplicitAliasName = (name: string) => {
-  if (getDialect() === "postgresql") {
+  if (getDialect() === "postgresql" || getDialect() === "plpgsql") {
     return postgresqlRequiresAsKeywords[name.toUpperCase()];
   } else {
     return isReservedKeyword(name);

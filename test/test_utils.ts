@@ -48,8 +48,7 @@ export function parseStmt(
 
 /** Runs the tests when active dialect is in specified dialects list */
 export function dialect(lang: DialectName | DialectName[], block: () => void) {
-  lang = isString(lang) ? [lang] : lang;
-  if (lang.includes(__SQL_DIALECT__)) {
+  if (canonicalizeDialects(lang).includes(__SQL_DIALECT__)) {
     describe(__SQL_DIALECT__, block);
   }
 }
@@ -59,10 +58,17 @@ export function notDialect(
   lang: DialectName | DialectName[],
   block: () => void
 ) {
-  lang = isString(lang) ? [lang] : lang;
-  if (!lang.includes(__SQL_DIALECT__)) {
+  if (!canonicalizeDialects(lang).includes(__SQL_DIALECT__)) {
     describe(__SQL_DIALECT__, block);
   }
+}
+
+function canonicalizeDialects(
+  lang: DialectName | DialectName[]
+): DialectName[] {
+  const langs = isString(lang) ? [lang] : lang;
+  // Treat PLPGSQL as superset of PostgreSQL
+  return langs.includes("postgresql") ? [...langs, "plpgsql"] : langs;
 }
 
 export function test(sql: string, options?: Partial<ParserOptions>) {

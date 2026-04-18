@@ -37,6 +37,7 @@
     isMariadb,
     isSqlite,
     isPostgresql,
+    isPlpgsql,
     hasParamType,
     isEnabledWhitespace,
     isAcceptUnsupportedGrammar,
@@ -9347,7 +9348,8 @@ sqlite = &{ return isSqlite(); }
 mysql = &{ return isMysql() || isMariadb(); } // 99% of MariaDB and MySQL syntax is the same
 only_mysql = &{ return isMysql(); } // 99% of MariaDB and MySQL syntax is the same
 only_mariadb = &{ return isMariadb(); } // 99% of MariaDB and MySQL syntax is the same
-postgres = &{ return isPostgresql(); }
+postgres = &{ return isPostgresql() || isPlpgsql(); } // We're treating PostgreSQL as subset of PLPGSQL
+plpgsql = &{ return isPlpgsql(); }
 
 unsupported_grammar_stmt = [^;]+ {
   return loc({
