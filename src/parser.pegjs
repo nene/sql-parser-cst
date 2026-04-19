@@ -264,8 +264,10 @@ statement_postgres
   / update_stmt
 
 statement_plpgsql
-  = labeled$block_stmt
+  = break_stmt
+  / continue_stmt
   / if_stmt
+  / labeled$block_stmt
 
 dml_statement
   = compound_select_stmt
@@ -5579,8 +5581,9 @@ break_stmt
   }
 
 break_kw
-  = LEAVE
+  = kw:LEAVE &(mysql / bigquery) { return kw; }
   / kw:BREAK &bigquery { return kw; }
+  / kw:EXIT &plpgsql { return kw; }
 
 continue_stmt
   = kw:continue_kw label:(__ ident)? {
@@ -5588,8 +5591,8 @@ continue_stmt
   }
 
 continue_kw
-  = ITERATE
-  / kw:CONTINUE &bigquery { return kw; }
+  = kw:ITERATE &(mysql / bigquery) { return kw; }
+  / kw:CONTINUE &(bigquery / plpgsql) { return kw; }
 
 call_stmt
   = kw:(CALL __) func:func_call {
@@ -9576,6 +9579,7 @@ EXCLUDING           = kw:"EXCLUDING"i           !ident_part { return loc(createK
 EXCLUSIVE           = kw:"EXCLUSIVE"i           !ident_part { return loc(createKeyword(kw)); }
 EXECUTE             = kw:"EXECUTE"i             !ident_part { return loc(createKeyword(kw)); }
 EXISTS              = kw:"EXISTS"i              !ident_part { return loc(createKeyword(kw)); }
+EXIT                = kw:"EXIT"i                !ident_part { return loc(createKeyword(kw)); }
 EXPANSION           = kw:"EXPANSION"i           !ident_part { return loc(createKeyword(kw)); }
 EXPLAIN             = kw:"EXPLAIN"i             !ident_part { return loc(createKeyword(kw)); }
 EXPORT              = kw:"EXPORT"i              !ident_part { return loc(createKeyword(kw)); }

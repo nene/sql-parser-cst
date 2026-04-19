@@ -195,10 +195,10 @@ export interface ForStmt extends BaseNode {
   endForKw: [Keyword<"END">, Keyword<"FOR">];
 }
 
-// BREAK | LEAVE
+// BREAK | LEAVE | EXIT
 export interface BreakStmt extends BaseNode {
   type: "break_stmt";
-  breakKw: Keyword<"BREAK" | "LEAVE">;
+  breakKw: Keyword<"BREAK" | "LEAVE" | "EXIT">;
   label?: Identifier;
 }
 

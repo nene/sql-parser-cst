@@ -125,6 +125,28 @@ describe("BEGIN..END", () => {
     });
   });
 
+  dialect("plpgsql", () => {
+    it("supports breaking out with EXIT", () => {
+      testWc(`
+        BEGIN
+          IF x > 10 THEN
+            EXIT;
+          END IF;
+        END
+      `);
+    });
+
+    it("supports breaking out with labeled EXIT", () => {
+      testWc(`
+        <<my_block>> BEGIN
+          IF x > 10 THEN
+            EXIT my_block;
+          END IF;
+        END
+      `);
+    });
+  });
+
   dialect(["mysql", "mariadb", "bigquery"], () => {
     it("supports continuing with ITERATE", () => {
       testWc(`
@@ -147,7 +169,7 @@ describe("BEGIN..END", () => {
     });
   });
 
-  dialect("bigquery", () => {
+  dialect(["bigquery", "plpgsql"], () => {
     it("supports continuing with CONTINUE", () => {
       testWc(`
         BEGIN
@@ -160,7 +182,7 @@ describe("BEGIN..END", () => {
 
     it("supports continuing with labeled CONTINUE", () => {
       testWc(`
-        my_block: BEGIN
+        BEGIN
           IF x = 10 THEN
             CONTINUE my_block;
           END IF;
