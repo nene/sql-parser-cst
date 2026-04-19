@@ -265,6 +265,7 @@ statement_postgres
 
 statement_plpgsql
   = break_stmt
+  / case_stmt
   / continue_stmt
   / if_stmt
   / labeled$block_stmt
