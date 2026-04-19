@@ -47,7 +47,8 @@ export type AllProceduralStatements =
   | ContinueStmt
   | CallStmt
   | ReturnStmt
-  | RaiseStmt;
+  | RaiseStmt
+  | NullStmt;
 
 export interface LabeledStmt extends BaseNode {
   type: "labeled_stmt";
@@ -289,4 +290,10 @@ export interface RaiseMessage extends BaseNode {
   type: "raise_message";
   usingMessageKw: [Keyword<"USING">, Keyword<"MESSAGE">];
   string: StringLiteral;
+}
+
+// NULL
+export interface NullStmt extends BaseNode {
+  type: "null_stmt";
+  nullKw: Keyword<"NULL">;
 }

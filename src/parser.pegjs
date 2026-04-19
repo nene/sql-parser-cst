@@ -273,6 +273,7 @@ statement_plpgsql
   / labeled$for_range_loop_stmt
   / labeled$loop_stmt
   / labeled$while_loop_stmt
+  / null_stmt
   / return_stmt
 
 dml_statement
@@ -5682,6 +5683,11 @@ raise_message
       usingMessageKw: read(kw),
       string: read(string),
     });
+  }
+
+null_stmt
+  = kw:NULL {
+    return loc({ type: "null_stmt", nullKw: kw });
   }
 
 /**
