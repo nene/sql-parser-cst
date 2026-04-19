@@ -270,6 +270,7 @@ statement_plpgsql
   / if_stmt
   / labeled$block_stmt
   / labeled$loop_stmt
+  / return_stmt
 
 dml_statement
   = compound_select_stmt
@@ -5605,7 +5606,7 @@ return_stmt
   = (&mysql / &postgres) kw:(RETURN __) expr:expr {
     return loc({ type: "return_stmt", returnKw: read(kw), expr });
   }
-  / &bigquery kw:RETURN {
+  / (&bigquery / &plpgsql) kw:RETURN {
     return loc({ type: "return_stmt", returnKw: kw });
   }
 
