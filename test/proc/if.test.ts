@@ -1,7 +1,7 @@
 import { dialect, parse, testWc } from "../test_utils";
 
 describe("IF", () => {
-  dialect(["mysql", "mariadb", "bigquery"], () => {
+  dialect(["mysql", "mariadb", "bigquery", "plpgsql"], () => {
     it("supports basic IF statement", () => {
       testWc(`IF true THEN SELECT 1; END IF`);
     });
@@ -45,15 +45,9 @@ describe("IF", () => {
     });
   });
 
-  dialect("sqlite", () => {
+  dialect(["sqlite", "postgresql"], () => {
     it("does not support IF statement", () => {
       expect(() => parse("IF true THEN SELECT 1; END IF")).toThrow();
-    });
-  });
-
-  dialect(["postgresql", "plpgsql"], () => {
-    it.skip("TODO:postgres", () => {
-      expect(true).toBe(true);
     });
   });
 });

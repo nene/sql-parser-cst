@@ -265,6 +265,7 @@ statement_postgres
 
 statement_plpgsql
   = labeled$block_stmt
+  / if_stmt
 
 dml_statement
   = compound_select_stmt
