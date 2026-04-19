@@ -47,9 +47,17 @@ describe("FOR..IN", () => {
     });
 
     describe("FOR IN range LOOP", () => {
-      it("supports basic FOR..IN range", () => {
+      it("supports basic range", () => {
         testWc(`
           FOR x IN 1 .. 10 LOOP
+            SELECT x;
+          END LOOP
+        `);
+      });
+
+      it("supports complex expressions", () => {
+        testWc(`
+          FOR x IN 1 + 5 .. 60 / 2 - sqrt(3) LOOP
             SELECT x;
           END LOOP
         `);
