@@ -55,7 +55,8 @@ export interface LabeledStmt extends BaseNode {
     | RepeatStmt
     | WhileStmt
     | WhileLoopStmt
-    | ForStmt;
+    | ForStmt
+    | ForLoopStmt;
   endLabel?: Identifier;
 }
 

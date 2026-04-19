@@ -18,15 +18,7 @@ describe("FOR..IN", () => {
       `);
     });
 
-    it("supports begin label", () => {
-      testWc(`
-        my_label: FOR x IN (SELECT 1) DO
-          SELECT 1;
-        END FOR
-      `);
-    });
-
-    it("supports end label", () => {
+    it("supports begin & end label", () => {
       testWc(`
         my_label: FOR x IN (SELECT 1) DO
           SELECT 1;
@@ -41,6 +33,14 @@ describe("FOR..IN", () => {
         FOR x IN SELECT col FROM tbl LOOP
           SELECT x;
         END LOOP
+      `);
+    });
+
+    it("supports begin & end label", () => {
+      testWc(`
+        <<my_label>> FOR x IN SELECT 1 LOOP
+          SELECT x;
+        END LOOP my_label
       `);
     });
   });
