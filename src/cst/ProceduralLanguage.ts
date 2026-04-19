@@ -230,6 +230,7 @@ export interface ForRangeLoopStmt extends BaseNode {
   forKw: Keyword<"FOR">;
   left: Identifier;
   inKw: Keyword<"IN">;
+  reverseKw?: Keyword<"REVERSE">;
   right: ForRange;
   loop: LoopStmt;
 }

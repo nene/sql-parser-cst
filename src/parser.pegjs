@@ -5607,12 +5607,13 @@ for_query_loop_stmt
   }
 
 for_range_loop_stmt
-  = kw:(FOR __) left:(ident __) inKw:(IN __) right:(for_range __) loop:loop_stmt {
+  = kw:(FOR __) left:(ident __) inKw:(IN __) reverseKw:(REVERSE __)? right:(for_range __) loop:loop_stmt {
     return loc({
       type: "for_range_loop_stmt",
       forKw: read(kw),
       left: read(left),
       inKw: read(inKw),
+      reverseKw: read(reverseKw),
       right: read(right),
       loop: read(loop),
     });
@@ -9912,6 +9913,7 @@ RESTRICTIVE         = kw:"RESTRICTIVE"i         !ident_part { return loc(createK
 RETURN              = kw:"RETURN"i              !ident_part { return loc(createKeyword(kw)); }
 RETURNING           = kw:"RETURNING"i           !ident_part { return loc(createKeyword(kw)); }
 RETURNS             = kw:"RETURNS"i             !ident_part { return loc(createKeyword(kw)); }
+REVERSE             = kw:"REVERSE"i             !ident_part { return loc(createKeyword(kw)); }
 REVOKE              = kw:"REVOKE"i              !ident_part { return loc(createKeyword(kw)); }
 RIGHT               = kw:"RIGHT"i               !ident_part { return loc(createKeyword(kw)); }
 RLIKE               = kw:"RLIKE"i               !ident_part { return loc(createKeyword(kw)); }

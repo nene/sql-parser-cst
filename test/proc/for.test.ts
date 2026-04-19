@@ -63,6 +63,14 @@ describe("FOR..IN", () => {
         `);
       });
 
+      it("supports REVERSE", () => {
+        testWc(`
+          FOR x IN REVERSE 6 .. 3 LOOP
+            SELECT x;
+          END LOOP
+        `);
+      });
+
       it("supports begin & end label", () => {
         testWc(`
           <<my_label>> FOR x IN 1..10 LOOP
