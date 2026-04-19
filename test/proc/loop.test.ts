@@ -12,15 +12,7 @@ describe("LOOP", () => {
   });
 
   dialect(["mysql", "mariadb", "bigquery"], () => {
-    it("supports begin label", () => {
-      testWc(`
-        my_label: LOOP
-          SELECT 1;
-        END LOOP
-      `);
-    });
-
-    it("supports end label", () => {
+    it("supports begin & end label", () => {
       testWc(`
         my_label: LOOP
           SELECT 1;
@@ -30,15 +22,7 @@ describe("LOOP", () => {
   });
 
   dialect(["plpgsql"], () => {
-    it("supports begin label", () => {
-      testWc(`
-        <<my_label>> LOOP
-          SELECT 1;
-        END LOOP
-      `);
-    });
-
-    it("supports end label", () => {
+    it("supports begin & end label", () => {
       testWc(`
         <<my_label>> LOOP
           SELECT 1;

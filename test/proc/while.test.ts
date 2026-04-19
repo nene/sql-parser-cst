@@ -13,15 +13,7 @@ describe("WHILE", () => {
   });
 
   dialect(["mysql", "mariadb", "bigquery"], () => {
-    it("supports begin label", () => {
-      testWc(`
-        my_label: WHILE x < 10 DO
-          SELECT 1;
-        END WHILE
-      `);
-    });
-
-    it("supports end label", () => {
+    it("supports begin & end label", () => {
       testWc(`
         my_label: WHILE x < 10 DO
           SELECT 1;
@@ -31,19 +23,11 @@ describe("WHILE", () => {
   });
 
   dialect(["plpgsql"], () => {
-    it("supports begin label", () => {
+    it("supports begin & end label", () => {
       testWc(`
         <<my_label>> WHILE x < 10 DO
           SELECT 1;
-        END WHILE
-      `);
-    });
-
-    it("supports end label", () => {
-      testWc(`
-        <<my_label>> WHILE x < 10 DO
-          SELECT 1;
-        END WHILE
+        END WHILE my_label
       `);
     });
   });
