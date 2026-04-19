@@ -5338,7 +5338,7 @@ role_specification
  * ------------------------------------------------------------------------------------ *
  */
 labeled$__template__
-  = beginLabel:(ident __) ":" stmt:(__ __template__) endLabel:(__ ident)? {
+  = beginLabel:label stmt:(__ __template__) endLabel:(__ ident)? {
     return loc({
       type: "labeled_stmt",
       beginLabel: read(beginLabel),
@@ -5353,6 +5353,14 @@ labeled$loop_stmt = .
 labeled$while_stmt = .
 labeled$repeat_stmt = .
 labeled$for_stmt = .
+
+label
+  = &plpgsql "<<" label:(__ ident __) ">>" {
+    return loc({ type: "chevron_label", label: read(label) });
+  }
+  / !plpgsql label:(ident __) ":" {
+    return loc({ type: "colon_label", label: read(label) });
+  }
 
 block_stmt
   = beginKw:(BEGIN __) atomicKw:(atomic_kw __)?

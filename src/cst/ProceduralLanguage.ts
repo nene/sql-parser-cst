@@ -17,6 +17,8 @@ import { SubSelect } from "./Select";
 
 export type AllProceduralNodes =
   | AllProceduralStatements
+  | ColonLabel
+  | ChevronLabel
   | ExceptionClause
   | ErrorCategory
   | DeclareDefault
@@ -44,9 +46,21 @@ export type AllProceduralStatements =
 
 export interface LabeledStmt extends BaseNode {
   type: "labeled_stmt";
-  beginLabel: Identifier;
+  beginLabel: ColonLabel | ChevronLabel;
   statement: BlockStmt | LoopStmt | RepeatStmt | WhileStmt | ForStmt;
   endLabel?: Identifier;
+}
+
+/** For the label: syntax (as in MySQL, BigQuery, DB2) */
+export interface ColonLabel {
+  type: "colon_label";
+  label: Identifier;
+}
+
+/** For the <<label>> syntax (as in PostgreSQL, Oracle) */
+export interface ChevronLabel {
+  type: "chevron_label";
+  label: Identifier;
 }
 
 // BEGIN .. END

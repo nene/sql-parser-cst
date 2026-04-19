@@ -7,7 +7,9 @@ export const proceduralLanguageMap: FullTransformMap<
   AllProceduralNodes
 > = {
   labeled_stmt: (node) =>
-    show([node.beginLabel, ":", node.statement, node.endLabel]),
+    show([node.beginLabel, node.statement, node.endLabel]),
+  colon_label: (node) => show([node.label, ":"]),
+  chevron_label: (node) => show(["<<", node.label, ">>"]),
   block_stmt: (node) =>
     show([
       node.beginKw,

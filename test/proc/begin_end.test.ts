@@ -33,8 +33,10 @@ describe("BEGIN..END", () => {
         END
       `);
     });
+  });
 
-    it("supports begin label", () => {
+  dialect(["mysql", "mariadb", "bigquery"], () => {
+    it("supports begin label: (with colon)", () => {
       test(`
         my_label: BEGIN
           SELECT 1;
@@ -54,7 +56,32 @@ describe("BEGIN..END", () => {
         END my_label
       `);
     });
+  });
 
+  dialect(["plpgsql"], () => {
+    it("supports begin <<label>> (with chevrons)", () => {
+      test(`
+        <<my_label>> BEGIN
+          SELECT 1;
+        END
+      `);
+      testWc(`
+        << my_label >> BEGIN
+          SELECT 1;
+        END
+      `);
+    });
+
+    it("supports end label", () => {
+      testWc(`
+        <<my_label>> BEGIN
+          SELECT 1;
+        END my_label
+      `);
+    });
+  });
+
+  dialect(["mysql", "mariadb", "bigquery"], () => {
     it("supports breaking out with LEAVE", () => {
       testWc(`
         BEGIN
