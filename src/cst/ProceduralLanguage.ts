@@ -39,6 +39,7 @@ export type AllProceduralStatements =
   | WhileStmt
   | WhileLoopStmt
   | ForStmt
+  | ForLoopStmt
   | BreakStmt
   | ContinueStmt
   | CallStmt
@@ -207,6 +208,16 @@ export interface ForStmt extends BaseNode {
   doKw: Keyword<"DO">;
   body: Program;
   endForKw: [Keyword<"END">, Keyword<"FOR">];
+}
+
+// FOR LOOP
+export interface ForLoopStmt extends BaseNode {
+  type: "for_loop_stmt";
+  forKw: Keyword<"FOR">;
+  left: Identifier;
+  inKw: Keyword<"IN">;
+  right: SubSelect;
+  loop: LoopStmt;
 }
 
 // BREAK | LEAVE | EXIT

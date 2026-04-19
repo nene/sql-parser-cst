@@ -61,6 +61,8 @@ export const proceduralLanguageMap: FullTransformMap<
       node.body,
       node.endForKw,
     ]),
+  for_loop_stmt: (node) =>
+    show([node.forKw, node.left, node.inKw, node.right, node.loop]),
   break_stmt: (node) => show([node.breakKw, node.label]),
   continue_stmt: (node) => show([node.continueKw, node.label]),
   call_stmt: (node) => show([node.callKw, node.func]),

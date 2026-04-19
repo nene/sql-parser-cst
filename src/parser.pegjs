@@ -269,6 +269,7 @@ statement_plpgsql
   / continue_stmt
   / if_stmt
   / labeled$block_stmt
+  / labeled$for_loop_stmt
   / labeled$loop_stmt
   / labeled$while_loop_stmt
   / return_stmt
@@ -5361,6 +5362,7 @@ labeled$while_stmt = .
 labeled$while_loop_stmt = .
 labeled$repeat_stmt = .
 labeled$for_stmt = .
+labeled$for_loop_stmt = .
 
 label
   = &plpgsql "<<" label:(__ ident __) ">>" {
@@ -5589,6 +5591,18 @@ for_stmt
         endForKw: read(endKw),
       });
     }
+
+for_loop_stmt
+  = kw:(FOR __) left:(ident __) inKw:(IN __) right:(compound_select_stmt __) loop:loop_stmt {
+    return loc({
+      type: "for_loop_stmt",
+      forKw: read(kw),
+      left: read(left),
+      inKw: read(inKw),
+      right: read(right),
+      loop: read(loop),
+    });
+  }
 
 break_stmt
   = kw:break_kw label:(__ ident)? {
