@@ -85,7 +85,7 @@ describe("BEGIN..END", () => {
     it("supports breaking out with LEAVE", () => {
       testWc(`
         BEGIN
-          if x > 10 THEN
+          IF x > 10 THEN
             LEAVE;
           END IF;
         END
@@ -95,7 +95,7 @@ describe("BEGIN..END", () => {
     it("supports breaking out with labeled LEAVE", () => {
       testWc(`
         my_block: BEGIN
-          if x > 10 THEN
+          IF x > 10 THEN
             LEAVE my_block;
           END IF;
         END
@@ -107,7 +107,7 @@ describe("BEGIN..END", () => {
     it("supports breaking out with BREAK", () => {
       testWc(`
         BEGIN
-          if x > 10 THEN
+          IF x > 10 THEN
             BREAK;
           END IF;
         END
@@ -117,7 +117,7 @@ describe("BEGIN..END", () => {
     it("supports breaking out with labeled BREAK", () => {
       testWc(`
         my_block: BEGIN
-          if x > 10 THEN
+          IF x > 10 THEN
             BREAK my_block;
           END IF;
         END
@@ -129,7 +129,7 @@ describe("BEGIN..END", () => {
     it("supports continuing with ITERATE", () => {
       testWc(`
         BEGIN
-          if x = 10 THEN
+          IF x = 10 THEN
             ITERATE;
           END IF;
         END
@@ -139,7 +139,7 @@ describe("BEGIN..END", () => {
     it("supports continuing with labeled ITERATE", () => {
       testWc(`
         my_block: BEGIN
-          if x = 10 THEN
+          IF x = 10 THEN
             ITERATE my_block;
           END IF;
         END
@@ -151,7 +151,7 @@ describe("BEGIN..END", () => {
     it("supports continuing with CONTINUE", () => {
       testWc(`
         BEGIN
-          if x = 10 THEN
+          IF x = 10 THEN
             CONTINUE;
           END IF;
         END
@@ -161,7 +161,7 @@ describe("BEGIN..END", () => {
     it("supports continuing with labeled CONTINUE", () => {
       testWc(`
         my_block: BEGIN
-          if x = 10 THEN
+          IF x = 10 THEN
             CONTINUE my_block;
           END IF;
         END
