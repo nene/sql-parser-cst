@@ -28,9 +28,17 @@ describe("FOR..IN", () => {
   });
 
   dialect(["plpgsql"], () => {
-    it("supports FOR..IN..LOOP statement with SELECT", () => {
+    it("supports FOR..IN query LOOP statement", () => {
       testWc(`
         FOR x IN SELECT col FROM tbl LOOP
+          SELECT x;
+        END LOOP
+      `);
+    });
+
+    it("supports FOR..IN range LOOP statement", () => {
+      testWc(`
+        FOR x IN 1 .. 10 LOOP
           SELECT x;
         END LOOP
       `);

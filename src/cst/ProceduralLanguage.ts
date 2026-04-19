@@ -25,6 +25,7 @@ export type AllProceduralNodes =
   | IfClause
   | ElseifClause
   | ElseClause
+  | ForRange
   | RaiseMessage;
 
 export type AllProceduralStatements =
@@ -39,7 +40,8 @@ export type AllProceduralStatements =
   | WhileStmt
   | WhileLoopStmt
   | ForStmt
-  | ForLoopStmt
+  | ForQueryLoopStmt
+  | ForRangeLoopStmt
   | BreakStmt
   | ContinueStmt
   | CallStmt
@@ -56,7 +58,8 @@ export interface LabeledStmt extends BaseNode {
     | WhileStmt
     | WhileLoopStmt
     | ForStmt
-    | ForLoopStmt;
+    | ForQueryLoopStmt
+    | ForRangeLoopStmt;
   endLabel?: Identifier;
 }
 
@@ -211,14 +214,31 @@ export interface ForStmt extends BaseNode {
   endForKw: [Keyword<"END">, Keyword<"FOR">];
 }
 
-// FOR LOOP
-export interface ForLoopStmt extends BaseNode {
-  type: "for_loop_stmt";
+// FOR IN query LOOP
+export interface ForQueryLoopStmt extends BaseNode {
+  type: "for_query_loop_stmt";
   forKw: Keyword<"FOR">;
   left: Identifier;
   inKw: Keyword<"IN">;
   right: SubSelect;
   loop: LoopStmt;
+}
+
+// FOR IN expr..expr LOOP
+export interface ForRangeLoopStmt extends BaseNode {
+  type: "for_range_loop_stmt";
+  forKw: Keyword<"FOR">;
+  left: Identifier;
+  inKw: Keyword<"IN">;
+  right: ForRange;
+  loop: LoopStmt;
+}
+
+// expr .. expr
+export interface ForRange extends BaseNode {
+  type: "for_range";
+  left: Expr;
+  right: Expr;
 }
 
 // BREAK | LEAVE | EXIT
