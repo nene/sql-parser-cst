@@ -1,15 +1,17 @@
 import { dialect, parse, testWc } from "../test_utils";
 
 describe("LOOP", () => {
-  dialect(["mysql", "mariadb", "bigquery"], () => {
+  dialect(["mysql", "mariadb", "bigquery", "plpgsql"], () => {
     it("supports basic infinite LOOP", () => {
       testWc(`
         LOOP
-          SET x = x + 1;
+          SELECT 1;
         END LOOP
       `);
     });
+  });
 
+  dialect(["mysql", "mariadb", "bigquery"], () => {
     it("supports begin label", () => {
       testWc(`
         my_label: LOOP
@@ -27,15 +29,27 @@ describe("LOOP", () => {
     });
   });
 
-  dialect("sqlite", () => {
-    it("does not support LOOP statement", () => {
-      expect(() => parse("LOOP SELECT 1; END LOOP")).toThrow();
+  dialect(["plpgsql"], () => {
+    it("supports begin label", () => {
+      testWc(`
+        <<my_label>> LOOP
+          SELECT 1;
+        END LOOP
+      `);
+    });
+
+    it("supports end label", () => {
+      testWc(`
+        <<my_label>> LOOP
+          SELECT 1;
+        END LOOP my_label
+      `);
     });
   });
 
-  dialect(["postgresql", "plpgsql"], () => {
-    it.skip("TODO:postgres", () => {
-      expect(true).toBe(true);
+  dialect(["sqlite", "postgresql"], () => {
+    it("does not support LOOP statement", () => {
+      expect(() => parse("LOOP SELECT 1; END LOOP")).toThrow();
     });
   });
 });
