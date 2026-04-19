@@ -10,6 +10,7 @@ import {
   CaseWhen,
   CaseElse,
   Variable,
+  MemberExpr,
 } from "./Expr";
 import { StringLiteral } from "./Literal";
 import { Program } from "./Program";
@@ -137,7 +138,7 @@ export interface AssignmentStmt extends BaseNode {
   type: "assignment_stmt";
   target: Identifier;
   operator: "=" | ":=";
-  expr: Expr;
+  expr: Expr | MemberExpr;
 }
 
 // IF

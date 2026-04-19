@@ -5459,7 +5459,7 @@ set_assignment
   }
 
 assignment_stmt
-  = target:(ident __) op:("=" / ":=") expr:(__ expr) {
+  = target:(member_or_array_subscript_expr __) op:("=" / ":=") expr:(__ expr) {
     return loc({
       type: "assignment_stmt",
       target: read(target),
@@ -7833,6 +7833,12 @@ member_expr_or_func_call
 // Plain member_expr node chain, without function calls and array subscripts
 member_expr
   = obj:ident props:(__ "." __ qualified_column)* {
+    return createMemberExprChain(obj, props);
+  }
+
+// Chain of member expressions or array subscripts
+member_or_array_subscript_expr
+  = obj:ident props:(__ "." __ qualified_column / __ array_subscript)* {
     return createMemberExprChain(obj, props);
   }
 

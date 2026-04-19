@@ -10,6 +10,22 @@ describe("Assignment", () => {
     it("supports complex expression on right side", () => {
       testWc("x := sqrt(2) / pi");
     });
+
+    it("supports record field assignment", () => {
+      testWc("foo.bar := 15");
+    });
+
+    it("supports array index assignment", () => {
+      testWc("foo[3] := 15");
+    });
+
+    it("supports array slice assignment", () => {
+      testWc("foo[1:5] := 25");
+    });
+
+    it("supports long chain assignment", () => {
+      testWc("foo[n].bar.baz := 42");
+    });
   });
 
   dialect(["mysql", "mariadb", "bigquery", "sqlite", "postgresql"], () => {
