@@ -29,6 +29,12 @@ describe("LOOP", () => {
         END LOOP my_label
       `);
     });
+
+    it("supports empty loop body", () => {
+      testWc(`
+        LOOP END LOOP
+      `);
+    });
   });
 
   dialect(["sqlite", "postgresql"], () => {

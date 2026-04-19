@@ -45,6 +45,17 @@ describe("IF", () => {
     });
   });
 
+  dialect(["plpgsql"], () => {
+    it("supports empty IF bodies", () => {
+      testWc(`
+        IF TRUE THEN
+        ELSEIF FALSE THEN
+        ELSE
+        END IF
+      `);
+    });
+  });
+
   dialect(["sqlite", "postgresql"], () => {
     it("does not support IF statement", () => {
       expect(() => parse("IF true THEN SELECT 1; END IF")).toThrow();
