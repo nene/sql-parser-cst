@@ -37,6 +37,14 @@ describe("FOR..IN", () => {
         `);
       });
 
+      it("supports complex query", () => {
+        testWc(`
+          FOR x IN SELECT 1 UNION SELECT 2 FROM tbl LOOP
+            SELECT x;
+          END LOOP
+        `);
+      });
+
       it("supports begin & end label", () => {
         testWc(`
           <<my_label>> FOR x IN SELECT 1 LOOP
