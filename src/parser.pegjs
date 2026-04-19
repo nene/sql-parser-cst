@@ -270,6 +270,7 @@ statement_plpgsql
   / if_stmt
   / labeled$block_stmt
   / labeled$loop_stmt
+  / labeled$while_stmt
   / return_stmt
 
 dml_statement
