@@ -1,7 +1,7 @@
 import { dialect, test, testWc } from "./test_utils";
 
 describe("analyze", () => {
-  dialect(["sqlite", "postgresql"], () => {
+  dialect(["sqlite", "postgresql", "plpgsql"], () => {
     it("supports plain ANALYZE", () => {
       test("ANALYZE");
     });
@@ -12,7 +12,7 @@ describe("analyze", () => {
     });
   });
 
-  dialect("postgresql", () => {
+  dialect(["postgresql", "plpgsql"], () => {
     it("supports ANALYZE with multiple tables", () => {
       testWc("ANALYZE tbl1, tbl2, tbl3");
     });

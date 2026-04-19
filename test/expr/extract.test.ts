@@ -1,7 +1,7 @@
 import { dialect, parseExpr, testExpr, testExprWc } from "../test_utils";
 
 describe("extract()", () => {
-  dialect(["mysql", "mariadb", "bigquery", "postgresql"], () => {
+  dialect(["mysql", "mariadb", "bigquery", "postgresql", "plpgsql"], () => {
     it("supports extract() expression", () => {
       testExprWc(`EXTRACT ( DAY FROM col1 )`);
     });
@@ -107,7 +107,7 @@ describe("extract()", () => {
       `);
     });
 
-    dialect("postgresql", () => {
+    dialect(["postgresql", "plpgsql"], () => {
       testExtractUnits([
         "CENTURY",
         "DAY",

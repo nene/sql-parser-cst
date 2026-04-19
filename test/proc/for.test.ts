@@ -41,7 +41,7 @@ describe("FOR..IN", () => {
     });
   });
 
-  dialect("postgresql", () => {
+  dialect(["postgresql", "plpgsql"], () => {
     it.skip("TODO:postgres", () => {
       expect(true).toBe(true);
     });

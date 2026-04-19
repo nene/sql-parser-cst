@@ -1,7 +1,7 @@
 import { dialect, notDialect, test, testWc } from "../test_utils";
 
 describe("sequence", () => {
-  dialect("postgresql", () => {
+  dialect(["postgresql", "plpgsql"], () => {
     const sequenceOptions = {
       "AS type": ["AS int", "AS varchar(100)"],
       "INCREMENT BY": ["INCREMENT BY 1", "INCREMENT +10", "INCREMENT -1"],
@@ -112,7 +112,7 @@ describe("sequence", () => {
     });
   });
 
-  notDialect("postgresql", () => {
+  notDialect(["postgresql", "plpgsql"], () => {
     it("does not support CREATE/DROP SEQUENCE", () => {
       expect(() => test("CREATE SEQUENCE my_schema")).toThrow();
       expect(() => test("DROP SEQUENCE my_schema")).toThrow();

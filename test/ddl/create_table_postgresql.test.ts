@@ -5,7 +5,7 @@ describe("create table (PostgreSQL)", () => {
     test(`CREATE TABLE t (id INT) ${withComments(clause)}`);
   }
 
-  dialect("postgresql", () => {
+  dialect(["postgresql", "plpgsql"], () => {
     it("supports CREATE TABLE .. INHERITS", () => {
       testClauseWc("INHERITS (parent)");
       testClauseWc("INHERITS (parent1, parent2)");
@@ -187,7 +187,7 @@ describe("create table (PostgreSQL)", () => {
     });
   });
 
-  notDialect("postgresql", () => {
+  notDialect(["postgresql", "plpgsql"], () => {
     it("does not support CREATE TABLE INHERITS", () => {
       expect(() => testClauseWc("INHERITS (parent)")).toThrow();
     });

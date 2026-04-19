@@ -1,7 +1,7 @@
 import { dialect, test, testWc } from "./test_utils";
 
 describe("explain", () => {
-  dialect(["mysql", "mariadb", "sqlite", "postgresql"], () => {
+  dialect(["mysql", "mariadb", "sqlite", "postgresql", "plpgsql"], () => {
     it("supports explaining of SELECT statement", () => {
       testWc("EXPLAIN SELECT * FROM foo");
     });
@@ -19,7 +19,7 @@ describe("explain", () => {
     });
   });
 
-  dialect(["mysql", "mariadb", "postgresql"], () => {
+  dialect(["mysql", "mariadb", "postgresql", "plpgsql"], () => {
     it("supports EXPLAIN ANALYZE", () => {
       testWc("EXPLAIN ANALYZE SELECT 1");
     });

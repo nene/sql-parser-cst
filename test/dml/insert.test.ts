@@ -30,7 +30,7 @@ describe("insert into", () => {
     });
   });
 
-  dialect(["sqlite", "postgresql"], () => {
+  dialect(["sqlite", "postgresql", "plpgsql"], () => {
     it("supports INSERT with aliased table", () => {
       testWc("INSERT INTO tbl AS t VALUES (1, 2, 3)");
     });
@@ -50,13 +50,13 @@ describe("insert into", () => {
     testWc("INSERT INTO tbl (SELECT 1, 2, 3)");
   });
 
-  dialect(["mysql", "mariadb", "sqlite", "postgresql"], () => {
+  dialect(["mysql", "mariadb", "sqlite", "postgresql", "plpgsql"], () => {
     it("supports insert of default values", () => {
       testWc("INSERT INTO tbl DEFAULT VALUES");
     });
   });
 
-  dialect(["mysql", "mariadb", "bigquery", "postgresql"], () => {
+  dialect(["mysql", "mariadb", "bigquery", "postgresql", "plpgsql"], () => {
     it("supports explicit default values for columns", () => {
       testWc("INSERT INTO tbl VALUES (1, DEFAULT, 3)");
     });
@@ -88,7 +88,7 @@ describe("insert into", () => {
     });
   });
 
-  dialect(["sqlite", "postgresql"], () => {
+  dialect(["sqlite", "postgresql", "plpgsql"], () => {
     it("supports WITH ... INSERT ...", () => {
       testWc("WITH subsel AS (SELECT 1) INSERT INTO tbl VALUES (1)");
     });
@@ -114,14 +114,14 @@ describe("insert into", () => {
     });
   });
 
-  dialect("postgresql", () => {
+  dialect(["postgresql", "plpgsql"], () => {
     it("supports OVERRIDING clause", () => {
       testWc("INSERT INTO tbl OVERRIDING SYSTEM VALUE VALUES (1)");
       testWc("INSERT INTO tbl OVERRIDING USER VALUE VALUES (1)");
     });
   });
 
-  dialect(["sqlite", "postgresql"], () => {
+  dialect(["sqlite", "postgresql", "plpgsql"], () => {
     describe("ON CONFLICT clause", () => {
       it("supports ON CONFLICT DO NOTHING", () => {
         testWc("INSERT INTO tbl VALUES (1) ON CONFLICT DO NOTHING");
@@ -151,7 +151,7 @@ describe("insert into", () => {
         testWc("INSERT INTO tbl VALUES (1) ON CONFLICT (col1 ASC, col2 DESC) DO NOTHING");
       });
 
-      dialect("postgresql", () => {
+      dialect(["postgresql", "plpgsql"], () => {
         it("supports ON CONFLICT (column ASC/DESC NULLS FIRST/LAST)", () => {
           testWc(
             "INSERT INTO tbl VALUES (1) ON CONFLICT (col1 ASC NULLS FIRST, col2 DESC NULLS LAST) DO NOTHING"
@@ -213,7 +213,7 @@ describe("insert into", () => {
     });
   });
 
-  dialect(["sqlite", "mariadb", "postgresql"], () => {
+  dialect(["sqlite", "mariadb", "postgresql", "plpgsql"], () => {
     it("supports INSERT ... RETURNING ...", () => {
       testWc("INSERT INTO tbl (col) VALUES (1) RETURNING *");
       testWc("INSERT INTO tbl (col1, col2) VALUES (1) RETURNING col2, col1");

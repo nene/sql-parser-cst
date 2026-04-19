@@ -26,7 +26,7 @@ describe("comparison operators", () => {
       testExprWc(`col IS NOT NULL`);
     });
 
-    dialect(["mysql", "mariadb", "bigquery", "postgresql"], () => {
+    dialect(["mysql", "mariadb", "bigquery", "postgresql", "plpgsql"], () => {
       it("supports IS [NOT] TRUE/FALSE operator", () => {
         testExprWc(`col IS TRUE`);
         testExprWc(`col IS NOT FALSE`);
@@ -63,7 +63,7 @@ describe("comparison operators", () => {
       });
     });
 
-    dialect(["sqlite", "bigquery", "postgresql"], () => {
+    dialect(["sqlite", "bigquery", "postgresql", "plpgsql"], () => {
       it("supports IS [NOT] DISTINCT FROM as alternative spelling for IS [NOT]", () => {
         testExprWc(`col IS DISTINCT FROM NULL`);
         testExprWc(`col IS NOT DISTINCT FROM NULL`);
@@ -88,7 +88,7 @@ describe("comparison operators", () => {
     });
   });
 
-  dialect(["sqlite", "postgresql"], () => {
+  dialect(["sqlite", "postgresql", "plpgsql"], () => {
     it("supports unary null-check operators", () => {
       testExprWc("col ISNULL");
       testExprWc("col NOTNULL");
@@ -190,7 +190,7 @@ describe("comparison operators", () => {
       `);
     });
 
-    dialect("postgresql", () => {
+    dialect(["postgresql", "plpgsql"], () => {
       it("supports [NOT] BETWEEN SYMMETRIC operator", () => {
         testExprWc(`x BETWEEN SYMMETRIC 10 AND 1`);
         testExprWc(`y NOT BETWEEN SYMMETRIC 10 AND 1`);
@@ -220,7 +220,7 @@ describe("comparison operators", () => {
   });
 
   describe("quantifiers", () => {
-    dialect(["mysql", "mariadb", "postgresql"], () => {
+    dialect(["mysql", "mariadb", "postgresql", "plpgsql"], () => {
       it("supports ANY / SOME / ALL quantifiers", () => {
         testExprWc(`col = ANY (SELECT c1 FROM tbl)`);
         testExprWc(`col >= SOME (SELECT c1 FROM tbl)`);

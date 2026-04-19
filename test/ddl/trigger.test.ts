@@ -70,7 +70,7 @@ describe("trigger", () => {
     });
   });
 
-  dialect("postgresql", () => {
+  dialect(["postgresql", "plpgsql"], () => {
     describe("CREATE TRIGGER", () => {
       it("supports CREATE TRIGGER .. EXECUTE function", () => {
         testWc(`
@@ -167,7 +167,7 @@ describe("trigger", () => {
     });
   });
 
-  dialect("postgresql", () => {
+  dialect(["postgresql", "plpgsql"], () => {
     describe("ALTER TRIGGER", () => {
       it("supports RENAME TO", () => {
         testWc("ALTER TRIGGER my_trg ON my_table RENAME TO my_trg_new");
@@ -193,7 +193,7 @@ describe("trigger", () => {
       });
     });
 
-    dialect(["postgresql"], () => {
+    dialect(["postgresql", "plpgsql"], () => {
       it("supports DROP TRIGGER .. ON ..", () => {
         testWc("DROP TRIGGER my_trg ON my_tbl");
         testWc("DROP TRIGGER my_trg ON schemata.my_tbl");

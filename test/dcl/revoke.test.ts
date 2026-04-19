@@ -21,7 +21,7 @@ describe("REVOKE", () => {
     });
   });
 
-  dialect("postgresql", () => {
+  dialect(["postgresql", "plpgsql"], () => {
     [
       "SELECT",
       "INSERT",

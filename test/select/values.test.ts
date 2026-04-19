@@ -1,7 +1,7 @@
 import { dialect, parseStmt, test, testWc } from "../test_utils";
 
 describe("VALUES clause/statement", () => {
-  dialect(["sqlite", "postgresql"], () => {
+  dialect(["sqlite", "postgresql", "plpgsql"], () => {
     it("supports separate VALUES statement", () => {
       testWc("VALUES (1, 'Hello', TRUE, NULL)");
       testWc("VALUES (1, 'Hello'), (2, 'World')");
@@ -18,7 +18,7 @@ describe("VALUES clause/statement", () => {
 
   // The following should be also valid in SQLite according to documentation,
   // but in practice it produces a syntax error.
-  dialect("postgresql", () => {
+  dialect(["postgresql", "plpgsql"], () => {
     it("supports VALUES followed by ORDER BY", () => {
       testWc("VALUES (1, 2), (3, 4) ORDER BY 2");
     });

@@ -1,7 +1,7 @@
 import { dialect, notDialect, parse, testWc } from "../test_utils";
 
 describe("PUBLICATION", () => {
-  dialect("postgresql", () => {
+  dialect(["postgresql", "plpgsql"], () => {
     describe("CREATE PUBLICATION", () => {
       it("supports CREATE PUBLICATION", () => {
         testWc(`CREATE PUBLICATION foo`);
@@ -98,7 +98,7 @@ describe("PUBLICATION", () => {
     });
   });
 
-  notDialect("postgresql", () => {
+  notDialect(["postgresql", "plpgsql"], () => {
     it("does not support CREATE PUBLICATION", () => {
       expect(() => parse("CREATE PUBLICATION foo")).toThrow();
     });

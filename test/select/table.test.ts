@@ -1,7 +1,7 @@
 import { dialect, parseStmt, testWc } from "../test_utils";
 
 describe("table", () => {
-  dialect(["mysql", "mariadb", "postgresql"], () => {
+  dialect(["mysql", "mariadb", "postgresql", "plpgsql"], () => {
     it("supports TABLE statement", () => {
       testWc("TABLE my_tbl");
     });
@@ -18,7 +18,7 @@ describe("table", () => {
       testWc("TABLE my_tbl ORDER BY col1 LIMIT 8");
     });
 
-    dialect("postgresql", () => {
+    dialect(["postgresql", "plpgsql"], () => {
       it("supports TABLE ONLY name", () => {
         testWc("TABLE ONLY my_tbl");
       });

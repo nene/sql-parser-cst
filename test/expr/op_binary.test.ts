@@ -17,7 +17,7 @@ describe("binary operators", () => {
     testExprWc(`x << ~y`);
   });
 
-  dialect("postgresql", () => {
+  dialect(["postgresql", "plpgsql"], () => {
     it("parses bitwise XOR operator", () => {
       testExprWc(`x # y`);
     });

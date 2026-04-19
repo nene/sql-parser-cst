@@ -41,7 +41,7 @@ describe("SET", () => {
     });
   });
 
-  dialect("postgresql", () => {
+  dialect(["postgresql", "plpgsql"], () => {
     // In PostgreSQL the SET statement is used for changing run-time parameters
     it("PostgreSQL does not parse SET statement as set_stmt", () => {
       expect(parseStmt("SET x = 10").type).not.toBe("set_stmt");

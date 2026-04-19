@@ -86,7 +86,7 @@ describe("function call", () => {
       });
     });
 
-    dialect("postgresql", () => {
+    dialect(["postgresql", "plpgsql"], () => {
       it("supports additional special functions without parenthesis", () => {
         testIsFunction("LOCALTIME");
         testIsFunction("LOCALTIMESTAMP");
@@ -138,7 +138,7 @@ describe("function call", () => {
     });
   });
 
-  dialect(["sqlite", "postgresql"], () => {
+  dialect(["sqlite", "postgresql", "plpgsql"], () => {
     it("supports FILTER clause for aggregate functions", () => {
       testExprWc(`count(*) FILTER (WHERE job_id = 2)`);
     });
@@ -151,7 +151,7 @@ describe("function call", () => {
       });
     });
 
-    dialect(["mysql", "mariadb", "bigquery", "postgresql"], () => {
+    dialect(["mysql", "mariadb", "bigquery", "postgresql", "plpgsql"], () => {
       it("LEFT() / RIGHT() functions", () => {
         testExpr(`LEFT('hello', 3)`);
         testExpr(`RIGHT('hello', 3)`);
@@ -169,7 +169,7 @@ describe("function call", () => {
     });
   });
 
-  dialect(["bigquery", "postgresql"], () => {
+  dialect(["bigquery", "postgresql", "plpgsql"], () => {
     it("supports named function arguments", () => {
       testExpr(`my_func(arg1 => 'foo', arg2 => 'bar')`);
     });
@@ -178,7 +178,7 @@ describe("function call", () => {
       testExpr(`SEARCH('foo', 'f', analyzer => 'NO_OP_ANALYZER')`);
     });
 
-    dialect("postgresql", () => {
+    dialect(["postgresql", "plpgsql"], () => {
       it("supports deprecated := syntax for named function arguments", () => {
         testExpr(`my_func(arg1 := 'foo', arg2 := 'bar')`);
       });

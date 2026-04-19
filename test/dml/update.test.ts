@@ -39,7 +39,7 @@ describe("update", () => {
     });
   });
 
-  dialect("postgresql", () => {
+  dialect(["postgresql", "plpgsql"], () => {
     it("supports ONLY inheritance modifier on table name", () => {
       testWc("UPDATE ONLY tbl SET x=1");
       testWc("UPDATE ONLY tbl AS t SET x=1");
@@ -50,7 +50,7 @@ describe("update", () => {
     });
   });
 
-  dialect(["mysql", "mariadb", "postgresql"], () => {
+  dialect(["mysql", "mariadb", "postgresql", "plpgsql"], () => {
     it("supports setting explicit default values", () => {
       testWc("UPDATE person SET age = DEFAULT");
     });
@@ -73,12 +73,12 @@ describe("update", () => {
     });
   });
 
-  dialect(["sqlite", "postgresql"], () => {
+  dialect(["sqlite", "postgresql", "plpgsql"], () => {
     it("supports assigning list of values to list of columns", () => {
       testWc("UPDATE tbl SET (id, name) = (1, 'John')");
     });
   });
-  dialect("postgresql", () => {
+  dialect(["postgresql", "plpgsql"], () => {
     it("supports assigning ROW constructor to list of values", () => {
       testWc("UPDATE tbl SET (id, name) = ROW (1, 'John')");
       testWc("UPDATE tbl SET (id, name) = ROW (1, DEFAULT)");
@@ -98,20 +98,20 @@ describe("update", () => {
     });
   });
 
-  dialect(["sqlite", "postgresql"], () => {
+  dialect(["sqlite", "postgresql", "plpgsql"], () => {
     it("supports WITH ... UPDATE ...", () => {
       testWc("WITH subsel AS (SELECT 1) UPDATE tbl SET col1 = 2");
       testWc("WITH subsel AS (SELECT 1) /*c*/ UPDATE tbl SET col1 = 2");
     });
   });
 
-  dialect(["sqlite", "bigquery", "postgresql"], () => {
+  dialect(["sqlite", "bigquery", "postgresql", "plpgsql"], () => {
     it("supports UPDATE ... FROM ...", () => {
       testWc("UPDATE tbl SET col1 = 2 FROM foo JOIN bar USING (id) WHERE foo.age > 0");
     });
   });
 
-  dialect(["sqlite", "postgresql"], () => {
+  dialect(["sqlite", "postgresql", "plpgsql"], () => {
     it("supports UPDATE ... RETURNING ...", () => {
       testWc("UPDATE tbl SET col1 = 2 RETURNING *");
       testWc("UPDATE tbl SET col1 = 2 RETURNING col1, col2");
@@ -128,7 +128,7 @@ describe("update", () => {
     });
   });
 
-  dialect("postgresql", () => {
+  dialect(["postgresql", "plpgsql"], () => {
     it("supports WHERE CURRENT OF", () => {
       testWc("UPDATE tbl SET col1 = 2 WHERE CURRENT OF cursor_name");
     });

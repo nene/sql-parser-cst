@@ -1,7 +1,7 @@
 import { dialect, parseExpr, testExpr, testExprWc } from "../test_utils";
 
 describe("array access", () => {
-  dialect(["bigquery", "postgresql"], () => {
+  dialect(["bigquery", "postgresql", "plpgsql"], () => {
     it("supports simple array subscript", () => {
       testExpr(`my_array[0]`);
       testExpr(`my_array[1+2]`);
@@ -76,7 +76,7 @@ describe("array access", () => {
       });
     });
 
-    dialect("postgresql", () => {
+    dialect(["postgresql", "plpgsql"], () => {
       it("supports array slice operator", () => {
         testExpr("foo[5:10]");
         testExpr("foo[:10]");

@@ -2,7 +2,7 @@ import { dialect, notDialect, parse, testExprWc } from "../test_utils";
 import { isPostgresqlOtherOperator } from "../../src/utils/pgOperators";
 
 describe("special PostgreSQL operators", () => {
-  dialect("postgresql", () => {
+  dialect(["postgresql", "plpgsql"], () => {
     [
       "||/",
       "|/",
@@ -139,7 +139,7 @@ describe("special PostgreSQL operators", () => {
     });
   });
 
-  notDialect("postgresql", () => {
+  notDialect(["postgresql", "plpgsql"], () => {
     it("does not support weird Postgres operators", () => {
       expect(() => parse(`x ||/ y`)).toThrow();
     });

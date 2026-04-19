@@ -7,7 +7,7 @@ describe("arithmetic operators", () => {
     });
   });
 
-  dialect(["mysql", "mariadb", "sqlite", "postgresql"], () => {
+  dialect(["mysql", "mariadb", "sqlite", "postgresql", "plpgsql"], () => {
     it("supports % operator", () => {
       testExprWc(`8 % 4`);
     });
@@ -25,7 +25,7 @@ describe("arithmetic operators", () => {
     });
   });
 
-  dialect(["postgresql"], () => {
+  dialect(["postgresql", "plpgsql"], () => {
     it("supports ^ operator", () => {
       testExprWc(`10 ^ 2`);
     });

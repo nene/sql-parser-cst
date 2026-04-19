@@ -13,7 +13,7 @@ describe("select GROUP BY", () => {
   it("supports GROUP BY with list expression", () => {
     testClauseWc("GROUP BY (id, name), age");
   });
-  dialect(["bigquery", "postgresql"], () => {
+  dialect(["bigquery", "postgresql", "plpgsql"], () => {
     it("supports GROUP BY empty list", () => {
       testClauseWc("GROUP BY ()");
       testClauseWc("GROUP BY foo, (), bar, ()");
@@ -26,7 +26,7 @@ describe("select GROUP BY", () => {
     });
   });
 
-  dialect(["bigquery", "postgresql"], () => {
+  dialect(["bigquery", "postgresql", "plpgsql"], () => {
     it("supports GROUP BY ROLLUP()", () => {
       testClauseWc("GROUP BY ROLLUP ( id, name + age )");
       testClauseWc("GROUP BY ROLLUP ( id, (name, age) )");
@@ -51,7 +51,7 @@ describe("select GROUP BY", () => {
     });
   });
 
-  dialect(["bigquery", "postgresql"], () => {
+  dialect(["bigquery", "postgresql", "plpgsql"], () => {
     it("supports GROUPING SETS", () => {
       testClauseWc("GROUP BY GROUPING SETS ( (id, name), age )");
     });
@@ -75,7 +75,7 @@ describe("select GROUP BY", () => {
     });
   });
 
-  dialect("postgresql", () => {
+  dialect(["postgresql", "plpgsql"], () => {
     it("supports GROUP BY {ALL | DISTINCT}", () => {
       testClauseWc("GROUP BY ALL id");
       testClauseWc("GROUP BY DISTINCT name, age");

@@ -1,7 +1,7 @@
 import { dialect, notDialect, parseExpr, testExpr } from "../test_utils";
 
 describe("JSONB literal", () => {
-  dialect("postgresql", () => {
+  dialect(["postgresql", "plpgsql"], () => {
     it("supports JSONB literal", () => {
       testExpr(`JSONB '{"foo": 10, bar: [1, 2, 3]}'`);
     });
@@ -31,7 +31,7 @@ describe("JSONB literal", () => {
     });
   });
 
-  notDialect("postgresql", () => {
+  notDialect(["postgresql", "plpgsql"], () => {
     it("does not support JSONB literals", () => {
       expect(() => testExpr(`(JSONB '{}')`)).toThrow();
     });

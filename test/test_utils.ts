@@ -66,9 +66,7 @@ export function notDialect(
 function canonicalizeDialects(
   lang: DialectName | DialectName[]
 ): DialectName[] {
-  const langs = isString(lang) ? [lang] : lang;
-  // Treat PLPGSQL as superset of PostgreSQL
-  return langs.includes("postgresql") ? [...langs, "plpgsql"] : langs;
+  return isString(lang) ? [lang] : lang;
 }
 
 export function test(sql: string, options?: Partial<ParserOptions>) {

@@ -11,7 +11,7 @@ describe("select FROM + TABLESAMPLE", () => {
     });
   });
 
-  dialect("postgresql", () => {
+  dialect(["postgresql", "plpgsql"], () => {
     it("supports TABLESAMPLE SYSTEM", () => {
       testWc("SELECT * FROM my_table TABLESAMPLE SYSTEM ( 10 )");
     });
@@ -30,7 +30,7 @@ describe("select FROM + TABLESAMPLE", () => {
     });
   });
 
-  notDialect(["bigquery", "postgresql"], () => {
+  notDialect(["bigquery", "postgresql", "plpgsql"], () => {
     it("does not support TABLESAMPLE", () => {
       expect(() => test("SELECT * FROM tbl TABLESAMPLE SYSTEM (5 PERCENT)")).toThrow();
     });

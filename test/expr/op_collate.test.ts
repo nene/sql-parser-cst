@@ -1,12 +1,12 @@
 import { dialect, parseExpr, testExprWc } from "../test_utils";
 
 describe("COLLATE operator", () => {
-  dialect(["mysql", "mariadb", "sqlite", "postgresql"], () => {
+  dialect(["mysql", "mariadb", "sqlite", "postgresql", "plpgsql"], () => {
     it("supports COLLATE operator", () => {
       // MySQL style collation identifiers
       testExprWc(`'foobar' COLLATE utf8`);
     });
-    dialect("postgresql", () => {
+    dialect(["postgresql", "plpgsql"], () => {
       it("supports COLLATE with quoted collation identifier", () => {
         testExprWc(`'foobar' COLLATE "C"`);
       });

@@ -1,7 +1,7 @@
 import { dialect, notDialect, testWc } from "../test_utils";
 
 describe("policy", () => {
-  dialect("postgresql", () => {
+  dialect(["postgresql", "plpgsql"], () => {
     describe("CREATE POLICY", () => {
       it("supports CREATE POLICY .. ON ..", () => {
         testWc("CREATE POLICY foo ON my_table");
@@ -98,7 +98,7 @@ describe("policy", () => {
     });
   });
 
-  notDialect("postgresql", () => {
+  notDialect(["postgresql", "plpgsql"], () => {
     it("does not support CREATE POLICY", () => {
       expect(() => test("CREATE POLICY my_pol ON tbl")).toThrow();
     });

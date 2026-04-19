@@ -20,13 +20,13 @@ describe("create table", () => {
     testWc("CREATE TEMPORARY TABLE foo (id INT)");
   });
 
-  dialect(["sqlite", "bigquery", "postgresql"], () => {
+  dialect(["sqlite", "bigquery", "postgresql", "plpgsql"], () => {
     it("supports CREATE TEMP TABLE", () => {
       testWc("CREATE TEMP TABLE foo (id INT)");
     });
   });
 
-  dialect("postgresql", () => {
+  dialect(["postgresql", "plpgsql"], () => {
     // This syntax is deprecated and has no effect
     it("supports [GLOBAL | LOCAL] TEMPORARY TABLE", () => {
       testWc("CREATE GLOBAL TEMP TABLE foo (id INT)");
@@ -34,7 +34,7 @@ describe("create table", () => {
     });
   });
 
-  dialect("postgresql", () => {
+  dialect(["postgresql", "plpgsql"], () => {
     it("supports UNLOGGED TABLE", () => {
       testWc("CREATE UNLOGGED TABLE foo (id INT)");
     });
@@ -70,7 +70,7 @@ describe("create table", () => {
       });
     });
 
-    dialect("postgresql", () => {
+    dialect(["postgresql", "plpgsql"], () => {
       it("supports CREATE TABLE ...(columns) AS select", () => {
         testWc("CREATE TABLE foo (id, name) AS SELECT 1, 'John'");
       });
@@ -99,13 +99,13 @@ describe("create table", () => {
       });
     });
 
-    dialect(["postgresql", "mysql", "mariadb"], () => {
+    dialect(["postgresql", "plpgsql", "mysql", "mariadb"], () => {
       it("supports (LIKE ...)", () => {
         testWc("CREATE TABLE foo (LIKE bar)");
       });
     });
 
-    dialect("postgresql", () => {
+    dialect(["postgresql", "plpgsql"], () => {
       it("supports LIKE combined with columns and constraints", () => {
         testWc(`
           CREATE TABLE foo (

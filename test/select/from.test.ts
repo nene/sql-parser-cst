@@ -28,7 +28,7 @@ describe("select FROM", () => {
     test("SELECT t.col FROM (((tbl) AS t) AS t1) AS t2");
   });
 
-  dialect(["mysql", "mariadb", "postgresql"], () => {
+  dialect(["mysql", "mariadb", "postgresql", "plpgsql"], () => {
     it("supports table column aliases", () => {
       test("SELECT t.col1 FROM tbl AS t (col1, col2)");
       test("SELECT t.col2 FROM tbl t (col1, col2)");
@@ -83,13 +83,13 @@ describe("select FROM", () => {
   });
 
   describe("LATERAL expressions", () => {
-    dialect(["mysql", "mariadb", "postgresql"], () => {
+    dialect(["mysql", "mariadb", "postgresql", "plpgsql"], () => {
       it("supports LATERAL subquery", () => {
         testWc(`SELECT 8 FROM tbl JOIN LATERAL (SELECT * FROM foo WHERE id=tbl.id) AS t`);
       });
     });
 
-    dialect(["postgresql"], () => {
+    dialect(["postgresql", "plpgsql"], () => {
       it("supports LATERAL table function", () => {
         testWc(`SELECT * FROM LATERAL table_func(1, 2, 3) AS t`);
       });
@@ -131,7 +131,7 @@ describe("select FROM", () => {
       test("SELECT * FROM func1(5, 10) foo");
     });
 
-    dialect("postgresql", () => {
+    dialect(["postgresql", "plpgsql"], () => {
       it("supports WITH ORDINALITY", () => {
         test("SELECT * FROM generate_series(5, 10) WITH ORDINALITY");
       });

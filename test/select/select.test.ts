@@ -13,7 +13,7 @@ describe("select", () => {
     test("SELECT DISTINCT foo");
   });
 
-  dialect("postgresql", () => {
+  dialect(["postgresql", "plpgsql"], () => {
     it("supports DISTINCT ON ()", () => {
       test("SELECT DISTINCT ON (foo, bar) * FROM tbl");
       test("SELECT DISTINCT ON (foo) foo, bar, baz, zap FROM tbl");
@@ -67,13 +67,13 @@ describe("select", () => {
         test(`SELECT col "foo"`);
       });
     });
-    dialect("postgresql", () => {
+    dialect(["postgresql", "plpgsql"], () => {
       it("does not support string as column alias", () => {
         expect(() => test(`SELECT col AS 'foo'`)).toThrow();
       });
     });
 
-    dialect("postgresql", () => {
+    dialect(["postgresql", "plpgsql"], () => {
       it("supports reserved keywords as explicit aliases", () => {
         test("SELECT 'hello' AS select");
         test("SELECT 'hello' AS from");
@@ -87,7 +87,7 @@ describe("select", () => {
       });
     });
 
-    dialect("postgresql", () => {
+    dialect(["postgresql", "plpgsql"], () => {
       it("supports interval units as explicit aliases", () => {
         test("SELECT '1981' AS year");
         test("SELECT 'Jan' AS month");
@@ -154,7 +154,7 @@ describe("select", () => {
     test(`(SELECT * FROM tbl) LIMIT 1`);
   });
 
-  dialect("postgresql", () => {
+  dialect(["postgresql", "plpgsql"], () => {
     it("supports empty select", () => {
       test(`SELECT FROM tbl;`);
       test(`SELECT;`);

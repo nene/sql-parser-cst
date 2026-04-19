@@ -184,7 +184,7 @@ describe("whitespace", () => {
         test("SELECT 1 + # comment 1\n # comment 2\n 2");
       });
     });
-    dialect(["postgresql"], () => {
+    dialect(["postgresql", "plpgsql"], () => {
       it("does not support hash comments", () => {
         expect(() => test("SELECT 1 + # comment 1\n # comment 2\n 2")).toThrow();
       });
@@ -194,7 +194,7 @@ describe("whitespace", () => {
       test("SELECT 1 + /* comment 1 */ /* comment 2 */ 2");
     });
 
-    dialect("postgresql", () => {
+    dialect(["postgresql", "plpgsql"], () => {
       it("parses nested block-comments", () => {
         test("SELECT 1 + /* com1 /*com2*/ com3 */ 2");
       });

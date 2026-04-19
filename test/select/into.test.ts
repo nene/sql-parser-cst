@@ -42,7 +42,7 @@ describe("select INTO", () => {
     });
   });
 
-  dialect("postgresql", () => {
+  dialect(["postgresql", "plpgsql"], () => {
     it("supports INTO [TABLE] tablename", () => {
       testWc("SELECT col INTO new_table FROM source_table");
       testWc("SELECT 1,2,3 INTO TABLE my_table");

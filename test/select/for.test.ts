@@ -1,7 +1,7 @@
 import { dialect, testClauseWc } from "../test_utils";
 
 describe("select FOR", () => {
-  dialect(["postgresql", "mysql"], () => {
+  dialect(["postgresql", "plpgsql", "mysql"], () => {
     it("supports FOR clause with different lock strengths", () => {
       testClauseWc("FOR UPDATE");
       testClauseWc("FOR NO KEY UPDATE");

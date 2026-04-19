@@ -3,7 +3,7 @@ import { dialect, testWc } from "./test_utils";
 describe("transactions", () => {
   describe("starting transaction", () => {
     // standard syntax
-    dialect(["mysql", "mariadb", "postgresql"], () => {
+    dialect(["mysql", "mariadb", "postgresql", "plpgsql"], () => {
       it("supports START TRANSACTION", () => {
         testWc("START TRANSACTION");
       });
@@ -13,7 +13,7 @@ describe("transactions", () => {
       testWc("BEGIN");
     });
 
-    dialect(["sqlite", "bigquery", "postgresql"], () => {
+    dialect(["sqlite", "bigquery", "postgresql", "plpgsql"], () => {
       it("supports BEGIN TRANSACTION", () => {
         testWc("BEGIN TRANSACTION");
       });
@@ -27,13 +27,13 @@ describe("transactions", () => {
       });
     });
 
-    dialect(["mysql", "mariadb", "postgresql"], () => {
+    dialect(["mysql", "mariadb", "postgresql", "plpgsql"], () => {
       it("supports BEGIN WORK", () => {
         testWc("BEGIN WORK");
       });
     });
 
-    dialect("postgresql", () => {
+    dialect(["postgresql", "plpgsql"], () => {
       it("supports [NOT] DEFERRABLE", () => {
         testWc("BEGIN NOT DEFERRABLE");
         testWc("BEGIN DEFERRABLE");
@@ -63,31 +63,31 @@ describe("transactions", () => {
       testWc("COMMIT");
     });
 
-    dialect(["sqlite", "bigquery", "postgresql"], () => {
+    dialect(["sqlite", "bigquery", "postgresql", "plpgsql"], () => {
       it("supports COMMIT TRANSACTION", () => {
         testWc("COMMIT TRANSACTION");
       });
     });
 
-    dialect(["sqlite", "postgresql"], () => {
+    dialect(["sqlite", "postgresql", "plpgsql"], () => {
       it("supports END [TRANSACTION]", () => {
         testWc("END TRANSACTION");
         testWc("END");
       });
     });
-    dialect("postgresql", () => {
+    dialect(["postgresql", "plpgsql"], () => {
       it("supports END WORK", () => {
         testWc("END WORK");
       });
     });
 
-    dialect(["mysql", "mariadb", "postgresql"], () => {
+    dialect(["mysql", "mariadb", "postgresql", "plpgsql"], () => {
       it("supports COMMIT WORK", () => {
         testWc("COMMIT WORK");
       });
     });
 
-    dialect("postgresql", () => {
+    dialect(["postgresql", "plpgsql"], () => {
       it("supports AND [NO] CHAIN", () => {
         testWc("COMMIT AND CHAIN");
         testWc("COMMIT AND NO CHAIN");
@@ -103,19 +103,19 @@ describe("transactions", () => {
       testWc("ROLLBACK");
     });
 
-    dialect(["sqlite", "bigquery", "postgresql"], () => {
+    dialect(["sqlite", "bigquery", "postgresql", "plpgsql"], () => {
       it("supports ROLLBACK TRANSACTION", () => {
         testWc("ROLLBACK TRANSACTION");
       });
     });
 
-    dialect(["mysql", "mariadb", "postgresql"], () => {
+    dialect(["mysql", "mariadb", "postgresql", "plpgsql"], () => {
       it("supports ROLLBACK WORK", () => {
         testWc("ROLLBACK WORK");
       });
     });
 
-    dialect("postgresql", () => {
+    dialect(["postgresql", "plpgsql"], () => {
       it("supports AND [NO] CHAIN", () => {
         testWc("ROLLBACK AND CHAIN");
         testWc("ROLLBACK AND NO CHAIN");
@@ -124,7 +124,7 @@ describe("transactions", () => {
     });
   });
 
-  dialect("postgresql", () => {
+  dialect(["postgresql", "plpgsql"], () => {
     describe("ABORT as alias for ROLLBACK", () => {
       it("supports ABORT", () => {
         testWc("ABORT");
@@ -136,7 +136,7 @@ describe("transactions", () => {
     });
   });
 
-  dialect(["mysql", "mariadb", "sqlite", "postgresql"], () => {
+  dialect(["mysql", "mariadb", "sqlite", "postgresql", "plpgsql"], () => {
     describe("creating savepoints", () => {
       it("supports SAVEPOINT", () => {
         testWc("SAVEPOINT my_sp");
@@ -148,7 +148,7 @@ describe("transactions", () => {
         testWc("RELEASE SAVEPOINT my_sp");
       });
 
-      dialect(["sqlite", "postgresql"], () => {
+      dialect(["sqlite", "postgresql", "plpgsql"], () => {
         it("supports RELEASE", () => {
           testWc("RELEASE my_sp");
         });
@@ -161,14 +161,14 @@ describe("transactions", () => {
         testWc("ROLLBACK TO my_savepoint");
       });
 
-      dialect(["sqlite", "postgresql"], () => {
+      dialect(["sqlite", "postgresql", "plpgsql"], () => {
         it("supports ROLLBACK TRANSACTION TO [SAVEPOINT]", () => {
           testWc("ROLLBACK TRANSACTION TO SAVEPOINT my_savepoint");
           testWc("ROLLBACK TRANSACTION TO my_savepoint");
         });
       });
 
-      dialect(["mysql", "mariadb", "postgresql"], () => {
+      dialect(["mysql", "mariadb", "postgresql", "plpgsql"], () => {
         it("supports ROLLBACK WORK TO [SAVEPOINT]", () => {
           testWc("ROLLBACK WORK TO SAVEPOINT my_savepoint");
           testWc("ROLLBACK WORK TO my_savepoint");

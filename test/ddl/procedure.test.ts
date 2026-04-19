@@ -41,7 +41,7 @@ describe("procedure", () => {
           END
         `);
       });
-      dialect("postgresql", () => {
+      dialect(["postgresql", "plpgsql"], () => {
         it("supports VARIADIC parameters", () => {
           testWc(`
             CREATE PROCEDURE first(
@@ -116,7 +116,7 @@ describe("procedure", () => {
         });
       });
 
-      dialect(["postgresql"], () => {
+      dialect(["postgresql", "plpgsql"], () => {
         describe("procedures in other languages", () => {
           it("supports LANGUAGE SQL", () => {
             testWc("CREATE PROCEDURE foo() AS 'SELECT 1' LANGUAGE SQL");
@@ -176,7 +176,7 @@ describe("procedure", () => {
         testWc("DROP PROCEDURE IF EXISTS foo");
       });
 
-      dialect(["postgresql"], () => {
+      dialect(["postgresql", "plpgsql"], () => {
         it("supports parameter list", () => {
           testWc("DROP PROCEDURE foo ( )");
           testWc("DROP PROCEDURE bar ( id INT, name VARCHAR(255) )");
@@ -201,7 +201,7 @@ describe("procedure", () => {
   dialect("bigquery", () => {
     testCreateProcedure("BEGIN");
   });
-  dialect("postgresql", () => {
+  dialect(["postgresql", "plpgsql"], () => {
     testCreateProcedure("BEGIN ATOMIC");
   });
 

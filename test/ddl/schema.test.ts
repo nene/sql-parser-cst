@@ -1,7 +1,7 @@
 import { dialect, parseStmt, test, testWc } from "../test_utils";
 
 describe("schema", () => {
-  dialect(["mysql", "mariadb", "bigquery", "postgresql"], () => {
+  dialect(["mysql", "mariadb", "bigquery", "postgresql", "plpgsql"], () => {
     describe("CREATE SCHEMA", () => {
       it("supports CREATE SCHEMA statement", () => {
         testWc("CREATE SCHEMA my_schema");
@@ -32,7 +32,7 @@ describe("schema", () => {
         });
       });
 
-      dialect("postgresql", () => {
+      dialect(["postgresql", "plpgsql"], () => {
         it("supports AUTHORIZATION clause", () => {
           testWc("CREATE SCHEMA my_schema AUTHORIZATION some_user");
           testWc("CREATE SCHEMA my_schema AUTHORIZATION CURRENT_USER");
@@ -75,13 +75,13 @@ describe("schema", () => {
         });
       });
 
-      dialect("postgresql", () => {
+      dialect(["postgresql", "plpgsql"], () => {
         it("supports dropping multiple schemas", () => {
           testWc("DROP SCHEMA schema1, schema2, my.schema3");
         });
       });
 
-      dialect(["bigquery", "postgresql"], () => {
+      dialect(["bigquery", "postgresql", "plpgsql"], () => {
         it("supports CASCADE / RESTRICT", () => {
           testWc("DROP SCHEMA my_schema CASCADE");
           testWc("DROP SCHEMA my_schema RESTRICT");
@@ -104,7 +104,7 @@ describe("schema", () => {
         });
       });
 
-      dialect("postgresql", () => {
+      dialect(["postgresql", "plpgsql"], () => {
         it("supports IF EXISTS", () => {
           testWc("ALTER SCHEMA IF EXISTS foo RENAME TO bar");
         });

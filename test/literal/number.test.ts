@@ -56,7 +56,7 @@ describe("number literal", () => {
     testExpr(`+18`);
   });
 
-  dialect(["sqlite", "bigquery", "postgresql"], () => {
+  dialect(["sqlite", "bigquery", "postgresql", "plpgsql"], () => {
     it("parses 0x12FC0a as hex number", () => {
       expect(parseExpr(`0x12FC0a`)).toMatchInlineSnapshot(`
         {
@@ -68,7 +68,7 @@ describe("number literal", () => {
     });
   });
 
-  dialect("postgresql", () => {
+  dialect(["postgresql", "plpgsql"], () => {
     it("parses 0b01101010 as binary number", () => {
       expect(parseExpr(`0b01101010`)).toMatchInlineSnapshot(`
         {
@@ -80,7 +80,7 @@ describe("number literal", () => {
     });
   });
 
-  dialect("postgresql", () => {
+  dialect(["postgresql", "plpgsql"], () => {
     it("parses 0o755 as octal number", () => {
       expect(parseExpr(`0o755`)).toMatchInlineSnapshot(`
         {
@@ -92,7 +92,7 @@ describe("number literal", () => {
     });
   });
 
-  dialect("postgresql", () => {
+  dialect(["postgresql", "plpgsql"], () => {
     function testNumberLiteral(text: string, value: number) {
       expect(parseExpr(text)).toEqual({ type: "number_literal", text, value });
     }

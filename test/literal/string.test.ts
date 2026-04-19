@@ -76,7 +76,7 @@ describe("string literal", () => {
       `);
     });
 
-    dialect(["mysql", "mariadb", "sqlite", "postgresql"], () => {
+    dialect(["mysql", "mariadb", "sqlite", "postgresql", "plpgsql"], () => {
       it("supports repeated-quote escapes", () => {
         testExpr(`'hel''lo'`);
       });
@@ -273,7 +273,7 @@ describe("string literal", () => {
     });
   });
 
-  dialect("postgresql", () => {
+  dialect(["postgresql", "plpgsql"], () => {
     it("dollar-quoted strings", () => {
       expect(parseExpr(`$$my string$$`)).toMatchInlineSnapshot(`
         {
@@ -295,7 +295,7 @@ describe("string literal", () => {
     });
   });
 
-  dialect("postgresql", () => {
+  dialect(["postgresql", "plpgsql"], () => {
     it("single-quoted string with C-style escapes", () => {
       expect(parseExpr(`E'my\\nstring'`)).toMatchInlineSnapshot(`
         {
@@ -320,7 +320,7 @@ describe("string literal", () => {
     testStringEscaping(["E'", "'"], postgresqlBackslashEscaping);
   });
 
-  dialect("postgresql", () => {
+  dialect(["postgresql", "plpgsql"], () => {
     it("string with unicode escapes", () => {
       expect(parseExpr(`U&'d\\0061t\\+000061'`)).toMatchInlineSnapshot(`
         {
@@ -365,7 +365,7 @@ describe("string literal", () => {
     });
   });
 
-  dialect("postgresql", () => {
+  dialect(["postgresql", "plpgsql"], () => {
     describe("string concatenation", () => {
       it("combines multiple strings separated by newlines", () => {
         expect(parseExpr(`'hello'\n'world'`)).toMatchInlineSnapshot(`

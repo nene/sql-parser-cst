@@ -1,7 +1,7 @@
 import { dialect, notDialect, testWc } from "../test_utils";
 
 describe("type", () => {
-  dialect("postgresql", () => {
+  dialect(["postgresql", "plpgsql"], () => {
     describe("CREATE TYPE", () => {
       it("supports CREATE TYPE without definition", () => {
         testWc("CREATE TYPE my_type");
@@ -100,7 +100,7 @@ describe("type", () => {
     });
   });
 
-  notDialect("postgresql", () => {
+  notDialect(["postgresql", "plpgsql"], () => {
     it("does not support CREATE TYPE", () => {
       expect(() => test("CREATE TYPE address AS (street TEXT, house INT)")).toThrow();
     });

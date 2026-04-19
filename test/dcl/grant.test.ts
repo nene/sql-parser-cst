@@ -21,7 +21,7 @@ describe("GRANT", () => {
     });
   });
 
-  dialect("postgresql", () => {
+  dialect(["postgresql", "plpgsql"], () => {
     [
       "SELECT",
       "INSERT",

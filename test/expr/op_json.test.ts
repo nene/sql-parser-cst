@@ -1,7 +1,7 @@
 import { dialect, parseExpr, testExpr, testExprWc } from "../test_utils";
 
 describe("JSON operators", () => {
-  dialect(["mysql", "sqlite", "postgresql"], () => {
+  dialect(["mysql", "sqlite", "postgresql", "plpgsql"], () => {
     it("supports common JSON operators", () => {
       testExpr(`col->'items[0].id'`);
       testExprWc(`x -> 'op'`);
@@ -15,7 +15,7 @@ describe("JSON operators", () => {
     });
   });
 
-  dialect("postgresql", () => {
+  dialect(["postgresql", "plpgsql"], () => {
     it("supports additional JSON operators", () => {
       testExprWc(`x #> 'op'`);
       testExprWc(`x #>> 'op'`);

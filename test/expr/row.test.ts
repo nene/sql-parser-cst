@@ -1,7 +1,7 @@
 import { dialect, parseExpr, testExpr, testExprWc } from "../test_utils";
 
 describe("ROW constructor", () => {
-  dialect("postgresql", () => {
+  dialect(["postgresql", "plpgsql"], () => {
     it("supports ROW constructor", () => {
       testExprWc("ROW ( )");
       testExprWc("ROW ( 1, 'Hello', TRUE, NULL )");

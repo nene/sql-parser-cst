@@ -90,13 +90,13 @@ describe("variable", () => {
     });
   });
 
-  dialect(["sqlite", "postgresql", "bigquery"], () => {
+  dialect(["sqlite", "postgresql", "plpgsql", "bigquery"], () => {
     it("does not support @variables", () => {
       expect(() => parseExpr("@my_var")).toThrow();
     });
   });
 
-  dialect(["mysql", "mariadb", "sqlite", "postgresql"], () => {
+  dialect(["mysql", "mariadb", "sqlite", "postgresql", "plpgsql"], () => {
     it("does not support @@variables", () => {
       expect(() => parseExpr("@@my_var")).toThrow();
     });

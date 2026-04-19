@@ -1,7 +1,7 @@
 import { dialect, notDialect, parse, testWc } from "../test_utils";
 
 describe("COMMENT ON", () => {
-  dialect("postgresql", () => {
+  dialect(["postgresql", "plpgsql"], () => {
     [
       "ACCESS METHOD my_am",
       "CAST (INTEGER AS TEXT)",
@@ -60,7 +60,7 @@ describe("COMMENT ON", () => {
       });
     });
   });
-  notDialect("postgresql", () => {
+  notDialect(["postgresql", "plpgsql"], () => {
     it("does not support COMMENT ON", () => {
       expect(() => parse(`COMMENT ON TABLE my_table IS 'This is a comment'`)).toThrow();
     });
