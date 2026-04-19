@@ -71,6 +71,19 @@ describe("FOR..IN", () => {
         `);
       });
 
+      it("supports BY", () => {
+        testWc(`
+          FOR x IN 1 .. 10 BY 2 LOOP
+            SELECT x;
+          END LOOP
+        `);
+        testWc(`
+          FOR x IN 1 .. 10 BY 1+1 LOOP
+            SELECT x;
+          END LOOP
+        `);
+      });
+
       it("supports begin & end label", () => {
         testWc(`
           <<my_label>> FOR x IN 1..10 LOOP

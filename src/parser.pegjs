@@ -5607,7 +5607,7 @@ for_query_loop_stmt
   }
 
 for_range_loop_stmt
-  = kw:(FOR __) left:(ident __) inKw:(IN __) reverseKw:(REVERSE __)? right:(for_range __) loop:loop_stmt {
+  = kw:(FOR __) left:(ident __) inKw:(IN __) reverseKw:(REVERSE __)? right:(for_range __) by:(for_by_clause __)? loop:loop_stmt {
     return loc({
       type: "for_range_loop_stmt",
       forKw: read(kw),
@@ -5615,6 +5615,7 @@ for_range_loop_stmt
       inKw: read(inKw),
       reverseKw: read(reverseKw),
       right: read(right),
+      by: read(by),
       loop: read(loop),
     });
   }
@@ -5625,6 +5626,15 @@ for_range
       type: "for_range",
       left: read(left),
       right: read(right),
+    });
+  }
+
+for_by_clause
+  = kw:(BY __) expr:expr {
+    return loc({
+      type: "for_by_clause",
+      byKw: read(kw),
+      expr,
     });
   }
 

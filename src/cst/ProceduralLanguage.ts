@@ -26,6 +26,7 @@ export type AllProceduralNodes =
   | ElseifClause
   | ElseClause
   | ForRange
+  | ForByClause
   | RaiseMessage;
 
 export type AllProceduralStatements =
@@ -232,6 +233,7 @@ export interface ForRangeLoopStmt extends BaseNode {
   inKw: Keyword<"IN">;
   reverseKw?: Keyword<"REVERSE">;
   right: ForRange;
+  by?: ForByClause;
   loop: LoopStmt;
 }
 
@@ -240,6 +242,12 @@ export interface ForRange extends BaseNode {
   type: "for_range";
   left: Expr;
   right: Expr;
+}
+
+export interface ForByClause extends BaseNode {
+  type: "for_by_clause";
+  byKw: Keyword<"BY">;
+  expr: Expr;
 }
 
 // BREAK | LEAVE | EXIT
