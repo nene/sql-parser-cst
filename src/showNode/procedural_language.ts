@@ -31,6 +31,7 @@ export const proceduralLanguageMap: FullTransformMap<
     show([node.declareKw, node.names, node.dataType, node.default]),
   declare_default: (node) => show([node.defaultKw, node.expr]),
   set_stmt: (node) => show([node.setKw, node.assignments]),
+  assignment_stmt: (node) => show([node.target, node.operator, node.expr]),
   if_stmt: (node) => show([node.clauses, node.endIfKw]),
   if_clause: (node) =>
     show([node.ifKw, node.condition, node.thenKw, node.consequent]),

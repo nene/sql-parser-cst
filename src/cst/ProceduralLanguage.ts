@@ -34,6 +34,7 @@ export type AllProceduralStatements =
   | BlockStmt
   | DeclareStmt
   | SetStmt
+  | AssignmentStmt
   | IfStmt
   | CaseStmt
   | LoopStmt
@@ -129,6 +130,14 @@ export interface SetStmt extends BaseNode {
       Expr
     >
   >;
+}
+
+// variable := expression
+export interface AssignmentStmt extends BaseNode {
+  type: "assignment_stmt";
+  target: Identifier;
+  operator: "=" | ":=";
+  expr: Expr;
 }
 
 // IF

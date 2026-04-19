@@ -264,7 +264,8 @@ statement_postgres
   / update_stmt
 
 statement_plpgsql
-  = break_stmt
+  = assignment_stmt
+  / break_stmt
   / case_stmt
   / continue_stmt
   / if_stmt
@@ -5454,6 +5455,16 @@ set_assignment
       left: read(name),
       operator: "=",
       right: read(value),
+    });
+  }
+
+assignment_stmt
+  = target:(ident __) op:("=" / ":=") expr:(__ expr) {
+    return loc({
+      type: "assignment_stmt",
+      target: read(target),
+      operator: op,
+      expr: read(expr),
     });
   }
 
