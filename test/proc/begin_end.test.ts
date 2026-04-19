@@ -191,7 +191,7 @@ describe("BEGIN..END", () => {
     });
   });
 
-  dialect("bigquery", () => {
+  dialect(["bigquery", "plpgsql"], () => {
     it("supports empty BEGIN..END", () => {
       testWc(`BEGIN END;`);
     });
