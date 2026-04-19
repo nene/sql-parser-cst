@@ -76,7 +76,8 @@ non_transaction_statement
   = &sqlite x:statement_sqlite { return x; }
   / &mysql x:statement_mysql { return x; }
   / &bigquery x:statement_bigquery { return x; }
-  / &postgres x:statement_postgres { return x; }
+  / &postgres x:statement_postgres { return x; } // Also applies for PL/pgSQL
+  / &plpgsql x:statement_plpgsql { return x; }
 
 statement_sqlite
   = alter_table_stmt
@@ -261,6 +262,9 @@ statement_postgres
   / show_parameter_stmt
   / truncate_stmt
   / update_stmt
+
+statement_plpgsql
+  = labeled$block_stmt
 
 dml_statement
   = compound_select_stmt

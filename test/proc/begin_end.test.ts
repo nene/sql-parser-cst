@@ -1,7 +1,7 @@
 import { dialect, parse, test, testWc } from "../test_utils";
 
 describe("BEGIN..END", () => {
-  dialect(["mysql", "mariadb", "bigquery"], () => {
+  dialect(["mysql", "mariadb", "bigquery", "plpgsql"], () => {
     it("supports BEGIN..END block", () => {
       testWc(`
         BEGIN
@@ -21,7 +21,9 @@ describe("BEGIN..END", () => {
         END
       `);
     });
+  });
 
+  dialect(["mysql", "mariadb", "bigquery"], () => {
     it("supports transactions inside BEGIN..END", () => {
       testWc(`
         BEGIN
@@ -166,15 +168,9 @@ describe("BEGIN..END", () => {
     });
   });
 
-  dialect("sqlite", () => {
+  dialect(["sqlite", "postgresql"], () => {
     it("does not support BEGIN..END block", () => {
       expect(() => parse("BEGIN SELECT 1; END")).toThrow();
-    });
-  });
-
-  dialect(["postgresql", "plpgsql"], () => {
-    it.skip("TODO:postgres", () => {
-      expect(true).toBe(true);
     });
   });
 });
