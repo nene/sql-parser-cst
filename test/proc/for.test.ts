@@ -28,28 +28,40 @@ describe("FOR..IN", () => {
   });
 
   dialect(["plpgsql"], () => {
-    it("supports FOR..IN query LOOP statement", () => {
-      testWc(`
-        FOR x IN SELECT col FROM tbl LOOP
-          SELECT x;
-        END LOOP
-      `);
+    describe("FOR IN query LOOP", () => {
+      it("supports basic FOR..IN query", () => {
+        testWc(`
+          FOR x IN SELECT col FROM tbl LOOP
+            SELECT x;
+          END LOOP
+        `);
+      });
+
+      it("supports begin & end label", () => {
+        testWc(`
+          <<my_label>> FOR x IN SELECT 1 LOOP
+            SELECT x;
+          END LOOP my_label
+        `);
+      });
     });
 
-    it("supports FOR..IN range LOOP statement", () => {
-      testWc(`
-        FOR x IN 1 .. 10 LOOP
-          SELECT x;
-        END LOOP
-      `);
-    });
+    describe("FOR IN range LOOP", () => {
+      it("supports basic FOR..IN range", () => {
+        testWc(`
+          FOR x IN 1 .. 10 LOOP
+            SELECT x;
+          END LOOP
+        `);
+      });
 
-    it("supports begin & end label", () => {
-      testWc(`
-        <<my_label>> FOR x IN SELECT 1 LOOP
-          SELECT x;
-        END LOOP my_label
-      `);
+      it("supports begin & end label", () => {
+        testWc(`
+          <<my_label>> FOR x IN 1..10 LOOP
+            SELECT x;
+          END LOOP my_label
+        `);
+      });
     });
   });
 
