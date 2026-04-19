@@ -37,6 +37,7 @@ export type AllProceduralStatements =
   | LoopStmt
   | RepeatStmt
   | WhileStmt
+  | WhileLoopStmt
   | ForStmt
   | BreakStmt
   | ContinueStmt
@@ -47,7 +48,13 @@ export type AllProceduralStatements =
 export interface LabeledStmt extends BaseNode {
   type: "labeled_stmt";
   beginLabel: ColonLabel | ChevronLabel;
-  statement: BlockStmt | LoopStmt | RepeatStmt | WhileStmt | ForStmt;
+  statement:
+    | BlockStmt
+    | LoopStmt
+    | RepeatStmt
+    | WhileStmt
+    | WhileLoopStmt
+    | ForStmt;
   endLabel?: Identifier;
 }
 
@@ -181,6 +188,13 @@ export interface WhileStmt extends BaseNode {
   doKw: Keyword<"DO">;
   body: Program;
   endWhileKw: [Keyword<"END">, Keyword<"WHILE">];
+}
+
+export interface WhileLoopStmt extends BaseNode {
+  type: "while_loop_stmt";
+  whileKw: Keyword<"WHILE">;
+  condition: Expr;
+  loop: LoopStmt;
 }
 
 // FOR

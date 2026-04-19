@@ -270,7 +270,7 @@ statement_plpgsql
   / if_stmt
   / labeled$block_stmt
   / labeled$loop_stmt
-  / labeled$while_stmt
+  / labeled$while_loop_stmt
   / return_stmt
 
 dml_statement
@@ -5358,6 +5358,7 @@ labeled$__template__
 labeled$block_stmt = .
 labeled$loop_stmt = .
 labeled$while_stmt = .
+labeled$while_loop_stmt = .
 labeled$repeat_stmt = .
 labeled$for_stmt = .
 
@@ -5561,6 +5562,16 @@ while_stmt
       doKw: read(doKw),
       body: read(body),
       endWhileKw: read(endKw),
+    });
+  }
+
+while_loop_stmt
+  = kw:(WHILE __) cond:(expr __) loop:loop_stmt {
+    return loc({
+      type: "while_loop_stmt",
+      whileKw: read(kw),
+      condition: read(cond),
+      loop: read(loop),
     });
   }
 

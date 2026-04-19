@@ -1,7 +1,7 @@
 import { dialect, parse, testWc } from "../test_utils";
 
 describe("WHILE", () => {
-  dialect(["mysql", "mariadb", "bigquery", "plpgsql"], () => {
+  dialect(["mysql", "mariadb", "bigquery"], () => {
     it("supports WHILE statement", () => {
       testWc(`
         WHILE x < 10 DO
@@ -10,9 +10,7 @@ describe("WHILE", () => {
         END WHILE
       `);
     });
-  });
 
-  dialect(["mysql", "mariadb", "bigquery"], () => {
     it("supports begin & end label", () => {
       testWc(`
         my_label: WHILE x < 10 DO
@@ -23,11 +21,20 @@ describe("WHILE", () => {
   });
 
   dialect(["plpgsql"], () => {
+    it("supports WHILE .. LOOP statement", () => {
+      testWc(`
+        WHILE x < 10 LOOP
+          SELECT x + 1;
+          SELECT x;
+        END LOOP
+      `);
+    });
+
     it("supports begin & end label", () => {
       testWc(`
-        <<my_label>> WHILE x < 10 DO
+        <<my_label>> WHILE x < 10 LOOP
           SELECT 1;
-        END WHILE my_label
+        END LOOP my_label
       `);
     });
   });
@@ -35,6 +42,9 @@ describe("WHILE", () => {
   dialect(["sqlite", "postgresql"], () => {
     it("does not support WHILE statement", () => {
       expect(() => parse("WHILE true DO SELECT 1; END WHILE")).toThrow();
+    });
+    it("does not support WHILE .. LOOP statement", () => {
+      expect(() => parse("WHILE true LOOP SELECT 1; END LOOP")).toThrow();
     });
   });
 });

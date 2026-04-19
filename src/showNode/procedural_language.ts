@@ -50,6 +50,7 @@ export const proceduralLanguageMap: FullTransformMap<
     ]),
   while_stmt: (node) =>
     show([node.whileKw, node.condition, node.doKw, node.body, node.endWhileKw]),
+  while_loop_stmt: (node) => show([node.whileKw, node.condition, node.loop]),
   for_stmt: (node) =>
     show([
       node.forKw,
