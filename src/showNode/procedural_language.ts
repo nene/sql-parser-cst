@@ -12,12 +12,14 @@ export const proceduralLanguageMap: FullTransformMap<
   chevron_label: (node) => show(["<<", node.label, ">>"]),
   block_stmt: (node) =>
     show([
+      node.declareClause,
       node.beginKw,
       node.atomicKw,
       node.program,
       node.exception,
       node.endKw,
     ]),
+  declare_clause: (node) => show([node.declareKw, node.program]),
   exception_clause: (node) =>
     show([
       node.exceptionKw,
@@ -28,8 +30,8 @@ export const proceduralLanguageMap: FullTransformMap<
     ]),
   error_category: (node) => show(node.errorKw),
   declare_stmt: (node) =>
-    show([node.declareKw, node.names, node.dataType, node.default]),
-  declare_default: (node) => show([node.defaultKw, node.expr]),
+    show([node.declareKw, node.names, node.dataType, node.init]),
+  declare_init: (node) => show([node.operator, node.expr]),
   set_stmt: (node) => show([node.setKw, node.assignments]),
   assignment_stmt: (node) => show([node.target, node.operator, node.expr]),
   if_stmt: (node) => show([node.clauses, node.endIfKw]),

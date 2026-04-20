@@ -5377,12 +5377,14 @@ label
   }
 
 block_stmt
-  = beginKw:(BEGIN __) atomicKw:(atomic_kw __)?
+  = declareClause:(declare_clause __)?
+    beginKw:(BEGIN __) atomicKw:(atomic_kw __)?
     program:inner_program
     exception:(__ exception_clause)?
     endKw:(__ END) {
       return loc({
         type: "block_stmt",
+        declareClause: read(declareClause),
         beginKw: read(beginKw),
         atomicKw: read(atomicKw),
         program,
@@ -5390,6 +5392,29 @@ block_stmt
         endKw: read(endKw),
       });
     }
+
+declare_clause
+  = &postgres kw:(DECLARE __) program:declarations_program {
+    return loc({
+      type: "declare_clause",
+      declareKw: read(kw),
+      program,
+    });
+  }
+
+declarations_program
+  = head:declare_stmt tail:(__ ";" __ (declare_stmt / empty))+ {
+    return loc({
+      type: "program",
+      statements: readCommaSepList(head, tail),
+    });
+  }
+  / empty {
+    return ({
+      type: "program",
+      statements: [],
+    });
+  }
 
 atomic_kw
   = kw:ATOMIC &postgres { return kw; }
@@ -5412,22 +5437,30 @@ error_category
   }
 
 declare_stmt
-  = kw:(DECLARE __) names:list$ident type:(__ data_type)? deflt:(__ declare_default)? {
+  = &plpgsql names:list$ident type:(__ data_type)? init:(__ declare_init)? {
+    return loc({
+      type: "declare_stmt",
+      names,
+      dataType: read(type),
+      init: read(init),
+    });
+  }
+  / !plpgsql kw:(DECLARE __) names:list$ident type:(__ data_type)? init:(__ declare_init)? {
     return loc({
       type: "declare_stmt",
       declareKw: read(kw),
       names,
       dataType: read(type),
-      default: read(deflt),
+      init: read(init),
     });
   }
 
-declare_default
-  = kw:(DEFAULT __) expr:expr {
+declare_init
+  = op:(DEFAULT / ":=" / "=") expr:(__ expr) {
     return loc({
-      type: "declare_default",
-      defaultKw: read(kw),
-      expr,
+      type: "declare_init",
+      operator: read(op),
+      expr: read(expr),
     });
   }
 

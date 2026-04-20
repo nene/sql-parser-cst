@@ -20,9 +20,10 @@ export type AllProceduralNodes =
   | AllProceduralStatements
   | ColonLabel
   | ChevronLabel
+  | DeclareClause
   | ExceptionClause
   | ErrorCategory
-  | DeclareDefault
+  | DeclareInit
   | IfClause
   | ElseifClause
   | ElseClause
@@ -82,11 +83,18 @@ export interface ChevronLabel {
 // BEGIN .. END
 export interface BlockStmt extends BaseNode {
   type: "block_stmt";
+  declareClause?: DeclareClause;
   beginKw: Keyword<"BEGIN">;
   atomicKw?: Keyword<"ATOMIC">;
   program: Program;
   exception?: ExceptionClause;
   endKw: Keyword<"END">;
+}
+
+export interface DeclareClause extends BaseNode {
+  type: "declare_clause";
+  declareKw: Keyword<"DECLARE">;
+  program: Program;
 }
 
 export interface ExceptionClause extends BaseNode {
@@ -106,15 +114,15 @@ export interface ErrorCategory extends BaseNode {
 // DECLARE
 export interface DeclareStmt extends BaseNode {
   type: "declare_stmt";
-  declareKw: Keyword<"DECLARE">;
+  declareKw?: Keyword<"DECLARE">;
   names: ListExpr<Identifier>;
   dataType?: DataType;
-  default?: DeclareDefault;
+  init?: DeclareInit;
 }
 
-export interface DeclareDefault extends BaseNode {
-  type: "declare_default";
-  defaultKw: Keyword<"DEFAULT">;
+export interface DeclareInit extends BaseNode {
+  type: "declare_init";
+  operator: Keyword<"DEFAULT"> | ":=" | "=";
   expr: Expr;
 }
 

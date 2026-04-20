@@ -23,15 +23,9 @@ describe("DECLARE", () => {
     });
   });
 
-  dialect("sqlite", () => {
+  dialect(["sqlite", "postgresql", "plpgsql"], () => {
     it("does not support DECLARE statement", () => {
       expect(() => parse("DECLARE x INT")).toThrow();
-    });
-  });
-
-  dialect(["postgresql", "plpgsql"], () => {
-    it.skip("TODO:postgres", () => {
-      expect(true).toBe(true);
     });
   });
 });
