@@ -241,6 +241,36 @@ describe("BEGIN..END", () => {
         END
       `);
     });
+
+    it("supports CONSTANT", () => {
+      testWc(`
+        DECLARE
+          my_var1 CONSTANT INT;
+        BEGIN
+          SELECT 1;
+        END
+      `);
+    });
+
+    it.skip("supports NOT NULL", () => {
+      testWc(`
+        DECLARE
+          my_var1 INT NOT NULL;
+        BEGIN
+          SELECT 1;
+        END
+      `);
+    });
+
+    it.skip("supports COLLATE", () => {
+      testWc(`
+        DECLARE
+          my_var1 TEXT COLLATE "utf8_general_ci";
+        BEGIN
+          SELECT 1;
+        END
+      `);
+    });
   });
 
   dialect(["sqlite", "postgresql"], () => {

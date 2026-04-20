@@ -116,6 +116,7 @@ export interface DeclareStmt extends BaseNode {
   type: "declare_stmt";
   declareKw?: Keyword<"DECLARE">;
   names: ListExpr<Identifier>;
+  constantKw?: Keyword<"CONSTANT">;
   dataType?: DataType;
   init?: DeclareInit;
 }

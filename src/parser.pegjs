@@ -5437,10 +5437,11 @@ error_category
   }
 
 declare_stmt
-  = &plpgsql names:list$ident type:(__ data_type)? init:(__ declare_init)? {
+  = &plpgsql names:list$ident constantKw:(__ CONSTANT)? type:(__ data_type)? init:(__ declare_init)? {
     return loc({
       type: "declare_stmt",
       names,
+      constantKw: read(constantKw),
       dataType: read(type),
       init: read(init),
     });
@@ -9601,6 +9602,7 @@ CONFIGURATION       = kw:"CONFIGURATION"i       !ident_part { return loc(createK
 CONFLICT            = kw:"CONFLICT"i            !ident_part { return loc(createKeyword(kw)); }
 CONNECT             = kw:"CONNECT"i             !ident_part { return loc(createKeyword(kw)); }
 CONNECTION          = kw:"CONNECTION"i          !ident_part { return loc(createKeyword(kw)); }
+CONSTANT            = kw:"CONSTANT"i            !ident_part { return loc(createKeyword(kw)); }
 CONSTRAINT          = kw:"CONSTRAINT"i          !ident_part { return loc(createKeyword(kw)); }
 CONSTRAINTS         = kw:"CONSTRAINTS"i         !ident_part { return loc(createKeyword(kw)); }
 CONTINUE            = kw:"CONTINUE"i            !ident_part { return loc(createKeyword(kw)); }

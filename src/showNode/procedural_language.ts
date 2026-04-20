@@ -30,7 +30,13 @@ export const proceduralLanguageMap: FullTransformMap<
     ]),
   error_category: (node) => show(node.errorKw),
   declare_stmt: (node) =>
-    show([node.declareKw, node.names, node.dataType, node.init]),
+    show([
+      node.declareKw,
+      node.names,
+      node.constantKw,
+      node.dataType,
+      node.init,
+    ]),
   declare_init: (node) => show([node.operator, node.expr]),
   set_stmt: (node) => show([node.setKw, node.assignments]),
   assignment_stmt: (node) => show([node.target, node.operator, node.expr]),
