@@ -2,13 +2,6 @@
 // https://www.sqlite.org/lang_keywords.html
 //
 // However, not all of them are fully reserved.
-// I've marked the ones that by my testing are reserved with (R).
-// This might or might not be fully accurate.
-//
-// Some keywords are never reserved. I've removed these from the list:
-// - KEY
-// Some are reserved only in certain contexts. I've removed these from the list:
-// - COLUMN
 //
 // The following map lists the contexts in which the keywords are reserved.
 // If the array is empty, then the keyword is reserved in all contexts.
@@ -43,6 +36,7 @@ export const keywordDefs: Record<string, string[]> = {
   CAST: ["col-name"],
   CHECK: ["col-alias", "tbl-alias", "col-name"],
   COLLATE: ["col-alias", "tbl-alias", "col-name"],
+  COLUMN: [],
   COMMIT: ["col-alias", "tbl-alias", "col-name"],
   CONFLICT: [],
   CONSTRAINT: ["col-alias", "tbl-alias", "col-name"],
@@ -99,6 +93,7 @@ export const keywordDefs: Record<string, string[]> = {
   IS: ["create-table", "col-alias", "tbl-alias", "col-name"],
   ISNULL: ["create-table", "tbl-alias", "col-as-alias", "col-name"],
   JOIN: ["create-table", "col-alias", "tbl-alias", "col-name"],
+  KEY: [],
   LAST: [],
   LEFT: ["col-alias"],
   LIKE: ["col-alias"],
@@ -169,5 +164,10 @@ export const keywordDefs: Record<string, string[]> = {
 };
 
 export const sqliteKeywords: Record<string, boolean> = Object.fromEntries(
-  Object.keys(keywordDefs).map((k) => [k, true])
+  Object.entries(keywordDefs)
+    // For now we explicitly exclude two keywords
+    // - KEY
+    // - COLUMN
+    .filter(([k]) => k !== "COLUMN" && k !== "KEY")
+    .map(([k]) => [k, true])
 );
