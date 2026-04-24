@@ -10,150 +10,160 @@
 // Some are reserved only in certain contexts. I've removed these from the list:
 // - COLUMN
 //
-export const sqliteKeywords: Record<string, boolean> = {
-  ABORT: true,
-  ACTION: true,
-  ADD: true, // (R)
-  AFTER: true,
-  ALL: true, // (R)
-  ALTER: true, // (R)
-  ALWAYS: true,
-  ANALYZE: true,
-  AND: true, // (R)
-  AS: true, // (R)
-  ASC: true,
-  ATTACH: true,
-  AUTOINCREMENT: true, // (R)
-  BEFORE: true,
-  BEGIN: true,
-  BETWEEN: true,
-  BY: true,
-  CASCADE: true,
-  CASE: true,
-  CAST: true,
-  CHECK: true,
-  COLLATE: true,
-  COMMIT: true,
-  CONFLICT: true,
-  CONSTRAINT: true,
-  CREATE: true,
-  CROSS: true,
-  CURRENT: true,
-  CURRENT_DATE: true,
-  CURRENT_TIME: true,
-  CURRENT_TIMESTAMP: true,
-  DATABASE: true,
-  DEFAULT: true,
-  DEFERRABLE: true,
-  DEFERRED: true,
-  DELETE: true,
-  DESC: true,
-  DETACH: true,
-  DISTINCT: true, // (R)
-  DO: true,
-  DROP: true, // (R)
-  EACH: true,
-  ELSE: true, // (R)
-  END: true,
-  ESCAPE: true, // (R)
-  EXCEPT: true, // (R)
-  EXCLUDE: true,
-  EXCLUSIVE: true,
-  EXISTS: true, // (R)
-  EXPLAIN: true,
-  FAIL: true,
-  FILTER: true,
-  FIRST: true,
-  FOLLOWING: true,
-  FOR: true,
-  FOREIGN: true, // (R)
-  FROM: true, // (R)
-  FULL: true,
-  GENERATED: true,
-  GLOB: true,
-  GROUP: true, // (R)
-  GROUPS: true,
-  HAVING: true, // (R)
-  IF: true, // (R)
-  IGNORE: true,
-  IMMEDIATE: true,
-  IN: true, // (R)
-  INDEX: true, // (R)
-  INDEXED: true,
-  INITIALLY: true,
-  INNER: true,
-  INSERT: true, // (R)
-  INSTEAD: true,
-  INTERSECT: true, // (R)
-  INTO: true, // (R)
-  IS: true, // (R)
-  ISNULL: true, // (R)
-  JOIN: true, // (R)
-  LAST: true,
-  LEFT: true,
-  LIKE: true,
-  LIMIT: true, // (R)
-  MATCH: true,
-  MATERIALIZED: true,
-  NATURAL: true,
-  NO: true,
-  NOT: true, // (R)
-  NOTHING: true, // (R)
-  NOTNULL: true, // (R)
-  NULL: true, // (R)
-  NULLS: true,
-  OF: true,
-  OFFSET: true,
-  ON: true, // (R)
-  OR: true, // (R)
-  ORDER: true, // (R)
-  OTHERS: true,
-  OUTER: true,
-  OVER: true,
-  PARTITION: true,
-  PLAN: true,
-  PRAGMA: true,
-  PRECEDING: true,
-  PRIMARY: true, // (R)
-  QUERY: true,
-  RAISE: true,
-  RANGE: true,
-  RECURSIVE: true,
-  REFERENCES: true, // (R)
-  REGEXP: true,
-  REINDEX: true,
-  RELEASE: true,
-  RENAME: true,
-  REPLACE: true,
-  RESTRICT: true,
-  RETURNING: true, // (R)
-  RIGHT: true,
-  ROLLBACK: true,
-  ROW: true,
-  ROWS: true,
-  SAVEPOINT: true,
-  SELECT: true, // (R)
-  SET: true, // (R)
-  TABLE: true, // (R)
-  TEMP: true,
-  TEMPORARY: true,
-  THEN: true, // (R)
-  TIES: true,
-  TO: true, // (R)
-  TRANSACTION: true, // (R)
-  TRIGGER: true,
-  UNBOUNDED: true,
-  UNION: true, // (R)
-  UNIQUE: true, // (R)
-  UPDATE: true, // (R)
-  USING: true, // (R)
-  VACUUM: true,
-  VALUES: true, // (R)
-  VIEW: true,
-  VIRTUAL: true,
-  WHEN: true, // (R)
-  WHERE: true, // (R)
-  WINDOW: true,
-  WITH: true,
-  WITHOUT: true,
+// The following map lists the contexts in which the keywords are reserved.
+// If the array is empty, then the keyword is reserved in all contexts.
+//
+// The contexts are:
+// - "create table": cannot be used in: CREATE TABLE <kw> (id INT)
+//
+export const keywordDefs: Record<string, string[]> = {
+  ABORT: [],
+  ACTION: [],
+  ADD: ["create table"],
+  AFTER: [],
+  ALL: ["create table"],
+  ALTER: ["create table"],
+  ALWAYS: [],
+  ANALYZE: [],
+  AND: ["create table"],
+  AS: ["create table"],
+  ASC: [],
+  ATTACH: [],
+  AUTOINCREMENT: ["create table"],
+  BEFORE: [],
+  BEGIN: [],
+  BETWEEN: [],
+  BY: [],
+  CASCADE: [],
+  CASE: [],
+  CAST: [],
+  CHECK: [],
+  COLLATE: [],
+  COMMIT: [],
+  CONFLICT: [],
+  CONSTRAINT: [],
+  CREATE: [],
+  CROSS: [],
+  CURRENT: [],
+  CURRENT_DATE: [],
+  CURRENT_TIME: [],
+  CURRENT_TIMESTAMP: [],
+  DATABASE: [],
+  DEFAULT: [],
+  DEFERRABLE: [],
+  DEFERRED: [],
+  DELETE: [],
+  DESC: [],
+  DETACH: [],
+  DISTINCT: ["create table"],
+  DO: [],
+  DROP: ["create table"],
+  EACH: [],
+  ELSE: ["create table"],
+  END: [],
+  ESCAPE: ["create table"],
+  EXCEPT: ["create table"],
+  EXCLUDE: [],
+  EXCLUSIVE: [],
+  EXISTS: ["create table"],
+  EXPLAIN: [],
+  FAIL: [],
+  FILTER: [],
+  FIRST: [],
+  FOLLOWING: [],
+  FOR: [],
+  FOREIGN: ["create table"],
+  FROM: ["create table"],
+  FULL: [],
+  GENERATED: [],
+  GLOB: [],
+  GROUP: ["create table"],
+  GROUPS: [],
+  HAVING: ["create table"],
+  IF: ["create table"],
+  IGNORE: [],
+  IMMEDIATE: [],
+  IN: ["create table"],
+  INDEX: ["create table"],
+  INDEXED: [],
+  INITIALLY: [],
+  INNER: [],
+  INSERT: ["create table"],
+  INSTEAD: [],
+  INTERSECT: ["create table"],
+  INTO: ["create table"],
+  IS: ["create table"],
+  ISNULL: ["create table"],
+  JOIN: ["create table"],
+  LAST: [],
+  LEFT: [],
+  LIKE: [],
+  LIMIT: ["create table"],
+  MATCH: [],
+  MATERIALIZED: [],
+  NATURAL: [],
+  NO: [],
+  NOT: ["create table"],
+  NOTHING: ["create table"],
+  NOTNULL: ["create table"],
+  NULL: ["create table"],
+  NULLS: [],
+  OF: [],
+  OFFSET: [],
+  ON: ["create table"],
+  OR: ["create table"],
+  ORDER: ["create table"],
+  OTHERS: [],
+  OUTER: [],
+  OVER: [],
+  PARTITION: [],
+  PLAN: [],
+  PRAGMA: [],
+  PRECEDING: [],
+  PRIMARY: ["create table"],
+  QUERY: [],
+  RAISE: [],
+  RANGE: [],
+  RECURSIVE: [],
+  REFERENCES: ["create table"],
+  REGEXP: [],
+  REINDEX: [],
+  RELEASE: [],
+  RENAME: [],
+  REPLACE: [],
+  RESTRICT: [],
+  RETURNING: ["create table"],
+  RIGHT: [],
+  ROLLBACK: [],
+  ROW: [],
+  ROWS: [],
+  SAVEPOINT: [],
+  SELECT: ["create table"],
+  SET: ["create table"],
+  TABLE: ["create table"],
+  TEMP: [],
+  TEMPORARY: [],
+  THEN: ["create table"],
+  TIES: [],
+  TO: ["create table"],
+  TRANSACTION: ["create table"],
+  TRIGGER: [],
+  UNBOUNDED: [],
+  UNION: ["create table"],
+  UNIQUE: ["create table"],
+  UPDATE: ["create table"],
+  USING: ["create table"],
+  VACUUM: [],
+  VALUES: ["create table"],
+  VIEW: [],
+  VIRTUAL: [],
+  WHEN: ["create table"],
+  WHERE: ["create table"],
+  WINDOW: [],
+  WITH: [],
+  WITHOUT: [],
 };
+
+export const sqliteKeywords: Record<string, boolean> = Object.fromEntries(
+  Object.keys(keywordDefs).map((k) => [k, true])
+);
