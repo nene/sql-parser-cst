@@ -5723,10 +5723,10 @@ return_stmt
     });
   }
   / &plpgsql kw:(RETURN __ QUERY __) expr:sub_select {
-    return loc({ type: "return_stmt", returnKw: read(kw), expr });
+    return loc({ type: "return_query_stmt", returnQueryKw: read(kw), expr });
   }
   / &plpgsql kw:(RETURN __ NEXT __) expr:expr {
-    return loc({ type: "return_stmt", returnKw: read(kw), expr });
+    return loc({ type: "return_next_stmt", returnNextKw: read(kw), expr });
   }
   / (&mysql / &postgres) kw:(RETURN __) expr:expr {
     return loc({ type: "return_stmt", returnKw: read(kw), expr });

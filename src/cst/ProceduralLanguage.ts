@@ -52,6 +52,8 @@ export type AllProceduralStatements =
   | ContinueStmt
   | CallStmt
   | ReturnStmt
+  | ReturnNextStmt
+  | ReturnQueryStmt
   | ReturnQueryExecuteStmt
   | RaiseStmt
   | NullStmt;
@@ -298,8 +300,22 @@ export interface CallStmt extends BaseNode {
 // RETURN
 export interface ReturnStmt extends BaseNode {
   type: "return_stmt";
-  returnKw: Keyword<"RETURN"> | [Keyword<"RETURN">, Keyword<"NEXT" | "QUERY">];
-  expr?: Expr | SubSelect;
+  returnKw: Keyword<"RETURN">;
+  expr?: Expr;
+}
+
+// RETURN NEXT
+export interface ReturnNextStmt extends BaseNode {
+  type: "return_next_stmt";
+  returnNextKw: [Keyword<"RETURN">, Keyword<"NEXT">];
+  expr: Expr;
+}
+
+// RETURN QUERY
+export interface ReturnQueryStmt extends BaseNode {
+  type: "return_query_stmt";
+  returnQueryKw: [Keyword<"RETURN">, Keyword<"QUERY">];
+  expr: SubSelect;
 }
 
 // RETURN QUERY EXECUTE
