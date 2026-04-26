@@ -76,6 +76,16 @@ export const proceduralLanguageMap: FullTransformMap<
   for_range: (node) =>
     show([node.reverseKw, node.from, "..", node.to, node.by]),
   for_by_clause: (node) => show([node.byKw, node.expr]),
+  foreach_stmt: (node) =>
+    show([
+      node.foreachKw,
+      node.left,
+      node.slice,
+      node.inArrayKw,
+      node.right,
+      node.loop,
+    ]),
+  foreach_slice: (node) => show([node.sliceKw, node.count]),
   break_stmt: (node) => show([node.breakKw, node.label, node.when]),
   continue_stmt: (node) => show([node.continueKw, node.label, node.when]),
   call_stmt: (node) => show([node.callKw, node.func]),

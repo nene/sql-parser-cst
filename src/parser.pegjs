@@ -271,6 +271,7 @@ statement_plpgsql
   / if_stmt
   / labeled$block_stmt
   / labeled$for_loop_stmt
+  / labeled$foreach_stmt
   / labeled$loop_stmt
   / labeled$while_loop_stmt
   / null_stmt
@@ -5365,6 +5366,7 @@ labeled$while_loop_stmt = .
 labeled$repeat_stmt = .
 labeled$for_stmt = .
 labeled$for_loop_stmt = .
+labeled$foreach_stmt = .
 
 label
   = &plpgsql "<<" label:(__ ident __) ">>" {
@@ -5672,6 +5674,28 @@ for_by_clause
       type: "for_by_clause",
       byKw: read(kw),
       expr,
+    });
+  }
+
+foreach_stmt
+  = kw:(FOREACH __) left:(ident __) slice:(foreach_slice __)? inArrayKw:(IN __ ARRAY __) right:(expr __) loop:loop_stmt {
+    return loc({
+      type: "foreach_stmt",
+      foreachKw: read(kw),
+      left: read(left),
+      slice: read(slice),
+      inArrayKw: read(inArrayKw),
+      right: read(right),
+      loop: read(loop),
+    });
+  }
+
+foreach_slice
+  = kw:(SLICE __) count:expr {
+    return loc({
+      type: "foreach_slice",
+      sliceKw: read(kw),
+      count: read(count),
     });
   }
 
@@ -9731,6 +9755,7 @@ FLOAT64             = kw:"FLOAT64"i             !ident_part { return loc(createK
 FOLLOWING           = kw:"FOLLOWING"i           !ident_part { return loc(createKeyword(kw)); }
 FOR                 = kw:"FOR"i                 !ident_part { return loc(createKeyword(kw)); }
 FORCE               = kw:"FORCE"i               !ident_part { return loc(createKeyword(kw)); }
+FOREACH             = kw:"FOREACH"i             !ident_part { return loc(createKeyword(kw)); }
 FOREIGN             = kw:"FOREIGN"i             !ident_part { return loc(createKeyword(kw)); }
 FORMAT              = kw:"FORMAT"i              !ident_part { return loc(createKeyword(kw)); }
 FRIDAY              = kw:"FRIDAY"i              !ident_part { return loc(createKeyword(kw)); }
@@ -10033,6 +10058,7 @@ SIGNED              = kw:"SIGNED"i              !ident_part { return loc(createK
 SIMILAR             = kw:"SIMILAR"i             !ident_part { return loc(createKeyword(kw)); }
 SIMPLE              = kw:"SIMPLE"i              !ident_part { return loc(createKeyword(kw)); }
 SKIP                = kw:"SKIP"i                !ident_part { return loc(createKeyword(kw)); }
+SLICE               = kw:"SLICE"i               !ident_part { return loc(createKeyword(kw)); }
 SMALLINT            = kw:"SMALLINT"i            !ident_part { return loc(createKeyword(kw)); }
 SNAPSHOT            = kw:"SNAPSHOT"i            !ident_part { return loc(createKeyword(kw)); }
 SOME                = kw:"SOME"i                !ident_part { return loc(createKeyword(kw)); }

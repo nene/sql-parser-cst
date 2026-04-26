@@ -32,6 +32,7 @@ export type AllProceduralNodes =
   | ElseClause
   | ForRange
   | ForByClause
+  | ForeachSlice
   | RaiseMessage;
 
 export type AllProceduralStatements =
@@ -48,6 +49,7 @@ export type AllProceduralStatements =
   | WhileLoopStmt
   | ForStmt
   | ForLoopStmt
+  | ForeachStmt
   | BreakStmt
   | ContinueStmt
   | CallStmt
@@ -67,7 +69,8 @@ export interface LabeledStmt extends BaseNode {
     | WhileStmt
     | WhileLoopStmt
     | ForStmt
-    | ForLoopStmt;
+    | ForLoopStmt
+    | ForeachStmt;
   endLabel?: Identifier;
 }
 
@@ -262,6 +265,23 @@ export interface ForByClause extends BaseNode {
   type: "for_by_clause";
   byKw: Keyword<"BY">;
   expr: Expr;
+}
+
+// FOREACH
+export interface ForeachStmt extends BaseNode {
+  type: "foreach_stmt";
+  foreachKw: Keyword<"FOREACH">;
+  left: Identifier;
+  slice?: ForeachSlice;
+  inArrayKw: [Keyword<"IN">, Keyword<"ARRAY">];
+  right: Expr;
+  loop: LoopStmt;
+}
+
+export interface ForeachSlice extends BaseNode {
+  type: "foreach_slice";
+  sliceKw: Keyword<"SLICE">;
+  count: Expr;
 }
 
 // BREAK | LEAVE | EXIT
