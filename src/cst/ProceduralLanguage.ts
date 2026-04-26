@@ -32,6 +32,7 @@ export type AllProceduralNodes =
   | ForRange
   | ForByClause
   | ForeachSlice
+  | RaiseLevel
   | RaiseUsingClause
   | RaiseUsingOption;
 
@@ -332,7 +333,15 @@ export interface ReturnQueryStmt extends BaseNode {
 export interface RaiseStmt extends BaseNode {
   type: "raise_stmt";
   raiseKw: Keyword<"RAISE">;
+  level?: RaiseLevel;
   using?: RaiseUsingClause;
+}
+
+export interface RaiseLevel extends BaseNode {
+  type: "raise_level";
+  levelKw: Keyword<
+    "DEBUG" | "LOG" | "INFO" | "NOTICE" | "WARNING" | "EXCEPTION"
+  >;
 }
 
 export interface RaiseUsingClause extends BaseNode {

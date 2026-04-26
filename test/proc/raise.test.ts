@@ -21,11 +21,20 @@ describe("RAISE", () => {
     );
 
     it("supports multiple USING options", () => {
-      test(`RAISE USING MESSAGE = 'AnError!', ERRCODE = 25 + 8, HINT = 'Haha'`);
+      testWc(`RAISE USING MESSAGE = 'AnError!', ERRCODE = 25 + 8, HINT = 'Haha'`);
     });
 
     it("supports := operator", () => {
-      test(`RAISE USING MESSAGE := 'AnError!'`);
+      testWc(`RAISE USING MESSAGE := 'AnError!'`);
+    });
+
+    it("supports RAISE with level", () => {
+      testWc(`RAISE DEBUG USING MESSAGE = 'foo'`);
+      testWc(`RAISE LOG USING MESSAGE = 'foo'`);
+      testWc(`RAISE INFO USING MESSAGE = 'foo'`);
+      testWc(`RAISE NOTICE USING MESSAGE = 'foo'`);
+      testWc(`RAISE WARNING USING MESSAGE = 'foo'`);
+      testWc(`RAISE EXCEPTION USING MESSAGE = 'foo'`);
     });
   });
 

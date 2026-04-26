@@ -5739,8 +5739,13 @@ return_stmt
   }
 
 raise_stmt
-  = kw:RAISE using:(__ raise_using_clause)? {
-    return loc({ type: "raise_stmt", raiseKw: kw, using: read(using) });
+  = kw:RAISE level:(__ raise_level)? using:(__ raise_using_clause)? {
+    return loc({ type: "raise_stmt", raiseKw: kw, level: read(level), using: read(using) });
+  }
+
+raise_level
+  = kw:(DEBUG / LOG / INFO / NOTICE / WARNING / EXCEPTION) {
+    return loc({ type: "raise_level", levelKw: kw });
   }
 
 raise_using_clause
@@ -9693,6 +9698,7 @@ DAY_SECOND          = kw:"DAY_SECOND"i          !ident_part { return loc(createK
 DAYOFWEEK           = kw:"DAYOFWEEK"i           !ident_part { return loc(createKeyword(kw)); }
 DAYOFYEAR           = kw:"DAYOFYEAR"i           !ident_part { return loc(createKeyword(kw)); }
 DEALLOCATE          = kw:"DEALLOCATE"i          !ident_part { return loc(createKeyword(kw)); }
+DEBUG               = kw:"DEBUG"i               !ident_part { return loc(createKeyword(kw)); }
 DEC                 = kw:"DEC"i                 !ident_part { return loc(createKeyword(kw)); }
 DECADE              = kw:"DECADE"i              !ident_part { return loc(createKeyword(kw)); }
 DECIMAL             = kw:"DECIMAL"i             !ident_part { return loc(createKeyword(kw)); }
@@ -9823,6 +9829,7 @@ INCREMENT           = kw:"INCREMENT"i           !ident_part { return loc(createK
 INDEX               = kw:"INDEX"i               !ident_part { return loc(createKeyword(kw)); }
 INDEXED             = kw:"INDEXED"i             !ident_part { return loc(createKeyword(kw)); }
 INDEXES             = kw:"INDEXES"i             !ident_part { return loc(createKeyword(kw)); }
+INFO                = kw:"INFO"i                !ident_part { return loc(createKeyword(kw)); }
 INHERIT             = kw:"INHERIT"i             !ident_part { return loc(createKeyword(kw)); }
 INHERITS            = kw:"INHERITS"i            !ident_part { return loc(createKeyword(kw)); }
 INITIALLY           = kw:"INITIALLY"i           !ident_part { return loc(createKeyword(kw)); }
@@ -9876,6 +9883,7 @@ LOCALTIME           = kw:"LOCALTIME"i           !ident_part { return loc(createK
 LOCALTIMESTAMP      = kw:"LOCALTIMESTAMP"i      !ident_part { return loc(createKeyword(kw)); }
 LOCK                = kw:"LOCK"i                !ident_part { return loc(createKeyword(kw)); }
 LOCKED              = kw:"LOCKED"i              !ident_part { return loc(createKeyword(kw)); }
+LOG                 = kw:"LOG"i                 !ident_part { return loc(createKeyword(kw)); }
 LOGGED              = kw:"LOGGED"i              !ident_part { return loc(createKeyword(kw)); }
 LOGIN               = kw:"LOGIN"i               !ident_part { return loc(createKeyword(kw)); }
 LOGS                = kw:"LOGS"i                !ident_part { return loc(createKeyword(kw)); }
@@ -9940,6 +9948,7 @@ NORMALIZED          = kw:"NORMALIZED"i          !ident_part { return loc(createK
 NOSUPERUSER         = kw:"NOSUPERUSER"i         !ident_part { return loc(createKeyword(kw)); }
 NOT                 = kw:"NOT"i                 !ident_part { return loc(createKeyword(kw)); }
 NOTHING             = kw:"NOTHING"i             !ident_part { return loc(createKeyword(kw)); }
+NOTICE              = kw:"NOTICE"i              !ident_part { return loc(createKeyword(kw)); }
 NOTNULL             = kw:"NOTNULL"i             !ident_part { return loc(createKeyword(kw)); }
 NOWAIT              = kw:"NOWAIT"i              !ident_part { return loc(createKeyword(kw)); }
 NTH_VALUE           = kw:"NTH_VALUE"i           !ident_part { return loc(createKeyword(kw)); }
@@ -10190,6 +10199,7 @@ VIRTUAL             = kw:"VIRTUAL"i             !ident_part { return loc(createK
 VISIBLE             = kw:"VISIBLE"i             !ident_part { return loc(createKeyword(kw)); }
 VOLATILE            = kw:"VOLATILE"i            !ident_part { return loc(createKeyword(kw)); }
 WAIT                = kw:"WAIT"i                !ident_part { return loc(createKeyword(kw)); }
+WARNING             = kw:"WARNING"i             !ident_part { return loc(createKeyword(kw)); }
 WEDNESDAY           = kw:"WEDNESDAY"i           !ident_part { return loc(createKeyword(kw)); }
 WEEK                = kw:"WEEK"i                !ident_part { return loc(createKeyword(kw)); }
 WHEN                = kw:"WHEN"i                !ident_part { return loc(createKeyword(kw)); }
