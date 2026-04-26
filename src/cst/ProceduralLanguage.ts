@@ -296,8 +296,8 @@ export interface CallStmt extends BaseNode {
 // RETURN
 export interface ReturnStmt extends BaseNode {
   type: "return_stmt";
-  returnKw: Keyword<"RETURN">;
-  expr?: Expr;
+  returnKw: Keyword<"RETURN"> | [Keyword<"RETURN">, Keyword<"NEXT" | "QUERY">];
+  expr?: Expr | SubSelect;
 }
 
 // RAISE

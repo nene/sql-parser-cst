@@ -17,6 +17,16 @@ describe("RETURN", () => {
     });
   });
 
+  dialect(["plpgsql"], () => {
+    it("supports RETURN NEXT", () => {
+      testWc(`RETURN NEXT r + 1`);
+    });
+
+    it("supports RETURN QUERY", () => {
+      testWc(`RETURN QUERY SELECT * FROM my_table`);
+    });
+  });
+
   dialect(["sqlite", "postgresql"], () => {
     it("does not support RETURN statement", () => {
       expect(() => parse("RETURN")).toThrow();

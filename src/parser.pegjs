@@ -5714,7 +5714,13 @@ call_stmt
   }
 
 return_stmt
-  = (&mysql / &postgres) kw:(RETURN __) expr:expr {
+  = &plpgsql kw:(RETURN __ NEXT __) expr:expr {
+    return loc({ type: "return_stmt", returnKw: read(kw), expr });
+  }
+  / &plpgsql kw:(RETURN __ QUERY __) expr:sub_select {
+    return loc({ type: "return_stmt", returnKw: read(kw), expr });
+  }
+  / (&mysql / &postgres) kw:(RETURN __) expr:expr {
     return loc({ type: "return_stmt", returnKw: read(kw), expr });
   }
   / (&bigquery / &plpgsql) kw:RETURN {
