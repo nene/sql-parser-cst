@@ -100,6 +100,24 @@ describe("FOR..IN", () => {
         `);
       });
     });
+
+    describe("FOR IN EXECUTE .. LOOP", () => {
+      it("supports basic EXECUTE", () => {
+        testWc(`
+          FOR x IN EXECUTE 'SELECT 1' LOOP
+            SELECT x;
+          END LOOP
+        `);
+      });
+
+      it("supports EXECUTE USING", () => {
+        testWc(`
+          FOR x IN EXECUTE 'SELECT ?, ?' USING var1, var2 LOOP
+            SELECT x;
+          END LOOP
+        `);
+      });
+    });
   });
 
   dialect(["mysql", "mariadb", "sqlite", "postgresql"], () => {

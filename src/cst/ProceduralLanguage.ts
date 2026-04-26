@@ -245,7 +245,7 @@ export interface ForLoopStmt extends BaseNode {
   forKw: Keyword<"FOR">;
   left: Identifier;
   inKw: Keyword<"IN">;
-  right: SubSelect | ForRange;
+  right: SubSelect | ForRange | ExecuteExpr;
   loop: LoopStmt;
 }
 
