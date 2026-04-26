@@ -6617,7 +6617,14 @@ table_constraint
     }
 
 constraint_name
-  = kw:CONSTRAINT name:(__ ident)? {
+  = &mysql kw:CONSTRAINT name:(__ ident)? {
+    return loc({
+      type: "constraint_name",
+      constraintKw: kw,
+      name: read(name),
+    });
+  }
+  / !mysql kw:CONSTRAINT name:(__ ident) {
     return loc({
       type: "constraint_name",
       constraintKw: kw,

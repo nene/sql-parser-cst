@@ -226,7 +226,7 @@ describe("table constraints", () => {
     });
   });
 
-  dialect(["mysql", "mariadb", "sqlite"], () => {
+  dialect(["mysql", "mariadb"], () => {
     it("supports CONSTRAINT keyword for table constraints", () => {
       testTblConstWc("CONSTRAINT PRIMARY KEY (id)");
       testTblConstWc("CONSTRAINT UNIQUE KEY (id)");
