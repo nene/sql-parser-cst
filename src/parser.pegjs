@@ -5714,10 +5714,18 @@ call_stmt
   }
 
 return_stmt
-  = &plpgsql kw:(RETURN __ NEXT __) expr:expr {
-    return loc({ type: "return_stmt", returnKw: read(kw), expr });
+  = &plpgsql kw:(RETURN __ QUERY __ EXECUTE __) expr:expr using:(__ execute_using_clause)? {
+    return loc({
+      type: "return_query_execute_stmt",
+      returnQueryExecuteKw: read(kw),
+      expr,
+      using: read(using),
+    });
   }
   / &plpgsql kw:(RETURN __ QUERY __) expr:sub_select {
+    return loc({ type: "return_stmt", returnKw: read(kw), expr });
+  }
+  / &plpgsql kw:(RETURN __ NEXT __) expr:expr {
     return loc({ type: "return_stmt", returnKw: read(kw), expr });
   }
   / (&mysql / &postgres) kw:(RETURN __) expr:expr {

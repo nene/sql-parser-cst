@@ -25,6 +25,10 @@ describe("RETURN", () => {
     it("supports RETURN QUERY", () => {
       testWc(`RETURN QUERY SELECT * FROM my_table`);
     });
+
+    it("supports RETURN QUERY EXECUTE", () => {
+      testWc(`RETURN QUERY EXECUTE 'SELECT * FROM tbl'`);
+    });
   });
 
   dialect(["sqlite", "postgresql"], () => {
