@@ -270,8 +270,7 @@ statement_plpgsql
   / continue_stmt
   / if_stmt
   / labeled$block_stmt
-  / labeled$for_query_loop_stmt
-  / labeled$for_range_loop_stmt
+  / labeled$for_loop_stmt
   / labeled$loop_stmt
   / labeled$while_loop_stmt
   / null_stmt
@@ -5365,8 +5364,7 @@ labeled$while_stmt = .
 labeled$while_loop_stmt = .
 labeled$repeat_stmt = .
 labeled$for_stmt = .
-labeled$for_query_loop_stmt = .
-labeled$for_range_loop_stmt = .
+labeled$for_loop_stmt = .
 
 label
   = &plpgsql "<<" label:(__ ident __) ">>" {
@@ -5645,38 +5643,26 @@ for_stmt
       });
     }
 
-for_query_loop_stmt
-  = kw:(FOR __) left:(ident __) inKw:(IN __) right:(compound_select_stmt __) loop:loop_stmt {
+for_loop_stmt
+  = kw:(FOR __) left:(ident __) inKw:(IN __) right:((compound_select_stmt / for_range) __) loop:loop_stmt {
     return loc({
-      type: "for_query_loop_stmt",
+      type: "for_loop_stmt",
       forKw: read(kw),
       left: read(left),
       inKw: read(inKw),
       right: read(right),
-      loop: read(loop),
-    });
-  }
-
-for_range_loop_stmt
-  = kw:(FOR __) left:(ident __) inKw:(IN __) reverseKw:(REVERSE __)? right:(for_range __) by:(for_by_clause __)? loop:loop_stmt {
-    return loc({
-      type: "for_range_loop_stmt",
-      forKw: read(kw),
-      left: read(left),
-      inKw: read(inKw),
-      reverseKw: read(reverseKw),
-      right: read(right),
-      by: read(by),
       loop: read(loop),
     });
   }
 
 for_range
-  = left:(expr __) ".." right:(__ expr) {
+  = reverseKw:(REVERSE __)? from:(expr __) ".." to:(__ expr) by:(__ for_by_clause)? {
     return loc({
       type: "for_range",
-      left: read(left),
-      right: read(right),
+      reverseKw: read(reverseKw),
+      from: read(from),
+      to: read(to),
+      by: read(by),
     });
   }
 

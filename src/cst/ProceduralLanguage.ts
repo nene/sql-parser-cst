@@ -47,8 +47,7 @@ export type AllProceduralStatements =
   | WhileStmt
   | WhileLoopStmt
   | ForStmt
-  | ForQueryLoopStmt
-  | ForRangeLoopStmt
+  | ForLoopStmt
   | BreakStmt
   | ContinueStmt
   | CallStmt
@@ -68,8 +67,7 @@ export interface LabeledStmt extends BaseNode {
     | WhileStmt
     | WhileLoopStmt
     | ForStmt
-    | ForQueryLoopStmt
-    | ForRangeLoopStmt;
+    | ForLoopStmt;
   endLabel?: Identifier;
 }
 
@@ -229,7 +227,7 @@ export interface WhileLoopStmt extends BaseNode {
   loop: LoopStmt;
 }
 
-// FOR
+// FOR x IN ... DO ... END FOR
 export interface ForStmt extends BaseNode {
   type: "for_stmt";
   forKw: Keyword<"FOR">;
@@ -241,33 +239,23 @@ export interface ForStmt extends BaseNode {
   endForKw: [Keyword<"END">, Keyword<"FOR">];
 }
 
-// FOR IN query LOOP
-export interface ForQueryLoopStmt extends BaseNode {
-  type: "for_query_loop_stmt";
+// FOR x IN ... LOOP ... END LOOP
+export interface ForLoopStmt extends BaseNode {
+  type: "for_loop_stmt";
   forKw: Keyword<"FOR">;
   left: Identifier;
   inKw: Keyword<"IN">;
-  right: SubSelect;
+  right: SubSelect | ForRange;
   loop: LoopStmt;
 }
 
-// FOR IN expr..expr LOOP
-export interface ForRangeLoopStmt extends BaseNode {
-  type: "for_range_loop_stmt";
-  forKw: Keyword<"FOR">;
-  left: Identifier;
-  inKw: Keyword<"IN">;
-  reverseKw?: Keyword<"REVERSE">;
-  right: ForRange;
-  by?: ForByClause;
-  loop: LoopStmt;
-}
-
-// expr .. expr
+// [REVERSE] expr..expr [BY expr]
 export interface ForRange extends BaseNode {
   type: "for_range";
-  left: Expr;
-  right: Expr;
+  reverseKw?: Keyword<"REVERSE">;
+  from: Expr;
+  to: Expr;
+  by?: ForByClause;
 }
 
 export interface ForByClause extends BaseNode {
