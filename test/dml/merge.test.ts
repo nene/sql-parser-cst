@@ -156,6 +156,13 @@ describe("merge into", () => {
           MERGE INTO foo USING bar ON x = y WHEN MATCHED THEN DELETE
         `);
       });
+
+      it("supports RETURNING clause", () => {
+        testWc(`
+          MERGE INTO foo USING bar ON x = y WHEN MATCHED THEN DELETE
+          RETURNING *
+        `);
+      });
     });
   });
 

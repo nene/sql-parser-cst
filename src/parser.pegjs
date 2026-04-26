@@ -1881,7 +1881,7 @@ truncate_stmt
 merge_stmt
   = withClause:(with_clause __)?
     mergeClause:merge_clause
-    clauses:(__ merge_when_clause)+ {
+    clauses:(__ (merge_when_clause / returning_clause))+ {
       return loc({
         type: "merge_stmt",
         clauses: [
