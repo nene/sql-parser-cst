@@ -5749,7 +5749,7 @@ raise_level
   }
 
 raise_using_clause
-  = kw:(USING __ ) options:list$raise_using_option {
+  = kw:(USING __ ) options:list$raise_option_element {
     return loc({
       type: "raise_using_clause",
       usingKw: read(kw),
@@ -5757,10 +5757,10 @@ raise_using_clause
     });
   }
 
-raise_using_option
+raise_option_element
   = nameKw:(using_option_kw __) operator:("=" / ":=") value:(__ expr) {
     return loc({
-      type: "raise_using_option",
+      type: "raise_option_element",
       nameKw: read(nameKw),
       operator: read(operator),
       value: read(value),
@@ -8557,7 +8557,7 @@ list$transaction_mode = .
 list$transform_type = .
 list$trigger_transition = .
 list$type_param = .
-list$raise_using_option = .
+list$raise_option_element = .
 list$values_row = .
 list$variable = .
 list$view_column_definition = .

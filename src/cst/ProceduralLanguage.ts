@@ -34,7 +34,7 @@ export type AllProceduralNodes =
   | ForeachSlice
   | RaiseLevel
   | RaiseUsingClause
-  | RaiseUsingOption;
+  | RaiseOptionElement;
 
 export type AllProceduralStatements =
   | LabeledStmt
@@ -347,11 +347,11 @@ export interface RaiseLevel extends BaseNode {
 export interface RaiseUsingClause extends BaseNode {
   type: "raise_using_clause";
   usingKw: Keyword<"USING">;
-  options: ListExpr<RaiseUsingOption>;
+  options: ListExpr<RaiseOptionElement>;
 }
 
-export interface RaiseUsingOption extends BaseNode {
-  type: "raise_using_option";
+export interface RaiseOptionElement extends BaseNode {
+  type: "raise_option_element";
   nameKw: Keyword<
     | "MESSAGE"
     | "DETAIL"
