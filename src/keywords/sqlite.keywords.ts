@@ -12,6 +12,7 @@
 // - "col-as-alias": cannot be used as an alias in: SELECT 1 AS <kw>
 // - "tbl-alias": cannot be used as an alias in: SELECT col FROM tbl [AS] <kw>
 // - "col-name": cannot be used as a column name in: SELECT <kw> FROM tbl
+// - "parser-issue": for now we have problems with parsing when this keywords is not reserved.
 //
 export const keywordDefs: Record<string, string[]> = {
   ABORT: [],
@@ -158,7 +159,7 @@ export const keywordDefs: Record<string, string[]> = {
   VIRTUAL: [],
   WHEN: ["create-table", "col-alias", "tbl-alias", "col-name"],
   WHERE: ["create-table", "col-alias", "tbl-alias", "col-name"],
-  WINDOW: [],
+  WINDOW: ["parser-issue"], // Should be allowed as alias name, but currently causes parsing issues.
   WITH: [],
   WITHOUT: [],
 };
