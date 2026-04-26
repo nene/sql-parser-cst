@@ -252,20 +252,20 @@ describe("BEGIN..END", () => {
       `);
     });
 
-    it.skip("supports NOT NULL", () => {
+    it("supports NOT NULL", () => {
       testWc(`
         DECLARE
-          my_var1 INT NOT NULL;
+          my_var1 INT NOT NULL = 1;
         BEGIN
           SELECT 1;
         END
       `);
     });
 
-    it.skip("supports COLLATE", () => {
+    it("supports COLLATE", () => {
       testWc(`
         DECLARE
-          my_var1 TEXT COLLATE "utf8_general_ci";
+          my_var1 TEXT COLLATE "utf8_general_ci" = 'hello';
         BEGIN
           SELECT 1;
         END

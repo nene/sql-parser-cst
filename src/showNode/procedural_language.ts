@@ -35,6 +35,7 @@ export const proceduralLanguageMap: FullTransformMap<
       node.names,
       node.constantKw,
       node.dataType,
+      node.constraints,
       node.init,
     ]),
   declare_init: (node) => show([node.operator, node.expr]),

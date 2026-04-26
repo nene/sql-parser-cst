@@ -1,4 +1,5 @@
 import { BaseNode, Keyword } from "./Base";
+import { ConstraintCollate, ConstraintNotNull } from "./Constraint";
 import { DataType } from "./DataType";
 import {
   Identifier,
@@ -118,6 +119,7 @@ export interface DeclareStmt extends BaseNode {
   names: ListExpr<Identifier>;
   constantKw?: Keyword<"CONSTANT">;
   dataType?: DataType;
+  constraints: (ConstraintNotNull | ConstraintCollate)[];
   init?: DeclareInit;
 }
 

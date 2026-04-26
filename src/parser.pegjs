@@ -5437,12 +5437,13 @@ error_category
   }
 
 declare_stmt
-  = &plpgsql names:list$ident constantKw:(__ CONSTANT)? type:(__ data_type)? init:(__ declare_init)? {
+  = &plpgsql names:list$ident constantKw:(__ CONSTANT)? type:(__ data_type)? constraints:(__ declare_constraint)* init:(__ declare_init)? {
     return loc({
       type: "declare_stmt",
       names,
       constantKw: read(constantKw),
       dataType: read(type),
+      constraints: constraints.map(read),
       init: read(init),
     });
   }
@@ -5452,6 +5453,7 @@ declare_stmt
       declareKw: read(kw),
       names,
       dataType: read(type),
+      constraints: [],
       init: read(init),
     });
   }
@@ -5464,6 +5466,9 @@ declare_init
       expr: read(expr),
     });
   }
+
+declare_constraint
+  = constraint_not_null / constraint_collate
 
 set_stmt
   = kw:(SET __) assignments:list$set_assignment {
