@@ -79,7 +79,7 @@ export const keywordDefs: Record<string, string[]> = {
   GROUP: ["create-table", "col-alias", "tbl-alias", "col-name"],
   GROUPS: ["parser-issue"], // Should be allowed as alias name, but currently causes parsing issues.
   HAVING: ["create-table", "col-alias", "tbl-alias", "col-name"],
-  IF: ["create-table"],
+  IF: [],
   IGNORE: [],
   IMMEDIATE: [],
   IN: ["create-table", "col-alias", "tbl-alias", "col-name"],

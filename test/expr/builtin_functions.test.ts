@@ -21,6 +21,7 @@ describe("builtin functions", () => {
       "glob",
       "hex",
       "ifnull",
+      "if",
       "iif",
       "instr",
       "last_insert_rowid",
