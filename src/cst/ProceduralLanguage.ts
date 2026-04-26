@@ -13,7 +13,6 @@ import {
   Variable,
   MemberExpr,
 } from "./Expr";
-import { StringLiteral } from "./Literal";
 import { ExecuteExpr } from "./PreparedStatements";
 import { Program } from "./Program";
 import { SubSelect } from "./Select";
@@ -33,7 +32,8 @@ export type AllProceduralNodes =
   | ForRange
   | ForByClause
   | ForeachSlice
-  | RaiseMessage;
+  | RaiseUsingClause
+  | RaiseUsingOption;
 
 export type AllProceduralStatements =
   | LabeledStmt
@@ -332,13 +332,30 @@ export interface ReturnQueryStmt extends BaseNode {
 export interface RaiseStmt extends BaseNode {
   type: "raise_stmt";
   raiseKw: Keyword<"RAISE">;
-  message?: RaiseMessage;
+  using?: RaiseUsingClause;
 }
 
-export interface RaiseMessage extends BaseNode {
-  type: "raise_message";
-  usingMessageKw: [Keyword<"USING">, Keyword<"MESSAGE">];
-  string: StringLiteral;
+export interface RaiseUsingClause extends BaseNode {
+  type: "raise_using_clause";
+  usingKw: Keyword<"USING">;
+  options: ListExpr<RaiseUsingOption>;
+}
+
+export interface RaiseUsingOption extends BaseNode {
+  type: "raise_using_option";
+  nameKw: Keyword<
+    | "MESSAGE"
+    | "DETAIL"
+    | "HINT"
+    | "ERRCODE"
+    | "COLUMN"
+    | "CONSTRAINT"
+    | "DATATYPE"
+    | "TABLE"
+    | "SCHEMA"
+  >;
+  operator: "=" | ":=";
+  value: Expr;
 }
 
 // NULL

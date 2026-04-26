@@ -5739,18 +5739,39 @@ return_stmt
   }
 
 raise_stmt
-  = kw:RAISE msg:(__ raise_message)? {
-    return loc({ type: "raise_stmt", raiseKw: kw, message: read(msg) });
+  = kw:RAISE using:(__ raise_using_clause)? {
+    return loc({ type: "raise_stmt", raiseKw: kw, using: read(using) });
   }
 
-raise_message
-  = kw:(USING __ MESSAGE __) "=" string:(__ string_literal) {
+raise_using_clause
+  = kw:(USING __ ) options:list$raise_using_option {
     return loc({
-      type: "raise_message",
-      usingMessageKw: read(kw),
-      string: read(string),
+      type: "raise_using_clause",
+      usingKw: read(kw),
+      options,
     });
   }
+
+raise_using_option
+  = nameKw:(using_option_kw __) operator:("=" / ":=") value:(__ expr) {
+    return loc({
+      type: "raise_using_option",
+      nameKw: read(nameKw),
+      operator: read(operator),
+      value: read(value),
+    });
+  }
+
+using_option_kw
+  = MESSAGE
+  / DETAIL
+  / HINT
+  / ERRCODE
+  / COLUMN
+  / CONSTRAINT
+  / DATATYPE
+  / TABLE
+  / SCHEMA
 
 null_stmt
   = kw:NULL {
@@ -8531,6 +8552,7 @@ list$transaction_mode = .
 list$transform_type = .
 list$trigger_transition = .
 list$type_param = .
+list$raise_using_option = .
 list$values_row = .
 list$variable = .
 list$view_column_definition = .
@@ -9660,6 +9682,7 @@ CURRENT_USER        = kw:"CURRENT_USER"i        !ident_part { return loc(createK
 CYCLE               = kw:"CYCLE"i               !ident_part { return loc(createKeyword(kw)); }
 DATA                = kw:"DATA"i                !ident_part { return loc(createKeyword(kw)); }
 DATABASE            = kw:"DATABASE"i            !ident_part { return loc(createKeyword(kw)); }
+DATATYPE            = kw:"DATATYPE"i            !ident_part { return loc(createKeyword(kw)); }
 DATE                = kw:"DATE"i                !ident_part { return loc(createKeyword(kw)); }
 DATETIME            = kw:"DATETIME"i            !ident_part { return loc(createKeyword(kw)); }
 DAY                 = kw:"DAY"i                 !ident_part { return loc(createKeyword(kw)); }
@@ -9688,6 +9711,7 @@ DEPTH               = kw:"DEPTH"i               !ident_part { return loc(createK
 DESC                = kw:"DESC"i                !ident_part { return loc(createKeyword(kw)); }
 DESCRIBE            = kw:"DESCRIBE"i            !ident_part { return loc(createKeyword(kw)); }
 DETACH              = kw:"DETACH"i              !ident_part { return loc(createKeyword(kw)); }
+DETAIL              = kw:"DETAIL"i              !ident_part { return loc(createKeyword(kw)); }
 DETERMINISTIC       = kw:"DETERMINISTIC"i       !ident_part { return loc(createKeyword(kw)); }
 DICTIONARY          = kw:"DICTIONARY"i          !ident_part { return loc(createKeyword(kw)); }
 DIRECTORY           = kw:"DIRECTORY"i           !ident_part { return loc(createKeyword(kw)); }
@@ -9719,6 +9743,7 @@ ENGINE              = kw:"ENGINE"i              !ident_part { return loc(createK
 ENGINE_ATTRIBUTE    = kw:"ENGINE_ATTRIBUTE"i    !ident_part { return loc(createKeyword(kw)); }
 ENUM                = kw:"ENUM"i                !ident_part { return loc(createKeyword(kw)); }
 EPOCH               = kw:"EPOCH"i               !ident_part { return loc(createKeyword(kw)); }
+ERRCODE             = kw:"ERRCODE"i             !ident_part { return loc(createKeyword(kw)); }
 ERROR               = kw:"ERROR"i               !ident_part { return loc(createKeyword(kw)); }
 ESCAPE              = kw:"ESCAPE"i              !ident_part { return loc(createKeyword(kw)); }
 ESCAPED             = kw:"ESCAPED"i             !ident_part { return loc(createKeyword(kw)); }
@@ -9780,6 +9805,7 @@ GROUPS              = kw:"GROUPS"i              !ident_part { return loc(createK
 HASH                = kw:"HASH"i                !ident_part { return loc(createKeyword(kw)); }
 HAVING              = kw:"HAVING"i              !ident_part { return loc(createKeyword(kw)); }
 HIGH_PRIORITY       = kw:"HIGH_PRIORITY"i       !ident_part { return loc(createKeyword(kw)); }
+HINT                = kw:"HINT"i                !ident_part { return loc(createKeyword(kw)); }
 HOUR                = kw:"HOUR"i                !ident_part { return loc(createKeyword(kw)); }
 HOUR_MICROSECOND    = kw:"HOUR_MICROSECOND"i    !ident_part { return loc(createKeyword(kw)); }
 HOUR_MINUTE         = kw:"HOUR_MINUTE"i         !ident_part { return loc(createKeyword(kw)); }

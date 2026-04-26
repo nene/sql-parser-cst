@@ -92,7 +92,8 @@ export const proceduralLanguageMap: FullTransformMap<
   return_stmt: (node) => show([node.returnKw, node.expr]),
   return_next_stmt: (node) => show([node.returnNextKw, node.expr]),
   return_query_stmt: (node) => show([node.returnQueryKw, node.expr]),
-  raise_stmt: (node) => show([node.raiseKw, node.message]),
-  raise_message: (node) => show([node.usingMessageKw, "=", node.string]),
+  raise_stmt: (node) => show([node.raiseKw, node.using]),
+  raise_using_clause: (node) => show([node.usingKw, node.options]),
+  raise_using_option: (node) => show([node.nameKw, node.operator, node.value]),
   null_stmt: (node) => show([node.nullKw]),
 };
