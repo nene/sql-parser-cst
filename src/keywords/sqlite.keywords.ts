@@ -77,7 +77,7 @@ export const keywordDefs: Record<string, string[]> = {
   GENERATED: [],
   GLOB: ["col-alias"],
   GROUP: ["create-table", "col-alias", "tbl-alias", "col-name"],
-  GROUPS: [],
+  GROUPS: ["parser-issue"], // Should be allowed as alias name, but currently causes parsing issues.
   HAVING: ["create-table", "col-alias", "tbl-alias", "col-name"],
   IF: ["create-table"],
   IGNORE: [],
