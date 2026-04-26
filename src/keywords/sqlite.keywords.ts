@@ -166,9 +166,6 @@ export const keywordDefs: Record<string, string[]> = {
 
 export const sqliteKeywords: Record<string, boolean> = Object.fromEntries(
   Object.entries(keywordDefs)
-    // For now we explicitly exclude two keywords
-    // - KEY
-    // - COLUMN
-    .filter(([k]) => k !== "COLUMN" && k !== "KEY")
+    .filter(([, contexts]) => contexts.length > 0)
     .map(([k]) => [k, true])
 );
