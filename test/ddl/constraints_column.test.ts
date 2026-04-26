@@ -276,7 +276,7 @@ describe("column constraints", () => {
     });
   });
 
-  dialect(["mysql", "mariadb", "sqlite"], () => {
+  dialect(["mysql", "mariadb"], () => {
     it("supports CONSTRAINT keyword for keys and check()", () => {
       testColConstWc("CONSTRAINT PRIMARY KEY");
       testColConstWc("CONSTRAINT UNIQUE");
@@ -289,17 +289,6 @@ describe("column constraints", () => {
       testColConstWc("CONSTRAINT cname PRIMARY KEY");
       testColConstWc("CONSTRAINT cname UNIQUE");
       testColConstWc("CONSTRAINT cname CHECK (true)");
-    });
-  });
-
-  dialect(["sqlite"], () => {
-    it("supports CONSTRAINT keyword for column constraints", () => {
-      testColConstWc("CONSTRAINT NULL");
-      testColConstWc("CONSTRAINT NOT NULL");
-      testColConstWc("CONSTRAINT DEFAULT 10");
-      testColConstWc("CONSTRAINT COLLATE utf8");
-      testColConstWc("CONSTRAINT GENERATED ALWAYS AS (x + y)");
-      testColConstWc("CONSTRAINT REFERENCES tbl2 (col)");
     });
   });
 

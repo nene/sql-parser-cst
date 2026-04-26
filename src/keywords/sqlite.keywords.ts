@@ -2,158 +2,170 @@
 // https://www.sqlite.org/lang_keywords.html
 //
 // However, not all of them are fully reserved.
-// I've marked the ones that by my testing are reserved with (R).
-// This might or might not be fully accurate.
 //
-// Some keywords are never reserved. I've removed these from the list:
-// - KEY
-// Some are reserved only in certain contexts. I've removed these from the list:
-// - COLUMN
+// The following map lists the contexts in which the keywords are reserved.
+// If the array is empty, then the keyword is reserved in all contexts.
 //
-export const sqliteKeywords: Record<string, boolean> = {
-  ABORT: true,
-  ACTION: true,
-  ADD: true, // (R)
-  AFTER: true,
-  ALL: true, // (R)
-  ALTER: true, // (R)
-  ALWAYS: true,
-  ANALYZE: true,
-  AND: true, // (R)
-  AS: true, // (R)
-  ASC: true,
-  ATTACH: true,
-  AUTOINCREMENT: true, // (R)
-  BEFORE: true,
-  BEGIN: true,
-  BETWEEN: true,
-  BY: true,
-  CASCADE: true,
-  CASE: true,
-  CAST: true,
-  CHECK: true,
-  COLLATE: true,
-  COMMIT: true,
-  CONFLICT: true,
-  CONSTRAINT: true,
-  CREATE: true,
-  CROSS: true,
-  CURRENT: true,
-  CURRENT_DATE: true,
-  CURRENT_TIME: true,
-  CURRENT_TIMESTAMP: true,
-  DATABASE: true,
-  DEFAULT: true,
-  DEFERRABLE: true,
-  DEFERRED: true,
-  DELETE: true,
-  DESC: true,
-  DETACH: true,
-  DISTINCT: true, // (R)
-  DO: true,
-  DROP: true, // (R)
-  EACH: true,
-  ELSE: true, // (R)
-  END: true,
-  ESCAPE: true, // (R)
-  EXCEPT: true, // (R)
-  EXCLUDE: true,
-  EXCLUSIVE: true,
-  EXISTS: true, // (R)
-  EXPLAIN: true,
-  FAIL: true,
-  FILTER: true,
-  FIRST: true,
-  FOLLOWING: true,
-  FOR: true,
-  FOREIGN: true, // (R)
-  FROM: true, // (R)
-  FULL: true,
-  GENERATED: true,
-  GLOB: true,
-  GROUP: true, // (R)
-  GROUPS: true,
-  HAVING: true, // (R)
-  IF: true, // (R)
-  IGNORE: true,
-  IMMEDIATE: true,
-  IN: true, // (R)
-  INDEX: true, // (R)
-  INDEXED: true,
-  INITIALLY: true,
-  INNER: true,
-  INSERT: true, // (R)
-  INSTEAD: true,
-  INTERSECT: true, // (R)
-  INTO: true, // (R)
-  IS: true, // (R)
-  ISNULL: true, // (R)
-  JOIN: true, // (R)
-  LAST: true,
-  LEFT: true,
-  LIKE: true,
-  LIMIT: true, // (R)
-  MATCH: true,
-  MATERIALIZED: true,
-  NATURAL: true,
-  NO: true,
-  NOT: true, // (R)
-  NOTHING: true, // (R)
-  NOTNULL: true, // (R)
-  NULL: true, // (R)
-  NULLS: true,
-  OF: true,
-  OFFSET: true,
-  ON: true, // (R)
-  OR: true, // (R)
-  ORDER: true, // (R)
-  OTHERS: true,
-  OUTER: true,
-  OVER: true,
-  PARTITION: true,
-  PLAN: true,
-  PRAGMA: true,
-  PRECEDING: true,
-  PRIMARY: true, // (R)
-  QUERY: true,
-  RAISE: true,
-  RANGE: true,
-  RECURSIVE: true,
-  REFERENCES: true, // (R)
-  REGEXP: true,
-  REINDEX: true,
-  RELEASE: true,
-  RENAME: true,
-  REPLACE: true,
-  RESTRICT: true,
-  RETURNING: true, // (R)
-  RIGHT: true,
-  ROLLBACK: true,
-  ROW: true,
-  ROWS: true,
-  SAVEPOINT: true,
-  SELECT: true, // (R)
-  SET: true, // (R)
-  TABLE: true, // (R)
-  TEMP: true,
-  TEMPORARY: true,
-  THEN: true, // (R)
-  TIES: true,
-  TO: true, // (R)
-  TRANSACTION: true, // (R)
-  TRIGGER: true,
-  UNBOUNDED: true,
-  UNION: true, // (R)
-  UNIQUE: true, // (R)
-  UPDATE: true, // (R)
-  USING: true, // (R)
-  VACUUM: true,
-  VALUES: true, // (R)
-  VIEW: true,
-  VIRTUAL: true,
-  WHEN: true, // (R)
-  WHERE: true, // (R)
-  WINDOW: true,
-  WITH: true,
-  WITHOUT: true,
+// The contexts are:
+// - "create-table": cannot be used in: CREATE TABLE <kw> (id INT)
+// - "col-alias": cannot be used as an alias in: SELECT 1 <kw>
+// - "col-as-alias": cannot be used as an alias in: SELECT 1 AS <kw>
+// - "tbl-alias": cannot be used as an alias in: SELECT col FROM tbl [AS] <kw>
+// - "col-name": cannot be used as a column name in: SELECT <kw> FROM tbl
+// - "parser-issue": for now we have problems with parsing when this keywords is not reserved.
+//
+export const keywordDefs: Record<string, string[]> = {
+  ABORT: [],
+  ACTION: [],
+  ADD: ["create-table", "col-alias", "tbl-alias", "col-name"],
+  AFTER: [],
+  ALL: ["create-table", "col-alias", "tbl-alias", "col-name"],
+  ALTER: ["create-table", "col-alias", "tbl-alias", "col-name"],
+  ALWAYS: [],
+  ANALYZE: [],
+  AND: ["create-table", "col-alias", "tbl-alias", "col-name"],
+  AS: ["create-table", "col-alias", "tbl-alias", "col-name"],
+  ASC: [],
+  ATTACH: [],
+  AUTOINCREMENT: ["create-table", "col-alias", "tbl-alias", "col-name"],
+  BEFORE: [],
+  BEGIN: [],
+  BETWEEN: ["col-alias", "tbl-alias", "col-name"],
+  BY: [],
+  CASCADE: [],
+  CASE: ["col-alias", "tbl-alias", "col-name"],
+  CAST: ["col-name"],
+  CHECK: ["col-alias", "tbl-alias", "col-name"],
+  COLLATE: ["col-alias", "tbl-alias", "col-name"],
+  COLUMN: [],
+  COMMIT: ["col-alias", "tbl-alias", "col-name"],
+  CONFLICT: [],
+  CONSTRAINT: ["col-alias", "tbl-alias", "col-name"],
+  CREATE: ["col-alias", "tbl-alias", "col-name"],
+  CROSS: ["col-alias"],
+  CURRENT: [],
+  CURRENT_DATE: [],
+  CURRENT_TIME: [],
+  CURRENT_TIMESTAMP: [],
+  DATABASE: [],
+  DEFAULT: ["col-alias", "tbl-alias", "col-name"],
+  DEFERRABLE: ["col-alias", "tbl-alias", "col-name"],
+  DEFERRED: [],
+  DELETE: ["col-alias", "tbl-alias", "col-name"],
+  DESC: [],
+  DETACH: [],
+  DISTINCT: ["create-table", "col-alias", "tbl-alias", "col-name"],
+  DO: [],
+  DROP: ["create-table", "col-alias", "tbl-alias", "col-name"],
+  EACH: [],
+  ELSE: ["create-table", "col-alias", "tbl-alias", "col-name"],
+  END: [],
+  ESCAPE: ["create-table", "col-alias", "tbl-alias", "col-name"],
+  EXCEPT: ["create-table", "col-alias", "tbl-alias", "col-name"],
+  EXCLUDE: [],
+  EXCLUSIVE: [],
+  EXISTS: ["create-table", "col-alias", "tbl-alias", "col-name"],
+  EXPLAIN: [],
+  FAIL: [],
+  FILTER: [],
+  FIRST: [],
+  FOLLOWING: [],
+  FOR: [],
+  FOREIGN: ["create-table", "col-alias", "tbl-alias", "col-name"],
+  FROM: ["create-table", "col-alias", "tbl-alias", "col-name"],
+  FULL: ["col-alias"],
+  GENERATED: [],
+  GLOB: ["col-alias"],
+  GROUP: ["create-table", "col-alias", "tbl-alias", "col-name"],
+  GROUPS: ["parser-issue"], // Should be allowed as alias name, but currently causes parsing issues.
+  HAVING: ["create-table", "col-alias", "tbl-alias", "col-name"],
+  IF: ["create-table"],
+  IGNORE: [],
+  IMMEDIATE: [],
+  IN: ["create-table", "col-alias", "tbl-alias", "col-name"],
+  INDEX: ["create-table", "col-alias", "tbl-alias", "col-name"],
+  INDEXED: ["col-alias"],
+  INITIALLY: [],
+  INNER: ["col-alias"],
+  INSERT: ["create-table", "col-alias", "tbl-alias", "col-name"],
+  INSTEAD: [],
+  INTERSECT: ["create-table", "col-alias", "tbl-alias", "col-name"],
+  INTO: ["create-table", "col-alias", "tbl-alias", "col-name"],
+  IS: ["create-table", "col-alias", "tbl-alias", "col-name"],
+  ISNULL: ["create-table", "tbl-alias", "col-as-alias", "col-name"],
+  JOIN: ["create-table", "col-alias", "tbl-alias", "col-name"],
+  KEY: [],
+  LAST: [],
+  LEFT: ["col-alias"],
+  LIKE: ["col-alias"],
+  LIMIT: ["create-table", "col-alias", "tbl-alias", "col-name"],
+  MATCH: ["col-alias"],
+  MATERIALIZED: [],
+  NATURAL: ["col-alias"],
+  NO: [],
+  NOT: ["create-table", "col-alias", "tbl-alias", "col-name"],
+  NOTHING: ["create-table", "col-alias", "tbl-alias", "col-name"],
+  NOTNULL: ["create-table", "tbl-alias", "col-as-alias", "col-name"],
+  NULL: ["create-table", "col-alias", "tbl-alias"],
+  NULLS: [],
+  OF: [],
+  OFFSET: [],
+  ON: ["create-table", "col-alias", "tbl-alias", "col-name"],
+  OR: ["create-table", "col-alias", "tbl-alias", "col-name"],
+  ORDER: ["create-table", "col-alias", "tbl-alias", "col-name"],
+  OTHERS: [],
+  OUTER: ["col-alias"],
+  OVER: [],
+  PARTITION: [],
+  PLAN: [],
+  PRAGMA: [],
+  PRECEDING: [],
+  PRIMARY: ["create-table", "col-alias", "tbl-alias", "col-name"],
+  QUERY: [],
+  RAISE: ["col-name"],
+  RANGE: [],
+  RECURSIVE: [],
+  REFERENCES: ["create-table", "col-alias", "tbl-alias", "col-name"],
+  REGEXP: ["col-alias"],
+  REINDEX: [],
+  RELEASE: [],
+  RENAME: [],
+  REPLACE: [],
+  RESTRICT: [],
+  RETURNING: ["create-table", "col-alias", "tbl-alias", "col-name"],
+  RIGHT: ["col-alias"],
+  ROLLBACK: [],
+  ROW: [],
+  ROWS: [],
+  SAVEPOINT: [],
+  SELECT: ["create-table", "col-alias", "tbl-alias", "col-name"],
+  SET: ["create-table", "col-alias", "tbl-alias", "col-name"],
+  TABLE: ["create-table", "col-alias", "tbl-alias", "col-name"],
+  TEMP: [],
+  TEMPORARY: [],
+  THEN: ["create-table", "col-alias", "tbl-alias", "col-name"],
+  TIES: [],
+  TO: ["create-table", "col-alias", "tbl-alias", "col-name"],
+  TRANSACTION: ["create-table", "col-alias", "tbl-alias", "col-name"],
+  TRIGGER: [],
+  UNBOUNDED: [],
+  UNION: ["create-table", "col-alias", "tbl-alias", "col-name"],
+  UNIQUE: ["create-table", "col-alias", "tbl-alias", "col-name"],
+  UPDATE: ["create-table", "col-alias", "tbl-alias", "col-name"],
+  USING: ["create-table", "col-alias", "tbl-alias", "col-name"],
+  VACUUM: [],
+  VALUES: ["create-table", "col-alias", "tbl-alias", "col-name"],
+  VIEW: [],
+  VIRTUAL: [],
+  WHEN: ["create-table", "col-alias", "tbl-alias", "col-name"],
+  WHERE: ["create-table", "col-alias", "tbl-alias", "col-name"],
+  WINDOW: ["parser-issue"], // Should be allowed as alias name, but currently causes parsing issues.
+  WITH: [],
+  WITHOUT: [],
 };
+
+export const sqliteKeywords: Record<string, boolean> = Object.fromEntries(
+  Object.entries(keywordDefs)
+    .filter(([, contexts]) => contexts.length > 0)
+    .map(([k]) => [k, true])
+);
