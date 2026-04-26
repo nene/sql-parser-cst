@@ -5700,7 +5700,7 @@ call_stmt
   }
 
 return_stmt
-  = &plpgsql kw:(RETURN __ QUERY __) expr:(sub_select / execute_expr) {
+  = &plpgsql kw:(RETURN __ QUERY __) expr:(compound_select_stmt / execute_expr) {
     return loc({ type: "return_query_stmt", returnQueryKw: read(kw), expr });
   }
   / &plpgsql kw:(RETURN __ NEXT __) expr:expr {

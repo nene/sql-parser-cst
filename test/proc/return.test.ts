@@ -26,6 +26,10 @@ describe("RETURN", () => {
       testWc(`RETURN QUERY SELECT * FROM my_table`);
     });
 
+    it("supports RETURN QUERY with complex query using union", () => {
+      testWc(`RETURN QUERY SELECT 1 UNION SELECT 2`);
+    });
+
     it("supports RETURN QUERY EXECUTE", () => {
       testWc(`RETURN QUERY EXECUTE 'SELECT * FROM tbl'`);
     });
