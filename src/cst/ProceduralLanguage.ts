@@ -14,7 +14,7 @@ import {
   MemberExpr,
 } from "./Expr";
 import { StringLiteral } from "./Literal";
-import { ExecuteUsingClause } from "./PreparedStatements";
+import { ExecuteExpr } from "./PreparedStatements";
 import { Program } from "./Program";
 import { SubSelect } from "./Select";
 import { WhenClause } from "./Trigger";
@@ -55,7 +55,6 @@ export type AllProceduralStatements =
   | ReturnStmt
   | ReturnNextStmt
   | ReturnQueryStmt
-  | ReturnQueryExecuteStmt
   | RaiseStmt
   | NullStmt;
 
@@ -318,19 +317,7 @@ export interface ReturnNextStmt extends BaseNode {
 export interface ReturnQueryStmt extends BaseNode {
   type: "return_query_stmt";
   returnQueryKw: [Keyword<"RETURN">, Keyword<"QUERY">];
-  expr: SubSelect;
-}
-
-// RETURN QUERY EXECUTE
-export interface ReturnQueryExecuteStmt extends BaseNode {
-  type: "return_query_execute_stmt";
-  returnQueryExecuteKw: [
-    Keyword<"RETURN">,
-    Keyword<"QUERY">,
-    Keyword<"EXECUTE">
-  ];
-  expr: Expr;
-  using?: ExecuteUsingClause;
+  expr: SubSelect | ExecuteExpr;
 }
 
 // RAISE

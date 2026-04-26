@@ -5714,15 +5714,7 @@ call_stmt
   }
 
 return_stmt
-  = &plpgsql kw:(RETURN __ QUERY __ EXECUTE __) expr:expr using:(__ execute_using_clause)? {
-    return loc({
-      type: "return_query_execute_stmt",
-      returnQueryExecuteKw: read(kw),
-      expr,
-      using: read(using),
-    });
-  }
-  / &plpgsql kw:(RETURN __ QUERY __) expr:sub_select {
+  = &plpgsql kw:(RETURN __ QUERY __) expr:(sub_select / execute_expr) {
     return loc({ type: "return_query_stmt", returnQueryKw: read(kw), expr });
   }
   / &plpgsql kw:(RETURN __ NEXT __) expr:expr {
@@ -5847,6 +5839,16 @@ execute_using_clause
       type: "execute_using_clause",
       usingKw: read(kw),
       values,
+    });
+  }
+
+execute_expr
+  = kw:(EXECUTE __) expr:expr using:(__ execute_using_clause)? {
+    return loc({
+      type: "execute_expr",
+      executeKw: read(kw),
+      expr,
+      using: read(using),
     });
   }
 

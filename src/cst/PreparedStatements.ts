@@ -10,7 +10,8 @@ export type AllPreparedStatementNodes =
   | PrepareFromClause
   | DeallocateAll
   | ExecuteIntoClause
-  | ExecuteUsingClause;
+  | ExecuteUsingClause
+  | ExecuteExpr;
 
 export type AllPreparedStatements =
   | PrepareStmt
@@ -76,4 +77,14 @@ export interface ExecuteUsingClause extends BaseNode {
   type: "execute_using_clause";
   usingKw: Keyword<"USING">;
   values: ListExpr<Expr | Alias<Expr>>;
+}
+
+// EXECUTE inside PL/pgSQL, as in:
+//  - RETURN QUERY EXECUTE 'SELECT * FROM tbl' USING var1, var2;
+//  - FOR rec IN EXECUTE 'SELECT * FROM tbl' LOOP ... END LOOP;
+export interface ExecuteExpr extends BaseNode {
+  type: "execute_expr";
+  executeKw: Keyword<"EXECUTE">;
+  expr: Expr;
+  using?: ExecuteUsingClause;
 }
