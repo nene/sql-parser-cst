@@ -30,6 +30,10 @@ describe("RETURN", () => {
       testWc(`RETURN QUERY EXECUTE 'SELECT * FROM tbl'`);
     });
 
+    it("supports RETURN QUERY EXECUTE with string-expression", () => {
+      testWc(`RETURN QUERY EXECUTE 'SELECT * FROM tbl' || ' WHERE id = ' || var1`);
+    });
+
     it("supports RETURN QUERY EXECUTE with USING clause", () => {
       testWc(`RETURN QUERY EXECUTE 'SELECT * FROM tbl' USING var1, var2`);
     });
