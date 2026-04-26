@@ -5644,7 +5644,7 @@ for_stmt
     }
 
 for_loop_stmt
-  = kw:(FOR __) left:(ident __) inKw:(IN __) right:((execute_expr / compound_select_stmt / for_range) __) loop:loop_stmt {
+  = kw:(FOR __) left:(ident __) inKw:(IN __) right:((execute_expr / dml_statement / for_range) __) loop:loop_stmt {
     return loc({
       type: "for_loop_stmt",
       forKw: read(kw),

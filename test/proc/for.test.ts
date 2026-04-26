@@ -52,6 +52,38 @@ describe("FOR..IN", () => {
           END LOOP my_label
         `);
       });
+
+      it("supports INSERT in place of query", () => {
+        testWc(`
+          FOR x IN INSERT INTO tbl (col) VALUES (1) RETURNING col LOOP
+            SELECT x;
+          END LOOP
+        `);
+      });
+
+      it("supports DELETE in place of query", () => {
+        testWc(`
+          FOR x IN DELETE FROM tbl WHERE col = 1 RETURNING col LOOP
+            SELECT x;
+          END LOOP
+        `);
+      });
+
+      it("supports UPDATE in place of query", () => {
+        testWc(`
+          FOR x IN UPDATE tbl SET col = col + 1 RETURNING col LOOP
+            SELECT x;
+          END LOOP
+        `);
+      });
+
+      it("supports MERGE in place of query", () => {
+        testWc(`
+          FOR x IN MERGE INTO foo USING bar ON x = y WHEN MATCHED THEN DELETE RETURNING col LOOP
+            SELECT x;
+          END LOOP
+        `);
+      });
     });
 
     describe("FOR IN range LOOP", () => {
