@@ -1,7 +1,7 @@
 import { dialect, parse, test, testWc } from "../test_utils";
 
 describe("RAISE", () => {
-  dialect(["bigquery"], () => {
+  dialect(["bigquery", "plpgsql"], () => {
     it("supports RAISE statement", () => {
       test(`RAISE`);
     });
@@ -11,15 +11,9 @@ describe("RAISE", () => {
     });
   });
 
-  dialect(["mysql", "mariadb", "sqlite"], () => {
+  dialect(["mysql", "mariadb", "sqlite", "postgresql"], () => {
     it("does not support RAISE statement", () => {
       expect(() => parse("RAISE")).toThrow();
-    });
-  });
-
-  dialect(["postgresql", "plpgsql"], () => {
-    it.skip("TODO:postgres", () => {
-      expect(true).toBe(true);
     });
   });
 });

@@ -276,6 +276,7 @@ statement_plpgsql
   / labeled$while_loop_stmt
   / null_stmt
   / return_stmt
+  / raise_stmt
 
 dml_statement
   = compound_select_stmt
