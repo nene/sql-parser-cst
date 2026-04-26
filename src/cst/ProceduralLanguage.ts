@@ -17,6 +17,7 @@ import { StringLiteral } from "./Literal";
 import { ExecuteUsingClause } from "./PreparedStatements";
 import { Program } from "./Program";
 import { SubSelect } from "./Select";
+import { WhenClause } from "./Trigger";
 
 export type AllProceduralNodes =
   | AllProceduralStatements
@@ -281,6 +282,7 @@ export interface BreakStmt extends BaseNode {
   type: "break_stmt";
   breakKw: Keyword<"BREAK" | "LEAVE" | "EXIT">;
   label?: Identifier;
+  when?: WhenClause;
 }
 
 // CONTINUE | ITERATE
@@ -288,6 +290,7 @@ export interface ContinueStmt extends BaseNode {
   type: "continue_stmt";
   continueKw: Keyword<"CONTINUE" | "ITERATE">;
   label?: Identifier;
+  when?: WhenClause;
 }
 
 // CALL

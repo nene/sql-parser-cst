@@ -5690,8 +5690,8 @@ for_by_clause
   }
 
 break_stmt
-  = kw:break_kw label:(__ ident)? {
-    return loc({ type: "break_stmt", breakKw: kw, label: read(label) });
+  = kw:break_kw label:(__ ident)? when:(__ when_clause)? {
+    return loc({ type: "break_stmt", breakKw: kw, label: read(label), when: read(when) });
   }
 
 break_kw
@@ -5700,8 +5700,8 @@ break_kw
   / kw:EXIT &plpgsql { return kw; }
 
 continue_stmt
-  = kw:continue_kw label:(__ ident)? {
-    return loc({ type: "continue_stmt", continueKw: kw, label: read(label) });
+  = kw:continue_kw label:(__ ident)? when:(__ when_clause)? {
+    return loc({ type: "continue_stmt", continueKw: kw, label: read(label), when: read(when) });
   }
 
 continue_kw

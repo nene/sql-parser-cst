@@ -145,6 +145,18 @@ describe("BEGIN..END", () => {
         END
       `);
     });
+
+    it("supports conditional breaking out with EXIT WHEN", () => {
+      testWc(`
+        <<my_block>> BEGIN
+          IF x > 10 THEN
+            EXIT my_block WHEN x > 10;
+          ELSE
+            EXIT WHEN x > 10;
+          END IF;
+        END
+      `);
+    });
   });
 
   dialect(["mysql", "mariadb", "bigquery"], () => {
@@ -188,6 +200,20 @@ describe("BEGIN..END", () => {
           END IF;
         END
       `);
+    });
+
+    dialect("plpgsql", () => {
+      it("supports conditional continuing with CONTINUE WHEN", () => {
+        testWc(`
+          BEGIN
+            IF x = 10 THEN
+              CONTINUE my_block WHEN x = 10;
+            ELSE
+              CONTINUE WHEN x = 10;
+            END IF;
+          END
+        `);
+      });
     });
   });
 
