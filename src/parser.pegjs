@@ -5743,7 +5743,7 @@ raise_stmt
     return loc({ type: "raise_stmt", raiseKw: kw, level: read(level), error: read(error), using: read(using) });
   }
 
-raise_error = raise_sqlstate / ident
+raise_error = raise_sqlstate / raise_format_string / ident
 
 raise_level
   = kw:(DEBUG / LOG / INFO / NOTICE / WARNING / EXCEPTION) {
@@ -5753,6 +5753,14 @@ raise_level
 raise_sqlstate
   = kw:(SQLSTATE __) code:string_literal {
     return loc({ type: "raise_sqlstate", sqlstateKw: read(kw), code });
+  }
+
+raise_format_string
+  = format:(string_literal __) "," args:(__ list$expr) {
+    return loc({ type: "raise_format_string", format: read(format), args: read(args) });
+  }
+  / format:string_literal {
+    return loc({ type: "raise_format_string", format });
   }
 
 raise_using_clause

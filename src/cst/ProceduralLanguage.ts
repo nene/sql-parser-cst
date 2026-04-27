@@ -35,6 +35,7 @@ export type AllProceduralNodes =
   | ForeachSlice
   | RaiseLevel
   | RaiseSqlstate
+  | RaiseFormatString
   | RaiseUsingClause
   | RaiseOptionElement;
 
@@ -336,7 +337,7 @@ export interface RaiseStmt extends BaseNode {
   type: "raise_stmt";
   raiseKw: Keyword<"RAISE">;
   level?: RaiseLevel;
-  error?: RaiseSqlstate | Identifier;
+  error?: RaiseSqlstate | RaiseFormatString | Identifier;
   using?: RaiseUsingClause;
 }
 
@@ -351,6 +352,12 @@ export interface RaiseSqlstate extends BaseNode {
   type: "raise_sqlstate";
   sqlstateKw: Keyword<"SQLSTATE">;
   code: StringLiteral;
+}
+
+export interface RaiseFormatString extends BaseNode {
+  type: "raise_format_string";
+  format: StringLiteral;
+  args?: ListExpr<Expr>;
 }
 
 export interface RaiseUsingClause extends BaseNode {

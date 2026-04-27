@@ -46,6 +46,17 @@ describe("RAISE", () => {
       testWc(`RAISE division_by_zero`);
       testWc(`RAISE WARNING division_by_zero USING MESSAGE = 'Division by zero'`);
     });
+
+    it("supports RAISE 'message string'", () => {
+      testWc(`RAISE 'An error occurred!'`);
+      testWc(`RAISE WARNING 'An error occurred!' USING MESSAGE = 'Something went wrong'`);
+    });
+
+    it("supports RAISE 'format', arg1, arg2, ...", () => {
+      testWc(`RAISE 'Error: %', 'Something went wrong'`);
+      testWc(`RAISE '%' , 'blah'`);
+      testWc(`RAISE 'More than % errors occurred: %', 5, 'Check the logs'`);
+    });
   });
 
   dialect(["mysql", "mariadb", "sqlite", "postgresql"], () => {

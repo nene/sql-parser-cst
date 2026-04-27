@@ -96,6 +96,8 @@ export const proceduralLanguageMap: FullTransformMap<
     show([node.raiseKw, node.level, node.error, node.using]),
   raise_level: (node) => show(node.levelKw),
   raise_sqlstate: (node) => show([node.sqlstateKw, node.code]),
+  raise_format_string: (node) =>
+    show([node.format, node.args ? "," : "", node.args]),
   raise_using_clause: (node) => show([node.usingKw, node.options]),
   raise_option_element: (node) =>
     show([node.nameKw, node.operator, node.value]),
