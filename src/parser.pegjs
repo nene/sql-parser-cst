@@ -5431,7 +5431,7 @@ exception_clause
   }
 
 exception_when_clause
-  = whenKw:(WHEN __) cond:(error_condition __) thenKw:(THEN __) program:inner_program {
+  = whenKw:(WHEN __) cond:(error_condition_expr __) thenKw:(THEN __) program:inner_program {
     return loc({
       type: "exception_when_clause",
       whenKw: read(whenKw),
@@ -5439,6 +5439,11 @@ exception_when_clause
       thenKw: read(thenKw),
       program,
     });
+  }
+
+error_condition_expr
+  = head:error_condition tail:(__ OR __ error_condition)* {
+    return createBinaryExprChain(head, tail);
   }
 
 error_condition

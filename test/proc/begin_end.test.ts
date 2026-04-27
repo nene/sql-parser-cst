@@ -269,6 +269,15 @@ describe("BEGIN..END", () => {
         END
       `);
     });
+
+    it("supports multiple error conditions", () => {
+      testWc(`
+        BEGIN
+        EXCEPTION WHEN SQLSTATE '22012' OR division_by_zero OR my_custom_error THEN
+          SELECT 'err1';
+        END
+      `);
+    });
   });
 
   dialect("plpgsql", () => {
