@@ -14,7 +14,9 @@ import {
   MemberExpr,
 } from "./Expr";
 import { StringLiteral } from "./Literal";
+import { CommaClause } from "./Node";
 import { ExecuteExpr } from "./PreparedStatements";
+import { AsClause } from "./ProcClause";
 import { Program } from "./Program";
 import { SubSelect } from "./Select";
 import { WhenClause } from "./Trigger";
@@ -61,6 +63,7 @@ export type AllProceduralStatements =
   | ReturnNextStmt
   | ReturnQueryStmt
   | RaiseStmt
+  | AssertStmt
   | NullStmt;
 
 export interface LabeledStmt extends BaseNode {
@@ -381,6 +384,14 @@ export interface RaiseOptionElement extends BaseNode {
   >;
   operator: "=" | ":=";
   value: Expr;
+}
+
+// ASSERT
+export interface AssertStmt extends BaseNode {
+  type: "assert_stmt";
+  assertKw: Keyword<"ASSERT">;
+  condition: Expr;
+  message?: AsClause<StringLiteral> | CommaClause<Expr>;
 }
 
 // NULL

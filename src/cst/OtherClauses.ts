@@ -1,9 +1,11 @@
 import { Alias } from "./Alias";
 import { BaseNode, Keyword } from "./Base";
 import { Expr, Identifier, ListExpr } from "./Expr";
+import { Node } from "./Node";
 
 export type AllOtherClauses =
   | ReturningClause
+  | CommaClause
   | ClusterByClause
   | WhereCurrentOfClause;
 
@@ -11,6 +13,12 @@ export interface ReturningClause extends BaseNode {
   type: "returning_clause";
   returningKw: Keyword<"RETURNING">;
   columns: ListExpr<Expr | Alias<Expr>>;
+}
+
+// Represents a leading comma
+export interface CommaClause<T = Node> extends BaseNode {
+  type: "comma_clause";
+  expr: T;
 }
 
 // BigQuery

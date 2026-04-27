@@ -54,7 +54,6 @@ export const bigqueryMap: FullTransformMap<string, AllBigqueryNodes> = {
     show([node.alterCapacityKw, node.name, node.actions]),
   alter_reservation_stmt: (node) =>
     show([node.alterReservationKw, node.name, node.actions]),
-  assert_stmt: (node) => show([node.assertKw, node.expr, node.as]),
   export_data_stmt: (node) =>
     show([node.exportDataKw, node.withConnection, node.options, node.as]),
   load_data_stmt: (node) =>

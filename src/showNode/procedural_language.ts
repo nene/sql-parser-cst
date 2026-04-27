@@ -101,5 +101,6 @@ export const proceduralLanguageMap: FullTransformMap<
   raise_using_clause: (node) => show([node.usingKw, node.options]),
   raise_option_element: (node) =>
     show([node.nameKw, node.operator, node.value]),
+  assert_stmt: (node) => show([node.assertKw, node.condition, node.message]),
   null_stmt: (node) => show([node.nullKw]),
 };

@@ -48,7 +48,6 @@ export type AllBigqueryStatements =
   | AlterBiCapacityStmt
   | AlterCapacityStmt
   | AlterReservationStmt
-  | AssertStmt
   | ExportDataStmt
   | LoadDataStmt;
 
@@ -176,14 +175,6 @@ export interface AlterReservationStmt extends BaseNode {
   alterReservationKw: [Keyword<"ALTER">, Keyword<"RESERVATION">];
   name: EntityName;
   actions: AlterActionSetBigqueryOptions[];
-}
-
-// ASSERT
-export interface AssertStmt extends BaseNode {
-  type: "assert_stmt";
-  assertKw: Keyword<"ASSERT">;
-  expr: Expr;
-  as?: AsClause<StringLiteral>;
 }
 
 // EXPORT DATA
