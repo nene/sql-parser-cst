@@ -5757,11 +5757,8 @@ raise_sqlstate
   }
 
 raise_format_string
-  = format:(string_literal __) "," args:(__ list$expr) {
+  = format:(string_literal __) args:(__ comma_clause$list$expr)? {
     return loc({ type: "raise_format_string", format: read(format), args: read(args) });
-  }
-  / format:string_literal {
-    return loc({ type: "raise_format_string", format });
   }
 
 raise_using_clause
@@ -8666,6 +8663,7 @@ comma_clause$__template__
 
 /*! comma_clause:start */
 comma_clause$expr = .
+comma_clause$list$expr = .
 /*! comma_clause:end */
 
 // Utility placeholder rule used by the rule-templates system

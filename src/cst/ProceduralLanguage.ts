@@ -360,7 +360,7 @@ export interface RaiseSqlstate extends BaseNode {
 export interface RaiseFormatString extends BaseNode {
   type: "raise_format_string";
   format: StringLiteral;
-  args?: ListExpr<Expr>;
+  args?: CommaClause<ListExpr<Expr>>;
 }
 
 export interface RaiseUsingClause extends BaseNode {
