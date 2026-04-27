@@ -2,7 +2,8 @@ import { BaseNode, Keyword } from "./Base";
 import { BigqueryOptions } from "./dialects/Bigquery";
 import { ListExpr, ParenExpr, EntityName } from "./Expr";
 import { StringLiteral } from "./Literal";
-import { AsClause, LanguageClause, WithConnectionClause } from "./ProcClause";
+import { LanguageClause, WithConnectionClause } from "./ProcClause";
+import { AsClause } from "./OtherClauses";
 import { BlockStmt } from "./ProceduralLanguage";
 import {
   DynamicallyLoadedFunction,

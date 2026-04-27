@@ -15,7 +15,8 @@ import {
   FuncCall,
   MemberExpr,
 } from "./Expr";
-import { AsClause, WithConnectionClause } from "./ProcClause";
+import { WithConnectionClause } from "./ProcClause";
+import { AsClause } from "./OtherClauses";
 import { ForSystemTimeAsOfExpr, PartitionByClause, SubSelect } from "./Select";
 import { ClusterByClause } from "./OtherClauses";
 import { NumberLiteral } from "./Literal";

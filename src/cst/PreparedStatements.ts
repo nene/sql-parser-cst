@@ -2,7 +2,7 @@ import { Alias } from "./Alias";
 import { BaseNode, Keyword } from "./Base";
 import { DataType } from "./DataType";
 import { EntityName, Expr, Identifier, ListExpr, ParenExpr } from "./Expr";
-import { AsClause } from "./ProcClause";
+import { AsClause } from "./OtherClauses";
 import { Statement } from "./Statement";
 
 export type AllPreparedStatementNodes =

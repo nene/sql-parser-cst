@@ -11,7 +11,8 @@ import {
 } from "../Expr";
 import { StringLiteral } from "../Literal";
 import { ClusterByClause } from "../OtherClauses";
-import { AsClause, WithConnectionClause } from "../ProcClause";
+import { WithConnectionClause } from "../ProcClause";
+import { AsClause } from "../OtherClauses";
 import { PartitionByClause, SubSelect } from "../Select";
 
 export type AllBigqueryNodes =
