@@ -24,6 +24,8 @@ export const proceduralLanguageMap: FullTransformMap<
   exception_when_clause: (node) =>
     show([node.whenKw, node.condition, node.thenKw, node.program]),
   error_category: (node) => show(node.errorKw),
+  error_sqlstate: (node) => show([node.sqlstateKw, node.code]),
+  error_format_string: (node) => show([node.format, node.args]),
   declare_stmt: (node) =>
     show([
       node.declareKw,
@@ -90,8 +92,6 @@ export const proceduralLanguageMap: FullTransformMap<
   raise_stmt: (node) =>
     show([node.raiseKw, node.level, node.error, node.using]),
   raise_level: (node) => show(node.levelKw),
-  raise_sqlstate: (node) => show([node.sqlstateKw, node.code]),
-  raise_format_string: (node) => show([node.format, node.args]),
   raise_using_clause: (node) => show([node.usingKw, node.options]),
   raise_option_element: (node) =>
     show([node.nameKw, node.operator, node.value]),

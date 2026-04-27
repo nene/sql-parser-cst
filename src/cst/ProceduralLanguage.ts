@@ -29,6 +29,8 @@ export type AllProceduralNodes =
   | ExceptionClause
   | ExceptionWhenClause
   | ErrorCategory
+  | ErrorSqlstate
+  | ErrorFormatString
   | DeclareInit
   | IfClause
   | ElseifClause
@@ -37,8 +39,6 @@ export type AllProceduralNodes =
   | ForByClause
   | ForeachSlice
   | RaiseLevel
-  | RaiseSqlstate
-  | RaiseFormatString
   | RaiseUsingClause
   | RaiseOptionElement;
 
@@ -125,9 +125,24 @@ export interface ExceptionWhenClause extends BaseNode {
   program: Program;
 }
 
+// BigQuery
 export interface ErrorCategory extends BaseNode {
   type: "error_category";
   errorKw: Keyword<"ERROR">;
+}
+
+// PostgreSQL
+export interface ErrorSqlstate extends BaseNode {
+  type: "error_sqlstate";
+  sqlstateKw: Keyword<"SQLSTATE">;
+  code: StringLiteral;
+}
+
+// PostgreSQL
+export interface ErrorFormatString extends BaseNode {
+  type: "error_format_string";
+  format: StringLiteral;
+  args?: CommaClause<ListExpr<Expr>>;
 }
 
 // DECLARE
@@ -346,7 +361,7 @@ export interface RaiseStmt extends BaseNode {
   type: "raise_stmt";
   raiseKw: Keyword<"RAISE">;
   level?: RaiseLevel;
-  error?: RaiseSqlstate | RaiseFormatString | Identifier;
+  error?: ErrorSqlstate | ErrorFormatString | Identifier;
   using?: RaiseUsingClause;
 }
 
@@ -355,18 +370,6 @@ export interface RaiseLevel extends BaseNode {
   levelKw: Keyword<
     "DEBUG" | "LOG" | "INFO" | "NOTICE" | "WARNING" | "EXCEPTION"
   >;
-}
-
-export interface RaiseSqlstate extends BaseNode {
-  type: "raise_sqlstate";
-  sqlstateKw: Keyword<"SQLSTATE">;
-  code: StringLiteral;
-}
-
-export interface RaiseFormatString extends BaseNode {
-  type: "raise_format_string";
-  format: StringLiteral;
-  args?: CommaClause<ListExpr<Expr>>;
 }
 
 export interface RaiseUsingClause extends BaseNode {

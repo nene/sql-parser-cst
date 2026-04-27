@@ -5446,6 +5446,16 @@ error_category
     return loc({ type: "error_category", errorKw: kw });
   }
 
+error_sqlstate
+  = kw:(SQLSTATE __) code:string_literal {
+    return loc({ type: "error_sqlstate", sqlstateKw: read(kw), code });
+  }
+
+error_format_string
+  = format:(string_literal __) args:(__ comma_clause$list$expr)? {
+    return loc({ type: "error_format_string", format: read(format), args: read(args) });
+  }
+
 declare_stmt
   = &plpgsql names:list$ident constantKw:(__ CONSTANT)? type:(__ data_type)? constraints:(__ declare_constraint)* init:(__ declare_init)? {
     return loc({
@@ -5752,21 +5762,11 @@ raise_stmt
     return loc({ type: "raise_stmt", raiseKw: kw, level: read(level), error: read(error), using: read(using) });
   }
 
-raise_error = raise_sqlstate / raise_format_string / ident
+raise_error = error_sqlstate / error_format_string / ident
 
 raise_level
   = kw:(DEBUG / LOG / INFO / NOTICE / WARNING / EXCEPTION) {
     return loc({ type: "raise_level", levelKw: kw });
-  }
-
-raise_sqlstate
-  = kw:(SQLSTATE __) code:string_literal {
-    return loc({ type: "raise_sqlstate", sqlstateKw: read(kw), code });
-  }
-
-raise_format_string
-  = format:(string_literal __) args:(__ comma_clause$list$expr)? {
-    return loc({ type: "raise_format_string", format: read(format), args: read(args) });
   }
 
 raise_using_clause
