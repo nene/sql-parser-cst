@@ -13,6 +13,7 @@ import {
   Variable,
   MemberExpr,
 } from "./Expr";
+import { StringLiteral } from "./Literal";
 import { ExecuteExpr } from "./PreparedStatements";
 import { Program } from "./Program";
 import { SubSelect } from "./Select";
@@ -33,6 +34,7 @@ export type AllProceduralNodes =
   | ForByClause
   | ForeachSlice
   | RaiseLevel
+  | RaiseSqlstate
   | RaiseUsingClause
   | RaiseOptionElement;
 
@@ -334,6 +336,7 @@ export interface RaiseStmt extends BaseNode {
   type: "raise_stmt";
   raiseKw: Keyword<"RAISE">;
   level?: RaiseLevel;
+  error?: RaiseSqlstate;
   using?: RaiseUsingClause;
 }
 
@@ -342,6 +345,12 @@ export interface RaiseLevel extends BaseNode {
   levelKw: Keyword<
     "DEBUG" | "LOG" | "INFO" | "NOTICE" | "WARNING" | "EXCEPTION"
   >;
+}
+
+export interface RaiseSqlstate extends BaseNode {
+  type: "raise_sqlstate";
+  sqlstateKw: Keyword<"SQLSTATE">;
+  code: StringLiteral;
 }
 
 export interface RaiseUsingClause extends BaseNode {

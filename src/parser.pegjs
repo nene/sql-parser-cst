@@ -5739,13 +5739,18 @@ return_stmt
   }
 
 raise_stmt
-  = kw:RAISE level:(__ raise_level)? using:(__ raise_using_clause)? {
-    return loc({ type: "raise_stmt", raiseKw: kw, level: read(level), using: read(using) });
+  = kw:RAISE level:(__ raise_level)? error:(__ raise_sqlstate)? using:(__ raise_using_clause)? {
+    return loc({ type: "raise_stmt", raiseKw: kw, level: read(level), error: read(error), using: read(using) });
   }
 
 raise_level
   = kw:(DEBUG / LOG / INFO / NOTICE / WARNING / EXCEPTION) {
     return loc({ type: "raise_level", levelKw: kw });
+  }
+
+raise_sqlstate
+  = kw:(SQLSTATE __) code:string_literal {
+    return loc({ type: "raise_sqlstate", sqlstateKw: read(kw), code });
   }
 
 raise_using_clause
@@ -10108,6 +10113,7 @@ SQL_CACHE           = kw:"SQL_CACHE"i           !ident_part { return loc(createK
 SQL_CALC_FOUND_ROWS = kw:"SQL_CALC_FOUND_ROWS"i !ident_part { return loc(createKeyword(kw)); }
 SQL_NO_CACHE        = kw:"SQL_NO_CACHE"i        !ident_part { return loc(createKeyword(kw)); }
 SQL_SMALL_RESULT    = kw:"SQL_SMALL_RESULT"i    !ident_part { return loc(createKeyword(kw)); }
+SQLSTATE            = kw:"SQLSTATE"i            !ident_part { return loc(createKeyword(kw)); }
 STABLE              = kw:"STABLE"i              !ident_part { return loc(createKeyword(kw)); }
 START               = kw:"START"i               !ident_part { return loc(createKeyword(kw)); }
 STARTING            = kw:"STARTING"i            !ident_part { return loc(createKeyword(kw)); }

@@ -36,6 +36,11 @@ describe("RAISE", () => {
       testWc(`RAISE WARNING USING MESSAGE = 'foo'`);
       testWc(`RAISE EXCEPTION USING MESSAGE = 'foo'`);
     });
+
+    it("supports RAISE SQLSTATE", () => {
+      testWc(`RAISE SQLSTATE '22012'`);
+      testWc(`RAISE WARNING SQLSTATE '22012' USING MESSAGE = 'Division by zero'`);
+    });
   });
 
   dialect(["mysql", "mariadb", "sqlite", "postgresql"], () => {
