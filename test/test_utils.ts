@@ -1,4 +1,5 @@
 import {
+  ErrorCondition,
   Expr,
   Keyword,
   ParenExpr,
@@ -157,9 +158,9 @@ export function showCompoundPrecedence(sql: string): string {
   return show(addPrecedenceParens(stmt));
 }
 
-function addPrecedenceParens<T extends Expr | SubSelect | TriggerEvent>(
-  expr: T
-): ParenExpr<T> | T {
+function addPrecedenceParens<
+  T extends Expr | SubSelect | TriggerEvent | ErrorCondition
+>(expr: T): ParenExpr<T> | T {
   const space: Whitespace[] = [{ type: "space", text: " " }];
 
   if (expr.type === "binary_expr" || expr.type === "compound_select_stmt") {

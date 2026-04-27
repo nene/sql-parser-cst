@@ -130,7 +130,7 @@ export type ErrorConditionExpr =
   | BinaryExpr<ErrorConditionExpr, Keyword<"OR">, ErrorConditionExpr>
   | ErrorCondition;
 
-type ErrorCondition = ErrorBigquery | ErrorSqlstate | ErrorName;
+export type ErrorCondition = ErrorBigquery | ErrorSqlstate | ErrorName;
 
 // BigQuery
 export interface ErrorBigquery extends BaseNode {
