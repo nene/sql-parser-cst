@@ -41,6 +41,11 @@ describe("RAISE", () => {
       testWc(`RAISE SQLSTATE '22012'`);
       testWc(`RAISE WARNING SQLSTATE '22012' USING MESSAGE = 'Division by zero'`);
     });
+
+    it("supports RAISE condition_name", () => {
+      testWc(`RAISE division_by_zero`);
+      testWc(`RAISE WARNING division_by_zero USING MESSAGE = 'Division by zero'`);
+    });
   });
 
   dialect(["mysql", "mariadb", "sqlite", "postgresql"], () => {

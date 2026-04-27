@@ -336,7 +336,7 @@ export interface RaiseStmt extends BaseNode {
   type: "raise_stmt";
   raiseKw: Keyword<"RAISE">;
   level?: RaiseLevel;
-  error?: RaiseSqlstate;
+  error?: RaiseSqlstate | Identifier;
   using?: RaiseUsingClause;
 }
 

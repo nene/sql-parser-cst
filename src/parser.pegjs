@@ -5739,9 +5739,11 @@ return_stmt
   }
 
 raise_stmt
-  = kw:RAISE level:(__ raise_level)? error:(__ raise_sqlstate)? using:(__ raise_using_clause)? {
+  = kw:RAISE level:(__ raise_level)? error:(__ raise_error)? using:(__ raise_using_clause)? {
     return loc({ type: "raise_stmt", raiseKw: kw, level: read(level), error: read(error), using: read(using) });
   }
+
+raise_error = raise_sqlstate / ident
 
 raise_level
   = kw:(DEBUG / LOG / INFO / NOTICE / WARNING / EXCEPTION) {
