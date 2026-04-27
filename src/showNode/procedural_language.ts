@@ -25,6 +25,7 @@ export const proceduralLanguageMap: FullTransformMap<
     show([node.whenKw, node.condition, node.thenKw, node.program]),
   error_bigquery: (node) => show(node.errorKw),
   error_sqlstate: (node) => show([node.sqlstateKw, node.code]),
+  error_name: (node) => show(node.name),
   error_format_string: (node) => show([node.format, node.args]),
   declare_stmt: (node) =>
     show([

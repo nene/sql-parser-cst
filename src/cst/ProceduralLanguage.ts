@@ -30,6 +30,7 @@ export type AllProceduralNodes =
   | ExceptionWhenClause
   | ErrorBigquery
   | ErrorSqlstate
+  | ErrorName
   | ErrorFormatString
   | DeclareInit
   | IfClause
@@ -120,7 +121,7 @@ export interface ExceptionClause extends BaseNode {
 export interface ExceptionWhenClause extends BaseNode {
   type: "exception_when_clause";
   whenKw: Keyword<"WHEN">;
-  condition: ErrorBigquery | ErrorSqlstate | Identifier;
+  condition: ErrorBigquery | ErrorSqlstate | ErrorName;
   thenKw: Keyword<"THEN">;
   program: Program;
 }
@@ -136,6 +137,12 @@ export interface ErrorSqlstate extends BaseNode {
   type: "error_sqlstate";
   sqlstateKw: Keyword<"SQLSTATE">;
   code: StringLiteral;
+}
+
+// PostgreSQL
+export interface ErrorName extends BaseNode {
+  type: "error_name";
+  name: Identifier;
 }
 
 // PostgreSQL
@@ -361,7 +368,7 @@ export interface RaiseStmt extends BaseNode {
   type: "raise_stmt";
   raiseKw: Keyword<"RAISE">;
   level?: RaiseLevel;
-  error?: ErrorSqlstate | ErrorFormatString | Identifier;
+  error?: ErrorSqlstate | ErrorFormatString | ErrorName;
   using?: RaiseUsingClause;
 }
 

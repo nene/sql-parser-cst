@@ -5444,7 +5444,7 @@ exception_when_clause
 error_condition
   = &bigquery x:error_bigquery { return x; }
   / &plpgsql x:error_sqlstate { return x; }
-  / &plpgsql x:ident { return x; }
+  / &plpgsql x:error_name { return x; }
 
 error_bigquery
   = kw:ERROR {
@@ -5454,6 +5454,11 @@ error_bigquery
 error_sqlstate
   = kw:(SQLSTATE __) code:string_literal {
     return loc({ type: "error_sqlstate", sqlstateKw: read(kw), code });
+  }
+
+error_name
+  = name:ident {
+    return loc({ type: "error_name", name });
   }
 
 error_format_string
@@ -5767,7 +5772,7 @@ raise_stmt
     return loc({ type: "raise_stmt", raiseKw: kw, level: read(level), error: read(error), using: read(using) });
   }
 
-raise_error = error_sqlstate / error_format_string / ident
+raise_error = error_sqlstate / error_format_string / error_name
 
 raise_level
   = kw:(DEBUG / LOG / INFO / NOTICE / WARNING / EXCEPTION) {
