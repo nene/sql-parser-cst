@@ -252,8 +252,10 @@ describe("BEGIN..END", () => {
         EXCEPTION
           WHEN division_by_zero THEN
             SELECT 'err1';
-          WHEN my_custom_error THEN
+          WHEN "my_custom_error" THEN
             SELECT 'err2';
+          WHEN others THEN
+            SELECT 'err3';
         END
       `);
     });
