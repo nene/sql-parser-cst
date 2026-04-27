@@ -29,15 +29,9 @@ describe("REPEAT", () => {
     });
   });
 
-  dialect("sqlite", () => {
+  dialect(["sqlite", "postgresql", "plpgsql"], () => {
     it("does not support REPEAT statement", () => {
       expect(() => parse("REPEAT SELECT 1; UNTIL true END REPEAT")).toThrow();
-    });
-  });
-
-  dialect(["postgresql", "plpgsql"], () => {
-    it.skip("TODO:postgres", () => {
-      expect(true).toBe(true);
     });
   });
 });
