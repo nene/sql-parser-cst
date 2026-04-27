@@ -84,13 +84,13 @@ export interface LabeledStmt extends BaseNode {
 }
 
 /** For the label: syntax (as in MySQL, BigQuery, DB2) */
-export interface ColonLabel {
+export interface ColonLabel extends BaseNode {
   type: "colon_label";
   label: Identifier;
 }
 
 /** For the <<label>> syntax (as in PostgreSQL, Oracle) */
-export interface ChevronLabel {
+export interface ChevronLabel extends BaseNode {
   type: "chevron_label";
   label: Identifier;
 }
