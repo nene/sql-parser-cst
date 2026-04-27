@@ -5431,7 +5431,7 @@ exception_clause
   }
 
 exception_when_clause
-  = whenKw:(WHEN __) cond:(error_bigquery __) thenKw:(THEN __) program:inner_program {
+  = whenKw:(WHEN __) cond:(error_condition __) thenKw:(THEN __) program:inner_program {
     return loc({
       type: "exception_when_clause",
       whenKw: read(whenKw),
@@ -5440,6 +5440,11 @@ exception_when_clause
       program,
     });
   }
+
+error_condition
+  = &bigquery x:error_bigquery { return x; }
+  / &plpgsql x:error_sqlstate { return x; }
+  / &plpgsql x:ident { return x; }
 
 error_bigquery
   = kw:ERROR {

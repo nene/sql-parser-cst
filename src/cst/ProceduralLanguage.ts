@@ -120,7 +120,7 @@ export interface ExceptionClause extends BaseNode {
 export interface ExceptionWhenClause extends BaseNode {
   type: "exception_when_clause";
   whenKw: Keyword<"WHEN">;
-  condition: ErrorBigquery;
+  condition: ErrorBigquery | ErrorSqlstate | Identifier;
   thenKw: Keyword<"THEN">;
   program: Program;
 }

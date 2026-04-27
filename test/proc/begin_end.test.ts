@@ -246,6 +246,32 @@ describe("BEGIN..END", () => {
   });
 
   dialect("plpgsql", () => {
+    it("supports error condition names", () => {
+      testWc(`
+        BEGIN
+        EXCEPTION
+          WHEN division_by_zero THEN
+            SELECT 'err1';
+          WHEN my_custom_error THEN
+            SELECT 'err2';
+        END
+      `);
+    });
+
+    it("supports SQLSTATE error codes", () => {
+      testWc(`
+        BEGIN
+        EXCEPTION
+          WHEN SQLSTATE '22012' THEN
+            SELECT 'err1';
+          WHEN SQLSTATE 'P0001' THEN
+            SELECT 'err2';
+        END
+      `);
+    });
+  });
+
+  dialect("plpgsql", () => {
     it("supports DECLARE..BEGIN..END", () => {
       testWc(`
         DECLARE
