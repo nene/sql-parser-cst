@@ -6,14 +6,14 @@ describe("string operators", () => {
     testExprWc(`'foobar' NOT LIKE 'foo%'`);
   });
 
-  dialect(["mysql", "mariadb", "sqlite", "postgresql"], () => {
+  dialect(["mysql", "mariadb", "sqlite", "postgresql", "plpgsql"], () => {
     it("supports LIKE with ESCAPE", () => {
       testExprWc(`'foobar' LIKE 'percentage|%' ESCAPE '|'`);
       testExprWc(`'foobar' NOT LIKE 'foo^_bar' ESCAPE '^'`);
     });
   });
 
-  dialect("postgresql", () => {
+  dialect(["postgresql", "plpgsql"], () => {
     it("supports [NOT] ILIKE operator", () => {
       testExprWc(`'foobar' ILIKE 'foo%'`);
       testExprWc(`'foobar' NOT ILIKE 'foo%'`);
@@ -60,7 +60,7 @@ describe("string operators", () => {
     });
   });
 
-  dialect(["sqlite", "bigquery", "postgresql"], () => {
+  dialect(["sqlite", "bigquery", "postgresql", "plpgsql"], () => {
     it("treats || as concatenation operator", () => {
       testExprWc(`'hello' || '_' || 'world'`);
     });
@@ -118,7 +118,7 @@ describe("string operators", () => {
     });
   });
 
-  dialect("postgresql", () => {
+  dialect(["postgresql", "plpgsql"], () => {
     it("supports ^@ starts-with operator", () => {
       testExprWc(`'hello' ^@ 'he'`);
     });

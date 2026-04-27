@@ -2,6 +2,7 @@ import { Alias } from "./Alias";
 import { BaseNode, Keyword } from "./Base";
 import { Expr, Identifier, ListExpr, ParenExpr, EntityName } from "./Expr";
 import { DefaultValues, OverridingClause, ValuesClause } from "./Insert";
+import { ReturningClause } from "./OtherClauses";
 import { SelectStmt, WithClause } from "./Select";
 import { SetClause } from "./Update";
 
@@ -19,7 +20,7 @@ export type AllMergeNodes =
 // BigQuery, PostgreSQL
 export interface MergeStmt extends BaseNode {
   type: "merge_stmt";
-  clauses: (WithClause | MergeClause | MergeWhenClause)[];
+  clauses: (WithClause | MergeClause | MergeWhenClause | ReturningClause)[];
 }
 
 export interface MergeClause extends BaseNode {

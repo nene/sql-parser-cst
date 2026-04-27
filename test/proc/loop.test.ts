@@ -1,24 +1,18 @@
 import { dialect, parse, testWc } from "../test_utils";
 
 describe("LOOP", () => {
-  dialect(["mysql", "mariadb", "bigquery"], () => {
+  dialect(["mysql", "mariadb", "bigquery", "plpgsql"], () => {
     it("supports basic infinite LOOP", () => {
       testWc(`
         LOOP
-          SET x = x + 1;
-        END LOOP
-      `);
-    });
-
-    it("supports begin label", () => {
-      testWc(`
-        my_label: LOOP
           SELECT 1;
         END LOOP
       `);
     });
+  });
 
-    it("supports end label", () => {
+  dialect(["mysql", "mariadb", "bigquery"], () => {
+    it("supports begin & end label", () => {
       testWc(`
         my_label: LOOP
           SELECT 1;
@@ -27,15 +21,25 @@ describe("LOOP", () => {
     });
   });
 
-  dialect("sqlite", () => {
-    it("does not support LOOP statement", () => {
-      expect(() => parse("LOOP SELECT 1; END LOOP")).toThrow();
+  dialect(["plpgsql"], () => {
+    it("supports begin & end label", () => {
+      testWc(`
+        <<my_label>> LOOP
+          SELECT 1;
+        END LOOP my_label
+      `);
+    });
+
+    it("supports empty loop body", () => {
+      testWc(`
+        LOOP END LOOP
+      `);
     });
   });
 
-  dialect("postgresql", () => {
-    it.skip("TODO:postgres", () => {
-      expect(true).toBe(true);
+  dialect(["sqlite", "postgresql"], () => {
+    it("does not support LOOP statement", () => {
+      expect(() => parse("LOOP SELECT 1; END LOOP")).toThrow();
     });
   });
 });

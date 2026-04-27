@@ -18,15 +18,7 @@ describe("FOR..IN", () => {
       `);
     });
 
-    it("supports begin label", () => {
-      testWc(`
-        my_label: FOR x IN (SELECT 1) DO
-          SELECT 1;
-        END FOR
-      `);
-    });
-
-    it("supports end label", () => {
+    it("supports begin & end label", () => {
       testWc(`
         my_label: FOR x IN (SELECT 1) DO
           SELECT 1;
@@ -35,15 +27,137 @@ describe("FOR..IN", () => {
     });
   });
 
-  dialect(["mysql", "mariadb", "sqlite"], () => {
-    it("does not support FOR..IN statement", () => {
-      expect(() => parse("FOR x IN (SELECT 1) DO SELECT x; END FOR")).toThrow();
+  dialect(["plpgsql"], () => {
+    describe("FOR IN query LOOP", () => {
+      it("supports basic FOR..IN query", () => {
+        testWc(`
+          FOR x IN SELECT col FROM tbl LOOP
+            SELECT x;
+          END LOOP
+        `);
+      });
+
+      it("supports complex query", () => {
+        testWc(`
+          FOR x IN SELECT 1 UNION SELECT 2 FROM tbl LOOP
+            SELECT x;
+          END LOOP
+        `);
+      });
+
+      it("supports begin & end label", () => {
+        testWc(`
+          <<my_label>> FOR x IN SELECT 1 LOOP
+            SELECT x;
+          END LOOP my_label
+        `);
+      });
+
+      it("supports INSERT in place of query", () => {
+        testWc(`
+          FOR x IN INSERT INTO tbl (col) VALUES (1) RETURNING col LOOP
+            SELECT x;
+          END LOOP
+        `);
+      });
+
+      it("supports DELETE in place of query", () => {
+        testWc(`
+          FOR x IN DELETE FROM tbl WHERE col = 1 RETURNING col LOOP
+            SELECT x;
+          END LOOP
+        `);
+      });
+
+      it("supports UPDATE in place of query", () => {
+        testWc(`
+          FOR x IN UPDATE tbl SET col = col + 1 RETURNING col LOOP
+            SELECT x;
+          END LOOP
+        `);
+      });
+
+      it("supports MERGE in place of query", () => {
+        testWc(`
+          FOR x IN MERGE INTO foo USING bar ON x = y WHEN MATCHED THEN DELETE RETURNING col LOOP
+            SELECT x;
+          END LOOP
+        `);
+      });
+    });
+
+    describe("FOR IN range LOOP", () => {
+      it("supports basic range", () => {
+        testWc(`
+          FOR x IN 1 .. 10 LOOP
+            SELECT x;
+          END LOOP
+        `);
+      });
+
+      it("supports complex expressions", () => {
+        testWc(`
+          FOR x IN 1 + 5 .. 60 / 2 - sqrt(3) LOOP
+            SELECT x;
+          END LOOP
+        `);
+      });
+
+      it("supports REVERSE", () => {
+        testWc(`
+          FOR x IN REVERSE 6 .. 3 LOOP
+            SELECT x;
+          END LOOP
+        `);
+      });
+
+      it("supports BY", () => {
+        testWc(`
+          FOR x IN 1 .. 10 BY 2 LOOP
+            SELECT x;
+          END LOOP
+        `);
+        testWc(`
+          FOR x IN 1 .. 10 BY 1+1 LOOP
+            SELECT x;
+          END LOOP
+        `);
+      });
+
+      it("supports begin & end label", () => {
+        testWc(`
+          <<my_label>> FOR x IN 1..10 LOOP
+            SELECT x;
+          END LOOP my_label
+        `);
+      });
+    });
+
+    describe("FOR IN EXECUTE .. LOOP", () => {
+      it("supports basic EXECUTE", () => {
+        testWc(`
+          FOR x IN EXECUTE 'SELECT 1' LOOP
+            SELECT x;
+          END LOOP
+        `);
+      });
+
+      it("supports EXECUTE USING", () => {
+        testWc(`
+          FOR x IN EXECUTE 'SELECT ?, ?' USING var1, var2 LOOP
+            SELECT x;
+          END LOOP
+        `);
+      });
     });
   });
 
-  dialect("postgresql", () => {
-    it.skip("TODO:postgres", () => {
-      expect(true).toBe(true);
+  dialect(["mysql", "mariadb", "sqlite", "postgresql"], () => {
+    it("does not support FOR..IN statement", () => {
+      expect(() => parse("FOR x IN (SELECT 1) DO SELECT x; END FOR")).toThrow();
+    });
+    it("does not support FOR..IN..LOOP statement", () => {
+      expect(() => parse("FOR x IN SELECT 1 LOOP SELECT x; END LOOP")).toThrow();
     });
   });
 });

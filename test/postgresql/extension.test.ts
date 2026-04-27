@@ -1,7 +1,7 @@
 import { dialect, notDialect, parse, testWc } from "../test_utils";
 
 describe("EXTENSION", () => {
-  dialect("postgresql", () => {
+  dialect(["postgresql", "plpgsql"], () => {
     describe("CREATE EXTENSION", () => {
       it("supports CREATE EXTENSION", () => {
         testWc(`CREATE EXTENSION foo`);
@@ -56,7 +56,7 @@ describe("EXTENSION", () => {
     });
   });
 
-  notDialect("postgresql", () => {
+  notDialect(["postgresql", "plpgsql"], () => {
     it("does not support CREATE EXTENSION", () => {
       expect(() => parse("CREATE EXTENSION foo")).toThrow();
     });

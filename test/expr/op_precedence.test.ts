@@ -222,7 +222,7 @@ describe("operator precedence", () => {
     });
   });
 
-  dialect("postgresql", () => {
+  dialect(["postgresql", "plpgsql"], () => {
     // TODO: . > :: > [] > unary +/-
     it("member_expr > negation", () => {
       expect(showPrecedence(`-tbl.col`)).toBe(`(- tbl.col)`);

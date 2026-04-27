@@ -1,7 +1,7 @@
 import { dialect, notDialect, testWc } from "../test_utils";
 
 describe("domain", () => {
-  dialect("postgresql", () => {
+  dialect(["postgresql", "plpgsql"], () => {
     describe("CREATE DOMAIN", () => {
       it("supports CREATE DOMAIN", () => {
         testWc("CREATE DOMAIN address AS TEXT");
@@ -103,7 +103,7 @@ describe("domain", () => {
     });
   });
 
-  notDialect("postgresql", () => {
+  notDialect(["postgresql", "plpgsql"], () => {
     it("does not support CREATE DOMAIN", () => {
       expect(() => test("CREATE DOMAIN address AS TEXT")).toThrow();
     });

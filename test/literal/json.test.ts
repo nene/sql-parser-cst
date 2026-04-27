@@ -1,7 +1,7 @@
 import { dialect, notDialect, parseExpr, testExpr } from "../test_utils";
 
 describe("JSON literal", () => {
-  dialect(["bigquery", "postgresql"], () => {
+  dialect(["bigquery", "postgresql", "plpgsql"], () => {
     it("supports JSON literal", () => {
       testExpr(`JSON '{"foo": 10, bar: [1, 2, 3]}'`);
     });
@@ -33,7 +33,7 @@ describe("JSON literal", () => {
     });
   });
 
-  dialect("postgresql", () => {
+  dialect(["postgresql", "plpgsql"], () => {
     it("supports JSON literal with various PostgreSQL string types", () => {
       testExpr(`JSON U&'{}'`);
       testExpr(`JSON E'{}'`);
@@ -41,7 +41,7 @@ describe("JSON literal", () => {
     });
   });
 
-  notDialect(["bigquery", "postgresql"], () => {
+  notDialect(["bigquery", "postgresql", "plpgsql"], () => {
     it("does not support JSON literals", () => {
       expect(() => testExpr(`(JSON '{}')`)).toThrow();
     });

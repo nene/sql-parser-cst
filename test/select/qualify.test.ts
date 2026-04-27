@@ -8,7 +8,7 @@ describe("select QUALIFY", () => {
     });
   });
 
-  dialect(["mysql", "mariadb", "sqlite", "postgresql"], () => {
+  dialect(["mysql", "mariadb", "sqlite", "postgresql", "plpgsql"], () => {
     it("ignore empty testsuite", () => {
       expect(true).toBeTruthy();
     });

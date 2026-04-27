@@ -11,7 +11,7 @@ describe("function", () => {
       it("supports parameters", () => {
         testWc(`CREATE FUNCTION multiplicate ( x INT , y INT ) ${body}`);
       });
-      dialect("postgresql", () => {
+      dialect(["postgresql", "plpgsql"], () => {
         it("supports IN, OUT, INOUT & VARIADIC parameters", () => {
           testWc(`
             CREATE FUNCTION multiplicate(
@@ -44,7 +44,7 @@ describe("function", () => {
         testWc(`CREATE FUNCTION foo() RETURNS INT ${body}`);
       });
 
-      dialect("postgresql", () => {
+      dialect(["postgresql", "plpgsql"], () => {
         it("supports RETURNS TABLE", () => {
           testWc(`CREATE FUNCTION foo() RETURNS TABLE (x INT, y TEXT) ${body}`);
         });
@@ -141,7 +141,7 @@ describe("function", () => {
         });
       });
 
-      dialect(["postgresql"], () => {
+      dialect(["postgresql", "plpgsql"], () => {
         describe("begin..end block", () => {
           it("supports BEGIN ATOMIC .. END block", () => {
             testWc(`
@@ -264,11 +264,11 @@ describe("function", () => {
   dialect("bigquery", () => {
     testCreateFunction("AS (1 * 2)");
   });
-  dialect("postgresql", () => {
+  dialect(["postgresql", "plpgsql"], () => {
     testCreateFunction("RETURN 1 * 2");
   });
 
-  dialect(["bigquery", "postgresql"], () => {
+  dialect(["bigquery", "postgresql", "plpgsql"], () => {
     describe("DROP FUNCTION", () => {
       it("supports basic DROP FUNCTION", () => {
         testWc("DROP FUNCTION foo");
@@ -286,7 +286,7 @@ describe("function", () => {
         });
       });
 
-      dialect(["postgresql"], () => {
+      dialect(["postgresql", "plpgsql"], () => {
         it("supports parameter list", () => {
           testWc("DROP FUNCTION foo ( )");
           testWc("DROP FUNCTION bar ( id INT, name VARCHAR(255) )");

@@ -28,7 +28,7 @@ describe("type cast", () => {
     expect(parseExpr(`CAST(10 AS INT)`).type).toBe("cast_expr");
   });
 
-  dialect("postgresql", () => {
+  dialect(["postgresql", "plpgsql"], () => {
     it("supports :: cast operator", () => {
       testExprWc(`x :: INT`);
       testExprWc(`8 :: DECIMAL(3, 2)`);

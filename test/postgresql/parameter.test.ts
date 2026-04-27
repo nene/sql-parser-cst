@@ -1,7 +1,7 @@
 import { dialect, notDialect, parse, parseStmt, testWc } from "../test_utils";
 
 describe("parameters", () => {
-  dialect("postgresql", () => {
+  dialect(["postgresql", "plpgsql"], () => {
     it("supports SET parameter = value", () => {
       testWc("SET foo = 10");
       testWc("SET foo = TRUE");
@@ -76,7 +76,7 @@ describe("parameters", () => {
     });
   });
 
-  notDialect("postgresql", () => {
+  notDialect(["postgresql", "plpgsql"], () => {
     it("does not support SET .. TO statement", () => {
       expect(() => parse("SET x TO 10")).toThrow();
     });

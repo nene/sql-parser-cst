@@ -1,7 +1,7 @@
 import { dialect, notDialect, parse, testWc } from "../test_utils";
 
 describe("SUBSCRIPTION", () => {
-  dialect("postgresql", () => {
+  dialect(["postgresql", "plpgsql"], () => {
     describe("CREATE SUBSCRIPTION", () => {
       it("supports CREATE SUBSCRIPTION", () => {
         testWc(`
@@ -37,7 +37,7 @@ describe("SUBSCRIPTION", () => {
     });
   });
 
-  notDialect("postgresql", () => {
+  notDialect(["postgresql", "plpgsql"], () => {
     it("does not support DROP SUBSCRIPTION", () => {
       expect(() => parse("DROP SUBSCRIPTION foo")).toThrow();
     });

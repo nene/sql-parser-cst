@@ -1,7 +1,7 @@
 import { dialect, parse, testWc } from "../test_utils";
 
 describe("CASE", () => {
-  dialect(["mysql", "mariadb", "bigquery"], () => {
+  dialect(["mysql", "mariadb", "bigquery", "plpgsql"], () => {
     it("supports basic CASE statement", () => {
       testWc(`
         CASE animal
@@ -39,15 +39,9 @@ describe("CASE", () => {
     });
   });
 
-  dialect("sqlite", () => {
+  dialect(["sqlite", "postgresql"], () => {
     it("does not support CASE statement", () => {
       expect(() => parse("CASE foo WHEN 1 THEN SELECT 1; END CASE")).toThrow();
-    });
-  });
-
-  dialect("postgresql", () => {
-    it.skip("TODO:postgres", () => {
-      expect(true).toBe(true);
     });
   });
 });

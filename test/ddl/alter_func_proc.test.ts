@@ -95,7 +95,7 @@ describe("alter function/procedure", () => {
     });
   }
 
-  dialect("postgresql", () => {
+  dialect(["postgresql", "plpgsql"], () => {
     testAlterStatement("FUNCTION");
     testAlterStatement("PROCEDURE");
   });

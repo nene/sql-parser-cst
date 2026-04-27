@@ -17,14 +17,14 @@ describe("select WITH", () => {
     testWc("WITH t1 AS (SELECT 1), t2 AS (SELECT 2) SELECT t1.name");
   });
 
-  dialect(["sqlite", "postgresql"], () => {
+  dialect(["sqlite", "postgresql", "plpgsql"], () => {
     it("supports MATERIALIZED & NOT MATERIALIZED options", () => {
       testWc("WITH t1 AS MATERIALIZED (SELECT 1) SELECT t1.name");
       testWc("WITH t1 AS NOT MATERIALIZED (SELECT 1) SELECT t1.name");
     });
   });
 
-  dialect("postgresql", () => {
+  dialect(["postgresql", "plpgsql"], () => {
     it("supports SEARCH BREATH FIRST clause", () => {
       testWc(`
         WITH RECURSIVE tree AS (

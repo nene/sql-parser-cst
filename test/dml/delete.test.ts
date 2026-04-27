@@ -35,7 +35,7 @@ describe("delete from", () => {
     });
   });
 
-  dialect("postgresql", () => {
+  dialect(["postgresql", "plpgsql"], () => {
     it("supports ONLY inheritance modifier on table name", () => {
       testWc("DELETE FROM ONLY tbl");
       testWc("DELETE FROM ONLY tbl AS t");
@@ -46,13 +46,13 @@ describe("delete from", () => {
     });
   });
 
-  dialect(["sqlite", "mysql", "postgresql"], () => {
+  dialect(["sqlite", "mysql", "postgresql", "plpgsql"], () => {
     it("supports WITH ... DELETE FROM ..", () => {
       testWc("WITH subsel AS (SELECT 1) DELETE FROM tbl");
     });
   });
 
-  dialect(["sqlite", "mysql", "mariadb", "postgresql"], () => {
+  dialect(["sqlite", "mysql", "mariadb", "postgresql", "plpgsql"], () => {
     it("supports DELETE ... RETURNING ...", () => {
       testWc("DELETE FROM tbl WHERE x > 0 RETURNING *");
       testWc("DELETE FROM tbl WHERE x > 0 RETURNING col1, col2");
@@ -88,7 +88,7 @@ describe("delete from", () => {
     });
   });
 
-  dialect(["mysql", "mariadb", "postgresql"], () => {
+  dialect(["mysql", "mariadb", "postgresql", "plpgsql"], () => {
     it("supports DELETE FROM .. USING ..", () => {
       testWc("DELETE FROM tbl1 USING tbl1 JOIN tbl2 WHERE tbl1.id = tbl2.id");
     });
@@ -111,7 +111,7 @@ describe("delete from", () => {
     });
   });
 
-  dialect("postgresql", () => {
+  dialect(["postgresql", "plpgsql"], () => {
     it("supports WHERE CURRENT OF", () => {
       testWc("DELETE FROM tbl WHERE CURRENT OF my_cursor");
     });

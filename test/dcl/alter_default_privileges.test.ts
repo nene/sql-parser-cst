@@ -1,7 +1,7 @@
 import { dialect, notDialect, parse, testWc } from "../test_utils";
 
 describe("ALTER DEFAULT PRIVILEGES", () => {
-  dialect("postgresql", () => {
+  dialect(["postgresql", "plpgsql"], () => {
     const privilegesOnResources: [string[], string][] = [
       [
         ["SELECT", "INSERT", "UPDATE", "DELETE", "TRUNCATE", "REFERENCES", "TRIGGER", "MAINTAIN"],
@@ -89,7 +89,7 @@ describe("ALTER DEFAULT PRIVILEGES", () => {
     });
   });
 
-  notDialect("postgresql", () => {
+  notDialect(["postgresql", "plpgsql"], () => {
     it("does not support ALTER DEFAULT PRIVILEGES", () => {
       expect(() => parse("ALTER DEFAULT PRIVILEGES GRANT SELECT ON TABLES TO john")).toThrow();
     });

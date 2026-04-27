@@ -11,7 +11,7 @@ import { BigqueryOptions } from "./dialects/Bigquery";
 import { PostgresqlWithOptions } from "./dialects/Postgresql";
 import { Identifier, ListExpr, ParenExpr, EntityName } from "./Expr";
 import { ClusterByClause } from "./OtherClauses";
-import { AsClause } from "./ProcClause";
+import { AsClause } from "./OtherClauses";
 import { PartitionByClause, SubSelect } from "./Select";
 
 export type AllViewNodes =

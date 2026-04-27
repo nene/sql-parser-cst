@@ -1,7 +1,7 @@
 import { dialect, notDialect, testWc } from "../test_utils";
 
 describe("role", () => {
-  dialect("postgresql", () => {
+  dialect(["postgresql", "plpgsql"], () => {
     describe("CREATE ROLE", () => {
       it("supports plain CREATE ROLE name", () => {
         testWc("CREATE ROLE my_role");
@@ -209,7 +209,7 @@ describe("role", () => {
     });
   });
 
-  notDialect("postgresql", () => {
+  notDialect(["postgresql", "plpgsql"], () => {
     it("does not support CREATE ROLE", () => {
       expect(() => test("CREATE ROLE foo WITH LOGIN")).toThrow();
     });

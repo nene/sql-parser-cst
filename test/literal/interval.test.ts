@@ -1,7 +1,7 @@
 import { dialect, parseExpr, testExpr } from "../test_utils";
 
 describe("INTERVAL literal", () => {
-  dialect(["mysql", "mariadb", "bigquery", "postgresql"], () => {
+  dialect(["mysql", "mariadb", "bigquery", "postgresql", "plpgsql"], () => {
     it("supports INTERVAL with string argument and unit", () => {
       testExpr(`INTERVAL '3' DAY`);
     });
@@ -79,7 +79,7 @@ describe("INTERVAL literal", () => {
     });
   });
 
-  dialect(["bigquery", "postgresql"], () => {
+  dialect(["bigquery", "postgresql", "plpgsql"], () => {
     it("supports time range syntax", () => {
       testExpr(`INTERVAL '11:25:58' HOUR TO SECOND`);
       testExpr(`INTERVAL '8 11:25' DAY TO MINUTE`);
@@ -140,7 +140,7 @@ describe("INTERVAL literal", () => {
     });
   });
 
-  dialect("postgresql", () => {
+  dialect(["postgresql", "plpgsql"], () => {
     it("supports INTERVAL with just string argument", () => {
       testExpr(`INTERVAL '1 year 25 days'`);
     });

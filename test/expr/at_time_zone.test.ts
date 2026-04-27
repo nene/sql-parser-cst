@@ -1,7 +1,7 @@
 import { dialect, notDialect, parseExpr, testExprWc } from "../test_utils";
 
 describe("AT TIME ZONE operator", () => {
-  dialect("postgresql", () => {
+  dialect(["postgresql", "plpgsql"], () => {
     it("supports AT TIME ZONE operator", () => {
       testExprWc(`col AT TIME ZONE 'America/Chicago'`);
       testExprWc(`TIME '22:30:00' AT TIME ZONE ('America' || '/' || 'Chicago')`);
@@ -52,7 +52,7 @@ describe("AT TIME ZONE operator", () => {
     });
   });
 
-  notDialect("postgresql", () => {
+  notDialect(["postgresql", "plpgsql"], () => {
     it("does not support AT TIME ZONE operator", () => {
       expect(() => parseExpr(`col AT TIME ZONE 'UTC'`)).toThrow();
     });

@@ -8,7 +8,7 @@ describe("prepared statements", () => {
     });
   });
 
-  dialect(["postgresql"], () => {
+  dialect(["postgresql", "plpgsql"], () => {
     it("supports PREPARE .. AS statement", () => {
       testWc(`PREPARE my_stmt AS SELECT * FROM my_table WHERE id = $1`, {
         paramTypes: ["$nr"],
@@ -35,13 +35,13 @@ describe("prepared statements", () => {
     });
   });
 
-  dialect(["mysql", "mariadb", "postgresql"], () => {
+  dialect(["mysql", "mariadb", "postgresql", "plpgsql"], () => {
     it("supports EXECUTE", () => {
       testWc(`EXECUTE my_stmt`);
     });
   });
 
-  dialect(["mysql", "mariadb", "postgresql"], () => {
+  dialect(["mysql", "mariadb", "postgresql", "plpgsql"], () => {
     it("supports DEALLOCATE PREPARE", () => {
       testWc(`DEALLOCATE PREPARE my_stmt`);
     });
@@ -53,7 +53,7 @@ describe("prepared statements", () => {
     });
   });
 
-  dialect(["postgresql"], () => {
+  dialect(["postgresql", "plpgsql"], () => {
     it("supports DEALLOCATE", () => {
       testWc(`DEALLOCATE my_stmt`);
     });
@@ -74,7 +74,7 @@ describe("prepared statements", () => {
     });
   });
 
-  dialect(["postgresql"], () => {
+  dialect(["postgresql", "plpgsql"], () => {
     it("supports EXECUTE .. (arg1, arg2, ...)", () => {
       testWc(`EXECUTE my_stmt(1, 2, 3)`);
     });

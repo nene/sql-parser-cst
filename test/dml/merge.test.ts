@@ -1,7 +1,7 @@
 import { dialect, parse, testWc } from "../test_utils";
 
 describe("merge into", () => {
-  dialect(["bigquery", "postgresql"], () => {
+  dialect(["bigquery", "postgresql", "plpgsql"], () => {
     it("supports MERGE INTO", () => {
       testWc("MERGE INTO foo USING bar ON x = y WHEN MATCHED THEN DELETE");
     });
@@ -28,7 +28,7 @@ describe("merge into", () => {
       testWc("MERGE INTO foo USING (SELECT * FROM bar) t ON x = y WHEN MATCHED THEN DELETE");
     });
 
-    dialect("postgresql", () => {
+    dialect(["postgresql", "plpgsql"], () => {
       it("supports ONLY and * on target table", () => {
         testWc("MERGE INTO ONLY foo USING bar ON x = y WHEN MATCHED THEN DELETE");
         testWc("MERGE INTO foo * USING bar ON x = y WHEN MATCHED THEN DELETE");
@@ -101,7 +101,7 @@ describe("merge into", () => {
         );
       });
 
-      dialect("postgresql", () => {
+      dialect(["postgresql", "plpgsql"], () => {
         it("supports INSERT DEFAULT VALUES", () => {
           testWc("MERGE INTO foo USING bar ON x=y WHEN NOT MATCHED THEN INSERT DEFAULT VALUES");
         });
@@ -127,7 +127,7 @@ describe("merge into", () => {
         });
       });
 
-      dialect("postgresql", () => {
+      dialect(["postgresql", "plpgsql"], () => {
         it("supports DO NOTHING", () => {
           testWc("MERGE INTO foo USING bar ON x=y WHEN MATCHED THEN DO NOTHING");
           testWc("MERGE INTO foo USING bar ON x=y WHEN NOT MATCHED THEN DO NOTHING");
@@ -149,11 +149,18 @@ describe("merge into", () => {
       `);
     });
 
-    dialect("postgresql", () => {
+    dialect(["postgresql", "plpgsql"], () => {
       it("supports WITH clause", () => {
         testWc(`
           WITH bar AS (SELECT * FROM baz)
           MERGE INTO foo USING bar ON x = y WHEN MATCHED THEN DELETE
+        `);
+      });
+
+      it("supports RETURNING clause", () => {
+        testWc(`
+          MERGE INTO foo USING bar ON x = y WHEN MATCHED THEN DELETE
+          RETURNING *
         `);
       });
     });

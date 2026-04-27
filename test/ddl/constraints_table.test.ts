@@ -46,14 +46,14 @@ describe("table constraints", () => {
       });
     });
 
-    dialect("postgresql", () => {
+    dialect(["postgresql", "plpgsql"], () => {
       it("supports index parameters", () => {
         testWithIndexParameters("PRIMARY KEY (id)");
       });
     });
   });
 
-  dialect(["mariadb", "mysql", "sqlite", "postgresql"], () => {
+  dialect(["mariadb", "mysql", "sqlite", "postgresql", "plpgsql"], () => {
     describe("unique", () => {
       it("UNIQUE", () => {
         testTblConstWc("UNIQUE (id)");
@@ -64,7 +64,7 @@ describe("table constraints", () => {
           testTblConstWc("UNIQUE INDEX (id)");
         });
       });
-      dialect(["postgresql"], () => {
+      dialect(["postgresql", "plpgsql"], () => {
         it("NULLS [NOT] DISTINCT", () => {
           testTblConstWc("UNIQUE NULLS DISTINCT (id)");
           testTblConstWc("UNIQUE NULLS NOT DISTINCT (id, name)");
@@ -77,7 +77,7 @@ describe("table constraints", () => {
     });
   });
 
-  dialect(["mariadb", "mysql", "sqlite", "postgresql"], () => {
+  dialect(["mariadb", "mysql", "sqlite", "postgresql", "plpgsql"], () => {
     it("CHECK", () => {
       testTblConstWc("CHECK (col > 10)");
     });
@@ -89,7 +89,7 @@ describe("table constraints", () => {
       testTblConstWc("FOREIGN KEY (id, name) REFERENCES tbl2 (id, name)");
     });
 
-    dialect(["sqlite", "postgresql"], () => {
+    dialect(["sqlite", "postgresql", "plpgsql"], () => {
       it("column names are optional in REFERENCES-clause", () => {
         testTblConstWc("FOREIGN KEY (id) REFERENCES tbl2");
       });
@@ -108,7 +108,7 @@ describe("table constraints", () => {
         "FOREIGN KEY (id) REFERENCES tbl2 (id) ON DELETE SET DEFAULT ON UPDATE NO ACTION"
       );
     });
-    dialect("postgresql", () => {
+    dialect(["postgresql", "plpgsql"], () => {
       it("supports columns list with SET NULL and SET DEFAULT", () => {
         testTblConstWc("FOREIGN KEY (id) REFERENCES tbl2 (id) ON DELETE SET NULL (id)");
         testTblConstWc("FOREIGN KEY (id) REFERENCES tbl2 (id) ON DELETE SET DEFAULT (id, name)");
@@ -128,7 +128,7 @@ describe("table constraints", () => {
   });
 
   describe("exclusion constraint", () => {
-    dialect("postgresql", () => {
+    dialect(["postgresql", "plpgsql"], () => {
       it("supports EXCLUDE constraint", () => {
         testTblConstWc("EXCLUDE (room_id WITH =, tsrange(booking_start, booking_end) WITH &&)");
         testTblConstWc("EXCLUDE (room_id WITH OPERATOR(=))");
@@ -155,7 +155,7 @@ describe("table constraints", () => {
   });
 
   describe("constraint modifiers", () => {
-    dialect(["sqlite", "postgresql"], () => {
+    dialect(["sqlite", "postgresql", "plpgsql"], () => {
       it("supports deferrability of foreign keys", () => {
         testTblConstWc("FOREIGN KEY (id) REFERENCES tbl2 (id) DEFERRABLE");
         testTblConstWc("FOREIGN KEY (id) REFERENCES tbl2 (id) NOT DEFERRABLE");
@@ -164,7 +164,7 @@ describe("table constraints", () => {
       });
     });
 
-    dialect(["postgresql"], () => {
+    dialect(["postgresql", "plpgsql"], () => {
       it("supports deferrability of all constraints", () => {
         testTblConstWc("CHECK (x > 10) NOT DEFERRABLE");
         testTblConstWc("UNIQUE (col) INITIALLY DEFERRED");
@@ -235,7 +235,7 @@ describe("table constraints", () => {
     });
   });
 
-  dialect(["mysql", "mariadb", "sqlite", "postgresql"], () => {
+  dialect(["mysql", "mariadb", "sqlite", "postgresql", "plpgsql"], () => {
     it("supports named table constraints", () => {
       testTblConstWc("CONSTRAINT cname PRIMARY KEY (id)");
       testTblConstWc("CONSTRAINT cname UNIQUE KEY (id)");

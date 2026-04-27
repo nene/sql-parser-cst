@@ -170,6 +170,15 @@ const keywordDefs: Record<string, KeywordDef> = {
   XMLSERIALIZE: { cannotBeFunctionOrType: true },
   XMLTABLE: { cannotBeFunctionOrType: true },
   YEAR: { requiresAs: true },
+
+  // PL/pgSQL (TODO: only reserve these in PL/pgSQL)
+  LOOP: { reserved: true, requiresAs: true },
+  BEGIN: { reserved: true, requiresAs: true },
+  BY: { reserved: true, requiresAs: true },
+  DECLARE: { reserved: true, requiresAs: true },
+  FOREACH: { reserved: true, requiresAs: true },
+  IF: { reserved: true, requiresAs: true },
+  WHILE: { reserved: true, requiresAs: true },
 };
 
 export const postgresqlKeywords: Record<string, boolean> = {

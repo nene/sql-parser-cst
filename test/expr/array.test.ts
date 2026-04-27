@@ -74,7 +74,7 @@ describe("array", () => {
     });
   });
 
-  dialect("postgresql", () => {
+  dialect(["postgresql", "plpgsql"], () => {
     it("supports ARRAY[]", () => {
       testExprWc(`ARRAY ['a', 'b', 'c']`);
     });

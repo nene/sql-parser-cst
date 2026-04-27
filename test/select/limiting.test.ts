@@ -25,14 +25,14 @@ describe("select limiting", () => {
       });
     });
 
-    dialect("postgresql", () => {
+    dialect(["postgresql", "plpgsql"], () => {
       it("supports LIMIT ALL", () => {
         testClauseWc("LIMIT ALL");
       });
     });
   });
 
-  dialect(["mariadb", "postgresql"], () => {
+  dialect(["mariadb", "postgresql", "plpgsql"], () => {
     describe("OFFSET and FETCH clauses", () => {
       it("supports OFFSET", () => {
         testClauseWc(`OFFSET 10 ROWS`);

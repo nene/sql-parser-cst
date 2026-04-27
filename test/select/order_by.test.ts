@@ -15,7 +15,7 @@ describe("select ORDER BY", () => {
     });
   });
 
-  dialect(["sqlite", "postgresql"], () => {
+  dialect(["sqlite", "postgresql", "plpgsql"], () => {
     it("supports null handling specifiers", () => {
       testClauseWc("ORDER BY name NULLS FIRST");
       testClauseWc("ORDER BY name DESC NULLS FIRST");
@@ -29,7 +29,7 @@ describe("select ORDER BY", () => {
     });
   });
 
-  dialect("postgresql", () => {
+  dialect(["postgresql", "plpgsql"], () => {
     it("supports USING operator", () => {
       testClauseWc("ORDER BY name USING >, age USING <");
     });

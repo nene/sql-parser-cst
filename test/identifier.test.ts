@@ -16,13 +16,13 @@ describe("identifier", () => {
   });
 
   // For SQLite see: #45
-  dialect(["postgresql", "mysql", "mariadb", "sqlite"], () => {
+  dialect(["postgresql", "plpgsql", "mysql", "mariadb", "sqlite"], () => {
     it("supports unicode letters in identifiers", () => {
       testExpr("õllevägilane");
     });
   });
 
-  dialect(["postgresql", "mysql", "mariadb"], () => {
+  dialect(["postgresql", "plpgsql", "mysql", "mariadb"], () => {
     it("supports $-character in identifiers", () => {
       testExpr("foo$bar");
     });
@@ -83,7 +83,7 @@ describe("identifier", () => {
     });
   });
 
-  dialect(["sqlite", "postgresql"], () => {
+  dialect(["sqlite", "postgresql", "plpgsql"], () => {
     it("supports double-quoted identifiers", () => {
       testExpr(`"some special name"`);
     });
@@ -209,7 +209,7 @@ describe("identifier", () => {
     });
   });
 
-  dialect("postgresql", () => {
+  dialect(["postgresql", "plpgsql"], () => {
     it("parses unicode identifier", () => {
       expect(parseExpr(`U&"d\\0061t\\+000061"`)).toMatchInlineSnapshot(`
         {

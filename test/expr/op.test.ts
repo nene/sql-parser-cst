@@ -23,14 +23,14 @@ describe("operators", () => {
     });
   });
 
-  dialect(["bigquery", "postgresql"], () => {
+  dialect(["bigquery", "postgresql", "plpgsql"], () => {
     it("requires space around keyword operators", () => {
       // In BigQuery & PostgreSQL identifiers can't start with number (as in above test)
       expect(() => parseExpr(`8AND4`)).toThrow();
     });
   });
 
-  dialect(["postgresql"], () => {
+  dialect(["postgresql", "plpgsql"], () => {
     it("supports OPERATOR(..) syntax", () => {
       testExprWc(`5 OPERATOR(+) 6`);
       testExprWc(`5 OPERATOR ( ~|// ) 6`);

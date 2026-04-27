@@ -21,26 +21,26 @@ describe("view", () => {
       });
     });
 
-    dialect(["mysql", "mariadb", "bigquery", "postgresql"], () => {
+    dialect(["mysql", "mariadb", "bigquery", "postgresql", "plpgsql"], () => {
       it("supports OR REPLACE", () => {
         testWc("CREATE OR REPLACE VIEW my_view AS SELECT 1");
       });
     });
 
-    dialect(["sqlite", "postgresql"], () => {
+    dialect(["sqlite", "postgresql", "plpgsql"], () => {
       it("TEMPORARY view", () => {
         testWc("CREATE TEMP VIEW my_view AS SELECT 1");
         testWc("CREATE TEMPORARY VIEW my_view AS SELECT 1");
       });
     });
-    dialect("postgresql", () => {
+    dialect(["postgresql", "plpgsql"], () => {
       it("RECURSIVE view", () => {
         testWc("CREATE RECURSIVE VIEW my_view AS SELECT * FROM my_view");
         testWc("CREATE TEMPORARY RECURSIVE VIEW my_view AS SELECT * FROM my_view");
       });
     });
 
-    dialect(["sqlite", "bigquery", "mariadb", "postgresql"], () => {
+    dialect(["sqlite", "bigquery", "mariadb", "postgresql", "plpgsql"], () => {
       it("supports IF NOT EXISTS", () => {
         testWc("CREATE VIEW IF NOT EXISTS my_view AS SELECT 1");
       });
@@ -53,7 +53,7 @@ describe("view", () => {
       });
     });
 
-    dialect("postgresql", () => {
+    dialect(["postgresql", "plpgsql"], () => {
       it("supports WITH ( ..options.. )", () => {
         testWc(`
           CREATE VIEW my_view WITH (
@@ -72,7 +72,7 @@ describe("view", () => {
       });
     });
 
-    dialect(["bigquery", "postgresql"], () => {
+    dialect(["bigquery", "postgresql", "plpgsql"], () => {
       describe("materialized view", () => {
         it("supports CREATE MATERIALIZED VIEW", () => {
           testWc("CREATE MATERIALIZED VIEW my_view AS SELECT 1");
@@ -106,7 +106,7 @@ describe("view", () => {
           });
         });
 
-        dialect("postgresql", () => {
+        dialect(["postgresql", "plpgsql"], () => {
           it("supports USING clause", () => {
             testWc(`CREATE MATERIALIZED VIEW my_view USING "SP-GiST" AS SELECT 1`);
           });
@@ -138,13 +138,13 @@ describe("view", () => {
       testWc("DROP VIEW view1, view2, view3");
     });
 
-    dialect(["bigquery", "postgresql"], () => {
+    dialect(["bigquery", "postgresql", "plpgsql"], () => {
       it("supports DROP MATERIALIZED VIEW", () => {
         testWc("DROP MATERIALIZED VIEW my_view");
       });
     });
 
-    dialect(["mysql", "mariadb", "postgresql"], () => {
+    dialect(["mysql", "mariadb", "postgresql", "plpgsql"], () => {
       it("with CASCADE/RESTRICT behavior", () => {
         testWc("DROP VIEW v1 CASCADE");
         testWc("DROP VIEW v1 RESTRICT");
@@ -180,7 +180,7 @@ describe("view", () => {
       });
     });
 
-    dialect("postgresql", () => {
+    dialect(["postgresql", "plpgsql"], () => {
       it("supports IF EXISTS", () => {
         testWc("ALTER VIEW IF EXISTS my_view RENAME TO new_view");
       });
@@ -233,7 +233,7 @@ describe("view", () => {
   });
 
   describe("ALTER MATERIALIZED VIEW", () => {
-    dialect("postgresql", () => {
+    dialect(["postgresql", "plpgsql"], () => {
       function testAlterMatWc(action: string) {
         testWc(`ALTER MATERIALIZED VIEW my_view ${action}`);
       }
@@ -307,7 +307,7 @@ describe("view", () => {
     });
   });
 
-  dialect("postgresql", () => {
+  dialect(["postgresql", "plpgsql"], () => {
     describe("REFRESH MATERIALIZED VIEW", () => {
       it("supports basic REFRESH MATERIALIZED VIEW statement", () => {
         testWc("REFRESH MATERIALIZED VIEW my_schema.my_view");

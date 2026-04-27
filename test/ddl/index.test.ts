@@ -2,7 +2,7 @@ import { dialect, testWc } from "../test_utils";
 
 describe("index", () => {
   describe("CREATE INDEX", () => {
-    dialect(["mysql", "mariadb", "sqlite", "postgresql"], () => {
+    dialect(["mysql", "mariadb", "sqlite", "postgresql", "plpgsql"], () => {
       it("simple CREATE INDEX statement", () => {
         testWc("CREATE INDEX my_idx ON tbl ( col1 , col2 )");
         testWc("CREATE INDEX schm.my_idx ON schm.tbl (col)");
@@ -12,19 +12,19 @@ describe("index", () => {
         testWc("CREATE UNIQUE INDEX my_idx ON tbl (col)");
       });
 
-      dialect("postgresql", () => {
+      dialect(["postgresql", "plpgsql"], () => {
         it("supports CONCURRENTLY", () => {
           testWc("CREATE INDEX CONCURRENTLY idx ON tbl (col)");
         });
       });
 
-      dialect(["sqlite", "postgresql"], () => {
+      dialect(["sqlite", "postgresql", "plpgsql"], () => {
         it("supports IF NOT EXISTS", () => {
           testWc("CREATE INDEX IF NOT EXISTS idx ON tbl (col)");
         });
       });
 
-      dialect("postgresql", () => {
+      dialect(["postgresql", "plpgsql"], () => {
         it("supports optional index name", () => {
           testWc("CREATE INDEX ON tbl (col)");
         });
@@ -39,7 +39,7 @@ describe("index", () => {
       });
 
       describe("columns list", () => {
-        dialect(["sqlite", "postgresql"], () => {
+        dialect(["sqlite", "postgresql", "plpgsql"], () => {
           it("supports ASC/DESC in columns list", () => {
             testWc("CREATE INDEX my_idx ON tbl (id ASC, name DESC)");
           });
@@ -48,7 +48,7 @@ describe("index", () => {
           });
         });
 
-        dialect("postgresql", () => {
+        dialect(["postgresql", "plpgsql"], () => {
           it("supports arbitrary expressions in columns list", () => {
             testWc("CREATE INDEX idx ON tbl ((col1 + col2), foo())");
           });
@@ -120,7 +120,7 @@ describe("index", () => {
       });
     });
 
-    dialect("postgresql", () => {
+    dialect(["postgresql", "plpgsql"], () => {
       it("supports INCLUDE (columns) clause", () => {
         testWc("CREATE INDEX my_idx ON tbl (col) INCLUDE (foo, bar, baz)");
       });
@@ -139,7 +139,7 @@ describe("index", () => {
       });
     });
 
-    dialect(["sqlite", "postgresql"], () => {
+    dialect(["sqlite", "postgresql", "plpgsql"], () => {
       it("supports WHERE clause", () => {
         testWc("CREATE INDEX idx ON tbl (col) WHERE x > 10");
       });
@@ -147,7 +147,7 @@ describe("index", () => {
   });
 
   describe("DROP INDEX", () => {
-    dialect(["sqlite", "postgresql"], () => {
+    dialect(["sqlite", "postgresql", "plpgsql"], () => {
       it("supports DROP INDEX name", () => {
         testWc("DROP INDEX my_idx");
         testWc("DROP INDEX schm.my_idx");
@@ -157,7 +157,7 @@ describe("index", () => {
         testWc("DROP INDEX IF EXISTS my_idx");
       });
 
-      dialect("postgresql", () => {
+      dialect(["postgresql", "plpgsql"], () => {
         it("supports CONCURRENTLY", () => {
           testWc("DROP INDEX CONCURRENTLY my_idx");
         });
@@ -193,7 +193,7 @@ describe("index", () => {
   });
 
   describe("alter index", () => {
-    dialect("postgresql", () => {
+    dialect(["postgresql", "plpgsql"], () => {
       it("supports IF EXISTS", () => {
         testWc("ALTER INDEX IF EXISTS my_idx RENAME TO new_idx");
       });
@@ -250,7 +250,7 @@ describe("index", () => {
       });
     });
 
-    dialect("postgresql", () => {
+    dialect(["postgresql", "plpgsql"], () => {
       it("supports REINDEX INDEX", () => {
         testWc("REINDEX INDEX my_idx");
         testWc("REINDEX INDEX schm.my_idx");

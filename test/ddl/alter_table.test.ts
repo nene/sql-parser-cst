@@ -9,13 +9,13 @@ describe("alter table", () => {
     testWc("ALTER TABLE schm.my_tbl RENAME TO new_name");
   });
 
-  dialect(["bigquery", "postgresql"], () => {
+  dialect(["bigquery", "postgresql", "plpgsql"], () => {
     it("supports ALTER TABLE IF EXISTS", () => {
       testWc("ALTER TABLE IF EXISTS my_tbl RENAME TO new_name");
     });
   });
 
-  dialect(["postgresql"], () => {
+  dialect(["postgresql", "plpgsql"], () => {
     it("supports ALTER TABLE [ONLY] name [*]", () => {
       testWc("ALTER TABLE ONLY my_tbl RENAME TO new_name");
       testWc("ALTER TABLE my_tbl * RENAME TO new_name");
@@ -53,7 +53,7 @@ describe("alter table", () => {
       testAlterWc("RENAME COLUMN col1 TO col2");
     });
 
-    dialect(["sqlite", "postgresql"], () => {
+    dialect(["sqlite", "postgresql", "plpgsql"], () => {
       it("supports RENAME col1 TO col2", () => {
         testAlterWc("RENAME col1 TO col2");
       });
@@ -71,13 +71,13 @@ describe("alter table", () => {
       testAlterWc("ADD COLUMN col1 INT NOT NULL");
     });
 
-    dialect(["mysql", "mariadb", "sqlite", "postgresql"], () => {
+    dialect(["mysql", "mariadb", "sqlite", "postgresql", "plpgsql"], () => {
       it("supports plain ADD", () => {
         testAlterWc("ADD col1 INT");
       });
     });
 
-    dialect(["bigquery", "postgresql", "mariadb"], () => {
+    dialect(["bigquery", "postgresql", "plpgsql", "mariadb"], () => {
       it("supports ADD COLUMN IF NOT EXISTS", () => {
         testAlterWc("ADD COLUMN IF NOT EXISTS col1 INT");
       });
@@ -89,19 +89,19 @@ describe("alter table", () => {
       testAlterWc("DROP COLUMN col1");
     });
 
-    dialect(["mysql", "mariadb", "sqlite", "postgresql"], () => {
+    dialect(["mysql", "mariadb", "sqlite", "postgresql", "plpgsql"], () => {
       it("supports plain DROP", () => {
         testAlterWc("DROP col1");
       });
     });
 
-    dialect(["bigquery", "postgresql"], () => {
+    dialect(["bigquery", "postgresql", "plpgsql"], () => {
       it("supports DROP COLUMN IF EXISTS", () => {
         testAlterWc("DROP COLUMN IF EXISTS col1");
       });
     });
 
-    dialect(["postgresql"], () => {
+    dialect(["postgresql", "plpgsql"], () => {
       it("supports DROP COLUMN [CASCADE | RESTRICT]", () => {
         testAlterWc("DROP COLUMN col1 CASCADE");
         testAlterWc("DROP COLUMN col2 RESTRICT");
@@ -110,12 +110,12 @@ describe("alter table", () => {
   });
 
   describe("alter column", () => {
-    dialect(["mysql", "mariadb", "bigquery", "postgresql"], () => {
+    dialect(["mysql", "mariadb", "bigquery", "postgresql", "plpgsql"], () => {
       it("supports ALTER COLUMN colname", () => {
         testAlterWc("ALTER COLUMN col1 DROP DEFAULT");
       });
     });
-    dialect(["mysql", "mariadb", "postgresql"], () => {
+    dialect(["mysql", "mariadb", "postgresql", "plpgsql"], () => {
       it("supports ALTER colname", () => {
         testAlterWc("ALTER col1 DROP DEFAULT");
       });
@@ -126,7 +126,7 @@ describe("alter table", () => {
       });
     });
 
-    dialect(["mysql", "mariadb", "bigquery", "postgresql"], () => {
+    dialect(["mysql", "mariadb", "bigquery", "postgresql", "plpgsql"], () => {
       it("supports SET DEFAULT", () => {
         testAlterWc("ALTER COLUMN foo SET DEFAULT 125");
       });
@@ -136,24 +136,24 @@ describe("alter table", () => {
       });
     });
 
-    dialect(["postgresql"], () => {
+    dialect(["postgresql", "plpgsql"], () => {
       it("supports SET NOT NULL", () => {
         testAlterWc("ALTER COLUMN foo SET NOT NULL");
       });
     });
-    dialect(["bigquery", "postgresql"], () => {
+    dialect(["bigquery", "postgresql", "plpgsql"], () => {
       it("supports DROP NOT NULL", () => {
         testAlterWc("ALTER COLUMN foo DROP NOT NULL");
       });
     });
 
-    dialect(["bigquery", "postgresql"], () => {
+    dialect(["bigquery", "postgresql", "plpgsql"], () => {
       it("supports SET DATA TYPE", () => {
         testAlterWc("ALTER COLUMN foo SET DATA TYPE INT");
         testAlterWc("ALTER COLUMN foo SET DATA TYPE DECIMAL(5, 8)");
       });
 
-      dialect("postgresql", () => {
+      dialect(["postgresql", "plpgsql"], () => {
         it("supports just TYPE", () => {
           testAlterWc("ALTER COLUMN foo TYPE DECIMAL(5, 8)");
         });
@@ -174,7 +174,7 @@ describe("alter table", () => {
         testAlterWc("ALTER COLUMN foo SET OPTIONS ( description = 'Blah' )");
       });
     });
-    dialect("postgresql", () => {
+    dialect(["postgresql", "plpgsql"], () => {
       it("supports SET (..postgresql options..)", () => {
         testAlterWc("ALTER COLUMN foo SET (n_distinct = 100, n_distinct_inherited = -1)");
       });
@@ -190,14 +190,14 @@ describe("alter table", () => {
       });
     });
 
-    dialect("postgresql", () => {
+    dialect(["postgresql", "plpgsql"], () => {
       it("supports SET COMPRESSION", () => {
         testAlterWc("ALTER COLUMN foo SET COMPRESSION zstd");
         testAlterWc("ALTER COLUMN foo SET COMPRESSION DEFAULT");
       });
     });
 
-    dialect("postgresql", () => {
+    dialect(["postgresql", "plpgsql"], () => {
       it("supports SET STORAGE", () => {
         testAlterWc("ALTER COLUMN foo SET STORAGE PLAIN");
         testAlterWc("ALTER COLUMN foo SET STORAGE EXTERNAL");
@@ -207,13 +207,13 @@ describe("alter table", () => {
       });
     });
 
-    dialect("postgresql", () => {
+    dialect(["postgresql", "plpgsql"], () => {
       it("supports SET STATISTICS", () => {
         testAlterWc("ALTER COLUMN foo SET STATISTICS 100");
       });
     });
 
-    dialect("postgresql", () => {
+    dialect(["postgresql", "plpgsql"], () => {
       it("supports DROP EXPRESSION [IF EXISTS]", () => {
         testAlterWc("ALTER COLUMN foo DROP EXPRESSION");
         testAlterWc("ALTER COLUMN foo DROP EXPRESSION IF EXISTS");
@@ -295,7 +295,7 @@ describe("alter table", () => {
     });
   });
 
-  dialect("postgresql", () => {
+  dialect(["postgresql", "plpgsql"], () => {
     it("supports SET (..postgresql storage parameters..)", () => {
       testAlterWc(`SET (
         fillfactor = 50,
@@ -310,7 +310,7 @@ describe("alter table", () => {
     });
   });
 
-  dialect(["mysql", "mariadb", "postgresql"], () => {
+  dialect(["mysql", "mariadb", "postgresql", "plpgsql"], () => {
     it("supports ADD CONSTRAINT", () => {
       testAlterWc("ADD CONSTRAINT pk PRIMARY KEY (col1)");
       testAlterWc("ADD PRIMARY KEY (col1)");
@@ -334,7 +334,7 @@ describe("alter table", () => {
       `);
     });
   });
-  dialect(["postgresql"], () => {
+  dialect(["postgresql", "plpgsql"], () => {
     it("supports ADD CONSTRAINT .. [NOT VALID]", () => {
       testAlterWc("ADD FOREIGN KEY (col1) REFERENCES tbl (col2) NOT VALID");
       testAlterWc("ADD CONSTRAINT ch CHECK (col1 > 0) NOT VALID");
@@ -351,7 +351,7 @@ describe("alter table", () => {
     });
   });
 
-  dialect(["mysql", "mariadb", "postgresql", "bigquery"], () => {
+  dialect(["mysql", "mariadb", "postgresql", "plpgsql", "bigquery"], () => {
     it("supports DROP CONSTRAINT", () => {
       testAlterWc("DROP CONSTRAINT my_constraint");
     });
@@ -361,12 +361,12 @@ describe("alter table", () => {
       testAlterWc("DROP CHECK my_constraint");
     });
   });
-  dialect(["postgresql", "mariadb", "bigquery"], () => {
+  dialect(["postgresql", "plpgsql", "mariadb", "bigquery"], () => {
     it("supports DROP CONSTRAINT [IF EXISTS]", () => {
       testAlterWc("DROP CONSTRAINT IF EXISTS my_constraint");
     });
   });
-  dialect(["postgresql"], () => {
+  dialect(["postgresql", "plpgsql"], () => {
     it("supports DROP CONSTRAINT [RESTRICT | CASCADE]", () => {
       testAlterWc("DROP CONSTRAINT my_constraint RESTRICT");
       testAlterWc("DROP CONSTRAINT my_constraint CASCADE");
@@ -379,7 +379,7 @@ describe("alter table", () => {
     });
   });
 
-  dialect("postgresql", () => {
+  dialect(["postgresql", "plpgsql"], () => {
     it("supports ALTER CONSTRAINT", () => {
       testAlterWc("ALTER CONSTRAINT my_constraint DEFERRABLE");
       testAlterWc("ALTER CONSTRAINT my_constraint NOT DEFERRABLE");
@@ -396,13 +396,13 @@ describe("alter table", () => {
     });
   });
 
-  dialect("postgresql", () => {
+  dialect(["postgresql", "plpgsql"], () => {
     it("supports RENAME CONSTRAINT", () => {
       testAlterWc("RENAME CONSTRAINT foo TO bar");
     });
   });
 
-  dialect("postgresql", () => {
+  dialect(["postgresql", "plpgsql"], () => {
     it("supports OWNER TO", () => {
       testAlterWc("OWNER TO my_user");
       testAlterWc("OWNER TO CURRENT_USER");
@@ -411,13 +411,13 @@ describe("alter table", () => {
     });
   });
 
-  dialect("postgresql", () => {
+  dialect(["postgresql", "plpgsql"], () => {
     it("supports SET SCHEMA", () => {
       testAlterWc("SET SCHEMA my_schema");
     });
   });
 
-  dialect("postgresql", () => {
+  dialect(["postgresql", "plpgsql"], () => {
     it("supports [NO] FORCE ROW LEVEL SECURITY", () => {
       testAlterWc(`FORCE ROW LEVEL SECURITY`);
       testAlterWc(`NO FORCE ROW LEVEL SECURITY`);
@@ -445,7 +445,7 @@ describe("alter table", () => {
     });
   });
 
-  dialect("postgresql", () => {
+  dialect(["postgresql", "plpgsql"], () => {
     it("supports SET TABLESPACE", () => {
       testAlterWc(`SET TABLESPACE my_space`);
       testAlterWc(`SET TABLESPACE my_space NOWAIT`);
@@ -473,7 +473,7 @@ describe("alter table", () => {
     });
   });
 
-  dialect("postgresql", () => {
+  dialect(["postgresql", "plpgsql"], () => {
     it("supports INHERIT", () => {
       testAlterWc(`INHERIT my_table`);
       testAlterWc(`INHERIT my_schema.my_table`);
@@ -493,7 +493,7 @@ describe("alter table", () => {
     });
   });
 
-  dialect("postgresql", () => {
+  dialect(["postgresql", "plpgsql"], () => {
     it("supports REPLICA IDENTITY", () => {
       testAlterWc(`REPLICA IDENTITY DEFAULT`);
       testAlterWc(`REPLICA IDENTITY FULL`);
@@ -502,7 +502,7 @@ describe("alter table", () => {
     });
   });
 
-  dialect("postgresql", () => {
+  dialect(["postgresql", "plpgsql"], () => {
     describe("ALTER TABLE ALL IN TABLESPACE", () => {
       it("supports ALTER TABLE ALL IN TABLESPACE", () => {
         testWc(`

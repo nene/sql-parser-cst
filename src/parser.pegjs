@@ -37,6 +37,7 @@
     isMariadb,
     isSqlite,
     isPostgresql,
+    isPlpgsql,
     hasParamType,
     isEnabledWhitespace,
     isAcceptUnsupportedGrammar,
@@ -75,7 +76,8 @@ non_transaction_statement
   = &sqlite x:statement_sqlite { return x; }
   / &mysql x:statement_mysql { return x; }
   / &bigquery x:statement_bigquery { return x; }
-  / &postgres x:statement_postgres { return x; }
+  / &postgres x:statement_postgres { return x; } // Also applies for PL/pgSQL
+  / &plpgsql x:statement_plpgsql { return x; }
 
 statement_sqlite
   = alter_table_stmt
@@ -260,6 +262,22 @@ statement_postgres
   / show_parameter_stmt
   / truncate_stmt
   / update_stmt
+
+statement_plpgsql
+  = assert_stmt
+  / assignment_stmt
+  / break_stmt
+  / case_stmt
+  / continue_stmt
+  / if_stmt
+  / labeled$block_stmt
+  / labeled$for_loop_stmt
+  / labeled$foreach_stmt
+  / labeled$loop_stmt
+  / labeled$while_loop_stmt
+  / null_stmt
+  / return_stmt
+  / raise_stmt
 
 dml_statement
   = compound_select_stmt
@@ -1866,7 +1884,7 @@ truncate_stmt
 merge_stmt
   = withClause:(with_clause __)?
     mergeClause:merge_clause
-    clauses:(__ merge_when_clause)+ {
+    clauses:(__ (merge_when_clause / returning_clause))+ {
       return loc({
         type: "merge_stmt",
         clauses: [
@@ -5333,7 +5351,7 @@ role_specification
  * ------------------------------------------------------------------------------------ *
  */
 labeled$__template__
-  = beginLabel:(ident __) ":" stmt:(__ __template__) endLabel:(__ ident)? {
+  = beginLabel:label stmt:(__ __template__) endLabel:(__ ident)? {
     return loc({
       type: "labeled_stmt",
       beginLabel: read(beginLabel),
@@ -5346,16 +5364,29 @@ labeled$__template__
 labeled$block_stmt = .
 labeled$loop_stmt = .
 labeled$while_stmt = .
+labeled$while_loop_stmt = .
 labeled$repeat_stmt = .
 labeled$for_stmt = .
+labeled$for_loop_stmt = .
+labeled$foreach_stmt = .
+
+label
+  = &plpgsql "<<" label:(__ ident __) ">>" {
+    return loc({ type: "chevron_label", label: read(label) });
+  }
+  / !plpgsql label:(ident __) ":" {
+    return loc({ type: "colon_label", label: read(label) });
+  }
 
 block_stmt
-  = beginKw:(BEGIN __) atomicKw:(atomic_kw __)?
+  = declareClause:(declare_clause __)?
+    beginKw:(BEGIN __) atomicKw:(atomic_kw __)?
     program:inner_program
     exception:(__ exception_clause)?
     endKw:(__ END) {
       return loc({
         type: "block_stmt",
+        declareClause: read(declareClause),
         beginKw: read(beginKw),
         atomicKw: read(atomicKw),
         program,
@@ -5364,14 +5395,45 @@ block_stmt
       });
     }
 
+declare_clause
+  = &postgres kw:(DECLARE __) program:declarations_program {
+    return loc({
+      type: "declare_clause",
+      declareKw: read(kw),
+      program,
+    });
+  }
+
+declarations_program
+  = head:declare_stmt tail:(__ ";" __ (declare_stmt / empty))+ {
+    return loc({
+      type: "program",
+      statements: readCommaSepList(head, tail),
+    });
+  }
+  / empty {
+    return ({
+      type: "program",
+      statements: [],
+    });
+  }
+
 atomic_kw
   = kw:ATOMIC &postgres { return kw; }
 
 exception_clause
-  = &bigquery kw:(EXCEPTION __) whenKw:(WHEN __) cond:(error_category __) thenKw:(THEN __) program:inner_program {
+  = (&bigquery / &plpgsql) kw:EXCEPTION clauses:(__ exception_when_clause)+ {
     return loc({
       type: "exception_clause",
       exceptionKw: read(kw),
+      clauses: clauses.map(read),
+    });
+  }
+
+exception_when_clause
+  = whenKw:(WHEN __) cond:(error_condition_expr __) thenKw:(THEN __) program:inner_program {
+    return loc({
+      type: "exception_when_clause",
       whenKw: read(whenKw),
       condition: read(cond),
       thenKw: read(thenKw),
@@ -5379,30 +5441,69 @@ exception_clause
     });
   }
 
-error_category
+error_condition_expr
+  = head:error_condition tail:(__ OR __ error_condition)* {
+    return createBinaryExprChain(head, tail);
+  }
+
+error_condition
+  = &bigquery x:error_bigquery { return x; }
+  / &plpgsql x:error_sqlstate { return x; }
+  / &plpgsql x:error_name { return x; }
+
+error_bigquery
   = kw:ERROR {
-    return loc({ type: "error_category", errorKw: kw });
+    return loc({ type: "error_bigquery", errorKw: kw });
+  }
+
+error_sqlstate
+  = kw:(SQLSTATE __) code:string_literal {
+    return loc({ type: "error_sqlstate", sqlstateKw: read(kw), code });
+  }
+
+error_name
+  = name:ident {
+    return loc({ type: "error_name", name });
+  }
+
+error_format_string
+  = format:(string_literal __) args:(__ comma_clause$list$expr)? {
+    return loc({ type: "error_format_string", format: read(format), args: read(args) });
   }
 
 declare_stmt
-  = kw:(DECLARE __) names:list$ident type:(__ data_type)? deflt:(__ declare_default)? {
+  = &plpgsql names:list$ident constantKw:(__ CONSTANT)? type:(__ data_type)? constraints:(__ declare_constraint)* init:(__ declare_init)? {
+    return loc({
+      type: "declare_stmt",
+      names,
+      constantKw: read(constantKw),
+      dataType: read(type),
+      constraints: constraints.map(read),
+      init: read(init),
+    });
+  }
+  / !plpgsql kw:(DECLARE __) names:list$ident type:(__ data_type)? init:(__ declare_init)? {
     return loc({
       type: "declare_stmt",
       declareKw: read(kw),
       names,
       dataType: read(type),
-      default: read(deflt),
+      constraints: [],
+      init: read(init),
     });
   }
 
-declare_default
-  = kw:(DEFAULT __) expr:expr {
+declare_init
+  = op:(DEFAULT / ":=" / "=") expr:(__ expr) {
     return loc({
-      type: "declare_default",
-      defaultKw: read(kw),
-      expr,
+      type: "declare_init",
+      operator: read(op),
+      expr: read(expr),
     });
   }
+
+declare_constraint
+  = constraint_not_null / constraint_collate
 
 set_stmt
   = kw:(SET __) assignments:list$set_assignment {
@@ -5428,6 +5529,16 @@ set_assignment
       left: read(name),
       operator: "=",
       right: read(value),
+    });
+  }
+
+assignment_stmt
+  = target:(member_or_array_subscript_expr __) op:("=" / ":=") expr:(__ expr) {
+    return loc({
+      type: "assignment_stmt",
+      target: read(target),
+      operator: op,
+      expr: read(expr),
     });
   }
 
@@ -5544,6 +5655,16 @@ while_stmt
     });
   }
 
+while_loop_stmt
+  = kw:(WHILE __) cond:(expr __) loop:loop_stmt {
+    return loc({
+      type: "while_loop_stmt",
+      whileKw: read(kw),
+      condition: read(cond),
+      loop: read(loop),
+    });
+  }
+
 for_stmt
   = kw:(FOR __) left:(ident __) inKw:(IN __) right:((paren$expr / paren$compound_select_stmt) __)
     doKw:(DO __) body:(inner_program __) endKw:(END __ FOR) {
@@ -5559,23 +5680,78 @@ for_stmt
       });
     }
 
+for_loop_stmt
+  = kw:(FOR __) left:(ident __) inKw:(IN __) right:((execute_expr / dml_statement / for_range) __) loop:loop_stmt {
+    return loc({
+      type: "for_loop_stmt",
+      forKw: read(kw),
+      left: read(left),
+      inKw: read(inKw),
+      right: read(right),
+      loop: read(loop),
+    });
+  }
+
+for_range
+  = reverseKw:(REVERSE __)? from:(expr __) ".." to:(__ expr) by:(__ for_by_clause)? {
+    return loc({
+      type: "for_range",
+      reverseKw: read(reverseKw),
+      from: read(from),
+      to: read(to),
+      by: read(by),
+    });
+  }
+
+for_by_clause
+  = kw:(BY __) expr:expr {
+    return loc({
+      type: "for_by_clause",
+      byKw: read(kw),
+      expr,
+    });
+  }
+
+foreach_stmt
+  = kw:(FOREACH __) left:(ident __) slice:(foreach_slice __)? inArrayKw:(IN __ ARRAY __) right:(expr __) loop:loop_stmt {
+    return loc({
+      type: "foreach_stmt",
+      foreachKw: read(kw),
+      left: read(left),
+      slice: read(slice),
+      inArrayKw: read(inArrayKw),
+      right: read(right),
+      loop: read(loop),
+    });
+  }
+
+foreach_slice
+  = kw:(SLICE __) count:expr {
+    return loc({
+      type: "foreach_slice",
+      sliceKw: read(kw),
+      count: read(count),
+    });
+  }
+
 break_stmt
-  = kw:break_kw label:(__ ident)? {
-    return loc({ type: "break_stmt", breakKw: kw, label: read(label) });
+  = kw:break_kw label:(__ ident)? when:(__ when_clause)? {
+    return loc({ type: "break_stmt", breakKw: kw, label: read(label), when: read(when) });
   }
 
 break_kw
-  = LEAVE
+  = kw:LEAVE &(mysql / bigquery) { return kw; }
   / kw:BREAK &bigquery { return kw; }
+  / kw:EXIT &plpgsql { return kw; }
 
 continue_stmt
-  = kw:continue_kw label:(__ ident)? {
-    return loc({ type: "continue_stmt", continueKw: kw, label: read(label) });
+  = kw:continue_kw label:(__ ident)? when:(__ when_clause)? {
+    return loc({ type: "continue_stmt", continueKw: kw, label: read(label), when: read(when) });
   }
 
 continue_kw
-  = ITERATE
-  / kw:CONTINUE &bigquery { return kw; }
+  = kw:ITERATE &(mysql / bigquery) { return kw; }
+  / kw:CONTINUE &(bigquery / plpgsql) { return kw; }
 
 call_stmt
   = kw:(CALL __) func:func_call {
@@ -5583,25 +5759,78 @@ call_stmt
   }
 
 return_stmt
-  = (&mysql / &postgres) kw:(RETURN __) expr:expr {
+  = &plpgsql kw:(RETURN __ QUERY __) expr:(compound_select_stmt / execute_expr) {
+    return loc({ type: "return_query_stmt", returnQueryKw: read(kw), expr });
+  }
+  / &plpgsql kw:(RETURN __ NEXT __) expr:expr {
+    return loc({ type: "return_next_stmt", returnNextKw: read(kw), expr });
+  }
+  / (&mysql / &postgres) kw:(RETURN __) expr:expr {
     return loc({ type: "return_stmt", returnKw: read(kw), expr });
   }
-  / &bigquery kw:RETURN {
+  / (&bigquery / &plpgsql) kw:RETURN {
     return loc({ type: "return_stmt", returnKw: kw });
   }
 
 raise_stmt
-  = kw:RAISE msg:(__ raise_message)? {
-    return loc({ type: "raise_stmt", raiseKw: kw, message: read(msg) });
+  = kw:RAISE level:(__ raise_level)? error:(__ raise_error)? using:(__ raise_using_clause)? {
+    return loc({ type: "raise_stmt", raiseKw: kw, level: read(level), error: read(error), using: read(using) });
   }
 
-raise_message
-  = kw:(USING __ MESSAGE __) "=" string:(__ string_literal) {
+raise_error = error_sqlstate / error_format_string / error_name
+
+raise_level
+  = kw:(DEBUG / LOG / INFO / NOTICE / WARNING / EXCEPTION) {
+    return loc({ type: "raise_level", levelKw: kw });
+  }
+
+raise_using_clause
+  = kw:(USING __ ) options:list$raise_option_element {
     return loc({
-      type: "raise_message",
-      usingMessageKw: read(kw),
-      string: read(string),
+      type: "raise_using_clause",
+      usingKw: read(kw),
+      options,
     });
+  }
+
+raise_option_element
+  = nameKw:(using_option_kw __) operator:("=" / ":=") value:(__ expr) {
+    return loc({
+      type: "raise_option_element",
+      nameKw: read(nameKw),
+      operator: read(operator),
+      value: read(value),
+    });
+  }
+
+using_option_kw
+  = MESSAGE
+  / DETAIL
+  / HINT
+  / ERRCODE
+  / COLUMN
+  / CONSTRAINT
+  / DATATYPE
+  / TABLE
+  / SCHEMA
+
+assert_stmt
+  = kw:(ASSERT __) condition:expr message:(__ assert_message)? {
+    return loc({
+      type: "assert_stmt",
+      assertKw: read(kw),
+      condition: read(condition),
+      message: read(message),
+    });
+  }
+
+assert_message
+  = &bigquery x:as_clause$string_literal { return x; }
+  / &plpgsql x:comma_clause$expr { return x; }
+
+null_stmt
+  = kw:NULL {
+    return loc({ type: "null_stmt", nullKw: kw });
   }
 
 /**
@@ -5697,6 +5926,16 @@ execute_using_clause
       type: "execute_using_clause",
       usingKw: read(kw),
       values,
+    });
+  }
+
+execute_expr
+  = kw:(EXECUTE __) expr:expr using:(__ execute_using_clause)? {
+    return loc({
+      type: "execute_expr",
+      executeKw: read(kw),
+      expr,
+      using: read(using),
     });
   }
 
@@ -5949,16 +6188,6 @@ alter_reservation_stmt
       alterReservationKw: read(kw),
       name: read(name),
       actions: [action],
-    });
-  }
-
-assert_stmt
-  = kw:(ASSERT __) expr:expr as:(__ as_clause$string_literal)? {
-    return loc({
-      type: "assert_stmt",
-      assertKw: read(kw),
-      expr,
-      as: read(as),
     });
   }
 
@@ -7746,6 +7975,12 @@ member_expr
     return createMemberExprChain(obj, props);
   }
 
+// Chain of member expressions or array subscripts
+member_or_array_subscript_expr
+  = obj:ident props:(__ "." __ qualified_column / __ array_subscript)* {
+    return createMemberExprChain(obj, props);
+  }
+
 array_subscript
   = (&bigquery / &postgres) "[" expr:(__ (array_subscript_specifier / array_slice_specifier / expr) __) "]" {
     return loc({
@@ -8369,6 +8604,7 @@ list$transaction_mode = .
 list$transform_type = .
 list$trigger_transition = .
 list$type_param = .
+list$raise_option_element = .
 list$values_row = .
 list$variable = .
 list$view_column_definition = .
@@ -8435,6 +8671,30 @@ as_clause$prepareable_statement = .
 as_clause$string_literal = .
 as_clause$expr = .
 /*! as_clause:end */
+
+/**
+ * ------------------------------------------------------------------------------------ *
+ *                                                                                      *
+ * comma clauses                                                                        *
+ *                                                                                      *
+ * Code for these rules is generated by rule-templates.ts plugin                        *
+ * To add new rule run:                                                                 *
+ *                                                                                      *
+ *   yarn add:template 'comma_clause$some_name'                                         *
+ * ------------------------------------------------------------------------------------ *
+ */
+comma_clause$__template__
+  = "," expr:(__ __template__) {
+    return loc({
+      type: "comma_clause",
+      expr: read(expr),
+    });
+  }
+
+/*! comma_clause:start */
+comma_clause$expr = .
+comma_clause$list$expr = .
+/*! comma_clause:end */
 
 // Utility placeholder rule used by the rule-templates system
 __template__ = .
@@ -9354,7 +9614,8 @@ sqlite = &{ return isSqlite(); }
 mysql = &{ return isMysql() || isMariadb(); } // 99% of MariaDB and MySQL syntax is the same
 only_mysql = &{ return isMysql(); } // 99% of MariaDB and MySQL syntax is the same
 only_mariadb = &{ return isMariadb(); } // 99% of MariaDB and MySQL syntax is the same
-postgres = &{ return isPostgresql(); }
+postgres = &{ return isPostgresql() || isPlpgsql(); } // We're treating PostgreSQL as subset of PLPGSQL
+plpgsql = &{ return isPlpgsql(); }
 
 unsupported_grammar_stmt = [^;]+ {
   return loc({
@@ -9471,6 +9732,7 @@ CONFIGURATION       = kw:"CONFIGURATION"i       !ident_part { return loc(createK
 CONFLICT            = kw:"CONFLICT"i            !ident_part { return loc(createKeyword(kw)); }
 CONNECT             = kw:"CONNECT"i             !ident_part { return loc(createKeyword(kw)); }
 CONNECTION          = kw:"CONNECTION"i          !ident_part { return loc(createKeyword(kw)); }
+CONSTANT            = kw:"CONSTANT"i            !ident_part { return loc(createKeyword(kw)); }
 CONSTRAINT          = kw:"CONSTRAINT"i          !ident_part { return loc(createKeyword(kw)); }
 CONSTRAINTS         = kw:"CONSTRAINTS"i         !ident_part { return loc(createKeyword(kw)); }
 CONTINUE            = kw:"CONTINUE"i            !ident_part { return loc(createKeyword(kw)); }
@@ -9496,6 +9758,7 @@ CURRENT_USER        = kw:"CURRENT_USER"i        !ident_part { return loc(createK
 CYCLE               = kw:"CYCLE"i               !ident_part { return loc(createKeyword(kw)); }
 DATA                = kw:"DATA"i                !ident_part { return loc(createKeyword(kw)); }
 DATABASE            = kw:"DATABASE"i            !ident_part { return loc(createKeyword(kw)); }
+DATATYPE            = kw:"DATATYPE"i            !ident_part { return loc(createKeyword(kw)); }
 DATE                = kw:"DATE"i                !ident_part { return loc(createKeyword(kw)); }
 DATETIME            = kw:"DATETIME"i            !ident_part { return loc(createKeyword(kw)); }
 DAY                 = kw:"DAY"i                 !ident_part { return loc(createKeyword(kw)); }
@@ -9506,6 +9769,7 @@ DAY_SECOND          = kw:"DAY_SECOND"i          !ident_part { return loc(createK
 DAYOFWEEK           = kw:"DAYOFWEEK"i           !ident_part { return loc(createKeyword(kw)); }
 DAYOFYEAR           = kw:"DAYOFYEAR"i           !ident_part { return loc(createKeyword(kw)); }
 DEALLOCATE          = kw:"DEALLOCATE"i          !ident_part { return loc(createKeyword(kw)); }
+DEBUG               = kw:"DEBUG"i               !ident_part { return loc(createKeyword(kw)); }
 DEC                 = kw:"DEC"i                 !ident_part { return loc(createKeyword(kw)); }
 DECADE              = kw:"DECADE"i              !ident_part { return loc(createKeyword(kw)); }
 DECIMAL             = kw:"DECIMAL"i             !ident_part { return loc(createKeyword(kw)); }
@@ -9524,6 +9788,7 @@ DEPTH               = kw:"DEPTH"i               !ident_part { return loc(createK
 DESC                = kw:"DESC"i                !ident_part { return loc(createKeyword(kw)); }
 DESCRIBE            = kw:"DESCRIBE"i            !ident_part { return loc(createKeyword(kw)); }
 DETACH              = kw:"DETACH"i              !ident_part { return loc(createKeyword(kw)); }
+DETAIL              = kw:"DETAIL"i              !ident_part { return loc(createKeyword(kw)); }
 DETERMINISTIC       = kw:"DETERMINISTIC"i       !ident_part { return loc(createKeyword(kw)); }
 DICTIONARY          = kw:"DICTIONARY"i          !ident_part { return loc(createKeyword(kw)); }
 DIRECTORY           = kw:"DIRECTORY"i           !ident_part { return loc(createKeyword(kw)); }
@@ -9555,6 +9820,7 @@ ENGINE              = kw:"ENGINE"i              !ident_part { return loc(createK
 ENGINE_ATTRIBUTE    = kw:"ENGINE_ATTRIBUTE"i    !ident_part { return loc(createKeyword(kw)); }
 ENUM                = kw:"ENUM"i                !ident_part { return loc(createKeyword(kw)); }
 EPOCH               = kw:"EPOCH"i               !ident_part { return loc(createKeyword(kw)); }
+ERRCODE             = kw:"ERRCODE"i             !ident_part { return loc(createKeyword(kw)); }
 ERROR               = kw:"ERROR"i               !ident_part { return loc(createKeyword(kw)); }
 ESCAPE              = kw:"ESCAPE"i              !ident_part { return loc(createKeyword(kw)); }
 ESCAPED             = kw:"ESCAPED"i             !ident_part { return loc(createKeyword(kw)); }
@@ -9568,6 +9834,7 @@ EXCLUDING           = kw:"EXCLUDING"i           !ident_part { return loc(createK
 EXCLUSIVE           = kw:"EXCLUSIVE"i           !ident_part { return loc(createKeyword(kw)); }
 EXECUTE             = kw:"EXECUTE"i             !ident_part { return loc(createKeyword(kw)); }
 EXISTS              = kw:"EXISTS"i              !ident_part { return loc(createKeyword(kw)); }
+EXIT                = kw:"EXIT"i                !ident_part { return loc(createKeyword(kw)); }
 EXPANSION           = kw:"EXPANSION"i           !ident_part { return loc(createKeyword(kw)); }
 EXPLAIN             = kw:"EXPLAIN"i             !ident_part { return loc(createKeyword(kw)); }
 EXPORT              = kw:"EXPORT"i              !ident_part { return loc(createKeyword(kw)); }
@@ -9591,6 +9858,7 @@ FLOAT64             = kw:"FLOAT64"i             !ident_part { return loc(createK
 FOLLOWING           = kw:"FOLLOWING"i           !ident_part { return loc(createKeyword(kw)); }
 FOR                 = kw:"FOR"i                 !ident_part { return loc(createKeyword(kw)); }
 FORCE               = kw:"FORCE"i               !ident_part { return loc(createKeyword(kw)); }
+FOREACH             = kw:"FOREACH"i             !ident_part { return loc(createKeyword(kw)); }
 FOREIGN             = kw:"FOREIGN"i             !ident_part { return loc(createKeyword(kw)); }
 FORMAT              = kw:"FORMAT"i              !ident_part { return loc(createKeyword(kw)); }
 FRIDAY              = kw:"FRIDAY"i              !ident_part { return loc(createKeyword(kw)); }
@@ -9614,6 +9882,7 @@ GROUPS              = kw:"GROUPS"i              !ident_part { return loc(createK
 HASH                = kw:"HASH"i                !ident_part { return loc(createKeyword(kw)); }
 HAVING              = kw:"HAVING"i              !ident_part { return loc(createKeyword(kw)); }
 HIGH_PRIORITY       = kw:"HIGH_PRIORITY"i       !ident_part { return loc(createKeyword(kw)); }
+HINT                = kw:"HINT"i                !ident_part { return loc(createKeyword(kw)); }
 HOUR                = kw:"HOUR"i                !ident_part { return loc(createKeyword(kw)); }
 HOUR_MICROSECOND    = kw:"HOUR_MICROSECOND"i    !ident_part { return loc(createKeyword(kw)); }
 HOUR_MINUTE         = kw:"HOUR_MINUTE"i         !ident_part { return loc(createKeyword(kw)); }
@@ -9631,6 +9900,7 @@ INCREMENT           = kw:"INCREMENT"i           !ident_part { return loc(createK
 INDEX               = kw:"INDEX"i               !ident_part { return loc(createKeyword(kw)); }
 INDEXED             = kw:"INDEXED"i             !ident_part { return loc(createKeyword(kw)); }
 INDEXES             = kw:"INDEXES"i             !ident_part { return loc(createKeyword(kw)); }
+INFO                = kw:"INFO"i                !ident_part { return loc(createKeyword(kw)); }
 INHERIT             = kw:"INHERIT"i             !ident_part { return loc(createKeyword(kw)); }
 INHERITS            = kw:"INHERITS"i            !ident_part { return loc(createKeyword(kw)); }
 INITIALLY           = kw:"INITIALLY"i           !ident_part { return loc(createKeyword(kw)); }
@@ -9684,6 +9954,7 @@ LOCALTIME           = kw:"LOCALTIME"i           !ident_part { return loc(createK
 LOCALTIMESTAMP      = kw:"LOCALTIMESTAMP"i      !ident_part { return loc(createKeyword(kw)); }
 LOCK                = kw:"LOCK"i                !ident_part { return loc(createKeyword(kw)); }
 LOCKED              = kw:"LOCKED"i              !ident_part { return loc(createKeyword(kw)); }
+LOG                 = kw:"LOG"i                 !ident_part { return loc(createKeyword(kw)); }
 LOGGED              = kw:"LOGGED"i              !ident_part { return loc(createKeyword(kw)); }
 LOGIN               = kw:"LOGIN"i               !ident_part { return loc(createKeyword(kw)); }
 LOGS                = kw:"LOGS"i                !ident_part { return loc(createKeyword(kw)); }
@@ -9748,6 +10019,7 @@ NORMALIZED          = kw:"NORMALIZED"i          !ident_part { return loc(createK
 NOSUPERUSER         = kw:"NOSUPERUSER"i         !ident_part { return loc(createKeyword(kw)); }
 NOT                 = kw:"NOT"i                 !ident_part { return loc(createKeyword(kw)); }
 NOTHING             = kw:"NOTHING"i             !ident_part { return loc(createKeyword(kw)); }
+NOTICE              = kw:"NOTICE"i              !ident_part { return loc(createKeyword(kw)); }
 NOTNULL             = kw:"NOTNULL"i             !ident_part { return loc(createKeyword(kw)); }
 NOWAIT              = kw:"NOWAIT"i              !ident_part { return loc(createKeyword(kw)); }
 NTH_VALUE           = kw:"NTH_VALUE"i           !ident_part { return loc(createKeyword(kw)); }
@@ -9848,6 +10120,7 @@ RESTRICTIVE         = kw:"RESTRICTIVE"i         !ident_part { return loc(createK
 RETURN              = kw:"RETURN"i              !ident_part { return loc(createKeyword(kw)); }
 RETURNING           = kw:"RETURNING"i           !ident_part { return loc(createKeyword(kw)); }
 RETURNS             = kw:"RETURNS"i             !ident_part { return loc(createKeyword(kw)); }
+REVERSE             = kw:"REVERSE"i             !ident_part { return loc(createKeyword(kw)); }
 REVOKE              = kw:"REVOKE"i              !ident_part { return loc(createKeyword(kw)); }
 RIGHT               = kw:"RIGHT"i               !ident_part { return loc(createKeyword(kw)); }
 RLIKE               = kw:"RLIKE"i               !ident_part { return loc(createKeyword(kw)); }
@@ -9892,6 +10165,7 @@ SIGNED              = kw:"SIGNED"i              !ident_part { return loc(createK
 SIMILAR             = kw:"SIMILAR"i             !ident_part { return loc(createKeyword(kw)); }
 SIMPLE              = kw:"SIMPLE"i              !ident_part { return loc(createKeyword(kw)); }
 SKIP                = kw:"SKIP"i                !ident_part { return loc(createKeyword(kw)); }
+SLICE               = kw:"SLICE"i               !ident_part { return loc(createKeyword(kw)); }
 SMALLINT            = kw:"SMALLINT"i            !ident_part { return loc(createKeyword(kw)); }
 SNAPSHOT            = kw:"SNAPSHOT"i            !ident_part { return loc(createKeyword(kw)); }
 SOME                = kw:"SOME"i                !ident_part { return loc(createKeyword(kw)); }
@@ -9905,6 +10179,7 @@ SQL_CACHE           = kw:"SQL_CACHE"i           !ident_part { return loc(createK
 SQL_CALC_FOUND_ROWS = kw:"SQL_CALC_FOUND_ROWS"i !ident_part { return loc(createKeyword(kw)); }
 SQL_NO_CACHE        = kw:"SQL_NO_CACHE"i        !ident_part { return loc(createKeyword(kw)); }
 SQL_SMALL_RESULT    = kw:"SQL_SMALL_RESULT"i    !ident_part { return loc(createKeyword(kw)); }
+SQLSTATE            = kw:"SQLSTATE"i            !ident_part { return loc(createKeyword(kw)); }
 STABLE              = kw:"STABLE"i              !ident_part { return loc(createKeyword(kw)); }
 START               = kw:"START"i               !ident_part { return loc(createKeyword(kw)); }
 STARTING            = kw:"STARTING"i            !ident_part { return loc(createKeyword(kw)); }
@@ -9996,6 +10271,7 @@ VIRTUAL             = kw:"VIRTUAL"i             !ident_part { return loc(createK
 VISIBLE             = kw:"VISIBLE"i             !ident_part { return loc(createKeyword(kw)); }
 VOLATILE            = kw:"VOLATILE"i            !ident_part { return loc(createKeyword(kw)); }
 WAIT                = kw:"WAIT"i                !ident_part { return loc(createKeyword(kw)); }
+WARNING             = kw:"WARNING"i             !ident_part { return loc(createKeyword(kw)); }
 WEDNESDAY           = kw:"WEDNESDAY"i           !ident_part { return loc(createKeyword(kw)); }
 WEEK                = kw:"WEEK"i                !ident_part { return loc(createKeyword(kw)); }
 WHEN                = kw:"WHEN"i                !ident_part { return loc(createKeyword(kw)); }

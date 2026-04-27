@@ -4,12 +4,12 @@ import { DataType } from "./DataType";
 import { Expr, Identifier, ListExpr, ParenExpr, EntityName } from "./Expr";
 import { NumberLiteral, StringLiteral } from "./Literal";
 import {
-  AsClause,
   DeterminismClause,
   LanguageClause,
   WithConnectionClause,
   ReturnsClause,
 } from "./ProcClause";
+import { AsClause } from "./OtherClauses";
 import { SubSelect } from "./Select";
 import { BlockStmt } from "./ProceduralLanguage";
 import { AlterFunctionAction } from "./AlterAction";

@@ -1,7 +1,7 @@
 import { dialect, notDialect, test, testWc } from "../../test_utils";
 
 describe("select FROM + table inheritance modifiers", () => {
-  dialect("postgresql", () => {
+  dialect(["postgresql", "plpgsql"], () => {
     it("supports explicitly including inherited tables: table *", () => {
       testWc("SELECT * FROM my_table *");
     });
@@ -19,7 +19,7 @@ describe("select FROM + table inheritance modifiers", () => {
     });
   });
 
-  notDialect("postgresql", () => {
+  notDialect(["postgresql", "plpgsql"], () => {
     it("does not support table inheritance modifiers", () => {
       expect(() => test("SELECT * FROM tbl*")).toThrow();
     });

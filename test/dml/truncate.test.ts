@@ -1,20 +1,20 @@
 import { dialect, parse, testWc } from "../test_utils";
 
 describe("truncate table", () => {
-  dialect(["bigquery", "mysql", "mariadb", "postgresql"], () => {
+  dialect(["bigquery", "mysql", "mariadb", "postgresql", "plpgsql"], () => {
     it("supports TRUNCATE TABLE statement", () => {
       testWc("TRUNCATE TABLE tbl");
       testWc("TRUNCATE TABLE db.tbl");
     });
   });
 
-  dialect(["mysql", "mariadb", "postgresql"], () => {
+  dialect(["mysql", "mariadb", "postgresql", "plpgsql"], () => {
     it("supports TRUNCATE statement without TABLE", () => {
       testWc("TRUNCATE my_table");
     });
   });
 
-  dialect("postgresql", () => {
+  dialect(["postgresql", "plpgsql"], () => {
     it("supports multi-table TRUNCATE statement", () => {
       testWc("TRUNCATE TABLE tbl1, tbl2");
     });
