@@ -27,6 +27,7 @@ export type AllProceduralNodes =
   | ChevronLabel
   | DeclareClause
   | ExceptionClause
+  | ExceptionWhenClause
   | ErrorCategory
   | DeclareInit
   | IfClause
@@ -113,6 +114,11 @@ export interface DeclareClause extends BaseNode {
 export interface ExceptionClause extends BaseNode {
   type: "exception_clause";
   exceptionKw: Keyword<"EXCEPTION">;
+  clauses: ExceptionWhenClause[];
+}
+
+export interface ExceptionWhenClause extends BaseNode {
+  type: "exception_when_clause";
   whenKw: Keyword<"WHEN">;
   condition: ErrorCategory;
   thenKw: Keyword<"THEN">;

@@ -5422,10 +5422,18 @@ atomic_kw
   = kw:ATOMIC &postgres { return kw; }
 
 exception_clause
-  = &bigquery kw:(EXCEPTION __) whenKw:(WHEN __) cond:(error_category __) thenKw:(THEN __) program:inner_program {
+  = &bigquery kw:EXCEPTION clauses:(__ exception_when_clause)+ {
     return loc({
       type: "exception_clause",
       exceptionKw: read(kw),
+      clauses: clauses.map(read),
+    });
+  }
+
+exception_when_clause
+  = whenKw:(WHEN __) cond:(error_category __) thenKw:(THEN __) program:inner_program {
+    return loc({
+      type: "exception_when_clause",
       whenKw: read(whenKw),
       condition: read(cond),
       thenKw: read(thenKw),

@@ -20,14 +20,9 @@ export const proceduralLanguageMap: FullTransformMap<
       node.endKw,
     ]),
   declare_clause: (node) => show([node.declareKw, node.program]),
-  exception_clause: (node) =>
-    show([
-      node.exceptionKw,
-      node.whenKw,
-      node.condition,
-      node.thenKw,
-      node.program,
-    ]),
+  exception_clause: (node) => show([node.exceptionKw, node.clauses]),
+  exception_when_clause: (node) =>
+    show([node.whenKw, node.condition, node.thenKw, node.program]),
   error_category: (node) => show(node.errorKw),
   declare_stmt: (node) =>
     show([
