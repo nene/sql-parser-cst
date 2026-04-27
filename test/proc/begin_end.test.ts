@@ -223,7 +223,7 @@ describe("BEGIN..END", () => {
     });
   });
 
-  dialect("bigquery", () => {
+  dialect(["bigquery", "plpgsql"], () => {
     it("supports BEGIN..EXCEPTION..END", () => {
       testWc(`
         BEGIN

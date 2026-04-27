@@ -5422,7 +5422,7 @@ atomic_kw
   = kw:ATOMIC &postgres { return kw; }
 
 exception_clause
-  = &bigquery kw:EXCEPTION clauses:(__ exception_when_clause)+ {
+  = (&bigquery / &plpgsql) kw:EXCEPTION clauses:(__ exception_when_clause)+ {
     return loc({
       type: "exception_clause",
       exceptionKw: read(kw),
