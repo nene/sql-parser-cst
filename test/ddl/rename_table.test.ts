@@ -53,15 +53,9 @@ describe("rename table", () => {
     });
   });
 
-  dialect(["bigquery", "sqlite"], () => {
+  dialect(["bigquery", "sqlite", "postgresql", "plpgsql"], () => {
     it("does not support RENAME TABLE", () => {
       expect(() => parseStmt("RENAME TABLE foo TO bar")).toThrow();
-    });
-  });
-
-  dialect(["postgresql", "plpgsql"], () => {
-    it.skip("TODO:postgres", () => {
-      expect(true).toBe(true);
     });
   });
 });
