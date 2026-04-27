@@ -28,7 +28,7 @@ export type AllProceduralNodes =
   | DeclareClause
   | ExceptionClause
   | ExceptionWhenClause
-  | ErrorCategory
+  | ErrorBigquery
   | ErrorSqlstate
   | ErrorFormatString
   | DeclareInit
@@ -120,14 +120,14 @@ export interface ExceptionClause extends BaseNode {
 export interface ExceptionWhenClause extends BaseNode {
   type: "exception_when_clause";
   whenKw: Keyword<"WHEN">;
-  condition: ErrorCategory;
+  condition: ErrorBigquery;
   thenKw: Keyword<"THEN">;
   program: Program;
 }
 
 // BigQuery
-export interface ErrorCategory extends BaseNode {
-  type: "error_category";
+export interface ErrorBigquery extends BaseNode {
+  type: "error_bigquery";
   errorKw: Keyword<"ERROR">;
 }
 

@@ -23,7 +23,7 @@ export const proceduralLanguageMap: FullTransformMap<
   exception_clause: (node) => show([node.exceptionKw, node.clauses]),
   exception_when_clause: (node) =>
     show([node.whenKw, node.condition, node.thenKw, node.program]),
-  error_category: (node) => show(node.errorKw),
+  error_bigquery: (node) => show(node.errorKw),
   error_sqlstate: (node) => show([node.sqlstateKw, node.code]),
   error_format_string: (node) => show([node.format, node.args]),
   declare_stmt: (node) =>
