@@ -300,7 +300,7 @@ inner_program
     });
   }
   / empty {
-    return ({
+    return loc({
       type: "program",
       statements: [],
     });
