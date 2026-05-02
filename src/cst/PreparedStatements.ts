@@ -2,7 +2,7 @@ import { Alias } from "./Alias";
 import { BaseNode, Keyword } from "./Base";
 import { DataType } from "./DataType";
 import { EntityName, Expr, ListExpr, ParenExpr } from "./Expr";
-import { AsClause, IntoClause } from "./OtherClauses";
+import { AsClause, IntoVariablesClause } from "./OtherClauses";
 import { Statement } from "./Statement";
 
 export type AllPreparedStatementNodes =
@@ -62,7 +62,7 @@ export interface ExecuteImmediateStmt extends BaseNode {
   executeKw: Keyword<"EXECUTE">;
   immediateKw?: Keyword<"IMMEDIATE">;
   expr: Expr;
-  into?: IntoClause;
+  into?: IntoVariablesClause;
   using?: ExecuteUsingClause;
 }
 

@@ -1,11 +1,11 @@
 import { Alias } from "./Alias";
 import { BaseNode, Keyword } from "./Base";
-import { Expr, Identifier, ListExpr } from "./Expr";
+import { Expr, Identifier, ListExpr, Variable } from "./Expr";
 import { Node } from "./Node";
 
 export type AllOtherClauses =
   | ReturningClause
-  | IntoClause
+  | IntoVariablesClause
   | AsClause
   | CommaClause
   | ClusterByClause
@@ -17,11 +17,11 @@ export interface ReturningClause extends BaseNode {
   columns: ListExpr<Expr | Alias<Expr>>;
 }
 
-export interface IntoClause extends BaseNode {
-  type: "into_clause";
+export interface IntoVariablesClause extends BaseNode {
+  type: "into_variables_clause";
   intoKw: Keyword<"INTO">;
   strictKw?: Keyword<"STRICT">;
-  variables: ListExpr<Identifier>;
+  variables: ListExpr<Identifier | Variable>;
 }
 
 export interface AsClause<T = Node> extends BaseNode {

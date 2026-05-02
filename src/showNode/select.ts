@@ -147,7 +147,6 @@ export const selectMap: FullTransformMap<string, AllSelectNodes> = {
   // INTO ...
   into_table_clause: (node) =>
     show([node.intoKw, node.kind, node.tableKw, node.name]),
-  into_variables_clause: (node) => show([node.intoKw, node.variables]),
   into_dumpfile_clause: (node) => show([node.intoDumpfileKw, node.filename]),
   into_outfile_clause: (node) =>
     show([

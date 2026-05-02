@@ -1408,15 +1408,6 @@ into_table_clause
     });
   }
 
-into_variables_clause
-  = kw:(INTO __) vars:list$variable {
-    return loc({
-      type: "into_variables_clause",
-      intoKw: read(kw),
-      variables: vars,
-    });
-  }
-
 into_dumpfile_clause
   = kw:(INTO __ DUMPFILE __) filename:string_literal {
     return loc({
@@ -5911,7 +5902,7 @@ execute_stmt
 
 execute_immediate_stmt
   = &bigquery kw:(EXECUTE __) immedKw:(IMMEDIATE __) expr:expr
-    into:(__ into_clause)?
+    into:(__ into_variables_clause)?
     using:(__ execute_using_clause)? {
       return loc({
         type: "execute_immediate_stmt",
@@ -5923,7 +5914,7 @@ execute_immediate_stmt
       });
     }
   / &plpgsql kw:(EXECUTE __) expr:expr
-    into:(__ into_clause)?
+    into:(__ into_variables_clause)?
     using:(__ execute_using_clause)? {
       return loc({
         type: "execute_immediate_stmt",
@@ -5934,10 +5925,10 @@ execute_immediate_stmt
       });
     }
 
-into_clause
-  = kw:(INTO __) strictKw:(STRICT __)? variables:list$ident {
+into_variables_clause
+  = kw:(INTO __) strictKw:(STRICT __)? variables:(list$ident / list$variable) {
     return loc({
-      type: "into_clause",
+      type: "into_variables_clause",
       intoKw: read(kw),
       strictKw: read(strictKw),
       variables,

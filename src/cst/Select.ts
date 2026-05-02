@@ -7,7 +7,6 @@ import {
   MemberExpr,
   ParenExpr,
   EntityName,
-  Variable,
 } from "./Expr";
 import { Alias } from "./Alias";
 import { FrameClause } from "./WindowFrame";
@@ -17,6 +16,7 @@ import { ColumnDefinition, RelationKind } from "./CreateTable";
 import {
   DeleteStmt,
   InsertStmt,
+  IntoVariablesClause,
   PostgresqlOperator,
   PostgresqlOperatorExpr,
   UpdateStmt,
@@ -86,7 +86,6 @@ export type AllSelectNodes =
   | SortDirectionDesc
   | SortDirectionUsingOperator
   | IntoTableClause
-  | IntoVariablesClause
   | IntoDumpfileClause
   | IntoOutfileClause
   | OutfileFields
@@ -662,13 +661,6 @@ export interface IntoTableClause extends BaseNode {
   kind?: RelationKind;
   tableKw?: Keyword<"TABLE">;
   name: EntityName;
-}
-
-// MySQL, MariaDB
-export interface IntoVariablesClause extends BaseNode {
-  type: "into_variables_clause";
-  intoKw: Keyword<"INTO">;
-  variables: ListExpr<Variable>;
 }
 
 // MySQL, MariaDB

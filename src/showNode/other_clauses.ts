@@ -4,7 +4,8 @@ import { FullTransformMap } from "../cstTransformer";
 
 export const otherClausesMap: FullTransformMap<string, AllOtherClauses> = {
   returning_clause: (node) => show([node.returningKw, node.columns]),
-  into_clause: (node) => show([node.intoKw, node.strictKw, node.variables]),
+  into_variables_clause: (node) =>
+    show([node.intoKw, node.strictKw, node.variables]),
   as_clause: (node) => show([node.asKw, node.expr]),
   comma_clause: (node) => show([",", node.expr]),
   where_current_of_clause: (node) => show([node.whereCurrentOfKw, node.cursor]),
