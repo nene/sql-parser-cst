@@ -269,6 +269,7 @@ statement_plpgsql
   / break_stmt
   / case_stmt
   / continue_stmt
+  / execute_immediate_stmt
   / if_stmt
   / labeled$block_stmt
   / labeled$for_loop_stmt
@@ -5898,7 +5899,7 @@ deallocate_all
   = allKw:ALL &postgres { return loc({ type: "deallocate_all", allKw }); }
 
 execute_stmt
-  = kw:(EXECUTE __) name:entity_name
+  = (&only_postgres / &mysql) kw:(EXECUTE __) name:entity_name
     args:(__ (execute_using_clause / paren$list$expr))? {
       return loc({
         type: "execute_stmt",
@@ -5909,13 +5910,24 @@ execute_stmt
     }
 
 execute_immediate_stmt
-  = kw:(EXECUTE __) immedKw:(IMMEDIATE __) expr:expr
+  = &bigquery kw:(EXECUTE __) immedKw:(IMMEDIATE __) expr:expr
     into:(__ execute_into_clause)?
     using:(__ execute_using_clause)? {
       return loc({
         type: "execute_immediate_stmt",
         executeKw: read(kw),
         immediateKw: read(immedKw),
+        expr,
+        into: read(into),
+        using: read(using),
+      });
+    }
+  / &plpgsql kw:(EXECUTE __) expr:expr
+    into:(__ execute_into_clause)?
+    using:(__ execute_using_clause)? {
+      return loc({
+        type: "execute_immediate_stmt",
+        executeKw: read(kw),
         expr,
         into: read(into),
         using: read(using),
@@ -9626,6 +9638,7 @@ mysql = &{ return isMysql() || isMariadb(); } // 99% of MariaDB and MySQL syntax
 only_mysql = &{ return isMysql(); } // 99% of MariaDB and MySQL syntax is the same
 only_mariadb = &{ return isMariadb(); } // 99% of MariaDB and MySQL syntax is the same
 postgres = &{ return isPostgresql() || isPlpgsql(); } // We're treating PostgreSQL as subset of PLPGSQL
+only_postgres = &{ return isPostgresql(); }
 plpgsql = &{ return isPlpgsql(); }
 
 unsupported_grammar_stmt = [^;]+ {

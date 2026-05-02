@@ -57,11 +57,11 @@ export interface ExecuteStmt extends BaseNode {
   args?: ExecuteUsingClause | ParenExpr<ListExpr<Expr>>;
 }
 
-// EXECUTE IMMEDIATE in BigQuery
+// EXECUTE IMMEDIATE in BigQuery and EXECUTE in PL/pgSQL
 export interface ExecuteImmediateStmt extends BaseNode {
   type: "execute_immediate_stmt";
   executeKw: Keyword<"EXECUTE">;
-  immediateKw: Keyword<"IMMEDIATE">;
+  immediateKw?: Keyword<"IMMEDIATE">;
   expr: Expr;
   into?: ExecuteIntoClause;
   using?: ExecuteUsingClause;

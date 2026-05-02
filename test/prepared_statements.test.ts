@@ -1,4 +1,4 @@
-import { dialect, parse, testWc, test, includeAll } from "./test_utils";
+import { dialect, parse, testWc, test, includeAll, parseStmt } from "./test_utils";
 
 describe("prepared statements", () => {
   dialect(["mysql", "mariadb"], () => {
@@ -74,40 +74,63 @@ describe("prepared statements", () => {
     });
   });
 
+  // This syntax has different meaning in PostgreSQL and PL/pgSQL
+  // - in PostgreSQL it's passing parameters to the prepared statement `my_stmt`
+  // - in PL/pgSQL it's a plain function call `my_stmt(1, 2, 3)` which returns a string that's executed
   dialect(["postgresql", "plpgsql"], () => {
     it("supports EXECUTE .. (arg1, arg2, ...)", () => {
       testWc(`EXECUTE my_stmt(1, 2, 3)`);
     });
-  });
 
-  dialect("bigquery", () => {
-    it("supports EXECUTE IMMEDIATE", () => {
-      testWc(`EXECUTE IMMEDIATE 'SELECT 1'`);
+    dialect("postgresql", () => {
+      it("parses as execute_stmt", () => {
+        expect(parseStmt(`EXECUTE my_stmt(1, 2, 3)`).type).toBe("execute_stmt");
+      });
     });
 
-    it("supports EXECUTE IMMEDIATE with more complex expression", () => {
-      test(`EXECUTE IMMEDIATE 'SELECT 1' || ', 2'`);
+    dialect("plpgsql", () => {
+      it("parses as execute_immediate_stmt", () => {
+        expect(parseStmt(`EXECUTE my_stmt(1, 2, 3)`).type).toBe("execute_immediate_stmt");
+      });
+    });
+  });
+
+  function testExecuteImmediate(stmt: string) {
+    it(`supports ${stmt}`, () => {
+      testWc(`${stmt} 'SELECT 1'`);
+    });
+
+    it(`supports ${stmt} with more complex expression`, () => {
+      test(`${stmt} 'SELECT 1' || ', 2'`);
     });
 
     it("supports USING with positional values", () => {
-      testWc(`EXECUTE IMMEDIATE 'SELECT ?, ?' USING 1, 2`);
+      testWc(`${stmt} 'SELECT ?, ?' USING 1, 2`);
     });
 
     it("supports USING with labeled values", () => {
-      testWc(`EXECUTE IMMEDIATE 'SELECT @a, @b' USING 1 as b , 2 as a`);
+      testWc(`${stmt} 'SELECT @a, @b' USING 1 as b , 2 as a`);
     });
 
     it("supports INTO with single variable", () => {
-      testWc(`EXECUTE IMMEDIATE 'SELECT 1' INTO my_var`);
+      testWc(`${stmt} 'SELECT 1' INTO my_var`);
     });
 
     it("supports INTO with multiple variables", () => {
-      testWc(`EXECUTE IMMEDIATE 'SELECT 1, 2' INTO var1, var2`);
+      testWc(`${stmt} 'SELECT 1, 2' INTO var1, var2`);
     });
 
     it("supports INTO + USING", () => {
-      test(`EXECUTE IMMEDIATE 'SELECT ?' INTO var1 USING 8`);
+      test(`${stmt} 'SELECT ?' INTO var1 USING 8`);
     });
+  }
+
+  dialect("bigquery", () => {
+    testExecuteImmediate("EXECUTE IMMEDIATE");
+  });
+
+  dialect("plpgsql", () => {
+    testExecuteImmediate("EXECUTE");
   });
 
   dialect(["sqlite", "bigquery"], () => {
