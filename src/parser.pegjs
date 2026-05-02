@@ -1397,6 +1397,16 @@ where_current_of_clause
  * SELECT .. INTO
  * --------------------------------------------------------------------------------------
  */
+into_variables_clause
+  = kw:(INTO __) strictKw:(STRICT __)? variables:(list$ident / list$variable) {
+    return loc({
+      type: "into_variables_clause",
+      intoKw: read(kw),
+      strictKw: read(strictKw),
+      variables,
+    });
+  }
+
 into_table_clause
   = kw:(INTO __) kind:(table_kind __)? tableKw:(TABLE __)? name:entity_name {
     return loc({
@@ -5924,16 +5934,6 @@ execute_immediate_stmt
         using: read(using),
       });
     }
-
-into_variables_clause
-  = kw:(INTO __) strictKw:(STRICT __)? variables:(list$ident / list$variable) {
-    return loc({
-      type: "into_variables_clause",
-      intoKw: read(kw),
-      strictKw: read(strictKw),
-      variables,
-    });
-  }
 
 execute_using_clause
   = kw:(USING __) values:list$expr_or_explicit_alias {
