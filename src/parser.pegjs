@@ -1570,7 +1570,8 @@ insert_stmt
     aliasCls:(__ row_alias_clause)?
     updateCls:(__ on_duplicate_key_update_clause)?
     upsert:(__ upsert_clause)*
-    returning:(__ returning_clause)? {
+    returning:(__ returning_clause)?
+    into:(__ into_variables_clause)? {
       return loc({
         type: "insert_stmt",
         clauses: [
@@ -1582,6 +1583,7 @@ insert_stmt
           read(updateCls),
           ...upsert.map(read),
           read(returning),
+          read(into),
         ].filter(identity),
       });
     }

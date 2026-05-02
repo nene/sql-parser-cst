@@ -221,6 +221,12 @@ describe("insert into", () => {
     });
   });
 
+  dialect(["plpgsql"], () => {
+    it("supports INSERT ... RETURNING ... INTO ...", () => {
+      testWc("INSERT INTO tbl (col) VALUES (1) RETURNING col INTO some_variable");
+    });
+  });
+
   it("parses INSERT to syntax tree", () => {
     expect(parseStmt("INSERT INTO tbl (col1, col2) VALUES (1, 2), (3, 4)")).toMatchInlineSnapshot(`
       {

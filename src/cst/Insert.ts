@@ -11,7 +11,7 @@ import { Alias } from "./Alias";
 import { PartitionedTable, SubSelect, WhereClause, WithClause } from "./Select";
 import { ColumnAssignment, SetClause } from "./Update";
 import { MysqlModifier } from "./dialects/Mysql";
-import { ReturningClause } from "./OtherClauses";
+import { IntoVariablesClause, ReturningClause } from "./OtherClauses";
 import { IndexSpecification } from "./Index";
 
 export type AllInsertNodes =
@@ -41,6 +41,7 @@ export interface InsertStmt extends BaseNode {
     | UpsertClause
     | OnDuplicateKeyUpdateClause
     | ReturningClause
+    | IntoVariablesClause
   )[];
 }
 
