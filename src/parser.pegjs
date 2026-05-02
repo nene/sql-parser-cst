@@ -1902,7 +1902,7 @@ truncate_stmt
 merge_stmt
   = withClause:(with_clause __)?
     mergeClause:merge_clause
-    clauses:(__ (merge_when_clause / returning_clause))+ {
+    clauses:(__ other_merge_clause)+ {
       return loc({
         type: "merge_stmt",
         clauses: [
@@ -1928,6 +1928,11 @@ merge_clause
         condition,
       });
     }
+
+other_merge_clause
+  = merge_when_clause
+  / returning_clause
+  / &plpgsql x:into_variables_clause { return x; }
 
 merge_when_clause
   = whenKw:(WHEN __) matchedKw:(MATCHED __ / NOT __ MATCHED __) byKw:(BY __ (TARGET / SOURCE) __)?

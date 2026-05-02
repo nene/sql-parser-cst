@@ -164,6 +164,14 @@ describe("merge into", () => {
         `);
       });
     });
+
+    dialect(["plpgsql"], () => {
+      it("supports MERGE INTO ... RETURNING ... INTO ...", () => {
+        testWc(
+          "MERGE INTO tbl USING bar ON x = y WHEN MATCHED THEN DELETE RETURNING col1 INTO some_variable"
+        );
+      });
+    });
   });
 
   dialect(["mysql", "mariadb", "sqlite"], () => {
