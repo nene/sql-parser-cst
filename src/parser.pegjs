@@ -5911,7 +5911,7 @@ execute_stmt
 
 execute_immediate_stmt
   = &bigquery kw:(EXECUTE __) immedKw:(IMMEDIATE __) expr:expr
-    into:(__ execute_into_clause)?
+    into:(__ into_clause)?
     using:(__ execute_using_clause)? {
       return loc({
         type: "execute_immediate_stmt",
@@ -5923,7 +5923,7 @@ execute_immediate_stmt
       });
     }
   / &plpgsql kw:(EXECUTE __) expr:expr
-    into:(__ execute_into_clause)?
+    into:(__ into_clause)?
     using:(__ execute_using_clause)? {
       return loc({
         type: "execute_immediate_stmt",
@@ -5934,10 +5934,10 @@ execute_immediate_stmt
       });
     }
 
-execute_into_clause
+into_clause
   = kw:(INTO __) strictKw:(STRICT __)? variables:list$ident {
     return loc({
-      type: "execute_into_clause",
+      type: "into_clause",
       intoKw: read(kw),
       strictKw: read(strictKw),
       variables,

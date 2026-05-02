@@ -9,7 +9,7 @@ export type AllPreparedStatementNodes =
   | AllPreparedStatements
   | PrepareFromClause
   | DeallocateAll
-  | ExecuteIntoClause
+  | IntoClause
   | ExecuteUsingClause
   | ExecuteExpr;
 
@@ -63,12 +63,12 @@ export interface ExecuteImmediateStmt extends BaseNode {
   executeKw: Keyword<"EXECUTE">;
   immediateKw?: Keyword<"IMMEDIATE">;
   expr: Expr;
-  into?: ExecuteIntoClause;
+  into?: IntoClause;
   using?: ExecuteUsingClause;
 }
 
-export interface ExecuteIntoClause extends BaseNode {
-  type: "execute_into_clause";
+export interface IntoClause extends BaseNode {
+  type: "into_clause";
   intoKw: Keyword<"INTO">;
   strictKw?: Keyword<"STRICT">;
   variables: ListExpr<Identifier>;
