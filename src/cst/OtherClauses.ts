@@ -5,6 +5,7 @@ import { Node } from "./Node";
 
 export type AllOtherClauses =
   | ReturningClause
+  | IntoClause
   | AsClause
   | CommaClause
   | ClusterByClause
@@ -14,6 +15,13 @@ export interface ReturningClause extends BaseNode {
   type: "returning_clause";
   returningKw: Keyword<"RETURNING">;
   columns: ListExpr<Expr | Alias<Expr>>;
+}
+
+export interface IntoClause extends BaseNode {
+  type: "into_clause";
+  intoKw: Keyword<"INTO">;
+  strictKw?: Keyword<"STRICT">;
+  variables: ListExpr<Identifier>;
 }
 
 export interface AsClause<T = Node> extends BaseNode {

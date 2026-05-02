@@ -1,15 +1,14 @@
 import { Alias } from "./Alias";
 import { BaseNode, Keyword } from "./Base";
 import { DataType } from "./DataType";
-import { EntityName, Expr, Identifier, ListExpr, ParenExpr } from "./Expr";
-import { AsClause } from "./OtherClauses";
+import { EntityName, Expr, ListExpr, ParenExpr } from "./Expr";
+import { AsClause, IntoClause } from "./OtherClauses";
 import { Statement } from "./Statement";
 
 export type AllPreparedStatementNodes =
   | AllPreparedStatements
   | PrepareFromClause
   | DeallocateAll
-  | IntoClause
   | ExecuteUsingClause
   | ExecuteExpr;
 
@@ -65,13 +64,6 @@ export interface ExecuteImmediateStmt extends BaseNode {
   expr: Expr;
   into?: IntoClause;
   using?: ExecuteUsingClause;
-}
-
-export interface IntoClause extends BaseNode {
-  type: "into_clause";
-  intoKw: Keyword<"INTO">;
-  strictKw?: Keyword<"STRICT">;
-  variables: ListExpr<Identifier>;
 }
 
 export interface ExecuteUsingClause extends BaseNode {
