@@ -60,6 +60,12 @@ describe("delete from", () => {
     });
   });
 
+  dialect(["plpgsql"], () => {
+    it("supports DELETE ... RETURNING ... INTO ...", () => {
+      testWc("DELETE FROM tbl WHERE x > 0 RETURNING col1 INTO some_variable");
+    });
+  });
+
   dialect(["sqlite", "mysql", "mariadb"], () => {
     it("supports DELETE ... LIMIT ...", () => {
       testWc("DELETE FROM tbl LIMIT 10");

@@ -1867,8 +1867,9 @@ other_delete_clause
   / returning_clause
   / order_by_clause
   / limit_clause
-  / x:from_using_clause (&mysql / &postgres) { return x; }
-  / x:from_clause &mysql { return x; }
+  / (&mysql / &postgres) x:from_using_clause { return x; }
+  / &mysql x:from_clause { return x; }
+  / &plpgsql x:into_variables_clause { return x; }
 
 /**
  * ------------------------------------------------------------------------------------ *

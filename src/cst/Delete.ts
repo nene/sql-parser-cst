@@ -11,7 +11,11 @@ import {
   WhereClause,
   WithClause,
 } from "./Select";
-import { ReturningClause, WhereCurrentOfClause } from "./OtherClauses";
+import {
+  IntoVariablesClause,
+  ReturningClause,
+  WhereCurrentOfClause,
+} from "./OtherClauses";
 
 export type AllDeleteNodes = DeleteStmt | DeleteClause;
 
@@ -24,6 +28,7 @@ export interface DeleteStmt extends BaseNode {
     | WhereClause
     | WhereCurrentOfClause
     | ReturningClause
+    | IntoVariablesClause
     | OrderByClause
     | LimitClause
     | FromClause
