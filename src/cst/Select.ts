@@ -197,7 +197,8 @@ export interface CteCycleClauseValues extends BaseNode {
 
 export interface SelectClause extends BaseNode {
   type: "select_clause";
-  selectKw: Keyword<"SELECT">;
+  // The PERFORM keyword is used in PL/pgSQL
+  selectKw: Keyword<"SELECT" | "PERFORM">;
   modifiers: (
     | SelectAll
     | SelectDistinct

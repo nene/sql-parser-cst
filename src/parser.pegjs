@@ -524,6 +524,17 @@ select_clause
         columns: read(columns),
       });
     }
+  / &plpgsql
+    selectKw:PERFORM
+    modifiers:(__ select_distinct)|0..1|
+    columns:(__ select_columns)? {
+      return loc({
+        type: "select_clause",
+        selectKw,
+        modifiers: modifiers.map(read),
+        columns: read(columns),
+      });
+    }
 
 select_distinct
   = kw:ALL {
@@ -10064,6 +10075,7 @@ PARTITION           = kw:"PARTITION"i           !ident_part { return loc(createK
 PASSWORD            = kw:"PASSWORD"i            !ident_part { return loc(createKeyword(kw)); }
 PERCENT             = kw:"PERCENT"i             !ident_part { return loc(createKeyword(kw)); }
 PERCENT_RANK        = kw:"PERCENT_RANK"i        !ident_part { return loc(createKeyword(kw)); }
+PERFORM             = kw:"PERFORM"i             !ident_part { return loc(createKeyword(kw)); }
 PERMISSIVE          = kw:"PERMISSIVE"i          !ident_part { return loc(createKeyword(kw)); }
 PERSIST             = kw:"PERSIST"i             !ident_part { return loc(createKeyword(kw)); }
 PERSIST_ONLY        = kw:"PERSIST_ONLY"i        !ident_part { return loc(createKeyword(kw)); }
