@@ -11,7 +11,7 @@ import {
   WhereClause,
   WithClause,
 } from "./Select";
-import { ReturningClause } from "./OtherClauses";
+import { IntoVariablesClause, ReturningClause } from "./OtherClauses";
 
 export type AllUpdateNodes =
   | UpdateStmt
@@ -31,6 +31,7 @@ export interface UpdateStmt extends BaseNode {
     | OrderByClause
     | LimitClause
     | ReturningClause
+    | IntoVariablesClause
   )[];
 }
 

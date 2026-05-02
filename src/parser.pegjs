@@ -1798,11 +1798,12 @@ set_clause
 
 other_update_clause
   = from_clause
-  / x:where_current_of_clause &postgres { return x; }
+  / &postgres x:where_current_of_clause { return x; }
   / where_clause
   / returning_clause
   / order_by_clause
   / limit_clause
+  / &plpgsql x:into_variables_clause { return x; }
 
 column_assignment
   = col:((optionally_qualified_column / paren$list$column) __) "=" expr:(__ column_value) {

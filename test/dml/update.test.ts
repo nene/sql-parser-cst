@@ -119,6 +119,12 @@ describe("update", () => {
     });
   });
 
+  dialect(["plpgsql"], () => {
+    it("supports UPDATE ... RETURNING ... INTO ...", () => {
+      testWc("UPDATE tbl SET col1 = 2 RETURNING col1 INTO some_variable");
+    });
+  });
+
   dialect(["mysql", "mariadb", "sqlite"], () => {
     it("supports UPDATE ... ORDER BY ...", () => {
       testWc("UPDATE tbl SET col1 = 2 ORDER BY col1");
