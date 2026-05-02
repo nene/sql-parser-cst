@@ -47,6 +47,7 @@ export type AllProceduralStatements =
   | LabeledStmt
   | BlockStmt
   | DeclareStmt
+  | DeclareAliasStmt
   | SetStmt
   | AssignmentStmt
   | IfStmt
@@ -173,6 +174,14 @@ export interface DeclareInit extends BaseNode {
   type: "declare_init";
   operator: Keyword<"DEFAULT"> | ":=" | "=";
   expr: Expr;
+}
+
+// newname ALIAS FOR oldname
+export interface DeclareAliasStmt extends BaseNode {
+  type: "declare_alias_stmt";
+  newName: Identifier;
+  aliasForKw: [Keyword<"ALIAS">, Keyword<"FOR">];
+  oldName: Identifier;
 }
 
 // SET

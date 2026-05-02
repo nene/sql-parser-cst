@@ -36,6 +36,8 @@ export const proceduralLanguageMap: FullTransformMap<
       node.constraints,
       node.init,
     ]),
+  declare_alias_stmt: (node) =>
+    show([node.newName, node.aliasForKw, node.oldName]),
   declare_init: (node) => show([node.operator, node.expr]),
   set_stmt: (node) => show([node.setKw, node.assignments]),
   assignment_stmt: (node) => show([node.target, node.operator, node.expr]),

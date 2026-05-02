@@ -5428,7 +5428,7 @@ declare_clause
   }
 
 declarations_program
-  = head:declare_stmt tail:(__ ";" __ (declare_stmt / empty))+ {
+  = head:declaration_statement tail:(__ ";" __ (declaration_statement / empty))+ {
     return loc({
       type: "program",
       statements: readCommaSepList(head, tail),
@@ -5440,6 +5440,10 @@ declarations_program
       statements: [],
     });
   }
+
+declaration_statement
+  = declare_alias_stmt
+  / declare_stmt
 
 atomic_kw
   = kw:ATOMIC &postgres { return kw; }
@@ -5527,6 +5531,16 @@ declare_init
 
 declare_constraint
   = constraint_not_null / constraint_collate
+
+declare_alias_stmt
+  = newName:ident aliasForKw:(__ ALIAS __ FOR __) oldName:ident {
+    return loc({
+      type: "declare_alias_stmt",
+      newName,
+      aliasForKw: read(aliasForKw),
+      oldName,
+    });
+  }
 
 set_stmt
   = kw:(SET __) assignments:list$set_assignment {
@@ -9679,6 +9693,7 @@ AFTER               = kw:"AFTER"i               !ident_part { return loc(createK
 AGAINST             = kw:"AGAINST"i             !ident_part { return loc(createKeyword(kw)); }
 AGGREGATE           = kw:"AGGREGATE"i           !ident_part { return loc(createKeyword(kw)); }
 ALGORITHM           = kw:"ALGORITHM"i           !ident_part { return loc(createKeyword(kw)); }
+ALIAS               = kw:"ALIAS"i               !ident_part { return loc(createKeyword(kw)); }
 ALL                 = kw:"ALL"i                 !ident_part { return loc(createKeyword(kw)); }
 ALTER               = kw:"ALTER"i               !ident_part { return loc(createKeyword(kw)); }
 ALWAYS              = kw:"ALWAYS"i              !ident_part { return loc(createKeyword(kw)); }

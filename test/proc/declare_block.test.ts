@@ -53,6 +53,16 @@ describe("DECLARE..BEGIN..END", () => {
         END
       `);
     });
+
+    it("supports declaring aliases", () => {
+      testWc(`
+        DECLARE
+          newname ALIAS FOR oldname;
+        BEGIN
+          SELECT 1;
+        END
+      `);
+    });
   });
 
   dialect(["sqlite", "bigquery", "postgresql", "mysql", "mariadb"], () => {
