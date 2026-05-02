@@ -1,4 +1,4 @@
-import { dialect, testWc } from "../test_utils";
+import { dialect, parseClause, testWc } from "../test_utils";
 
 describe("select INTO", () => {
   dialect(["mysql", "mariadb"], () => {
@@ -42,7 +42,14 @@ describe("select INTO", () => {
     });
   });
 
-  dialect(["postgresql", "plpgsql"], () => {
+  // The INTO clause works differently in PostgreSQL and PL/pgSQL
+  // - In PostgreSQL, it's used to write query results to a file or a new table
+  // - In PL/pgSQL, it's used to select query results into variables
+  dialect(["postgresql"], () => {
+    it("parses INTO clause as into_table_clause", () => {
+      expect(parseClause("INTO foo").type).toBe("into_table_clause");
+    });
+
     it("supports INTO [TABLE] tablename", () => {
       testWc("SELECT col INTO new_table FROM source_table");
       testWc("SELECT 1,2,3 INTO TABLE my_table");
@@ -58,6 +65,18 @@ describe("select INTO", () => {
     it("supports INTO UNLOGGED TABLE", () => {
       testWc("SELECT col INTO UNLOGGED my_table FROM source_table");
       testWc("SELECT col INTO UNLOGGED TABLE my_table FROM source_table");
+    });
+  });
+
+  dialect(["plpgsql"], () => {
+    it("parses INTO clause as into_variables_clause", () => {
+      expect(parseClause("INTO foo").type).toBe("into_variables_clause");
+    });
+
+    it("supports INTO variable", () => {
+      testWc("SELECT col INTO varname FROM source_table");
+      testWc("SELECT 1,2,3 INTO var1, var2, var3 FROM source_table");
+      testWc("SELECT 1 INTO STRICT var1");
     });
   });
 

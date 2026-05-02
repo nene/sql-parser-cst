@@ -472,7 +472,8 @@ other_clause
   / (&postgres / &only_mariadb) x:offset_clause { return x; }
   / (&postgres / &only_mariadb) x:fetch_clause { return x; }
   / &mysql x:(into_variables_clause / into_dumpfile_clause / into_outfile_clause) { return x; }
-  / &postgres x:into_table_clause { return x; }
+  / &only_postgres x:into_table_clause { return x; }
+  / &plpgsql x:into_variables_clause { return x; }
   / (&postgres / &mysql) x:for_clause { return x; }
   / &mysql x:lock_in_share_mode_clause { return x; }
 
