@@ -70,6 +70,7 @@ export interface ExecuteImmediateStmt extends BaseNode {
 export interface ExecuteIntoClause extends BaseNode {
   type: "execute_into_clause";
   intoKw: Keyword<"INTO">;
+  strictKw?: Keyword<"STRICT">;
   variables: ListExpr<Identifier>;
 }
 

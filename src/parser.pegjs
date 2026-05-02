@@ -5935,10 +5935,11 @@ execute_immediate_stmt
     }
 
 execute_into_clause
-  = kw:(INTO __) variables:list$ident {
+  = kw:(INTO __) strictKw:(STRICT __)? variables:list$ident {
     return loc({
       type: "execute_into_clause",
       intoKw: read(kw),
+      strictKw: read(strictKw),
       variables,
     });
   }

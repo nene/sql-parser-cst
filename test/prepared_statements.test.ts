@@ -131,6 +131,10 @@ describe("prepared statements", () => {
 
   dialect("plpgsql", () => {
     testExecuteImmediate("EXECUTE");
+
+    it("supports INTO STRICT", () => {
+      testWc(`EXECUTE 'SELECT 1' INTO STRICT my_var`);
+    });
   });
 
   dialect(["sqlite", "bigquery"], () => {
