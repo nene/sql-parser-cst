@@ -12,7 +12,7 @@ export const proceduralLanguageMap: FullTransformMap<
   chevron_label: (node) => show(["<<", node.label, ">>"]),
   block_stmt: (node) =>
     show([
-      node.declareClause,
+      node.declare,
       node.beginKw,
       node.atomicKw,
       node.program,

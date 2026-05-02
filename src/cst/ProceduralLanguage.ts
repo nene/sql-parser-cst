@@ -98,7 +98,7 @@ export interface ChevronLabel extends BaseNode {
 // BEGIN .. END
 export interface BlockStmt extends BaseNode {
   type: "block_stmt";
-  declareClause?: DeclareClause;
+  declare?: DeclareClause;
   beginKw: Keyword<"BEGIN">;
   atomicKw?: Keyword<"ATOMIC">;
   program: Program;

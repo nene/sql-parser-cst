@@ -5402,14 +5402,14 @@ label
   }
 
 block_stmt
-  = declareClause:(declare_clause __)?
+  = declare:(declare_clause __)?
     beginKw:(BEGIN __) atomicKw:(atomic_kw __)?
     program:inner_program
     exception:(__ exception_clause)?
     endKw:(__ END) {
       return loc({
         type: "block_stmt",
-        declareClause: read(declareClause),
+        declare: read(declare),
         beginKw: read(beginKw),
         atomicKw: read(atomicKw),
         program,
