@@ -31,7 +31,6 @@ import { InsertStmt } from "./Insert";
 import { MergeStmt } from "./Merge";
 import { TruncateStmt } from "./Truncate";
 import { UpdateStmt } from "./Update";
-import { UnsupportedGrammarStmt } from "./UnsupportedGrammar";
 import { DoStmt } from "./Do";
 
 export type Statement =
@@ -69,5 +68,4 @@ export type Statement =
   | MergeStmt
   | SelectStmt
   | TruncateStmt
-  | UpdateStmt
-  | UnsupportedGrammarStmt;
+  | UpdateStmt;
