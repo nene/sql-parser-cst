@@ -40,7 +40,6 @@
     isPlpgsql,
     hasParamType,
     isEnabledWhitespace,
-    isAcceptUnsupportedGrammar,
   } from "./utils/parserState";
   import { isReservedKeyword, isForbiddenImplicitAliasName } from "./utils/keywords";
   import { loc } from "./utils/loc";
@@ -67,7 +66,6 @@ program
 statement
   = non_transaction_statement
   / transaction_statement  // match BEGIN transaction after BEGIN..END block
-  / &{ return isAcceptUnsupportedGrammar(); } x:unsupported_grammar_stmt { return x; }
 
 // This is referenced by BEGIN..END blocks of FUNCTION definitions,
 // which don't allow transactions inside them (specifically it would create a conflict
@@ -9656,13 +9654,6 @@ only_mariadb = &{ return isMariadb(); } // 99% of MariaDB and MySQL syntax is th
 postgres = &{ return isPostgresql() || isPlpgsql(); } // We're treating PostgreSQL as subset of PLPGSQL
 only_postgres = &{ return isPostgresql(); }
 plpgsql = &{ return isPlpgsql(); }
-
-unsupported_grammar_stmt = [^;]+ {
-  return loc({
-    type: "unsupported_grammar_stmt",
-    text: text(),
-  });
-}
 
 /**
  * Generic keyword rules
