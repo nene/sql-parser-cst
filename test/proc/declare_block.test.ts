@@ -63,6 +63,17 @@ describe("DECLARE..BEGIN..END", () => {
         END
       `);
     });
+
+    it.skip("supports declaring aliases for function parameters", () => {
+      testWc(`
+        DECLARE
+          name1 ALIAS FOR $1;
+          name2 ALIAS FOR $2;
+        BEGIN
+          SELECT 1;
+        END
+      `);
+    });
   });
 
   dialect(["sqlite", "bigquery", "postgresql", "mysql", "mariadb"], () => {
