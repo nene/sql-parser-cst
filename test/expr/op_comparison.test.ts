@@ -236,6 +236,12 @@ describe("comparison operators", () => {
           testExprWc(`col SIMILAR TO ALL (SELECT c1 FROM tbl)`);
           testExprWc(`col NOT SIMILAR TO SOME (SELECT c1 FROM tbl)`);
         });
+
+        it("supports all kinds of Postgres operators combined with quantifiers", () => {
+          testExprWc(`col ~ ANY (SELECT c1 FROM tbl)`);
+          testExprWc(`col ~@ ALL (SELECT c1 FROM tbl)`);
+          testExprWc(`col !/= SOME (SELECT c1 FROM tbl)`);
+        });
       });
 
       it("parses quantifier_expr", () => {

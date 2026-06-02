@@ -7622,7 +7622,7 @@ _pg_is_expr_right
   }
 
 pg_comparison_expr
-  = head:pg_in_expr tail:(__ (">=" / ">" / "<=" / "<>" / "<" / "=" / "!=" / pg_like_op) __ (quantifier_expr / pg_in_expr))* {
+  = head:pg_in_expr tail:(__ (">=" / ">" / "<=" / "<>" / "<" / "=" / "!=" / pg_like_op / pg_other_op) __ (quantifier_expr / pg_in_expr))* {
     return loc(createBinaryExprChain(head, tail));
   }
 
