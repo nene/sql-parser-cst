@@ -227,6 +227,17 @@ describe("comparison operators", () => {
         testExprWc(`col < ALL (SELECT c1 FROM tbl)`);
       });
 
+      dialect(["postgresql", "plpgsql"], () => {
+        it("supports LIKE.. etc operators combined with quantifiers", () => {
+          testExprWc(`col LIKE ANY (SELECT c1 FROM tbl)`);
+          testExprWc(`col NOT LIKE ANY (SELECT c1 FROM tbl)`);
+          testExprWc(`col ILIKE ALL (SELECT c1 FROM tbl)`);
+          testExprWc(`col NOT ILIKE SOME (SELECT c1 FROM tbl)`);
+          testExprWc(`col SIMILAR TO ALL (SELECT c1 FROM tbl)`);
+          testExprWc(`col NOT SIMILAR TO SOME (SELECT c1 FROM tbl)`);
+        });
+      });
+
       it("parses quantifier_expr", () => {
         expect(parseExpr(`col = ANY (SELECT 1)`)).toMatchInlineSnapshot(`
           {

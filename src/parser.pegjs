@@ -7622,7 +7622,7 @@ _pg_is_expr_right
   }
 
 pg_comparison_expr
-  = head:pg_in_expr tail:(__ (">=" / ">" / "<=" / "<>" / "<" / "=" / "!=") __ (quantifier_expr / pg_in_expr))* {
+  = head:pg_in_expr tail:(__ (">=" / ">" / "<=" / "<>" / "<" / "=" / "!=" / pg_like_op) __ (quantifier_expr / pg_in_expr))* {
     return loc(createBinaryExprChain(head, tail));
   }
 
@@ -7640,7 +7640,7 @@ _pg_in_expr_right
     return (left: any) => createBinaryExpr(left, c1, read(op), c2, right);
   }
   / c1:__ op:pg_like_op c2:__ right:escape_expr {
-    return (left: any) => createBinaryExpr(left, c1, read(op), c2, right);
+    return (left: any) => createBinaryExpr(left, c1, op, c2, right);
   }
   / betweenKw:(__ pg_between_op) begin:(__ sub_comparison_expr) andKw:(__ AND) end:(__ sub_comparison_expr) {
     return (left: any) => ({
@@ -7654,8 +7654,9 @@ _pg_in_expr_right
   }
 
 pg_like_op
-  = LIKE / ILIKE / SIMILAR __ TO
-  / NOT __ LIKE / NOT __ ILIKE / NOT __ SIMILAR __ TO
+  = op:(LIKE / ILIKE / SIMILAR __ TO / NOT __ LIKE / NOT __ ILIKE / NOT __ SIMILAR __ TO) {
+    return read(op);
+  }
 
 pg_between_op
   = kws:(NOT __ BETWEEN __ SYMMETRIC / BETWEEN __ SYMMETRIC / NOT __ BETWEEN / BETWEEN) { return read(kws); }
