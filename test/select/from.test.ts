@@ -69,7 +69,6 @@ describe("select FROM", () => {
               "text": "tbl3",
               "type": "identifier",
             },
-            "specification": undefined,
             "type": "join_expr",
           }
         `);

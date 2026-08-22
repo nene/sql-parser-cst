@@ -75,8 +75,8 @@ describe("join", () => {
 
   dialect("sqlite", () => {
     it("supports NATURAL FULL [OUTER] JOIN", () => {
-      testWc("SELECT c FROM t1 NATURAL FULL JOIN t2 ON x = y");
-      testWc("SELECT c FROM t1 NATURAL FULL OUTER JOIN t2 ON x = y");
+      testWc("SELECT c FROM t1 NATURAL FULL JOIN t2");
+      testWc("SELECT c FROM t1 NATURAL FULL OUTER JOIN t2");
     });
   });
 

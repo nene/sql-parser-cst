@@ -697,7 +697,7 @@ join_expr_right
       right: read(right),
     });
   }
-  / &postgres c1:__ op:(natural_join / cross_join) right:(__ alias$table_factor) {
+  / c1:__ op:(natural_join / cross_join) right:(__ alias$table_factor) {
     return (left: any) => ({
       type: "join_expr",
       left: trailing(left, c1),
@@ -834,9 +834,7 @@ partitioned_table
   }
 
 join_op
-  = natural_join
-  / cross_join
-  / &mysql kw:STRAIGHT_JOIN { return kw; }
+  = &mysql kw:STRAIGHT_JOIN { return kw; }
   / join_type
 
 natural_join
