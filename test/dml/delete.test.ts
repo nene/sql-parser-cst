@@ -103,16 +103,16 @@ describe("delete from", () => {
   dialect(["mysql", "mariadb"], () => {
     describe("multi table delete", () => {
       it("supports DELETE .. FROM ..", () => {
-        testWc("DELETE tbl1, tbl2 FROM tbl1 JOIN tbl2 WHERE tbl1.id = tbl2.id");
+        testWc("DELETE tbl1, tbl2 FROM tbl1 CROSS JOIN tbl2 WHERE tbl1.id = tbl2.id");
       });
 
       it("supports DELETE FROM .. USING ..", () => {
-        testWc("DELETE FROM tbl1, tbl2 USING tbl1 JOIN tbl2 WHERE tbl1.id = tbl2.id");
+        testWc("DELETE FROM tbl1, tbl2 USING tbl1 CROSS JOIN tbl2 WHERE tbl1.id = tbl2.id");
       });
 
       it("supports .* syntax for tables", () => {
-        testWc("DELETE tbl1.*, tbl2.* FROM tbl1 JOIN tbl2");
-        testWc("DELETE FROM tbl1.*, tbl2.* USING tbl1 JOIN tbl2");
+        testWc("DELETE tbl1.*, tbl2.* FROM tbl1 CROSS JOIN tbl2");
+        testWc("DELETE FROM tbl1.*, tbl2.* USING tbl1 CROSS JOIN tbl2");
       });
     });
   });

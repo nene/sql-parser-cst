@@ -689,7 +689,23 @@ join_expr
     }
 
 join_expr_right
-  = c1:__ op:(join_op / ",") right:(__ alias$table_factor) spec:(__ join_specification)? {
+  = c1:__ op:"," right:(__ alias$table_factor) {
+    return (left: any) => ({
+      type: "join_expr",
+      left: trailing(left, c1),
+      operator: op,
+      right: read(right),
+    });
+  }
+  / &postgres c1:__ op:(natural_join / cross_join) right:(__ alias$table_factor) {
+    return (left: any) => ({
+      type: "join_expr",
+      left: trailing(left, c1),
+      operator: op,
+      right: read(right),
+    });
+  }
+  / c1:__ op:join_op right:(__ alias$table_factor) spec:(__ join_specification)? {
     return (left: any) => ({
       type: "join_expr",
       left: trailing(left, c1),
@@ -820,8 +836,8 @@ partitioned_table
 join_op
   = natural_join
   / cross_join
+  / &mysql kw:STRAIGHT_JOIN { return kw; }
   / join_type
-  / kw:STRAIGHT_JOIN &mysql { return kw; }
 
 natural_join
   = kw:(NATURAL __) jt:join_type (&mysql / &sqlite) {

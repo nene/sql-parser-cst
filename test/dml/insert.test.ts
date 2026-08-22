@@ -185,6 +185,11 @@ describe("insert into", () => {
           "INSERT INTO tbl VALUES (1) ON CONFLICT (col1) DO NOTHING ON CONFLICT (col2) DO UPDATE SET col2=0"
         );
       });
+
+      // Issue #124
+      it("supports ON CONFLICT together with SELECT .. JOIN", () => {
+        testWc("INSERT INTO tbl SELECT * FROM foo CROSS JOIN bar ON CONFLICT DO NOTHING");
+      });
     });
   });
 

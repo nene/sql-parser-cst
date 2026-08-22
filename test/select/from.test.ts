@@ -44,16 +44,16 @@ describe("select FROM", () => {
   });
 
   it("supports joined tables in parenthesis", () => {
-    test("SELECT t.col FROM (tbl1 JOIN tbl2) AS t");
+    test("SELECT t.col FROM (tbl1 CROSS JOIN tbl2) AS t");
   });
 
   dialect(["mysql", "mariadb"], () => {
     it("supports list of table names in parenthesis", () => {
-      test("SELECT * FROM tbl1 JOIN (tbl2, tbl3, tbl4)");
+      test("SELECT * FROM tbl1 CROSS JOIN (tbl2, tbl3, tbl4)");
     });
 
     it("parses list of table names as comma-joined tables", () => {
-      const join = parseFrom("tbl1 JOIN (tbl2, tbl3)") as JoinExpr;
+      const join = parseFrom("tbl1 CROSS JOIN (tbl2, tbl3)") as JoinExpr;
       expect(join.right.type).toBe("paren_expr");
       if (join.right.type === "paren_expr") {
         expect(join.right.expr).toMatchInlineSnapshot(`
@@ -85,7 +85,7 @@ describe("select FROM", () => {
   describe("LATERAL expressions", () => {
     dialect(["mysql", "mariadb", "postgresql", "plpgsql"], () => {
       it("supports LATERAL subquery", () => {
-        testWc(`SELECT 8 FROM tbl JOIN LATERAL (SELECT * FROM foo WHERE id=tbl.id) AS t`);
+        testWc(`SELECT 8 FROM tbl CROSS JOIN LATERAL (SELECT * FROM foo WHERE id=tbl.id) AS t`);
       });
     });
 
@@ -124,7 +124,7 @@ describe("select FROM", () => {
       test("SELECT * FROM my_schema.my_func(5, 10)");
     });
     it("supports combining table-functions with joins", () => {
-      test("SELECT * FROM func1(5, 10) JOIN func2(8)");
+      test("SELECT * FROM func1(5, 10) CROSS JOIN func2(8)");
     });
     it("supports aliased table-function", () => {
       test("SELECT * FROM func1(5, 10) AS foo");

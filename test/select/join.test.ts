@@ -47,7 +47,13 @@ describe("join", () => {
   });
 
   it("supports INNER JOIN", () => {
-    testWc("SELECT c FROM t1 INNER JOIN t2");
+    testWc("SELECT c FROM t1 INNER JOIN t2 ON x = y");
+  });
+
+  dialect(["mysql", "mariadb"], () => {
+    it("supports plain INNER JOIN", () => {
+      testWc("SELECT c FROM t1 INNER JOIN t2");
+    });
   });
 
   dialect(["mysql", "mariadb", "sqlite"], () => {
@@ -62,15 +68,15 @@ describe("join", () => {
 
   dialect(["sqlite", "bigquery", "postgresql", "plpgsql"], () => {
     it("supports FULL [OUTER] JOIN", () => {
-      testWc("SELECT c FROM t1 FULL JOIN t2");
-      testWc("SELECT c FROM t1 FULL OUTER JOIN t2");
+      testWc("SELECT c FROM t1 FULL JOIN t2 ON x = y");
+      testWc("SELECT c FROM t1 FULL OUTER JOIN t2 ON x = y");
     });
   });
 
   dialect("sqlite", () => {
     it("supports NATURAL FULL [OUTER] JOIN", () => {
-      testWc("SELECT c FROM t1 NATURAL FULL JOIN t2");
-      testWc("SELECT c FROM t1 NATURAL FULL OUTER JOIN t2");
+      testWc("SELECT c FROM t1 NATURAL FULL JOIN t2 ON x = y");
+      testWc("SELECT c FROM t1 NATURAL FULL OUTER JOIN t2 ON x = y");
     });
   });
 
