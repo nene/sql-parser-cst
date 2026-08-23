@@ -1,6 +1,7 @@
 import { BaseNode, Keyword } from "./Base";
 import { DataType } from "./DataType";
 import { Identifier, EntityName } from "./Expr";
+import { StringLiteral } from "./Literal";
 
 export type AllProcClauseNodes =
   | ReturnsClause
@@ -24,7 +25,7 @@ export interface DeterminismClause extends BaseNode {
 export interface LanguageClause extends BaseNode {
   type: "language_clause";
   languageKw: Keyword<"LANGUAGE">;
-  name: Identifier;
+  name: Identifier | StringLiteral;
 }
 
 export interface WithConnectionClause extends BaseNode {

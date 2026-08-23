@@ -3957,7 +3957,7 @@ determinism_clause
   }
 
 language_clause
-  = kw:(LANGUAGE __) lang:ident {
+  = kw:(LANGUAGE __) lang:(ident / string_literal) {
     return loc({
       type: "language_clause",
       languageKw: read(kw),

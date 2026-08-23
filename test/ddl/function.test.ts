@@ -168,6 +168,10 @@ describe("function", () => {
             testWc("CREATE FUNCTION foo() RETURNS INT LANGUAGE SQL AS 'SELECT 1'");
           });
 
+          it("supports LANGUAGE specified as string", () => {
+            testWc("CREATE FUNCTION foo() RETURNS INT LANGUAGE 'sql' AS 'SELECT 1'");
+          });
+
           it("supports LANGUAGE PL/pgSQL", () => {
             testWc(`
               CREATE FUNCTION foo() RETURNS INT AS $$

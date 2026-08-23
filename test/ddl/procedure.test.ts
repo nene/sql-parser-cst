@@ -122,6 +122,10 @@ describe("procedure", () => {
             testWc("CREATE PROCEDURE foo() AS 'SELECT 1' LANGUAGE SQL");
           });
 
+          it("supports LANGUAGE specified as string", () => {
+            testWc("CREATE PROCEDURE foo() AS 'SELECT 1' LANGUAGE 'sql'");
+          });
+
           it("supports procedures in PL/pgSQL", () => {
             test(`
               CREATE PROCEDURE my_proc()
