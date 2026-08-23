@@ -1606,7 +1606,7 @@ insert_clause
     orAction:(__ or_alternate_action)?
     intoKw:(__ INTO)?
     table:(__ (partitioned_table / table_or_explicit_alias))
-    columns:(__ paren$list$column)? {
+    columns:(__ paren$list$insert_column)? {
       return loc({
         type: "insert_clause",
         insertKw,
@@ -8557,6 +8557,7 @@ paren$list$func_param = .
 paren$list$grouping_element = .
 paren$list$ident = .
 paren$list$index_specification = .
+paren$list$insert_column = .
 paren$list$literal = .
 paren$list$member_expr = .
 paren$list$partition_bound_from_to_value = .
@@ -8631,6 +8632,7 @@ list$grantee = .
 list$grouping_element = .
 list$ident = .
 list$index_specification = .
+list$insert_column = .
 list$literal = .
 list$member_expr = .
 list$named_window = .
@@ -8778,6 +8780,10 @@ qualified_column
 
 column
   = ident
+
+insert_column
+  = &postgres x:member_or_array_subscript_expr { return x; }
+  / !postgres x:column { return x; }
 
 /**
  * ------------------------------------------------------------------------------------ *

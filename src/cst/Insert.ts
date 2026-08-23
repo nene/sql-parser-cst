@@ -6,6 +6,7 @@ import {
   ParenExpr,
   EntityName,
   RowConstructor,
+  MemberExpr,
 } from "./Expr";
 import { Alias } from "./Alias";
 import { PartitionedTable, SubSelect, WhereClause, WithClause } from "./Select";
@@ -52,7 +53,7 @@ export interface InsertClause extends BaseNode {
   orAction?: OrAlternateAction;
   intoKw?: Keyword<"INTO">;
   table: EntityName | Alias<EntityName> | PartitionedTable;
-  columns?: ParenExpr<ListExpr<Identifier>>;
+  columns?: ParenExpr<ListExpr<Identifier | MemberExpr>>;
 }
 
 // Only in SQLite

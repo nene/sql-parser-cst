@@ -68,6 +68,24 @@ describe("insert into", () => {
     });
   });
 
+  dialect(["postgresql", "plpgsql"], () => {
+    it("supports inserting into sub-field", () => {
+      testWc("INSERT INTO tbl (address.street, address.nr) VALUES ('Baker', '221B')");
+    });
+
+    it("supports inserting to sub-sub-field name", () => {
+      testWc("INSERT INTO tbl (foo.address.street) VALUES ('Baker')");
+    });
+
+    it("supports assigning to array subscript", () => {
+      testWc("INSERT INTO tbl (notes[2]) VALUES (13)");
+    });
+
+    it("supports assigning to array slice", () => {
+      testWc("INSERT INTO tbl (notes[1:5]) VALUES (ARRAY[1, 2])");
+    });
+  });
+
   dialect(["mysql", "mariadb"], () => {
     it("supports hints", () => {
       testWc("INSERT LOW_PRIORITY INTO tbl VALUES (1)");
