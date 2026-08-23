@@ -1818,7 +1818,7 @@ other_update_clause
   / &plpgsql x:into_variables_clause { return x; }
 
 column_assignment
-  = col:((optionally_qualified_column / paren$list$column) __) "=" expr:(__ column_value) {
+  = col:((member_or_array_subscript_expr / paren$list$column) __) "=" expr:(__ column_value) {
     return loc({
       type: "column_assignment",
       column: read(col),
@@ -8768,15 +8768,6 @@ entity_name
  *                                                                                      *
  * ------------------------------------------------------------------------------------ *
  */
-optionally_qualified_column
-  = tbl:(ident __) "." col:(__ qualified_column) {
-    return loc({
-      type: "member_expr",
-      object: read(tbl),
-      property: read(col),
-    });
-  }
-  / column
 
 // Keywords can be used as column names when they are prefixed by table name, like tbl.update
 qualified_column

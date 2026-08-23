@@ -98,6 +98,24 @@ describe("update", () => {
     });
   });
 
+  dialect(["postgresql", "plpgsql"], () => {
+    it("supports assigning to sub-field name", () => {
+      testWc("UPDATE tbl SET address.street = 'Baker'");
+    });
+
+    it("supports assigning to sub-sub-field name", () => {
+      testWc("UPDATE tbl SET foo.address.street = 'Baker'");
+    });
+
+    it("supports assigning to array subscript", () => {
+      testWc("UPDATE tbl SET notes[2] = 13");
+    });
+
+    it("supports assigning to array slice", () => {
+      testWc("UPDATE tbl SET notes[1:8] = ARRAY[1, 2]");
+    });
+  });
+
   dialect(["sqlite", "postgresql", "plpgsql"], () => {
     it("supports WITH ... UPDATE ...", () => {
       testWc("WITH subsel AS (SELECT 1) UPDATE tbl SET col1 = 2");
