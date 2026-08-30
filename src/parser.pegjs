@@ -9589,6 +9589,7 @@ __hspace__
 // Comments
 comment
   = line_comment
+  / &only_postgres x:psql_restrict_command { return x; }
   / conditional_comment
   / !postgres x:pound_sign_comment { return x; }
   / !postgres x:block_comment { return x; }
@@ -9625,6 +9626,14 @@ nested_block_comment
 
 line_comment
   = "--" (!end_of_line .)* {
+    return loc({
+      type: "line_comment",
+      text: text(),
+    });
+  }
+
+psql_restrict_command
+  = "\\" ("restrict " / "unrestrict ") (!end_of_line .)* {
     return loc({
       type: "line_comment",
       text: text(),

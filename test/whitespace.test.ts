@@ -179,6 +179,13 @@ describe("whitespace", () => {
       test("SELECT 1 + -- comment 1\n -- comment 2\n 2");
     });
 
+    dialect("postgresql", () => {
+      it("parses pg_dump restrict commands", () => {
+        const key = "aB3".repeat(21); // 63 alphanumeric characters
+        test(`\\restrict ${key}\nSELECT 1;\n\\unrestrict ${key}\n`);
+      });
+    });
+
     dialect(["bigquery", "sqlite", "mysql", "mariadb"], () => {
       it("parses hash comments", () => {
         test("SELECT 1 + # comment 1\n # comment 2\n 2");
