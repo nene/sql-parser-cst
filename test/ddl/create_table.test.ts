@@ -1,4 +1,4 @@
-import { dialect, testWc } from "../test_utils";
+import { dialect, notDialect, test, testWc } from "../test_utils";
 
 describe("create table", () => {
   it("supports simple CREATE TABLE statement", () => {
@@ -37,6 +37,20 @@ describe("create table", () => {
   dialect(["postgresql", "plpgsql"], () => {
     it("supports UNLOGGED TABLE", () => {
       testWc("CREATE UNLOGGED TABLE foo (id INT)");
+    });
+  });
+
+  dialect(["postgresql", "plpgsql"], () => {
+    it("supports table with zero columns", () => {
+      testWc("CREATE TABLE foo ()");
+      testWc("CREATE TABLE foo ( )");
+      testWc("CREATE TABLE foo () INHERITS (bar)");
+    });
+  });
+
+  notDialect(["postgresql", "plpgsql"], () => {
+    it("does not support table with zero columns", () => {
+      expect(() => test("CREATE TABLE foo ()")).toThrow();
     });
   });
 

@@ -2417,7 +2417,7 @@ create_table_stmt
     name:(__ entity_name)
     partitionOf:(__ create_table_partition_of_clause)?
     ofType:(__ create_table_of_type_clause)?
-    columns:(__ paren$list$create_definition)?
+    columns:(__ (paren$list$create_definition / x:paren$empty_list &postgres { return x; }))?
     options:(__ table_options)?
     clauses:(__ create_table_clause)*
     {
