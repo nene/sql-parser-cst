@@ -1,4 +1,4 @@
-import { dialect, notDialect, test, testWc } from "../test_utils";
+import { dialect, testWc } from "../test_utils";
 
 describe("create table", () => {
   it("supports simple CREATE TABLE statement", () => {
@@ -7,6 +7,12 @@ describe("create table", () => {
 
   it("supports CREATE TABLE with multiple column definitions", () => {
     testWc("CREATE TABLE foo ( id INT , age SMALLINT )");
+  });
+
+  // This is really only valid in PostgreSQL, but we support it in all dialects.
+  // The typical usecase in Postgres is: CREATE TABLE foo ( ) INHERITS (bar);
+  it("supports table with zero columns", () => {
+    testWc("CREATE TABLE foo ( )");
   });
 
   dialect("sqlite", () => {
@@ -37,20 +43,6 @@ describe("create table", () => {
   dialect(["postgresql", "plpgsql"], () => {
     it("supports UNLOGGED TABLE", () => {
       testWc("CREATE UNLOGGED TABLE foo (id INT)");
-    });
-  });
-
-  dialect(["postgresql", "plpgsql"], () => {
-    it("supports table with zero columns", () => {
-      testWc("CREATE TABLE foo ()");
-      testWc("CREATE TABLE foo ( )");
-      testWc("CREATE TABLE foo () INHERITS (bar)");
-    });
-  });
-
-  notDialect(["postgresql", "plpgsql"], () => {
-    it("does not support table with zero columns", () => {
-      expect(() => test("CREATE TABLE foo ()")).toThrow();
     });
   });
 
