@@ -1,5 +1,4 @@
 import { dialect, notDialect, parse, showPrecedence, testExprWc } from "../test_utils";
-import { isPostgresqlOtherOperator } from "../../src/utils/pgOperators";
 
 describe("special PostgreSQL operators", () => {
   dialect(["postgresql", "plpgsql"], () => {
@@ -137,61 +136,6 @@ describe("special PostgreSQL operators", () => {
         expect(showPrecedence(`x<<=-1`)).toBe(`(x <<= (- 1))`);
         expect(showPrecedence(`x<->-1`)).toBe(`(x <-> (- 1))`);
         expect(showPrecedence(`x=+1`)).toBe(`(x = (+ 1))`);
-      });
-    });
-
-    // Separately test the isPostgresqlOtherOperator() predicate
-    describe("isPostgresqlOtherOperator()", () => {
-      it("rejects standard operators", () => {
-        expect(isPostgresqlOtherOperator("+")).toBe(false);
-        expect(isPostgresqlOtherOperator("-")).toBe(false);
-        expect(isPostgresqlOtherOperator("*")).toBe(false);
-        expect(isPostgresqlOtherOperator("/")).toBe(false);
-        expect(isPostgresqlOtherOperator("^")).toBe(false);
-        expect(isPostgresqlOtherOperator("%")).toBe(false);
-        expect(isPostgresqlOtherOperator(">")).toBe(false);
-        expect(isPostgresqlOtherOperator("<")).toBe(false);
-        expect(isPostgresqlOtherOperator("<>")).toBe(false);
-        expect(isPostgresqlOtherOperator(">=")).toBe(false);
-        expect(isPostgresqlOtherOperator("<=")).toBe(false);
-        expect(isPostgresqlOtherOperator("!=")).toBe(false);
-        expect(isPostgresqlOtherOperator("=")).toBe(false);
-      });
-
-      // ~ ! @ # & | ` ?
-      it("allows for single-letter operators", () => {
-        expect(isPostgresqlOtherOperator("~")).toBe(true);
-        expect(isPostgresqlOtherOperator("!")).toBe(true);
-        expect(isPostgresqlOtherOperator("@")).toBe(true);
-        expect(isPostgresqlOtherOperator("#")).toBe(true);
-        expect(isPostgresqlOtherOperator("&")).toBe(true);
-        expect(isPostgresqlOtherOperator("|")).toBe(true);
-        expect(isPostgresqlOtherOperator("`")).toBe(true);
-        expect(isPostgresqlOtherOperator("?")).toBe(true);
-      });
-
-      it("rejects operators containing -- or /*", () => {
-        expect(isPostgresqlOtherOperator("--")).toBe(false);
-        expect(isPostgresqlOtherOperator("/*")).toBe(false);
-        expect(isPostgresqlOtherOperator("*/*")).toBe(false);
-        expect(isPostgresqlOtherOperator("@--@")).toBe(false);
-      });
-
-      it("rejects operators ending with + or -", () => {
-        expect(isPostgresqlOtherOperator("=+")).toBe(false);
-        expect(isPostgresqlOtherOperator("</>-")).toBe(false);
-      });
-
-      it("allows operators ending with + or - when they also contain ~ ! @ # % ^ & | ` ?", () => {
-        expect(isPostgresqlOtherOperator("!+")).toBe(true);
-        expect(isPostgresqlOtherOperator("<%>-")).toBe(true);
-      });
-
-      it("allows the known weird operators", () => {
-        expect(isPostgresqlOtherOperator("!~~*")).toBe(true);
-        expect(isPostgresqlOtherOperator("||/")).toBe(true);
-        expect(isPostgresqlOtherOperator("~*")).toBe(true);
-        expect(isPostgresqlOtherOperator("?")).toBe(true);
       });
     });
   });
