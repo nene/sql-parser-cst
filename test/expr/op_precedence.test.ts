@@ -262,6 +262,15 @@ describe("operator precedence", () => {
       expect(showPrecedence(`5 + 2 >> 3`)).toBe(`((5 + 2) >> 3)`);
     });
 
+    it("all arithmetic operators > any other operator", () => {
+      expect(showPrecedence(`a | b + c`)).toBe(`(a | (b + c))`);
+      expect(showPrecedence(`a | b - c`)).toBe(`(a | (b - c))`);
+      expect(showPrecedence(`a | b * c`)).toBe(`(a | (b * c))`);
+      expect(showPrecedence(`a | b / c`)).toBe(`(a | (b / c))`);
+      expect(showPrecedence(`a | b % c`)).toBe(`(a | (b % c))`);
+      expect(showPrecedence(`a | b ^ c`)).toBe(`(a | (b ^ c))`);
+    });
+
     it("these other operators have the same precedence", () => {
       expect(showPrecedence(`a | b & c >> d`)).toBe(`(((a | b) & c) >> d)`);
       expect(showPrecedence(`a >> b & c | d`)).toBe(`(((a >> b) & c) | d)`);
@@ -297,6 +306,16 @@ describe("operator precedence", () => {
 
     it("range containment > comparison", () => {
       expect(showPrecedence(`x IN y > a IN b`)).toBe(`((x IN y) > (a IN b))`);
+    });
+
+    it("any other operator > all comparison operators", () => {
+      expect(showPrecedence(`a | b < c | d`)).toBe(`((a | b) < (c | d))`);
+      expect(showPrecedence(`a | b > c | d`)).toBe(`((a | b) > (c | d))`);
+      expect(showPrecedence(`a | b <= c | d`)).toBe(`((a | b) <= (c | d))`);
+      expect(showPrecedence(`a | b >= c | d`)).toBe(`((a | b) >= (c | d))`);
+      expect(showPrecedence(`a | b = c | d`)).toBe(`((a | b) = (c | d))`);
+      expect(showPrecedence(`a | b <> c | d`)).toBe(`((a | b) <> (c | d))`);
+      expect(showPrecedence(`a | b != c | d`)).toBe(`((a | b) != (c | d))`);
     });
 
     it("comparison > IS", () => {

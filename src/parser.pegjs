@@ -43,7 +43,6 @@
   } from "./utils/parserState";
   import { isReservedKeyword, isForbiddenImplicitAliasName } from "./utils/keywords";
   import { loc } from "./utils/loc";
-  import { isPostgresqlOtherOperator } from "./utils/pgOperators";
 
   setRangeFunction(() => [peg$savedPos, peg$currPos]);
 
@@ -7636,8 +7635,13 @@ _pg_is_expr_right
   }
 
 pg_comparison_expr
-  = head:pg_in_expr tail:(__ (">=" / ">" / "<=" / "<>" / "<" / "=" / "!=" / pg_like_op / pg_other_op) __ (quantifier_expr / pg_in_expr))* {
+  = head:pg_in_expr tail:(__ (pg_comparison_op / pg_like_op / pg_other_op) __ (quantifier_expr / pg_in_expr))* {
     return loc(createBinaryExprChain(head, tail));
+  }
+
+pg_comparison_op
+  = op:pg_standard_op &{ return [">=", ">", "<=", "<>", "<", "=", "!="].includes(op); } {
+    return op;
   }
 
 pg_in_expr
@@ -7833,12 +7837,48 @@ pg_other_expr
 //
 //   + - * / < > = ~ ! @ # % ^ & | ` ?
 //
-// But there are some restrictions (see isPostgresqlOtherOperator for details)
+// But there are some restrictions (see pg_operator_token for details).
+//
+// The standard operators are excluded here because they have their own precedence rules.
 //
 pg_other_op
-  = op:(postgresql_operator_string) &{ return isPostgresqlOtherOperator(op); } {
+  = !pg_standard_op op:pg_operator_token {
     return op;
   }
+
+// Matches the whole operator token, so that e.g. "*" in "*~-" doesn't get
+// parsed as a standalone multiplication operator.
+pg_standard_op
+  = op:(pg_operator_token / [-+]) &{
+    return ["+", "-", "*", "/", "%", "^", "<", ">", "<=", ">=", "<>", "!=", "="].includes(op);
+  } {
+    return op;
+  }
+
+// Matches the longest valid multi-character operator, like PostgreSQL lexer does:
+//
+// - stops before -- or /* (start of a comment)
+// - when operator contains none of ~ ! @ # % ^ & | ` ?
+//   then trailing + and - characters are excluded from the operator.
+//
+pg_operator_token
+  = $(pg_op_char_nonspecial* pg_op_char_special pg_op_char*)
+  / $((pg_op_char_plusminus* pg_op_char_other)+)
+
+pg_op_char
+  = pg_op_char_nonspecial / pg_op_char_special
+
+pg_op_char_special
+  = [~!@#%^&|`?]
+
+pg_op_char_nonspecial
+  = pg_op_char_plusminus / pg_op_char_other
+
+pg_op_char_plusminus
+  = !"--" [-+]
+
+pg_op_char_other
+  = !"/*" [*/<>=]
 
 postgresql_operator_expr
   = op:(OPERATOR __) expr:paren$postgresql_op {
@@ -7862,15 +7902,12 @@ postgresql_operator_member_expr
   }
 
 postgresql_operator
-  = op:postgresql_operator_string {
+  = op:(pg_operator_token / [-+]) {
     return loc({
       type: "postgresql_operator",
       operator: text(),
     });
   }
-
-postgresql_operator_string
-  = [-+*/<>=~!@#%^&|`?]+ { return text(); }
 
 // Some of these PostgreSQL operators above can also be unary
 pg_other_unary_expr
@@ -7891,17 +7928,17 @@ pg_other_unary_expr
  * cast: ::
  */
 pg_additive_expr
-  = head:pg_multiplicative_expr tail:(__ additive_operator  __ pg_multiplicative_expr)* {
+  = head:pg_multiplicative_expr tail:(__ pg_additive_op  __ pg_multiplicative_expr)* {
     return createBinaryExprChain(head, tail);
   }
 
 pg_multiplicative_expr
-  = head:pg_exponent_expr tail:(__ ("*" / "/" / "%")  __ pg_exponent_expr)* {
+  = head:pg_exponent_expr tail:(__ pg_multiplicative_op  __ pg_exponent_expr)* {
       return createBinaryExprChain(head, tail);
     }
 
 pg_exponent_expr
-  = head:pg_at_time_zone_expr tail:(__ "^"  __ pg_at_time_zone_expr)* {
+  = head:pg_at_time_zone_expr tail:(__ pg_exponent_op  __ pg_at_time_zone_expr)* {
     return createBinaryExprChain(head, tail);
   }
 
@@ -7914,6 +7951,15 @@ pg_collate_expr
   = head:pg_negation_expr tail:(__ COLLATE __ ident)* {
     return createBinaryExprChain(head, tail);
   }
+
+pg_additive_op
+  = op:pg_standard_op &{ return op === "+" || op === "-"; } { return op; }
+
+pg_multiplicative_op
+  = op:pg_standard_op &{ return op === "*" || op === "/" || op === "%"; } { return op; }
+
+pg_exponent_op
+  = op:pg_standard_op &{ return op === "^"; } { return op; }
 
 pg_at_time_zone_op
   = kws:(AT __ TIME __ ZONE) { return read(kws); }
