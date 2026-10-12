@@ -43,7 +43,6 @@
   } from "./utils/parserState";
   import { isReservedKeyword, isForbiddenImplicitAliasName } from "./utils/keywords";
   import { loc } from "./utils/loc";
-  import { isPostgresqlStandardOperator } from "./utils/pgOperators";
 
   setRangeFunction(() => [peg$savedPos, peg$currPos]);
 
@@ -7850,7 +7849,9 @@ pg_other_op
 // Matches the whole operator token, so that e.g. "*" in "*~-" doesn't get
 // parsed as a standalone multiplication operator.
 pg_standard_op
-  = op:(pg_operator_token / [-+]) &{ return isPostgresqlStandardOperator(op); } {
+  = op:(pg_operator_token / [-+]) &{
+    return ["+", "-", "*", "/", "%", "^", "<", ">", "<=", ">=", "<>", "!=", "="].includes(op);
+  } {
     return op;
   }
 
