@@ -43,7 +43,7 @@
   } from "./utils/parserState";
   import { isReservedKeyword, isForbiddenImplicitAliasName } from "./utils/keywords";
   import { loc } from "./utils/loc";
-  import { isPostgresqlOtherOperator, isPostgresqlStandardOperator } from "./utils/pgOperators";
+  import { isPostgresqlStandardOperator } from "./utils/pgOperators";
 
   setRangeFunction(() => [peg$savedPos, peg$currPos]);
 
@@ -7838,10 +7838,12 @@ pg_other_expr
 //
 //   + - * / < > = ~ ! @ # % ^ & | ` ?
 //
-// But there are some restrictions (see isPostgresqlOtherOperator for details)
+// But there are some restrictions (see pg_operator_token for details).
+//
+// The standard operators are excluded here because they have their own precedence rules.
 //
 pg_other_op
-  = op:pg_operator_token &{ return isPostgresqlOtherOperator(op); } {
+  = !pg_standard_op op:pg_operator_token {
     return op;
   }
 
