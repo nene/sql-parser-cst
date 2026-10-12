@@ -18,7 +18,7 @@
  *    ~ ! @ # % ^ & | ` ?
  */
 export const isPostgresqlOtherOperator = (op: string) => {
-  if (standardOperators.includes(op)) {
+  if (isPostgresqlStandardOperator(op)) {
     return false;
   }
   // restriction #1
@@ -31,6 +31,9 @@ export const isPostgresqlOtherOperator = (op: string) => {
   }
   return true;
 };
+
+export const isPostgresqlStandardOperator = (op: string) =>
+  standardOperators.includes(op);
 
 const standardOperators = [
   // arithmetic

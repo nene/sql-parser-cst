@@ -1,4 +1,4 @@
-import { dialect, notDialect, parse, testExprWc } from "../test_utils";
+import { dialect, notDialect, parse, showPrecedence, testExprWc } from "../test_utils";
 import { isPostgresqlOtherOperator } from "../../src/utils/pgOperators";
 
 describe("special PostgreSQL operators", () => {
@@ -80,6 +80,63 @@ describe("special PostgreSQL operators", () => {
     ].forEach((op) => {
       it(`parses ${op} operator`, () => {
         testExprWc(`x ${op} y`);
+      });
+    });
+
+    describe("when operator ends with - or +", () => {
+      it("parses as single operator when the operator contains ~!@#%^&|`?", () => {
+        // Actual operators from PostgreSQL
+        // jsonb #- text[]: delete the field or array element at the specified path
+        expect(showPrecedence(`x#-y`)).toBe(`(x #- y)`);
+        // ?- line: is line horizontal?
+        // line ?- line: are lines horizontally aligned?
+        expect(showPrecedence(`x?-y`)).toBe(`(x ?- y)`);
+        // anyrange -|- anyrange: are the ranges adjacent?
+        expect(showPrecedence(`x-|-y`)).toBe(`(x -|- y)`);
+
+        // Synthetic cases of possible operators
+        expect(showPrecedence(`x*~-y`)).toBe(`(x *~- y)`);
+        expect(showPrecedence(`x*!-y`)).toBe(`(x *!- y)`);
+        expect(showPrecedence(`x*@-y`)).toBe(`(x *@- y)`);
+        expect(showPrecedence(`x*#-y`)).toBe(`(x *#- y)`);
+        expect(showPrecedence(`x*%-y`)).toBe(`(x *%- y)`);
+        expect(showPrecedence(`x*^-y`)).toBe(`(x *^- y)`);
+        expect(showPrecedence(`x*&-y`)).toBe(`(x *&- y)`);
+        expect(showPrecedence(`x*|-y`)).toBe(`(x *|- y)`);
+        expect(showPrecedence("x*`-y")).toBe("(x *`- y)");
+        expect(showPrecedence(`x*?-y`)).toBe(`(x *?- y)`);
+
+        expect(showPrecedence(`x*~+y`)).toBe(`(x *~+ y)`);
+        expect(showPrecedence(`x*!+y`)).toBe(`(x *!+ y)`);
+        expect(showPrecedence(`x*@+y`)).toBe(`(x *@+ y)`);
+        expect(showPrecedence(`x*#+y`)).toBe(`(x *#+ y)`);
+        expect(showPrecedence(`x*%+y`)).toBe(`(x *%+ y)`);
+        expect(showPrecedence(`x*^+y`)).toBe(`(x *^+ y)`);
+        expect(showPrecedence(`x*&+y`)).toBe(`(x *&+ y)`);
+        expect(showPrecedence(`x*|+y`)).toBe(`(x *|+ y)`);
+        expect(showPrecedence("x*`+y")).toBe("(x *`+ y)");
+        expect(showPrecedence(`x*?+y`)).toBe(`(x *?+ y)`);
+      });
+
+      it("parses as multiple operators when the operator does not contain ~!@#%^&|`?", () => {
+        expect(showPrecedence(`x->-y`)).toBe(`(x -> (- y))`);
+        expect(showPrecedence(`x->+y`)).toBe(`(x -> (+ y))`);
+        expect(showPrecedence(`x->>-1`)).toBe(`(x ->> (- 1))`);
+        expect(showPrecedence(`x<-1`)).toBe(`(x < (- 1))`);
+        expect(showPrecedence(`x>-1`)).toBe(`(x > (- 1))`);
+        expect(showPrecedence(`x=-1`)).toBe(`(x = (- 1))`);
+        expect(showPrecedence(`x<>-1`)).toBe(`(x <> (- 1))`);
+        expect(showPrecedence(`x<=-1`)).toBe(`(x <= (- 1))`);
+        expect(showPrecedence(`x>=-1`)).toBe(`(x >= (- 1))`);
+        expect(showPrecedence(`x*-1`)).toBe(`(x * (- 1))`);
+        expect(showPrecedence(`x/-1`)).toBe(`(x / (- 1))`);
+        expect(showPrecedence(`x+-1`)).toBe(`(x + (- 1))`);
+        expect(showPrecedence(`x-+1`)).toBe(`(x - (+ 1))`);
+        expect(showPrecedence(`x<<-1`)).toBe(`(x << (- 1))`);
+        expect(showPrecedence(`x>>-1`)).toBe(`(x >> (- 1))`);
+        expect(showPrecedence(`x<<=-1`)).toBe(`(x <<= (- 1))`);
+        expect(showPrecedence(`x<->-1`)).toBe(`(x <-> (- 1))`);
+        expect(showPrecedence(`x=+1`)).toBe(`(x = (+ 1))`);
       });
     });
 
