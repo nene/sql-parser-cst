@@ -1,4 +1,4 @@
-import { dialect, parse, testWc } from "../test_utils";
+import { dialect, parse, parseStmt, testWc } from "../test_utils";
 
 describe("FOR..IN", () => {
   dialect(["bigquery"], () => {
@@ -134,6 +134,13 @@ describe("FOR..IN", () => {
     });
 
     describe("FOR IN EXECUTE .. LOOP", () => {
+      it.each(["", " USING var1, var2"])("parses EXECUTE%s as execute_immediate_expr", (using) => {
+        expect(parseStmt(`FOR x IN EXECUTE 'SELECT 1'${using} LOOP NULL; END LOOP`)).toMatchObject({
+          type: "for_loop_stmt",
+          right: { type: "execute_immediate_expr" },
+        });
+      });
+
       it("supports basic EXECUTE", () => {
         testWc(`
           FOR x IN EXECUTE 'SELECT 1' LOOP

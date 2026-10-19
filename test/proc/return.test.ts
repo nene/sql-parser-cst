@@ -1,4 +1,4 @@
-import { dialect, parse, testWc } from "../test_utils";
+import { dialect, parse, parseStmt, testWc } from "../test_utils";
 
 describe("RETURN", () => {
   dialect(["bigquery", "plpgsql"], () => {
@@ -33,6 +33,16 @@ describe("RETURN", () => {
     it("supports RETURN QUERY EXECUTE", () => {
       testWc(`RETURN QUERY EXECUTE 'SELECT * FROM tbl'`);
     });
+
+    it.each(["", " USING var1, var2"])(
+      "parses RETURN QUERY EXECUTE%s as execute_immediate_expr",
+      (using) => {
+        expect(parseStmt(`RETURN QUERY EXECUTE 'SELECT * FROM tbl'${using}`)).toMatchObject({
+          type: "return_query_stmt",
+          expr: { type: "execute_immediate_expr" },
+        });
+      }
+    );
 
     it("supports RETURN QUERY EXECUTE with string-expression", () => {
       testWc(`RETURN QUERY EXECUTE 'SELECT * FROM tbl' || ' WHERE id = ' || var1`);

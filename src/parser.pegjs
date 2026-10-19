@@ -5729,7 +5729,7 @@ for_stmt
     }
 
 for_loop_stmt
-  = kw:(FOR __) left:(ident __) inKw:(IN __) right:((execute_expr / dml_statement / for_range) __) loop:loop_stmt {
+  = kw:(FOR __) left:(ident __) inKw:(IN __) right:((execute_immediate_expr / dml_statement / for_range) __) loop:loop_stmt {
     return loc({
       type: "for_loop_stmt",
       forKw: read(kw),
@@ -5807,7 +5807,7 @@ call_stmt
   }
 
 return_stmt
-  = &plpgsql kw:(RETURN __ QUERY __) expr:(compound_select_stmt / execute_expr) {
+  = &plpgsql kw:(RETURN __ QUERY __) expr:(compound_select_stmt / execute_immediate_expr) {
     return loc({ type: "return_query_stmt", returnQueryKw: read(kw), expr });
   }
   / &plpgsql kw:(RETURN __ NEXT __) expr:expr {
@@ -5979,10 +5979,10 @@ execute_using_clause
     });
   }
 
-execute_expr
+execute_immediate_expr
   = kw:(EXECUTE __) expr:expr using:(__ execute_using_clause)? {
     return loc({
-      type: "execute_expr",
+      type: "execute_immediate_expr",
       executeKw: read(kw),
       expr,
       using: read(using),

@@ -15,5 +15,6 @@ export const preparedStatementsMap: FullTransformMap<
   execute_immediate_stmt: (node) =>
     show([node.executeKw, node.immediateKw, node.expr, node.into, node.using]),
   execute_using_clause: (node) => show([node.usingKw, node.values]),
-  execute_expr: (node) => show([node.executeKw, node.expr, node.using]),
+  execute_immediate_expr: (node) =>
+    show([node.executeKw, node.expr, node.using]),
 };
