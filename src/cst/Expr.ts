@@ -340,8 +340,8 @@ export interface CaseElse<T> extends BaseNode {
 // in MySQL, MariaDB & PostgreSQL
 export interface RowConstructor extends BaseNode {
   type: "row_constructor";
-  rowKw: Keyword<"ROW">;
-  row: ParenExpr<ListExpr<Expr | Default>>;
+  rowKw?: Keyword<"ROW">;
+  row: ListExpr<Expr | Default>;
 }
 
 // PostgreSQL

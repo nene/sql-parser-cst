@@ -1679,11 +1679,11 @@ values_row
   / &mysql list:(paren$list$expr_or_default / row_constructor) { return list; }
 
 row_constructor
-  = kw:(ROW __) row:paren$list$expr_or_default {
+  = kw:(ROW __) "(" row:(__ list$expr_or_default __) ")" {
     return loc({
       type: "row_constructor",
       rowKw: read(kw),
-      row,
+      row: read(row),
     });
   }
 
@@ -8134,6 +8134,7 @@ primary
 // - first try matching a list
 // - when it's multi-element list, treat it as parenthesized list
 //   (when parsing BigQuery, treat it as untyped struct)
+//   (when parsing Postgresql, treat it as row constructor)
 // - when it's single-element list, treat it as parenthesized single expression
 primary_paren_expr
   = "(" c1:__ list:list$expr c2:__ ")" {
@@ -8141,6 +8142,9 @@ primary_paren_expr
       if (isBigquery()) {
         // Untyped struct expression must have at least 2 elements in it
         return loc({ type: "struct_expr", expr: surrounding(c1, list, c2) });
+      } else if (isPostgresql() || isPlpgsql()) {
+        // Similarly... row constructor must have at least 2 elements in it
+        return loc({ type: "row_constructor", row: surrounding(c1, list, c2) });
       } else {
         return loc({ type: "paren_expr", expr: surrounding(c1, list, c2) });
       }
