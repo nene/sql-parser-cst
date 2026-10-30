@@ -205,8 +205,12 @@ describe("insert into", () => {
       });
 
       // Issue #124
-      it("supports ON CONFLICT together with SELECT .. JOIN", () => {
-        testWc("INSERT INTO tbl SELECT * FROM foo CROSS JOIN bar ON CONFLICT DO NOTHING");
+      // While SQLite supports CROSS JOIN without ON-condition,
+      // following it with ON CONFLICT will cause a syntax error in SQLite.
+      dialect(["postgresql", "plpgsql"], () => {
+        it("supports ON CONFLICT together with SELECT .. JOIN", () => {
+          testWc("INSERT INTO tbl SELECT * FROM foo CROSS JOIN bar ON CONFLICT DO NOTHING");
+        });
       });
     });
   });

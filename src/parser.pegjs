@@ -696,6 +696,16 @@ join_expr_right
       right: read(right),
     });
   }
+  // Only SQLite supports cross-join together with join_specification, so parse this first
+  / &sqlite c1:__ op:cross_join right:(__ alias$table_factor) spec:(__ join_specification) {
+    return (left: any) => ({
+      type: "join_expr",
+      left: trailing(left, c1),
+      operator: op,
+      right: read(right),
+      specification: read(spec),
+    });
+  }
   / c1:__ op:(natural_join / cross_join) right:(__ alias$table_factor) {
     return (left: any) => ({
       type: "join_expr",

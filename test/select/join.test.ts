@@ -65,6 +65,12 @@ describe("join", () => {
   it("supports CROSS JOIN", () => {
     testWc("SELECT c FROM t1 CROSS JOIN t2");
   });
+  dialect("sqlite", () => {
+    it("supports CROSS JOIN with USING & ON-specification", () => {
+      testWc("SELECT c FROM t1 CROSS JOIN t2 USING (id)");
+      testWc("SELECT c FROM t1 CROSS JOIN t2 ON t1.id = t2.id");
+    });
+  });
 
   dialect(["sqlite", "bigquery", "postgresql", "plpgsql"], () => {
     it("supports FULL [OUTER] JOIN", () => {
