@@ -15,7 +15,7 @@ import {
 } from "./Expr";
 import { StringLiteral } from "./Literal";
 import { CommaClause } from "./Node";
-import { ExecuteExpr } from "./PreparedStatements";
+import { ExecuteImmediateExpr } from "./PreparedStatements";
 import { AsClause } from "./OtherClauses";
 import { Program } from "./Program";
 import { SubSelect } from "./Select";
@@ -298,7 +298,7 @@ export interface ForLoopStmt extends BaseNode {
   forKw: Keyword<"FOR">;
   left: Identifier;
   inKw: Keyword<"IN">;
-  right: SubSelect | ForRange | ExecuteExpr;
+  right: SubSelect | ForRange | ExecuteImmediateExpr;
   loop: LoopStmt;
 }
 
@@ -375,7 +375,7 @@ export interface ReturnNextStmt extends BaseNode {
 export interface ReturnQueryStmt extends BaseNode {
   type: "return_query_stmt";
   returnQueryKw: [Keyword<"RETURN">, Keyword<"QUERY">];
-  expr: SubSelect | ExecuteExpr;
+  expr: SubSelect | ExecuteImmediateExpr;
 }
 
 // RAISE
