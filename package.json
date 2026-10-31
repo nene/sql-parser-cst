@@ -35,6 +35,7 @@
     "test:plpgsql": "jest --config test/config/plpgsql.json",
     "test:all": "yarn test:sqlite && yarn test:bigquery && yarn test:mysql && yarn test:mariadb && yarn test:postgresql && yarn test:plpgsql",
     "test": "yarn generate && yarn test:all",
+    "prepare": "yarn build",
     "perf:big": "yarn ts-node perf/perf-test.ts big",
     "perf:func": "yarn ts-node perf/perf-test.ts func",
     "perf:paren": "yarn ts-node perf/perf-test.ts paren",
