@@ -3,6 +3,8 @@ import { AllExprNodes } from "../cst/Node";
 import { FullTransformMap } from "../cstTransformer";
 
 export const exprMap: FullTransformMap<string, AllExprNodes> = {
+  psql_variable: (node) => node.text,
+  psql_identifier: (node) => node.text,
   list_expr: (node) => show(node.items, ","),
   paren_expr: (node) => "(" + show(node.expr) + ")",
   binary_expr: (node) => show([node.left, node.operator, node.right]),

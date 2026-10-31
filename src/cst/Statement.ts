@@ -32,8 +32,11 @@ import { MergeStmt } from "./Merge";
 import { TruncateStmt } from "./Truncate";
 import { UpdateStmt } from "./Update";
 import { DoStmt } from "./Do";
+import { PsqlCommand, PsqlQuery } from "./Psql";
 
 export type Statement =
+  | PsqlCommand
+  | PsqlQuery
   | AllAlterTableStatements
   | AllBigqueryStatements
   | AllCommentStatements

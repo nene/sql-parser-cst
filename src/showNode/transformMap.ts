@@ -1,4 +1,5 @@
 import { alterActionMap } from "./alter_action";
+import { show } from "../show";
 import { alterTableMap } from "./alter_table";
 import { analyzeMap } from "./analyze";
 import { baseMap } from "./base";
@@ -48,6 +49,8 @@ import { sqliteMap } from "./dialects/sqlite";
 import { mysqlMap } from "./dialects/mysql";
 
 export const transformMap: FullTransformMap<string> = {
+  psql_command: (node) => node.text,
+  psql_query: (node) => show(node.query) + node.terminator,
   ...baseMap,
 
   // SELECT, INSERT, UPDATE, DELETE, TRUNCATE, MERGE

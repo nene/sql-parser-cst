@@ -32,6 +32,7 @@ export * from "./ProcClause";
 export * from "./Procedure";
 export * from "./ProceduralLanguage";
 export * from "./Program";
+export * from "./Psql";
 export * from "./Publication";
 export * from "./RenameTable";
 export * from "./Role";
