@@ -187,6 +187,7 @@ Note the following conventions:
 Parses SQL string and returns the CST tree. Takes the following options:
 
 - **dialect**: `'sqlite' | 'bigquery' | 'mysql' | 'mariadb' | 'postgresql' | 'plpgsql'` The SQL dialect to parse **(required)**.
+- **psql**: `boolean` Enables parsing standalone psql backslash commands and variable references for PostgreSQL. Command text is preserved.
 - **includeRange**: `boolean` When enabled adds `range: [number, number]` field to all CST nodes,
   which contains the start and end locations of the node.
 - **includeComments**: `boolean` When enabled adds `leading: Whitespace[]` and/or `trailing: Whitespace[]`

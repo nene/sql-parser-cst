@@ -10,6 +10,7 @@ import {
   WindowDefinition,
 } from "./Select";
 import { Default } from "./Insert";
+import { PsqlIdentifier, PsqlVariable } from "./Psql";
 import {
   PostgresqlOperator,
   PostgresqlOperatorExpr,
@@ -36,6 +37,7 @@ export type AllExprNodes =
   | ArraySliceSpecifier;
 
 export type Expr =
+  | PsqlVariable
   | ListExpr
   | ParenExpr
   | BinaryExpr
@@ -436,7 +438,9 @@ export interface ArraySliceSpecifier extends BaseNode {
   to?: Expr;
 }
 
-export interface Identifier extends BaseNode {
+export type Identifier = PlainIdentifier | PsqlIdentifier;
+
+export interface PlainIdentifier extends BaseNode {
   type: "identifier";
   text: string;
   name: string;

@@ -50,9 +50,63 @@
 }
 
 start
-  = c1:__ program:program c2:__ {
+  = &{ return options.psql && options.dialect === "postgresql"; } p:psql_program { return p; }
+  / c1:__ program:program c2:__ {
     return surrounding(c1, program, c2);
   }
+
+psql_program
+  = items:(c1:__ x:(psql_command / psql_query) { return surrounding(c1, x, []); })* c2:__ {
+    return loc({ type: "program", statements: items, psql: true, trailing: c2 });
+  }
+
+psql_query
+  = query:statement c:__ terminator:(";" / psql_query_command / !. { return ""; }) {
+    return loc({ type: "psql_query", query: trailing(query, c), terminator });
+  }
+
+psql_query_command
+  = &psql_line_start text:$( "\\" ("gdesc" / "gexec" / "gset" / "gx" / "g") ![a-zA-Z_] psql_command_arguments) {
+    return text;
+  }
+
+psql_command
+  = &psql_line_start text:$("\\" psql_command_name psql_command_arguments) {
+    return loc({ type: "psql_command", text });
+  }
+
+psql_command_name
+  = [^ \t\r\n\\]+
+
+psql_line_start
+  = &{ return input.slice(input.lastIndexOf("\n", peg$currPos - 1) + 1, peg$currPos).trim() === ""; }
+
+psql_command_arguments
+  = (psql_single_quoted_argument / psql_double_quoted_argument / psql_backquoted_argument / !("\\" / end_of_line / "'" / "\"" / "`") .)*
+
+psql_single_quoted_argument
+  = "'" ("''" / "\\" . / !"'" .)* "'"
+
+psql_double_quoted_argument
+  = "\"" (!"\"" .)* "\""
+
+psql_backquoted_argument
+  = "`" (!"`" .)* "`"
+
+psql_variable
+  = &{ return options.psql && options.dialect === "postgresql"; }
+    text:$(":" ("'" psql_variable_name "'" / psql_variable_name / "{?" psql_variable_name "}")) {
+    return loc({ type: "psql_variable", text });
+  }
+
+psql_identifier
+  = &{ return options.psql && options.dialect === "postgresql"; }
+    ":" '"' name:$psql_variable_name '"' {
+    return loc({ type: "psql_identifier", name, text: text() });
+  }
+
+psql_variable_name
+  = [a-zA-Z_0-9]+
 
 program
   = head:(statement / empty) tail:(__ ";" __ (statement / empty))* {
@@ -8116,7 +8170,8 @@ array_slice_specifier
   }
 
 primary
-  = literal
+  = psql_variable
+  / literal
   / primary_paren_expr
   / paren$compound_select_stmt
   / &bigquery x:(typed_array_expr / array_expr / typed_struct_expr) { return x; }
@@ -8868,7 +8923,8 @@ explicit_alias_ident
   }
 
 ident "identifier"
-  = quoted_ident
+  = psql_identifier
+  / quoted_ident
   / name:ident_name !{ return isReservedKeyword(name); } {
     return loc(createIdentifier(name, name));
   }
