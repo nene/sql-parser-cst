@@ -25,19 +25,22 @@ describe("struct", () => {
       expect(parseExpr("(1,2)")).toMatchInlineSnapshot(`
         {
           "expr": {
-            "items": [
-              {
-                "text": "1",
-                "type": "number_literal",
-                "value": 1,
-              },
-              {
-                "text": "2",
-                "type": "number_literal",
-                "value": 2,
-              },
-            ],
-            "type": "list_expr",
+            "expr": {
+              "items": [
+                {
+                  "text": "1",
+                  "type": "number_literal",
+                  "value": 1,
+                },
+                {
+                  "text": "2",
+                  "type": "number_literal",
+                  "value": 2,
+                },
+              ],
+              "type": "list_expr",
+            },
+            "type": "paren_expr",
           },
           "type": "struct_expr",
         }
@@ -86,14 +89,17 @@ describe("struct", () => {
           },
           "expr": {
             "expr": {
-              "items": [
-                {
-                  "text": "1",
-                  "type": "number_literal",
-                  "value": 1,
-                },
-              ],
-              "type": "list_expr",
+              "expr": {
+                "items": [
+                  {
+                    "text": "1",
+                    "type": "number_literal",
+                    "value": 1,
+                  },
+                ],
+                "type": "list_expr",
+              },
+              "type": "paren_expr",
             },
             "type": "struct_expr",
           },

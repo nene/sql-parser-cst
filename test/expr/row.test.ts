@@ -17,24 +17,27 @@ describe("ROW constructor", () => {
       expect(parseExpr("ROW(1, 2, 3)")).toMatchInlineSnapshot(`
         {
           "row": {
-            "items": [
-              {
-                "text": "1",
-                "type": "number_literal",
-                "value": 1,
-              },
-              {
-                "text": "2",
-                "type": "number_literal",
-                "value": 2,
-              },
-              {
-                "text": "3",
-                "type": "number_literal",
-                "value": 3,
-              },
-            ],
-            "type": "list_expr",
+            "expr": {
+              "items": [
+                {
+                  "text": "1",
+                  "type": "number_literal",
+                  "value": 1,
+                },
+                {
+                  "text": "2",
+                  "type": "number_literal",
+                  "value": 2,
+                },
+                {
+                  "text": "3",
+                  "type": "number_literal",
+                  "value": 3,
+                },
+              ],
+              "type": "list_expr",
+            },
+            "type": "paren_expr",
           },
           "rowKw": {
             "name": "ROW",
@@ -56,19 +59,22 @@ describe("ROW constructor", () => {
       expect(parseExpr("(1, 2)")).toMatchInlineSnapshot(`
         {
           "row": {
-            "items": [
-              {
-                "text": "1",
-                "type": "number_literal",
-                "value": 1,
-              },
-              {
-                "text": "2",
-                "type": "number_literal",
-                "value": 2,
-              },
-            ],
-            "type": "list_expr",
+            "expr": {
+              "items": [
+                {
+                  "text": "1",
+                  "type": "number_literal",
+                  "value": 1,
+                },
+                {
+                  "text": "2",
+                  "type": "number_literal",
+                  "value": 2,
+                },
+              ],
+              "type": "list_expr",
+            },
+            "type": "paren_expr",
           },
           "type": "row_constructor",
         }

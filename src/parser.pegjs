@@ -1679,7 +1679,7 @@ values_row
   / &mysql list:(paren$list$expr_or_default / row_constructor) { return list; }
 
 row_constructor
-  = kw:(ROW __) "(" row:(__ list$expr_or_default __) ")" {
+  = kw:(ROW __) row:paren$list$expr_or_default {
     return loc({
       type: "row_constructor",
       rowKw: read(kw),
@@ -8139,14 +8139,15 @@ primary
 primary_paren_expr
   = "(" c1:__ list:list$expr c2:__ ")" {
     if (list.items.length > 1) {
+      const parenExpr = loc({ type: "paren_expr", expr: surrounding(c1, list, c2) });
       if (isBigquery()) {
         // Untyped struct expression must have at least 2 elements in it
-        return loc({ type: "struct_expr", expr: surrounding(c1, list, c2) });
+        return loc({ type: "struct_expr", expr: parenExpr });
       } else if (isPostgresql() || isPlpgsql()) {
         // Similarly... row constructor must have at least 2 elements in it
-        return loc({ type: "row_constructor", row: surrounding(c1, list, c2) });
+        return loc({ type: "row_constructor", row: parenExpr });
       } else {
-        return loc({ type: "paren_expr", expr: surrounding(c1, list, c2) });
+        return parenExpr;
       }
     } else {
       return loc({ type: "paren_expr", expr: surrounding(c1, list.items[0], c2) });
@@ -8613,6 +8614,7 @@ paren$list$equals_expr = .
 paren$list$exclusion_param = .
 paren$list$expr = .
 paren$list$expr_or_default = .
+paren$list$expr_or_explicit_alias = .
 paren$list$func_param = .
 paren$list$grouping_element = .
 paren$list$ident = .
@@ -9030,7 +9032,7 @@ typed_struct_expr
   }
 
 struct_expr
-  = "(" expr:(__ list$expr_or_explicit_alias __) ")" {
+  = expr:paren$list$expr_or_explicit_alias {
     return loc({
       type: "struct_expr",
       expr: read(expr),

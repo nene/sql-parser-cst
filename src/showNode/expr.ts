@@ -24,7 +24,7 @@ export const exprMap: FullTransformMap<string, AllExprNodes> = {
   cast_arg: (node) => show([node.expr, node.asKw, node.dataType, node.format]),
   cast_format: (node) => show([node.formatKw, node.string, node.timezone]),
   cast_format_timezone: (node) => show([node.atTimeZoneKw, node.timezone]),
-  row_constructor: (node) => show([node.rowKw, "(", node.row, ")"]),
+  row_constructor: (node) => show([node.rowKw, node.row]),
   array_constructor: (node) => show([node.arrayKw, node.expr]),
   raise_expr: (node) => show([node.raiseKw, node.args]),
   raise_expr_type: (node) => show(node.typeKw),
@@ -43,7 +43,7 @@ export const exprMap: FullTransformMap<string, AllExprNodes> = {
   typed_expr: (node) => show([node.dataType, node.expr]),
   array_literal_expr: (node) => show([node.arrayKw, node.expr]),
   array_expr: (node) => show(["[", node.expr, "]"]),
-  struct_expr: (node) => show(["(", node.expr, ")"]),
+  struct_expr: (node) => show(node.expr),
   quantifier_expr: (node) => show([node.quantifierKw, node.expr]),
   full_text_match_expr: (node) =>
     show([node.matchKw, node.columns, node.againstKw, node.args]),

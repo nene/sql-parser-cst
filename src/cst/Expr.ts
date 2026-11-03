@@ -341,7 +341,7 @@ export interface CaseElse<T> extends BaseNode {
 export interface RowConstructor extends BaseNode {
   type: "row_constructor";
   rowKw?: Keyword<"ROW">;
-  row: ListExpr<Expr | Default>;
+  row: ParenExpr<ListExpr<Expr | Default>>;
 }
 
 // PostgreSQL
@@ -476,5 +476,5 @@ export interface ArrayExpr extends BaseNode {
 // BigQuery
 export interface StructExpr extends BaseNode {
   type: "struct_expr";
-  expr: ListExpr<Expr>;
+  expr: ParenExpr<ListExpr<Expr>>;
 }
