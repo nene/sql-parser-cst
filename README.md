@@ -313,7 +313,7 @@ export const sqliteKeywords = {
 
 ## Development
 
-`yarn generate` will generate parser.
+`npm run generate` will generate parser.
 
 The testsuite contains two kinds of tests:
 
@@ -321,12 +321,12 @@ The testsuite contains two kinds of tests:
 - tests applicable for only some specific dialects
 
 When running the testsuite one always needs to pick a dialect.
-For example `yarn test:sqlite` or `yarn test:mysql`.
+For example `npm run test:sqlite` or `npm run test:mysql`.
 Running one of these commands will run the testsuite against the parser
 of that dialect. It will execute all the generic tests plus tests
 applicable for that dialect.
 
-`yarn test` will execute the testsuite for each supported dialect,
+`npm test` will execute the testsuite for each supported dialect,
 covering all the possible combinations.
 
 ### During development
@@ -334,26 +334,26 @@ covering all the possible combinations.
 Start the parser-generator watch process in one terminal:
 
 ```
-yarn watch:generate
+npm run watch:generate
 ```
 
 and the tests watch process in another terminal:
 
 ```
-yarn test:sqlite --watch
+npm run test:sqlite -- --watch
 ```
 
-Note that `yarn test --watch` doesn't work.
+Note that `npm run test --watch` doesn't work.
 A separate watch process needs to be started manually for each dialect.
 
 ### Release
 
-Generate new release with `yarn publish`.
+Generate new release with `npm run publish`.
 
-To generate a changelog use the `yarn changelog` command:
+To generate a changelog use the `npm run changelog` command:
 
 ```
-VERSION=v0.27.0 yarn changelog
+VERSION=v0.44.0 npm run changelog
 ```
 
 ## Acknowledgements
