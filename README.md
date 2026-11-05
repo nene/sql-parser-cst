@@ -348,7 +348,12 @@ A separate watch process needs to be started manually for each dialect.
 
 ### Release
 
-Generate new release with `npm run publish`.
+Generate new release with:
+
+```
+npm version <patch|minor>
+npm publish
+```
 
 To generate a changelog use the `npm run changelog` command:
 
