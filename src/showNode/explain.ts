@@ -1,8 +1,16 @@
 import { show } from "../show";
-import { ExplainStmt } from "../cst/Node";
+import { AllExplainNodes } from "../cst/Node";
 import { FullTransformMap } from "../cstTransformer";
 
-export const explainMap: FullTransformMap<string, ExplainStmt> = {
+export const explainMap: FullTransformMap<string, AllExplainNodes> = {
   explain_stmt: (node) =>
-    show([node.explainKw, node.analyzeKw, node.queryPlanKw, node.statement]),
+    show([
+      node.explainKw,
+      node.analyzeKw,
+      node.verboseKw,
+      node.options,
+      node.queryPlanKw,
+      node.statement,
+    ]),
+  explain_option: (node) => show([node.name, node.value]),
 };
