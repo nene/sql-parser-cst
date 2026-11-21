@@ -86,6 +86,23 @@ describe("explain", () => {
           ) SELECT 1`);
       });
 
+      it("supports ON/OFF boolean values", () => {
+        testWc(`
+          EXPLAIN (
+            ANALYZE ON,
+            VERBOSE OFF,
+            COSTS ON,
+            SETTINGS OFF,
+            GENERIC_PLAN ON,
+            BUFFERS OFF,
+            WAL ON,
+            TIMING OFF,
+            SUMMARY ON,
+            MEMORY OFF,
+            IO ON
+          ) SELECT 1`);
+      });
+
       it("supports FORMAT", () => {
         testWc("EXPLAIN (FORMAT TEXT) SELECT 1");
         testWc("EXPLAIN (FORMAT XML) SELECT 1");
