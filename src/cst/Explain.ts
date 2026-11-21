@@ -1,6 +1,6 @@
 import { BaseNode, Keyword } from "./Base";
 import { ListExpr, ParenExpr } from "./Expr";
-import { BooleanLiteral, NumberLiteral } from "./Literal";
+import { BooleanLiteral, NumberLiteral, StringLiteral } from "./Literal";
 import { PostgresqlBooleanOnOffLiteral } from "./Node";
 import { Statement } from "./Statement";
 
@@ -38,5 +38,6 @@ export interface ExplainOption extends BaseNode {
     | Keyword<"NONE" | "TEXT" | "BINARY" | "XML" | "JSON" | "YAML">
     | BooleanLiteral
     | PostgresqlBooleanOnOffLiteral
-    | NumberLiteral;
+    | NumberLiteral
+    | StringLiteral;
 }

@@ -99,6 +99,7 @@ describe("explain", () => {
         testWc("EXPLAIN (FORMAT XML) SELECT 1");
         testWc("EXPLAIN (FORMAT JSON) SELECT 1");
         testWc("EXPLAIN (FORMAT YAML) SELECT 1");
+        testWc("EXPLAIN (FORMAT 'yaml') SELECT 1");
       });
 
       it("supports SERIALIZE", () => {
@@ -106,6 +107,7 @@ describe("explain", () => {
         testWc("EXPLAIN (ANALYZE, SERIALIZE NONE) SELECT 1");
         testWc("EXPLAIN (ANALYZE, SERIALIZE TEXT) SELECT 1");
         testWc("EXPLAIN (ANALYZE, SERIALIZE BINARY) SELECT 1");
+        testWc("EXPLAIN (ANALYZE, SERIALIZE 'binary') SELECT 1");
       });
     });
   });
