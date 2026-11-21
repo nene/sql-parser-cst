@@ -103,6 +103,23 @@ describe("explain", () => {
           ) SELECT 1`);
       });
 
+      it("supports numeric boolean values", () => {
+        testWc(`
+          EXPLAIN (
+            ANALYZE 1,
+            VERBOSE 0,
+            COSTS 1,
+            SETTINGS 0,
+            GENERIC_PLAN 1,
+            BUFFERS 0,
+            WAL 1,
+            TIMING 0,
+            SUMMARY 1,
+            MEMORY 0,
+            IO 1
+          ) SELECT 1`);
+      });
+
       it("supports FORMAT", () => {
         testWc("EXPLAIN (FORMAT TEXT) SELECT 1");
         testWc("EXPLAIN (FORMAT XML) SELECT 1");

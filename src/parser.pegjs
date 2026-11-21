@@ -4932,6 +4932,7 @@ explain_option_name
 explain_option_value
   = boolean_literal
   / postgresql_boolean_on_off_literal
+  / number_literal
   / NONE / TEXT / BINARY / XML / JSON / YAML
 
 /**
