@@ -17,6 +17,27 @@ describe("explain", () => {
     });
   });
 
+  dialect(["postgresql", "plpgsql"], () => {
+    it("supports explaining of MERGE statements", () => {
+      test("EXPLAIN MERGE INTO foo USING bar ON true WHEN MATCHED THEN DELETE");
+    });
+
+    it("supports explaining of CREATE TABLE/CREATE VIEW/REFRESH VIEW statements", () => {
+      test("EXPLAIN MERGE INTO foo USING bar ON true WHEN MATCHED THEN DELETE");
+      test("EXPLAIN CREATE TABLE foo (id INT) AS SELECT 1");
+      test("EXPLAIN CREATE MATERIALIZED VIEW foo AS SELECT 1");
+      test("EXPLAIN REFRESH MATERIALIZED VIEW foo");
+    });
+
+    it.skip("supports explaining of DECLARE statements", () => {
+      test("EXPLAIN DECLARE mycursor CURSOR FOR SELECT 1");
+    });
+
+    it.skip("supports explaining of EXECUTE statements", () => {
+      test("EXPLAIN EXECUTE plan_name");
+    });
+  });
+
   dialect("sqlite", () => {
     it("supports EXPLAIN QUERY PLAN", () => {
       testWc("EXPLAIN QUERY PLAN SELECT 1");
