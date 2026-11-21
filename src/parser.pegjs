@@ -4886,11 +4886,12 @@ analyze_stmt
  * ------------------------------------------------------------------------------------ *
  */
 explain_stmt
-  = kw:(explain_kw __) anKw:(ANALYZE __)? qpKw:(QUERY __ PLAN __)? stmt:statement {
+  = kw:(explain_kw __) anKw:(ANALYZE __)? verboseKw:(VERBOSE __)? qpKw:(QUERY __ PLAN __)? stmt:statement {
     return loc({
       type: "explain_stmt",
       explainKw: read(kw),
       analyzeKw: read(anKw),
+      verboseKw: read(verboseKw),
       queryPlanKw: read(qpKw),
       statement: stmt,
     });

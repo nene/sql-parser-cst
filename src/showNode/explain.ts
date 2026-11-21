@@ -4,5 +4,11 @@ import { FullTransformMap } from "../cstTransformer";
 
 export const explainMap: FullTransformMap<string, ExplainStmt> = {
   explain_stmt: (node) =>
-    show([node.explainKw, node.analyzeKw, node.queryPlanKw, node.statement]),
+    show([
+      node.explainKw,
+      node.analyzeKw,
+      node.verboseKw,
+      node.queryPlanKw,
+      node.statement,
+    ]),
 };

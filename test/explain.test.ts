@@ -25,6 +25,13 @@ describe("explain", () => {
     });
   });
 
+  dialect(["postgresql", "plpgsql"], () => {
+    it("supports EXPLAIN [ANALYZE] VERBOSE", () => {
+      testWc("EXPLAIN VERBOSE SELECT 1");
+      testWc("EXPLAIN ANALYZE VERBOSE SELECT 1");
+    });
+  });
+
   dialect(["mysql", "mariadb"], () => {
     it("supports DESCRIBE/DESC instead of EXPLAIN", () => {
       testWc("DESCRIBE SELECT 1");
