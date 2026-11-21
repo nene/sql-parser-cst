@@ -43,6 +43,64 @@ describe("explain", () => {
     });
   });
 
+  dialect(["postgresql", "plpgsql"], () => {
+    describe("options", () => {
+      it("supports single option", () => {
+        testWc("EXPLAIN (ANALYZE) SELECT 1");
+        testWc("EXPLAIN (VERBOSE) SELECT 1");
+      });
+
+      it("supports value-less options", () => {
+        testWc(
+          `EXPLAIN (
+            ANALYZE,
+            VERBOSE,
+            COSTS,
+            SETTINGS,
+            GENERIC_PLAN,
+            BUFFERS,
+            SERIALIZE,
+            WAL,
+            TIMING,
+            SUMMARY,
+            MEMORY,
+            IO
+          ) SELECT 1`
+        );
+      });
+
+      it("supports boolean values", () => {
+        testWc(`
+          EXPLAIN (
+            ANALYZE true,
+            VERBOSE false,
+            COSTS true,
+            SETTINGS false,
+            GENERIC_PLAN true,
+            BUFFERS false,
+            WAL true,
+            TIMING false,
+            SUMMARY true,
+            MEMORY false,
+            IO true
+          ) SELECT 1`);
+      });
+
+      it("supports FORMAT", () => {
+        testWc("EXPLAIN (FORMAT TEXT) SELECT 1");
+        testWc("EXPLAIN (FORMAT XML) SELECT 1");
+        testWc("EXPLAIN (FORMAT JSON) SELECT 1");
+        testWc("EXPLAIN (FORMAT YAML) SELECT 1");
+      });
+
+      it("supports SERIALIZE", () => {
+        testWc("EXPLAIN (SERIALIZE NONE) SELECT 1");
+        testWc("EXPLAIN (SERIALIZE TEXT) SELECT 1");
+        testWc("EXPLAIN (SERIALIZE BINARY) SELECT 1");
+      });
+    });
+  });
+
   dialect("bigquery", () => {
     it("does not support EXPLAIN", () => {
       expect(() => test("EXPLAIN SELECT * FROM foo")).toThrow();
