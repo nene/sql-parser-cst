@@ -62,6 +62,7 @@ import { AllDataTypeNodes } from "./DataType";
 import { AllDclNodes } from "./Dcl";
 import { AllDeleteNodes } from "./Delete";
 import { AllDomainNodes } from "./Domain";
+import { AllExplainNodes } from "./Explain";
 import { AllExprNodes } from "./Expr";
 import { AllExtensionNodes } from "./Extension";
 import { AllFrameNodes } from "./WindowFrame";
@@ -107,6 +108,7 @@ export type Node =
   | AllDclNodes
   | AllDeleteNodes
   | AllDomainNodes
+  | AllExplainNodes
   | AllExprNodes
   | AllExtensionNodes
   | AllFrameNodes

@@ -32,7 +32,7 @@ describe("parameters", () => {
 
     it("parses ON value as literal", () => {
       expect(parseParameterValue("SET x = ON")).toEqual({
-        type: "boolean_on_off_literal",
+        type: "postgresql_boolean_on_off_literal",
         valueKw: { type: "keyword", name: "ON", text: "ON" },
         value: true,
       });
@@ -40,7 +40,7 @@ describe("parameters", () => {
 
     it("parses OFF value as literal", () => {
       expect(parseParameterValue("SET x = OFF")).toEqual({
-        type: "boolean_on_off_literal",
+        type: "postgresql_boolean_on_off_literal",
         valueKw: { type: "keyword", name: "OFF", text: "OFF" },
         value: false,
       });

@@ -9,4 +9,5 @@ export const postgresqlMap: FullTransformMap<string, AllPostgresqlNodes> = {
   postgresql_options: (node) => show([node.optionsKw, node.options]),
   postgresql_option_element: (node) => show([node.name, node.value]),
   postgresql_with_options: (node) => show([node.withKw, node.options]),
+  postgresql_boolean_on_off_literal: (node) => show([node.valueKw]),
 };

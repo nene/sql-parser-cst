@@ -9,7 +9,8 @@ export type AllPostgresqlNodes =
   | PostgresqlOperatorClass
   | PostgresqlOptions
   | PostgresqlOptionElement
-  | PostgresqlWithOptions;
+  | PostgresqlWithOptions
+  | PostgresqlBooleanOnOffLiteral;
 
 export interface PostgresqlOperatorExpr extends BaseNode {
   type: "postgresql_operator_expr";
@@ -50,3 +51,9 @@ export type PostgresqlTableOption = TableOption<
   Identifier | MemberExpr,
   Expr | Keyword
 >;
+
+export interface PostgresqlBooleanOnOffLiteral extends BaseNode {
+  type: "postgresql_boolean_on_off_literal";
+  valueKw: Keyword<"ON" | "OFF">;
+  value: boolean;
+}
