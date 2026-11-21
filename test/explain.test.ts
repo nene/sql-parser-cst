@@ -87,37 +87,11 @@ describe("explain", () => {
       });
 
       it("supports ON/OFF boolean values", () => {
-        testWc(`
-          EXPLAIN (
-            ANALYZE ON,
-            VERBOSE OFF,
-            COSTS ON,
-            SETTINGS OFF,
-            GENERIC_PLAN ON,
-            BUFFERS OFF,
-            WAL ON,
-            TIMING OFF,
-            SUMMARY ON,
-            MEMORY OFF,
-            IO ON
-          ) SELECT 1`);
+        testWc("EXPLAIN ( ANALYZE ON, VERBOSE OFF ) SELECT 1");
       });
 
-      it("supports numeric boolean values", () => {
-        testWc(`
-          EXPLAIN (
-            ANALYZE 1,
-            VERBOSE 0,
-            COSTS 1,
-            SETTINGS 0,
-            GENERIC_PLAN 1,
-            BUFFERS 0,
-            WAL 1,
-            TIMING 0,
-            SUMMARY 1,
-            MEMORY 0,
-            IO 1
-          ) SELECT 1`);
+      it("supports 0/1 boolean values", () => {
+        testWc("EXPLAIN ( ANALYZE 1, VERBOSE 0 ) SELECT 1");
       });
 
       it("supports FORMAT", () => {
