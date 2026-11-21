@@ -6,6 +6,10 @@ describe("explain", () => {
       testWc("EXPLAIN SELECT * FROM foo");
     });
 
+    it("supports explaining of (SELECT statement)", () => {
+      testWc("EXPLAIN (SELECT * FROM foo)");
+    });
+
     it("supports explaining of INSERT/UPDATE/DELETE statements", () => {
       test("EXPLAIN INSERT INTO foo VALUES (1, 2, 3)");
       test("EXPLAIN UPDATE tbl SET name = 'unknown'");
