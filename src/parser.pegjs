@@ -6366,15 +6366,7 @@ set_parameter_clause
   }
 
 config_parameter_value
-  = literal / boolean_on_off_literal / default / ident
-
-boolean_on_off_literal
-  = kw:ON {
-    return loc({ type: "boolean_on_off_literal", valueKw: kw, value: true });
-  }
-  / kw:OFF {
-    return loc({ type: "boolean_on_off_literal", valueKw: kw, value: false });
-  }
+  = literal / postgresql_boolean_on_off_literal / default / ident
 
 set_time_zone_parameter_stmt
   = kw:(SET __) modifierKw:((LOCAL / SESSION) __)? timeZoneKw:(TIME __ ZONE __) value:(default / local_parameter_value / expr) {
@@ -6811,6 +6803,14 @@ postgresql_option_element
 postgresql_operator_class
   = &postgres name:member_expr options:(__ paren$list$table_option_postgresql)? {
     return loc({ type: "postgresql_operator_class", name, options: read(options) });
+  }
+
+postgresql_boolean_on_off_literal
+  = kw:ON {
+    return loc({ type: "postgresql_boolean_on_off_literal", valueKw: kw, value: true });
+  }
+  / kw:OFF {
+    return loc({ type: "postgresql_boolean_on_off_literal", valueKw: kw, value: false });
   }
 
 /**
