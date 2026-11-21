@@ -102,9 +102,10 @@ describe("explain", () => {
       });
 
       it("supports SERIALIZE", () => {
-        testWc("EXPLAIN (SERIALIZE NONE) SELECT 1");
-        testWc("EXPLAIN (SERIALIZE TEXT) SELECT 1");
-        testWc("EXPLAIN (SERIALIZE BINARY) SELECT 1");
+        // Note: In practice, SERIALIZE option only works together with ANALYZE
+        testWc("EXPLAIN (ANALYZE, SERIALIZE NONE) SELECT 1");
+        testWc("EXPLAIN (ANALYZE, SERIALIZE TEXT) SELECT 1");
+        testWc("EXPLAIN (ANALYZE, SERIALIZE BINARY) SELECT 1");
       });
     });
   });
