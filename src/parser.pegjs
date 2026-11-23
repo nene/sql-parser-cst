@@ -4884,7 +4884,7 @@ analyze_stmt
       analyzeKw: kw,
       verboseKw: read(verboseKw),
       tableKw: read(tableKw),
-      tables: read(tables) || [],
+      tables: read(tables),
     });
   }
 
