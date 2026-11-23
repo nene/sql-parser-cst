@@ -35,6 +35,14 @@ describe("vacuum", () => {
       testWc("VACUUM my_table (col1, col2), my_table * (col3)");
     });
 
+    it("supports VACUUM [ FULL ] [ FREEZE ] [ VERBOSE ] [ ANALYZE ]", () => {
+      testWc("VACUUM FULL");
+      testWc("VACUUM FREEZE");
+      testWc("VACUUM VERBOSE");
+      testWc("VACUUM ANALYZE");
+      testWc("VACUUM FULL FREEZE VERBOSE ANALYZE my_table");
+    });
+
     describe("options", () => {
       it("supports value-less options", () => {
         testWc("VACUUM ( FULL, FREEZE, VERBOSE ) my_table");

@@ -20,6 +20,7 @@ export interface VacuumDatabaseStmt extends BaseNode {
 export interface VacuumTableStmt extends BaseNode {
   type: "vacuum_table_stmt";
   vacuumKw: Keyword<"VACUUM">;
+  modifiers: Keyword<"FULL" | "FREEZE" | "VERBOSE" | "ANALYZE">[];
   options?: ParenExpr<ListExpr<PostgresqlOptionElement>>;
   tables?: ListExpr<TableWithColumns>;
 }

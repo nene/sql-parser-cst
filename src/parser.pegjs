@@ -4946,14 +4946,21 @@ vacuum_into_clause
   }
 
 vacuum_table_stmt
-  = kw:VACUUM options:(__ paren$list$postgresql_option_element)? tables:(__ list$table_with_columns)? {
+  = kw:VACUUM
+    modifiers:(__ vacuum_modifier_kw)*
+    options:(__ paren$list$postgresql_option_element)?
+    tables:(__ list$table_with_columns)? {
     return loc({
       type: "vacuum_table_stmt",
       vacuumKw: read(kw),
+      modifiers: modifiers.map(read),
       options: read(options),
       tables: read(tables),
     });
   }
+
+vacuum_modifier_kw
+  = FULL / FREEZE / VERBOSE / ANALYZE
 
 /**
  * ------------------------------------------------------------------------------------ *
@@ -10011,6 +10018,7 @@ FORCE               = kw:"FORCE"i               !ident_part { return loc(createK
 FOREACH             = kw:"FOREACH"i             !ident_part { return loc(createKeyword(kw)); }
 FOREIGN             = kw:"FOREIGN"i             !ident_part { return loc(createKeyword(kw)); }
 FORMAT              = kw:"FORMAT"i              !ident_part { return loc(createKeyword(kw)); }
+FREEZE              = kw:"FREEZE"i              !ident_part { return loc(createKeyword(kw)); }
 FRIDAY              = kw:"FRIDAY"i              !ident_part { return loc(createKeyword(kw)); }
 FROM                = kw:"FROM"i                !ident_part { return loc(createKeyword(kw)); }
 FULL                = kw:"FULL"i                !ident_part { return loc(createKeyword(kw)); }
