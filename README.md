@@ -351,6 +351,7 @@ A separate watch process needs to be started manually for each dialect.
 Generate new release with:
 
 ```
+npm login
 npm version <patch|minor>
 npm publish
 ```
