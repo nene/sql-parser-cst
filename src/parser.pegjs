@@ -96,7 +96,7 @@ statement_sqlite
   / pragma_stmt
   / reindex_stmt
   / update_stmt
-  / vacuum_stmt
+  / vacuum_database_stmt
 
 statement_mysql
   = alter_schema_stmt
@@ -259,6 +259,7 @@ statement_postgres
   / show_parameter_stmt
   / truncate_stmt
   / update_stmt
+  / vacuum_table_stmt
 
 statement_plpgsql
   = assert_stmt
@@ -4921,6 +4922,49 @@ explain_kw
 /**
  * ------------------------------------------------------------------------------------ *
  *                                                                                      *
+ * VACUUM                                                                               *
+ *                                                                                      *
+ * ------------------------------------------------------------------------------------ *
+ */
+vacuum_database_stmt
+  = kw:VACUUM schema:(__ ident)? into:(__ vacuum_into_clause)? {
+    return loc({
+      type: "vacuum_database_stmt",
+      vacuumKw: read(kw),
+      schema: read(schema),
+      into: read(into),
+    });
+  }
+
+vacuum_into_clause
+  = intoKw:(INTO __) file:string_literal {
+    return loc({
+      type: "vacuum_into_clause",
+      intoKw: read(intoKw),
+      file,
+    });
+  }
+
+vacuum_table_stmt
+  = kw:VACUUM
+    modifiers:(__ vacuum_modifier_kw)*
+    options:(__ paren$list$postgresql_option_element)?
+    tables:(__ list$table_with_columns)? {
+    return loc({
+      type: "vacuum_table_stmt",
+      vacuumKw: read(kw),
+      modifiers: modifiers.map(read),
+      options: read(options),
+      tables: read(tables),
+    });
+  }
+
+vacuum_modifier_kw
+  = FULL / FREEZE / VERBOSE / ANALYZE
+
+/**
+ * ------------------------------------------------------------------------------------ *
+ *                                                                                      *
  * Transactions                                                                         *
  *                                                                                      *
  * ------------------------------------------------------------------------------------ *
@@ -6042,24 +6086,6 @@ detach_database_stmt
       detachKw: read(kw),
       databaseKw: read(dbKw),
       schema,
-    });
-  }
-
-vacuum_stmt
-  = kw:(VACUUM __) schema:(ident __)? intoKw:(INTO __) file:string_literal {
-    return loc({
-      type: "vacuum_stmt",
-      vacuumKw: read(kw),
-      schema: read(schema),
-      intoKw: read(intoKw),
-      file,
-    });
-  }
-  / kw:(VACUUM __) schema:ident? {
-    return loc({
-      type: "vacuum_stmt",
-      vacuumKw: read(kw),
-      schema: read(schema),
     });
   }
 
@@ -9992,6 +10018,7 @@ FORCE               = kw:"FORCE"i               !ident_part { return loc(createK
 FOREACH             = kw:"FOREACH"i             !ident_part { return loc(createKeyword(kw)); }
 FOREIGN             = kw:"FOREIGN"i             !ident_part { return loc(createKeyword(kw)); }
 FORMAT              = kw:"FORMAT"i              !ident_part { return loc(createKeyword(kw)); }
+FREEZE              = kw:"FREEZE"i              !ident_part { return loc(createKeyword(kw)); }
 FRIDAY              = kw:"FRIDAY"i              !ident_part { return loc(createKeyword(kw)); }
 FROM                = kw:"FROM"i                !ident_part { return loc(createKeyword(kw)); }
 FULL                = kw:"FULL"i                !ident_part { return loc(createKeyword(kw)); }

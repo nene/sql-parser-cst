@@ -35,6 +35,7 @@ import { transactionMap } from "./transaction";
 import { triggerMap } from "./trigger";
 import { truncateMap } from "./truncate";
 import { updateMap } from "./update";
+import { vacuumMap } from "./vacuum";
 import { viewMap } from "./view";
 import { frameMap } from "./window_frame";
 import { FullTransformMap } from "../cstTransformer";
@@ -97,6 +98,7 @@ export const transformMap: FullTransformMap<string> = {
   ...preparedStatementsMap,
   ...publicationMap,
   ...subscriptionMap,
+  ...vacuumMap,
   ...otherClausesMap,
 
   // DB-specific statements
