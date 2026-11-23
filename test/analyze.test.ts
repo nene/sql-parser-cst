@@ -20,6 +20,11 @@ describe("analyze", () => {
     it("supports ONLY and * inheritance modifiers", () => {
       testWc("ANALYZE tbl1 *, ONLY tbl2");
     });
+
+    it("supports columns after table name", () => {
+      testWc("ANALYZE tbl1 (col1, col2), tbl2 (col3)");
+      testWc("ANALYZE ONLY tbl1 (col1, col2), tbl2 * (col3)");
+    });
   });
 
   dialect(["mysql", "mariadb"], () => {

@@ -63,6 +63,7 @@ export type AllSelectNodes =
   | NotIndexedTable
   | LateralDerivedTable
   | PartitionedTable
+  | TableWithColumns
   | TableWithInheritance
   | TableWithoutInheritance
   | FuncCallWithColumnDefinitions
@@ -476,6 +477,15 @@ export interface PartitionedTable extends BaseNode {
   table: EntityName | Alias<EntityName>;
   partitionKw: Keyword<"PARTITION">;
   partitions: ParenExpr<ListExpr<Identifier>>;
+}
+
+// Used by PostgreSQL (possibly needed elsewhere as well)
+// Not used within SELECT, but closely related to RelationExpr,
+// so makes sense to keep in the same file.
+export interface TableWithColumns extends BaseNode {
+  type: "table_with_columns";
+  table: RelationExpr;
+  columns?: ParenExpr<ListExpr<Identifier>>;
 }
 
 // PostgreSQL syntax: table_name *

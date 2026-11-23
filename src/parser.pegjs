@@ -735,6 +735,15 @@ table_factor
   / rows_from_expr
   / relation_expr
 
+table_with_columns
+  = table:relation_expr columns:(__ paren$list$column)? {
+    return {
+      type: "table_with_columns",
+      table,
+      columns: read(columns),
+    };
+  }
+
 relation_expr
   = pg_table_with_inheritance
   / pg_table_without_inheritance
@@ -4869,7 +4878,7 @@ drop_policy_stmt
  * ------------------------------------------------------------------------------------ *
  */
 analyze_stmt
-  = kw:ANALYZE tKw:(__ TABLE)? tables:(__ list$relation_expr)? {
+  = kw:ANALYZE tKw:(__ TABLE)? tables:(__ list$table_with_columns)? {
     return loc({
       type: "analyze_stmt",
       analyzeKw: kw,
@@ -8752,6 +8761,7 @@ list$sort_specification = .
 list$string_literal = .
 list$table_func_call = .
 list$table_option_postgresql = .
+list$table_with_columns = .
 list$tablesample_arg = .
 list$transaction_mode = .
 list$transform_type = .
