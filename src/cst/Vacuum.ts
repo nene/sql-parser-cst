@@ -2,7 +2,7 @@ import { BaseNode, Keyword } from "./Base";
 import { Identifier } from "./Expr";
 import { StringLiteral } from "./Literal";
 
-export type AllVacuumNodes = VacuumStmt;
+export type AllVacuumNodes = AllVacuumStatements | VacuumIntoClause;
 
 export type AllVacuumStatements = VacuumStmt;
 
@@ -11,6 +11,12 @@ export interface VacuumStmt extends BaseNode {
   type: "vacuum_stmt";
   vacuumKw: Keyword<"VACUUM">;
   schema?: Identifier;
-  intoKw?: Keyword<"INTO">;
-  file?: StringLiteral;
+  into?: VacuumIntoClause;
+}
+
+// SQLite
+export interface VacuumIntoClause extends BaseNode {
+  type: "vacuum_into_clause";
+  intoKw: Keyword<"INTO">;
+  file: StringLiteral;
 }

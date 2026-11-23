@@ -4926,20 +4926,21 @@ explain_kw
  * ------------------------------------------------------------------------------------ *
  */
 vacuum_stmt
-  = kw:(VACUUM __) schema:(ident __)? intoKw:(INTO __) file:string_literal {
+  = kw:VACUUM schema:(__ ident)? into:(__ vacuum_into_clause)? {
     return loc({
       type: "vacuum_stmt",
       vacuumKw: read(kw),
       schema: read(schema),
-      intoKw: read(intoKw),
-      file,
+      into: read(into),
     });
   }
-  / kw:(VACUUM __) schema:ident? {
+
+vacuum_into_clause
+  = intoKw:(INTO __) file:string_literal {
     return loc({
-      type: "vacuum_stmt",
-      vacuumKw: read(kw),
-      schema: read(schema),
+      type: "vacuum_into_clause",
+      intoKw: read(intoKw),
+      file,
     });
   }
 
