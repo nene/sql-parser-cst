@@ -1,7 +1,7 @@
 import { BaseNode, Keyword } from "../Base";
 import { TableOption } from "../CreateTable";
 import { Expr, Identifier, ListExpr, MemberExpr, ParenExpr } from "../Expr";
-import { StringLiteral } from "../Literal";
+import { BooleanLiteral, NumberLiteral, StringLiteral } from "../Literal";
 
 export type AllPostgresqlNodes =
   | PostgresqlOperatorExpr
@@ -37,8 +37,13 @@ export interface PostgresqlOptions extends BaseNode {
 
 export interface PostgresqlOptionElement extends BaseNode {
   type: "postgresql_option_element";
-  name: Identifier;
-  value: StringLiteral;
+  name: Keyword;
+  value?:
+    | StringLiteral
+    | NumberLiteral
+    | BooleanLiteral
+    | PostgresqlBooleanOnOffLiteral
+    | Keyword;
 }
 
 export interface PostgresqlWithOptions extends BaseNode {

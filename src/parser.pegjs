@@ -4879,7 +4879,7 @@ drop_policy_stmt
  */
 analyze_stmt
   = kw:ANALYZE verboseKw:(__ VERBOSE)?
-    options:(__ paren$list$analyze_option)?
+    options:(__ paren$list$postgresql_option_element)?
     tableKw:(__ TABLE)? tables:(__ list$table_with_columns)? {
       return loc({
         type: "analyze_stmt",
@@ -4891,25 +4891,6 @@ analyze_stmt
       });
     }
 
-analyze_option
-  = name:analyze_option_name value:(__ analyze_option_value)? {
-    return loc({
-      type: "analyze_option",
-      name,
-      value: read(value),
-    });
-  }
-
-analyze_option_name
-  = VERBOSE
-  / SKIP_LOCKED
-  / BUFFER_USAGE_LIMIT
-
-analyze_option_value
-  = boolean_literal
-  / postgresql_boolean_on_off_literal
-  / number_literal
-
 /**
  * ------------------------------------------------------------------------------------ *
  *                                                                                      *
@@ -4919,7 +4900,7 @@ analyze_option_value
  */
 explain_stmt
   = kw:(explain_kw __) anKw:(ANALYZE __)? verboseKw:(VERBOSE __)? qpKw:(QUERY __ PLAN __)?
-    options:(paren$list$explain_option __)?
+    options:(paren$list$postgresql_option_element __)?
     stmt:statement {
       return loc({
         type: "explain_stmt",
@@ -4936,37 +4917,6 @@ explain_kw
   = EXPLAIN
   / kw:DESCRIBE &mysql { return kw; }
   / kw:DESC &mysql { return kw; }
-
-explain_option
-  = name:explain_option_name value:(__ explain_option_value)? {
-    return loc({
-      type: "explain_option",
-      name,
-      value: read(value),
-    });
-  }
-
-explain_option_name
-  = ANALYZE
-  / VERBOSE
-  / COSTS
-  / SETTINGS
-  / GENERIC_PLAN
-  / BUFFERS
-  / SERIALIZE
-  / WAL
-  / TIMING
-  / SUMMARY
-  / MEMORY
-  / IO
-  / FORMAT
-
-explain_option_value
-  = boolean_literal
-  / postgresql_boolean_on_off_literal
-  / number_literal
-  / string_literal
-  / NONE / TEXT / BINARY / XML / JSON / YAML
 
 /**
  * ------------------------------------------------------------------------------------ *
@@ -6827,13 +6777,20 @@ postgresql_options
   }
 
 postgresql_option_element
-  = name:(ident __) value:string_literal {
+  = name:keyword value:(__ postgresql_option_value)? {
     return loc({
       type: "postgresql_option_element",
-      name: read(name),
-      value,
+      name,
+      value: read(value)
     });
   }
+
+postgresql_option_value
+  = string_literal
+  / number_literal
+  / boolean_literal
+  / postgresql_boolean_on_off_literal
+  / keyword
 
 postgresql_operator_class
   = &postgres name:member_expr options:(__ paren$list$table_option_postgresql)? {
@@ -8672,7 +8629,6 @@ paren$join_expr = .
 paren$list$alias$column = .
 paren$list$alias$expr = .
 paren$list$alias$paren$list$column = .
-paren$list$analyze_option = .
 paren$list$column = .
 paren$list$column_definition = .
 paren$list$create_definition = .
@@ -8680,7 +8636,6 @@ paren$list$data_type = .
 paren$list$entity_name = .
 paren$list$equals_expr = .
 paren$list$exclusion_param = .
-paren$list$explain_option = .
 paren$list$expr = .
 paren$list$expr_or_default = .
 paren$list$expr_or_explicit_alias = .
@@ -8743,7 +8698,6 @@ list$all_publication_object = .
 list$alter_action = .
 list$alter_view_action = .
 list$alter_type_action = .
-list$analyze_option = .
 list$column = .
 list$column_assignment = .
 list$column_definition = .
@@ -8755,7 +8709,6 @@ list$delete_clause_table = .
 list$entity_name = .
 list$equals_expr = .
 list$exclusion_param = .
-list$explain_option = .
 list$expr = .
 list$expr_or_default = .
 list$expr_or_explicit_alias = .

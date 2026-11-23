@@ -12,5 +12,4 @@ export const explainMap: FullTransformMap<string, AllExplainNodes> = {
       node.options,
       node.statement,
     ]),
-  explain_option: (node) => show([node.name, node.value]),
 };

@@ -1,23 +1,16 @@
 import { BaseNode, Keyword } from "./Base";
 import { ListExpr, ParenExpr } from "./Expr";
-import { BooleanLiteral, NumberLiteral } from "./Literal";
-import { PostgresqlBooleanOnOffLiteral } from "./Node";
+import { PostgresqlOptionElement } from "./Node";
 import { TableWithColumns } from "./Select";
 
-export type AllAnalyzeNodes = AnalyzeStmt | AnalyzeOption;
+export type AllAnalyzeNodes = AnalyzeStmt;
 
 // ANALYZE
 export interface AnalyzeStmt extends BaseNode {
   type: "analyze_stmt";
   analyzeKw: Keyword<"ANALYZE">;
   verboseKw?: Keyword<"VERBOSE">;
-  options?: ParenExpr<ListExpr<AnalyzeOption>>; // PostgreSQL
+  options?: ParenExpr<ListExpr<PostgresqlOptionElement>>; // PostgreSQL
   tableKw?: Keyword<"TABLE">;
   tables: ListExpr<TableWithColumns>;
-}
-
-export interface AnalyzeOption extends BaseNode {
-  type: "analyze_option";
-  name: Keyword<"VERBOSE" | "SKIP_LOCKED" | "BUFFER_USAGE_LIMIT">;
-  value?: BooleanLiteral | PostgresqlBooleanOnOffLiteral | NumberLiteral;
 }

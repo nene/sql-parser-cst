@@ -11,5 +11,4 @@ export const analyzeMap: FullTransformMap<string, AllAnalyzeNodes> = {
       node.tableKw,
       node.tables,
     ]),
-  analyze_option: (node) => show([node.name, node.value]),
 };
