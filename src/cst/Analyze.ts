@@ -9,8 +9,8 @@ export type AllAnalyzeNodes = AnalyzeStmt;
 export interface AnalyzeStmt extends BaseNode {
   type: "analyze_stmt";
   analyzeKw: Keyword<"ANALYZE">;
-  verboseKw?: Keyword<"VERBOSE">;
+  verboseKw?: Keyword<"VERBOSE">; // PostgreSQL
   options?: ParenExpr<ListExpr<PostgresqlOptionElement>>; // PostgreSQL
-  tableKw?: Keyword<"TABLE">;
+  tableKw?: Keyword<"TABLE">; // MySQL
   tables: ListExpr<TableWithColumns>;
 }
