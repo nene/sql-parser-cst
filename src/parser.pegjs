@@ -4878,11 +4878,12 @@ drop_policy_stmt
  * ------------------------------------------------------------------------------------ *
  */
 analyze_stmt
-  = kw:ANALYZE tKw:(__ TABLE)? tables:(__ list$table_with_columns)? {
+  = kw:ANALYZE verboseKw:(__ VERBOSE)? tableKw:(__ TABLE)? tables:(__ list$table_with_columns)? {
     return loc({
       type: "analyze_stmt",
       analyzeKw: kw,
-      tableKw: read(tKw),
+      verboseKw: read(verboseKw),
+      tableKw: read(tableKw),
       tables: read(tables) || [],
     });
   }

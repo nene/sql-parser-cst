@@ -6,6 +6,7 @@ import { TableWithColumns } from "./Select";
 export interface AnalyzeStmt extends BaseNode {
   type: "analyze_stmt";
   analyzeKw: Keyword<"ANALYZE">;
+  verboseKw?: Keyword<"VERBOSE">;
   tableKw?: Keyword<"TABLE">;
   tables: ListExpr<TableWithColumns>;
 }

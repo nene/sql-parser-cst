@@ -25,6 +25,10 @@ describe("analyze", () => {
       testWc("ANALYZE tbl1 (col1, col2), tbl2 (col3)");
       testWc("ANALYZE ONLY tbl1 (col1, col2), tbl2 * (col3)");
     });
+
+    it("supports ANALYZE VERBOSE", () => {
+      testWc("ANALYZE VERBOSE tbl1");
+    });
   });
 
   dialect(["mysql", "mariadb"], () => {
