@@ -4869,7 +4869,7 @@ drop_policy_stmt
  * ------------------------------------------------------------------------------------ *
  */
 analyze_stmt
-  = kw:ANALYZE tKw:(__ TABLE)? tables:(__ list$entity_name)? {
+  = kw:ANALYZE tKw:(__ TABLE)? tables:(__ list$relation_expr)? {
     return loc({
       type: "analyze_stmt",
       analyzeKw: kw,

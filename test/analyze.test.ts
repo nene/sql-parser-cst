@@ -16,6 +16,10 @@ describe("analyze", () => {
     it("supports ANALYZE with multiple tables", () => {
       testWc("ANALYZE tbl1, tbl2, tbl3");
     });
+
+    it("supports ONLY and * inheritance modifiers", () => {
+      testWc("ANALYZE tbl1 *, ONLY tbl2");
+    });
   });
 
   dialect(["mysql", "mariadb"], () => {
