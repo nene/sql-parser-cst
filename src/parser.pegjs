@@ -259,6 +259,7 @@ statement_postgres
   / show_parameter_stmt
   / truncate_stmt
   / update_stmt
+  / vacuum_table_stmt
 
 statement_plpgsql
   = assert_stmt
@@ -4941,6 +4942,15 @@ vacuum_into_clause
       type: "vacuum_into_clause",
       intoKw: read(intoKw),
       file,
+    });
+  }
+
+vacuum_table_stmt
+  = kw:VACUUM tables:(__ list$table_with_columns)? {
+    return loc({
+      type: "vacuum_table_stmt",
+      vacuumKw: read(kw),
+      tables: read(tables),
     });
   }
 
