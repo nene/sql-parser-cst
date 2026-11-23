@@ -1,6 +1,6 @@
 import { BaseNode, Keyword } from "../Base";
 import { Expr, Identifier, ParenExpr, EntityName } from "../Expr";
-import { Literal, StringLiteral } from "../Literal";
+import { Literal } from "../Literal";
 
 export type AllSqliteNodes =
   | AllSqliteStatements
@@ -11,7 +11,6 @@ export type AllSqliteNodes =
 export type AllSqliteStatements =
   | AttachDatabaseStmt
   | DetachDatabaseStmt
-  | VacuumStmt
   | PragmaStmt;
 
 export interface AttachDatabaseStmt extends BaseNode {
@@ -28,14 +27,6 @@ export interface DetachDatabaseStmt extends BaseNode {
   detachKw: Keyword<"DETACH">;
   databaseKw?: Keyword<"DATABASE">;
   schema: Identifier;
-}
-
-export interface VacuumStmt extends BaseNode {
-  type: "vacuum_stmt";
-  vacuumKw: Keyword<"VACUUM">;
-  schema?: Identifier;
-  intoKw?: Keyword<"INTO">;
-  file?: StringLiteral;
 }
 
 export interface PragmaStmt extends BaseNode {

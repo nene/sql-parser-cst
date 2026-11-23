@@ -19,6 +19,7 @@ import { AllSubscriptionNodes } from "./Subscription";
 import { AllTransactionStatements } from "./Transaction";
 import { AllTriggerStatements } from "./Trigger";
 import { AllTypeStatements } from "./Type";
+import { AllVacuumStatements } from "./Vacuum";
 import { AllViewStatements } from "./View";
 import { AnalyzeStmt } from "./Analyze";
 import { CompoundSelectStmt, SelectStmt } from "./Select";
@@ -55,6 +56,7 @@ export type Statement =
   | AllTransactionStatements
   | AllTriggerStatements
   | AllTypeStatements
+  | AllVacuumStatements
   | AllViewStatements
   | AnalyzeStmt
   | CompoundSelectStmt

@@ -46,6 +46,7 @@ export * from "./Trigger";
 export * from "./Truncate";
 export * from "./Type";
 export * from "./Update";
+export * from "./Vacuum";
 export * from "./View";
 export * from "./WindowFrame";
 
@@ -91,6 +92,7 @@ import { AllTransactionNodes } from "./Transaction";
 import { AllTriggerNodes } from "./Trigger";
 import { AllTypeNodes } from "./Type";
 import { AllUpdateNodes } from "./Update";
+import { AllVacuumNodes } from "./Vacuum";
 import { AllViewNodes } from "./View";
 import { Program } from "./Program";
 import { Statement } from "./Statement";
@@ -138,6 +140,7 @@ export type Node =
   | AllTriggerNodes
   | AllTypeNodes
   | AllUpdateNodes
+  | AllVacuumNodes
   | AllViewNodes
   | Keyword
   | Program

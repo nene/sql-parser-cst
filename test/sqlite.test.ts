@@ -16,15 +16,6 @@ describe("SQLite specific statements", () => {
       });
     });
 
-    describe("VACUUM", () => {
-      it("supports VACUUM statement", () => {
-        testWc("VACUUM");
-        testWc("VACUUM my_schema");
-        testWc("VACUUM INTO '/my/file.db'");
-        testWc("VACUUM my_schema INTO '/my/file.db'");
-      });
-    });
-
     describe("PRAGMA", () => {
       it("supports quering PRAGMA name", () => {
         testWc("PRAGMA function_list");

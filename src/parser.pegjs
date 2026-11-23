@@ -4921,6 +4921,31 @@ explain_kw
 /**
  * ------------------------------------------------------------------------------------ *
  *                                                                                      *
+ * VACUUM                                                                               *
+ *                                                                                      *
+ * ------------------------------------------------------------------------------------ *
+ */
+vacuum_stmt
+  = kw:(VACUUM __) schema:(ident __)? intoKw:(INTO __) file:string_literal {
+    return loc({
+      type: "vacuum_stmt",
+      vacuumKw: read(kw),
+      schema: read(schema),
+      intoKw: read(intoKw),
+      file,
+    });
+  }
+  / kw:(VACUUM __) schema:ident? {
+    return loc({
+      type: "vacuum_stmt",
+      vacuumKw: read(kw),
+      schema: read(schema),
+    });
+  }
+
+/**
+ * ------------------------------------------------------------------------------------ *
+ *                                                                                      *
  * Transactions                                                                         *
  *                                                                                      *
  * ------------------------------------------------------------------------------------ *
@@ -6042,24 +6067,6 @@ detach_database_stmt
       detachKw: read(kw),
       databaseKw: read(dbKw),
       schema,
-    });
-  }
-
-vacuum_stmt
-  = kw:(VACUUM __) schema:(ident __)? intoKw:(INTO __) file:string_literal {
-    return loc({
-      type: "vacuum_stmt",
-      vacuumKw: read(kw),
-      schema: read(schema),
-      intoKw: read(intoKw),
-      file,
-    });
-  }
-  / kw:(VACUUM __) schema:ident? {
-    return loc({
-      type: "vacuum_stmt",
-      vacuumKw: read(kw),
-      schema: read(schema),
     });
   }
 
