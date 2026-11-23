@@ -1,6 +1,7 @@
 import { BaseNode, Keyword } from "./Base";
-import { Identifier, ListExpr } from "./Expr";
+import { Identifier, ListExpr, ParenExpr } from "./Expr";
 import { StringLiteral } from "./Literal";
+import { PostgresqlOptionElement } from "./Node";
 import { TableWithColumns } from "./Select";
 
 export type AllVacuumNodes = AllVacuumStatements | VacuumIntoClause;
@@ -19,6 +20,7 @@ export interface VacuumDatabaseStmt extends BaseNode {
 export interface VacuumTableStmt extends BaseNode {
   type: "vacuum_table_stmt";
   vacuumKw: Keyword<"VACUUM">;
+  options?: ParenExpr<ListExpr<PostgresqlOptionElement>>;
   tables?: ListExpr<TableWithColumns>;
 }
 

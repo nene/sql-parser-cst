@@ -4946,10 +4946,11 @@ vacuum_into_clause
   }
 
 vacuum_table_stmt
-  = kw:VACUUM tables:(__ list$table_with_columns)? {
+  = kw:VACUUM options:(__ paren$list$postgresql_option_element)? tables:(__ list$table_with_columns)? {
     return loc({
       type: "vacuum_table_stmt",
       vacuumKw: read(kw),
+      options: read(options),
       tables: read(tables),
     });
   }
