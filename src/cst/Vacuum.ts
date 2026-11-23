@@ -4,11 +4,11 @@ import { StringLiteral } from "./Literal";
 
 export type AllVacuumNodes = AllVacuumStatements | VacuumIntoClause;
 
-export type AllVacuumStatements = VacuumStmt;
+export type AllVacuumStatements = VacuumDatabaseStmt;
 
 // SQLite
-export interface VacuumStmt extends BaseNode {
-  type: "vacuum_stmt";
+export interface VacuumDatabaseStmt extends BaseNode {
+  type: "vacuum_database_stmt";
   vacuumKw: Keyword<"VACUUM">;
   schema?: Identifier;
   into?: VacuumIntoClause;

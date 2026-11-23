@@ -96,7 +96,7 @@ statement_sqlite
   / pragma_stmt
   / reindex_stmt
   / update_stmt
-  / vacuum_stmt
+  / vacuum_database_stmt
 
 statement_mysql
   = alter_schema_stmt
@@ -4925,10 +4925,10 @@ explain_kw
  *                                                                                      *
  * ------------------------------------------------------------------------------------ *
  */
-vacuum_stmt
+vacuum_database_stmt
   = kw:VACUUM schema:(__ ident)? into:(__ vacuum_into_clause)? {
     return loc({
-      type: "vacuum_stmt",
+      type: "vacuum_database_stmt",
       vacuumKw: read(kw),
       schema: read(schema),
       into: read(into),
