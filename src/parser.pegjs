@@ -735,6 +735,15 @@ table_factor
   / rows_from_expr
   / relation_expr
 
+table_with_columns
+  = table:relation_expr columns:(__ paren$list$column)? {
+    return {
+      type: "table_with_columns",
+      table,
+      columns: read(columns),
+    };
+  }
+
 relation_expr
   = pg_table_with_inheritance
   / pg_table_without_inheritance
@@ -4869,14 +4878,37 @@ drop_policy_stmt
  * ------------------------------------------------------------------------------------ *
  */
 analyze_stmt
-  = kw:ANALYZE tKw:(__ TABLE)? tables:(__ list$entity_name)? {
+  = kw:ANALYZE verboseKw:(__ VERBOSE)?
+    options:(__ paren$list$analyze_option)?
+    tableKw:(__ TABLE)? tables:(__ list$table_with_columns)? {
+      return loc({
+        type: "analyze_stmt",
+        analyzeKw: kw,
+        verboseKw: read(verboseKw),
+        options: read(options),
+        tableKw: read(tableKw),
+        tables: read(tables),
+      });
+    }
+
+analyze_option
+  = name:analyze_option_name value:(__ analyze_option_value)? {
     return loc({
-      type: "analyze_stmt",
-      analyzeKw: kw,
-      tableKw: read(tKw),
-      tables: read(tables) || [],
+      type: "analyze_option",
+      name,
+      value: read(value),
     });
   }
+
+analyze_option_name
+  = VERBOSE
+  / SKIP_LOCKED
+  / BUFFER_USAGE_LIMIT
+
+analyze_option_value
+  = boolean_literal
+  / postgresql_boolean_on_off_literal
+  / number_literal
 
 /**
  * ------------------------------------------------------------------------------------ *
@@ -8640,6 +8672,7 @@ paren$join_expr = .
 paren$list$alias$column = .
 paren$list$alias$expr = .
 paren$list$alias$paren$list$column = .
+paren$list$analyze_option = .
 paren$list$column = .
 paren$list$column_definition = .
 paren$list$create_definition = .
@@ -8710,6 +8743,7 @@ list$all_publication_object = .
 list$alter_action = .
 list$alter_view_action = .
 list$alter_type_action = .
+list$analyze_option = .
 list$column = .
 list$column_assignment = .
 list$column_definition = .
@@ -8752,6 +8786,7 @@ list$sort_specification = .
 list$string_literal = .
 list$table_func_call = .
 list$table_option_postgresql = .
+list$table_with_columns = .
 list$tablesample_arg = .
 list$transaction_mode = .
 list$transform_type = .
@@ -9835,6 +9870,7 @@ BOOLEAN             = kw:"BOOLEAN"i             !ident_part { return loc(createK
 BREADTH             = kw:"BREADTH"i             !ident_part { return loc(createKeyword(kw)); }
 BREAK               = kw:"BREAK"i               !ident_part { return loc(createKeyword(kw)); }
 BTREE               = kw:"BTREE"i               !ident_part { return loc(createKeyword(kw)); }
+BUFFER_USAGE_LIMIT  = kw:"BUFFER_USAGE_LIMIT"i  !ident_part { return loc(createKeyword(kw)); }
 BUFFERS             = kw:"BUFFERS"i             !ident_part { return loc(createKeyword(kw)); }
 BY                  = kw:"BY"i                  !ident_part { return loc(createKeyword(kw)); }
 BYPASSRLS           = kw:"BYPASSRLS"i           !ident_part { return loc(createKeyword(kw)); }
@@ -10315,6 +10351,7 @@ SIGNED              = kw:"SIGNED"i              !ident_part { return loc(createK
 SIMILAR             = kw:"SIMILAR"i             !ident_part { return loc(createKeyword(kw)); }
 SIMPLE              = kw:"SIMPLE"i              !ident_part { return loc(createKeyword(kw)); }
 SKIP                = kw:"SKIP"i                !ident_part { return loc(createKeyword(kw)); }
+SKIP_LOCKED         = kw:"SKIP_LOCKED"i         !ident_part { return loc(createKeyword(kw)); }
 SLICE               = kw:"SLICE"i               !ident_part { return loc(createKeyword(kw)); }
 SMALLINT            = kw:"SMALLINT"i            !ident_part { return loc(createKeyword(kw)); }
 SNAPSHOT            = kw:"SNAPSHOT"i            !ident_part { return loc(createKeyword(kw)); }

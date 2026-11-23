@@ -52,6 +52,7 @@ export * from "./WindowFrame";
 import { Alias } from "./Alias";
 import { AllAlterActionNodes } from "./AlterAction";
 import { AllAlterTableNodes } from "./AlterTable";
+import { AllAnalyzeNodes } from "./Analyze";
 import { AllBigqueryNodes } from "./dialects/Bigquery";
 import { AllCastNodes } from "./Cast";
 import { AllColumns, Keyword } from "./Base";
@@ -98,6 +99,7 @@ export type Node =
   | Alias
   | AllAlterActionNodes
   | AllAlterTableNodes
+  | AllAnalyzeNodes
   | AllBigqueryNodes
   | AllCastNodes
   | AllColumns

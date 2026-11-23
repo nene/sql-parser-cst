@@ -1,7 +1,15 @@
 import { show } from "../show";
-import { AnalyzeStmt } from "../cst/Node";
+import { AllAnalyzeNodes } from "../cst/Node";
 import { FullTransformMap } from "../cstTransformer";
 
-export const analyzeMap: FullTransformMap<string, AnalyzeStmt> = {
-  analyze_stmt: (node) => show([node.analyzeKw, node.tableKw, node.tables]),
+export const analyzeMap: FullTransformMap<string, AllAnalyzeNodes> = {
+  analyze_stmt: (node) =>
+    show([
+      node.analyzeKw,
+      node.verboseKw,
+      node.options,
+      node.tableKw,
+      node.tables,
+    ]),
+  analyze_option: (node) => show([node.name, node.value]),
 };
