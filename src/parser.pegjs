@@ -7829,7 +7829,7 @@ regexp_op_kw
   / &sqlite kw:MATCH { return kw; }
 
 escape_expr
-  = left:sub_comparison_expr c1:__ op:ESCAPE c2:__ right:string_literal {
+  = left:sub_comparison_expr c1:__ op:ESCAPE c2:__ right:expr {
     return loc(createBinaryExpr(left, c1, op, c2, right));
   }
   / sub_comparison_expr

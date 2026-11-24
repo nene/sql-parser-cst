@@ -11,6 +11,11 @@ describe("string operators", () => {
       testExprWc(`'foobar' LIKE 'percentage|%' ESCAPE '|'`);
       testExprWc(`'foobar' NOT LIKE 'foo^_bar' ESCAPE '^'`);
     });
+
+    it("supports LIKE with ESCAPE <any expression>", () => {
+      testExprWc(`'foobar' LIKE 'foo' ESCAPE '%' || ''`);
+      testExprWc(`'foobar' LIKE 'foo' ESCAPE x`);
+    });
   });
 
   dialect(["postgresql", "plpgsql"], () => {
