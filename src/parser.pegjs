@@ -9594,14 +9594,14 @@ number_literal "number"
   / n:number_literal_oct &postgres { return n; }
 
 number_literal_hex
-  = &postgres "0x" pg_hex_digits {
+  = &(postgres / sqlite) "0x" pg_hex_digits {
     return loc({
       type: "number_literal",
       text: text(),
       value: parseInt(text().replace(/_/g, ""), 16),
     });
   }
-  / !postgres "0x" hex_digit+ {
+  / !(postgres / sqlite) "0x" hex_digit+ {
     return loc({
       type: "number_literal",
       text: text(),
@@ -9648,14 +9648,14 @@ number_literal_oct
   }
 
 number_literal_decimal
-  = &postgres (pg_digits ("." pg_digits?)? / "." pg_digits) pg_exp? !ident_start {
+  = &(postgres / sqlite) (pg_digits ("." pg_digits?)? / "." pg_digits) pg_exp? !ident_start {
     return loc({
       type: "number_literal",
       text: text(),
       value: parseFloat(text().replace(/_/g, "")),
     });
   }
-  / !postgres (digits ("." digits?)? / "." digits) exp? !ident_start {
+  / !(postgres / sqlite) (digits ("." digits?)? / "." digits) exp? !ident_start {
     return loc({
       type: "number_literal",
       text: text(),
@@ -9663,7 +9663,7 @@ number_literal_decimal
     });
   }
 
-// PostgreSQL allows for underscores in numbers
+// PostgreSQL and SQLite allows for underscores in numbers
 pg_exp = exp ("_" digits)*
 pg_digits = digits ("_" digits)*
 

@@ -103,7 +103,7 @@ describe("number literal", () => {
     });
   });
 
-  dialect(["postgresql", "plpgsql"], () => {
+  dialect(["postgresql", "plpgsql", "sqlite"], () => {
     function testNumberLiteral(text: string, value: number) {
       expect(parseExpr(text)).toEqual({ type: "number_literal", text, value });
     }
@@ -119,12 +119,14 @@ describe("number literal", () => {
       testNumberLiteral(`0xFFF_000`, 0xfff000);
     });
 
-    it("parses underscores in octal literal", () => {
-      testNumberLiteral(`0o77_66_00`, 0o776600);
-    });
+    dialect(["postgresql", "plpgsql"], () => {
+      it("parses underscores in octal literal", () => {
+        testNumberLiteral(`0o77_66_00`, 0o776600);
+      });
 
-    it("parses underscores in bit literal", () => {
-      testNumberLiteral(`0b0011_1010_1101_0010`, 0b0011101011010010);
+      it("parses underscores in bit literal", () => {
+        testNumberLiteral(`0b0011_1010_1101_0010`, 0b0011101011010010);
+      });
     });
 
     function parseNumberLiteral(text: string) {
