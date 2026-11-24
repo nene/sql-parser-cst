@@ -142,6 +142,12 @@ describe("comparison operators", () => {
       testExprWc(`7 NOT IN (SELECT 1)`);
     });
 
+    dialect("sqlite", () => {
+      it("supports IN () with empty list", () => {
+        testExprWc(`7 IN ( )`);
+      });
+    });
+
     dialect("bigquery", () => {
       it("supports IN UNNEST (array) operator", () => {
         testExprWc(`7 IN UNNEST ([1, 2, 3])`);

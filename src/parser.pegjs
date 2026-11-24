@@ -7757,7 +7757,7 @@ _comparison_expr_right
   / tail:(__ comparison_op __ (x:quantifier_expr &mysql { return x; } / sub_comparison_expr))+ {
     return (head: any) => createBinaryExprChain(head, tail);
   }
-  / c1:__ op:(NOT __ IN / IN) c2:__ right:(paren$list$expr / sub_comparison_expr / &bigquery e:unnest_expr { return e; }) {
+  / c1:__ op:(NOT __ IN / IN) c2:__ right:(paren$list$expr / paren$empty_list / sub_comparison_expr / &bigquery e:unnest_expr { return e; }) {
     return (left: any) => createBinaryExpr(left, c1, read(op), c2, right);
   }
   / c1:__ op:(NOT __ LIKE / LIKE) c2:__ right:(&bigquery x:quantifier_expr { return x; } / escape_expr) {
