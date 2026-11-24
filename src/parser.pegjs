@@ -9648,14 +9648,14 @@ number_literal_oct
   }
 
 number_literal_decimal
-  = &postgres (pg_digits pg_frac? / pg_frac) pg_exp? !ident_start {
+  = &postgres (pg_digits ("." pg_digits)? / "." pg_digits) pg_exp? !ident_start {
     return loc({
       type: "number_literal",
       text: text(),
       value: parseFloat(text().replace(/_/g, "")),
     });
   }
-  / !postgres (digits frac? / frac) exp? !ident_start {
+  / !postgres (digits ("." digits)? / "." digits) exp? !ident_start {
     return loc({
       type: "number_literal",
       text: text(),
@@ -9665,15 +9665,11 @@ number_literal_decimal
 
 // PostgreSQL allows for underscores in numbers
 pg_exp = exp ("_" digits)*
-pg_frac = "." pg_digits
 pg_digits = digits ("_" digits)*
 
 pg_hex_digits = hex_digit+ ("_" hex_digit+)*
 pg_oct_digits = [0-7]+ ("_" [0-7]+)*
 pg_bit_digits = [01]+ ("_" [01]+)*
-
-frac
-  = "." digits
 
 exp
   = [eE] [+-]? digits
