@@ -9594,7 +9594,7 @@ number_literal "number"
   / n:number_literal_oct &postgres { return n; }
 
 number_literal_hex
-  = &(postgres / sqlite) "0x" pg_hex_digits {
+  = &(postgres / sqlite) "0x" uscr_hex_digits {
     return loc({
       type: "number_literal",
       text: text(),
@@ -9620,7 +9620,7 @@ blob_literal_hex
   }
 
 number_literal_bit
-  = "0b" chars:$pg_bit_digits {
+  = "0b" chars:$uscr_bit_digits {
     return loc({
       type: "number_literal",
       text: text(),
@@ -9639,7 +9639,7 @@ blob_literal_bit
   }
 
 number_literal_oct
-  = "0o" chars:$pg_oct_digits {
+  = "0o" chars:$uscr_oct_digits {
     return loc({
       type: "number_literal",
       text: text(),
@@ -9648,7 +9648,7 @@ number_literal_oct
   }
 
 number_literal_decimal
-  = &(postgres / sqlite) (pg_digits ("." pg_digits?)? / "." pg_digits) pg_exp? !ident_start {
+  = &(postgres / sqlite) (uscr_digits ("." uscr_digits?)? / "." uscr_digits) uscr_exp? !ident_start {
     return loc({
       type: "number_literal",
       text: text(),
@@ -9663,13 +9663,13 @@ number_literal_decimal
     });
   }
 
-// PostgreSQL and SQLite allows for underscores in numbers
-pg_exp = exp ("_" digits)*
-pg_digits = digits ("_" digits)*
+// PostgreSQL and SQLite allow for underscores in numbers
+uscr_exp = exp ("_" digits)*
+uscr_digits = digits ("_" digits)*
 
-pg_hex_digits = hex_digit+ ("_" hex_digit+)*
-pg_oct_digits = [0-7]+ ("_" [0-7]+)*
-pg_bit_digits = [01]+ ("_" [01]+)*
+uscr_hex_digits = hex_digit+ ("_" hex_digit+)*
+uscr_oct_digits = [0-7]+ ("_" [0-7]+)*
+uscr_bit_digits = [01]+ ("_" [01]+)*
 
 exp
   = [eE] [+-]? digits
