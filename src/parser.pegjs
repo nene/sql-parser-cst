@@ -9648,14 +9648,14 @@ number_literal_oct
   }
 
 number_literal_decimal
-  = &postgres (pg_digits ("." pg_digits)? / "." pg_digits) pg_exp? !ident_start {
+  = &postgres (pg_digits ("." pg_digits?)? / "." pg_digits) pg_exp? !ident_start {
     return loc({
       type: "number_literal",
       text: text(),
       value: parseFloat(text().replace(/_/g, "")),
     });
   }
-  / !postgres (digits ("." digits)? / "." digits) exp? !ident_start {
+  / !postgres (digits ("." digits?)? / "." digits) exp? !ident_start {
     return loc({
       type: "number_literal",
       text: text(),

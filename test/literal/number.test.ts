@@ -45,6 +45,17 @@ describe("number literal", () => {
     `);
   });
 
+  it("supports fractions without trailing digits", () => {
+    testExpr(`3.`);
+    expect(parseExpr(`3.`)).toMatchInlineSnapshot(`
+      {
+        "text": "3.",
+        "type": "number_literal",
+        "value": 3,
+      }
+    `);
+  });
+
   it("supports scientific notation", () => {
     testExpr(`123e15`);
     testExpr(`1.23E+13`);
