@@ -31,6 +31,10 @@ describe("SQLite specific statements", () => {
         testWc("PRAGMA my_schema.journal_mode = DELETE");
       });
 
+      it("supports setting PRAGMA value with negative number", () => {
+        testWc("PRAGMA cache_size = -2000");
+      });
+
       it("supports calling PRAGMA function", () => {
         testWc("PRAGMA optimize(0x02)");
         testWc("PRAGMA my_schema.integrity_check(my_table)");
@@ -38,6 +42,10 @@ describe("SQLite specific statements", () => {
 
       it("supports calling PRAGMA function with keyword", () => {
         testWc("PRAGMA my_schema.wal_checkpoint(FULL)");
+      });
+
+      it("supports calling PRAGMA function with negative number", () => {
+        testWc("PRAGMA my_schema.foo(-1)");
       });
     });
   });

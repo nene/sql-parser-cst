@@ -6118,6 +6118,7 @@ pragma_func_call
 
 pragma_value
   = kw:ident_name { return createKeyword(kw); }
+  / signed_number_literal
   / literal
 
 /**

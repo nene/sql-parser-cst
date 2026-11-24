@@ -1,6 +1,5 @@
 import { BaseNode, Keyword } from "../Base";
 import { Expr, Identifier, ParenExpr, EntityName } from "../Expr";
-import { Literal } from "../Literal";
 
 export type AllSqliteNodes =
   | AllSqliteStatements
@@ -38,11 +37,11 @@ export interface PragmaStmt extends BaseNode {
 export interface PragmaAssignment extends BaseNode {
   type: "pragma_assignment";
   name: EntityName;
-  value: Literal | Keyword;
+  value: Expr | Keyword;
 }
 
 export interface PragmaFuncCall extends BaseNode {
   type: "pragma_func_call";
   name: EntityName;
-  args: ParenExpr<Literal | Keyword>;
+  args: ParenExpr<Expr | Keyword>;
 }
