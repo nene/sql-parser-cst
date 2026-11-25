@@ -707,7 +707,15 @@ join_expr_right
       specification: read(spec),
     });
   }
-  / (&mysql / &postgres) c1:__ op:(natural_join / cross_join) right:(__ alias$table_factor) {
+  / !sqlite c1:__ op:cross_join right:(__ alias$table_factor) {
+    return (left: any) => ({
+      type: "join_expr",
+      left: trailing(left, c1),
+      operator: op,
+      right: read(right),
+    });
+  }
+  / (&mysql / &postgres) c1:__ op:natural_join right:(__ alias$table_factor) {
     return (left: any) => ({
       type: "join_expr",
       left: trailing(left, c1),
