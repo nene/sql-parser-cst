@@ -16,7 +16,7 @@ describe("join", () => {
     expect(show(join.right).trim()).toBe(`baz`);
   });
 
-  dialect(["mysql", "mariadb", "sqlite"], () => {
+  dialect(["mysql", "mariadb", "sqlite", "postgresql", "plpgsql"], () => {
     it("supports NATURAL JOIN", () => {
       testWc("SELECT c FROM t1 NATURAL JOIN t2");
     });
@@ -27,7 +27,7 @@ describe("join", () => {
     testWc("SELECT c FROM t1 LEFT OUTER JOIN t2");
   });
 
-  dialect(["mysql", "mariadb", "sqlite"], () => {
+  dialect(["mysql", "mariadb", "sqlite", "postgresql", "plpgsql"], () => {
     it("supports NATURAL LEFT [OUTER] JOIN", () => {
       testWc("SELECT c FROM t1 NATURAL LEFT JOIN t2");
       testWc("SELECT c FROM t1 NATURAL LEFT OUTER JOIN t2");
@@ -39,7 +39,7 @@ describe("join", () => {
     testWc("SELECT c FROM t1 RIGHT OUTER JOIN t2");
   });
 
-  dialect(["mysql", "mariadb", "sqlite"], () => {
+  dialect(["mysql", "mariadb", "sqlite", "postgresql", "plpgsql"], () => {
     it("supports NATURAL RIGHT [OUTER] JOIN", () => {
       testWc("SELECT c FROM t1 NATURAL RIGHT JOIN t2");
       testWc("SELECT c FROM t1 NATURAL RIGHT OUTER JOIN t2");
@@ -56,7 +56,7 @@ describe("join", () => {
     });
   });
 
-  dialect(["mysql", "mariadb", "sqlite"], () => {
+  dialect(["mysql", "mariadb", "sqlite", "postgresql", "plpgsql"], () => {
     it("supports NATURAL INNER JOIN", () => {
       testWc("SELECT c FROM t1 NATURAL INNER JOIN t2");
     });
@@ -79,7 +79,7 @@ describe("join", () => {
     });
   });
 
-  dialect("sqlite", () => {
+  dialect(["sqlite", "postgresql", "plpgsql"], () => {
     it("supports NATURAL FULL [OUTER] JOIN", () => {
       testWc("SELECT c FROM t1 NATURAL FULL JOIN t2");
       testWc("SELECT c FROM t1 NATURAL FULL OUTER JOIN t2");

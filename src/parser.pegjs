@@ -707,7 +707,7 @@ join_expr_right
       specification: read(spec),
     });
   }
-  / c1:__ op:(natural_join / cross_join) right:(__ alias$table_factor) {
+  / (&mysql / &sqlite / &postgres) c1:__ op:(natural_join / cross_join) right:(__ alias$table_factor) {
     return (left: any) => ({
       type: "join_expr",
       left: trailing(left, c1),
@@ -857,7 +857,7 @@ join_op
   / join_type
 
 natural_join
-  = kw:(NATURAL __) jt:join_type (&mysql / &sqlite) {
+  = kw:(NATURAL __) jt:join_type {
     return [read(kw), ...(jt instanceof Array ? jt : [jt])];
   }
 
