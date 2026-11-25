@@ -5859,7 +5859,7 @@ break_stmt
   }
 
 break_kw
-  = kw:LEAVE &(mysql / bigquery) { return kw; }
+  = kw:LEAVE (&mysql / &bigquery) { return kw; }
   / kw:BREAK &bigquery { return kw; }
   / kw:EXIT &plpgsql { return kw; }
 
@@ -5869,8 +5869,8 @@ continue_stmt
   }
 
 continue_kw
-  = kw:ITERATE &(mysql / bigquery) { return kw; }
-  / kw:CONTINUE &(bigquery / plpgsql) { return kw; }
+  = kw:ITERATE (&mysql / &bigquery) { return kw; }
+  / kw:CONTINUE (&bigquery / &plpgsql) { return kw; }
 
 call_stmt
   = kw:(CALL __) func:func_call {
@@ -9594,14 +9594,14 @@ number_literal "number"
   / n:number_literal_oct &postgres { return n; }
 
 number_literal_hex
-  = &(postgres / sqlite) "0x" uscr_hex_digits {
+  = (&postgres / &sqlite) "0x" uscr_hex_digits {
     return loc({
       type: "number_literal",
       text: text(),
       value: parseInt(text().replace(/_/g, ""), 16),
     });
   }
-  / !(postgres / sqlite) "0x" hex_digit+ {
+  / !(&postgres / &sqlite) "0x" hex_digit+ {
     return loc({
       type: "number_literal",
       text: text(),
@@ -9650,14 +9650,14 @@ number_literal_oct
 // Number may end with a decimal, but only with a single decimal.
 // Otherwise the parser will try to parse `1.` as number in the FOR x IN 1..10 loop.
 number_literal_decimal
-  = &(postgres / sqlite) (uscr_digits ("." uscr_digits / "." !".")? / "." uscr_digits) uscr_exp? !ident_start {
+  = (&postgres / &sqlite) (uscr_digits ("." uscr_digits / "." !".")? / "." uscr_digits) uscr_exp? !ident_start {
     return loc({
       type: "number_literal",
       text: text(),
       value: parseFloat(text().replace(/_/g, "")),
     });
   }
-  / !(postgres / sqlite) (digits ("." digits / "." !".")? / "." digits) exp? !ident_start {
+  / !(&postgres / &sqlite) (digits ("." digits / "." !".")? / "." digits) exp? !ident_start {
     return loc({
       type: "number_literal",
       text: text(),
