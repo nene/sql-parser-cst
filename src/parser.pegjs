@@ -697,8 +697,8 @@ join_expr_right
       right: read(right),
     });
   }
-  // Only SQLite supports cross-join together with join_specification, so parse this first
-  / &sqlite c1:__ op:cross_join right:(__ alias$table_factor) spec:(__ join_specification) {
+  // SQLite has its own extra-permissive JOIN syntax.
+  / &sqlite c1:__ op:sqlite_join right:(__ alias$table_factor) spec:(__ join_specification)? {
     return (left: any) => ({
       type: "join_expr",
       left: trailing(left, c1),
@@ -707,7 +707,7 @@ join_expr_right
       specification: read(spec),
     });
   }
-  / (&mysql / &sqlite / &postgres) c1:__ op:(natural_join / cross_join) right:(__ alias$table_factor) {
+  / (&mysql / &postgres) c1:__ op:(natural_join / cross_join) right:(__ alias$table_factor) {
     return (left: any) => ({
       type: "join_expr",
       left: trailing(left, c1),
@@ -715,7 +715,7 @@ join_expr_right
       right: read(right),
     });
   }
-  / c1:__ op:join_op right:(__ alias$table_factor) spec:(__ join_specification)? {
+  / !sqlite c1:__ op:join_op right:(__ alias$table_factor) spec:(__ join_specification)? {
     return (left: any) => ({
       type: "join_expr",
       left: trailing(left, c1),
@@ -875,7 +875,15 @@ join_type
 left_right_full_kw
   = LEFT
   / RIGHT
-  / kw:FULL (&sqlite / &bigquery / &postgres) { return kw; }
+  / kw:FULL (&bigquery / &postgres) { return kw; }
+
+sqlite_join
+  = kws:(sqlite_join_kw __)|0..3| joinKw:JOIN {
+    return [...kws.map(read), read(joinKw)];
+  }
+
+sqlite_join_kw
+  = CROSS / FULL / INNER / LEFT / NATURAL / OUTER / RIGHT
 
 join_specification
   = using_clause / on_clause

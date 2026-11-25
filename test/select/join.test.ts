@@ -50,7 +50,7 @@ describe("join", () => {
     testWc("SELECT c FROM t1 INNER JOIN t2 ON x = y");
   });
 
-  dialect(["mysql", "mariadb"], () => {
+  dialect(["mysql", "mariadb", "sqlite"], () => {
     it("supports plain INNER JOIN", () => {
       testWc("SELECT c FROM t1 INNER JOIN t2");
     });
@@ -92,6 +92,28 @@ describe("join", () => {
     });
   });
 
+  dialect("sqlite", () => {
+    // The general syntax in SQLite is:
+    //
+    //   blah blah blah JOIN
+    //
+    // Where there are between 1 and 3 instances of "blah", each of which can be any of:
+    const joinTypes = ["CROSS", "FULL", "INNER", "LEFT", "NATURAL", "OUTER", "RIGHT"];
+    // Not all of these combinations are actually valid in SQLite,
+    // but in our parser we choose to lean on the side of being too permissive.
+
+    [
+      ...combinations(1, joinTypes),
+      ...combinations(2, joinTypes),
+      ...combinations(3, joinTypes),
+    ].forEach((combo) => {
+      const join = combo.join(" ");
+      it(`supports ${join} JOIN`, () => {
+        testWc(`SELECT x FROM t1 ${join} JOIN t2`);
+      });
+    });
+  });
+
   it("supports join with USING specification", () => {
     testWc("SELECT c FROM t1 JOIN t2 USING (id)");
     testWc("SELECT c FROM t1 JOIN t2 USING (col1, col2)");
@@ -105,3 +127,16 @@ describe("join", () => {
     testWc("SELECT c FROM t1 JOIN t2 on t1.id = t2.id");
   });
 });
+
+function combinations<T>(count: number, options: T[]): T[][] {
+  if (count === 0) return [[]];
+  if (count > options.length) return [];
+  const result: T[][] = [];
+  for (let i = 0; i < options.length; i++) {
+    const rest = options.slice(i + 1);
+    for (const combo of combinations(count - 1, rest)) {
+      result.push([options[i], ...combo]);
+    }
+  }
+  return result;
+}
