@@ -9647,15 +9647,17 @@ number_literal_oct
     });
   }
 
+// Number may end with a decimal, but only with a single decimal.
+// Otherwise the parser will try to parse `1.` as number in the FOR x IN 1..10 loop.
 number_literal_decimal
-  = &(postgres / sqlite) (uscr_digits ("." uscr_digits?)? / "." uscr_digits) uscr_exp? !ident_start {
+  = &(postgres / sqlite) (uscr_digits ("." uscr_digits / "." !".")? / "." uscr_digits) uscr_exp? !ident_start {
     return loc({
       type: "number_literal",
       text: text(),
       value: parseFloat(text().replace(/_/g, "")),
     });
   }
-  / !(postgres / sqlite) (digits ("." digits?)? / "." digits) exp? !ident_start {
+  / !(postgres / sqlite) (digits ("." digits / "." !".")? / "." digits) exp? !ident_start {
     return loc({
       type: "number_literal",
       text: text(),

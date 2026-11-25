@@ -95,6 +95,30 @@ describe("FOR..IN", () => {
         `);
       });
 
+      it("supports compact range (without spaces)", () => {
+        testWc(`
+          FOR x IN 1..10 LOOP
+            SELECT x;
+          END LOOP
+        `);
+      });
+
+      it("supports range of floats", () => {
+        testWc(`
+          FOR x IN 1.5..10.8 LOOP
+            SELECT x;
+          END LOOP
+        `);
+      });
+
+      it("supports range where numbers have decimal point before & after", () => {
+        testWc(`
+          FOR x IN 3. .. .5 LOOP
+            SELECT x;
+          END LOOP
+        `);
+      });
+
       it("supports complex expressions", () => {
         testWc(`
           FOR x IN 1 + 5 .. 60 / 2 - sqrt(3) LOOP
