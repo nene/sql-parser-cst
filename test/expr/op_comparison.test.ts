@@ -226,6 +226,11 @@ describe("comparison operators", () => {
       testExprWc(`'haha' SOUNDS LIKE 'hoho'`);
     });
   });
+  dialect("mariadb", () => {
+    it("supports chaining of SOUNDS LIKE operator", () => {
+      testExprWc(`'haha' SOUNDS LIKE 'hoho' SOUNDS LIKE 'hehe'`);
+    });
+  });
 
   dialect(["sqlite", "bigquery"], () => {
     it("does not support MEMBER OF operator", () => {

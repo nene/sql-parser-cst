@@ -7783,8 +7783,8 @@ _comparison_expr_right
   / &only_mysql c1:__ op:(MEMBER __ OF) c2:__ right:paren$string_literal {
     return (left: any) => createBinaryExpr(left, c1, read(op), c2, right);
   }
-  / &mysql c1:__ op:(SOUNDS __ LIKE) c2:__ right:sub_comparison_expr {
-    return (left: any) => createBinaryExpr(left, c1, read(op), c2, right);
+  / &mysql tail:(__ sounds_like_op __ sub_comparison_expr)+ {
+    return (head: any) => createBinaryExprChain(head, tail);
   }
   / betweenKw:(__ between_op) begin:(__ sub_comparison_expr) andKw:(__ AND) end:(__ sub_comparison_expr) {
     return (left: any) => ({
@@ -7835,6 +7835,9 @@ in_op
 
 like_op
   = kws:(NOT __ LIKE / LIKE) { return read(kws); }
+
+sounds_like_op
+  = kws:(SOUNDS __ LIKE) { return read(kws); }
 
 is_op
   = (&sqlite / &bigquery / &postgres) kws:(IS __ NOT __ DISTINCT __ FROM) { return read(kws); }
