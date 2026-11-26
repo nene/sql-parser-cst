@@ -7777,8 +7777,8 @@ _comparison_expr_right
   / c1:__ op:(NOT __ IN / IN) c2:__ right:(paren$list$expr / paren$empty_list / sub_comparison_expr / &bigquery e:unnest_expr { return e; }) {
     return (left: any) => createBinaryExpr(left, c1, read(op), c2, right);
   }
-  / c1:__ op:(NOT __ LIKE / LIKE) c2:__ right:(&bigquery x:quantifier_expr { return x; } / escape_expr) {
-    return (left: any) => createBinaryExpr(left, c1, read(op), c2, right);
+  / tail:(__ like_op __ (&bigquery x:quantifier_expr { return x; } / escape_expr))+ {
+    return (head: any) => createBinaryExprChain(head, tail);
   }
   / &only_mysql c1:__ op:(MEMBER __ OF) c2:__ right:paren$string_literal {
     return (left: any) => createBinaryExpr(left, c1, read(op), c2, right);
@@ -7829,6 +7829,9 @@ comparison_op
   / "!="
   / is_op
   / regexp_op
+
+like_op
+  = kws:(NOT __ LIKE / LIKE) { return read(kws); }
 
 is_op
   = (&sqlite / &bigquery / &postgres) kws:(IS __ NOT __ DISTINCT __ FROM) { return read(kws); }

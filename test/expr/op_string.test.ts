@@ -18,6 +18,14 @@ describe("string operators", () => {
     });
   });
 
+  dialect(["sqlite", "mariadb"], () => {
+    // Not useful in practice, but technically supported
+    it("supports chaining of LIKE operator", () => {
+      testExprWc(`'foobar' LIKE 'a' LIKE 'b'`);
+      testExprWc(`'foobar' LIKE 'a' ESCAPE 'x' LIKE 'b' ESCAPE 'y'`);
+    });
+  });
+
   dialect(["postgresql", "plpgsql"], () => {
     it("supports [NOT] ILIKE operator", () => {
       testExprWc(`'foobar' ILIKE 'foo%'`);
