@@ -16,6 +16,7 @@
     createMemberExprChain,
     createFuncCall,
     createPrefixOpExpr,
+    createPostfixOpExprChain,
     createPostfixOpExpr,
     createKeyword,
     createIdentifier,
@@ -7767,8 +7768,8 @@ comparison_expr
   / &mysql x:full_text_match_expr { return x; }
 
 _comparison_expr_right
-  = op:(__ unary_comparison_op) {
-    return (expr: any) => createPostfixOpExpr(read(op), expr);
+  = ops:(__ unary_comparison_op)+ {
+    return (expr: any) => createPostfixOpExprChain(expr, ops.map(read));
   }
   / tail:(__ comparison_op __ (x:quantifier_expr &mysql { return x; } / sub_comparison_expr))+ {
     return (head: any) => createBinaryExprChain(head, tail);

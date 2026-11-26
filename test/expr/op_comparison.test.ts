@@ -93,6 +93,10 @@ describe("comparison operators", () => {
       testExprWc("col ISNULL");
       testExprWc("col NOTNULL");
     });
+
+    it("supports chain of null-check operators", () => {
+      testExprWc("col ISNULL NOTNULL ISNULL");
+    });
   });
 
   dialect("sqlite", () => {

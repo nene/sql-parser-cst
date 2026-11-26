@@ -308,6 +308,13 @@ export function createPrefixOpExpr(
   };
 }
 
+export function createPostfixOpExprChain(
+  head: Expr,
+  tail: PostfixOpExpr["operator"][]
+): Expr {
+  return tail.reduce((head, op) => createPostfixOpExpr(op, head), head);
+}
+
 export function createPostfixOpExpr(
   op: PostfixOpExpr["operator"],
   expr: Expr
