@@ -158,6 +158,13 @@ describe("comparison operators", () => {
         testExprWc(`7 NOT IN UNNEST ([42])`);
       });
     });
+
+    dialect(["sqlite", "mariadb", "postgresql"], () => {
+      it("supports chaining of IN operator", () => {
+        testExprWc(`5 IN (5, 10) IN (true)`);
+        testExprWc(`5 IN (5, 10) NOT IN (true)`);
+      });
+    });
   });
 
   describe("BETWEEN", () => {
