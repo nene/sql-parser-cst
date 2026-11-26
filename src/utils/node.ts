@@ -312,8 +312,24 @@ export function createPostfixOpExprChain(
   head: Expr,
   tail: PostfixOpExpr["operator"][]
 ): Expr {
-  return tail.reduce((head, op) => createPostfixOpExpr(op, head), head);
+  return tail.reduce(
+    (head, op) => derivePostfixOpExprLoc(createPostfixOpExpr(op, head)),
+    head
+  );
 }
+
+const derivePostfixOpExprLoc = (postfix: PostfixOpExpr): PostfixOpExpr => {
+  const lastOpKeyword =
+    postfix.operator instanceof Array
+      ? postfix.operator[postfix.operator.length - 1]
+      : postfix.operator;
+  if (!postfix.expr.range || !lastOpKeyword.range) {
+    return postfix;
+  }
+  const start = postfix.expr.range[0];
+  const end = lastOpKeyword.range[1];
+  return { ...postfix, range: [start, end] };
+};
 
 export function createPostfixOpExpr(
   op: PostfixOpExpr["operator"],
