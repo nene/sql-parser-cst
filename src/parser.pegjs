@@ -7774,7 +7774,7 @@ _comparison_expr_right
   / tail:(__ comparison_op __ (x:quantifier_expr &mysql { return x; } / sub_comparison_expr))+ {
     return (head: any) => createBinaryExprChain(head, tail);
   }
-  / tail:(__ op:in_op __ (paren$list$expr / paren$empty_list / sub_comparison_expr / &bigquery e:unnest_expr { return e; }))+ {
+  / tail:(__ in_op __ (paren$list$expr / paren$empty_list / sub_comparison_expr / &bigquery e:unnest_expr { return e; }))+ {
     return (head: any) => createBinaryExprChain(head, tail);
   }
   / tail:(__ like_op __ (&bigquery x:quantifier_expr { return x; } / escape_expr))+ {
