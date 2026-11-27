@@ -18,11 +18,20 @@ const removeImportsPass: Pass = (ast) => {
   if (!ast.initializer) {
     return;
   }
-  const code = ast.initializer.code;
+
+  const code =
+    ast.initializer instanceof Array
+      ? ast.initializer[0].code
+      : ast.initializer.code;
 
   imports = code.match(IMPORT_REGEX) || [];
   const withoutImports = code.replace(IMPORT_REGEX, "");
-  ast.initializer.code = withoutImports;
+
+  if (ast.initializer instanceof Array) {
+    ast.initializer[0].code = withoutImports;
+  } else {
+    ast.initializer.code = withoutImports;
+  }
 };
 
 const addImportsPass: Pass = (ast) => {

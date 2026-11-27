@@ -1,5 +1,5 @@
 {
-  "preset": "ts-jest",
+  "preset": "ts-jest/presets/js-with-ts",
   "roots": ["../../test", "../../src"],
   "globals": {
     "__SQL_DIALECT__": "mysql"

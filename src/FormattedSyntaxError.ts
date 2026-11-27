@@ -1,4 +1,4 @@
-import { Expectation, PeggySyntaxError } from "./parser";
+import { Expectation, SyntaxError as PeggySyntaxError } from "./parser";
 
 export class FormattedSyntaxError extends Error {
   constructor(e: PeggySyntaxError, sql: string, filename?: string) {
@@ -29,11 +29,11 @@ ${indent} | ${"^".padStart(colNr)}`;
 
 // When we stopped at a single letter, display the whole word instead
 function expandFound(
-  found: string | null,
+  found: string | null | undefined,
   colNr: number,
   line: string
-): string | null {
-  if (found !== null && /^\w$/.test(found)) {
+): string | null | undefined {
+  if (found !== null && found !== undefined && /^\w$/.test(found)) {
     const [word] = line.slice(colNr - 1).match(/\w+/) || [];
     return word || null;
   }
@@ -48,7 +48,7 @@ function expandFound(
 /* eslint-disable no-control-regex */
 /* eslint-disable no-case-declarations */
 
-function describeFound(found1: string | null) {
+function describeFound(found1: string | null | undefined) {
   return found1 ? '"' + literalEscape(found1) + '"' : "end of input";
 }
 
@@ -92,9 +92,7 @@ function describeExpectation(expectation: Expectation) {
     case "class":
       const escapedParts = expectation.parts.map((part) => {
         return Array.isArray(part)
-          ? classEscape(part[0] as string) +
-              "-" +
-              classEscape(part[1] as string)
+          ? classEscape(part[0]) + "-" + classEscape(part[1])
           : classEscape(part);
       });
 

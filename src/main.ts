@@ -6,7 +6,7 @@ export { type DialectName, type ParserOptions } from "./ParserOptions";
 export { FormattedSyntaxError } from "./FormattedSyntaxError";
 
 import { Node, Program } from "./cst/Node";
-import { parse as parseSql, PeggySyntaxError } from "./parser";
+import { parse as parseSql, SyntaxError as PeggySyntaxError } from "./parser";
 import { show as showSql } from "./show";
 import { ParserOptions, validDialectNames } from "./ParserOptions";
 import { FormattedSyntaxError } from "./FormattedSyntaxError";

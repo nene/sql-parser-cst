@@ -691,7 +691,7 @@ join_expr
 
 join_expr_right
   = c1:__ op:"," right:(__ alias$table_factor) {
-    return (left: any) => ({
+    return (left) => ({
       type: "join_expr",
       left: trailing(left, c1),
       operator: op,
@@ -700,7 +700,7 @@ join_expr_right
   }
   // SQLite has its own extra-permissive JOIN syntax.
   / &sqlite c1:__ op:sqlite_join right:(__ alias$table_factor) spec:(__ join_specification)? {
-    return (left: any) => ({
+    return (left) => ({
       type: "join_expr",
       left: trailing(left, c1),
       operator: op,
@@ -709,7 +709,7 @@ join_expr_right
     });
   }
   / !sqlite c1:__ op:cross_join right:(__ alias$table_factor) {
-    return (left: any) => ({
+    return (left) => ({
       type: "join_expr",
       left: trailing(left, c1),
       operator: op,
@@ -717,7 +717,7 @@ join_expr_right
     });
   }
   / (&mysql / &postgres) c1:__ op:natural_join right:(__ alias$table_factor) {
-    return (left: any) => ({
+    return (left) => ({
       type: "join_expr",
       left: trailing(left, c1),
       operator: op,
@@ -725,7 +725,7 @@ join_expr_right
     });
   }
   / !sqlite c1:__ op:join_op right:(__ alias$table_factor) spec:(__ join_specification)? {
-    return (left: any) => ({
+    return (left) => ({
       type: "join_expr",
       left: trailing(left, c1),
       operator: op,
@@ -945,7 +945,7 @@ unnest_expr
 // PIVOT ........................................................
 pivot_expr_right
   = &bigquery c1:__ kw:(PIVOT __) args:paren$pivot_for_in {
-    return (left: any) => ({
+    return (left) => ({
       type: "pivot_expr",
       left: trailing(left, c1),
       pivotKw: read(kw),
@@ -970,7 +970,7 @@ unpivot_expr_right
   = &bigquery c1:__ kw:(UNPIVOT __)
     nulls:((INCLUDE / EXCLUDE) __ NULLS __)?
     args:paren$unpivot_for_in {
-      return (left: any) => ({
+      return (left) => ({
         type: "unpivot_expr",
         left: trailing(left, c1),
         unpivotKw: read(kw),
@@ -998,7 +998,7 @@ tablesample_expr_right
   = (&bigquery / &postgres) c1:__ kw:(TABLESAMPLE __)
     method:((tablesample_method / ident) __) args:paren$list$tablesample_arg
     repeatable:(__ tablesample_repeatable)? {
-      return (left: any) => ({
+      return (left) => ({
         type: "tablesample_expr",
         left: trailing(left, c1),
         tablesampleKw: read(kw),
@@ -1036,7 +1036,7 @@ tablesample_repeatable
 // FOR SYSTEM_TIME AS OF ........................................................
 for_system_time_as_of_expr_right
   = &bigquery c1:__ kw:(FOR __ SYSTEM_TIME __ AS __ OF __) expr:expr {
-    return (left: any) => ({
+    return (left) => ({
       type: "for_system_time_as_of_expr",
       left: trailing(left, c1),
       forSystemTimeAsOfKw: read(kw),
@@ -7651,7 +7651,7 @@ mysql_assign_expr
 
 _mysql_assign_expr_right
   = c1:__ op:":=" c2:__ right:mysql_assign_expr {
-    return (left: any) => createBinaryExpr(left, c1, op, c2, right);
+    return (left) => createBinaryExpr(left, c1, op, c2, right);
   }
 
 mysql_or_expr = head:mysql_xor_expr tail:(__ (OR / "||") __ mysql_xor_expr)* {
@@ -7706,10 +7706,10 @@ pg_is_expr
 
 _pg_is_expr_right
   = ops:(__ unary_comparison_op)+ {
-    return (head: any) => createPostfixOpExprChain(head, ops.map(read));
+    return (head) => createPostfixOpExprChain(head, ops.map(read));
   }
   / tail:(__ is_op __ pg_comparison_expr)+ {
-    return (head: any) => createBinaryExprChain(head, tail);
+    return (head) => createBinaryExprChain(head, tail);
   }
 
 pg_comparison_expr
@@ -7733,13 +7733,13 @@ pg_in_expr
 
 _pg_in_expr_right
   = tail:(__ in_op __ (paren$list$expr / sub_comparison_expr))+ {
-    return (head: any) => createBinaryExprChain(head, tail);
+    return (head) => createBinaryExprChain(head, tail);
   }
   / c1:__ op:pg_like_op c2:__ right:escape_expr {
-    return (left: any) => createBinaryExpr(left, c1, op, c2, right);
+    return (left) => createBinaryExpr(left, c1, op, c2, right);
   }
   / betweenKw:(__ pg_between_op) begin:(__ sub_comparison_expr) andKw:(__ AND) end:(__ sub_comparison_expr) {
-    return (left: any) => ({
+    return (left) => ({
       type: "between_expr",
       left: left,
       betweenKw: read(betweenKw),
@@ -7769,25 +7769,25 @@ comparison_expr
 
 _comparison_expr_right
   = ops:(__ unary_comparison_op)+ {
-    return (expr: any) => createPostfixOpExprChain(expr, ops.map(read));
+    return (expr) => createPostfixOpExprChain(expr, ops.map(read));
   }
   / tail:(__ comparison_op __ (x:quantifier_expr &mysql { return x; } / sub_comparison_expr))+ {
-    return (head: any) => createBinaryExprChain(head, tail);
+    return (head) => createBinaryExprChain(head, tail);
   }
   / tail:(__ in_op __ (paren$list$expr / paren$empty_list / sub_comparison_expr / &bigquery e:unnest_expr { return e; }))+ {
-    return (head: any) => createBinaryExprChain(head, tail);
+    return (head) => createBinaryExprChain(head, tail);
   }
   / tail:(__ like_op __ (&bigquery x:quantifier_expr { return x; } / escape_expr))+ {
-    return (head: any) => createBinaryExprChain(head, tail);
+    return (head) => createBinaryExprChain(head, tail);
   }
   / &only_mysql c1:__ op:(MEMBER __ OF) c2:__ right:paren$string_literal {
-    return (left: any) => createBinaryExpr(left, c1, read(op), c2, right);
+    return (left) => createBinaryExpr(left, c1, read(op), c2, right);
   }
   / &mysql tail:(__ sounds_like_op __ sub_comparison_expr)+ {
-    return (head: any) => createBinaryExprChain(head, tail);
+    return (head) => createBinaryExprChain(head, tail);
   }
   / betweenKw:(__ between_op) begin:(__ sub_comparison_expr) andKw:(__ AND) end:(__ sub_comparison_expr) {
-    return (left: any) => ({
+    return (left) => ({
       type: "between_expr",
       left: left,
       betweenKw: read(betweenKw),
