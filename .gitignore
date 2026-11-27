@@ -1,5 +1,6 @@
 node_modules
 lib
-src/parser.ts
+src/parser.js
+src/parser.d.ts
 .claude
 build
