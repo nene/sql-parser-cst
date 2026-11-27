@@ -7705,8 +7705,8 @@ pg_is_expr
   }
 
 _pg_is_expr_right
-  = op:(__ unary_comparison_op) {
-    return (expr: any) => createPostfixOpExpr(read(op), expr);
+  = ops:(__ unary_comparison_op)+ {
+    return (head: any) => createPostfixOpExprChain(head, ops.map(read));
   }
   / tail:(__ is_op __ pg_comparison_expr)+ {
     return (head: any) => createBinaryExprChain(head, tail);
