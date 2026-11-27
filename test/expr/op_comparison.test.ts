@@ -61,6 +61,11 @@ describe("comparison operators", () => {
           }
         `);
       });
+
+      it("supports chaining of IS [NOT] UNKNOWN operator", () => {
+        testExprWc(`col IS UNKNOWN`);
+        testExprWc(`col IS NOT UNKNOWN`);
+      });
     });
 
     dialect(["sqlite", "bigquery", "postgresql", "plpgsql"], () => {
