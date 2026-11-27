@@ -3,4 +3,4 @@ lib
 src/parser.js
 src/parser.d.ts
 .claude
-build
+plugins/build

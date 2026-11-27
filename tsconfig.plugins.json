@@ -3,13 +3,13 @@
   "compilerOptions": {
     "noEmit": false,
     "declaration": false,
-    "rootDir": "scripts",
-    "outDir": "build/plugins"
+    "rootDir": "plugins",
+    "outDir": "plugins/build"
   },
   "include": [],
   "files": [
-    "scripts/move-imports.ts",
-    "scripts/rule-templates.ts",
-    "scripts/disable-recusion-check.ts"
+    "plugins/move-imports.ts",
+    "plugins/rule-templates.ts",
+    "plugins/disable-recusion-check.ts"
   ]
 }

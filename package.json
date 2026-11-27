@@ -42,7 +42,7 @@
     "perf:list": "ts-node perf/perf-test.ts list",
     "perf:select": "ts-node perf/perf-test.ts select",
     "perf:case": "ts-node perf/perf-test.ts case",
-    "lint": "eslint src test scripts perf",
+    "lint": "eslint src test scripts plugins perf",
     "ts:check": "tsc --noEmit",
     "changelog": "auto-changelog -p --starting-version $VERSION --ending-version $VERSION"
   },

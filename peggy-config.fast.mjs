@@ -1,6 +1,6 @@
-import { moveImports } from "./build/plugins/move-imports.js";
-import { ruleTemplates } from "./build/plugins/rule-templates.js";
-import { disableRecursionCheck } from "./build/plugins/disable-recusion-check.js";
+import { moveImports } from "./plugins/build/move-imports.js";
+import { ruleTemplates } from "./plugins/build/rule-templates.js";
+import { disableRecursionCheck } from "./plugins/build/disable-recusion-check.js";
 
 export default {
   dts: true,

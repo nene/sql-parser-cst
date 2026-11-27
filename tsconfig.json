@@ -14,6 +14,6 @@
     "allowJs": true,
     "noEmit": true
   },
-  "include": ["src", "test", "perf", "scripts"],
-  "exclude": ["node_modules"]
+  "include": ["src", "test", "perf", "scripts", "plugins"],
+  "exclude": ["node_modules", "plugins/build"]
 }

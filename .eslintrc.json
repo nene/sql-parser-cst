@@ -1,5 +1,10 @@
 {
-  "ignorePatterns": ["src/parser.js", "src/parser.d.ts", "peggy-config.*"],
+  "ignorePatterns": [
+    "src/parser.js",
+    "src/parser.d.ts",
+    "peggy-config.*",
+    "plugins/build"
+  ],
   "env": {
     "es2021": true
   },
