@@ -150,5 +150,11 @@ describe("string operators", () => {
       testExprWc(`'hello' IS NOT NFKC NORMALIZED`);
       testExprWc(`'hello' IS NOT NFKD NORMALIZED`);
     });
+
+    // Actually not supported, because it only works on strings,
+    // but it's rejected by query analyzer, not by PostgreSQL parser.
+    it("supports chaining of IS NORMALIZED operator", () => {
+      testExprWc(`'hello' IS NORMALIZED IS NOT NFD NORMALIZED`);
+    });
   });
 });
