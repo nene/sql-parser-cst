@@ -27,6 +27,7 @@
     "watch:generate": "npm-watch",
     "clean": "rm -rf lib; rm -rf src/generated_parser.ts",
     "build": "npm run clean && npm run generate && tsc -p tsconfig.build.json",
+    "build:plugins": "tsc -p tsconfig.plugins.json",
     "test:bigquery": "jest --config test/config/bigquery.json",
     "test:mysql": "jest --config test/config/mysql.json",
     "test:mariadb": "jest --config test/config/mariadb.json",

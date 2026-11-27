@@ -2,3 +2,4 @@ node_modules
 lib
 src/parser.ts
 .claude
+build
