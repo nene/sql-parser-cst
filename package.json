@@ -26,7 +26,7 @@
     "generate:fast": "peggy -c peggy-config.fast.mjs",
     "watch:generate": "npm-watch",
     "clean": "rm -rf lib; rm -f src/parser.js src/parser.d.ts",
-    "build": "npm run clean && npm run generate && tsc -p tsconfig.build.json",
+    "build": "npm run clean && npm run generate && tsc -p tsconfig.build.json && cp src/parser.d.ts lib/parser.d.ts",
     "build:plugins": "tsc -p tsconfig.plugins.json",
     "test:bigquery": "jest --config test/config/bigquery.json",
     "test:mysql": "jest --config test/config/mysql.json",
