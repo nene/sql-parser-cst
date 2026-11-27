@@ -7732,8 +7732,8 @@ pg_in_expr
   }
 
 _pg_in_expr_right
-  = c1:__ op:(NOT __ IN / IN) c2:__ right:(paren$list$expr / sub_comparison_expr) {
-    return (left: any) => createBinaryExpr(left, c1, read(op), c2, right);
+  = tail:(__ in_op __ (paren$list$expr / sub_comparison_expr))+ {
+    return (head: any) => createBinaryExprChain(head, tail);
   }
   / c1:__ op:pg_like_op c2:__ right:escape_expr {
     return (left: any) => createBinaryExpr(left, c1, op, c2, right);
